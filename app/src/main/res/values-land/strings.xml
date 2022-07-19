@@ -1,19 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Slatmate</string>
-    <string name="action_settings">Settings</string>
-    <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
-
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
-
-    <string name="welcome_to_satalment">Welcome To <font fgcolor="#FF3D55DD">Satalment</font></string>
+    <string name="welcome_to_satalment">Welcome To Satalment</string>
     <string name="enter_your_email_id">Enter Your Email Id</string>
     <string name="enter_your_password">Enter Your Password</string>
     <string name="forget_password">Forget Password?</string>
@@ -23,7 +10,7 @@
     <string name="confirm_password">Confirm Password</string>
     <string name="back_to_login">Back To login</string>
     <string name="password_change_successfully">Password Change Successfully</string>
-    <string name="first_name">First Name*</string>
+    <string name="first_name">First Name</string>
     <string name="last_name">Last Name*</string>
     <string name="email">Email*</string>
     <string name="gender">Gender*</string>
@@ -36,10 +23,4 @@
     <string name="feeds">Feeds</string>
     <string name="campus">Campus</string>
     <string name="notification">Notification</string>
-
-
-    <string-array name="date">
-        <item>01</item>
-        <item>02</item>
-    </string-array>
 </resources>

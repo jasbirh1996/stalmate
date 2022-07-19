@@ -1,5 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/slatmate-user-android/app/src/main/res/drawable/background_edittext.xml" value="0.1815" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/slatmate-user-android/app/src/main/res/drawable/border_on_click_otp.xml" value="0.153" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/slatmate-user-android/app/src/main/res/drawable/border_otp.xml" value="0.153" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/slatmate-user-android/app/src/main/res/drawable/card_background.xml" value="0.1685" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/slatmate-user-android/app/src/main/res/drawable/comon_button_background.xml" value="0.1815" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/slatmate-user-android/app/src/main/res/drawable/login_image_background.xml" value="0.162" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/slatmate-user-android/app/src/main/res/drawable/otp_box_border.xml" value="0.232" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/slatmate-user-android/app/src/main/res/drawable/otp_box_border_filted.xml" value="0.18" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/slatmate-user-android/app/src/main/res/drawable/search_background.xml" value="0.1685" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/activity_login.xml" value="0.27291666666666664" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/activity_parent_login_sign_up.xml" value="0.22" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/common_toolbar.xml" value="0.25" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/fragment_forget_password.xml" value="0.25" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/fragment_login.xml" value="0.22" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/fragment_o_t_p.xml" value="0.25" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/fragment_o_t_p_enter.xml" value="0.25" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/fragment_password_reset.xml" value="0.25" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/fragment_sign_up.xml" value="0.75" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/home_page_toolbar.xml" value="0.25" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/item_home_story.xml" value="0.25" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/item_home_user_post.xml" value="0.271875" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/password_change_dialog.xml" value="0.271875" />
+      </map>
+    </option>
+  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
