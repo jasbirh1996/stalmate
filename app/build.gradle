@@ -63,4 +63,8 @@ dependencies {
 
     /*PinView DD*/
     implementation 'io.github.chaosleung:pinview:1.4.4'
+
+
+    /*circle image view*/
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
 }

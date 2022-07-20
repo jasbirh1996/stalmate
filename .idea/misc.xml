@@ -7,7 +7,10 @@
         <entry key="..\:/Users/Admin/AndroidStudioProjects/slatmate-user-android/app/src/main/res/drawable/border_on_click_otp.xml" value="0.153" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/slatmate-user-android/app/src/main/res/drawable/border_otp.xml" value="0.153" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/slatmate-user-android/app/src/main/res/drawable/card_background.xml" value="0.1685" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/slatmate-user-android/app/src/main/res/drawable/circle_background.xml" value="0.1685" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/slatmate-user-android/app/src/main/res/drawable/comon_button_background.xml" value="0.1815" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/slatmate-user-android/app/src/main/res/drawable/friend_request_button_background.xml" value="0.1685" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/slatmate-user-android/app/src/main/res/drawable/friend_request_button_background_grey.xml" value="0.1685" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/slatmate-user-android/app/src/main/res/drawable/login_image_background.xml" value="0.162" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/slatmate-user-android/app/src/main/res/drawable/otp_box_border.xml" value="0.232" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/slatmate-user-android/app/src/main/res/drawable/otp_box_border_filted.xml" value="0.18" />
@@ -20,11 +23,14 @@
         <entry key="..\:/Users/Admin/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/fragment_o_t_p.xml" value="0.25" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/fragment_o_t_p_enter.xml" value="0.25" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/fragment_password_reset.xml" value="0.25" />
-        <entry key="..\:/Users/Admin/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/fragment_sign_up.xml" value="0.75" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/fragment_sign_up.xml" value="0.47549019607843135" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/home_page_toolbar.xml" value="0.25" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/item_home_friends_suggestion.xml" value="0.33" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/item_home_story.xml" value="0.25" />
-        <entry key="..\:/Users/Admin/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/item_home_user_post.xml" value="0.271875" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/item_home_user_post.xml" value="0.25" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/item_sidedrawer.xml" value="0.25" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/password_change_dialog.xml" value="0.271875" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/side_drawer_layout.xml" value="0.22" />
       </map>
     </option>
   </component>
@@ -33,5 +39,12 @@
   </component>
   <component name="ProjectType">
     <option name="id" value="Android" />
+  </component>
+  <component name="VisualizationToolProject">
+    <option name="state">
+      <ProjectState>
+        <option name="scale" value="0.12" />
+      </ProjectState>
+    </option>
   </component>
 </project>

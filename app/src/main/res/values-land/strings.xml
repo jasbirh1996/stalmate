@@ -23,4 +23,11 @@
     <string name="feeds">Feeds</string>
     <string name="campus">Campus</string>
     <string name="notification">Notification</string>
+    <string name="follow">Follow</string>
+    <string name="likes">Likes</string>
+    <string name="comments">Comments</string>
+    <string name="share">Share</string>
+    <string name="add_friends">Add Friends</string>
+    <string name="menu">Menu</string>
+    <string name="posts">posts</string>
 </resources>
