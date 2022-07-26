@@ -1,5 +1,6 @@
 package com.slatmate.user.LoginPage.LoginFragment
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,6 +9,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.Navigation.findNavController
 import androidx.navigation.fragment.findNavController
+import com.slatmate.user.Home.Dashboard.ActivityDashboard
 import com.slatmate.user.R
 import com.slatmate.user.databinding.FragmentLoginBinding
 
@@ -40,7 +42,10 @@ class FragmentLogin : Fragment() {
        }
 
         binding.btnLogin.setOnClickListener {
-            findNavController().navigate(R.id.fragmentOTPEnter)
+            /*findNavController().navigate(R.id.fragmentOTPEnter)*/
+
+            val intent = Intent(context, ActivityDashboard::class.java)
+            startActivity(intent)
         }
 
         binding.createAccount.setOnClickListener {

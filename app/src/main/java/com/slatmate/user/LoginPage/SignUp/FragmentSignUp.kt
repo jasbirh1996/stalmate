@@ -34,7 +34,9 @@ class FragmentSignUp : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.toolbar.hearderText.text = "Sign Up"
+        /*Common ToolBar SetUp*/
+        toolbarSetUp()
+
 
         binding.rdmale.setOnCheckedChangeListener { compoundButton, ischeck ->
             if (ischeck){
@@ -60,6 +62,14 @@ class FragmentSignUp : Fragment() {
                 binding.rdOthers.setChecked(true)
             }
         }
+    }
+
+    private fun toolbarSetUp() {
+        binding.toolbar.toolBarCenterText.visibility = View.VISIBLE
+        binding.toolbar.toolBarCenterText.text =  getString(R.string.sign_up)
+        binding.toolbar.toolBarCenterText.visibility = View.VISIBLE
+        binding.toolbar.backButtonRightText.visibility = View.GONE
+        binding.toolbar.menuChat.visibility = View.VISIBLE
     }
 
 }

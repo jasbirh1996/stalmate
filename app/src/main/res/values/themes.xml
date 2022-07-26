@@ -36,6 +36,17 @@
     </style>
 
 
+    <style name="roundedimageView" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">7dp</item>
+        <item name="color">@color/white</item>
+    </style>
+
+    <style name="roundedimageView1" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">20dp</item>
+        <item name="color">@color/white</item>
+    </style>
 
 
 

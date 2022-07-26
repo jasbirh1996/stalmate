@@ -33,12 +33,11 @@ class FragmentForgetPassword : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        /*Common ToolBar SetUp*/
+        toolbarSetUp()
+
 
         /*Click on page */
-
-        binding.toolbar.hearderText.text = "Forget Password"
-
-
 
         binding.loginPage.setOnClickListener {
             findNavController().navigate(R.id.fragmentLogin)
@@ -53,7 +52,12 @@ class FragmentForgetPassword : Fragment() {
 
     }
 
-
+    private fun toolbarSetUp() {
+        binding.toolbar.toolBarCenterText.visibility = View.VISIBLE
+        binding.toolbar.toolBarCenterText.text =  getString(R.string.forget_post)
+        binding.toolbar.toolBarCenterText.visibility = View.VISIBLE
+        binding.toolbar.backButtonRightText.visibility = View.GONE
+    }
 
 
 }

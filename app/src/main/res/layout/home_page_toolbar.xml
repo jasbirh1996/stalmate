@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
 
     <androidx.cardview.widget.CardView
@@ -24,17 +24,17 @@
                 android:layout_height="60dp"
                 android:orientation="horizontal"
                 android:weightSum="1"
+                android:layout_marginVertical="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
 
-                <androidx.appcompat.widget.AppCompatImageView
+                <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/profile_photo"
                     android:layout_width="30dp"
                     android:layout_height="50dp"
                     android:layout_marginHorizontal="10dp"
-                    android:layout_marginVertical="10dp"
                     android:layout_weight=".1"
                     android:src="@drawable/logo"
                     app:layout_constraintStart_toStartOf="parent"
@@ -44,22 +44,27 @@
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
                     android:layout_gravity="center"
+                    android:layout_marginStart="10dp"
                     android:layout_weight=".8"
                     android:background="@drawable/search_background"
                     app:layout_constraintBottom_toBottomOf="@+id/profile_photo"
                     app:layout_constraintStart_toEndOf="@+id/profile_photo"
                     app:layout_constraintTop_toTopOf="@+id/profile_photo">
 
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:layout_width="wrap_content"
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:text="Search"
+                        android:background="@null"
+                        android:hint="Search"
+                        android:inputType="textAutoComplete"
                         app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/appCompatImageView6"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/appCompatImageView6"
                         android:layout_width="16dp"
                         android:layout_height="16dp"
                         android:layout_marginEnd="16dp"
@@ -74,6 +79,7 @@
                 <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="40dp"
                     android:layout_height="40dp"
+                    android:padding="5dp"
                     android:layout_gravity="center"
                     android:layout_weight=".1"
                     android:src="@drawable/menu" />
@@ -87,7 +93,6 @@
                 android:orientation="horizontal"
                 android:weightSum="3"
                 android:layout_marginTop="20dp"
-                android:layout_marginHorizontal="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout">
@@ -96,7 +101,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_gravity="center"
                     android:orientation="horizontal">
 
 
@@ -104,17 +108,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@color/white"
-                        android:layout_marginStart="10dp"
+                        app:cardUseCompatPadding="true"
                         app:cardCornerRadius="30dp">
 
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
 
                             <androidx.appcompat.widget.AppCompatImageView
                                 android:id="@+id/appCompatImageView2"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
                                 android:padding="10dp"
                                 android:src="@drawable/menu"
                                 app:layout_constraintBottom_toBottomOf="parent"
@@ -122,7 +123,6 @@
                                 app:layout_constraintTop_toTopOf="parent" />
 
 
-                        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
                     </androidx.cardview.widget.CardView>
@@ -132,9 +132,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:text="@string/feeds"
-                        android:gravity="center"
-                        android:layout_marginStart="8dp"
-                        android:textSize="16sp" />
+                        android:textSize="12sp" />
 
                 </LinearLayout>
 
@@ -151,25 +149,21 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@color/white"
-
+                        app:cardUseCompatPadding="true"
                         app:cardCornerRadius="30dp">
 
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
+
 
                             <androidx.appcompat.widget.AppCompatImageView
                                 android:id="@+id/appCompatImageView3"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
                                 android:padding="10dp"
                                 android:src="@drawable/menu"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent" />
 
-
-                        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
                     </androidx.cardview.widget.CardView>
@@ -179,9 +173,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:text="@string/campus"
-                        android:gravity="center"
-                        android:layout_marginStart="8dp"
-                        android:textSize="16sp" />
+                        android:textSize="12sp" />
 
                 </LinearLayout>
 
@@ -198,26 +190,17 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@color/white"
-
+                        app:cardUseCompatPadding="true"
                         app:cardCornerRadius="30dp">
-
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
-
                             <androidx.appcompat.widget.AppCompatImageView
                                 android:id="@+id/appCompatImageView4"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
                                 android:padding="10dp"
                                 android:src="@drawable/menu"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent" />
-
-
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-
 
                     </androidx.cardview.widget.CardView>
 
@@ -225,24 +208,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:gravity="center_horizontal"
                         android:text="@string/notification"
-                        android:layout_marginStart="8dp"
-                        android:textSize="16sp" />
+                        android:textSize="12sp" />
 
                 </LinearLayout>
 
-
             </LinearLayout>
 
-
-
-
         </androidx.constraintlayout.widget.ConstraintLayout>
+
     </androidx.cardview.widget.CardView>
-
-
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
