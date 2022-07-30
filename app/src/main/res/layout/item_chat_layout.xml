@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white">
@@ -22,7 +23,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:fontFamily="@font/poppins"
+        android:fontFamily="@font/poppins_semibold"
         android:text="Abhay Kashyap"
         android:textColor="@color/black"
         android:textSize="14sp"
@@ -31,6 +32,65 @@
         app:layout_constraintTop_toTopOf="@+id/user_image" />
 
 
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/chat_unread_count"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/circle_blue_background"
+        android:gravity="center"
+        android:text="1"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/icon_mute_chat"
+        app:layout_constraintEnd_toStartOf="@+id/icon_mute_chat"
+        app:layout_constraintTop_toTopOf="@+id/icon_mute_chat" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/icon_mute_chat"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginEnd="16dp"
+        android:src="@drawable/ic_eye_close"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_user_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tv_user_name" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_last_msg_timing"
+        android:layout_width="wrap_content"
+        android:layout_height="21dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/poppins"
+        android:text="09:00PM"
+        android:textColor="@color/black"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@+id/icon_mute_chat"
+        app:layout_constraintStart_toStartOf="@+id/chat_unread_count"
+        app:layout_constraintTop_toBottomOf="@+id/icon_mute_chat" />
+
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/imSeenMsgUnSeen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/ic_eye_close"
+        app:layout_constraintStart_toStartOf="@+id/tv_user_name"
+        app:layout_constraintTop_toBottomOf="@+id/tv_user_name" />
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_last_msg"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:fontFamily="@font/poppins"
+        android:text="Hello Abhay, How are you?"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/imSeenMsgUnSeen"
+        app:layout_constraintEnd_toStartOf="@+id/tv_last_msg_timing"
+        app:layout_constraintStart_toEndOf="@+id/imSeenMsgUnSeen"
+        app:layout_constraintTop_toTopOf="@+id/imSeenMsgUnSeen" />
 
 
 

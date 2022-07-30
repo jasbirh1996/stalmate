@@ -4,6 +4,7 @@
     package="com.slatmate.user">
 
     <application
+        android:name=".base.App"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -11,28 +12,45 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Slatmate"
+        android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".Home.Dashboard.ActivityDashboard"
+            android:name=".OnBoardingScreen.ActivityOnBoardingScreen"
+            android:exported="false"
+            />
+        <activity
+            android:name=".Splash.ActivitySplash"
             android:exported="true">
-            <!--<intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
+            </intent-filter>
+
+        </activity>
+        <activity
+            android:name=".Home.Dashboard.ActivityDashboard"
+            android:exported="true"
+            android:theme="@style/Theme.Slatmate.NoActionBar">
+
+            <!--
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            -->
         </activity>
         <activity
             android:name=".LoginPage.ActivityParentLoginSignUp"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.Slatmate.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            <meta-data
+                android:name="preloaded_fonts"
+                android:resource="@array/preloaded_fonts" />
         </activity>
 
         <meta-data

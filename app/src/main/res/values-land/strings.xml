@@ -38,4 +38,12 @@
     <string name="sign_up">Sign Up</string>
     <string name="chat">Chat</string>
     <string name="search">Search</string>
+    <string name="first_screen_title">Meet and make friends</string>
+    <string name="find_lorem">Find Lorem ipsum dolor sit amet, consectetur adipiscing elit.</string>
+    <string name="second_screen_title">Live Streaming</string>
+    <string name="description_second_screen">Find Lorem ipsum dolor sit amet, consectetur adipiscing elit.</string>
+    <string name="third_screen_title">Funtime</string>
+    <string name="third_screen_description">Find Lorem ipsum dolor sit amet, consectetur adipiscing elit.</string>
+    <string name="four_screen_title">Experience New World</string>
+    <string name="four_screen_description">Find Lorem ipsum dolor sit amet, consectetur adipiscing elit.</string>
 </resources>
