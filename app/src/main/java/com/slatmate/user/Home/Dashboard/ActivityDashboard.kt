@@ -2,10 +2,8 @@ package com.slatmate.user.Home.Dashboard
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.replace
-import com.slatmate.user.Home.Dashboard.Chat.FragmentChat
+import com.slatmate.user.Home.Dashboard.Chat.ChatCallTabFragment
 import com.slatmate.user.Home.Dashboard.Friend.FragmentFriendList
 import com.slatmate.user.Home.Dashboard.HomeFragment.FragmentHome
 import com.slatmate.user.Home.Dashboard.VideoReels.FragmentReels
@@ -29,7 +27,7 @@ class ActivityDashboard : AppCompatActivity() {
             when(it.itemId){
                 R.id.home -> replaceFragment(FragmentHome())
                 R.id.funTime -> replaceFragment(FragmentFunTime())
-                R.id.chat -> replaceFragment(FragmentChat())
+                R.id.chat -> replaceFragment(ChatCallTabFragment())
                 R.id.video -> replaceFragment(FragmentReels())
                 R.id.friend -> replaceFragment(FragmentFriendList())
 

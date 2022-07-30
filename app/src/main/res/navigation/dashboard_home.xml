@@ -14,7 +14,7 @@
 
     <fragment
         android:id="@+id/fragmentChat"
-        android:name="com.slatmate.user.Home.Dashboard.Chat.FragmentChat"
+        android:name="com.slatmate.user.Home.Dashboard.Chat.ChatCallTabFragment"
         android:label="FragmentChat" />
 
     <fragment

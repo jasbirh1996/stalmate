@@ -50,6 +50,7 @@
     <string name="reset_password">Reset Password</string>
     <string name="sign_up">Sign Up</string>
     <string name="chat">Chat</string>
+    <string name="search">Search</string>
 
 
     <string-array name="date">
