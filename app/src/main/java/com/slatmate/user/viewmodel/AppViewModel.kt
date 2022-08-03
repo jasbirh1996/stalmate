@@ -1,8 +1,9 @@
-package com.slatmate.user.base
+package com.slatmate.user.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.slatmate.user.base.App
 import com.slatmate.user.model.ModelSuccess
 import com.slatmate.user.networking.ApiInterface
 
