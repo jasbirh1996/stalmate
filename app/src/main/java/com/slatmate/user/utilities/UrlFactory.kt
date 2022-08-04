@@ -4,8 +4,8 @@ import java.util.*
 
 
 object UrlFactory {
-    private const val URL_DEV = "https://foujiadda.in/admin/api/" // Development
-    private const val URL_PROD = "https://foujiadda.in/admin/api/" // Live
+    private const val URL_DEV = "https://api-gateway.suzero.co/" // Development
+    private const val URL_PROD = "https://api-gateway.suzero.co/" // Live
     private const val API_VERSION = "api/v0/"
     const val isModeDevelopment = true
 
@@ -38,6 +38,7 @@ object UrlFactory {
         defaultHeaders.put("currentVersion", BuildConfig.VERSION_NAME);*/
     val defaultHeaders: HashMap<String, String>
         get() {
+
             val defaultHeaders = HashMap<String, String>()
             defaultHeaders["Content-Type"] = "application/json"
             defaultHeaders["Accept"] = "application/json"
