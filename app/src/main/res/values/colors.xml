@@ -1,6 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="black">#FF000000</color>
+<<<<<<< HEAD
+<<<<<<< HEAD
+    <color name="black_text_splash">#141414</color>
+    <color name="white">#FFFFFF</color>
+
+    <color name="blue_line">#0F52BA</color>
+    <color name="app_color">#0F52BA</color>
+    <color name="border_your_mind_color">#D9E8FF</color>
+    <color name="grey_light">#F3EFEF</color>
+    <color name="grey_dark">#757171</color>
+    <color name="blur_color">#EFF2F6</color>
+    <color name="home_post_btn_background_color">#F8F8F8</color>
+    <color name="transparent">#003C0505</color>
+
+
+
+
+
+=======
+    <color name="white">#FFFFFFFF</color>
+=======
+>>>>>>> b268c399ddb51b870c0fa1b421ac20ae7a46cd7b
 
     <color name="colorPrimary">#257CFF</color>
     <color name="colorSecondary">#9E9E9E</color>
@@ -62,6 +84,9 @@
     <color name="black_trasp">#99000000</color>
 
     ////////////////////////////////////////////////
+<<<<<<< HEAD
+>>>>>>> 0a30f169d0321edb26a361012a65d308079cb44d
+=======
 =======
     <color name="black_text_splash">#141414</color>
     <color name="white">#FFFFFF</color>
@@ -80,4 +105,5 @@
 
 
 >>>>>>> 46476d8315739b25825df6c83796b61dbe5162e8
+>>>>>>> b268c399ddb51b870c0fa1b421ac20ae7a46cd7b
 </resources>

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -9,6 +11,7 @@
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 =======
+>>>>>>> b268c399ddb51b870c0fa1b421ac20ae7a46cd7b
 
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -47,7 +50,7 @@
                     android:id="@+id/bottomNavigationView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:background="@color/app_color"
+                    android:background="@color/white"
                     app:labelVisibilityMode="unlabeled"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -63,4 +66,17 @@
 
 
 </layout>
+<<<<<<< HEAD
+=======
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.activity.ActivityDashboard">
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+>>>>>>> 0a30f169d0321edb26a361012a65d308079cb44d
+=======
 >>>>>>> 46476d8315739b25825df6c83796b61dbe5162e8
+>>>>>>> b268c399ddb51b870c0fa1b421ac20ae7a46cd7b

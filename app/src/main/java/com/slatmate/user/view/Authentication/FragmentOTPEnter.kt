@@ -1,11 +1,13 @@
 package com.slatmate.user.view.Authentication
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import com.slatmate.user.Home.Dashboard.ActivityDashboard
 import com.slatmate.user.R
 import com.slatmate.user.databinding.FragmentOTPEnterBinding
 
@@ -43,6 +45,9 @@ class FragmentOTPEnter : Fragment() {
 
         binding.btnProcess.setOnClickListener {
 
+             val intent = Intent(context, ActivityDashboard::class.java)
+           startActivity(intent)
+
         }
     }
 
@@ -51,6 +56,10 @@ class FragmentOTPEnter : Fragment() {
         binding.toolbar.toolBarCenterText.text =  getString(R.string.forget_post)
         binding.toolbar.toolBarCenterText.visibility = View.VISIBLE
         binding.toolbar.backButtonRightText.visibility = View.GONE
+
+        binding.toolbar.back.setOnClickListener {
+            activity?.onBackPressed()
+        }
     }
 
 }

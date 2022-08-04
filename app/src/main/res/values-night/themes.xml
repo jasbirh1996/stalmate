@@ -1,37 +1,64 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
     <style name="AppTheme" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
 =======
+>>>>>>> b268c399ddb51b870c0fa1b421ac20ae7a46cd7b
     <style name="Theme.Slatmate" parent="Theme.AppCompat.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/white</item>
         <item name="colorPrimaryVariant">@color/white</item>
-        <item name="colorOnPrimary">@color/black</item>
+        <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_200</item>
-        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorSecondary">@color/app_color</item>
+        <item name="colorSecondaryVariant">@color/app_color</item>
+        <item name="colorOnSecondary">@color/white</item>
         <item name="android:windowDisablePreview">true</item>
         <item name="android:windowBackground">@null</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+<<<<<<< HEAD
+=======
+    <style name="AppTheme" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your dark theme here. -->
+        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+>>>>>>> 0a30f169d0321edb26a361012a65d308079cb44d
+=======
 >>>>>>> 46476d8315739b25825df6c83796b61dbe5162e8
+>>>>>>> b268c399ddb51b870c0fa1b421ac20ae7a46cd7b
     </style>
 
 
+<!--
 
-    <!--EditText-->
-    <!-- Base application theme. -->
+    &lt;!&ndash;EditText&ndash;&gt;
+    &lt;!&ndash; Base application theme. &ndash;&gt;
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+        &lt;!&ndash; Customize your theme here. &ndash;&gt;
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryDark">@color/teal_200</item>
         <item name="colorAccent">@color/teal_200</item>
     </style>
+-->
+
+
+    <style name="roundedimageView" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">7dp</item>
+        <item name="color">@color/black</item>
+    </style>
+
+    <style name="roundedimageView1" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">20dp</item>
+        <item name="color">@color/black</item>
+    </style>
+
 
 </resources>

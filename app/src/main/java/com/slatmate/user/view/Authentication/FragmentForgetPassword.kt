@@ -43,12 +43,8 @@ class FragmentForgetPassword : Fragment() {
         }
 
         binding.btnProcessOtp.setOnClickListener {
-            findNavController().navigate(R.id.fragmentOTPEnter)
+            findNavController().navigate(R.id.fragmentPasswordReset)
         }
-
-
-
-
     }
 
     private fun toolbarSetUp() {
@@ -56,6 +52,10 @@ class FragmentForgetPassword : Fragment() {
         binding.toolbar.toolBarCenterText.text =  getString(R.string.forget_post)
         binding.toolbar.toolBarCenterText.visibility = View.VISIBLE
         binding.toolbar.backButtonRightText.visibility = View.GONE
+
+        binding.toolbar.back.setOnClickListener {
+            activity?.onBackPressed()
+        }
     }
 
 

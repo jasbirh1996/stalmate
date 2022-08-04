@@ -470,6 +470,9 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
     <
     <
     <
@@ -479,6 +482,7 @@
     < HEAD
 
     =======
+>>>>>>> b268c399ddb51b870c0fa1b421ac20ae7a46cd7b
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
@@ -529,14 +533,28 @@
     <string name="third_screen_description">Find Lorem ipsum dolor sit amet, consectetur adipiscing elit.</string>
     <string name="four_screen_title">Experience New World</string>
     <string name="four_screen_description">Find Lorem ipsum dolor sit amet, consectetur adipiscing elit.</string>
+<<<<<<< HEAD
+    <string name="videos">Videos</string>
+    <string name="live_videos">Live Vides</string>
+    <string name="your_video">Your Videos</string>
+    <string name="folllowing">Following</string>
+    <string name="saved">Saved</string>
+=======
     <string name="followers">Followers</string>
     <string name="edit_profile">Edit Profile</string>
     <string name="edit_profile">Edit Profile</string>
+>>>>>>> b268c399ddb51b870c0fa1b421ac20ae7a46cd7b
 
 
     <string-array name="date">
         <item>01</item>
         <item>02</item>
     </string-array>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 0a30f169d0321edb26a361012a65d308079cb44d
+=======
     >>>>>>> 46476d8315739b25825df6c83796b61dbe5162e8
+>>>>>>> b268c399ddb51b870c0fa1b421ac20ae7a46cd7b
 </resources>

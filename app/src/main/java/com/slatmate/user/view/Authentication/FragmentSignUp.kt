@@ -69,6 +69,10 @@ class FragmentSignUp : Fragment() {
         binding.toolbar.toolBarCenterText.visibility = View.VISIBLE
         binding.toolbar.backButtonRightText.visibility = View.GONE
         binding.toolbar.menuChat.visibility = View.VISIBLE
+
+        binding.toolbar.back.setOnClickListener {
+            activity?.onBackPressed()
+        }
     }
 
 }

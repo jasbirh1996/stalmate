@@ -45,4 +45,9 @@
     <string name="third_screen_description">Find Lorem ipsum dolor sit amet, consectetur adipiscing elit.</string>
     <string name="four_screen_title">Experience New World</string>
     <string name="four_screen_description">Find Lorem ipsum dolor sit amet, consectetur adipiscing elit.</string>
+    <string name="videos">Videos</string>
+    <string name="live_videos">Live Vides</string>
+    <string name="your_video">Your Videos</string>
+    <string name="folllowing">Following</string>
+    <string name="saved">Saved</string>
 </resources>

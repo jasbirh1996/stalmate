@@ -1,11 +1,11 @@
 package com.slatmate.user.view.Authentication
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import com.slatmate.user.R
 import com.slatmate.user.databinding.FragmentPasswordResetBinding
 
@@ -39,7 +39,13 @@ class FragmentPasswordReset : Fragment() {
         binding.toolbar.toolBarCenterText.text =  getString(R.string.reset_password)
         binding.toolbar.toolBarCenterText.visibility = View.VISIBLE
         binding.toolbar.backButtonRightText.visibility = View.GONE
+
+        binding.toolbar.back.setOnClickListener {
+            activity?.onBackPressed()
+        }
     }
+
+
 
 
 }
