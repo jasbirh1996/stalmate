@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
+<<<<<<< HEAD
     <color name="black_text_splash">#141414</color>
     <color name="white">#FFFFFF</color>
 
@@ -22,4 +18,64 @@
 
 
 
+=======
+    <color name="white">#FFFFFFFF</color>
+
+
+
+    <color name="colorGray">#9E9E9E</color>
+    <color name="colorLightGray">#E3E2E2</color>
+    <color name="background">#dddddd</color>
+    <color name="colorOrange">#FF5722</color>
+    <color name="colorPink">#F65864</color>
+    <color name="colorGreen">#56DA52</color>
+    <color name="colorLightOrange">#FF5722</color>
+
+
+    <color name="colorRed">#EC2568</color>
+    <color name="colorBlue">#14B5FF</color>
+    <color name="colorYellow">#D1BC03</color>
+    <color name="colorVeryLightOrange">#FBD7CB</color>
+    <color name="colorVeryLightPink">#FAC4D6</color>
+    <color name="colorVeryLightGreen">#B1EFAF</color>
+
+    <color name="colorVeryLightRed">#FACADA</color>
+    <color name="colorVeryLightBlue">#ADECFF</color>
+    <color name="colorVeryLightYellow">#F8F6E8</color>
+    <color name="colorWindowbackground">#F4F4F4</color>
+
+
+
+    <color name="colorGolden">#D3BE57</color>
+
+
+    //////////////////////
+
+    /////photo Editing /////
+    <color name="semi_black_transparent">#99000000</color>
+    <color name="blue_color_picker">#0066FF</color>
+    <color name="brown_color_picker">#AF593E</color>
+    <color name="green_color_picker">#01A368</color>
+    <color name="orange_color_picker">#FF861F</color>
+    <color name="red_color_picker">#ED0A3F</color>
+    <color name="red_orange_color_picker">#FF3F34</color>
+    <color name="sky_blue_color_picker">#76D7EA</color>
+    <color name="violet_color_picker">#8359A3</color>
+    <color name="yellow_color_picker">#FBE870</color>
+    <color name="yellow_green_color_picker">#C5E17A</color>
+    <color name="tool_bg">#151414</color>
+    /////////////////////////////
+
+
+    <color name="progress_primary">@color/white</color>
+    <color name="progress_secondary">#9E9E9E</color>
+    <color name="progress_max_active">@color/white</color>
+
+
+
+
+    <color name="black_trasp">#99000000</color>
+
+    ////////////////////////////////////////////////
+>>>>>>> 0a30f169d0321edb26a361012a65d308079cb44d
 </resources>

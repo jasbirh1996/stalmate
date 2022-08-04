@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".reels.activity.ActivityVideoRecorder">
+
+
+    <com.otaliastudios.cameraview.CameraView
+        android:id="@+id/cameraView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:cameraAudio="on"
+        app:cameraAudioCodec="aac"
+        app:cameraEngine="camera1"
+        app:cameraFacing="front"
+        app:cameraPreviewFrameRate="60"
+        app:cameraPreviewFrameRateExact="true"
+        app:cameraMode="video"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layoutCameraControllers"
+        android:layout_width="match_parent"
+        android:padding="20dp"
+        android:layout_height="match_parent">
+
+        <pt.tornelas.segmentedprogressbar.SegmentedProgressBar
+            android:id="@+id/segmented_progressbar"
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:layout_margin="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:segmentBackgroundColor="@color/design_default_color_error"
+            app:segmentCornerRadius="2dp"
+            app:segmentMargins="@dimen/default_segment_margin"
+            app:segmentSelectedBackgroundColor="@color/black"
+            app:segmentSelectedStrokeColor="@android:color/black"
+            app:segmentStrokeColor="@android:color/black"
+            app:segmentStrokeWidth="0dp"
+            app:timePerSegment="2000"
+            app:totalSegments="10" />
+
+        <ImageView
+            android:id="@+id/buttonColorFilterIcon"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:padding="10dp"
+            android:src="@drawable/stars"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonMusic" />
+
+
+        <ImageView
+            android:id="@+id/buttonMusic"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:padding="10dp"
+            android:src="@drawable/musical_notes"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/segmented_progressbar" />
+
+        <ImageView
+            android:id="@+id/buttonSpeed"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:padding="10dp"
+            android:src="@drawable/speedometer"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonColorFilterIcon" />
+
+        <ImageView
+            android:id="@+id/buttonFlash"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:padding="10dp"
+            android:src="@drawable/electricity"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonSpeed" />
+
+        <ImageView
+            android:id="@+id/buttonCameraChanger"
+            android:layout_width="50dp"
+            android:padding="10dp"
+            android:layout_height="50dp"
+            android:src="@drawable/refresh_buttons"
+            app:layout_constraintBottom_toBottomOf="@+id/buttonRecord"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/buttonRecord" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/buttonRecord"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="20dp"
+            android:src="@drawable/color_filter_icon"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/segmented_progressbar"
+            app:layout_constraintVertical_bias="1.0">
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/recordAnimationView"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/recording" />
+
+            <ImageView
+                android:id="@+id/stopIConView"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/record"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <TextView
+            android:id="@+id/buttonDone"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/small_done_button"
+            android:elevation="10dp"
+            android:gravity="center"
+            android:padding="10dp"
+            android:src="@drawable/color_filter_icon"
+            android:text="Next"
+            android:textSize="12sp"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toTopOf="@+id/speeds"
+            app:layout_constraintEnd_toEndOf="@+id/buttonColorFilterIcon" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvFilters"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:clipToPadding="false"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            android:visibility="gone"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toTopOf="@+id/buttonRecord"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:visibility="visible" />
+
+
+        <info.hoang8f.android.segmented.SegmentedGroup
+            android:id="@+id/speeds"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginBottom="20dp"
+
+            android:orientation="horizontal"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/rvFilters"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:sc_border_width="2dp"
+            app:sc_checked_text_color="@android:color/black"
+            app:sc_corner_radius="10dp"
+            app:sc_tint_color="@color/radio_button_selected_color"
+            tools:visibility="gone">
+
+            <RadioButton
+                android:id="@+id/speed05x"
+                style="@style/RadioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="-2x"
+                tools:ignore="HardcodedText" />
+
+            <RadioButton
+                android:id="@+id/speed075x"
+                style="@style/RadioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="-1.5x"
+                tools:ignore="HardcodedText" />
+
+            <RadioButton
+                android:id="@+id/speed1x"
+                style="@style/RadioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1x"
+                tools:ignore="HardcodedText" />
+
+            <RadioButton
+                android:id="@+id/speed15x"
+                style="@style/RadioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1.5x"
+                tools:ignore="HardcodedText" />
+
+            <RadioButton
+                android:id="@+id/speed2x"
+                style="@style/RadioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2x"
+                tools:ignore="HardcodedText" />
+
+        </info.hoang8f.android.segmented.SegmentedGroup>
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

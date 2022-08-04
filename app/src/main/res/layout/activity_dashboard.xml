@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<<<<<<< HEAD
 
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -53,3 +54,13 @@
 
 
 </layout>
+=======
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.activity.ActivityDashboard">
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+>>>>>>> 0a30f169d0321edb26a361012a65d308079cb44d

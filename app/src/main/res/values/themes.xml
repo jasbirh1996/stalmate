@@ -1,5 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
+<<<<<<< HEAD
     <style name="Theme.Slatmate" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/white</item>
@@ -14,13 +15,21 @@
         <!-- Customize your theme here. -->
 <!--        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>-->
 
+=======
+    <style name="Base.AppTheme" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+>>>>>>> 0a30f169d0321edb26a361012a65d308079cb44d
     </style>
 
-    <style name="Theme.Slatmate.NoActionBar">
+    <style name="AppTheme" parent="Base.AppTheme" />
+
+    <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
+<<<<<<< HEAD
     <style name="Theme.Slatmate.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.Slatmate.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
@@ -42,4 +51,6 @@
     </style>
 
 
+=======
+>>>>>>> 0a30f169d0321edb26a361012a65d308079cb44d
 </resources>
