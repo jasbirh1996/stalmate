@@ -24,7 +24,8 @@ abstract class BaseActivity : AppCompatActivity(), View.OnClickListener,
 
 
     val networkViewModel: AppViewModel by lazy {
-        ViewModelProvider(this).get(AppViewModel::class.java)
+        ViewModelProvider(this)[AppViewModel::class.java]
+
     }
 
 
@@ -39,6 +40,7 @@ abstract class BaseActivity : AppCompatActivity(), View.OnClickListener,
         super.onCreate(savedInstanceState)
         progressDialog = ProgressDialog(this)
         context = this
+
     }
 
     fun makeToast(message: String?) {

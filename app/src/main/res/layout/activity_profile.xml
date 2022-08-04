@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
-  <androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto"
-      xmlns:tools="http://schemas.android.com/tools"
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+  <androidx.constraintlayout.motion.widget.MotionLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:background="#DCDCDC"
+      android:background="@color/white"
       app:layoutDescription="@xml/profile_header_scene">
 
     <ImageView
         android:id="@+id/iv_background"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="200dp"
         android:scaleType="centerCrop"
         app:srcCompat="@drawable/image" />
 
@@ -20,22 +21,27 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:adjustViewBounds="true"
+        android:padding="10dp"
         android:src="@drawable/ic_back"
+        android:tint="@color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
+
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/iv_user_thumb"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:src="@drawable/image"
+        app:civ_border_color="#FF000000"
+        app:civ_border_width="2dp"
         app:layout_constraintBottom_toBottomOf="@+id/iv_background"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/iv_background"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/iv_background" />
+
 
     <ImageView
         android:id="@+id/iv_search"
@@ -43,7 +49,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:adjustViewBounds="true"
-        android:src="@drawable/image"
+        android:src="@drawable/search"
         app:layout_constraintBottom_toBottomOf="@+id/iv_back"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/iv_back" />
@@ -52,12 +58,10 @@
         android:id="@+id/layout"
         layout="@layout/content_scroll_profile"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/iv_user_thumb" />
-
 
 
   </androidx.constraintlayout.motion.widget.MotionLayout>

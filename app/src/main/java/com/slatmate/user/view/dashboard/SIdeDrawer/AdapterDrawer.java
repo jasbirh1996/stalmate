@@ -1,4 +1,4 @@
-package com.slatmate.user.view.Dashboard.SIdeDrawer;
+package com.slatmate.user.view.dashboard.SIdeDrawer;
 
 import android.content.Context;
 import android.view.LayoutInflater;

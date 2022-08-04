@@ -1,8 +1,11 @@
 package com.slatmate.user.networking
 
 import android.content.Context
+import com.slatmate.user.model.ModelCategory
 import com.slatmate.user.model.ModelFeed
+import com.slatmate.user.model.ModelLanguage
 import com.slatmate.user.model.ModelSuccess
+import com.slatmate.user.utilities.Constants
 
 
 import okhttp3.MultipartBody
@@ -14,6 +17,17 @@ interface ApiInterface {
 
     @POST("signup")
     fun setSignupDetails(@Body map: String, map1: HashMap<String, String>): Call<ModelFeed>
+
+    @GET(Constants.url_category_list)
+    fun getCategorList(): Call<ModelCategory>
+
+    @GET(Constants.url_language_list)
+    fun getLanguageList(): Call<ModelLanguage>
+
+
+    @GET(Constants.url_language_list)
+    fun getFeedList(): Call<ModelFeed>
+
 
 
 /*

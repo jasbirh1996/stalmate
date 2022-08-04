@@ -27,6 +27,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = '1.8'
     }
@@ -107,4 +108,8 @@ dependencies {
     implementation "com.airbnb.android:lottie:5.0.3"
     implementation 'com.writingminds:FFmpegAndroid:0.3.2'
     implementation 'com.tbuonomo:dotsindicator:4.2'
+
+
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+
 }

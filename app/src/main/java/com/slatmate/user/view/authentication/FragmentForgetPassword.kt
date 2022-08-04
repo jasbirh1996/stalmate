@@ -1,4 +1,4 @@
-package com.slatmate.user.view.Authentication
+package com.slatmate.user.view.authentication
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

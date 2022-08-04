@@ -1,4 +1,4 @@
-package com.slatmate.user.view.Dashboard.Chat
+package com.slatmate.user.view.dashboard.Chat
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

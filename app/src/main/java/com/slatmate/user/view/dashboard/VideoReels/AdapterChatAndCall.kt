@@ -1,11 +1,12 @@
-package com.slatmate.user.view.Dashboard.Chat
+package com.slatmate.user.view.dashboard.VideoReels
 
 import android.content.Context
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import com.slatmate.user.view.Dashboard.Chat.CallFragment.FragmentCall
-import com.slatmate.user.view.Dashboard.Chat.ChatFragment.FragmentChat
+import com.slatmate.user.view.dashboard.Chat.CallFragment.FragmentCall
+import com.slatmate.user.view.dashboard.Chat.ChatFragment.FragmentChat
+
 
 class AdapterChatAndCall(myContext: Context, fm: FragmentManager, internal var totalTabs: Int) : FragmentPagerAdapter(fm) {
 

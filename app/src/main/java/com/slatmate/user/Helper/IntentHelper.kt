@@ -2,7 +2,7 @@ package com.slatmate.user.Helper
 
 import android.content.Context
 import android.content.Intent
-import com.slatmate.user.view.Authentication.FragmentOTPEnter
+import com.slatmate.user.view.authentication.FragmentOTPEnter
 
 public class IntentHelper {
 

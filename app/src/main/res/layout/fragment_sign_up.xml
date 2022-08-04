@@ -7,7 +7,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.Authentication.FragmentSignUp">
+    tools:context=".view.authentication.FragmentSignUp">
 
 
     <include layout="@layout/common_toolbar"

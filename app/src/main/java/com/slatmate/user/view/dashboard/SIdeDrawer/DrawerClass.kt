@@ -1,4 +1,4 @@
-package com.slatmate.user.view.Dashboard.SIdeDrawer
+package com.slatmate.user.view.dashboard.SIdeDrawer
 
 import android.os.Bundle
 import android.view.View

@@ -1,13 +1,13 @@
-package com.slatmate.user.view.Dashboard
+package com.slatmate.user.view.dashboard
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import com.slatmate.user.view.Dashboard.Chat.ChatCallTabFragment
-import com.slatmate.user.view.Dashboard.Friend.FragmentFriendList
-import com.slatmate.user.view.Dashboard.HomeFragment.FragmentHome
-import com.slatmate.user.view.Dashboard.VideoReels.FragmentReels
-import com.slatmate.user.view.Dashboard.funtime.FragmentFunTime
+import com.slatmate.user.view.dashboard.Chat.ChatCallTabFragment
+import com.slatmate.user.view.dashboard.Friend.FragmentFriendList
+import com.slatmate.user.view.dashboard.HomeFragment.FragmentHome
+import com.slatmate.user.view.dashboard.VideoReels.FragmentReels
+import com.slatmate.user.view.dashboard.funtime.FragmentFunTime
 import com.slatmate.user.R
 import com.slatmate.user.databinding.ActivityDashboardBinding
 

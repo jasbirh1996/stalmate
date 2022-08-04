@@ -1,6 +1,5 @@
-package com.slatmate.user.view.Authentication
+package com.slatmate.user.view.authentication
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
-import com.slatmate.user.view.Dashboard.ActivityDashboard
 import com.slatmate.user.R
 import com.slatmate.user.databinding.FragmentLoginBinding
 

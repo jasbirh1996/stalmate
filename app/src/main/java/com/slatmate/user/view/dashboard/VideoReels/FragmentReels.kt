@@ -1,4 +1,4 @@
-package com.slatmate.user.view.Dashboard.VideoReels
+package com.slatmate.user.view.dashboard.VideoReels
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
-import com.slatmate.user.Home.Dashboard.Chat.AdapterChatAndCall
+
 import com.slatmate.user.R
 import com.slatmate.user.databinding.FragmentReelsBinding
 

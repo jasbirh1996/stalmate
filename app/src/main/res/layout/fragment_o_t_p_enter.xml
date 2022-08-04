@@ -8,13 +8,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-<<<<<<< HEAD
         tools:context=".LoginPage.Otp.FragmentOTPEnter">
-=======
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        tools:context=".view.Authentication.FragmentOTPEnter">
->>>>>>> b268c399ddb51b870c0fa1b421ac20ae7a46cd7b
-
 
 
         <include

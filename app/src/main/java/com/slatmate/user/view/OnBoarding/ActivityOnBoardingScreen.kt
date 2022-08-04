@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.viewpager.widget.ViewPager
-import com.slatmate.user.view.Authentication.ActivityAuthentication
+import com.slatmate.user.view.authentication.ActivityAuthentication
 import com.slatmate.user.R
 import com.slatmate.user.databinding.ActivityOnBoardingScreenBinding
 

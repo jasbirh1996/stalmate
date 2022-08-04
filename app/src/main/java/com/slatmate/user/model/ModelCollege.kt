@@ -11,8 +11,6 @@ data class College(
     val created_at: String,
     val description: String,
     val id: String,
-    val feedimages: List<FeedImage>,
-    val feedvideos: List<FeedVideo>,
     val is_deleted: String,
     var already_follow: String,
     val status: String,

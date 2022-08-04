@@ -1,4 +1,4 @@
-package com.slatmate.user.view.Authentication
+package com.slatmate.user.view.authentication
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

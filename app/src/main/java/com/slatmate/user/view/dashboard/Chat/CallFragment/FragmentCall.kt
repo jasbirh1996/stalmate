@@ -1,4 +1,4 @@
-package com.slatmate.user.view.Dashboard.funtime
+package com.slatmate.user.view.dashboard.Chat.CallFragment
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.slatmate.user.R
 
-class FragmentFunTime : Fragment() {
+class FragmentCall : Fragment() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,6 +20,7 @@ class FragmentFunTime : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_fun_time, container, false)
+        return inflater.inflate(R.layout.fragment_call, container, false)
     }
+
 }
