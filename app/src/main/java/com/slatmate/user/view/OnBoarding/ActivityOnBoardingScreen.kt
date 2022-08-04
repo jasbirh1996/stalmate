@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.viewpager.widget.ViewPager
-import com.slatmate.user.view.Authentication.ActivityParentLoginSignUp
+import com.slatmate.user.view.Authentication.ActivityAuthentication
 import com.slatmate.user.R
 import com.slatmate.user.databinding.ActivityOnBoardingScreenBinding
 
@@ -39,7 +39,7 @@ class ActivityOnBoardingScreen : AppCompatActivity(), View.OnClickListener {
 
 
         binding.skip.setOnClickListener {
-            startActivity(Intent(applicationContext, ActivityParentLoginSignUp::class.java))
+            startActivity(Intent(applicationContext, ActivityAuthentication::class.java))
             finish()
         }
 
@@ -49,7 +49,7 @@ class ActivityOnBoardingScreen : AppCompatActivity(), View.OnClickListener {
             if (current < onBoardingData.size) {
                 binding.viewpager.currentItem = current
             } else {
-                startActivity(Intent(applicationContext, ActivityParentLoginSignUp::class.java))
+                startActivity(Intent(applicationContext, ActivityAuthentication::class.java))
                 finish()
             }
 

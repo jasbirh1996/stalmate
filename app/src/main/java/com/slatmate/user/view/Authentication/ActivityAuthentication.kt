@@ -6,16 +6,16 @@ import androidx.databinding.DataBindingUtil
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import com.slatmate.user.R
-import com.slatmate.user.databinding.ActivityParentLoginSignUpBinding
+import com.slatmate.user.databinding.ActivityActivitytestBinding
 
-class ActivityParentLoginSignUp : AppCompatActivity() {
+class ActivityAuthentication : AppCompatActivity() {
 
     lateinit var navController: NavController
-    lateinit var binding: ActivityParentLoginSignUpBinding
+    lateinit var binding: ActivityActivitytestBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding= DataBindingUtil.setContentView(this, R.layout.activity_parent_login_sign_up)!!
+        binding= DataBindingUtil.setContentView(this, R.layout.activity_authentication)!!
         setUpNavigation()
     }
 
