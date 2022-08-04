@@ -275,7 +275,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/story_view"
-                tools:listitem="@layout/item_home_user_post" />
+                tools:listitem="@layout/item_feed" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

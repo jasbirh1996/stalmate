@@ -16,6 +16,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import com.slatmate.user.base.callbacks.BaseCallBacks
+import com.slatmate.user.viewmodel.AppViewModel
 
 abstract class BaseActivity : AppCompatActivity(), View.OnClickListener,
     BaseCallBacks {

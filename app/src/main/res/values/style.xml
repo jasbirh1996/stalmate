@@ -20,10 +20,26 @@
     </style>
 
 
+<<<<<<< HEAD
     <style name="checkbox" parent="Base.Theme.AppCompat">
         <item name="colorAccent">@color/app_color</item> <!-- for uncheck state -->
         <item name="android:textColorSecondary">@color/grey_dark</item><!-- for check state -->
     </style>
+=======
+
+
+
+
+
+
+
+
+
+
+
+
+
+>>>>>>> b268c399ddb51b870c0fa1b421ac20ae7a46cd7b
 
 
 

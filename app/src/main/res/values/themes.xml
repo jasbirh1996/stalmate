@@ -1,7 +1,15 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
 <<<<<<< HEAD
+<<<<<<< HEAD
     <style name="Theme.Slatmate" parent="Theme.AppCompat.Light.DarkActionBar">
+=======
+    <style name="Base.AppTheme" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+=======
+    <style name="Theme.Slatmate" parent="Theme.AppCompat.DayNight.DarkActionBar">
+>>>>>>> b268c399ddb51b870c0fa1b421ac20ae7a46cd7b
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/white</item>
         <item name="colorPrimaryVariant">@color/white</item>
@@ -15,11 +23,15 @@
         <!-- Customize your theme here. -->
 <!--        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>-->
 
+<<<<<<< HEAD
 =======
     <style name="Base.AppTheme" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
 >>>>>>> 0a30f169d0321edb26a361012a65d308079cb44d
+=======
+>>>>>>> 46476d8315739b25825df6c83796b61dbe5162e8
+>>>>>>> b268c399ddb51b870c0fa1b421ac20ae7a46cd7b
     </style>
 
     <style name="AppTheme" parent="Base.AppTheme" />
@@ -30,6 +42,10 @@
     </style>
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> b268c399ddb51b870c0fa1b421ac20ae7a46cd7b
     <style name="Theme.Slatmate.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.Slatmate.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
@@ -51,6 +67,10 @@
     </style>
 
 
+<<<<<<< HEAD
 =======
 >>>>>>> 0a30f169d0321edb26a361012a65d308079cb44d
+=======
+>>>>>>> 46476d8315739b25825df6c83796b61dbe5162e8
+>>>>>>> b268c399ddb51b870c0fa1b421ac20ae7a46cd7b
 </resources>

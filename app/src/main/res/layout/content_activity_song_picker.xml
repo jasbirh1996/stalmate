@@ -11,11 +11,19 @@
 
 
     <fragment
+<<<<<<< HEAD
 <<<<<<< HEAD:app/src/main/res/layout/activity_parent_login_sign_up.xml
         android:id="@+id/nav_host_fragment"
 =======
         android:id="@+id/nav_host_fragment_content_activity_song_picker"
 >>>>>>> 0a30f169d0321edb26a361012a65d308079cb44d:app/src/main/res/layout/content_activity_song_picker.xml
+=======
+<<<<<<< HEAD:app/src/main/res/layout/content_activity_song_picker.xml
+        android:id="@+id/nav_host_fragment_content_activity_song_picker"
+=======
+        android:id="@+id/nav_host_fragment"
+>>>>>>> 46476d8315739b25825df6c83796b61dbe5162e8:app/src/main/res/layout/activity_parent_login_sign_up.xml
+>>>>>>> b268c399ddb51b870c0fa1b421ac20ae7a46cd7b
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -24,7 +32,14 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+<<<<<<< HEAD
 <<<<<<< HEAD:app/src/main/res/layout/activity_parent_login_sign_up.xml
+=======
+<<<<<<< HEAD:app/src/main/res/layout/content_activity_song_picker.xml
+      />
+</androidx.constraintlayout.widget.ConstraintLayout>
+=======
+>>>>>>> b268c399ddb51b870c0fa1b421ac20ae7a46cd7b
         app:navGraph="@navigation/loginsignup"
         tools:layout="@layout/fragment_login"
         app:popUpToInclusive="false" />
@@ -33,7 +48,11 @@
 
 
 </layout>
+<<<<<<< HEAD
 =======
       />
 </androidx.constraintlayout.widget.ConstraintLayout>
 >>>>>>> 0a30f169d0321edb26a361012a65d308079cb44d:app/src/main/res/layout/content_activity_song_picker.xml
+=======
+>>>>>>> 46476d8315739b25825df6c83796b61dbe5162e8:app/src/main/res/layout/activity_parent_login_sign_up.xml
+>>>>>>> b268c399ddb51b870c0fa1b421ac20ae7a46cd7b

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/ic_splash_bg"
-    tools:context=".Splash.ActivitySplash">
+    tools:context=".view.Splash.ActivitySplash">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:layout_width="wrap_content"

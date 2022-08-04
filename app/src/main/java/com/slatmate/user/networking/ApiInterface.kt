@@ -1,6 +1,7 @@
 package com.slatmate.user.networking
 
 import android.content.Context
+import com.slatmate.user.model.ModelFeed
 import com.slatmate.user.model.ModelSuccess
 
 
@@ -12,7 +13,7 @@ import retrofit2.http.*
 interface ApiInterface {
 
     @POST("signup")
-    fun setSignupDetails(@Body map: String, map1: HashMap<String, String>): Call<ModelSuccess>
+    fun setSignupDetails(@Body map: String, map1: HashMap<String, String>): Call<ModelFeed>
 
 
 /*

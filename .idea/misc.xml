@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
 <<<<<<< HEAD
+<<<<<<< HEAD
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/drawable/blur_background.xml" value="0.111" />
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/drawable/check_box_drawable.xml" value="0.111" />
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/drawable/circle_blue_background.xml" value="0.1" />
@@ -67,15 +68,32 @@
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/layout_splash.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/menu/bottom_navigation_menu.xml" value="0.20416666666666666" />
 =======
+=======
+        <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/drawable/primary_button_background.xml" value="0.1825" />
+>>>>>>> b268c399ddb51b870c0fa1b421ac20ae7a46cd7b
         <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/activity_activitytest.xml" value="0.290625" />
         <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/activity_dashboard.xml" value="0.290625" />
         <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/activity_main.xml" value="0.290625" />
+        <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/activity_profile.xml" value="0.275" />
         <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/activity_song_picker.xml" value="0.7219647822057461" />
+        <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/common_toolbar.xml" value="0.3625" />
         <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/content_activity_song_picker.xml" value="0.290625" />
         <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/content_main.xml" value="0.290625" />
+        <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/content_scroll_profile.xml" value="0.3614583333333333" />
         <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/fragment_first.xml" value="0.290625" />
+        <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/fragment_o_t_p_enter.xml" value="0.26875" />
         <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/fragment_second.xml" value="0.290625" />
+<<<<<<< HEAD
 >>>>>>> 0a30f169d0321edb26a361012a65d308079cb44d
+=======
+        <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/home_page_toolbar.xml" value="0.3625" />
+        <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/home_post_tool_bar.xml" value="0.3625" />
+        <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/item_feed.xml" value="0.67" />
+        <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/item_home_user_post.xml" value="0.3625" />
+        <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/layout_profile_data_lines.xml" value="0.25" />
+        <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/layout_profile_header.xml" value="0.2965811965811966" />
+        <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/xml/profile_header_scene.xml" value="0.271875" />
+>>>>>>> b268c399ddb51b870c0fa1b421ac20ae7a46cd7b
       </map>
     </option>
   </component>
