@@ -42,11 +42,11 @@ class FragmentLogin : Fragment() {
        }
 
         binding.btnLogin.setOnClickListener {
-            /*findNavController().navigate(R.id.fragmentOTPEnter)*/
-
-            val intent = Intent(context, ActivityDashboard::class.java)
-            startActivity(intent)
+            findNavController().navigate(R.id.fragmentOTPEnter)
+           /* val intent = Intent(context, ActivityDashboard::class.java)
+            startActivity(intent)*/
         }
+
 
         binding.createAccount.setOnClickListener {
             findNavController().navigate(R.id.fragmentSignUp)

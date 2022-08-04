@@ -60,6 +60,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etEmail"
                 android:textSize="14sp"
+
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
@@ -80,7 +81,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etPassword"
                 android:textSize="14sp"
-                android:drawableEnd="@drawable/ic_eye_close"
+                android:inputType="textPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
@@ -107,7 +108,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="30dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="18dp"
             android:background="@drawable/comon_button_background"
             android:gravity="center"
             android:padding="14dp"
@@ -143,7 +144,7 @@
                 android:layout_marginStart="5dp"
                 android:text="@string/create_account"
                 android:textColor="@color/app_color"
-                android:textSize="14dp"
+                android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/dont_account"
                 app:layout_constraintTop_toTopOf="@+id/dont_account" />

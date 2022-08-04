@@ -19,8 +19,6 @@ class ChatCallTabFragment : Fragment() {
     var viewPager: ViewPager? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
     }
 
     override fun onCreateView(
@@ -30,8 +28,6 @@ class ChatCallTabFragment : Fragment() {
         // Inflate the layout for this fragment
         var view = inflater.inflate(R.layout.chatcalltabfragment, container, false)
         binding = DataBindingUtil.bind<ChatcalltabfragmentBinding>(view)!!
-
-
 
         /*tab and ViewPager Layout id*/
 
