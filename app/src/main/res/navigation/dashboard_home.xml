@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/dashboard_home"
+    app:startDestination="@id/fragmentHome">
+
+
+    <fragment
+        android:id="@+id/fragmentFunTime"
+        android:name="com.slatmate.user.view.Dashboard.funtime.FragmentFunTime"
+        android:label="FragmentFunTime" />
+
+
+    <fragment
+        android:id="@+id/fragmentChat"
+        android:name="com.slatmate.user.view.Dashboard.Chat.ChatCallTabFragment"
+        android:label="FragmentChat" />
+
+    <fragment
+        android:id="@+id/fragmentHome"
+        android:name="com.slatmate.user.view.Dashboard.HomeFragment.FragmentHome"
+        android:label="FragmentHome" />
+
+    <activity
+        android:id="@+id/activityDashboard"
+        android:name="com.slatmate.user.view.Dashboard.ActivityDashboard"
+        android:label="ActivityDashboard" />
+
+    <fragment
+        android:id="@+id/fragmentReels"
+        android:name="com.slatmate.user.view.Dashboard.VideoReels.FragmentReels"
+        android:label="fragment_reels"
+        tools:layout="@layout/fragment_reels" />
+
+    <fragment
+        android:id="@+id/fragmentFriendList"
+        android:name="com.slatmate.user.view.Dashboard.Friend.FragmentFriendList"
+        android:label="fragment_friend_list"
+        tools:layout="@layout/fragment_friend_list" />
+
+</navigation>

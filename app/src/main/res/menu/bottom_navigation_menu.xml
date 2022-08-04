@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+
+    <item android:id="@+id/funTime"
+        android:title="Fun"
+        android:icon="@drawable/love"/>
+
+
+    <item android:id="@+id/chat"
+        android:title="Home"
+        android:icon="@drawable/ic_back"/>
+
+    <item android:id="@+id/home"
+        android:title="Home"
+        android:icon="@drawable/like"/>
+
+    <item android:id="@+id/video"
+        android:title="Home"
+        android:icon="@drawable/love"/>
+
+
+    <item android:id="@+id/friend"
+        android:title="Home"
+        android:icon="@drawable/menu"/>
+
+</menu>

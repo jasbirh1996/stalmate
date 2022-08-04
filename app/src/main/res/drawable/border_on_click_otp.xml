@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Use for the item to be input, set the value as the default to disable it -->
+
+
+    <item android:drawable="@drawable/otp_box_border_filted" android:state_selected="true" tools:ignore="StateListReachable" />
+    <item android:drawable="@drawable/otp_box_border_filted" android:state_focused="true"/>
+
+
+</selector>
