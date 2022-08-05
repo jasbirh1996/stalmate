@@ -25,7 +25,7 @@ class ChatCallTabFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        var view = inflater.inflate(R.layout.chatcalltabfragment, container, false)
+        val view = inflater.inflate(R.layout.chatcalltabfragment, container, false)
         binding = DataBindingUtil.bind<ChatcalltabfragmentBinding>(view)!!
 
         /*tab and ViewPager Layout id*/
