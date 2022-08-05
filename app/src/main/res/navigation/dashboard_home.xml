@@ -8,34 +8,34 @@
 
     <fragment
         android:id="@+id/fragmentFunTime"
-        android:name="com.slatmate.user.view.dashboard.funtime.FragmentFunTime"
+        android:name="com.stalmate.user.view.dashboard.funtime.FragmentFunTime"
         android:label="FragmentFunTime" />
 
 
     <fragment
         android:id="@+id/fragmentChat"
-        android:name="com.slatmate.user.view.dashboard.Chat.ChatCallTabFragment"
+        android:name="com.stalmate.user.view.dashboard.Chat.ChatCallTabFragment"
         android:label="FragmentChat" />
 
     <fragment
         android:id="@+id/fragmentHome"
-        android:name="com.slatmate.user.view.dashboard.HomeFragment.FragmentHome"
+        android:name="com.stalmate.user.view.dashboard.HomeFragment.FragmentHome"
         android:label="FragmentHome" />
 
     <activity
         android:id="@+id/activityDashboard"
-        android:name="com.slatmate.user.view.dashboard.ActivityDashboard"
+        android:name="com.stalmate.user.view.dashboard.ActivityDashboard"
         android:label="ActivityDashboard" />
 
     <fragment
         android:id="@+id/fragmentReels"
-        android:name="com.slatmate.user.view.dashboard.VideoReels.FragmentReels"
+        android:name="com.stalmate.user.view.dashboard.VideoReels.FragmentReels"
         android:label="fragment_reels"
         tools:layout="@layout/fragment_reels" />
 
     <fragment
         android:id="@+id/fragmentFriendList"
-        android:name="com.slatmate.user.view.dashboard.Friend.FragmentFriendList"
+        android:name="com.stalmate.user.view.dashboard.Friend.FragmentFriendList"
         android:label="fragment_friend_list"
         tools:layout="@layout/fragment_friend_list" />
 

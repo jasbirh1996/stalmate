@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/fragmentForgetPassword"
-        android:name="com.slatmate.user.view.authentication.FragmentForgetPassword"
+        android:name="com.stalmate.user.view.authentication.FragmentForgetPassword"
         android:label="fragment_o_t_p"
         tools:layout="@layout/fragment_forget_password" >
         <action
@@ -16,7 +16,7 @@
     </fragment>
     <fragment
         android:id="@+id/fragmentOTPEnter"
-        android:name="com.slatmate.user.view.authentication.FragmentOTPEnter"
+        android:name="com.stalmate.user.view.authentication.FragmentOTPEnter"
         android:label="fragment_o_t_p_enter"
         tools:layout="@layout/fragment_o_t_p_enter" >
         <action
@@ -25,7 +25,7 @@
     </fragment>
     <fragment
         android:id="@+id/fragmentPasswordReset"
-        android:name="com.slatmate.user.view.authentication.FragmentPasswordReset"
+        android:name="com.stalmate.user.view.authentication.FragmentPasswordReset"
         android:label="fragment_password_reset"
         tools:layout="@layout/fragment_password_reset" >
         <action
@@ -37,12 +37,12 @@
     </fragment>
     <fragment
         android:id="@+id/fragmentSignUp"
-        android:name="com.slatmate.user.view.authentication.FragmentSignUp"
+        android:name="com.stalmate.user.view.authentication.FragmentSignUp"
         android:label="fragment_sign_up"
         tools:layout="@layout/fragment_sign_up" />
     <fragment
         android:id="@+id/fragmentLogin"
-        android:name="com.slatmate.user.view.authentication.FragmentLogin"
+        android:name="com.stalmate.user.view.authentication.FragmentLogin"
         android:label="FragmentLogin" >
         <action
             android:id="@+id/action_fragmentLogin_to_fragmentOTPEnter"

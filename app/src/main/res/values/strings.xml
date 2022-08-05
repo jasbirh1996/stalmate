@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Slatmate</string>
+    <string name="app_name">Stalmate</string>
     <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
@@ -529,6 +529,8 @@
 
     <string name="followers">Followers</string>
     <string name="edit_profile">Edit Profile</string>
+    <string name="friends">Friends</string>
+    <string name="search_friends">Search Friends</string>
 
 
     <string-array name="date">
