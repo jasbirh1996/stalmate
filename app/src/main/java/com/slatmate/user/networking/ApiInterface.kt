@@ -1,10 +1,7 @@
 package com.slatmate.user.networking
 
 import android.content.Context
-import com.slatmate.user.model.ModelCategory
-import com.slatmate.user.model.ModelFeed
-import com.slatmate.user.model.ModelLanguage
-import com.slatmate.user.model.ModelSuccess
+import com.slatmate.user.model.*
 import com.slatmate.user.utilities.Constants
 
 
@@ -28,6 +25,13 @@ interface ApiInterface {
     @GET(Constants.url_language_list)
     fun getFeedList(): Call<ModelFeed>
 
+
+    @POST("auth_service/auth_api/user_register")
+    fun setSignupDetails(@Body map: HashMap<String, String>): Call<ModelRegisterResponse>
+
+
+    @PATCH("auth_service/auth_api/update_password")
+    fun setOtpVerify(@Body map: HashMap<String, String>): Call<CommonModelResponse>
 
 
 /*

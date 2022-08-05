@@ -7,11 +7,12 @@ import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import com.slatmate.user.R
 import com.slatmate.user.databinding.ActivityActivitytestBinding
+import com.slatmate.user.databinding.ActivityAuthenticationBinding
 
 class ActivityAuthentication : AppCompatActivity() {
 
     lateinit var navController: NavController
-    lateinit var binding: ActivityActivitytestBinding
+    lateinit var binding: ActivityAuthenticationBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

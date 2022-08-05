@@ -3,7 +3,10 @@
     <!-- Use for the item to be input, set the value as the default to disable it -->
 
 
-    <item android:drawable="@drawable/otp_box_border_filted" android:state_selected="true" tools:ignore="StateListReachable" />
+
+
+    <item android:drawable="@drawable/otp_box_border" android:state_active="true" />
+    <item android:drawable="@drawable/otp_box_border_filted" android:state_selected="true" />
     <item android:drawable="@drawable/otp_box_border_filted" android:state_focused="true"/>
 
 
