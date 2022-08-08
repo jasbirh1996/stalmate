@@ -1,26 +1,25 @@
 package com.slatmate.user.view.authentication
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.util.Log
-import androidx.fragment.app.Fragment
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import androidx.navigation.fragment.findNavController
 import com.example.mechanicforyoubusiness.utilities.PrefManager
 import com.slatmate.user.R
-import com.slatmate.user.base.App
 import com.slatmate.user.base.BaseFragment
 import com.slatmate.user.databinding.FragmentOTPEnterBinding
+import com.slatmate.user.view.OnBoarding.ActivityOnBoardingScreen
 import com.slatmate.user.view.dashboard.ActivityDashboard
-import java.util.HashMap
+
 
 class FragmentOTPEnter : BaseFragment() {
-
+    val DURATION: Long = 2000
     private lateinit var binding: FragmentOTPEnterBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,7 +33,7 @@ class FragmentOTPEnter : BaseFragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        var view =  inflater.inflate(R.layout.fragment_o_t_p_enter, container, false)
+        var view =  inflater.inflate(com.slatmate.user.R.layout.fragment_o_t_p_enter, container, false)
         binding = DataBindingUtil.bind<FragmentOTPEnterBinding>(view)!!
         return binding.root
     }
@@ -51,9 +50,20 @@ class FragmentOTPEnter : BaseFragment() {
         binding.btnProcess.setOnClickListener {
             /*Otp Verify Api Call*/
 //            otpVerifyApiCall()
-            val intent = Intent(context, ActivityDashboard::class.java)
-            startActivity(intent)
-            requireActivity().finish()
+
+
+            val builder = AlertDialog.Builder(requireContext(), R.style.CustomAlertDialog).create()
+            val view = layoutInflater.inflate(R.layout.sign_up_success_poppu,null)
+            builder.setView(view)
+            builder.setCanceledOnTouchOutside(false)
+            builder.show()
+
+            Handler(Looper.getMainLooper()).postDelayed({
+
+                val intent = Intent(context, ActivityDashboard::class.java)
+                startActivity(intent)
+                requireActivity().finish()
+            }, DURATION)
 
         }
     }
@@ -86,7 +96,7 @@ class FragmentOTPEnter : BaseFragment() {
 
     private fun toolbarSetUp() {
         binding.toolbar.toolBarCenterText.visibility = View.VISIBLE
-        binding.toolbar.toolBarCenterText.text =  getString(R.string.forget_post)
+        binding.toolbar.toolBarCenterText.text =  getString(com.slatmate.user.R.string.forget_post)
         binding.toolbar.toolBarCenterText.visibility = View.VISIBLE
         binding.toolbar.backButtonRightText.visibility = View.GONE
 

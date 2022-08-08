@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import com.slatmate.user.R
 import com.slatmate.user.databinding.FragmentPasswordResetBinding
 
-class FragmentPasswordReset : Fragment() {
+class FragmentNewPasswordEnter : Fragment() {
 
     private lateinit var binding : FragmentPasswordResetBinding
 

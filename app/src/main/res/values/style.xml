@@ -26,7 +26,9 @@
         <item name="android:textColorSecondary">@color/grey_dark</item><!-- for check state -->
     </style>
 
-
+    <style name="CustomAlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:windowBackground">@drawable/round_small_corner_white</item>
+    </style>
 
 
 

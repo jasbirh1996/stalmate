@@ -27,7 +27,7 @@
 
     <fragment
         android:id="@+id/fragmentPasswordReset"
-        android:name="com.slatmate.user.view.authentication.FragmentPasswordReset"
+        android:name="com.slatmate.user.view.authentication.FragmentNewPasswordEnter"
         android:label="fragment_password_reset"
         tools:layout="@layout/fragment_password_reset" >
         <action
