@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/loginsignup"
-    app:startDestination="@id/fragmentLogin">
+    app:startDestination="@id/fragmentLanguage">
 
     <fragment
         android:id="@+id/fragmentForgetPassword"
@@ -14,6 +14,7 @@
             android:id="@+id/action_fragmentForgetPassword_to_fragmentOTPEnter"
             app:destination="@id/fragmentOTPEnter" />
     </fragment>
+
     <fragment
         android:id="@+id/fragmentOTPEnter"
         android:name="com.stalmate.user.view.authentication.FragmentOTPEnter"
@@ -23,6 +24,7 @@
             android:id="@+id/action_fragmentOTPEnter_to_fragmentForgetPassword"
             app:destination="@id/fragmentForgetPassword" />
     </fragment>
+
     <fragment
         android:id="@+id/fragmentPasswordReset"
         android:name="com.stalmate.user.view.authentication.FragmentPasswordReset"
@@ -35,15 +37,18 @@
             android:id="@+id/action_fragmentPasswordReset_to_fragmentOTPEnter"
             app:destination="@id/fragmentOTPEnter" />
     </fragment>
+
     <fragment
         android:id="@+id/fragmentSignUp"
         android:name="com.stalmate.user.view.authentication.FragmentSignUp"
         android:label="fragment_sign_up"
-        tools:layout="@layout/fragment_sign_up" />
+        tools:layout="@layout/fragmentsignup" />
+
     <fragment
         android:id="@+id/fragmentLogin"
         android:name="com.stalmate.user.view.authentication.FragmentLogin"
         android:label="FragmentLogin" >
+
         <action
             android:id="@+id/action_fragmentLogin_to_fragmentOTPEnter"
             app:destination="@id/fragmentOTPEnter" />
@@ -51,4 +56,13 @@
             android:id="@+id/action_fragmentLogin_to_fragmentSignUp"
             app:destination="@id/fragmentSignUp" />
     </fragment>
+    <fragment
+        android:id="@+id/fragmentLanguage"
+        android:name="com.stalmate.user.view.language.FragmentLanguage"
+        android:label="FragmentLanguage" >
+        <action
+            android:id="@+id/action_fragmentLanguage_to_fragmentLogin"
+            app:destination="@id/fragmentLogin" />
+    </fragment>
+
 </navigation>

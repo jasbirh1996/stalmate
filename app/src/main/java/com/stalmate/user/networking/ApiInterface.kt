@@ -4,6 +4,7 @@ import android.content.Context
 import com.stalmate.user.model.*
 import com.stalmate.user.utilities.Constants
 
+import com.slatmate.user.model.*
 
 import retrofit2.Call
 import retrofit2.http.*
@@ -25,6 +26,13 @@ interface ApiInterface {
     @GET(Constants.url_language_list)
     fun getFriendList(): Call<ModelFriend>
 
+
+    @POST("auth_service/auth_api/user_register")
+    fun setSignupDetails(@Body map: HashMap<String, String>): Call<ModelRegisterResponse>
+
+
+    @PATCH("auth_service/auth_api/update_password")
+    fun setOtpVerify(@Body map: HashMap<String, String>): Call<CommonModelResponse>
 
 
 /*

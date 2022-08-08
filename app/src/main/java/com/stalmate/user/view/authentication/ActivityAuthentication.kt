@@ -5,13 +5,15 @@ import android.os.Bundle
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+
 import com.stalmate.user.R
 import com.stalmate.user.databinding.ActivityActivitytestBinding
+import com.stalmate.user.databinding.ActivityAuthenticationBinding
 
 class ActivityAuthentication : AppCompatActivity() {
 
     lateinit var navController: NavController
-    lateinit var binding: ActivityActivitytestBinding
+    lateinit var binding: ActivityAuthenticationBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

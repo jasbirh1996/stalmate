@@ -8,18 +8,19 @@ android {
 
     defaultConfig {
         applicationId "com.zhpan.viewpagerindicator"
-        applicationId "com.slatmate.user"
+        applicationId "com.stalmate.user"
         minSdk 24
         targetSdk 32
         versionCode 1
         versionName "1.0"
-
+        resConfigs "en"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -111,6 +112,6 @@ dependencies {
 
 
     implementation 'de.hdodenhof:circleimageview:3.1.0'
-    implementation 'com.github.pgreze:android-reactions:1.6'
+  //  implementation 'com.github.pgreze:android-reactions:1.6'
 
 }

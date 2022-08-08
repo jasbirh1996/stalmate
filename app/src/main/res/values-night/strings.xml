@@ -50,4 +50,12 @@
     <string name="your_video">Your Videos</string>
     <string name="folllowing">Following</string>
     <string name="saved">Saved</string>
+    <string name="first_name_toast">Please Enter First Name</string>
+    <string name="last_name_toast">Please Enter Last Name</string>
+    <string name="email_error_toast">Please Enter Email</string>
+    <string name="select_gendar_error">Please Select Gender</string>
+    <string name="password_error_toast">Please Enter Password</string>
+    <string name="accept_tnc">Please Accept TnC</string>
+    <string name="process">Process</string>
+    <string name="choose_language">Choose Language</string>
 </resources>

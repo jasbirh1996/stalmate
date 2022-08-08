@@ -29,6 +29,7 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
 
         binding.layout.rvFeeds.adapter=feedAdapter
         binding.layout.rvFeeds.layoutManager=LinearLayoutManager(this)
+
         networkViewModel.getFeedList("", HashMap())
         networkViewModel.feedLiveData.observe(this, Observer {
             Log.d("asdasdasd","oaspiasddsad")

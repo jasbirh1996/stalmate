@@ -7,12 +7,21 @@ import android.view.Gravity
 import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
+
 import com.stalmate.user.base.callbacks.BaseCallBacks
+import com.stalmate.user.viewmodel.AppViewModel
 
 
-class BaseFragment : Fragment(), BaseCallBacks {
+open class BaseFragment : Fragment(), BaseCallBacks {
     private var callBacks: BaseCallBacks? = null
+
+    val networkViewModel: AppViewModel by lazy {
+        ViewModelProvider(this)[AppViewModel::class.java]
+
+    }
+
     override fun onAttach(context: Context) {
         Log.d("fjha", "ppp")
         super.onAttach(context)

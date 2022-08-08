@@ -4,9 +4,17 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+
 import com.stalmate.user.base.App
 import com.stalmate.user.model.*
 import com.stalmate.user.networking.ApiInterface
+
+
+
+import com.slatmate.user.model.CommonModelResponse
+
+import com.slatmate.user.model.ModelRegisterResponse
+
 
 import retrofit2.Call
 import retrofit2.Response
@@ -14,8 +22,6 @@ import retrofit2.Response
 open class AppViewModel : ViewModel() {
 
     var apiInterface = ApiInterface.init(App.getInstance())
-
-
 
 
     var feedLiveData: LiveData<ModelFeed?> = MutableLiveData<ModelFeed?>()
@@ -28,6 +34,7 @@ open class AppViewModel : ViewModel() {
 
 
 
+
     var friendLiveData: LiveData<ModelFriend?> = MutableLiveData<ModelFriend?>()
     fun getFriendList(token: String, map: HashMap<String, String>) {
         val temp = MutableLiveData<ModelFriend?>()
@@ -36,7 +43,7 @@ open class AppViewModel : ViewModel() {
     }
 
 
-/*
+
     var categoryLiveData: LiveData<ModelCategory?> = MutableLiveData<ModelCategory?>()
     fun getCategoryList(token: String, map: HashMap<String, String>) {
         val temp = MutableLiveData<ModelCategory?>()
@@ -44,15 +51,21 @@ open class AppViewModel : ViewModel() {
         getResult(temp, apiInterface.getCategorList())
     }
 
+    var registerData: LiveData<ModelRegisterResponse?> = MutableLiveData<ModelRegisterResponse?>()
+    fun registration(map: HashMap<String, String>) {
+        val temp = MutableLiveData<ModelRegisterResponse?>()
+        registerData = temp
+        getResult(temp, apiInterface.setSignupDetails(map))
 
-    var languageLiveData: LiveData<ModelLanguage?> = MutableLiveData<ModelLanguage?>()
-    fun getLanguageList(token: String, map: HashMap<String, String>) {
-        val temp = MutableLiveData<ModelLanguage?>()
-        languageLiveData = temp
-        getResult(temp, apiInterface.getLanguageList())
     }
 
-*/
+
+    var otpVerifyData: LiveData<CommonModelResponse?> = MutableLiveData<CommonModelResponse?>()
+    fun otpVerify(map: HashMap<String, String>) {
+        val temp = MutableLiveData<CommonModelResponse?>()
+        otpVerifyData = temp
+        getResult(temp, apiInterface.setOtpVerify(map))
+    }
 
 
 

@@ -10,10 +10,10 @@ import android.view.*
 import android.widget.ImageView
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.github.pgreze.reactions.ReactionPopup
+/*import com.github.pgreze.reactions.ReactionPopup
 import com.github.pgreze.reactions.ReactionsConfigBuilder
 import com.github.pgreze.reactions.dsl.reactionConfig
-import com.github.pgreze.reactions.dsl.reactions
+import com.github.pgreze.reactions.dsl.reactions*/
 import com.stalmate.user.R
 import com.stalmate.user.databinding.ItemFeedBinding
 import com.stalmate.user.model.Feed
@@ -52,6 +52,7 @@ class AdapterFeed(
         RecyclerView.ViewHolder(binding.root) {
         fun bind(feed: Feed) {
 
+/*
 
             val config = reactionConfig(context) {
                 reactions {
@@ -89,11 +90,13 @@ class AdapterFeed(
             }
 
 
-     /*       binding.like.setOnLongClickListener {
+     */
+/*       binding.like.setOnLongClickListener {
                 Log.d("Reactions", "Selection position")
                 popup.showAsDropDown(binding.likeIcon)
                 return@setOnLongClickListener true
-            }*/
+            }*//*
+
 
 
 
@@ -102,7 +105,7 @@ class AdapterFeed(
             binding.like.setOnTouchListener(object : View.OnTouchListener {
                @SuppressLint("ClickableViewAccessibility")
                var firsttouch=0.0;
-              var   isup=false;
+              var  isup=false;
                 var  millistotouch=400;
                 override fun onTouch(view: View?, motionEvent: MotionEvent?): Boolean {
                     if(motionEvent!!.action==MotionEvent.ACTION_DOWN){
@@ -138,6 +141,7 @@ class AdapterFeed(
                     return false
                 } });
 
+*/
 
 
 

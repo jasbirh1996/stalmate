@@ -5,8 +5,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.slatmate.user.R
-import com.slatmate.user.databinding.ItemFriendBinding
+import com.stalmate.user.R
+import com.stalmate.user.databinding.ItemFriendBinding
+
 
 import com.stalmate.user.model.Feed
 import com.stalmate.user.viewmodel.AppViewModel
