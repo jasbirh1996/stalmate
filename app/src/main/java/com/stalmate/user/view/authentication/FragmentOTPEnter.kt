@@ -1,5 +1,6 @@
 package com.stalmate.user.view.authentication
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
@@ -11,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.navigation.fragment.findNavController
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentOTPEnterBinding
@@ -63,13 +65,11 @@ class FragmentOTPEnter : BaseFragment() {
         }
     }
 
+
     private fun otpVerifyForgotApiCall() {
         val hashMap = HashMap<String, String>()
 
-        Log.d("ncksn",email)
-
-
-            hashMap["email"] = email
+        hashMap["email"] = email
 
         binding.progressBar.visibility = View.VISIBLE
         networkViewModel.otpVerify(hashMap)
@@ -77,22 +77,25 @@ class FragmentOTPEnter : BaseFragment() {
         networkViewModel.otpVerifyData.observe(requireActivity()){
 
             it?.let {
-                val message = it.message
 
                 if (it.status == true){
                     binding.progressBar.visibility = View.GONE
+                    val bundle = Bundle()
+
+                    bundle.putString("email",email)
+                    bundle.putString("otp","1234")
+                    findNavController().navigate(R.id.fragmentPasswordReset,bundle)
+
                 }
             }
-            binding.progressBar.visibility = View.GONE
+
         }
     }
 
     private fun getOtpApiCall() {
         val hashMap = HashMap<String, String>()
 
-        Log.d("ncksn",email)
-
-            hashMap["email"] = PrefManager.getInstance(requireContext())!!.userDetail.results.get(0).email.toString()
+        hashMap["email"] = PrefManager.getInstance(requireContext())!!.userDetail.results.get(0).email.toString()
 
         binding.progressBar.visibility = View.VISIBLE
         networkViewModel.otpVerify(hashMap)
@@ -100,7 +103,6 @@ class FragmentOTPEnter : BaseFragment() {
             networkViewModel.otpVerifyData.observe(requireActivity()){
 
                 it?.let {
-                    val message = it.message
 
                     if (it.status == true){
                         binding.progressBar.visibility = View.GONE
@@ -115,7 +117,6 @@ class FragmentOTPEnter : BaseFragment() {
         val hashMap = HashMap<String, String>()
 
         hashMap["email"] = PrefManager.getInstance(requireContext())!!.userDetail.results.get(0).email.toString()
-
         hashMap["otp"] = binding.pinView.text.toString()
         binding.progressBar.visibility = View.VISIBLE
         networkViewModel.otpVerify(hashMap)

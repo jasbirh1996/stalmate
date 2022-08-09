@@ -58,7 +58,7 @@ class FragmentForgetPassword : BaseFragment() {
     private fun requestOtpApi() {
         val hashMap = HashMap<String, String>()
         hashMap["email"] =binding.etEmail.text.toString()
-   showLoader()
+        showLoader()
 
         networkViewModel.otpVerify(hashMap)
         networkViewModel.otpVerifyData.observe(requireActivity()){
@@ -67,6 +67,7 @@ class FragmentForgetPassword : BaseFragment() {
                 val message = it.message
 
                 if (it.status == true){
+                    dismissLoader()
                     val bundle = Bundle()
                     bundle.putString("email", binding.etEmail.text.toString())
                     bundle.putBoolean("Boolean", true)
