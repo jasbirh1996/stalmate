@@ -13,17 +13,25 @@
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/activity_activitytest.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/activity_authentication.xml" value="0.18" />
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/activity_dashboard.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/activity_filter.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/activity_on_boarding_screen.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/activity_profile.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/common_toolbar.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/content_scroll_profile.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/fragment_bottom_custom_effect_dialog.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/fragment_forget_password.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/fragment_language.xml" value="0.20416666666666666" />
-        <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/fragment_login.xml" value="0.18" />
-        <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/fragment_o_t_p_enter.xml" value="0.22" />
+        <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/fragment_login.xml" value="0.2" />
+        <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/fragment_o_t_p.xml" value="0.1" />
+        <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/fragment_o_t_p_enter.xml" value="0.16" />
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/fragment_password_reset.xml" value="0.18" />
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/fragment_sign_up.xml" value="0.22" />
-        <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/fragmentsignup.xml" value="0.2" />
+        <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/fragmentsignup.xml" value="0.22" />
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/item_feed.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/item_fun_time.xml" value="0.2" />
+        <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/item_language_layout.xml" value="0.14" />
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/layout_profile_data_lines.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/layout_splash.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/sign_up_success_poppu.xml" value="0.16" />
         <entry key="..\:/Users/Windows 10/AppData/Local/Android/Sdk/platforms/android-32/data/res/layout/auto_complete_list.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Windows 10/AppData/Local/Android/Sdk/platforms/android-32/data/res/layout/simple_spinner_item.xml" value="0.20416666666666666" />

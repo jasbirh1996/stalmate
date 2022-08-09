@@ -7,6 +7,7 @@
 
     <color name="blue_line">#0F52BA</color>
     <color name="app_color">#0F52BA</color>
+    <color name="obboard_indicator">#418CFF</color>
     <color name="border_your_mind_color">#D9E8FF</color>
     <color name="grey_light">#F3EFEF</color>
     <color name="grey_dark">#EEECEC</color>
@@ -19,7 +20,7 @@
 //by Vaibhav
     <color name="colorPrimary">#0F52BA</color>
     <color name="colorSecondary">#9E9E9E</color>
-    <color name="colorPrimaryLight">#C6CCE3</color>
+    <color name="colorPrimaryLight">#DDE1ED</color>
     <color name="colorSecondaryLight">#9E9E9E</color>
 
 

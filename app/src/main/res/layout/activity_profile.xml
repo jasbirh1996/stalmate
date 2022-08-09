@@ -6,7 +6,6 @@
   <androidx.constraintlayout.motion.widget.MotionLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:background="@color/white"
       app:layoutDescription="@xml/profile_header_scene">
 
     <ImageView
@@ -25,9 +24,9 @@
         android:adjustViewBounds="true"
         android:padding="10dp"
         android:src="@drawable/ic_back"
-        android:tint="@color/white"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/white" />
 
 
     <de.hdodenhof.circleimageview.CircleImageView

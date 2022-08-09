@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Slatmate</string>
+    <string name="app_name">Stalmate</string>
     <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
@@ -474,7 +474,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
-    <string name="welcome_to_satalment">Welcome To <font fgcolor="#0F52BA">Satalment</font></string>
+    <string name="welcome_to_satalment">Welcome To <font fgcolor="#0F52BA">Stalment</font></string>
     <string name="enter_your_email_id">Enter Your Email Id</string>
     <string name="enter_your_password">Enter Your Password</string>
     <string name="forget_password">Forget Password?</string>
@@ -529,6 +529,10 @@
 
     <string name="followers">Followers</string>
     <string name="edit_profile">Edit Profile</string>
+
+    <string name="friends">Friends</string>
+    <string name="search_friends">Search Friends</string>
+
     <string name="first_name_toast">Please Enter First Name</string>
     <string name="last_name_toast">Please Enter Last Name</string>
     <string name="email_error_toast">Please Enter Email</string>
@@ -537,6 +541,7 @@
     <string name="accept_tnc">Please Accept TnC</string>
     <string name="process">Process</string>
     <string name="choose_language">Choose Language</string>
+    <string name="create_password">Create Password</string>
 
 
     <string-array name="date">
