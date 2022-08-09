@@ -1,16 +1,17 @@
 package com.stalmate.user.view.authentication
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import com.stalmate.user.R
+import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentForgetPasswordBinding
+import com.stalmate.user.utilities.ValidationHelper
 
-class FragmentForgetPassword : Fragment() {
+class FragmentForgetPassword : BaseFragment() {
 
     private lateinit var binding: FragmentForgetPasswordBinding
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,8 +44,45 @@ class FragmentForgetPassword : Fragment() {
         }
 
         binding.btnProcessOtp.setOnClickListener {
-            findNavController().navigate(R.id.fragmentPasswordReset)
+//            findNavController().navigate(R.id.fragmentPasswordReset)
+
+            if (isValid()){
+                requestOtpApi()
+            }
         }
+    }
+
+
+
+
+    private fun requestOtpApi() {
+        val hashMap = HashMap<String, String>()
+        hashMap["email"] =binding.etEmail.text.toString()
+   showLoader()
+
+        networkViewModel.otpVerify(hashMap)
+        networkViewModel.otpVerifyData.observe(requireActivity()){
+
+            it?.let {
+                val message = it.message
+
+                if (it.status == true){
+                    val bundle = Bundle()
+                    bundle.putString("email", binding.etEmail.text.toString())
+                    bundle.putBoolean("Boolean", true)
+                    findNavController().navigate(R.id.fragmentOTPEnter,bundle)
+
+                    makeToast(message)
+                }else{
+                    makeToast(message)
+                }
+
+            }
+
+
+        }
+
+
     }
 
     private fun toolbarSetUp() {
@@ -56,6 +94,17 @@ class FragmentForgetPassword : Fragment() {
         binding.toolbar.back.setOnClickListener {
             activity?.onBackPressed()
         }
+    }
+
+
+    fun isValid():Boolean{
+
+        if (!ValidationHelper.isValidEmail(binding.etEmail.text.toString())){
+            makeToast(getString(R.string.email_error_toast))
+            return false;
+        }
+
+        return true
     }
 
 

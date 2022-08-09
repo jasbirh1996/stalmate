@@ -32,6 +32,12 @@ open class AppViewModel : ViewModel() {
     }
 
 
+    var languageLiveData: LiveData<ModelLanguageResponse?> = MutableLiveData<ModelLanguageResponse?>()
+    fun languageLiveData(token: String, map: HashMap<String, String>) {
+        val temp = MutableLiveData<ModelLanguageResponse?>()
+        languageLiveData = temp
+        getResult(temp, apiInterface.getLanguageList())
+    }
 
 
 
@@ -60,15 +66,20 @@ open class AppViewModel : ViewModel() {
     }
 
 
+    var loginData: LiveData<ModelLoginResponse?> = MutableLiveData<ModelLoginResponse?>()
+    fun login(map: HashMap<String, String>) {
+        val temp = MutableLiveData<ModelLoginResponse?>()
+        loginData = temp
+        getResult(temp, apiInterface.setLoginDetails(map))
+    }
+
+
     var otpVerifyData: LiveData<CommonModelResponse?> = MutableLiveData<CommonModelResponse?>()
     fun otpVerify(map: HashMap<String, String>) {
         val temp = MutableLiveData<CommonModelResponse?>()
         otpVerifyData = temp
         getResult(temp, apiInterface.setOtpVerify(map))
     }
-
-
-
 
 
     fun <T : Any> getResult(data: MutableLiveData<T?>, call: Call<T>) {

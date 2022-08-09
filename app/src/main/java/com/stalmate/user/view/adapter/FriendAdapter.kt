@@ -7,8 +7,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.stalmate.user.R
 import com.stalmate.user.databinding.ItemFriendBinding
-
-
 import com.stalmate.user.model.Feed
 import com.stalmate.user.model.Friend
 import com.stalmate.user.viewmodel.AppViewModel

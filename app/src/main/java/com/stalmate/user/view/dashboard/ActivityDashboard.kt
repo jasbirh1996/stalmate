@@ -3,14 +3,17 @@ package com.stalmate.user.view.dashboard
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
+import com.stalmate.user.R
+import com.stalmate.user.databinding.ActivityDashboardBinding
+
 import com.stalmate.user.view.dashboard.Chat.ChatCallTabFragment
 import com.stalmate.user.view.dashboard.Friend.FragmentFriendList
 import com.stalmate.user.view.dashboard.HomeFragment.FragmentHome
 import com.stalmate.user.view.dashboard.VideoReels.FragmentReels
 import com.stalmate.user.view.dashboard.funtime.FragmentFunTime
-import com.stalmate.user.R
-import com.stalmate.user.databinding.ActivityDashboardBinding
+
 import com.stalmate.user.view.dashboard.Friend.FragmentFriend
+
 
 class ActivityDashboard : AppCompatActivity() {
 

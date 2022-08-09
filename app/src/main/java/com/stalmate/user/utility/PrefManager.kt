@@ -4,12 +4,16 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.slatmate.user.model.ModelRegisterResponse
+import com.stalmate.user.model.ModelLoginResponse
 
 
 class PrefManager(private val context: Context) {
     private val preferences: SharedPreferences
     private val editor: SharedPreferences.Editor
     var PRIVATE_MODE = 0
+
+
+
     var keyIsLoggedIn: Boolean
         get() = getBooleanValue(KEY_IS_LOGGED_IN)
         set(value) {
@@ -42,6 +46,19 @@ class PrefManager(private val context: Context) {
         }
 
 
+    var userDetailLogin: ModelLoginResponse
+        get() {
+            val gson = Gson()
+            val json = preferences.getString(KEY_USER_DETAILS, "")
+            return gson.fromJson(json, ModelLoginResponse::class.java)
+        }
+        set(user) {
+            val gson = Gson()
+            val json: String = gson.toJson(user)
+            editor.putString(KEY_USER_DETAILS, json)
+            editor.commit()
+        }
+
     /*
 
     public void setCurrentWeddingDetail(ModelWeddingList.DataBean modelWeddingList) {
@@ -71,6 +88,16 @@ class PrefManager(private val context: Context) {
         editor.commit()
     }
 
+    fun getBooleanValueOTP(key: String?): Boolean {
+        return preferences.getBoolean(key, false)
+    }
+
+    fun setBooleanValueOTP(key: String?, value: Boolean) {
+        editor.putBoolean(key, value)
+        editor.commit()
+    }
+
+
     fun getStringValue(key: String?): String? {
         return preferences.getString(key, "")
     }
@@ -79,6 +106,10 @@ class PrefManager(private val context: Context) {
         editor.putString(key, value)
         editor.commit()
     }
+
+
+
+
 
     fun setLongitudeValue(key: String?, value: String?) {
         editor.putString(key, value)

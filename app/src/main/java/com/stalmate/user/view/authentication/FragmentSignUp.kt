@@ -9,15 +9,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
-import androidx.navigation.Navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.stalmate.user.R
-
+import com.stalmate.user.base.App
 import com.stalmate.user.base.BaseFragment
-
 import com.stalmate.user.databinding.FragmentsignupBinding
+import com.stalmate.user.utilities.PrefManager
+
 import com.stalmate.user.utilities.ValidationHelper
+import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -35,7 +35,6 @@ class FragmentSignUp : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
-//        binding.etDOB.text = SimpleDateFormat("dd.MM.yyyy").format(System.currentTimeMillis())
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -43,11 +42,10 @@ class FragmentSignUp : BaseFragment() {
         // Inflate the layout for this fragment
         val view =  inflater.inflate(R.layout.fragmentsignup, container, false)
         binding = DataBindingUtil.bind(view)!!
-//        binding.etDOB.text = SimpleDateFormat("dd.MM.yyyy").format(System.currentTimeMillis())
 
         var cal = Calendar.getInstance()
 
-     /*   val dateSetListener =
+        val dateSetListener =
             DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
                 cal.set(Calendar.YEAR, year)
                 cal.set(Calendar.MONTH, monthOfYear)
@@ -68,7 +66,7 @@ class FragmentSignUp : BaseFragment() {
                 cal.get(Calendar.MONTH),
                 cal.get(Calendar.DAY_OF_MONTH)
             ).show()
-        }*/
+        }
         return binding.root
     }
 
@@ -111,11 +109,10 @@ class FragmentSignUp : BaseFragment() {
 
 
         binding.btnCrateAccount.setOnClickListener {
-            /*if (isValid()) {
+            if (isValid()) {
                 createAccountApiCall()
-            }*/
-
-            findNavController().navigate(R.id.fragmentOTPEnter)
+            }
+//            findNavController().navigate(R.id.fragmentOTPEnter)
         }
     }
 
@@ -137,13 +134,12 @@ class FragmentSignUp : BaseFragment() {
             if(!binding.rdmale.isChecked && !binding.rdFamel.isChecked && !binding.rdOthers.isChecked){
             makeToast(getString(R.string.select_gendar_error))
                return false
-            }else
-                if(ValidationHelper.isValidPassword(binding.etPassword.text.toString())){
+            }else if(ValidationHelper.isValidPassword(binding.etPassword.text.toString())){
                 makeToast(getString(R.string.password_error_toast))
                 return false
-            }else
-                if (!binding.tmcheckbox.isChecked){
+            }else if (!binding.tmcheckbox.isChecked){
                 makeToast(getString(R.string.accept_tnc))
+                return false
             }
         return true
     }
@@ -152,7 +148,7 @@ class FragmentSignUp : BaseFragment() {
         return !TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches()
     }
 
-    /*private fun createAccountApiCall() {
+    private fun createAccountApiCall() {
 
         var gander_name : String = ""
         if (GANDER=="1"){
@@ -182,10 +178,9 @@ class FragmentSignUp : BaseFragment() {
                 val message = it.message
 
                 if (it.status == true){
-                    PrefManager.getInstance(requireContext())!!.userDetail=it
-                    PrefManager.getInstance(requireContext())!!.keyIsLoggedIn = true
-                    findNavController().navigate(com.slatmate.user.R.id.fragmentOTPEnter)
 
+                    PrefManager.getInstance(requireContext())!!.userDetail=it
+                    findNavController().navigate(R.id.fragmentOTPEnter)
                     makeToast(message)
                 }else{
                     makeToast(message)
@@ -193,7 +188,7 @@ class FragmentSignUp : BaseFragment() {
             }
             binding.progressBar.visibility = View.GONE
         }
-    }*/
+    }
 
 
 
@@ -204,6 +199,7 @@ class FragmentSignUp : BaseFragment() {
         binding.toolbar.toolBarCenterText.visibility = View.VISIBLE
         binding.toolbar.backButtonRightText.visibility = View.GONE
         binding.toolbar.menuChat.visibility = View.VISIBLE
+        binding.toolbar.menuChat.setImageDrawable(getResources().getDrawable(R.drawable.ic_signup_top_logo));
 
         binding.toolbar.back.setOnClickListener {
             activity?.onBackPressed()

@@ -24,9 +24,9 @@
         android:adjustViewBounds="true"
         android:padding="10dp"
         android:src="@drawable/ic_back"
-        android:tint="@color/white"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/white" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layoutChangeBackgroundImage"

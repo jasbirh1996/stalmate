@@ -1,4 +1,4 @@
-package com.user.vaibhavmodules.reels.activity
+package com.stalmate.user.modules.reels.activity
 
 
 import android.content.Intent
@@ -23,24 +23,19 @@ import java.io.File
 import java.util.*
 
 class ActivityFilter : AppCompatActivity() {
-    lateinit var binding: ActivityFilterBinding
+    private lateinit var binding: ActivityFilterBinding
     private var mModel: ActivityFilterViewModel? = null
     private var mPlayer: ExoPlayer? = null
     private var mSong = 0
     private var mVideo: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-       binding=ActivityFilterBinding.inflate(layoutInflater)
+        binding= ActivityFilterBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-
 
         mModel = ViewModelProvider(this)[ActivityFilterViewModel::class.java]
         mSong = intent.getIntExtra(EXTRA_SONG, 0)
         mVideo = intent.getStringExtra(EXTRA_VIDEO)
-
-
-/*done.setOnClickListener { view: View? -> commitSelection() }*/
 
         mPlayer = ExoPlayer.Builder(this).build()
         mPlayer!!.setRepeatMode(ExoPlayer.REPEAT_MODE_ALL)
@@ -82,7 +77,7 @@ class ActivityFilter : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-      mPlayer!!.stop(true)
+        mPlayer!!.stop(true)
         mPlayer!!.setPlayWhenReady(false)
         mPlayer!!.release()
         mPlayer = null

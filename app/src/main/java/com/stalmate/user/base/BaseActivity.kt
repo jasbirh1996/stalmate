@@ -20,7 +20,6 @@ import com.stalmate.user.viewmodel.AppViewModel
 abstract class BaseActivity : AppCompatActivity(), View.OnClickListener,
     BaseCallBacks {
 
-
     val networkViewModel: AppViewModel by lazy {
         ViewModelProvider(this)[AppViewModel::class.java]
 

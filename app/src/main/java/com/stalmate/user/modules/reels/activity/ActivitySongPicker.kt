@@ -1,4 +1,4 @@
-package com.user.vaibhavmodules.reels.activity
+package com.stalmate.user.modules.reels.activity
 
 import android.content.Intent
 import android.net.Uri

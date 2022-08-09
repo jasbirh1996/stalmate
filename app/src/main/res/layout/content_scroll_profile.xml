@@ -186,7 +186,9 @@
                     android:fontFamily="@font/poppins_medium"
                     android:text="@string/friends"
                     android:textColor="@color/black"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tvFriendCount"
@@ -197,7 +199,8 @@
                     android:text="3"
                     android:textColor="@color/colorPrimary"
                     android:textSize="14sp"
-                    app:layout_constraintStart_toEndOf="@+id/appCompatTextView11" />
+                    app:layout_constraintStart_toEndOf="@+id/appCompatTextView11"
+                    app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -18,21 +18,26 @@ interface ApiInterface {
     fun getCategorList(): Call<ModelCategory>
 
     @GET(Constants.url_language_list)
-    fun getLanguageList(): Call<ModelLanguage>
+    fun getLanguageList(): Call<ModelLanguageResponse>
 
 
     @GET(Constants.url_language_list)
     fun getFeedList(): Call<ModelFeed>
+
     @GET(Constants.url_language_list)
     fun getFriendList(): Call<ModelFriend>
 
 
-    @POST("auth_service/auth_api/user_register")
+    @POST(Constants.URL_SIGN_UP)
     fun setSignupDetails(@Body map: HashMap<String, String>): Call<ModelRegisterResponse>
 
 
-    @PATCH("auth_service/auth_api/update_password")
+    @PATCH(Constants.URL_OTP)
     fun setOtpVerify(@Body map: HashMap<String, String>): Call<CommonModelResponse>
+
+
+    @POST(Constants.URL_LOGIN)
+    fun setLoginDetails(@Body map: HashMap<String, String>): Call<ModelLoginResponse>
 
 
 /*

@@ -5,14 +5,14 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.viewpager.widget.ViewPager
-import com.stalmate.user.view.authentication.ActivityAuthentication
 import com.stalmate.user.R
 import com.stalmate.user.databinding.ActivityOnBoardingScreenBinding
+import com.stalmate.user.view.authentication.ActivityAuthentication
 
 class ActivityOnBoardingScreen : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var onBoardingViewPagerAdapter: OnBoardingAdapter
-    private lateinit var binding :ActivityOnBoardingScreenBinding
+    private lateinit var binding : ActivityOnBoardingScreenBinding
     private var position = 0
     private val onBoardingData: MutableList<OnBoardingModel> = ArrayList()
 

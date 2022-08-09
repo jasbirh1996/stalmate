@@ -27,7 +27,7 @@
 
     <fragment
         android:id="@+id/fragmentPasswordReset"
-        android:name="com.stalmate.user.view.authentication.FragmentPasswordReset"
+        android:name="com.stalmate.user.view.authentication.FragmentNewPasswordEnter"
         android:label="fragment_password_reset"
         tools:layout="@layout/fragment_password_reset" >
         <action
@@ -42,7 +42,11 @@
         android:id="@+id/fragmentSignUp"
         android:name="com.stalmate.user.view.authentication.FragmentSignUp"
         android:label="fragment_sign_up"
-        tools:layout="@layout/fragmentsignup" />
+        tools:layout="@layout/fragmentsignup" >
+        <action
+            android:id="@+id/action_fragmentSignUp_to_fragmentOTPEnter"
+            app:destination="@id/fragmentOTPEnter" />
+    </fragment>
 
     <fragment
         android:id="@+id/fragmentLogin"

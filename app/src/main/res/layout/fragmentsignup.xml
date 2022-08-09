@@ -42,6 +42,7 @@
                         android:id="@+id/etName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:maxLines="1"
                         android:textSize="14sp" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -59,6 +60,7 @@
                         android:id="@+id/etLastName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:maxLines="1"
                         android:textSize="14sp" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -77,6 +79,7 @@
                         android:id="@+id/etEmail"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:maxLines="1"
                         android:textSize="14sp" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -112,7 +115,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/male"
                             android:textColor="@color/black"
-                            android:theme="@style/checkbox"
+                            android:theme="@style/customButtonStyle"
                             android:layout_weight="1"
                             app:layout_constraintStart_toStartOf="@+id/gender"
                             app:layout_constraintTop_toBottomOf="@+id/gender" />
@@ -125,7 +128,7 @@
                             android:text="@string/female"
                             android:layout_weight="1"
                             android:textColor="@color/black"
-                            android:theme="@style/checkbox"
+                            android:theme="@style/customButtonStyle"
                             app:layout_constraintBottom_toBottomOf="@+id/rdmale"
                             app:layout_constraintEnd_toStartOf="@+id/radioButton2"
                             app:layout_constraintStart_toEndOf="@+id/rdmale"
@@ -139,14 +142,12 @@
                             android:text="@string/others"
                             android:layout_weight="1"
                             android:textColor="@color/black"
-                            android:theme="@style/checkbox"
+                            android:theme="@style/customButtonStyle"
                             app:layout_constraintBottom_toBottomOf="@+id/radioButton"
                             app:layout_constraintEnd_toEndOf="@+id/filledTextEmail"
                             app:layout_constraintTop_toTopOf="@+id/radioButton" />
 
-
                     </LinearLayout>
-
 
                 </RadioGroup>
 
@@ -162,35 +163,46 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/radio_group" />
 
-
-                <Spinner
-                    android:id="@+id/spDate"
-                    android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/etDOB"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:entries="@array/date"
+                    android:layout_marginTop="14dp"
+                    android:hint="dd/mm/yy"
+                    android:padding="10sp"
                     app:layout_constraintBottom_toBottomOf="@+id/appCompatTextView4"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/appCompatTextView4"
-                    app:layout_constraintTop_toBottomOf="@+id/appCompatTextView4" />
+                    app:layout_constraintTop_toBottomOf="@+id/radio_group" />
+
+                <!-- <Spinner
+                     android:id="@+id/spDate"
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:layout_marginStart="16dp"
+                     android:entries="@array/date"
+                     app:layout_constraintBottom_toBottomOf="@+id/appCompatTextView4"
+                     app:layout_constraintStart_toEndOf="@+id/appCompatTextView4"
+                     app:layout_constraintTop_toBottomOf="@+id/appCompatTextView4" />
 
 
-                <Spinner
-                    android:id="@+id/spMonth"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:entries="@array/month"
-                    app:layout_constraintBottom_toBottomOf="@+id/spDate"
-                    app:layout_constraintStart_toEndOf="@+id/spDate"
-                    app:layout_constraintTop_toTopOf="@+id/spDate" />
+                 <Spinner
+                     android:id="@+id/spMonth"
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:entries="@array/month"
+                     app:layout_constraintBottom_toBottomOf="@+id/spDate"
+                     app:layout_constraintStart_toEndOf="@+id/spDate"
+                     app:layout_constraintTop_toTopOf="@+id/spDate" />
 
-                <Spinner
-                    android:id="@+id/spYear"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:entries="@array/date"
-                    app:layout_constraintBottom_toBottomOf="@+id/spMonth"
-                    app:layout_constraintStart_toEndOf="@+id/spMonth"
-                    app:layout_constraintTop_toTopOf="@+id/spMonth" />
+                 <Spinner
+                     android:id="@+id/spYear"
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     app:layout_constraintBottom_toBottomOf="@+id/spMonth"
+                     app:layout_constraintStart_toEndOf="@+id/spMonth"
+                     app:layout_constraintTop_toTopOf="@+id/spMonth" />-->
 
                 <View
                     android:id="@+id/view"
@@ -198,21 +210,22 @@
                     android:layout_height="1dp"
                     android:layout_marginTop="5dp"
                     android:background="#DCD6D6"
-                    app:layout_constraintTop_toBottomOf="@id/spYear" />
+                    app:layout_constraintTop_toBottomOf="@id/etDOB" />
 
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/filledTextcollege"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="15dp"
                     android:hint="@string/add_school_college"
-                    app:layout_constraintTop_toBottomOf="@+id/spYear">
+                    app:layout_constraintTop_toBottomOf="@+id/etDOB">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etschoolcollege"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:maxLines="1"
                         android:textSize="14sp" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -225,6 +238,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
                     android:hint="Create Password"
+                    app:passwordToggleEnabled="true"
                     app:startIconDrawable="@drawable/lock"
                     app:layout_constraintTop_toBottomOf="@+id/filledTextcollege">
 
@@ -232,7 +246,7 @@
                         android:id="@+id/etPassword"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:drawableEnd="@drawable/view"
+                        android:maxLines="1"
                         android:textSize="14sp" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -243,7 +257,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:theme="@style/checkbox"
+                    android:theme="@style/customButtonStyle"
                     app:layout_constraintStart_toStartOf="@+id/filledTextPassword"
                     app:layout_constraintTop_toBottomOf="@+id/filledTextPassword" />
 
@@ -279,6 +293,18 @@
                     app:layout_constraintTop_toBottomOf="@+id/tmcondition"
                     app:textAllCaps="false"/>
 
+
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:visibility="invisible"
+                    app:layout_constraintBottom_toBottomOf="@+id/btn_crate_account"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
 
 

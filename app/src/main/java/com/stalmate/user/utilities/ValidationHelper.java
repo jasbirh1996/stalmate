@@ -63,7 +63,10 @@ public class ValidationHelper {
 
     public static boolean isValidPassword(String password) {
         int minLength = 6, maxLength = 20;
-        return password != null && password.length() >= minLength && password.length() <= maxLength;
+        if (password != null && password.length() <= minLength) {
+            password.length();
+        }
+        return false;
     }
 
     public static boolean isValidPinCode(EditText pinCodeEditText, String pinNumber) {

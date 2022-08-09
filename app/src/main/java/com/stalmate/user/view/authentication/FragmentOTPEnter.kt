@@ -1,36 +1,29 @@
 package com.stalmate.user.view.authentication
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-
 import com.stalmate.user.R
-import com.stalmate.user.databinding.FragmentOTPEnterBinding
-import com.stalmate.user.view.dashboard.ActivityDashboard
-
-import androidx.navigation.fragment.findNavController
 import com.stalmate.user.base.BaseFragment
+import com.stalmate.user.databinding.FragmentOTPEnterBinding
 import com.stalmate.user.utilities.PrefManager
-
-import java.util.HashMap
+import com.stalmate.user.view.dashboard.ActivityDashboard
 
 
 class FragmentOTPEnter : BaseFragment() {
-
+    val DURATION: Long = 2000
     private lateinit var binding: FragmentOTPEnterBinding
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-
-    }
+    var email : String = ""
+    var forgetPasswordScreen : Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,6 +32,9 @@ class FragmentOTPEnter : BaseFragment() {
         // Inflate the layout for this fragment
         var view =  inflater.inflate(R.layout.fragment_o_t_p_enter, container, false)
         binding = DataBindingUtil.bind<FragmentOTPEnterBinding>(view)!!
+        email = requireArguments().getString("email").toString()
+        forgetPasswordScreen = requireArguments().getBoolean("Boolean")
+        Log.d("akjsdad",email)
         return binding.root
     }
 
@@ -51,46 +47,116 @@ class FragmentOTPEnter : BaseFragment() {
 
         startTimer()
 
+        getOtpApiCall()
+
+
+
         binding.btnProcess.setOnClickListener {
             /*Otp Verify Api Call*/
-//            otpVerifyApiCall()
-            val intent = Intent(context, ActivityDashboard::class.java)
-            startActivity(intent)
-            requireActivity().finish()
+
+            if (email.isEmpty()) {
+                otpVerifyApiCall()
+            }else{
+                otpVerifyForgotApiCall()
+            }
 
         }
     }
 
-    private fun otpVerifyApiCall() {
-
+    private fun otpVerifyForgotApiCall() {
         val hashMap = HashMap<String, String>()
-        hashMap["email"] = PrefManager.getInstance(requireContext())!!.userDetail.results.get(0).email.toString()
-        hashMap["otp"] = binding.pinView.text.toString()
+
+        Log.d("ncksn",email)
+
+
+            hashMap["email"] = email
+
         binding.progressBar.visibility = View.VISIBLE
-/*        networkViewModel.otpVerify(hashMap)
+        networkViewModel.otpVerify(hashMap)
+
         networkViewModel.otpVerifyData.observe(requireActivity()){
 
             it?.let {
                 val message = it.message
 
                 if (it.status == true){
-                    val intent = Intent(context, ActivityDashboard::class.java)
-                    startActivity(intent)
-                    requireActivity().finish()
+                    binding.progressBar.visibility = View.GONE
+                }
+            }
+            binding.progressBar.visibility = View.GONE
+        }
+    }
+
+    private fun getOtpApiCall() {
+        val hashMap = HashMap<String, String>()
+
+        Log.d("ncksn",email)
+
+            hashMap["email"] = PrefManager.getInstance(requireContext())!!.userDetail.results.get(0).email.toString()
+
+        binding.progressBar.visibility = View.VISIBLE
+        networkViewModel.otpVerify(hashMap)
+
+            networkViewModel.otpVerifyData.observe(requireActivity()){
+
+                it?.let {
+                    val message = it.message
+
+                    if (it.status == true){
+                        binding.progressBar.visibility = View.GONE
+                    }
+                }
+                binding.progressBar.visibility = View.GONE
+        }
+    }
+
+    private fun otpVerifyApiCall() {
+
+        val hashMap = HashMap<String, String>()
+
+        hashMap["email"] = PrefManager.getInstance(requireContext())!!.userDetail.results.get(0).email.toString()
+
+        hashMap["otp"] = binding.pinView.text.toString()
+        binding.progressBar.visibility = View.VISIBLE
+        networkViewModel.otpVerify(hashMap)
+        networkViewModel.otpVerifyData.observe(requireActivity()){
+
+            it?.let {
+                val message = it.message
+
+                if (it.status == true){
+
+                    val builder = AlertDialog.Builder(requireContext(), R.style.CustomAlertDialog).create()
+                    val view = layoutInflater.inflate(R.layout.sign_up_success_poppu,null)
+                    builder.setView(view)
+                    builder.setCanceledOnTouchOutside(false)
+
+                    PrefManager.getInstance(requireContext())!!.keyIsLoggedIn = true
+
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        val intent = Intent(requireContext(), ActivityDashboard::class.java)
+                        startActivity(intent)
+
+                        builder.dismiss()
+                        activity?.finish()
+                    }, DURATION)
+                    builder.show()
+
+
                     makeToast(message)
                 }else{
                     makeToast(message)
                 }
+
             }
             binding.progressBar.visibility = View.GONE
-        }*/
+        }
 
     }
 
     private fun toolbarSetUp() {
         binding.toolbar.toolBarCenterText.visibility = View.VISIBLE
         binding.toolbar.toolBarCenterText.text =  getString(R.string.forget_post)
-        binding.toolbar.toolBarCenterText.visibility = View.VISIBLE
         binding.toolbar.backButtonRightText.visibility = View.GONE
 
         binding.toolbar.back.setOnClickListener {
@@ -114,6 +180,7 @@ class FragmentOTPEnter : BaseFragment() {
                     startTimer()
                     binding.otpResent.visibility = View.GONE
                     binding.otpCountDown.visibility = View.VISIBLE
+
                 }
             }
         }
@@ -126,5 +193,6 @@ class FragmentOTPEnter : BaseFragment() {
         val ss = if (secondsLeft < 10) "0$secondsLeft" else "" + secondsLeft
         return "00:$ss"
     }
+
 
 }

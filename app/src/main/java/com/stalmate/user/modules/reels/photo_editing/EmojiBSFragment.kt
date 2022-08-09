@@ -1,4 +1,4 @@
-package com.user.vaibhavmodules.reels.photo_editing
+package com.stalmate.user.modules.reels.photo_editing
 
 import android.annotation.SuppressLint
 import android.app.Dialog

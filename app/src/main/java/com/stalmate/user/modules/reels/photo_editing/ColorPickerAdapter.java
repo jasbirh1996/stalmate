@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.stalmate.user.R;
 
-
 import java.util.ArrayList;
 import java.util.List;
 

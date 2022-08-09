@@ -17,8 +17,11 @@ import com.stalmate.user.databinding.FragmentHomeBinding
 
 
 class FragmentHome : BaseFragment(), AdapterFeed.Callbackk {
-lateinit var binding:FragmentHomeBinding
+
+    private lateinit var binding: FragmentHomeBinding
     lateinit var feedAdapter: AdapterFeed
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

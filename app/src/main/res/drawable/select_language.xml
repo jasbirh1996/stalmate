@@ -1,17 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-   <!-- <item android:drawable="@drawable/language_select_background_blue"
-        android:state_selected="true"
-        android:state_pressed="true"/>
 
-    <item android:drawable="@drawable/language_select_background"
-        android:state_selected="false"
-        android:state_pressed="false"/>-->
-
-
-    <item android:drawable="@drawable/language_select_background_blue" android:state_selected="true" />
-    <item android:drawable="@drawable/language_select_background_blue" android:state_pressed="true" />
-    <item android:drawable="@drawable/language_select_background" />
+    <item android:state_pressed="true" android:drawable="@drawable/language_select_background_blue"/>
+    <item android:state_selected="true" android:drawable="@drawable/language_select_background_blue"/>
+    <item android:state_enabled="true"  android:drawable="@drawable/language_select_background" />
+    <item android:state_enabled="false" android:drawable="@drawable/language_select_background"/>
 
 </selector>

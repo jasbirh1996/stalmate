@@ -1,4 +1,4 @@
-package com.user.vaibhavmodules.reels.activity
+package com.stalmate.user.modules.reels.activity
 
 import android.annotation.SuppressLint
 import android.app.ProgressDialog
@@ -32,7 +32,7 @@ import com.stalmate.user.modules.reels.photo_editing.PropertiesBSFragment
 import com.stalmate.user.modules.reels.photo_editing.StickerBSFragment
 import com.stalmate.user.modules.reels.photo_editing.TextEditorDialogFragment
 
-import com.user.vaibhavmodules.reels.photo_editing.EmojiBSFragment
+import com.stalmate.user.modules.reels.photo_editing.EmojiBSFragment
 
 import ja.burhanrashid52.photoeditor.*
 import ja.burhanrashid52.photoeditor.Utils.getScaledDimension
