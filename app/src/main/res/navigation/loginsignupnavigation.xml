@@ -30,12 +30,7 @@
         android:name="com.stalmate.user.view.authentication.FragmentNewPasswordEnter"
         android:label="fragment_password_reset"
         tools:layout="@layout/fragment_password_reset" >
-        <action
-            android:id="@+id/action_fragmentPasswordReset_to_fragmentLogin"
-            app:destination="@id/fragmentLogin" />
-        <action
-            android:id="@+id/action_fragmentPasswordReset_to_fragmentOTPEnter"
-            app:destination="@id/fragmentOTPEnter" />
+
     </fragment>
 
     <fragment
