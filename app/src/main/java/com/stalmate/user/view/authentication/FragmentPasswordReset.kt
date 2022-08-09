@@ -2,6 +2,7 @@ package com.stalmate.user.view.authentication
 
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,6 +34,8 @@ class FragmentPasswordReset : BaseFragment() {
         email = requireArguments().getString("email").toString()
         otp = requireArguments().getString("otp").toString()
 
+
+        Log.d("cjksdjhcb", "cnsdnjkcn")
         return binding.root
     }
 
@@ -42,8 +45,8 @@ class FragmentPasswordReset : BaseFragment() {
         toolbarSetUp()
 
 
-        binding.btnLogin.setOnClickListener {
-
+        binding.btnSubmit.setOnClickListener {
+            Log.d("acdjmcb", "acbasbcja")
             if (isValid()) {
                 forgetPasswordApiCall()
             }
@@ -94,17 +97,18 @@ class FragmentPasswordReset : BaseFragment() {
         }
     }
 
-    fun isValid(): Boolean {
+    fun isValid():Boolean {
 
-        if (binding.etPassword.text!!.isEmpty() && binding.etConfirmpassword.text!!.isEmpty()) {
+        if(binding.etPassword.text!!.isEmpty() || binding.etConfirmpassword.text!!.isEmpty()) {
             makeToast("Please Enter Password")
-        } else if (ValidationHelper.isValidPassword(binding.etPassword.text.toString())) {
+            return false
+        } else if(ValidationHelper.isValidPassword(binding.etPassword.text.toString())) {
             makeToast(getString(R.string.password_error_toast))
             return false
-        } else if (binding.etPassword.text == binding.etConfirmpassword.text) {
+        } else if(binding.etPassword.text != binding.etConfirmpassword.text) {
             makeToast(getString(R.string.password_not_match))
+            return false
         }
-
 
         return true
     }
