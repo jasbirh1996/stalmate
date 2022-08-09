@@ -59,4 +59,5 @@
     <string name="process">Process</string>
     <string name="choose_language">Choose Language</string>
     <string name="create_password">Create Password</string>
+    <string name="password_not_match">Password not Match</string>
 </resources>

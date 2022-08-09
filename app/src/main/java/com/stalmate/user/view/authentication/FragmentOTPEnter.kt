@@ -65,7 +65,7 @@ class FragmentOTPEnter : BaseFragment() {
         }
     }
 
-    @SuppressLint("ResourceType")
+
     private fun otpVerifyForgotApiCall() {
         val hashMap = HashMap<String, String>()
 
@@ -77,7 +77,6 @@ class FragmentOTPEnter : BaseFragment() {
         networkViewModel.otpVerifyData.observe(requireActivity()){
 
             it?.let {
-                val message = it.message
 
                 if (it.status == true){
                     binding.progressBar.visibility = View.GONE
@@ -85,7 +84,7 @@ class FragmentOTPEnter : BaseFragment() {
 
                     bundle.putString("email",email)
                     bundle.putString("otp","1234")
-                    findNavController().navigate(R.layout.fragment_password_reset,bundle)
+                    findNavController().navigate(R.id.fragmentPasswordReset,bundle)
 
                 }
             }
@@ -96,7 +95,7 @@ class FragmentOTPEnter : BaseFragment() {
     private fun getOtpApiCall() {
         val hashMap = HashMap<String, String>()
 
-            hashMap["email"] = PrefManager.getInstance(requireContext())!!.userDetail.results.get(0).email.toString()
+        hashMap["email"] = PrefManager.getInstance(requireContext())!!.userDetail.results.get(0).email.toString()
 
         binding.progressBar.visibility = View.VISIBLE
         networkViewModel.otpVerify(hashMap)

@@ -546,7 +546,7 @@
     <string name="funtime">Funtime</string>
 
     <string name="create_password">Create Password</string>
-
+    <string name="password_not_match">Password not Match</string>
 
 
     <string-array name="date">
