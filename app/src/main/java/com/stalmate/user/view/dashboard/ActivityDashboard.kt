@@ -10,6 +10,7 @@ import com.stalmate.user.view.dashboard.VideoReels.FragmentReels
 import com.stalmate.user.view.dashboard.funtime.FragmentFunTime
 import com.stalmate.user.R
 import com.stalmate.user.databinding.ActivityDashboardBinding
+import com.stalmate.user.view.dashboard.Friend.FragmentFriend
 
 class ActivityDashboard : AppCompatActivity() {
 
@@ -29,7 +30,7 @@ class ActivityDashboard : AppCompatActivity() {
                 R.id.funTime -> replaceFragment(FragmentFunTime())
                 R.id.chat -> replaceFragment(ChatCallTabFragment())
                 R.id.video -> replaceFragment(FragmentReels())
-                R.id.friend -> replaceFragment(FragmentFriendList())
+                R.id.friend -> replaceFragment(FragmentFriend())
 
                 else ->
                 {

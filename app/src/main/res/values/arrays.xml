@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="countries">
+        <item>Argentina</item>
+        <item>Bolivia</item>
+        <item>Brazil</item>
+        <item>Chile</item>
+        <item>Costa Rica</item>
+        <item>Dominican Republic</item>
+        <item>Mexico</item>
+        <item>Nicaragua</item>
+        <item>Peru</item>
+        <item>Venezuela</item>
+        <item>Cuba</item>
+        <item>Ecuador</item>
+        <item>El Salvador</item>
+        <item>Haiti</item>
+        <item>Panama</item>
+        <item>Paraguay</item>
+    </string-array>
+
+    <integer-array name="images">
+        <item>@drawable/electricity</item>
+        <item>@drawable/electricity</item>
+        <item>@drawable/electricity</item>
+        <item>@drawable/electricity</item>
+        <item>@drawable/electricity</item>
+        <item>@drawable/electricity</item>
+        <item>@drawable/electricity</item>
+        <item>@drawable/electricity</item>
+
+        <item>@drawable/electricity</item>
+        <item>@drawable/electricity</item>
+        <item>@drawable/electricity</item>
+        <item>@drawable/electricity</item>
+
+        <item>@drawable/electricity</item>
+        <item>@drawable/electricity</item>
+        <item>@drawable/electricity</item>
+        <item>@drawable/electricity</item>
+    </integer-array>
+
+    <integer-array name="colors">
+        <item>@color/grey_dark</item>
+        <item>@color/grey_dark</item>
+        <item>@color/grey_dark</item>
+        <item>@color/grey_dark</item>
+        <item>@color/grey_dark</item>
+        <item>@color/grey_dark</item>
+        <item>@color/grey_dark</item>
+        <item>@color/grey_dark</item>
+        <item>@color/grey_dark</item>
+        <item>@color/grey_dark</item>
+        <item>@color/grey_dark</item>
+        <item>@color/grey_dark</item>
+        <item>@color/grey_dark</item>
+        <item>@color/grey_dark</item>
+        <item>@color/grey_dark</item>
+        <item>@color/grey_dark</item>
+    </integer-array>
+
+</resources>

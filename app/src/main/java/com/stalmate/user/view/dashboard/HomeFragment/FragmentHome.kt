@@ -9,6 +9,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.commonadapters.AdapterFeed
@@ -51,6 +52,12 @@ lateinit var binding:FragmentHomeBinding
                 feedAdapter.submitList(it!!.results)
             }
         })
+
+
+        binding.postContant.userImage.setOnClickListener {
+            startActivity(IntentHelper.getProfileScreen(context!!))
+        }
+
 
     }
 

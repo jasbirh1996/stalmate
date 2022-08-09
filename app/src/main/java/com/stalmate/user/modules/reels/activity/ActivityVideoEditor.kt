@@ -26,6 +26,7 @@ import com.github.hiteshsondhi88.libffmpeg.FFmpegLoadBinaryResponseHandler
 import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedException
 import com.simform.videooperations.*
 import com.stalmate.user.R
+import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.databinding.ActivityPreviewVideoBinding
 import com.stalmate.user.modules.reels.photo_editing.PropertiesBSFragment
 import com.stalmate.user.modules.reels.photo_editing.StickerBSFragment
@@ -38,7 +39,7 @@ import ja.burhanrashid52.photoeditor.Utils.getScaledDimension
 import java.io.File
 import java.io.IOException
 
-class ActivityVideoEditor() : AppCompatActivity(), OnPhotoEditorListener,
+class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
     PropertiesBSFragment.Properties, View.OnClickListener, StickerBSFragment.StickerListener,
     EmojiBSFragment.EmojiListener {
     lateinit var binding: ActivityPreviewVideoBinding
@@ -53,6 +54,10 @@ class ActivityVideoEditor() : AppCompatActivity(), OnPhotoEditorListener,
     lateinit var fFmpeg: FFmpeg
     private lateinit var newCommand: Array<String?>
     private var progressDialog: ProgressDialog? = null
+    override fun onClick(viewId: Int, view: View?) {
+
+    }
+
     private var originalDisplayWidth = 0
     private var originalDisplayHeight = 0
     private var newCanvasWidth = 0
@@ -291,6 +296,7 @@ class ActivityVideoEditor() : AppCompatActivity(), OnPhotoEditorListener,
 
     @SuppressLint("MissingPermission")
     private fun saveImage() {
+        showLoader()
         val file = File(
             getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
                 .toString() + File.separator + ""
@@ -307,6 +313,7 @@ class ActivityVideoEditor() : AppCompatActivity(), OnPhotoEditorListener,
             mPhotoEditor.saveAsFile(file.absolutePath, saveSettings, object : PhotoEditor.OnSaveListener {
                 override
                 fun onSuccess(@NonNull imagePath: String) {
+                    dismissLoader()
                     this@ActivityVideoEditor.imagePath = imagePath
                     Log.d("imagePath>>", imagePath)
                     Log.d("imagePath2>>", Uri.fromFile(File(imagePath)).toString())
@@ -320,6 +327,7 @@ class ActivityVideoEditor() : AppCompatActivity(), OnPhotoEditorListener,
                 }
 
                 override fun onFailure(exception: Exception) {
+                    dismissLoader()
                     Toast.makeText(
                         this@ActivityVideoEditor,
                         "Saving Failed...",
@@ -330,6 +338,7 @@ class ActivityVideoEditor() : AppCompatActivity(), OnPhotoEditorListener,
 
             })
         } catch (e: IOException) {
+            dismissLoader()
             e.printStackTrace()
         }
     }

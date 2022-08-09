@@ -30,6 +30,16 @@
             android:layout_marginStart="20dp" />
 
 
+        <Constraint
+            android:id="@+id/layoutChangeBackgroundImage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:alpha="1"
+            android:layout_marginBottom="10dp"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintBottom_toBottomOf="@+id/iv_background" />
+
+
 
     </ConstraintSet>
 
@@ -53,7 +63,7 @@
             motion:layout_constraintBottom_toBottomOf="@+id/iv_background"
             motion:layout_constraintTop_toBottomOf="@+id/iv_background"
             motion:layout_constraintEnd_toEndOf="@+id/iv_background"
-            android:layout_marginEnd="50dp" />
+            android:layout_marginEnd="20dp" />
         <Constraint
             android:layout_height="0dp"
             motion:layout_constraintStart_toStartOf="parent"
@@ -62,6 +72,16 @@
             android:layout_width="0dp"
             motion:layout_constraintTop_toBottomOf="@+id/iv_background"
             android:id="@+id/layout" />
+
+        <Constraint
+            android:id="@+id/layoutChangeBackgroundImage"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:alpha="0"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toTopOf="parent" />
+
 
 
     </ConstraintSet>
