@@ -33,17 +33,19 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
-                    android:hint="@string/first_name"
+
+                    app:hintEnabled="false"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etName"
+                        android:hint="@string/first_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:maxLines="1"
-                        android:textSize="14sp" />
+                        style="@style/customEditbox" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -52,16 +54,19 @@
                     android:id="@+id/filledTextLastName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    app:hintEnabled="false"
                     android:layout_marginTop="12dp"
-                    android:hint="@string/last_name"
+
                     app:layout_constraintTop_toBottomOf="@+id/filledTextName">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etLastName"
                         android:layout_width="match_parent"
+                        android:hint="@string/last_name"
                         android:layout_height="wrap_content"
                         android:maxLines="1"
-                        android:textSize="14sp" />
+                        style="@style/customEditbox"
+                     />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -71,16 +76,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:hint="@string/email"
+                    app:hintEnabled="false"
                     app:layout_constraintTop_toBottomOf="@+id/filledTextLastName"
-                    app:startIconDrawable="@drawable/email">
+                    app:startIconDrawable="@drawable/ic_login_mail_active">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etEmail"
+                        android:hint="@string/email"
+                        style="@style/customEditbox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:maxLines="1"
-                        android:textSize="14sp" />
+                    />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -100,6 +107,7 @@
                     android:id="@+id/radio_group"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:orientation="horizontal"
                     app:layout_constraintStart_toStartOf="@+id/gender"
                     app:layout_constraintTop_toBottomOf="@+id/gender">
@@ -113,10 +121,10 @@
                             android:id="@+id/rdmale"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:text="@string/male"
                             android:textColor="@color/black"
                             android:theme="@style/customButtonStyle"
-                            android:layout_weight="1"
                             app:layout_constraintStart_toStartOf="@+id/gender"
                             app:layout_constraintTop_toBottomOf="@+id/gender" />
 
@@ -125,8 +133,8 @@
                             android:id="@+id/rdFamel"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/female"
                             android:layout_weight="1"
+                            android:text="@string/female"
                             android:textColor="@color/black"
                             android:theme="@style/customButtonStyle"
                             app:layout_constraintBottom_toBottomOf="@+id/rdmale"
@@ -139,8 +147,8 @@
                             android:id="@+id/rdOthers"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/others"
                             android:layout_weight="1"
+                            android:text="@string/others"
                             android:textColor="@color/black"
                             android:theme="@style/customButtonStyle"
                             app:layout_constraintBottom_toBottomOf="@+id/radioButton"
@@ -218,7 +226,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    android:hint="@string/add_school_college"
+                    app:hintEnabled="false"
+
                     app:layout_constraintTop_toBottomOf="@+id/etDOB">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -226,7 +235,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:maxLines="1"
-                        android:textSize="14sp" />
+                        android:hint="@string/add_school_college"
+                        style="@style/customEditbox" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -237,17 +247,20 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
-                    android:hint="Create Password"
+                    android:textColorHint="@color/colorGray"
+                    app:startIconDrawable="@drawable/ic_login_lock_active"
+                    app:hintEnabled="false"
                     app:passwordToggleEnabled="true"
-                    app:startIconDrawable="@drawable/lock"
+
                     app:layout_constraintTop_toBottomOf="@+id/filledTextcollege">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etPassword"
                         android:layout_width="match_parent"
+                        android:hint="Create Password"
                         android:layout_height="wrap_content"
                         android:maxLines="1"
-                        android:textSize="14sp" />
+                        style="@style/customEditbox" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -266,32 +279,33 @@
                     android:id="@+id/tmcondition"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:textSize="12sp"
-                    android:maxLines="2"
+                    android:layout_marginStart="10dp"
                     android:ellipsize="end"
-                    android:maxEms="16"
                     android:fontFamily="@font/poppins"
-                    android:textColor="@color/app_color"
+                    android:maxEms="16"
+                    android:maxLines="2"
                     android:text="@string/i_agree_to_the_terms_amp_condition_and_privacy_policy_of_this_application"
-                    app:layout_constraintBottom_toBottomOf="@+id/tmcheckbox"
+                    android:textColor="@color/app_color"
+                    android:textSize="10sp"
+                    app:layout_constraintEnd_toEndOf="@+id/filledTextPassword"
                     app:layout_constraintStart_toEndOf="@+id/tmcheckbox"
-                    app:layout_constraintTop_toTopOf="@+id/tmcheckbox"
-                    />
+                    app:layout_constraintTop_toTopOf="@+id/tmcheckbox" />
 
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/btn_crate_account"
+                    style="@style/primaryButtonStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="30dp"
                     android:layout_marginTop="32dp"
-                    android:background="@drawable/comon_button_background"
                     android:gravity="center"
-                    android:padding="14dp"
                     android:text="@string/create_account"
                     android:textColor="@color/white"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tmcondition"
-                    app:textAllCaps="false"/>
+                    app:textAllCaps="false" />
 
 
                 <ProgressBar

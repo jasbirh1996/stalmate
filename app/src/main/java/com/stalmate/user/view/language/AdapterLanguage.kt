@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.stalmate.user.R
@@ -19,7 +20,7 @@ class AdapterLanguage(
     var callback: Callbackk
 
 ) : RecyclerView.Adapter<AdapterLanguage.LanguageViewHolder>() {
-
+    var row_index = -1
     var list = ArrayList<Result>()
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -32,7 +33,11 @@ class AdapterLanguage(
     }
 
     override fun onBindViewHolder(holder: AdapterLanguage.LanguageViewHolder, position: Int) {
+
         holder.bind(list.get(position))
+
+
+
 
 
 
@@ -60,9 +65,33 @@ class AdapterLanguage(
             binding.item.text = feed.name
 
             binding.itemLayout.setOnClickListener {
+
+                row_index = position
+                notifyDataSetChanged()
+
                callback.onClickLanguageItem(list[position].id)
 
             }
+
+
+            if (row_index == position) {
+                binding.item.setBackground(
+                    ContextCompat.getDrawable(
+                        context,
+                        R.drawable.language_select_background_blue
+                    )
+                )
+                binding.item.setTextColor(ContextCompat.getColor(context, R.color.white))
+            } else {
+                binding.item.setBackground(
+                    ContextCompat.getDrawable(
+                        context,
+                        R.drawable.language_select_background
+                    )
+                )
+                binding.item.setTextColor(ContextCompat.getColor(context, R.color.black))
+            }
+
         }
     }
 }

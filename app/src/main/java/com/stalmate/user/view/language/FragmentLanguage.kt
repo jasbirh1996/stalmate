@@ -42,7 +42,6 @@ class FragmentLanguage : BaseFragment(), AdapterLanguage.Callbackk {
         /*Common ToolBar SetUp*/
         toolbarSetUp()
 
-        binding.progressBar.visibility = View.VISIBLE
         feedAdapter = AdapterLanguage(networkViewModel, requireContext(),this )
         binding.rvLanguage.adapter=feedAdapter
         binding.rvLanguage.layoutManager= GridLayoutManager(requireContext(), 3 )
@@ -50,7 +49,6 @@ class FragmentLanguage : BaseFragment(), AdapterLanguage.Callbackk {
         networkViewModel.languageLiveData("", HashMap())
         networkViewModel.languageLiveData.observe(requireActivity()) {
             it.let {
-                binding.progressBar.visibility = View.GONE
                 feedAdapter.submitList(it!!.results)
             }
         }
@@ -82,7 +80,7 @@ class FragmentLanguage : BaseFragment(), AdapterLanguage.Callbackk {
 
 
     override fun onClickLanguageItem(postId: String) {
-        makeToast( "abhay")
+
     }
 
 }

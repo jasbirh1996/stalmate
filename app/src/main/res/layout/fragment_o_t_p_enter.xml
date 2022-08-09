@@ -34,9 +34,9 @@
                     android:layout_marginTop="52dp"
                     android:fontFamily="@font/poppins"
                     android:gravity="center"
-                    android:text="Please enter your registered email id to rest your password"
-                    android:textColor="@color/black"
-                    android:textSize="16sp"
+                    android:text="Enter the OTP sent to your registered email id to reset your password."
+                    android:textColor="@color/colorGray"
+                    android:textSize="14sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -93,8 +93,9 @@
                     android:layout_marginTop="10dp"
                     android:text="Recent 25 Sec"
                     android:visibility="visible"
-                    android:textColor="@color/black"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="14sp"
+                    android:fontFamily="@font/poppins"
                     app:layout_constraintEnd_toEndOf="@+id/dont_receive"
                     app:layout_constraintStart_toStartOf="@+id/dont_receive"
                     app:layout_constraintTop_toBottomOf="@+id/dont_receive" />
@@ -119,11 +120,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="60dp"
                     android:layout_marginTop="50dp"
-                    android:background="@drawable/comon_button_background"
+            style="@style/primaryButtonStyle"
                     android:gravity="center"
-                    android:padding="14dp"
-                    android:text="@string/process"
-                    android:textColor="@color/white"
+                    android:text="@string/proceed"
                     app:layout_constraintTop_toBottomOf="@id/dont_receive"
                     app:layout_constraintBottom_toBottomOf="parent" />
 
