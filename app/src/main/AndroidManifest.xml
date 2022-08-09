@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.stalmate.user" >
+    package="com.stalmate.user">
+
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -20,54 +21,53 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:targetApi="32" >
-
+        tools:targetApi="32">
+        <activity
+            android:name=".view.profile.ActivityProfileEdit"
+            android:exported="false" />
         <activity
             android:name=".modules.reels.activity.ActivityFilter"
             android:exported="false" />
         <activity
             android:name=".view.OnBoarding.ActivityOnBoardingScreen"
             android:exported="false" />
-
         <activity
             android:name=".view.authentication.ActivityAuthentication"
             android:exported="false" />
-
-
         <activity
             android:name=".view.dashboard.ActivityDashboard"
             android:exported="false" />
-
         <activity
             android:name=".modules.reels.activity.ActivityVideoEditor"
             android:exported="false" />
-
         <activity
             android:name="com.stalmate.user.modules.reels.activity.ActivityVideoRecorder"
             android:exported="true"
             android:label="@string/app_name" />
-
         <activity
             android:name=".view.Splash.ActivitySplash"
-            android:exported="true"
-            android:theme="@style/SplashTheme">
+            android:exported="true">>
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
-            android:name="com.stalmate.user.view.profile.ActivityProfile"
-            android:exported="true" >
-           <!-- <intent-filter>
+            android:name=".view.profile.ActivityProfile"
+            android:exported="true">
+
+            <!--
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
+            </intent-filter>
+            -->
         </activity>
 
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
     </application>
+
 </manifest>

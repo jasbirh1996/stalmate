@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.stalmate.user.R
 import com.stalmate.user.databinding.ItemFriendBinding
 import com.stalmate.user.model.Feed
+import com.stalmate.user.model.Friend
 import com.stalmate.user.viewmodel.AppViewModel
 
 class FriendAdapter(
@@ -16,7 +17,7 @@ class FriendAdapter(
     var callback: Callbackk
 ) :
     RecyclerView.Adapter<FriendAdapter.FeedViewHolder>() {
-    var list = ArrayList<Feed>()
+    var list = ArrayList<Friend>()
 
 
     override fun onCreateViewHolder(
@@ -40,7 +41,7 @@ class FriendAdapter(
 
     inner class FeedViewHolder(var binding: ItemFriendBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(feed: Feed) {
+        fun bind(feed: Friend) {
 
 
         }
@@ -112,7 +113,7 @@ class FriendAdapter(
 */
 
 
-    fun submitList(feedList: List<Feed>) {
+    fun submitList(feedList: List<Friend>) {
         list.clear()
         list.addAll(feedList)
         notifyDataSetChanged()

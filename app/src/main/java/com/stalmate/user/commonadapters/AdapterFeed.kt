@@ -19,7 +19,6 @@ import com.stalmate.user.databinding.ItemFeedBinding
 import com.stalmate.user.model.Feed
 import com.stalmate.user.viewmodel.AppViewModel
 
-
 class AdapterFeed(
     val viewModel: AppViewModel,
     val context: Context,

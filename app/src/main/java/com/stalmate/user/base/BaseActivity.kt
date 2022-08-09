@@ -28,14 +28,14 @@ abstract class BaseActivity : AppCompatActivity(), View.OnClickListener,
 
     var isGPSAvailable = false
     var isInternetAvailable = false
-    private var progressDialog: ProgressDialog? = null
+    private var progressDialog: com.stalmate.user.view.dialogs.ProgressDialog? = null
     private var mProgressDialog: ProgressDialog? = null
     private val isInBAckground = false
     private var context: Context? = null
     abstract fun onClick(viewId: Int, view: View?)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        progressDialog = ProgressDialog(this)
+        progressDialog = com.stalmate.user.view.dialogs.ProgressDialog(this)
         context = this
 
     }
@@ -54,16 +54,18 @@ abstract class BaseActivity : AppCompatActivity(), View.OnClickListener,
             else -> onClick(v.id, v)
         }
     }
+
     override
     fun showLoader() {
         Log.d("asdsadsd", "asdsadsd")
-   /*     try {
-            if (!isFinishing && !progressDialog!!.isShowing) progressDialog.showDialog(com.user.foujiadda.dialog.ProgressDialog.DIALOG_FULLSCREEN)
+        try {
+            if (!isFinishing && !progressDialog!!.isShowing) progressDialog!!.showDialog(com.stalmate.user.view.dialogs.ProgressDialog.DIALOG_CENTERED)
         } catch (e: Exception) {
             e.printStackTrace()
-        }*/
+        }
     }
-override
+
+    override
     fun dismissLoader() {
         if (!isFinishing && progressDialog!!.isShowing) progressDialog!!.dismiss()
     }
@@ -90,8 +92,11 @@ override
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
         }
     }
+
     override
-    fun onFragmentDetach(fragmentTag: String?) {}
+    fun onFragmentDetach(fragmentTag: String?) {
+    }
+
     fun requestPermission(permission: String): Boolean {
         val isGranted =
             ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED

@@ -94,6 +94,9 @@ dependencies {
     implementation 'jp.co.cyberagent.android:gpuimage:2.1.0'
     implementation project(path: ':photoeditor')
     implementation project(path: ':SSffmpegVideoOperation')
+    implementation project(path: ':bubblepicker')
+
+
  //  implementation project(path: ':FBReaction-master')
 
 
@@ -105,13 +108,15 @@ dependencies {
     implementation 'info.hoang8f:android-segmented:1.0.6'
     implementation 'com.github.MasayukiSuda:Mp4Composer-android:v0.4.0'  //slow video
     implementation 'androidx.concurrent:concurrent-futures:1.1.0'
-    implementation 'com.google.android.exoplayer:exoplayer:2.18.0'
+    implementation 'com.google.android.exoplayer:exoplayer:2.18.1'
     implementation "com.airbnb.android:lottie:5.0.3"
     implementation 'com.writingminds:FFmpegAndroid:0.3.2'
     implementation 'com.tbuonomo:dotsindicator:4.3'
 
 
     implementation 'de.hdodenhof:circleimageview:3.1.0'
-  //  implementation 'com.github.pgreze:android-reactions:1.6'
+    implementation 'com.github.pgreze:android-reactions:1.6'
+    implementation 'com.github.Dimezis:BlurView:version-2.0.2'
+    implementation 'com.github.baoyachi:StepView:1.9'
 
 }

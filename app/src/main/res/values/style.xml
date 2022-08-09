@@ -54,6 +54,13 @@
 
 
 
+    <style name="StepsSeekBar" parent="Base.Widget.AppCompat.SeekBar">
+        <item name="android:indeterminateOnly">true</item>
+        <item name="android:progressDrawable">@drawable/electricity</item>
+        <item name="android:indeterminateDrawable">@drawable/electricity</item>
+        <item name="android:thumb">@drawable/electricity</item>
+        <item name="android:focusable">false</item>
+    </style>
 
 
 

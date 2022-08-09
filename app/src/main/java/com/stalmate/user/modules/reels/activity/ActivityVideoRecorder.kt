@@ -38,6 +38,7 @@ import com.otaliastudios.cameraview.filters.SharpnessFilter
 import com.otaliastudios.cameraview.gesture.Gesture
 import com.otaliastudios.cameraview.gesture.GestureAction
 import com.stalmate.user.R
+import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.databinding.ActivityVideoRecorderBinding
 import com.stalmate.user.modules.reels.adapter.FilterAdapter
 import com.stalmate.user.modules.reels.filters.*
@@ -52,7 +53,7 @@ import java.io.File
 import java.util.*
 
 
-class ActivityVideoRecorder : AppCompatActivity() {
+class ActivityVideoRecorder : BaseActivity() {
 
 
     val EXTRA_AUDIO = "audio"
@@ -63,6 +64,10 @@ class ActivityVideoRecorder : AppCompatActivity() {
     private var mMediaPlayer: MediaPlayer? = null
     private val mStopper = Runnable { stopRecording() }
     lateinit var binding: ActivityVideoRecorderBinding
+    override fun onClick(viewId: Int, view: View?) {
+
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityVideoRecorderBinding.inflate(layoutInflater)
@@ -358,9 +363,7 @@ class ActivityVideoRecorder : AppCompatActivity() {
             binding.cameraView.takeVideoSnapshot(
                 mModel!!.video!!, ((SharedConstants.MAX_DURATION - recorded).toInt())
             )
-            /*  mPulse = YoYo.with(Techniques.Pulse)
-                  .repeat(YoYo.INFINITE)
-                  .playOn(mRecordButton)*/
+
         }
     }
 
@@ -370,6 +373,8 @@ class ActivityVideoRecorder : AppCompatActivity() {
     }
 
     private fun commitRecordings() {
+        showLoader()
+
         val videos: MutableList<String> = ArrayList()
         for (segment in mModel!!.segments) {
             videos.add(segment.file!!.absolutePath)
@@ -425,6 +430,7 @@ class ActivityVideoRecorder : AppCompatActivity() {
     }
 
     private fun processCurrentRecording() {
+        showLoader()
         val duration: Long = VideoUtil.getDuration(this, Uri.fromFile(mModel!!.video))
     /*    if (mModel!!.speed != 1f) {
             applyVideoSpeed(mModel!!.video!!, mModel!!.speed, duration)
@@ -439,6 +445,7 @@ class ActivityVideoRecorder : AppCompatActivity() {
     }
 
     private fun applyVideoSpeed(file: File, speed: Float, duration: Long) {
+
         val output = File(cacheDir, UUID.randomUUID().toString())
         val data = Data.Builder()
             .putString(VideoSpeedWorker.KEY_INPUT, file.absolutePath)
@@ -452,8 +459,12 @@ class ActivityVideoRecorder : AppCompatActivity() {
         wm.enqueue(request)
         wm.getWorkInfoByIdLiveData(request.id)
             .observe(this) { info: WorkInfo ->
-                val ended = (info.state == WorkInfo.State.CANCELLED
-                        || info.state == WorkInfo.State.FAILED)
+
+                val ended = (info.state == WorkInfo.State.CANCELLED || info.state == WorkInfo.State.FAILED)
+
+
+
+
                 if (info.state == WorkInfo.State.SUCCEEDED) {
 
                     val segment = RecordSegment()
@@ -461,15 +472,16 @@ class ActivityVideoRecorder : AppCompatActivity() {
                     segment.duration = duration
                     mModel!!.segments.add(segment)
                     file.delete()
+                    dismissLoader()
                 } else if (ended) {
 
                     file.delete()
+                    dismissLoader()
                 }
             }
     }
     private fun closeFinally(video: File) {
-        Log.d("ksjlfhdsdf","asdas")
-            Log.d("ksjlfhdsdf",mModel!!.segments.size.toString())
+      dismissLoader()
         val intent = Intent(this, ActivityFilter::class.java)
        intent.putExtra(ActivityFilter.EXTRA_SONG, mModel!!.song)
         intent.putExtra(ActivityFilter.EXTRA_VIDEO, video.absolutePath)
