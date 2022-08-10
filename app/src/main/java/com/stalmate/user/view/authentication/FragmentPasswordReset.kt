@@ -1,7 +1,10 @@
 package com.stalmate.user.view.authentication
 
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -45,13 +48,58 @@ class FragmentPasswordReset : BaseFragment() {
         toolbarSetUp()
 
 
-        binding.btnSubmit.setOnClickListener {
+        binding.btnLogin.setOnClickListener {
             Log.d("acdjmcb", "acbasbcja")
             if (isValid()) {
                 forgetPasswordApiCall()
             }
 
         }
+
+
+        binding.etPassword.addTextChangedListener(object : TextWatcher {
+            @SuppressLint("ResourceAsColor")
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+
+                if (binding.etPassword.text!!.isEmpty()){
+                    binding.appCompatImageView17.visibility = View.GONE
+                }else {
+                    binding.appCompatImageView17.visibility = View.VISIBLE
+                }
+
+            }
+
+            override fun beforeTextChanged(s: CharSequence,start: Int,count: Int,after: Int) {
+
+            }
+
+            override fun afterTextChanged(s: Editable) {
+
+            }
+        })
+
+        binding.etConfirmPassword.addTextChangedListener(object : TextWatcher {
+            @SuppressLint("ResourceAsColor")
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+
+                if (binding.etConfirmPassword.text!!.isEmpty()){
+                    binding.appCompatImageView18.visibility = View.GONE
+                }else {
+                    binding.appCompatImageView18.visibility = View.VISIBLE
+
+                }
+
+
+            }
+
+            override fun beforeTextChanged(s: CharSequence,start: Int,count: Int,after: Int) {
+
+            }
+
+            override fun afterTextChanged(s: Editable) {
+
+            }
+        })
     }
 
 
@@ -99,13 +147,13 @@ class FragmentPasswordReset : BaseFragment() {
 
     fun isValid():Boolean {
 
-        if(binding.etPassword.text!!.isEmpty() || binding.etConfirmpassword.text!!.isEmpty()) {
+        if(binding.etPassword.text!!.isEmpty() || binding.etConfirmPassword.text!!.isEmpty()) {
             makeToast("Please Enter Password")
             return false
         } else if(ValidationHelper.isValidPassword(binding.etPassword.text.toString())) {
             makeToast(getString(R.string.password_error_toast))
             return false
-        } else if(binding.etPassword.text != binding.etConfirmpassword.text) {
+        } else if (binding.etPassword.text.toString() != binding.etConfirmPassword.text.toString()) {
             makeToast(getString(R.string.password_not_match))
             return false
         }

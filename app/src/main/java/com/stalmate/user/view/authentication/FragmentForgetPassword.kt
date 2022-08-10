@@ -1,6 +1,9 @@
 package com.stalmate.user.view.authentication
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -50,6 +53,28 @@ class FragmentForgetPassword : BaseFragment() {
                 requestOtpApi()
             }
         }
+
+
+        binding.etEmail.addTextChangedListener(object : TextWatcher {
+            @SuppressLint("ResourceAsColor")
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+
+                if (ValidationHelper.isValidEmail(binding.etEmail.text.toString())){
+                    binding.appCompatImageView12.visibility = View.VISIBLE
+                }else{
+                    binding.appCompatImageView12.visibility = View.GONE
+                }
+
+            }
+
+            override fun beforeTextChanged(s: CharSequence,start: Int,count: Int,after: Int) {
+
+            }
+
+            override fun afterTextChanged(s: Editable) {
+
+            }
+        })
     }
 
 
@@ -98,12 +123,17 @@ class FragmentForgetPassword : BaseFragment() {
     }
 
 
-    fun isValid():Boolean{
 
-        if (!ValidationHelper.isValidEmail(binding.etEmail.text.toString())){
+
+    fun isValid():Boolean{
+        if (ValidationHelper.isNull(binding.etEmail.text.toString())){
             makeToast(getString(R.string.email_error_toast))
             return false;
-        }
+        }else
+            if (!ValidationHelper.isValidEmail(binding.etEmail.text.toString())){
+                makeToast(getString(R.string.please_enter_valid_email))
+                return false;
+            }
 
         return true
     }

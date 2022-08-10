@@ -33,13 +33,14 @@
             app:dotsColor="@color/grey_light"
             app:dotsCornerRadius="8dp"
             app:dotsSize="12dp"
+
             app:dotsSpacing="4dp"
             app:dotsWidthFactor="2"
             app:layout_constraintBottom_toBottomOf="@+id/btn_next"
             app:layout_constraintEnd_toStartOf="@+id/btn_next"
             app:layout_constraintStart_toEndOf="@+id/skip"
             app:layout_constraintTop_toTopOf="@+id/btn_next"
-            app:progressMode="true"
+            app:progressMode="false"
             app:selectedDotColor="@color/obboard_indicator" />
 
 
@@ -61,9 +62,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            android:fontFamily="@font/poppins_semibold"
+            android:fontFamily="@font/poppins"
             android:text="Skip"
-            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="@+id/btn_next"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/btn_next" />

@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.Window
+import android.view.WindowManager
 import com.stalmate.user.R
 import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.view.OnBoarding.ActivityOnBoardingScreen
@@ -16,7 +18,10 @@ class ActivitySplash : AppCompatActivity() {
     private  lateinit var context: ActivitySplash
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_splash)
         context = this
         prefManager = PrefManager(context)

@@ -24,65 +24,125 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/toolbar">
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/first_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/filledTextName"
-                    android:layout_width="match_parent"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etName"
+                    style="@style/customEditbox"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
                     android:hint="@string/first_name"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    android:maxLines="1"
+                    android:paddingVertical="15dp"
+                    app:layout_constraintEnd_toStartOf="@+id/appCompatImageView14"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etName"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:maxLines="1"
-                        android:textSize="14sp" />
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/appCompatImageView14"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:src="@drawable/ic_login_check_tick"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                </com.google.android.material.textfield.TextInputLayout>
 
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/filledTextLastName"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:hint="@string/last_name"
-                    app:layout_constraintTop_toBottomOf="@+id/filledTextName">
+                    app:layout_constraintTop_toBottomOf="@+id/first_name">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etLastName"
-                        android:layout_width="match_parent"
+                        style="@style/customEditbox"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:hint="@string/last_name"
                         android:maxLines="1"
-                        android:textSize="14sp" />
+                        android:paddingVertical="15dp"
+                        app:layout_constraintEnd_toStartOf="@+id/appCompatImageView13"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-                </com.google.android.material.textfield.TextInputLayout>
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/appCompatImageView13"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        android:src="@drawable/ic_login_check_tick"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/filledTextEmail"
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:hint="@string/email"
-                    app:layout_constraintTop_toBottomOf="@+id/filledTextLastName"
-                    app:startIconDrawable="@drawable/email">
+                    app:layout_constraintTop_toBottomOf="@+id/name">
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etEmail"
-                        android:layout_width="match_parent"
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/filledTextEmail"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:maxLines="1"
-                        android:textSize="14sp" />
+                        android:layout_marginTop="10dp"
+                        android:textColorHint="@color/app_color"
+                        app:hintEnabled="false"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/appCompatImageView12"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
 
-                </com.google.android.material.textfield.TextInputLayout>
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etEmail"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:drawableStart="@drawable/ic_login_mail_inactive"
+                            android:drawablePadding="8dp"
+                            android:paddingVertical="15dp"
+                            android:hint="@string/enter_your_email_id"
+                            android:maxLines="1"
+                            android:textSize="14sp" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/appCompatImageView12"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        android:src="@drawable/ic_login_check_tick"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -92,14 +152,15 @@
                     android:text="@string/gender"
                     android:layout_marginTop="10dp"
                     android:textSize="16dp"
-                    app:layout_constraintStart_toStartOf="@+id/filledTextEmail"
-                    app:layout_constraintTop_toBottomOf="@+id/filledTextEmail" />
+                    app:layout_constraintStart_toStartOf="@+id/email"
+                    app:layout_constraintTop_toBottomOf="@+id/email" />
 
 
                 <RadioGroup
                     android:id="@+id/radio_group"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:orientation="horizontal"
                     app:layout_constraintStart_toStartOf="@+id/gender"
                     app:layout_constraintTop_toBottomOf="@+id/gender">
@@ -113,10 +174,10 @@
                             android:id="@+id/rdmale"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:text="@string/male"
                             android:textColor="@color/black"
                             android:theme="@style/customButtonStyle"
-                            android:layout_weight="1"
                             app:layout_constraintStart_toStartOf="@+id/gender"
                             app:layout_constraintTop_toBottomOf="@+id/gender" />
 
@@ -125,8 +186,8 @@
                             android:id="@+id/rdFamel"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/female"
                             android:layout_weight="1"
+                            android:text="@string/female"
                             android:textColor="@color/black"
                             android:theme="@style/customButtonStyle"
                             app:layout_constraintBottom_toBottomOf="@+id/rdmale"
@@ -139,8 +200,8 @@
                             android:id="@+id/rdOthers"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/others"
                             android:layout_weight="1"
+                            android:text="@string/others"
                             android:textColor="@color/black"
                             android:theme="@style/customButtonStyle"
                             app:layout_constraintBottom_toBottomOf="@+id/radioButton"
@@ -213,43 +274,85 @@
                     app:layout_constraintTop_toBottomOf="@id/etDOB" />
 
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/filledTextcollege"
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/dob"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:hint="@string/add_school_college"
                     app:layout_constraintTop_toBottomOf="@+id/etDOB">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etschoolcollege"
-                        android:layout_width="match_parent"
+                        style="@style/customEditbox"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:hint="@string/add_school_college"
                         android:maxLines="1"
-                        android:textSize="14sp" />
+                        android:paddingVertical="15dp"
+                        app:layout_constraintEnd_toStartOf="@+id/appCompatImageView16"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-                </com.google.android.material.textfield.TextInputLayout>
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/appCompatImageView16"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        android:src="@drawable/ic_login_check_tick"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
 
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/filledTextPassword"
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:hint="Create Password"
-                    app:passwordToggleEnabled="true"
-                    app:startIconDrawable="@drawable/lock"
-                    app:layout_constraintTop_toBottomOf="@+id/filledTextcollege">
+                    app:layout_constraintTop_toBottomOf="@+id/dob">
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etPassword"
-                        android:layout_width="match_parent"
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/filledTextPassword"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:maxLines="1"
-                        android:textSize="14sp" />
+                        android:textColorHint="@color/app_color"
+                        app:hintEnabled="false"
+                        app:layout_constraintEnd_toStartOf="@+id/appCompatImageView17"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:passwordToggleEnabled="true">
 
-                </com.google.android.material.textfield.TextInputLayout>
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etPassword"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:drawableStart="@drawable/ic_login_lock_inactive"
+                            android:drawablePadding="8dp"
+                            android:hint="@string/enter_your_password"
+                            android:textSize="14sp" />
+
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/appCompatImageView17"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        android:src="@drawable/ic_login_check_tick"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+
 
 
                 <androidx.appcompat.widget.AppCompatCheckBox
@@ -258,40 +361,41 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:theme="@style/customButtonStyle"
-                    app:layout_constraintStart_toStartOf="@+id/filledTextPassword"
-                    app:layout_constraintTop_toBottomOf="@+id/filledTextPassword" />
+                    app:layout_constraintStart_toStartOf="@+id/password"
+                    app:layout_constraintTop_toBottomOf="@+id/password" />
 
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tmcondition"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:textSize="12sp"
-                    android:maxLines="2"
+                    android:layout_marginStart="10dp"
                     android:ellipsize="end"
-                    android:maxEms="16"
                     android:fontFamily="@font/poppins"
-                    android:textColor="@color/app_color"
+                    android:maxEms="16"
+                    android:maxLines="2"
                     android:text="@string/i_agree_to_the_terms_amp_condition_and_privacy_policy_of_this_application"
-                    app:layout_constraintBottom_toBottomOf="@+id/tmcheckbox"
+                    android:textColor="@color/app_color"
+                    android:textSize="10sp"
+                    app:layout_constraintEnd_toEndOf="@+id/password"
                     app:layout_constraintStart_toEndOf="@+id/tmcheckbox"
-                    app:layout_constraintTop_toTopOf="@+id/tmcheckbox"
-                    />
+                    app:layout_constraintTop_toTopOf="@+id/tmcheckbox" />
 
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/btn_crate_account"
+                    style="@style/primaryButtonStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="30dp"
                     android:layout_marginTop="32dp"
-                    android:background="@drawable/comon_button_background"
                     android:gravity="center"
-                    android:padding="14dp"
                     android:text="@string/create_account"
                     android:textColor="@color/white"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tmcondition"
-                    app:textAllCaps="false"/>
+                    app:textAllCaps="false" />
 
 
                 <ProgressBar
