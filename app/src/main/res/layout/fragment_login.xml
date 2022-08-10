@@ -76,6 +76,7 @@
                     android:layout_height="wrap_content"
                     android:drawableStart="@drawable/ic_login_mail_inactive"
                     android:drawablePadding="8dp"
+                    style="@style/customEditbox"
                     android:hint="@string/enter_your_email_id"
                     android:maxLines="1"
                     android:textSize="14sp" />
@@ -122,6 +123,7 @@
                     android:layout_height="wrap_content"
                     android:drawableStart="@drawable/ic_login_lock_inactive"
                     android:drawablePadding="8dp"
+                    style="@style/customEditbox"
                     android:hint="@string/enter_your_password"
                     android:textSize="14sp" />
 

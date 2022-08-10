@@ -61,4 +61,6 @@
     <string name="create_password">Create Password</string>
     <string name="password_not_match">Password not Match</string>
     <string name="reset">Reset</string>
+    <string name="password_chnage_successfull">Password Changed Successfully</string>
+    <string name="your_account_has_been_successfully_created">Your account has been successfully created</string>
 </resources>

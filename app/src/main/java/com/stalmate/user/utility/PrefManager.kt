@@ -107,10 +107,6 @@ class PrefManager(private val context: Context) {
         editor.commit()
     }
 
-
-
-
-
     fun setLongitudeValue(key: String?, value: String?) {
         editor.putString(key, value)
         editor.commit()

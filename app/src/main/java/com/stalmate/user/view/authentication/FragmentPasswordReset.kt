@@ -2,7 +2,11 @@ package com.stalmate.user.view.authentication
 
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -14,13 +18,18 @@ import androidx.navigation.fragment.findNavController
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentPasswordResetBinding
+import com.stalmate.user.databinding.SignUpSuccessPoppuBinding
+import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.utilities.ValidationHelper
+import com.stalmate.user.view.dashboard.ActivityDashboard
 
 class FragmentPasswordReset : BaseFragment() {
 
     private lateinit var binding: FragmentPasswordResetBinding
+    private lateinit var bindingdialog : SignUpSuccessPoppuBinding
     var email: String = ""
     var otp: String = ""
+    val DURATION: Long = 2000
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -120,8 +129,32 @@ class FragmentPasswordReset : BaseFragment() {
 
                 if (it.status == true) {
 
+
+
                     dismissLoader()
-                    findNavController().navigate(R.id.fragmentLogin)
+                    val builder = AlertDialog.Builder(requireContext(), R.style.CustomAlertDialog).create()
+                    val view = layoutInflater.inflate(R.layout.sign_up_success_poppu,null)
+
+                    bindingdialog.succesIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_successfull_vector))
+                    bindingdialog.dialogText.setText(getString(R.string.password_chnage_successfull))
+                    builder.setView(view)
+                    builder.setCanceledOnTouchOutside(false)
+
+                    PrefManager.getInstance(requireContext())!!.keyIsLoggedIn = true
+
+                    Handler(Looper.getMainLooper()).postDelayed({
+
+                        findNavController().navigate(R.id.fragmentLogin)
+
+                        builder.dismiss()
+                        activity?.finish()
+                    }, DURATION)
+                    builder.show()
+
+
+                    makeToast(message)
+
+
 
                     makeToast(message)
                 } else {
