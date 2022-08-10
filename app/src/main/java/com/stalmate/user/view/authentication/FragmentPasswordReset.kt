@@ -19,20 +19,18 @@ class FragmentPasswordReset : BaseFragment() {
     var otp: String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         // Inflate the layout for this fragment
         var view = inflater.inflate(R.layout.fragment_password_reset, container, false)
         binding = DataBindingUtil.bind<FragmentPasswordResetBinding>(view)!!
-
         email = requireArguments().getString("email").toString()
         otp = requireArguments().getString("otp").toString()
-
         return binding.root
     }
 
@@ -40,14 +38,10 @@ class FragmentPasswordReset : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         /*Common ToolBar SetUp*/
         toolbarSetUp()
-
-
         binding.btnLogin.setOnClickListener {
-
             if (isValid()) {
                 forgetPasswordApiCall()
             }
-
         }
     }
 
