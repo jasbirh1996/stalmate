@@ -34,8 +34,12 @@ class FragmentOTPEnter : BaseFragment() {
         // Inflate the layout for this fragment
         var view =  inflater.inflate(R.layout.fragment_o_t_p_enter, container, false)
         binding = DataBindingUtil.bind<FragmentOTPEnterBinding>(view)!!
-        email = requireArguments().getString("email").toString()
-        forgetPasswordScreen = requireArguments().getBoolean("Boolean")
+
+        try {
+            email = requireArguments().getString("email").toString()
+            forgetPasswordScreen = requireArguments().getBoolean("Boolean")
+        }catch (e : Exception){}
+
         Log.d("akjsdad",email)
         return binding.root
     }
@@ -181,6 +185,7 @@ class FragmentOTPEnter : BaseFragment() {
                     startTimer()
                     binding.otpResent.visibility = View.GONE
                     binding.otpCountDown.visibility = View.VISIBLE
+                    getOtpApiCall()
 
                 }
             }

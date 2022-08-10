@@ -20,7 +20,7 @@ class AdapterLanguage(
     var callback: Callbackk
 
 ) : RecyclerView.Adapter<AdapterLanguage.LanguageViewHolder>() {
-    var row_index = -1
+    var row_index = 0
     var list = ArrayList<Result>()
     override fun onCreateViewHolder(
         parent: ViewGroup,
