@@ -1,7 +1,6 @@
 package com.stalmate.user.view.dashboard.welcome
 
 
-
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -22,12 +21,13 @@ import com.kienht.bubblepicker.rendering.BubblePicker
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentInterestSuggestionListBinding
+import com.stalmate.user.model.Friend
 import com.stalmate.user.view.adapter.FriendAdapter
 
 
 class FragmentInterestSuggestionList : BaseFragment(), FriendAdapter.Callbackk {
-    lateinit var friendAdapter:FriendAdapter
-    lateinit var binding:FragmentInterestSuggestionListBinding
+    lateinit var friendAdapter: FriendAdapter
+    lateinit var binding: FragmentInterestSuggestionListBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -37,7 +37,13 @@ class FragmentInterestSuggestionList : BaseFragment(), FriendAdapter.Callbackk {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding=DataBindingUtil.bind<FragmentInterestSuggestionListBinding>(inflater.inflate(R.layout.fragment_interest_suggestion_list, container, false))!!
+        binding = DataBindingUtil.bind<FragmentInterestSuggestionListBinding>(
+            inflater.inflate(
+                R.layout.fragment_interest_suggestion_list,
+                container,
+                false
+            )
+        )!!
         return binding.root
     }
 
@@ -60,7 +66,7 @@ class FragmentInterestSuggestionList : BaseFragment(), FriendAdapter.Callbackk {
         val titles = resources.getStringArray(R.array.countries)
         val colors = resources.obtainTypedArray(R.array.colors)
         val images = resources.obtainTypedArray(R.array.images)
-        binding.picker.centerImmediately=true
+        binding.picker.centerImmediately = true
 
 /*        Handler().postDelayed({
             binding.picker = BubblePicker(this, null)
@@ -112,53 +118,53 @@ class FragmentInterestSuggestionList : BaseFragment(), FriendAdapter.Callbackk {
         stepsBeanList.add(stepBean4)
 
 
-Handler(Looper.myLooper()!!).postDelayed(Runnable {
-    binding.stepview.setStepViewTexts(stepsBeanList) //总步骤
-        .setTextSize(12)
-        .setStepsViewIndicatorCompletedLineColor(
-            ContextCompat.getColor(
-                requireActivity(),
-                android.R.color.white
-            )
-        )
-        .setStepsViewIndicatorUnCompletedLineColor(
-            ContextCompat.getColor(
-                requireActivity(),
-                R.color.colorPrimary
-            )
-        )
-        .setStepViewComplectedTextColor(
-            ContextCompat.getColor(
-                requireActivity(),
-                android.R.color.white
-            )
-        )
-        .setStepViewUnComplectedTextColor(
-            ContextCompat.getColor(
-                requireActivity(),
-                R.color.colorPrimary
-            )
-        )
-        .setStepsViewIndicatorCompleteIcon(
-            ContextCompat.getDrawable(
-                requireActivity(),
-                R.drawable.view
-            )
-        )
-        .setStepsViewIndicatorDefaultIcon(
-            ContextCompat.getDrawable(
-                requireActivity(),
-                R.drawable.view
-            )
-        )
-        .setStepsViewIndicatorAttentionIcon(
-            ContextCompat.getDrawable(
-                requireActivity(),
-                R.drawable.view
-            )
-        )
+        Handler(Looper.myLooper()!!).postDelayed(Runnable {
+            binding.stepview.setStepViewTexts(stepsBeanList) //总步骤
+                .setTextSize(12)
+                .setStepsViewIndicatorCompletedLineColor(
+                    ContextCompat.getColor(
+                        requireActivity(),
+                        android.R.color.white
+                    )
+                )
+                .setStepsViewIndicatorUnCompletedLineColor(
+                    ContextCompat.getColor(
+                        requireActivity(),
+                        R.color.colorPrimary
+                    )
+                )
+                .setStepViewComplectedTextColor(
+                    ContextCompat.getColor(
+                        requireActivity(),
+                        android.R.color.white
+                    )
+                )
+                .setStepViewUnComplectedTextColor(
+                    ContextCompat.getColor(
+                        requireActivity(),
+                        R.color.colorPrimary
+                    )
+                )
+                .setStepsViewIndicatorCompleteIcon(
+                    ContextCompat.getDrawable(
+                        requireActivity(),
+                        R.drawable.view
+                    )
+                )
+                .setStepsViewIndicatorDefaultIcon(
+                    ContextCompat.getDrawable(
+                        requireActivity(),
+                        R.drawable.view
+                    )
+                )
+                .setStepsViewIndicatorAttentionIcon(
+                    ContextCompat.getDrawable(
+                        requireActivity(),
+                        R.drawable.view
+                    )
+                )
 
-},250)
+        }, 250)
 
 
     }
@@ -179,8 +185,7 @@ Handler(Looper.myLooper()!!).postDelayed(Runnable {
     }
 
 
-
-    override fun onClickOnViewComments(postId: Int) {
+    override fun onClickOnUpdateFriendRequest(friend: Friend, status: String) {
 
     }
 }

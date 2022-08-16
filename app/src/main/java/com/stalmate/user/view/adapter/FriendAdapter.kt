@@ -4,6 +4,10 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.stalmate.user.R
 import com.stalmate.user.databinding.ItemFriendBinding
@@ -16,10 +20,8 @@ class FriendAdapter(
     val context: Context,
     var callback: Callbackk
 ) :
-    RecyclerView.Adapter<FriendAdapter.FeedViewHolder>() {
+    RecyclerView.Adapter<FriendAdapter.FeedViewHolder>(){
     var list = ArrayList<Friend>()
-
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -33,84 +35,21 @@ class FriendAdapter(
     override fun onBindViewHolder(holder: FriendAdapter.FeedViewHolder, position: Int) {
         holder.bind(list.get(position))
     }
-
     override fun getItemCount(): Int {
         return list.size
     }
-
-
     inner class FeedViewHolder(var binding: ItemFriendBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(feed: Friend) {
-
-
-        }
-
-    }
-
-
-/*
-    private fun likeUnlikeApi(
-        position: Int, feed: Feed
-    ) {
-        val hashMap = HashMap<String, String>()
-        hashMap["token"] =
-            PrefManager.getInstance(context)!!.userDetail.token
-        hashMap["post_id"] = feed.id
-        if (feed.like == 0) {
-            hashMap["like"] = "1"
-        } else {
-            hashMap["like"] = "0"
-        }
-        RestClient.getInst().likeUnlikeFeed(hashMap).enqueue(object : Callback<ModelSuccess> {
-            override fun onResponse(call: Call<ModelSuccess>, response: Response<ModelSuccess>) {
-                if (response.body()!!.result) {
-                    if (feed.like == 0) {
-                        feed.like = 1
-                        feed.likeCount = (feed.likeCount.toInt() + 1).toString()
-                    } else {
-                        feed.like = 0
-                        feed.likeCount = (feed.likeCount.toInt() - 1).toString()
-                    }
-                    viewModel.update(feed, position)
-                } else {
-                }
+        fun bind(friend: Friend) {
+            binding.buttonFollow.setOnClickListener {
+              callback.onClickOnUpdateFriendRequest(friend,"Accept")
             }
-
-            override fun onFailure(call: Call<ModelSuccess>, t: Throwable) {}
-        })
-    }
-
-
-    private fun followUnfollowApi(
-        position: Int, feed: Feed
-    ) {
-        val hashMap = HashMap<String, String>()
-        hashMap["token"] =
-            PrefManager.getInstance(context)!!.userDetail.token
-        hashMap["postUserID"] = feed.user_id
-        if (feed.already_follow == "No") {
-            hashMap["follow"] = "Yes"
-        } else {
-            hashMap["follow"] = "No"
         }
-        RestClient.getInst().followUnfollowUser(hashMap).enqueue(object : Callback<ModelSuccess> {
-            override fun onResponse(call: Call<ModelSuccess>, response: Response<ModelSuccess>) {
-                if (response.body()!!.result) {
-                    if (feed.already_follow == "No") {
-                        feed.already_follow = "Yes"
-                    } else {
-                        feed.already_follow = "No"
-                    }
-                    viewModel.update(feed, position)
-                } else {
-                }
-            }
-
-            override fun onFailure(call: Call<ModelSuccess>, t: Throwable) {}
-        })
     }
-*/
+
+
+
+
 
 
     fun submitList(feedList: List<Friend>) {
@@ -120,8 +59,15 @@ class FriendAdapter(
     }
 
     public interface Callbackk {
-        fun onClickOnViewComments(postId: Int)
+        fun onClickOnUpdateFriendRequest(friend:Friend,status: String)
     }
+
+
+
+
+
+
+
 
 
 }

@@ -15,6 +15,7 @@ import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.commonadapters.FragmentViewPagerAdapter
 import com.stalmate.user.databinding.FragmentFriendBinding
+import com.stalmate.user.model.Friend
 import com.stalmate.user.view.adapter.FriendAdapter
 import com.stalmate.user.view.adapter.ProfileFriendAdapter
 
@@ -54,7 +55,8 @@ class FragmentFriend : BaseFragment(), FriendAdapter.Callbackk {
     }
 
 
-    override fun onClickOnViewComments(postId: Int) {
+
+    override fun onClickOnUpdateFriendRequest(friend: Friend, status: String) {
 
     }
 }

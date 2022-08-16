@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentFriendListBinding
+import com.stalmate.user.model.Friend
 import com.stalmate.user.view.adapter.FriendAdapter
 import com.stalmate.user.view.adapter.ProfileFriendAdapter
 
@@ -31,16 +32,16 @@ lateinit var binding:FragmentFriendListBinding
         binding=DataBindingUtil.bind<FragmentFriendListBinding>(inflater.inflate(R.layout.fragment_friend_list, container, false))!!
         return binding.root
     }
-
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        friendAdapter = FriendAdapter(networkViewModel, context!!, this)
-
+        friendAdapter = FriendAdapter(networkViewModel, requireContext(), this)
         binding.rvFriends.adapter=friendAdapter
         binding.rvFriends.layoutManager= LinearLayoutManager(context)
-        networkViewModel.getFriendList("", HashMap())
+        var hashmap=HashMap<String,String>()
+        hashmap.put("type","")
+        hashmap.put("search","")
+        hashmap.put("page","")
+        networkViewModel.getFriendList("", hashmap)
         networkViewModel.friendLiveData.observe(viewLifecycleOwner, Observer {
             it.let {
                 friendAdapter.submitList(it!!.results)
@@ -49,7 +50,7 @@ lateinit var binding:FragmentFriendListBinding
     }
 
 
-    override fun onClickOnViewComments(postId: Int) {
+    override fun onClickOnUpdateFriendRequest(friend: Friend, status: String) {
 
     }
 }

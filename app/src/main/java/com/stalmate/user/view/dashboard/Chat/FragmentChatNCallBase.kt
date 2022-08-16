@@ -13,6 +13,7 @@ import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentCallNChatBaseBinding
 import com.stalmate.user.databinding.FragmentCallUsersListBinding
+import com.stalmate.user.model.Friend
 import com.stalmate.user.view.adapter.FriendAdapter
 
 class FragmentChatNCallBase : BaseFragment(), FriendAdapter.Callbackk {
@@ -35,7 +36,9 @@ class FragmentChatNCallBase : BaseFragment(), FriendAdapter.Callbackk {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
     }
-    override fun onClickOnViewComments(postId: Int) {
+
+
+    override fun onClickOnUpdateFriendRequest(friend: Friend, status: String) {
 
     }
 }

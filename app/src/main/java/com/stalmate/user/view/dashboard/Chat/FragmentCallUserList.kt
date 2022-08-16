@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentCallUsersListBinding
+import com.stalmate.user.model.Friend
 import com.stalmate.user.view.adapter.FriendAdapter
 
 class FragmentCallUserList : BaseFragment(), FriendAdapter.Callbackk {
@@ -46,8 +47,9 @@ class FragmentCallUserList : BaseFragment(), FriendAdapter.Callbackk {
         })
     }
 
-
-    override fun onClickOnViewComments(postId: Int) {
+    override fun onClickOnUpdateFriendRequest(friend: Friend, status: String) {
 
     }
+
+
 }

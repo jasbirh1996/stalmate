@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
+import com.stalmate.user.model.Friend
 
 
 import com.stalmate.user.view.adapter.ProfileFriendAdapter
@@ -54,7 +55,9 @@ class FragmentEventSuggestionsList : BaseFragment(), FriendAdapter.Callbackk {
     }
 
 
-    override fun onClickOnViewComments(postId: Int) {
+
+
+    override fun onClickOnUpdateFriendRequest(friend: Friend, status: String) {
 
     }
 }

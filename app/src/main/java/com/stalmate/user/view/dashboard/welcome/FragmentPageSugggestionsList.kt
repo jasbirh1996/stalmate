@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentPageSuggestionListBinding
+import com.stalmate.user.model.Friend
 
 
 import com.stalmate.user.view.adapter.ProfileFriendAdapter
@@ -56,7 +57,9 @@ class FragmentPageSugggestionsList : BaseFragment(), FriendAdapter.Callbackk {
     }
 
 
-    override fun onClickOnViewComments(postId: Int) {
 
+
+    override fun onClickOnUpdateFriendRequest(friend: Friend, status: String) {
+        TODO("Not yet implemented")
     }
 }

@@ -49,6 +49,14 @@ open class AppViewModel : ViewModel() {
     }
 
 
+    var updateFriendRequestLiveData: LiveData<ModelSuccess?> = MutableLiveData<ModelSuccess?>()
+    fun updateFriendRequest(token: String, map: HashMap<String, String>) {
+        val temp = MutableLiveData<ModelSuccess?>()
+        updateFriendRequestLiveData = temp
+        getResult(temp, apiInterface.updateFriendRequest(map))
+    }
+
+
 
     var categoryLiveData: LiveData<ModelCategory?> = MutableLiveData<ModelCategory?>()
     fun getCategoryList(token: String, map: HashMap<String, String>) {
@@ -80,6 +88,14 @@ open class AppViewModel : ViewModel() {
         otpVerifyData = temp
         getResult(temp, apiInterface.setOtpVerify(map))
     }
+
+
+
+
+
+
+
+
 
 
     fun <T : Any> getResult(data: MutableLiveData<T?>, call: Call<T>) {
