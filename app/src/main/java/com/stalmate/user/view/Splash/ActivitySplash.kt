@@ -18,17 +18,10 @@ class ActivitySplash : AppCompatActivity() {
     private  lateinit var context: ActivitySplash
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
-
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_splash)
         context = this
         prefManager = PrefManager(context)
-
-
-
-
         Handler(Looper.getMainLooper()).postDelayed({
             if (prefManager.keyIsLoggedIn) {
                 startActivity(Intent(applicationContext, ActivityDashboard::class.java))

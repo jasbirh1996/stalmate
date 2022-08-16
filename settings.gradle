@@ -15,4 +15,4 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "Slatmate"
-include ':app',':photoeditor',':SSffmpegVideoOperation',':bubblepicker'
+include ':app',':photoeditor',':SSffmpegVideoOperation',':bubblepicker',':custombottomnavigation'

@@ -47,8 +47,7 @@ class FragmentReels : Fragment() {
 
         /*TAb ViewPager Adapter*/
 
-        val adapter = AdapterChatAndCall(requireContext(), requireFragmentManager(), tabLayout!!.tabCount)
-        viewPager!!.adapter = adapter
+
 
 
         viewPager!!.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabLayout))
