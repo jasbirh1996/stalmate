@@ -2,17 +2,18 @@ package com.stalmate.user.view.authentication
 
 
 import android.annotation.SuppressLint
-import android.app.DatePickerDialog
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
+import android.util.Log
 import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
-import androidx.core.content.ContextCompat
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Spinner
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import com.stalmate.user.R
@@ -21,15 +22,25 @@ import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentsignupBinding
 import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.utilities.ValidationHelper
-import java.text.SimpleDateFormat
 import java.util.*
 
 
-class FragmentSignUp : BaseFragment() {
+class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
     private lateinit var binding: FragmentsignupBinding
 
     private var GANDER: String = ""
     val c = Calendar.getInstance()
+
+    var dates : String = ""
+    var month : String = ""
+    var year : String = ""
+    var spinnerArrayFeb = arrayOf("Feb")
+    var spinnerArrayFull = arrayOf("Jan", "Mar", "May", "July", "Aug", "Oct", "Dec")
+    var spinnerArrayFullSemihalf = arrayOf("Apr", "Jun", "Sep", "Nov")
+    var spinnerArrayFullhalf = arrayOf("jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+    var spinnerArrayBlank = arrayOf("")
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -49,9 +60,21 @@ class FragmentSignUp : BaseFragment() {
         val view = inflater.inflate(R.layout.fragmentsignup, container, false)
         binding = DataBindingUtil.bind(view)!!
 
+
+        val dataAdapter : ArrayAdapter<String> = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, spinnerArrayFullhalf)
+
+        // Drop down layout style - list view with radio button
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // attaching data adapter to spinner
+        binding.spMonth.setAdapter(dataAdapter);
+
+//        binding.spDate.setBackgroundColor()
+
+
         var cal = Calendar.getInstance()
 
-        val dateSetListener =
+        /*val dateSetListener =
             DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
                 cal.set(Calendar.YEAR, year)
                 cal.set(Calendar.MONTH, monthOfYear)
@@ -72,13 +95,13 @@ class FragmentSignUp : BaseFragment() {
                 cal.get(Calendar.MONTH),
                 cal.get(Calendar.DAY_OF_MONTH)
             ).show()
-        }
+        }*/
 
 
         with(binding) {
 
 
-            // Display Selected date in textbox
+         /*   // Display Selected date in textbox
             etDOB.setOnClickListener {
                 DatePickerDialog(
                     requireContext(), dateSetListener,
@@ -86,6 +109,85 @@ class FragmentSignUp : BaseFragment() {
                     cal.get(Calendar.MONTH),
                     cal.get(Calendar.DAY_OF_MONTH)
                 ).show()
+            }*/
+
+            binding.spDate.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(p0: AdapterView<*>?, p1: View?, position: Int, p3: Long) {
+                    dates = p0!!.getItemAtPosition(position).toString()
+
+
+                    Log.d("jcaujc", dates)
+                    if (dates == "31"){
+
+                        val dataAdapter : ArrayAdapter<String> = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, spinnerArrayFull)
+
+                        // Drop down layout style - list view with radio button
+                        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+                        // attaching data adapter to spinner
+                        binding.spMonth.setAdapter(dataAdapter);
+                    }else if (dates== "30"){
+                        val dataAdapter : ArrayAdapter<String> = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, spinnerArrayFullSemihalf)
+
+                        // Drop down layout style - list view with radio button
+                        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+                        // attaching data adapter to spinner
+                        binding.spMonth.setAdapter(dataAdapter);
+                    }else if (dates== "28"){
+                        val dataAdapter : ArrayAdapter<String> = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, spinnerArrayFeb)
+
+                        // Drop down layout style - list view with radio button
+                        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+                        // attaching data adapter to spinner
+                        binding.spMonth.setAdapter(dataAdapter);
+                    } else if (dates != "30" || dates != "31" || dates != "28") {
+                        val dataAdapter : ArrayAdapter<String> = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, spinnerArrayFullhalf)
+
+                        // Drop down layout style - list view with radio button
+                        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+                        // attaching data adapter to spinner
+                        binding.spMonth.setAdapter(dataAdapter);
+
+
+                    }
+
+                }
+
+                override fun onNothingSelected(p0: AdapterView<*>?) {
+
+                }
+
+
+
+            }
+
+
+            binding.spMonth.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(p0: AdapterView<*>?, p1: View?, position: Int, p3: Long) {
+                    month = p0!!.getItemAtPosition(position).toString()
+                    Log.d("jcaujc", month)
+                }
+
+                override fun onNothingSelected(p0: AdapterView<*>?) {
+
+                }
+
+            }
+
+
+            binding.spYear.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(p0: AdapterView<*>?, p1: View?, position: Int, p3: Long) {
+                    year = p0!!.getItemAtPosition(position).toString()
+                    Log.d("jcaujc", year)
+                }
+
+                override fun onNothingSelected(p0: AdapterView<*>?) {
+
+                }
+
             }
 
 
@@ -304,7 +406,7 @@ class FragmentSignUp : BaseFragment() {
         hashMap["last_name"] = binding.etLastName.text.toString()
         hashMap["gender"] = gander_name
         hashMap["schoolandcollege"] = binding.etschoolcollege.text.toString()
-        hashMap["dob"] = binding.etDOB.text.toString()
+        hashMap["dob"] = year+"-"+month+"-"+dates
         hashMap["device_id"] = ""
         hashMap["device_token"] = App.getInstance().firebaseToken.toString()
         hashMap["device_type"] = "android"
@@ -318,7 +420,11 @@ class FragmentSignUp : BaseFragment() {
                 if (it.status == true) {
 
                     PrefManager.getInstance(requireContext())!!.userDetail = it
-                    findNavController().navigate(R.id.fragmentOTPEnter)
+                    val bundle = Bundle()
+                    bundle.putString("email", binding.etEmail.text.toString())
+                    bundle.putString("layout", "SignUp")
+                    findNavController().navigate(R.id.fragmentOTPEnter, bundle)
+                    Log.d("kacajhshc", bundle.toString())
                     makeToast(message)
                 } else {
                     makeToast(message)
@@ -340,6 +446,14 @@ class FragmentSignUp : BaseFragment() {
         binding.toolbar.back.setOnClickListener {
             activity?.onBackPressed()
         }
+    }
+
+    override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+
+    }
+
+    override fun onNothingSelected(p0: AdapterView<*>?) {
+
     }
 
 }

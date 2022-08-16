@@ -95,7 +95,7 @@ class FragmentForgetPassword : BaseFragment() {
                     dismissLoader()
                     val bundle = Bundle()
                     bundle.putString("email", binding.etEmail.text.toString())
-                    bundle.putBoolean("Boolean", true)
+                    bundle.putString("layout", "ForgetPassword")
                     findNavController().navigate(R.id.fragmentOTPEnter,bundle)
 
                     makeToast(message)

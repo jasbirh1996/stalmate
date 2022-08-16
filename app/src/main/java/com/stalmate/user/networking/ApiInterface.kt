@@ -39,6 +39,9 @@ interface ApiInterface {
     @POST(Constants.URL_LOGIN)
     fun setLoginDetails(@Body map: HashMap<String, String>): Call<ModelLoginResponse>
 
+    @POST(Constants.GET_PROFILE_API)
+    fun setProfileDetails(@Body map: HashMap<String, String>): Call<ModelProfileResponse>
+
 
 /*
     @HTTP(method = "DELETE", path = "delete_post" ,hasBody = true)

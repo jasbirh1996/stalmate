@@ -12,6 +12,7 @@ import com.google.android.material.snackbar.Snackbar
 
 import com.stalmate.user.base.callbacks.BaseCallBacks
 import com.stalmate.user.viewmodel.AppViewModel
+import java.util.*
 
 
 open class BaseFragment : Fragment(), BaseCallBacks {
@@ -70,5 +71,15 @@ open class BaseFragment : Fragment(), BaseCallBacks {
         params.gravity = Gravity.TOP
         view.layoutParams = params
         snack.show()
+    }
+
+
+    fun setAppLocale(context: Context, language: String) {
+        val locale = Locale(language)
+        Locale.setDefault(locale)
+        val config = context.resources.configuration
+        config.setLocale(locale)
+        context.createConfigurationContext(config)
+        context.resources.updateConfiguration(config, context.resources.displayMetrics)
     }
 }

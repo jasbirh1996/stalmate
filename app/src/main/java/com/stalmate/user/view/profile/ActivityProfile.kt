@@ -23,6 +23,7 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
     lateinit var binding: ActivityProfileBinding
     lateinit var feedAdapter: AdapterFeed
     lateinit var friendAdapter: ProfileFriendAdapter
+
     override fun onClick(viewId: Int, view: View?) {
 
     }

@@ -119,6 +119,7 @@
                             android:id="@+id/etEmail"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            style="@style/customEditbox"
                             android:drawableStart="@drawable/ic_login_mail_inactive"
                             android:drawablePadding="8dp"
                             android:paddingVertical="15dp"
@@ -224,54 +225,59 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/radio_group" />
 
-                <TextView
+                <!--<TextView
                     android:id="@+id/etDOB"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="14dp"
                     android:hint="dd/mm/yy"
+                    android:textSize="12sp"
+                    android:fontFamily="@font/poppins"
+                    android:textColor="@color/app_color"
                     android:padding="10sp"
                     app:layout_constraintBottom_toBottomOf="@+id/appCompatTextView4"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/appCompatTextView4"
-                    app:layout_constraintTop_toBottomOf="@+id/radio_group" />
+                    app:layout_constraintTop_toBottomOf="@+id/radio_group" />-->
 
-                <!-- <Spinner
+                 <Spinner
                      android:id="@+id/spDate"
                      android:layout_width="wrap_content"
                      android:layout_height="wrap_content"
-                     android:layout_marginStart="16dp"
+                     android:layout_marginStart="5dp"
+                     android:layout_marginTop="10dp"
                      android:entries="@array/date"
                      app:layout_constraintBottom_toBottomOf="@+id/appCompatTextView4"
                      app:layout_constraintStart_toEndOf="@+id/appCompatTextView4"
-                     app:layout_constraintTop_toBottomOf="@+id/appCompatTextView4" />
+                     app:layout_constraintTop_toBottomOf="@+id/radio_group" />
 
 
                  <Spinner
                      android:id="@+id/spMonth"
                      android:layout_width="wrap_content"
                      android:layout_height="wrap_content"
-                     android:entries="@array/month"
                      app:layout_constraintBottom_toBottomOf="@+id/spDate"
                      app:layout_constraintStart_toEndOf="@+id/spDate"
                      app:layout_constraintTop_toTopOf="@+id/spDate" />
 
-                 <Spinner
-                     android:id="@+id/spYear"
-                     android:layout_width="wrap_content"
-                     android:layout_height="wrap_content"
-                     app:layout_constraintBottom_toBottomOf="@+id/spMonth"
-                     app:layout_constraintStart_toEndOf="@+id/spMonth"
-                     app:layout_constraintTop_toTopOf="@+id/spMonth" />-->
+                <Spinner
+                    android:id="@+id/spYear"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:entries="@array/year"
+                    app:layout_constraintBottom_toBottomOf="@+id/spMonth"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/spMonth"
+                    app:layout_constraintTop_toTopOf="@+id/spMonth" />
 
                 <View
                     android:id="@+id/view"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="10dp"
                     android:background="#DCD6D6"
-                    app:layout_constraintTop_toBottomOf="@id/etDOB" />
+                    app:layout_constraintTop_toBottomOf="@id/spYear" />
 
 
 
@@ -279,7 +285,8 @@
                     android:id="@+id/dob"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@+id/etDOB">
+                    android:layout_marginTop="10dp"
+                    app:layout_constraintTop_toBottomOf="@+id/view">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etschoolcollege"
@@ -288,6 +295,7 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/add_school_college"
                         android:maxLines="1"
+                        android:layout_marginTop="10dp"
                         android:paddingVertical="15dp"
                         app:layout_constraintEnd_toStartOf="@+id/appCompatImageView16"
                         app:layout_constraintStart_toStartOf="parent"
@@ -320,6 +328,7 @@
                         android:layout_height="wrap_content"
                         android:textColorHint="@color/app_color"
                         app:hintEnabled="false"
+                        android:layout_marginTop="10dp"
                         app:layout_constraintEnd_toStartOf="@+id/appCompatImageView17"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
@@ -331,7 +340,9 @@
                             android:layout_height="wrap_content"
                             android:drawableStart="@drawable/ic_login_lock_inactive"
                             android:drawablePadding="8dp"
+                            style="@style/customEditbox"
                             android:hint="@string/enter_your_password"
+                            android:inputType="textPassword"
                             android:textSize="14sp" />
 
 
