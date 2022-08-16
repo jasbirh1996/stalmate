@@ -18,7 +18,19 @@ android {
     }
 
     buildTypes {
+        debug {
+            ndk {
+                abiFilters "arm64-v8a", "armeabi-v7a"
+            }
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+
         release {
+            ndk {
+                abiFilters "arm64-v8a", "armeabi-v7a"
+            }
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -35,6 +47,12 @@ android {
     buildFeatures {
         viewBinding true
         dataBinding true
+    }
+
+    sourceSets{
+        main{
+            jniLibs.srcDirs =['libs']
+        }
     }
 
 
@@ -92,6 +110,8 @@ dependencies {
 
     implementation 'com.otaliastudios:cameraview:2.7.2'
     implementation 'jp.co.cyberagent.android:gpuimage:2.1.0'
+
+
     implementation project(path: ':photoeditor')
     implementation project(path: ':SSffmpegVideoOperation')
     implementation project(path: ':bubblepicker')
