@@ -423,10 +423,7 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
                     val bundle = Bundle()
                     bundle.putString("email", binding.etEmail.text.toString())
                     bundle.putString("layout", "SignUp")
-
-
                     findNavController().navigate(R.id.fragmentOTPEnter, bundle)
-
                     Log.d("kacajhshc", bundle.toString())
                     makeToast(message)
                 } else {

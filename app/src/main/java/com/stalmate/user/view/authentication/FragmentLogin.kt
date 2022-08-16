@@ -119,13 +119,14 @@ class FragmentLogin : BaseFragment() {
 
                 if (it.status){
                     PrefManager.getInstance(requireContext())!!.userDetailLogin= it
-
+                    binding.progressBar.visibility = View.GONE
                     PrefManager.getInstance(requireContext())!!.keyIsLoggedIn = true
                     val intent = Intent(requireContext(), ActivityDashboard::class.java)
                     startActivity(intent)
 
                     makeToast(message)
                 }else{
+                    binding.progressBar.visibility = View.GONE
                     makeToast(message)
                 }
 

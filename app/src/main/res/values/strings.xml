@@ -1,13 +1,13 @@
 <resources>
-    <string name="app_name">Stalmate</string>
-    <string name="action_settings">Settings</string>
+    <string name="app_name" translatable="false">Stalmate</string>
+    <string name="action_settings" translatable="false">Settings</string>
     <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
+    <string name="first_fragment_label" translatable="false">First Fragment</string>
+    <string name="second_fragment_label" translatable="false">Second Fragment</string>
+    <string name="next" translatable="false">Next</string>
+    <string name="previous" translatable="false">Previous</string>
 
-    <string name="lorem_ipsum">
+    <string name="lorem_ipsum" translatable="false">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
         volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus
         dui nec risus. Maecenas non sodales nisi, vel dictum dolor. Class aptent taciti sociosqu ad
@@ -43,22 +43,22 @@
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
-    <string name="recorder_error_maxed_out">Max Duration Reached</string>
-    <string name="recorder_error_no_clips">No Clips Reorded</string>
-    <string name="recorder_error_in_progress">Video Taking is in progress</string>
+    <string name="recorder_error_maxed_out" translatable="false">Max Duration Reached</string>
+    <string name="recorder_error_no_clips" translatable="false">No Clips Reorded</string>
+    <string name="recorder_error_in_progress" translatable="false">Video Taking is in progress</string>
 
 
-    <string name="label_brush">Brush</string>
-    <string name="label_emoji">Emoji</string>
-    <string name="label_sticker">Sticker</string>
-    <string name="label_eraser">Eraser</string>
-    <string name="label_text">Text</string>
-    <string name="label_filter">Filter</string>
-    <string name="label_adjust">Adjust</string>
-    <string name="msg_save_image_to_share">Save Image to Share</string>
-    <string name="msg_share_image">Share Image</string>
-    <string name="msg_save_image">Save Image</string>
-    <string name="label_eraser_mode">Erasor Mode</string>
+    <string name="label_brush" translatable="false">Brush</string>
+    <string name="label_emoji" translatable="false">Emoji</string>
+    <string name="label_sticker" translatable="false">Sticker</string>
+    <string name="label_eraser" translatable="false">Eraser</string>
+    <string name="label_text" translatable="false">Text</string>
+    <string name="label_filter" translatable="false">Filter</string>
+    <string name="label_adjust" translatable="false">Adjust</string>
+    <string name="msg_save_image_to_share" translatable="false">Save Image to Share</string>
+    <string name="msg_share_image" translatable="false">Share Image</string>
+    <string name="msg_save_image" translatable="false">Save Image</string>
+    <string name="label_eraser_mode" translatable="false">Erasor Mode</string>
 
     <string-array name="photo_editor_emoji">
 
@@ -466,12 +466,12 @@
         <item>u+1f4cd</item>
         <item>u+1f6a9</item>
     </string-array>
-    <string name="title_activity_song_picker">ActivitySongPicker</string>
+    <string name="title_activity_song_picker" translatable="false">ActivitySongPicker</string>
 
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="hello_first_fragment" translatable="false">Hello first fragment</string>
+    <string name="hello_second_fragment" translatable="false">Hello second fragment. Arg: %1$s</string>
 
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
 
 
     <string name="welcome_to_satalment">Welcome To <font fgcolor="#0F52BA">Stalmate</font></string>
@@ -495,7 +495,7 @@
     <string name="add_school_college">Add School/College</string>
     <string name="i_agree_to_the_terms_amp_condition_and_privacy_policy_of_this_application"><![CDATA[I agree to the terms & condition and privacy policy of this application]]></string>
     <string name="feeds">Feeds</string>
-    <string name="campus">Campus</string>
+    <string name="campus" translatable="false">Campus</string>
     <string name="notification">Notification</string>
     <string name="follow">Follow</string>
     <string name="likes">Likes</string>
@@ -527,11 +527,11 @@
     <string name="folllowing">Following</string>
     <string name="saved">Saved</string>
 
-    <string name="followers">Followers</string>
-    <string name="edit_profile">Edit Profile</string>
+    <string name="followers" translatable="false">Followers</string>
+    <string name="edit_profile" translatable="false">Edit Profile</string>
 
-    <string name="friends">Friends</string>
-    <string name="search_friends">Search Friends</string>
+    <string name="friends" translatable="false">Friends</string>
+    <string name="search_friends" translatable="false">Search Friends</string>
 
     <string name="first_name_toast">Please Enter First Name</string>
     <string name="last_name_toast">Please Enter Last Name</string>
@@ -542,12 +542,12 @@
     <string name="process">Process</string>
     <string name="choose_language">Choose Language</string>
 
-    <string name="change_cover_photo">Change Cover Photo</string>
-    <string name="funtime">Funtime</string>
+    <string name="change_cover_photo" translatable="false">Change Cover Photo</string>
+    <string name="funtime" translatable="false">Funtime</string>
 
     <string name="create_password">Create Password</string>
 
-    <string name="proceed">Proceed</string>
+    <string name="proceed" translatable="false">Proceed</string>
 
     <string name="password_not_match">Password not Match</string>
     <string name="please_enter_valid_email">Please Enyter Valid Email</string>

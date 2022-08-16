@@ -6,6 +6,7 @@ import android.app.ProgressDialog
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -13,9 +14,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import com.airbnb.lottie.utils.Utils
 import com.google.android.material.snackbar.Snackbar
+import com.simform.videooperations.Common
 import com.stalmate.user.base.callbacks.BaseCallBacks
+import com.stalmate.user.utilities.untilitys
 import com.stalmate.user.viewmodel.AppViewModel
+import java.util.*
+import kotlin.collections.ArrayList
 
 abstract class BaseActivity : AppCompatActivity(), View.OnClickListener,
     BaseCallBacks {
@@ -38,6 +44,13 @@ abstract class BaseActivity : AppCompatActivity(), View.OnClickListener,
         progressDialog = com.stalmate.user.view.dialogs.ProgressDialog(this)
         context = this
 
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
+        super.onCreate(savedInstanceState, persistentState)
+        /*if (getSaveString("LANG").isNotEmpty()) {
+            untilitys.setAppLocale(this, Common.getString("LANG"))
+        }*/
     }
 
     fun makeToast(message: String?) {
@@ -148,5 +161,15 @@ abstract class BaseActivity : AppCompatActivity(), View.OnClickListener,
         const val MULTIPLE_PERMISSIONS = 10
         private val sessionExpireDialogList: List<AlertDialog> = ArrayList()
         private val errorDialogList: List<AlertDialog> = ArrayList()
+    }
+
+
+    fun setAppLocale(context: Context, language: String) {
+        val locale = Locale(language)
+        Locale.setDefault(locale)
+        val config = context.resources.configuration
+        config.setLocale(locale)
+        context.createConfigurationContext(config)
+        context.resources.updateConfiguration(config, context.resources.displayMetrics)
     }
 }
