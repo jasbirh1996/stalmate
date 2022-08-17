@@ -34,6 +34,12 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
 
         super.onCreate(savedInstanceState)
 
+
+
+
+
+
+
         binding = DataBindingUtil.setContentView(this, R.layout.activity_profile)
         feedAdapter = AdapterFeed(networkViewModel, this, this)
 

@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.gson.Gson
 
 import com.stalmate.user.base.App
 import com.stalmate.user.model.*
@@ -110,6 +111,7 @@ open class AppViewModel : ViewModel() {
             override fun onResponse(call: Call<T?>, response: Response<T?>) {
                 Log.d("asdasdas","spfoksdf")
                 data.value = response.body()
+                Log.d("akjsdasd",Gson().toJson(response.body()))
 
             }
             override fun onFailure(call: Call<T?>, t: Throwable) {

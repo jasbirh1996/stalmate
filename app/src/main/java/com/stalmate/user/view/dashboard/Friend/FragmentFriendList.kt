@@ -10,6 +10,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentFriendListBinding
@@ -40,7 +41,7 @@ lateinit var binding:FragmentFriendListBinding
         var hashmap=HashMap<String,String>()
         hashmap.put("type","")
         hashmap.put("search","")
-        hashmap.put("page","")
+        hashmap.put("page","1")
         networkViewModel.getFriendList("", hashmap)
         networkViewModel.friendLiveData.observe(viewLifecycleOwner, Observer {
             it.let {
@@ -52,5 +53,9 @@ lateinit var binding:FragmentFriendListBinding
 
     override fun onClickOnUpdateFriendRequest(friend: Friend, status: String) {
 
+    }
+
+    override fun onClickOnProfile(friend: Friend) {
+        startActivity(IntentHelper.getProfileScreen(requireContext())!!.putExtra("userData",friend))
     }
 }

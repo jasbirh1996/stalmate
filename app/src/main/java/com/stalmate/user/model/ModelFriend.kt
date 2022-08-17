@@ -1,5 +1,7 @@
 package com.stalmate.user.model
 
+import java.io.Serializable
+
 data class ModelFriend(
     val message: String,
     val results: List<Friend>,
@@ -7,7 +9,5 @@ data class ModelFriend(
 )
 
 data class Friend(
-    val id: String,
-    val image: String,
-    val name: String
-)
+    val id: String
+):Serializable

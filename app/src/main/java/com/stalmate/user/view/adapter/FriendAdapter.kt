@@ -44,6 +44,10 @@ class FriendAdapter(
             binding.buttonFollow.setOnClickListener {
               callback.onClickOnUpdateFriendRequest(friend,"Accept")
             }
+            binding.root.setOnClickListener {
+                callback.onClickOnProfile(friend)
+            }
+
         }
     }
 
@@ -60,6 +64,7 @@ class FriendAdapter(
 
     public interface Callbackk {
         fun onClickOnUpdateFriendRequest(friend:Friend,status: String)
+        fun onClickOnProfile(friend:Friend)
     }
 
 

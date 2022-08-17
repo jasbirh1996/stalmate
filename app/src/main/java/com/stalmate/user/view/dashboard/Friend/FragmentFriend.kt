@@ -59,4 +59,8 @@ class FragmentFriend : BaseFragment(), FriendAdapter.Callbackk {
     override fun onClickOnUpdateFriendRequest(friend: Friend, status: String) {
 
     }
+
+    override fun onClickOnProfile(friend: Friend) {
+        TODO("Not yet implemented")
+    }
 }

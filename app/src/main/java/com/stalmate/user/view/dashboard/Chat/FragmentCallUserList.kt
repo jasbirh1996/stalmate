@@ -51,5 +51,9 @@ class FragmentCallUserList : BaseFragment(), FriendAdapter.Callbackk {
 
     }
 
+    override fun onClickOnProfile(friend: Friend) {
+        TODO("Not yet implemented")
+    }
+
 
 }
