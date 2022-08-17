@@ -39,7 +39,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
-                    android:visibility="gone"
+                    android:visibility="visible"
 
                     app:labelVisibilityMode="unlabeled"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -48,25 +48,25 @@
                     app:menu="@menu/bottom_navigation_menu" />
 
 
-
                 <com.simform.custombottomnavigation.SSCustomBottomNavigation
                     android:id="@+id/bottomNavigation"
                     android:layout_width="match_parent"
-                    android:layout_height="90dp"
+                    android:layout_height="80dp"
                     android:layout_gravity="bottom"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:ss_backgroundBottomColor="#ffffff"
                     app:ss_circleColor="#ff6f00"
-                    app:ss_waveHeight="9"
                     app:ss_countBackgroundColor="#ff6f00"
                     app:ss_countTextColor="#ffffff"
                     app:ss_defaultIconColor="#6200EE"
                     app:ss_iconTextColor="#6200EE"
+                    app:ss_iconTextSize="12sp"
                     app:ss_rippleColor="#2f424242"
-                    app:ss_iconTextSize="14sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:ss_selectedIconColor="#ff6f00"
                     app:ss_selectedIconTextColor="#ff6f00"
-                    app:ss_shadowColor="#1f212121" />
+                    app:ss_shadowColor="#1f212121"
+                    app:ss_waveHeight="2" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

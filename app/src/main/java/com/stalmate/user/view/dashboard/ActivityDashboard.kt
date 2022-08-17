@@ -27,15 +27,10 @@ class ActivityDashboard : AppCompatActivity() {
 
         binding = ActivityDashboardBinding.inflate(layoutInflater)
         setContentView(binding.root)
- /*       binding.space.showIconOnly()
-        binding.space.addSpaceItem(SpaceItem("Feed", R.drawable.ic_botm_menu_funtime))
-        binding.space.addSpaceItem(SpaceItem("Chat", R.drawable.ic_botm_menu_chat_inactive))
-        binding.space.addSpaceItem(SpaceItem("Videos", R.drawable.ic_botm_menu_video_inactive))
-        binding.space.addSpaceItem(SpaceItem("User", R.drawable.ic_botm_menu_friends_inactive))
 
         setupBottomBar()
-     */
-        setBottomNavigationInNormalWay(savedInstanceState)
+
+      //  setBottomNavigationInNormalWay(savedInstanceState)
 
         
     }

@@ -1,6 +1,8 @@
 package com.stalmate.user.networking
 
 import com.google.gson.GsonBuilder
+import com.stalmate.user.base.App
+import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.utilities.UrlFactory
 
 import okhttp3.OkHttpClient
@@ -36,7 +38,35 @@ class RestClient private constructor() {
         val gson = GsonBuilder()
             .setLenient()
             .create()
-        client = builder.build()
+
+        if (PrefManager.getInstance(App.getInstance())!!.keyIsLoggedIn){
+            client =  (OkHttpClient.Builder().addInterceptor { chain ->
+                val request = chain.request().newBuilder().addHeader("Authorization", "Bearer ${PrefManager.getInstance(App.getInstance())!!.userDetailLogin.results[0].token}").build()
+                chain.proceed(request)
+            }.build())
+
+        }else{
+            client =  builder.build()
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         retrofit = Retrofit.Builder()
             .baseUrl(UrlFactory.baseUrl)
             .client(client) //.addCallAdapterFactory(RxJavaCallAdapterFactory.create())
@@ -44,7 +74,6 @@ class RestClient private constructor() {
             .build()
         mRestService = retrofit!!.create(ApiInterface::class.java)
     }
-
 
     companion object {
         val inst = RestClient()

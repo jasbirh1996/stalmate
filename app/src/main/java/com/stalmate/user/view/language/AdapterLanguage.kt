@@ -48,7 +48,7 @@ class AdapterLanguage(
     }
 
     public interface Callbackk {
-        fun onClickLanguageItem(postId: String)
+        fun onClickLanguageItem(postId: String, lang : String)
     }
 
     fun submitList(languageList: List<Result>) {
@@ -69,7 +69,7 @@ class AdapterLanguage(
                 row_index = position
                 notifyDataSetChanged()
 
-               callback.onClickLanguageItem(list[position].id)
+               callback.onClickLanguageItem(list[position].id, list[position].name)
 
             }
 

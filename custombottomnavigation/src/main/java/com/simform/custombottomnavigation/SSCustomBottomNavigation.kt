@@ -281,8 +281,8 @@ class SSCustomBottomNavigation : FrameLayout {
                     destinationId = cbnMenuItem.destinationId,
                     icon = cbnMenuItem.icon,
                     id = cbnMenuItem.id,
-                    text = cbnMenuItem.text,
-                    count = cbnMenuItem.count
+                  /*  text = cbnMenuItem.text,*/
+                /*    count = cbnMenuItem.count*/
                 )
             )
         }

@@ -77,10 +77,9 @@ class FragmentLanguage : BaseFragment(), AdapterLanguage.Callbackk {
         }
     }
 
-
-
-    override fun onClickLanguageItem(postId: String) {
+    override fun onClickLanguageItem(postId: String, lang: String) {
 
     }
+
 
 }

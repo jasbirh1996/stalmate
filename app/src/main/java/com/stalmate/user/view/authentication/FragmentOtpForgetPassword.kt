@@ -1,13 +1,11 @@
 package com.stalmate.user.view.authentication
 
-import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,34 +14,32 @@ import androidx.navigation.fragment.findNavController
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentOTPEnterBinding
-import com.stalmate.user.databinding.SignUpSuccessPoppuBinding
+import com.stalmate.user.databinding.FragmentOtpForgetPasswordBinding
 import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.view.dashboard.ActivityDashboard
 
 
-class FragmentOTPEnter : BaseFragment() {
+class FragmentOtpForgetPassword : BaseFragment() {
+
     val DURATION: Long = 2000
-    private lateinit var binding: FragmentOTPEnterBinding
-    private lateinit var bindingdialog : SignUpSuccessPoppuBinding
-    var email : String = ""
-    var forgetPasswordScreen : String = ""
+    private lateinit var binding: FragmentOtpForgetPasswordBinding
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+       
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        var view =  inflater.inflate(R.layout.fragment_otp_forget_password, container, false)
+      
+        binding = DataBindingUtil.bind<FragmentOtpForgetPasswordBinding>(view)!!
+
         // Inflate the layout for this fragment
-        var view =  inflater.inflate(R.layout.fragment_o_t_p_enter, container, false)
-        binding = DataBindingUtil.bind<FragmentOTPEnterBinding>(view)!!
-
-            email = requireArguments().getString("email").toString()
-            forgetPasswordScreen = requireArguments().getString("signUp").toString()
-
-
-        Log.d("akjsdad",forgetPasswordScreen)
         return binding.root
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -51,28 +47,49 @@ class FragmentOTPEnter : BaseFragment() {
         /*Common ToolBar SetUp*/
         toolbarSetUp()
 
-        startTimer()
+     /*   startTimer()
 
         getOtpApiCall()
-        email = requireArguments().getString("email").toString()
-        forgetPasswordScreen = requireArguments().getString("layout").toString()
+        */
 
-        Log.d("emiasljkcn", email)
 
         binding.btnProcess.setOnClickListener {
             /*Otp Verify Api Call*/
 
-            if (forgetPasswordScreen == "SignUp") {
-                otpVerifyApiCall()
-            }else if (forgetPasswordScreen == "ForgetPassword"){
-                otpVerifyForgotApiCall()
-            }
+                          otpVerifyForgotApiCall()
+            
 
         }
     }
 
 
     private fun otpVerifyForgotApiCall() {
+        val hashMap = HashMap<String, String>()
+
+//        hashMap["email"] = email
+
+        binding.progressBar.visibility = View.VISIBLE
+        networkViewModel.otpVerify(hashMap)
+
+        networkViewModel.otpVerifyData.observe(requireActivity()){
+
+            it?.let {
+
+                if (it.status == true){
+                    binding.progressBar.visibility = View.GONE
+                    val bundle = Bundle()
+
+                   /* bundle.putString("email",email)
+                    bundle.putString("otp","1234")*/
+                    findNavController().navigate(R.id.fragmentPasswordReset,bundle)
+
+                }
+            }
+
+        }
+    }
+
+  /*  private fun getOtpApiCall() {
         val hashMap = HashMap<String, String>()
 
         hashMap["email"] = email
@@ -86,35 +103,9 @@ class FragmentOTPEnter : BaseFragment() {
 
                 if (it.status == true){
                     binding.progressBar.visibility = View.GONE
-                    val bundle = Bundle()
-
-                    bundle.putString("email",email)
-                    bundle.putString("otp","1234")
-                    findNavController().navigate(R.id.fragmentPasswordReset,bundle)
-
                 }
             }
-
-        }
-    }
-
-    private fun getOtpApiCall() {
-        val hashMap = HashMap<String, String>()
-
-        hashMap["email"] = email
-
-        binding.progressBar.visibility = View.VISIBLE
-        networkViewModel.otpVerify(hashMap)
-
-            networkViewModel.otpVerifyData.observe(requireActivity()){
-
-                it?.let {
-
-                    if (it.status == true){
-                        binding.progressBar.visibility = View.GONE
-                    }
-                }
-                binding.progressBar.visibility = View.GONE
+            binding.progressBar.visibility = View.GONE
         }
     }
 
@@ -135,11 +126,6 @@ class FragmentOTPEnter : BaseFragment() {
 
                     val builder = AlertDialog.Builder(requireContext(), R.style.CustomAlertDialog).create()
                     val view = layoutInflater.inflate(R.layout.sign_up_success_poppu,null)
-
-
-                    bindingdialog.succesIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_successfull_star_icon))
-                    bindingdialog.dialogText.setText(getString(R.string.password_chnage_successfull))
-
                     builder.setView(view)
                     builder.setCanceledOnTouchOutside(false)
 
@@ -164,7 +150,7 @@ class FragmentOTPEnter : BaseFragment() {
             binding.progressBar.visibility = View.GONE
         }
 
-    }
+    }*/
 
     private fun toolbarSetUp() {
         binding.toolbar.toolBarCenterText.visibility = View.VISIBLE
@@ -176,7 +162,7 @@ class FragmentOTPEnter : BaseFragment() {
         }
     }
 
-    private fun startTimer() {
+   /* private fun startTimer() {
         val timeDuration = 30000L
         val interval = 1000L
         val timer = object : CountDownTimer(timeDuration, interval) {
@@ -199,13 +185,12 @@ class FragmentOTPEnter : BaseFragment() {
         }
 
         timer.start()
-    }
+    }*/
 
     fun formatSeconds(timeInSeconds: Long): String {
         val secondsLeft = timeInSeconds / 1000
         val ss = if (secondsLeft < 10) "0$secondsLeft" else "" + secondsLeft
         return "00:$ss"
     }
-
 
 }

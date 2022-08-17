@@ -1,5 +1,6 @@
 package com.stalmate.user.utilities
 
+import com.stalmate.user.base.App
 import java.util.*
 
 
@@ -63,8 +64,11 @@ object UrlFactory {
 
     //  appHeaders.put(kHeaderAccessToken, App.getInstance().getAccessToken());
     val appHeaders: HashMap<String, String>
-        get() =//  appHeaders.put(kHeaderAccessToken, App.getInstance().getAccessToken());
-            defaultHeaders
+        get() {
+            defaultHeaders.put(kHeaderAccessToken, PrefManager.getInstance(App.getInstance())!!.userDetailLogin.results[0].token)
+            return  defaultHeaders
+        }
+
 
     /*public static String getLanguage() {
         if (new LanguagePref(App.getInstance()).getLanguage()!=null && new LanguagePref(App.getInstance()).getLanguage().equalsIgnoreCase("ar")) {

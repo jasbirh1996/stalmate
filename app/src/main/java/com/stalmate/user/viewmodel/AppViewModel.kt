@@ -89,6 +89,13 @@ open class AppViewModel : ViewModel() {
         getResult(temp, apiInterface.setOtpVerify(map))
     }
 
+    var profileData: LiveData<ModelProfileResponse?> = MutableLiveData<ModelProfileResponse?>()
+    fun profileDatas(map: HashMap<String, String>) {
+        val temp = MutableLiveData<ModelProfileResponse?>()
+       // otpVerifyData = temp
+        getResult(temp, apiInterface.setProfileDetails(map))
+    }
+
 
 
 
