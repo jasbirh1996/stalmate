@@ -13,6 +13,7 @@ import com.stalmate.user.R
 import com.stalmate.user.databinding.ItemFriendBinding
 import com.stalmate.user.model.Feed
 import com.stalmate.user.model.Friend
+import com.stalmate.user.utilities.ImageLoaderHelperGlide
 import com.stalmate.user.viewmodel.AppViewModel
 
 class FriendAdapter(
@@ -47,6 +48,11 @@ class FriendAdapter(
             binding.root.setOnClickListener {
                 callback.onClickOnProfile(friend)
             }
+
+
+            ImageLoaderHelperGlide.setGlideCorner(context,binding.ivUserImage,friend.img+"/"+friend.img)
+            binding.tvUserName.text=friend.first_name
+
 
         }
     }

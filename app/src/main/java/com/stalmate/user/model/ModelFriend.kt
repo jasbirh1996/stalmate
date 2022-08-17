@@ -9,5 +9,10 @@ data class ModelFriend(
 )
 
 data class Friend(
-    val id: String
+    val first_name: String,
+    val id: String,
+    val img: String,
+    val last_name: String,
+    val request_status: String,
+    val url: String
 ):Serializable
