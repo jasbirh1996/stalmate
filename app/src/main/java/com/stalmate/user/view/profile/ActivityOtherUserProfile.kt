@@ -15,40 +15,36 @@ import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.commonadapters.AdapterFeed
-import com.stalmate.user.databinding.ActivityProfileBinding
+import com.stalmate.user.databinding.ActivityOtherUserProfileBinding
 import com.stalmate.user.model.AboutProfileLine
+
+import com.stalmate.user.model.ModelUser
 import com.stalmate.user.model.User
 import com.stalmate.user.view.adapter.ProfileAboutAdapter
 
 import com.stalmate.user.view.adapter.ProfileFriendAdapter
 
-class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdapter.Callbackk,
+class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk,
+    ProfileFriendAdapter.Callbackk,
     ProfileAboutAdapter.Callbackk {
-    lateinit var binding: ActivityProfileBinding
+    lateinit var binding: ActivityOtherUserProfileBinding
     lateinit var feedAdapter: AdapterFeed
     lateinit var friendAdapter: ProfileFriendAdapter
-
+    var userId = ""
     lateinit var userData: User
-
     override fun onClick(viewId: Int, view: View?) {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        if (intent.getSerializableExtra("id") != null) {
+            userId = intent.getSerializableExtra("id").toString()
+        }
         getUserProfileData()
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_profile)
-        feedAdapter = AdapterFeed(networkViewModel, this, this)
-        binding.layout.rvFeeds.adapter = feedAdapter
-        binding.layout.rvFeeds.layoutManager = LinearLayoutManager(this)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_other_user_profile)
 
-        networkViewModel.getFeedList("", HashMap())
-        networkViewModel.feedLiveData.observe(this, Observer {
-            Log.d("asdasdasd", "oaspiasddsad")
-            it.let {
-                feedAdapter.submitList(it!!.results)
-            }
-        })
+
         friendAdapter = ProfileFriendAdapter(networkViewModel, this, this)
         binding.layout.rvFriends.adapter = friendAdapter
         binding.layout.rvFriends.layoutManager = GridLayoutManager(this, 3)
@@ -59,13 +55,25 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
                 friendAdapter.submitList(it!!.results)
             }
         })
+        feedAdapter = AdapterFeed(networkViewModel, this, this)
+        binding.layout.rvFeeds.adapter = feedAdapter
+        binding.layout.rvFeeds.layoutManager = LinearLayoutManager(this)
+        networkViewModel.getFeedList("", HashMap())
+        networkViewModel.feedLiveData.observe(this, Observer {
+            Log.d("asdasdasd", "oaspiasddsad")
+            it.let {
+                feedAdapter.submitList(it!!.results)
+            }
+        })
+
+
+
+
         setupData()
     }
 
 
     fun setupData() {
-
-
 
 
         binding.layout.layoutFollowers.setOnClickListener {
@@ -101,19 +109,30 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
     }
 
 
+    fun updateFriendStatus() {
+        var hashMap = HashMap<String, String>()
+        hashMap.put("id_user", userId)
+        networkViewModel.sendFriendRequest("", hashMap)
+        networkViewModel.sendFriendRequestLiveData.observe(this, Observer {
+            it.let {
+
+            }
+        })
+    }
 
 
     fun getUserProfileData() {
+        Log.d("asdasdasd", "asdasasdd")
         var hashMap = HashMap<String, String>()
-        networkViewModel.getProfileData( hashMap)
-        networkViewModel.profileLiveData.observe(this, Observer {
+        networkViewModel.getOtherUserProfileData(hashMap, user_id = userId)
+        networkViewModel.otherUserProfileLiveData.observe(this, Observer {
+            Log.d("asdasdasd", "asdasdfgdfgdfgd")
             it.let {
                 userData = it!!.results
                 setUpAboutUI()
             }
         })
     }
-
 
     fun setUpAboutUI() {
 
@@ -150,7 +169,6 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
         binding.layout.rvAbout.adapter = profileAboutAdapter
 
     }
-
 
 }
 

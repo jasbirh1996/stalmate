@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.stalmate.user.R
 import com.stalmate.user.databinding.ItemFriendBinding
 import com.stalmate.user.model.Feed
-import com.stalmate.user.model.Friend
+import com.stalmate.user.model.User
 import com.stalmate.user.utilities.ImageLoaderHelperGlide
 import com.stalmate.user.viewmodel.AppViewModel
 
@@ -22,7 +22,7 @@ class FriendAdapter(
     var callback: Callbackk
 ) :
     RecyclerView.Adapter<FriendAdapter.FeedViewHolder>(){
-    var list = ArrayList<Friend>()
+    var list = ArrayList<User>()
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -41,7 +41,7 @@ class FriendAdapter(
     }
     inner class FeedViewHolder(var binding: ItemFriendBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(friend: Friend) {
+        fun bind(friend: User) {
             binding.buttonFollow.setOnClickListener {
               callback.onClickOnUpdateFriendRequest(friend,"Accept")
             }
@@ -50,7 +50,7 @@ class FriendAdapter(
             }
 
 
-            ImageLoaderHelperGlide.setGlideCorner(context,binding.ivUserImage,friend.img+"/"+friend.img)
+            ImageLoaderHelperGlide.setGlideCorner(context,binding.ivUserImage,friend.url+"/"+friend.img)
             binding.tvUserName.text=friend.first_name
 
 
@@ -62,15 +62,15 @@ class FriendAdapter(
 
 
 
-    fun submitList(feedList: List<Friend>) {
+    fun submitList(feedList: List<User>) {
         list.clear()
         list.addAll(feedList)
         notifyDataSetChanged()
     }
 
     public interface Callbackk {
-        fun onClickOnUpdateFriendRequest(friend:Friend,status: String)
-        fun onClickOnProfile(friend:Friend)
+        fun onClickOnUpdateFriendRequest(friend:User,status: String)
+        fun onClickOnProfile(friend:User)
     }
 
 

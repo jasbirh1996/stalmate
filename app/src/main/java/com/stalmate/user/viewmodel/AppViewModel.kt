@@ -57,6 +57,13 @@ open class AppViewModel : ViewModel() {
         getResult(temp, apiInterface.updateFriendRequest(map))
     }
 
+    var sendFriendRequestLiveData: LiveData<ModelSuccess?> = MutableLiveData<ModelSuccess?>()
+    fun sendFriendRequest(token: String, map: HashMap<String, String>) {
+        val temp = MutableLiveData<ModelSuccess?>()
+        sendFriendRequestLiveData = temp
+        getResult(temp, apiInterface.sendFriendRequest(map))
+    }
+
 
 
     var categoryLiveData: LiveData<ModelCategory?> = MutableLiveData<ModelCategory?>()
@@ -90,11 +97,18 @@ open class AppViewModel : ViewModel() {
         getResult(temp, apiInterface.setOtpVerify(map))
     }
 
-    var profileData: LiveData<ModelProfileResponse?> = MutableLiveData<ModelProfileResponse?>()
-    fun profileDatas(map: HashMap<String, String>) {
-        val temp = MutableLiveData<ModelProfileResponse?>()
-       // otpVerifyData = temp
-        getResult(temp, apiInterface.setProfileDetails(map))
+    var profileLiveData: LiveData<ModelUser?> = MutableLiveData<ModelUser?>()
+    fun getProfileData(map: HashMap<String, String>) {
+        val temp = MutableLiveData<ModelUser?>()
+        profileLiveData = temp
+        getResult(temp, apiInterface.setProfileDetails())
+    }
+
+    var otherUserProfileLiveData: LiveData<ModelUser?> = MutableLiveData<ModelUser?>()
+    fun getOtherUserProfileData(map: HashMap<String, String>,user_id:String) {
+        val temp = MutableLiveData<ModelUser?>()
+        otherUserProfileLiveData = temp
+        getResult(temp, apiInterface.getOtherUserProfileDetails(user_id))
     }
 
 

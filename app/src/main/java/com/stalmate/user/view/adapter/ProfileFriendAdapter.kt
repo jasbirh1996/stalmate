@@ -8,7 +8,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.stalmate.user.R
 import com.stalmate.user.databinding.ItemProfileFriendBinding
-import com.stalmate.user.model.Friend
+
+import com.stalmate.user.model.User
 import com.stalmate.user.utilities.ImageLoaderHelperGlide
 import com.stalmate.user.viewmodel.AppViewModel
 
@@ -18,7 +19,7 @@ class ProfileFriendAdapter(
     var callback: Callbackk
 ) :
     RecyclerView.Adapter<ProfileFriendAdapter.FeedViewHolder>() {
-    var list = ArrayList<Friend>()
+    var list = ArrayList<User>()
 
 
     override fun onCreateViewHolder(
@@ -42,13 +43,21 @@ class ProfileFriendAdapter(
 
     inner class FeedViewHolder(var binding: ItemProfileFriendBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(friend: Friend) {
-            ImageLoaderHelperGlide.setGlideCorner(context,binding.ivUserImage,"")
+        fun bind(friend: User) {
 
-            binding.ivUserImage.setShapeAppearanceModel(binding.ivUserImage.getShapeAppearanceModel()
+
+/*            binding.ivUserImage.setShapeAppearanceModel(binding.ivUserImage.getShapeAppearanceModel()
                     .toBuilder()
                     .setAllCornerSizes(20f)
-                    .build());
+                    .build());*/
+
+                binding.root.setOnClickListener {
+                    callback.onClickOnProfile(friend)
+                }
+            ImageLoaderHelperGlide.setGlideCorner(context,binding.ivUserImage,friend.url+"/"+friend.img)
+            binding.tvUserName.text=friend.first_name
+
+
 
         }
 
@@ -119,14 +128,14 @@ class ProfileFriendAdapter(
 */
 
 
-    fun submitList(feedList: List<Friend>) {
+    fun submitList(feedList: List<User>) {
         list.clear()
         list.addAll(feedList)
         notifyDataSetChanged()
     }
 
     public interface Callbackk {
-        fun onClickOnViewComments(postId: Int)
+        fun onClickOnProfile(user: User)
     }
 
 

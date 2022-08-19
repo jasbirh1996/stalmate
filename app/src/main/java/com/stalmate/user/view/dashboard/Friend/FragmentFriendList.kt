@@ -14,7 +14,8 @@ import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentFriendListBinding
-import com.stalmate.user.model.Friend
+import com.stalmate.user.model.User
+
 import com.stalmate.user.view.adapter.FriendAdapter
 import com.stalmate.user.view.adapter.ProfileFriendAdapter
 
@@ -51,11 +52,20 @@ lateinit var binding:FragmentFriendListBinding
     }
 
 
-    override fun onClickOnUpdateFriendRequest(friend: Friend, status: String) {
+    override fun onClickOnUpdateFriendRequest(friend: User, status: String) {
+
+        var hashmap=HashMap<String,String>()
+        hashmap.put("type","")
+        hashmap.put("search","")
+        hashmap.put("page","1")
+
+
+
+
 
     }
 
-    override fun onClickOnProfile(friend: Friend) {
+    override fun onClickOnProfile(friend: User) {
         startActivity(IntentHelper.getProfileScreen(requireContext())!!.putExtra("userData",friend))
     }
 }

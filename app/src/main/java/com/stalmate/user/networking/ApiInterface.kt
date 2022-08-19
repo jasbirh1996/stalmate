@@ -40,7 +40,7 @@ interface ApiInterface {
     fun setLoginDetails(@Body map: HashMap<String, String>): Call<ModelLoginResponse>
 
     @POST(Constants.url_send_friend_request)
-    fun sendFriendRequest(@Body map: HashMap<String, String>): Call<ModelLoginResponse>
+    fun sendFriendRequest(@Body map: HashMap<String, String>): Call<ModelSuccess>
 
 
     @PUT(Constants.url_update_friend_request)
@@ -51,9 +51,12 @@ interface ApiInterface {
     fun requestBeFollower(@Body map: HashMap<String, String>): Call<ModelLoginResponse>
 
 
-    @POST(Constants.GET_PROFILE_API)
-    fun setProfileDetails(@Body map: HashMap<String, String>): Call<ModelProfileResponse>
+    @GET(Constants.GET_PROFILE_API)
+    fun setProfileDetails(): Call<ModelUser>
 
+
+    @GET(Constants.GET_OTHER_USER_PROFILE_API)
+    fun getOtherUserProfileDetails(@Query("id_user") id_user :String): Call<ModelUser>
 
 
 /*

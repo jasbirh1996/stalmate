@@ -23,6 +23,9 @@
         android:theme="@style/AppTheme"
         tools:targetApi="32">
         <activity
+            android:name=".view.profile.ActivityOtherUserProfile"
+            android:exported="false" />
+        <activity
             android:name=".view.profile.ActivityProfileEdit"
             android:exported="false" />
         <activity
@@ -46,9 +49,8 @@
             android:label="@string/app_name" />
         <activity
             android:name=".view.Splash.ActivitySplash"
-            android:theme="@style/SplashTheme"
-            android:exported="true">
-
+            android:exported="true"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -57,6 +59,7 @@
         <activity
             android:name=".view.profile.ActivityProfile"
             android:exported="true">
+
             <!--
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -64,6 +67,7 @@
             </intent-filter>
             -->
         </activity>
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

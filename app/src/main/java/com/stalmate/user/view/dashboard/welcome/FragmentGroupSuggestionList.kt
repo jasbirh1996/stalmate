@@ -17,7 +17,7 @@ import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
 
 import com.stalmate.user.databinding.FragmentGroupSuggestionListBinding
-import com.stalmate.user.model.Friend
+import com.stalmate.user.model.User
 import com.stalmate.user.view.adapter.FriendAdapter
 import com.stalmate.user.view.adapter.ProfileFriendAdapter
 
@@ -56,11 +56,11 @@ class FragmentGroupSuggestionList : BaseFragment(), FriendAdapter.Callbackk {
 
 
 
-    override fun onClickOnUpdateFriendRequest(friend: Friend, status: String) {
+    override fun onClickOnUpdateFriendRequest(friend: User, status: String) {
 
     }
 
-    override fun onClickOnProfile(friend: Friend) {
+    override fun onClickOnProfile(friend: User) {
 
     }
 }

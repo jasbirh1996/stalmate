@@ -172,4 +172,8 @@ abstract class BaseActivity : AppCompatActivity(), View.OnClickListener,
         context.createConfigurationContext(config)
         context.resources.updateConfiguration(config, context.resources.displayMetrics)
     }
+
+    fun debugPrint(key:String,data:String){
+        Log.d(key,data)
+    }
 }

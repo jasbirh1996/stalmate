@@ -46,15 +46,15 @@ public class ImageLoaderHelperGlide extends Activity {
                 .centerCrop()
                 .dontAnimate()
                 .apply(RequestOptions.bitmapTransform(new RoundedCorners(20)))
-                .placeholder(R.drawable.image)
+               .placeholder(R.drawable.image)
                 .priority(Priority.IMMEDIATE)
                 .encodeFormat(Bitmap.CompressFormat.PNG)
                 .format(DecodeFormat.DEFAULT);
         Glide.with(context)
                 .applyDefaultRequestOptions(requestOptions)
                 .load(imageLink).transition(DrawableTransitionOptions.withCrossFade())
-                .error(Glide.with(context)
-                        .load(R.drawable.image))
+       /*         .error(Glide.with(context)
+                        .load(R.drawable.image))*/
                 .into(imageView);
         Glide.get(context).clearMemory();
     }

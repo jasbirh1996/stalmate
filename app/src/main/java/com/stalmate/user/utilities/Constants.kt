@@ -11,6 +11,7 @@ object Constants {
     const val url_update_friend_request="auth_service/friend_api/update_friend_request"
     const val url_send_follower_request="auth_service/friend_api/send_follower_request"
     const val GET_PROFILE_API="auth_service/auth_api/get_profile_data"
+    const val GET_OTHER_USER_PROFILE_API="auth_service/auth_api/get_profile_user"
 
     const val START_DATE = "01"
 }

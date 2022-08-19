@@ -11,7 +11,8 @@ import com.stalmate.user.databinding.ItemFriendBinding
 
 
 import com.stalmate.user.model.Feed
-import com.stalmate.user.model.Friend
+import com.stalmate.user.model.User
+
 import com.stalmate.user.viewmodel.AppViewModel
 
 class ChatUserAdapter(
@@ -20,7 +21,7 @@ class ChatUserAdapter(
     var callback: Callbackk
 ) :
     RecyclerView.Adapter<ChatUserAdapter.FeedViewHolder>() {
-    var list = ArrayList<Friend>()
+    var list = ArrayList<User>()
 
 
     override fun onCreateViewHolder(
@@ -44,7 +45,7 @@ class ChatUserAdapter(
 
     inner class FeedViewHolder(var binding: ItemFriendBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(feed: Friend) {
+        fun bind(feed: User) {
 
 
         }
@@ -116,7 +117,7 @@ class ChatUserAdapter(
 */
 
 
-    fun submitList(feedList: List<Friend>) {
+    fun submitList(feedList: List<User>) {
         list.clear()
         list.addAll(feedList)
         notifyDataSetChanged()
