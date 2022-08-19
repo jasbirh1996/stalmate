@@ -18,7 +18,6 @@ import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.utilities.ValidationHelper
 import com.stalmate.user.utilities.ValidationHelper.isValidEmail
 import com.stalmate.user.view.dashboard.ActivityDashboard
-import java.util.HashMap
 
 class FragmentLogin : BaseFragment() {
 
@@ -137,6 +136,8 @@ class FragmentLogin : BaseFragment() {
 
 
     }
+
+
 
     fun isValid():Boolean{
         if (ValidationHelper.isNull(binding.etEmail.text.toString())){

@@ -18,15 +18,19 @@ import androidx.navigation.fragment.findNavController
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentPasswordResetBinding
+import com.stalmate.user.databinding.ResetSuccessPoppuBinding
 import com.stalmate.user.databinding.SignUpSuccessPoppuBinding
 import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.utilities.ValidationHelper
 import com.stalmate.user.view.dashboard.ActivityDashboard
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 
 class FragmentPasswordReset : BaseFragment() {
 
     private lateinit var binding: FragmentPasswordResetBinding
-    private lateinit var bindingdialog : SignUpSuccessPoppuBinding
+    private lateinit var bindingdialog : ResetSuccessPoppuBinding
+
     var email: String = ""
     var otp: String = ""
     val DURATION: Long = 2000
@@ -42,6 +46,12 @@ class FragmentPasswordReset : BaseFragment() {
         // Inflate the layout for this fragment
         var view = inflater.inflate(R.layout.fragment_password_reset, container, false)
         binding = DataBindingUtil.bind<FragmentPasswordResetBinding>(view)!!
+
+
+
+
+
+
         email = requireArguments().getString("email").toString()
         otp = requireArguments().getString("otp").toString()
         return binding.root
@@ -62,10 +72,12 @@ class FragmentPasswordReset : BaseFragment() {
             @SuppressLint("ResourceAsColor")
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
 
-                if (binding.etPassword.text!!.isEmpty()){
-                    binding.appCompatImageView17.visibility = View.GONE
-                }else {
+                if (!binding.etPassword.text!!.isEmpty() && isValidPassword(binding.etPassword.text.toString().trim())){
+
                     binding.appCompatImageView17.visibility = View.VISIBLE
+                }else {
+                    binding.appCompatImageView17.visibility = View.GONE
+
                 }
 
             }
@@ -83,10 +95,11 @@ class FragmentPasswordReset : BaseFragment() {
             @SuppressLint("ResourceAsColor")
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
 
-                if (binding.etConfirmPassword.text!!.isEmpty()){
-                    binding.appCompatImageView18.visibility = View.GONE
-                }else {
+                if (!binding.etConfirmPassword.text!!.isEmpty() && isValidPassword(binding.etPassword.text.toString().trim())){
+
                     binding.appCompatImageView18.visibility = View.VISIBLE
+                }else {
+                    binding.appCompatImageView18.visibility = View.GONE
 
                 }
 
@@ -101,10 +114,16 @@ class FragmentPasswordReset : BaseFragment() {
 
             }
         })
+
+
+        binding.appCompatTextView3.setOnClickListener {
+            findNavController().navigate(R.id.fragmentLogin)
+        }
     }
 
 
     private fun forgetPasswordApiCall() {
+
 
         val hashMap = HashMap<String, String>()
 
@@ -121,31 +140,21 @@ class FragmentPasswordReset : BaseFragment() {
 
                 if (it.status == true) {
 
-
-
                     dismissLoader()
-                    val builder = AlertDialog.Builder(requireContext(), R.style.CustomAlertDialog).create()
-                    val view = layoutInflater.inflate(R.layout.sign_up_success_poppu,null)
 
-                    bindingdialog.succesIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_successfull_vector))
-                    bindingdialog.dialogText.setText(getString(R.string.password_chnage_successfull))
+                    val builder = AlertDialog.Builder(requireContext(), R.style.CustomAlertDialog).create()
+                    val view = layoutInflater.inflate(R.layout.reset_success_poppu,null)
+
                     builder.setView(view)
                     builder.setCanceledOnTouchOutside(false)
+                   bindingdialog = DataBindingUtil.bind(view)!!
 
-                    PrefManager.getInstance(requireContext())!!.keyIsLoggedIn = true
 
-                    Handler(Looper.getMainLooper()).postDelayed({
-
+                    bindingdialog.btnLogin.setOnClickListener {
                         findNavController().navigate(R.id.fragmentLogin)
-
                         builder.dismiss()
-                        activity?.finish()
-                    }, DURATION)
+                    }
                     builder.show()
-
-
-                    makeToast(message)
-
 
 
                     makeToast(message)
@@ -181,11 +190,23 @@ class FragmentPasswordReset : BaseFragment() {
         } else if (binding.etPassword.text.toString() != binding.etConfirmPassword.text.toString()) {
             makeToast(getString(R.string.password_not_match))
             return false
+        }else if (!isValidPassword(binding.etPassword.text.toString().trim())){
+            makeToast("Password Must Include Atleast: 1 uppercase,\n 1 Lowercase,\n 1 Number & 1 Spaecial Character")
+            return false
         }
 
         return true
     }
 
+
+    fun isValidPassword(password: String?): Boolean {
+        val pattern: Pattern
+        val matcher: Matcher
+        val PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{4,}$"
+        pattern = Pattern.compile(PASSWORD_PATTERN)
+        matcher = pattern.matcher(password)
+        return matcher.matches()
+    }
 
 
 

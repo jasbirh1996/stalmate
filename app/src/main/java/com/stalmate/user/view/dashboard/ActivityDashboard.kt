@@ -31,12 +31,7 @@ class ActivityDashboard : AppCompatActivity() {
         setupBottomBar()
 
       //  setBottomNavigationInNormalWay(savedInstanceState)
-
-        
     }
-
-
-
 
     companion object {
         private const val ID_HOME = 0
@@ -46,12 +41,7 @@ class ActivityDashboard : AppCompatActivity() {
         private const val ID_ACCOUNT = 4
     }
 
-
-
-
-
-
-        fun setupBottomBar(){
+    fun setupBottomBar(){
             binding.bottomNavigationView.selectedItemId = R.id.home
             fm.beginTransaction().add(binding.fragmentContainerView.id, fragment5, "5").hide(fragment5).commit()
             fm.beginTransaction().add(binding.fragmentContainerView.id, fragment4, "4").hide(fragment4).commit()

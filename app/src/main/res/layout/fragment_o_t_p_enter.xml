@@ -68,6 +68,7 @@
                     app:itemRadius="5dp"
                     app:itemSpacing="18dp"
                     app:itemWidth="50dp"
+                    app:lineColor="@color/obboard_indicator2"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/otp_image"

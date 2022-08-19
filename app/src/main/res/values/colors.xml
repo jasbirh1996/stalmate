@@ -7,14 +7,28 @@
 
     <color name="blue_line">#0F52BA</color>
     <color name="app_color">#0F52BA</color>
+    <color name="blue_dark">#00307A</color>
     <color name="obboard_indicator">#418CFF</color>
+    <color name="obboard_indicator2">#D8E7FF</color>
     <color name="border_your_mind_color">#D9E8FF</color>
+
+
+    <!--GREY-->
     <color name="grey_light">#F3EFEF</color>
     <color name="grey_dark">#535353</color>
+    <color name="grey_dark_color">#7D7D7D</color>
+    <color name="grey1">#B7B7B7</color>
+    <color name="colorGray">#9E9E9E</color>
+    <color name="colorLightGray">#E3E2E2</color>
+    <color name="background">#dddddd</color>
+    <color name="grey2">#8A8A8A</color>
+
+
     <color name="blur_color">#EFF2F6</color>
     <color name="home_post_btn_background_color">#F8F8F8</color>
     <color name="transparent">#003C0505</color>
     <color name="text_succes_color">#1EC751</color>
+    <color name="text_add_more">#00A21B</color>
 
 
 //by Vaibhav
@@ -24,9 +38,7 @@
     <color name="colorSecondaryLight">#9E9E9E</color>
 
 
-    <color name="colorGray">#9E9E9E</color>
-    <color name="colorLightGray">#E3E2E2</color>
-    <color name="background">#dddddd</color>
+
     <color name="colorOrange">#FF5722</color>
     <color name="colorPink">#F65864</color>
     <color name="colorGreen">#56DA52</color>

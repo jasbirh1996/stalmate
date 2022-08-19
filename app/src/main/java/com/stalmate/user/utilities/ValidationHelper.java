@@ -27,6 +27,11 @@ public class ValidationHelper {
         String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
         return email.toLowerCase().trim().matches(emailPattern);
     }
+
+    public static boolean isValidPasswordPattern(String password) {
+        String passwordPattern = "/^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[#$@!%&*?])[A-Za-z\\d#$@!%&*?]{8,30}$/";
+        return password.toLowerCase().trim().matches(passwordPattern);
+    }
     /*public static boolean isValidEmail(String email) {
         String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+.[a-z]+";
         return email.toLowerCase().trim().matches(emailPattern);
