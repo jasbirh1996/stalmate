@@ -3,15 +3,24 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_background"
             android:layout_width="wrap_content"
             android:layout_height="200dp"
             android:scaleType="centerCrop"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/image" />
 
         <ImageView
@@ -23,7 +32,7 @@
             android:adjustViewBounds="true"
             android:padding="10dp"
             android:src="@drawable/ic_back"
-            android:tint="@color/white"
+            app:tint="@color/white"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -38,12 +47,16 @@
             app:layout_constraintEnd_toEndOf="parent">
 
             <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/appCompatImageView11"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:id="@+id/id_cover_photo"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_marginEnd="20dp"
-                android:src="@drawable/round_small_corner_white"
-                app:layout_constraintEnd_toEndOf="parent" />
+                android:padding="10dp"
+                android:background="@drawable/circle_blue_background_dark"
+                android:src="@drawable/ic_camera"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -53,9 +66,9 @@
                 android:text="@string/change_cover_photo"
                 android:textColor="@color/white"
                 android:textSize="10sp"
-                app:layout_constraintBottom_toBottomOf="@+id/appCompatImageView11"
-                app:layout_constraintEnd_toStartOf="@+id/appCompatImageView11"
-                app:layout_constraintTop_toTopOf="@+id/appCompatImageView11" />
+                app:layout_constraintBottom_toBottomOf="@+id/id_cover_photo"
+                app:layout_constraintEnd_toStartOf="@+id/id_cover_photo"
+                app:layout_constraintTop_toTopOf="@+id/id_cover_photo" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -72,6 +85,16 @@
             app:layout_constraintBottom_toBottomOf="@+id/iv_background"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/iv_background" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/id_camera_profile"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/circle_blue_background_stock"
+            android:padding="8dp"
+            android:src="@drawable/ic_camera"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_user_thumb"
+            app:layout_constraintEnd_toEndOf="@+id/iv_user_thumb" />
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -132,10 +155,29 @@
             layout="@layout/content_scroll_profile_edit"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="30dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/iv_user_thumb" />
 
 
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/btn_crate_account"
+            style="@style/primaryButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="30dp"
+            android:layout_marginTop="32dp"
+            android:gravity="center"
+            android:text="Update"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layout"
+            app:textAllCaps="false" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </ScrollView>
 </layout>

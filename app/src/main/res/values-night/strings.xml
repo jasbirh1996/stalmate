@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="welcome_to_satalment" translatable="false">Welcome To Stalment</string>
-    <string name="enter_your_email_id" translatable="false">Enter Your Email Id</string>
+    <string name="enter_your_email_id" translatable="false">Email*</string>
     <string name="enter_your_password" translatable="false">Enter Your Password</string>
     <string name="forget_password" translatable="false">Forget Password?</string>
-    <string name="log_in" translatable="false">Log In</string>
+    <string name="log_in" translatable="false">Login</string>
     <string name="don_t_have_an_account" translatable="false">Don\'t have an account?</string>
     <string name="create_account" translatable="false">Create Account</string>
     <string name="confirm_password" translatable="false">Confirm Password</string>
@@ -57,7 +57,7 @@
     <string name="password_error_toast" translatable="false">Please Enter Password</string>
     <string name="accept_tnc" translatable="false">Please Accept TnC</string>
     <string name="process" translatable="false">Process</string>
-    <string name="choose_language" translatable="false">Choose Language</string>
+    <string name="choose_language" translatable="false">Choose Your Language</string>
     <string name="create_password" translatable="false">Create Password</string>
     <string name="password_not_match">Password not Match</string>
     <string name="reset">Reset</string>

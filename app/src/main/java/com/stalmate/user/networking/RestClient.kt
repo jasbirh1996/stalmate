@@ -39,7 +39,7 @@ class RestClient private constructor() {
         val gson = GsonBuilder()
             .setLenient()
             .create()
-            Log.d("asdsadasd",PrefManager.getInstance(App.getInstance())!!.userDetailLogin.results[0].token)
+
 
         if (PrefManager.getInstance(App.getInstance())!!.keyIsLoggedIn){
             client =  (builder.addInterceptor { chain ->

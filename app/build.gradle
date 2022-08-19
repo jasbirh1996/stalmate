@@ -135,7 +135,7 @@ dependencies {
     implementation "com.airbnb.android:lottie:5.0.3"
     implementation 'com.writingminds:FFmpegAndroid:0.3.2'
     implementation 'com.tbuonomo:dotsindicator:4.3'
-
+    implementation 'com.github.CanHub:Android-Image-Cropper:3.1.1'
 
     implementation 'de.hdodenhof:circleimageview:3.1.0'
     implementation 'com.github.pgreze:android-reactions:1.6'

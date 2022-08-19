@@ -2,6 +2,7 @@ package com.stalmate.user.view.authentication
 
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextUtils
@@ -13,36 +14,40 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Spinner
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import com.stalmate.user.R
 import com.stalmate.user.base.App
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentsignupBinding
-import com.stalmate.user.utilities.PrefManager
+import com.stalmate.user.databinding.TermandconditionpopupBinding
 import com.stalmate.user.utilities.ValidationHelper
 import java.util.*
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 
 
 class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
     private lateinit var binding: FragmentsignupBinding
-
+    private lateinit var bindingpopup: TermandconditionpopupBinding
+    var PASSWORDPATTERN = "\"^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$\""
     private var GANDER: String = ""
     val c = Calendar.getInstance()
 
-    var dates : String = ""
-    var month : String = ""
-    var year : String = ""
+    var dates: String = ""
+    var month: String = ""
+    var year: String = ""
     var spinnerArrayFeb = arrayOf("Feb")
     var spinnerArrayFull = arrayOf("Jan", "Mar", "May", "July", "Aug", "Oct", "Dec")
     var spinnerArrayFullSemihalf = arrayOf("Apr", "Jun", "Sep", "Nov")
-    var spinnerArrayFullhalf = arrayOf("jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+    var spinnerArrayFullhalf =
+        arrayOf("jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
     var spinnerArrayBlank = arrayOf("")
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
 
     }
 
@@ -60,8 +65,17 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
         val view = inflater.inflate(R.layout.fragmentsignup, container, false)
         binding = DataBindingUtil.bind(view)!!
 
+        val builder = AlertDialog.Builder(requireContext(), R.style.CustomAlertDialog).create()
+        val views = layoutInflater.inflate(R.layout.termandconditionpopup, null)
+        bindingpopup = DataBindingUtil.bind(views)!!
 
-        val dataAdapter : ArrayAdapter<String> = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, spinnerArrayFullhalf)
+
+
+        val dataAdapter: ArrayAdapter<String> = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_item,
+            spinnerArrayFullhalf
+        )
 
         // Drop down layout style - list view with radio button
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -101,7 +115,7 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
         with(binding) {
 
 
-         /*   // Display Selected date in textbox
+            /*   // Display Selected date in textbox
             etDOB.setOnClickListener {
                 DatePickerDialog(
                     requireContext(), dateSetListener,
@@ -112,30 +126,47 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
             }*/
 
             binding.spDate.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(p0: AdapterView<*>?, p1: View?, position: Int, p3: Long) {
+                override fun onItemSelected(
+                    p0: AdapterView<*>?,
+                    p1: View?,
+                    position: Int,
+                    p3: Long
+                ) {
                     dates = p0!!.getItemAtPosition(position).toString()
 
 
                     Log.d("jcaujc", dates)
-                    if (dates == "31"){
+                    if (dates == "31") {
 
-                        val dataAdapter : ArrayAdapter<String> = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, spinnerArrayFull)
-
-                        // Drop down layout style - list view with radio button
-                        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-                        // attaching data adapter to spinner
-                        binding.spMonth.setAdapter(dataAdapter);
-                    }else if (dates== "30"){
-                        val dataAdapter : ArrayAdapter<String> = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, spinnerArrayFullSemihalf)
+                        val dataAdapter: ArrayAdapter<String> = ArrayAdapter(
+                            requireContext(),
+                            android.R.layout.simple_spinner_item,
+                            spinnerArrayFull
+                        )
 
                         // Drop down layout style - list view with radio button
                         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
                         // attaching data adapter to spinner
                         binding.spMonth.setAdapter(dataAdapter);
-                    }else if (dates== "28"){
-                        val dataAdapter : ArrayAdapter<String> = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, spinnerArrayFeb)
+                    } else if (dates == "30") {
+                        val dataAdapter: ArrayAdapter<String> = ArrayAdapter(
+                            requireContext(),
+                            android.R.layout.simple_spinner_item,
+                            spinnerArrayFullSemihalf
+                        )
+
+                        // Drop down layout style - list view with radio button
+                        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+                        // attaching data adapter to spinner
+                        binding.spMonth.setAdapter(dataAdapter);
+                    } else if (dates == "28") {
+                        val dataAdapter: ArrayAdapter<String> = ArrayAdapter(
+                            requireContext(),
+                            android.R.layout.simple_spinner_item,
+                            spinnerArrayFeb
+                        )
 
                         // Drop down layout style - list view with radio button
                         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -143,7 +174,11 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
                         // attaching data adapter to spinner
                         binding.spMonth.setAdapter(dataAdapter);
                     } else if (dates != "30" || dates != "31" || dates != "28") {
-                        val dataAdapter : ArrayAdapter<String> = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, spinnerArrayFullhalf)
+                        val dataAdapter: ArrayAdapter<String> = ArrayAdapter(
+                            requireContext(),
+                            android.R.layout.simple_spinner_item,
+                            spinnerArrayFullhalf
+                        )
 
                         // Drop down layout style - list view with radio button
                         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -159,14 +194,29 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
                 override fun onNothingSelected(p0: AdapterView<*>?) {
 
                 }
+            }
 
+            binding.tmcondition.setOnClickListener {
+                builder.setView(views)
+                builder.setCanceledOnTouchOutside(false)
+                builder.show()
+            }
 
+            bindingpopup.appCompatImageView15.setOnClickListener {
 
+                builder.setView(views)
+                builder.setCanceledOnTouchOutside(false)
+                builder.dismiss()
             }
 
 
             binding.spMonth.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(p0: AdapterView<*>?, p1: View?, position: Int, p3: Long) {
+                override fun onItemSelected(
+                    p0: AdapterView<*>?,
+                    p1: View?,
+                    position: Int,
+                    p3: Long
+                ) {
                     month = p0!!.getItemAtPosition(position).toString()
                     Log.d("jcaujc", month)
                 }
@@ -179,7 +229,12 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
 
 
             binding.spYear.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(p0: AdapterView<*>?, p1: View?, position: Int, p3: Long) {
+                override fun onItemSelected(
+                    p0: AdapterView<*>?,
+                    p1: View?,
+                    position: Int,
+                    p3: Long
+                ) {
                     year = p0!!.getItemAtPosition(position).toString()
                     Log.d("jcaujc", year)
                 }
@@ -195,15 +250,20 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
                 @SuppressLint("ResourceAsColor")
                 override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
 
-                    if (isValidEmail(binding.etEmail.text.toString())){
+                    if (isValidEmail(binding.etEmail.text.toString())) {
                         binding.appCompatImageView12.visibility = View.VISIBLE
-                    }else{
+                    } else {
                         binding.appCompatImageView12.visibility = View.GONE
                     }
 
                 }
 
-                override fun beforeTextChanged(s: CharSequence,start: Int,count: Int,after: Int) {
+                override fun beforeTextChanged(
+                    s: CharSequence,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
 
                 }
 
@@ -216,16 +276,21 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
                 @SuppressLint("ResourceAsColor")
                 override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
 
-                    if (binding.etName.text!!.isEmpty()){
+                    if (binding.etName.text!!.isEmpty()) {
                         binding.appCompatImageView14.visibility = View.GONE
-                    }else {
+                    } else {
 
                         binding.appCompatImageView14.visibility = View.VISIBLE
                     }
 
                 }
 
-                override fun beforeTextChanged(s: CharSequence,start: Int,count: Int,after: Int) {
+                override fun beforeTextChanged(
+                    s: CharSequence,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
 
                 }
 
@@ -239,19 +304,21 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
                 override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
 
 
-                    if (binding.etLastName.text!!.isEmpty()){
+                    if (binding.etLastName.text!!.isEmpty()) {
                         binding.appCompatImageView13.visibility = View.GONE
-                    }else {
+                    } else {
 
                         binding.appCompatImageView13.visibility = View.VISIBLE
                     }
 
-
-
-
                 }
 
-                override fun beforeTextChanged(s: CharSequence,start: Int,count: Int,after: Int) {
+                override fun beforeTextChanged(
+                    s: CharSequence,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
 
                 }
 
@@ -265,19 +332,21 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
                 @SuppressLint("ResourceAsColor")
                 override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
 
-                    if (binding.etschoolcollege.text!!.isEmpty()){
+                    if (binding.etschoolcollege.text!!.isEmpty()) {
                         binding.appCompatImageView16.visibility = View.GONE
-                    }else {
+                    } else {
 
                         binding.appCompatImageView16.visibility = View.VISIBLE
                     }
 
-
-
-
                 }
 
-                override fun beforeTextChanged(s: CharSequence,start: Int,count: Int,after: Int) {
+                override fun beforeTextChanged(
+                    s: CharSequence,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
 
                 }
 
@@ -290,16 +359,21 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
                 @SuppressLint("ResourceAsColor")
                 override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
 
-                    if (binding.etPassword.text!!.isEmpty()){
-                        binding.appCompatImageView17.visibility = View.GONE
-                    }else {
+                    if (!binding.etPassword.text!!.isEmpty() && isValidPassword(binding.etPassword.text.toString().trim())) {
 
                         binding.appCompatImageView17.visibility = View.VISIBLE
+                    } else {
+                        binding.appCompatImageView17.visibility = View.GONE
                     }
 
                 }
 
-                override fun beforeTextChanged(s: CharSequence,start: Int,count: Int,after: Int) {
+                override fun beforeTextChanged(
+                    s: CharSequence,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
 
                 }
 
@@ -363,24 +437,31 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
 
             makeToast(getString(R.string.first_name_toast))
             return false
-        } else
-            if (ValidationHelper.isNull(binding.etLastName.text.toString())) {
-                makeToast(getString(R.string.last_name_toast))
-            } else if (ValidationHelper.isNull(binding.etEmail.text.toString())) {
-                makeToast(getString(R.string.email_error_toast))
-            } else if (!isValidEmail(binding.etEmail.text.toString())) {
-                makeToast(getString(R.string.please_enter_valid_email))
-                return false;
-            } else if (!binding.rdmale.isChecked && !binding.rdFamel.isChecked && !binding.rdOthers.isChecked) {
-                makeToast(getString(R.string.select_gendar_error))
-                return false
-            } else if (ValidationHelper.isNull(binding.etPassword.text.toString())) {
-                makeToast(getString(R.string.password_error_toast))
-                return false
-            } else if (!binding.tmcheckbox.isChecked) {
-                makeToast(getString(R.string.accept_tnc))
-                return false
-            }
+        } else if (ValidationHelper.isNull(binding.etLastName.text.toString())) {
+            makeToast(getString(R.string.last_name_toast))
+            return false
+        } else if (ValidationHelper.isNull(binding.etEmail.text.toString())) {
+            makeToast(getString(R.string.email_error_toast))
+            return false
+        } else if (!isValidEmail(binding.etEmail.text.toString())) {
+            makeToast(getString(R.string.please_enter_valid_email))
+            return false;
+        } else if (!binding.rdmale.isChecked && !binding.rdFamel.isChecked && !binding.rdOthers.isChecked) {
+            makeToast(getString(R.string.select_gendar_error))
+            return false
+        } else if (ValidationHelper.isNull(binding.etschoolcollege.text.toString())) {
+            makeToast(getString(R.string.pleaseenterschoolcollegename))
+            return false
+        } else if (ValidationHelper.isNull(binding.etPassword.text.toString())) {
+            makeToast(getString(R.string.password_error_toast))
+            return false
+        } else if (!isValidPassword(binding.etPassword.text.toString().trim())) {
+            makeToast("Password Must Include Atleast: 1 uppercase,\n 1 Lowercase,\n 1 Number & 1 Spaecial Character")
+            return false
+        } else if (!binding.tmcheckbox.isChecked) {
+            makeToast(getString(R.string.accept_tnc))
+            return false
+        }
         return true
     }
 
@@ -388,8 +469,17 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
         return !TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches()
     }
 
-    private fun createAccountApiCall() {
+    fun isValidPassword(password: String?): Boolean {
+        val pattern: Pattern
+        val matcher: Matcher
+        val PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{4,}$"
+        pattern = Pattern.compile(PASSWORD_PATTERN)
+        matcher = pattern.matcher(password)
+        return matcher.matches()
+    }
 
+
+    private fun createAccountApiCall() {
         var gander_name: String = ""
         if (GANDER == "1") {
             gander_name = "Male"
@@ -399,7 +489,22 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
             gander_name = "Others"
         }
 
-        val hashMap = HashMap<String, String>()
+
+        val bundle = Bundle()
+        bundle.putString("email", binding.etEmail.text.toString())
+        bundle.putString("password", binding.etPassword.text.toString())
+        bundle.putString("first_name", binding.etName.text.toString())
+        bundle.putString("last_name", binding.etLastName.text.toString())
+        bundle.putString("gender",  gander_name)
+        bundle.putString("schoolandcollege", binding.etschoolcollege.text.toString())
+        bundle.putString("dob",  year+"-"+month+"-"+dates)
+        bundle.putString("device_token", App.getInstance().firebaseToken.toString())
+        bundle.putString("device_type", "android")
+        bundle.putString("layout", "SignUp")
+        findNavController().navigate(R.id.fragmentOTPEnter, bundle)
+        Log.d("kacajhshc", bundle.toString())
+
+       /* val hashMap = HashMap<String, String>()
         hashMap["email"] = binding.etEmail.text.toString()
         hashMap["password"] = binding.etPassword.text.toString()
         hashMap["first_name"] = binding.etName.text.toString()
@@ -422,6 +527,14 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
                     PrefManager.getInstance(requireContext())!!.userDetail = it
                     val bundle = Bundle()
                     bundle.putString("email", binding.etEmail.text.toString())
+                    bundle.putString("password", binding.etPassword.text.toString())
+                    bundle.putString("first_name", binding.etName.text.toString())
+                    bundle.putString("last_name", binding.etLastName.text.toString())
+                    bundle.putString("gender",  gander_name)
+                    bundle.putString("schoolandcollege", binding.etschoolcollege.text.toString())
+                    bundle.putString("dob",  year+"-"+month+"-"+dates)
+                    bundle.putString("device_token", App.getInstance().firebaseToken.toString())
+                    bundle.putString("device_type", "android")
                     bundle.putString("layout", "SignUp")
                     findNavController().navigate(R.id.fragmentOTPEnter, bundle)
                     Log.d("kacajhshc", bundle.toString())
@@ -431,9 +544,8 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
                 }
             }
             binding.progressBar.visibility = View.GONE
-        }
+        }*/
     }
-
 
     private fun toolbarSetUp() {
         binding.toolbar.toolBarCenterText.visibility = View.VISIBLE

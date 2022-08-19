@@ -14,6 +14,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import com.stalmate.user.R
+import com.stalmate.user.base.App
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentOTPEnterBinding
 import com.stalmate.user.databinding.SignUpSuccessPoppuBinding
@@ -26,6 +27,14 @@ class FragmentOTPEnter : BaseFragment() {
     private lateinit var binding: FragmentOTPEnterBinding
     private lateinit var bindingdialog : SignUpSuccessPoppuBinding
     var email : String = ""
+    var password : String = ""
+    var first_name : String = ""
+    var last_name : String = ""
+    var gender : String = ""
+    var schoolandcollege : String = ""
+    var dob : String = ""
+    var device_token : String = ""
+    var device_type : String = ""
     var forgetPasswordScreen : String = ""
 
     override fun onCreateView(
@@ -36,11 +45,7 @@ class FragmentOTPEnter : BaseFragment() {
         var view =  inflater.inflate(R.layout.fragment_o_t_p_enter, container, false)
         binding = DataBindingUtil.bind<FragmentOTPEnterBinding>(view)!!
 
-            email = requireArguments().getString("email").toString()
-            forgetPasswordScreen = requireArguments().getString("signUp").toString()
 
-
-        Log.d("akjsdad",forgetPasswordScreen)
         return binding.root
     }
 
@@ -54,7 +59,17 @@ class FragmentOTPEnter : BaseFragment() {
         startTimer()
 
         getOtpApiCall()
+
         email = requireArguments().getString("email").toString()
+        password = requireArguments().getString("password").toString()
+        first_name = requireArguments().getString("first_name").toString()
+        last_name = requireArguments().getString("last_name").toString()
+        gender = requireArguments().getString("gender").toString()
+        schoolandcollege = requireArguments().getString("schoolandcollege").toString()
+        dob = requireArguments().getString("dob").toString()
+        device_token = requireArguments().getString("device_token").toString()
+        device_type = requireArguments().getString("device_type").toString()
+        forgetPasswordScreen = requireArguments().getString("signUp").toString()
         forgetPasswordScreen = requireArguments().getString("layout").toString()
 
         Log.d("emiasljkcn", email)
@@ -136,10 +151,6 @@ class FragmentOTPEnter : BaseFragment() {
                     val builder = AlertDialog.Builder(requireContext(), R.style.CustomAlertDialog).create()
                     val view = layoutInflater.inflate(R.layout.sign_up_success_poppu,null)
 
-
-                    bindingdialog.succesIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_successfull_star_icon))
-                    bindingdialog.dialogText.setText(getString(R.string.password_chnage_successfull))
-
                     builder.setView(view)
                     builder.setCanceledOnTouchOutside(false)
 
@@ -148,7 +159,7 @@ class FragmentOTPEnter : BaseFragment() {
                     Handler(Looper.getMainLooper()).postDelayed({
                         val intent = Intent(requireContext(), ActivityDashboard::class.java)
                         startActivity(intent)
-
+                        createAccountApiCall()
                         builder.dismiss()
                         activity?.finish()
                     }, DURATION)
@@ -164,6 +175,41 @@ class FragmentOTPEnter : BaseFragment() {
             binding.progressBar.visibility = View.GONE
         }
 
+    }
+
+
+
+    private fun createAccountApiCall() {
+
+
+        val hashMap = java.util.HashMap<String, String>()
+        hashMap["email"] = email
+        hashMap["password"] = password
+        hashMap["first_name"] = first_name
+        hashMap["last_name"] = last_name
+        hashMap["gender"] = gender
+        hashMap["schoolandcollege"] = schoolandcollege
+        hashMap["dob"] = dob
+        hashMap["device_id"] = ""
+        hashMap["device_token"] = App.getInstance().firebaseToken.toString()
+        hashMap["device_type"] = "android"
+        binding.progressBar.visibility = View.VISIBLE
+        networkViewModel.registration(hashMap)
+        networkViewModel.registerData.observe(requireActivity()) {
+
+            it?.let {
+                val message = it.message
+
+                if (it.status == true) {
+
+                    PrefManager.getInstance(requireContext())!!.userDetail = it
+
+                } else {
+                    makeToast(message)
+                }
+            }
+            binding.progressBar.visibility = View.GONE
+        }
     }
 
     private fun toolbarSetUp() {
