@@ -23,10 +23,10 @@ class FragmentOtpForgetPassword : BaseFragment() {
 
     val DURATION: Long = 2000
     private lateinit var binding: FragmentOtpForgetPasswordBinding
+    var email : String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-       
     }
 
     override fun onCreateView(
@@ -34,9 +34,9 @@ class FragmentOtpForgetPassword : BaseFragment() {
         savedInstanceState: Bundle?
     ): View? {
         var view =  inflater.inflate(R.layout.fragment_otp_forget_password, container, false)
-      
-        binding = DataBindingUtil.bind<FragmentOtpForgetPasswordBinding>(view)!!
+        email = requireArguments().getString("email").toString()
 
+        binding = DataBindingUtil.bind<FragmentOtpForgetPasswordBinding>(view)!!
         // Inflate the layout for this fragment
         return binding.root
     }
@@ -56,7 +56,7 @@ class FragmentOtpForgetPassword : BaseFragment() {
         binding.btnProcess.setOnClickListener {
             /*Otp Verify Api Call*/
 
-                          otpVerifyForgotApiCall()
+            otpVerifyForgotApiCall()
             
 
         }
@@ -66,7 +66,7 @@ class FragmentOtpForgetPassword : BaseFragment() {
     private fun otpVerifyForgotApiCall() {
         val hashMap = HashMap<String, String>()
 
-//        hashMap["email"] = email
+        hashMap["email"] = email
 
         binding.progressBar.visibility = View.VISIBLE
         networkViewModel.otpVerify(hashMap)
@@ -89,7 +89,7 @@ class FragmentOtpForgetPassword : BaseFragment() {
         }
     }
 
-  /*  private fun getOtpApiCall() {
+    private fun getOtpApiCall() {
         val hashMap = HashMap<String, String>()
 
         hashMap["email"] = email
@@ -150,7 +150,7 @@ class FragmentOtpForgetPassword : BaseFragment() {
             binding.progressBar.visibility = View.GONE
         }
 
-    }*/
+    }
 
     private fun toolbarSetUp() {
         binding.toolbar.toolBarCenterText.visibility = View.VISIBLE
@@ -162,7 +162,7 @@ class FragmentOtpForgetPassword : BaseFragment() {
         }
     }
 
-   /* private fun startTimer() {
+    private fun startTimer() {
         val timeDuration = 30000L
         val interval = 1000L
         val timer = object : CountDownTimer(timeDuration, interval) {
@@ -185,7 +185,7 @@ class FragmentOtpForgetPassword : BaseFragment() {
         }
 
         timer.start()
-    }*/
+    }
 
     fun formatSeconds(timeInSeconds: Long): String {
         val secondsLeft = timeInSeconds / 1000
