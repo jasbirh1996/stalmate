@@ -18,6 +18,7 @@ import com.airbnb.lottie.utils.Utils
 import com.google.android.material.snackbar.Snackbar
 import com.simform.videooperations.Common
 import com.stalmate.user.base.callbacks.BaseCallBacks
+import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.utilities.untilitys
 import com.stalmate.user.viewmodel.AppViewModel
 import java.util.*
@@ -43,6 +44,12 @@ abstract class BaseActivity : AppCompatActivity(), View.OnClickListener,
         super.onCreate(savedInstanceState)
         progressDialog = com.stalmate.user.view.dialogs.ProgressDialog(this)
         context = this
+        try {
+          debugPrint("tokenn", PrefManager.getInstance(App.getInstance())!!.userDetailLogin.results[0].token)
+        }catch (e:Exception){
+
+        }
+
 
     }
 

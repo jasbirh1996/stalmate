@@ -16,6 +16,7 @@ data class User(
 
 
 
+    val friends_count:Int,
     val about: String,
     val albums: List<Any>,
     val city: String,
@@ -23,8 +24,8 @@ data class User(
     val cover_img: List<CoverImg>,
     val cover_img1: String,
     val dob: String,
-    val follower:String,
-    val following:String,
+    val follower:Int,
+    val following:Int,
     val email: String,
     val first_name: String,
     val gender: String,

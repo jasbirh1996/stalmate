@@ -566,6 +566,8 @@
     <string name="terms_amp_conditions"><![CDATA[Terms & Conditions]]></string>
     <string name="pleaseenterschoolcollegename">Please Enter School/College Name</string>
     <string name="back_to_login_screen">Back to Login</string>
+    <string name="add_friend">Add Friend</string>
+    <string name="block">Block</string>
 
 
     <string-array name="date">

@@ -117,6 +117,7 @@
                 android:layout_height="wrap_content"
 
                 android:text="@string/edit_profile"
+                android:visibility="gone"
                 app:backgroundTint="@null"
                 app:layout_constraintBottom_toBottomOf="@+id/layoutFollowing"
                 app:layout_constraintEnd_toEndOf="parent"

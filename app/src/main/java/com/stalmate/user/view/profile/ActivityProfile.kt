@@ -9,6 +9,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.otaliastudios.opengl.core.use
 import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseActivity
@@ -17,6 +19,7 @@ import com.stalmate.user.databinding.ActivityProfileBinding
 
 import com.stalmate.user.model.AboutProfileLine
 import com.stalmate.user.model.User
+import com.stalmate.user.utilities.ImageLoaderHelperGlide
 import com.stalmate.user.view.adapter.ProfileAboutAdapter
 
 import com.stalmate.user.view.adapter.ProfileFriendAdapter
@@ -39,8 +42,8 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
 
 
         getUserProfileData()
-
         binding = DataBindingUtil.setContentView(this, R.layout.activity_profile)
+        binding.layout.buttonEditProfile.visibility=View.VISIBLE
         feedAdapter = AdapterFeed(networkViewModel, this, this)
         binding.layout.rvFeeds.adapter = feedAdapter
         binding.layout.rvFeeds.layoutManager = LinearLayoutManager(this)
@@ -52,23 +55,22 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
                 feedAdapter.submitList(it!!.results)
             }
         })
-
-
-/*
->>>>>>> 290771115795d2a2f14958d37a4c3e68fac833f9
         friendAdapter = ProfileFriendAdapter(networkViewModel, this, this)
         binding.layout.rvFriends.adapter = friendAdapter
         binding.layout.rvFriends.layoutManager = GridLayoutManager(this, 3)
-        networkViewModel.getFriendList("", HashMap())
+
+        var hashmap=HashMap<String,String>()
+        hashmap.put("type","profile_friends")
+        hashmap.put("sub_type","")
+        hashmap.put("search","")
+        hashmap.put("page","1")
+        hashmap.put("limit","6")
+        networkViewModel.getFriendList("", hashmap)
         networkViewModel.friendLiveData.observe(this, Observer {
-            Log.d("asdasdasd", "oaspidsad")
             it.let {
                 friendAdapter.submitList(it!!.results)
             }
-<<<<<<< HEAD
         })
-=======
-        })*/
 
 
 
@@ -163,10 +165,14 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
 
 
         binding.tvUserName.text=userData.first_name+" "+userData.last_name
-        binding.layout.tvFollowerCount.text=userData.follower
-        binding.layout.tvFollowingCount.text=userData.following
+        binding.layout.tvFollowerCount.text=userData.follower.toString()
+        binding.layout.tvFollowingCount.text=userData.following.toString()
+        binding.tvUserAbout.text=userData.about
+        binding.layout.tvFriendCount.text=userData.friends_count.toString()
 
 
+        ImageLoaderHelperGlide.setGlide(this,binding.ivBackground,userData.img_url+userData.cover_img1)
+        ImageLoaderHelperGlide.setGlide(this,binding.ivUserThumb,userData.img_url+userData.profile_img1)
 
 
         var aboutArrayList = ArrayList<AboutProfileLine>()

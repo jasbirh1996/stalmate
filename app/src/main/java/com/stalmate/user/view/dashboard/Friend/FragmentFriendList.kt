@@ -15,13 +15,15 @@ import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentFriendListBinding
 import com.stalmate.user.model.User
+import com.stalmate.user.utilities.Constants
 
 import com.stalmate.user.view.adapter.FriendAdapter
 import com.stalmate.user.view.adapter.ProfileFriendAdapter
 
-class FragmentFriendList : BaseFragment(), FriendAdapter.Callbackk {
-    lateinit var friendAdapter:FriendAdapter
-lateinit var binding:FragmentFriendListBinding
+class FragmentFriendList(var type: String, var subtype: String) : BaseFragment(),
+    FriendAdapter.Callbackk {
+    lateinit var friendAdapter: FriendAdapter
+    lateinit var binding: FragmentFriendListBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -31,18 +33,27 @@ lateinit var binding:FragmentFriendListBinding
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding=DataBindingUtil.bind<FragmentFriendListBinding>(inflater.inflate(R.layout.fragment_friend_list, container, false))!!
+        binding = DataBindingUtil.bind<FragmentFriendListBinding>(
+            inflater.inflate(
+                R.layout.fragment_friend_list,
+                container,
+                false
+            )
+        )!!
         return binding.root
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        friendAdapter = FriendAdapter(networkViewModel, requireContext(), this)
-        binding.rvFriends.adapter=friendAdapter
-        binding.rvFriends.layoutManager= LinearLayoutManager(context)
-        var hashmap=HashMap<String,String>()
-        hashmap.put("type","")
-        hashmap.put("search","")
-        hashmap.put("page","1")
+        friendAdapter = FriendAdapter(networkViewModel, requireContext(), this,type,subtype)
+        binding.rvFriends.adapter = friendAdapter
+        binding.rvFriends.layoutManager = LinearLayoutManager(context)
+        var hashmap = HashMap<String, String>()
+        hashmap.put("type", type)
+        hashmap.put("sub_type", subtype)
+        hashmap.put("search", "")
+        hashmap.put("page", "1")
+        hashmap.put("limit", "")
         networkViewModel.getFriendList("", hashmap)
         networkViewModel.friendLiveData.observe(viewLifecycleOwner, Observer {
             it.let {
@@ -54,18 +65,20 @@ lateinit var binding:FragmentFriendListBinding
 
     override fun onClickOnUpdateFriendRequest(friend: User, status: String) {
 
-        var hashmap=HashMap<String,String>()
-        hashmap.put("type","")
-        hashmap.put("search","")
-        hashmap.put("page","1")
-
-
-
+        var hashmap = HashMap<String, String>()
+        hashmap.put("type", "")
+        hashmap.put("search", "")
+        hashmap.put("page", "1")
 
 
     }
 
+
+
+
     override fun onClickOnProfile(friend: User) {
-        startActivity(IntentHelper.getProfileScreen(requireContext())!!.putExtra("userData",friend))
+        startActivity(
+            IntentHelper.getOtherUserProfileScreen(requireContext())!!.putExtra("id", friend.id)
+        )
     }
 }

@@ -20,6 +20,7 @@ import com.stalmate.user.model.AboutProfileLine
 
 import com.stalmate.user.model.ModelUser
 import com.stalmate.user.model.User
+import com.stalmate.user.utilities.ImageLoaderHelperGlide
 import com.stalmate.user.view.adapter.ProfileAboutAdapter
 
 import com.stalmate.user.view.adapter.ProfileFriendAdapter
@@ -45,16 +46,28 @@ class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk,
         binding = DataBindingUtil.setContentView(this, R.layout.activity_other_user_profile)
 
 
+
+
         friendAdapter = ProfileFriendAdapter(networkViewModel, this, this)
         binding.layout.rvFriends.adapter = friendAdapter
         binding.layout.rvFriends.layoutManager = GridLayoutManager(this, 3)
-        networkViewModel.getFriendList("", HashMap())
+        var hashmap=HashMap<String,String>()
+        hashmap.put("type","profile_friends")
+        hashmap.put("sub_type","")
+        hashmap.put("search","")
+        hashmap.put("page","1")
+        hashmap.put("limit","6")
+        networkViewModel.getFriendList("", hashmap)
         networkViewModel.friendLiveData.observe(this, Observer {
-            Log.d("asdasdasd", "oaspidsad")
             it.let {
                 friendAdapter.submitList(it!!.results)
             }
         })
+
+
+
+
+
         feedAdapter = AdapterFeed(networkViewModel, this, this)
         binding.layout.rvFeeds.adapter = feedAdapter
         binding.layout.rvFeeds.layoutManager = LinearLayoutManager(this)
@@ -80,20 +93,15 @@ class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk,
 
         }
 
-        binding.layout.buttonEditProfile.setOnClickListener {
 
-
-            // create an options object that defines the transition
-            val options = ActivityOptions.makeSceneTransitionAnimation(
-                this,
-                binding.layoutChangeBackgroundImage,
-                "image"
-            )
-
-
-            // start the activity with transition
-            startActivity(IntentHelper.getProfileEditScreen(this), options.toBundle())
+        binding.buttonFriendUpdate.setOnClickListener {
+            updateFriendStatus("add_friend")
         }
+
+        binding.buttonFollow.setOnClickListener {
+            updateFriendStatus("follow")
+        }
+
     }
 
     override fun onDestroy() {
@@ -109,15 +117,28 @@ class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk,
     }
 
 
-    fun updateFriendStatus() {
+    fun updateFriendStatus(status:String) {
         var hashMap = HashMap<String, String>()
         hashMap.put("id_user", userId)
-        networkViewModel.sendFriendRequest("", hashMap)
-        networkViewModel.sendFriendRequestLiveData.observe(this, Observer {
-            it.let {
 
-            }
-        })
+        if (status.equals("add_friend")){
+            networkViewModel.sendFriendRequest("", hashMap)
+            networkViewModel.sendFriendRequestLiveData.observe(this, Observer {
+                it.let {
+
+                }
+            })
+        }
+        if (status.equals("follow")){
+
+            networkViewModel.sendFollowRequest("", hashMap)
+            networkViewModel.followRequestLiveData.observe(this, Observer {
+                it.let {
+
+                }
+            })
+        }
+
     }
 
 
@@ -138,10 +159,15 @@ class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk,
 
 
         binding.tvUserName.text=userData.first_name+" "+userData.last_name
-        binding.layout.tvFollowerCount.text=userData.follower
-        binding.layout.tvFollowingCount.text=userData.following
+        binding.layout.tvFollowerCount.text=userData.follower.toString()
+        binding.layout.tvFollowingCount.text=userData.following.toString()
+        binding.tvUserAbout.text=userData.about
+        binding.layout.tvFriendCount.text=userData.friends_count.toString()
 
 
+
+        ImageLoaderHelperGlide.setGlide(this,binding.ivBackground,userData.img_url+userData.cover_img1)
+        ImageLoaderHelperGlide.setGlide(this,binding.ivUserThumb,userData.img_url+userData.profile_img1)
 
 
         var aboutArrayList = ArrayList<AboutProfileLine>()
@@ -167,6 +193,7 @@ class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk,
         var profileAboutAdapter = ProfileAboutAdapter(networkViewModel, this, this)
         profileAboutAdapter.submitList(aboutArrayList)
         binding.layout.rvAbout.adapter = profileAboutAdapter
+
 
     }
 
