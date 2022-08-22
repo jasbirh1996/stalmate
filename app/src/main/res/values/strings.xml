@@ -566,7 +566,12 @@
     <string name="terms_amp_conditions"><![CDATA[Terms & Conditions]]></string>
     <string name="pleaseenterschoolcollegename">Please Enter School/College Name</string>
     <string name="back_to_login_screen">Back to Login</string>
+    <string name="company">Company</string>
 
+    <string-array name="marrage">
+        <item><font fgcolor="#B7B7B7">Signle</font></item>
+        <item><font fgcolor="#B7B7B7">Merriage</font></item>
+    </string-array>
 
     <string-array name="date">
         <item><font fgcolor="#B7B7B7">01</font></item>

@@ -38,7 +38,7 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
         super.onCreate(savedInstanceState)
 
 
-        getUserProfileData()
+//        getUserProfileData()
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_profile)
         feedAdapter = AdapterFeed(networkViewModel, this, this)
@@ -55,7 +55,6 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
 
 
 /*
->>>>>>> 290771115795d2a2f14958d37a4c3e68fac833f9
         friendAdapter = ProfileFriendAdapter(networkViewModel, this, this)
         binding.layout.rvFriends.adapter = friendAdapter
         binding.layout.rvFriends.layoutManager = GridLayoutManager(this, 3)
@@ -65,9 +64,7 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
             it.let {
                 friendAdapter.submitList(it!!.results)
             }
-<<<<<<< HEAD
         })
-=======
         })*/
 
 
@@ -147,7 +144,7 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
 
 
 
-    fun getUserProfileData() {
+    /*fun getUserProfileData() {
         var hashMap = HashMap<String, String>()
         networkViewModel.getProfileData( hashMap)
         networkViewModel.profileLiveData.observe(this, Observer {
@@ -156,7 +153,7 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
                 setUpAboutUI()
             }
         })
-    }
+    }*/
 
 
     fun setUpAboutUI() {

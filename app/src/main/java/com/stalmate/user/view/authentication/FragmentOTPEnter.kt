@@ -58,7 +58,6 @@ class FragmentOTPEnter : BaseFragment() {
 
         startTimer()
 
-        getOtpApiCall()
 
         email = requireArguments().getString("email").toString()
         password = requireArguments().getString("password").toString()
@@ -74,6 +73,10 @@ class FragmentOTPEnter : BaseFragment() {
 
         Log.d("emiasljkcn", email)
 
+        getOtpApiCall()
+        getOtpRegistrationApiCall()
+
+
         binding.btnProcess.setOnClickListener {
             /*Otp Verify Api Call*/
 
@@ -82,7 +85,26 @@ class FragmentOTPEnter : BaseFragment() {
             }else if (forgetPasswordScreen == "ForgetPassword"){
                 otpVerifyForgotApiCall()
             }
+        }
+    }
 
+    private fun getOtpRegistrationApiCall() {
+        val hashMap = HashMap<String, String>()
+
+        hashMap["email"] = email
+
+        binding.progressBar.visibility = View.VISIBLE
+        networkViewModel.otpVerifyRegistration(hashMap,email = email, otp = "")
+
+        networkViewModel.otpVerifyRegistarionData.observe(requireActivity()){
+
+            it?.let {
+
+                if (it.status == true){
+                    binding.progressBar.visibility = View.GONE
+                }
+            }
+            binding.progressBar.visibility = View.GONE
         }
     }
 
@@ -140,16 +162,15 @@ class FragmentOTPEnter : BaseFragment() {
         hashMap["email"] = email
         hashMap["otp"] = binding.pinView.text.toString()
         binding.progressBar.visibility = View.VISIBLE
-        networkViewModel.otpVerify(hashMap)
-        networkViewModel.otpVerifyData.observe(requireActivity()){
-
+        networkViewModel.otpVerifyRegistration(hashMap, email = email, otp = binding.pinView.text.toString())
+        networkViewModel.otpVerifyRegistarionData.observe(requireActivity()) {
             it?.let {
                 val message = it.message
 
-                if (it.status == true){
+                if (it.status == true) {
 
                     val builder = AlertDialog.Builder(requireContext(), R.style.CustomAlertDialog).create()
-                    val view = layoutInflater.inflate(R.layout.sign_up_success_poppu,null)
+                    val view = layoutInflater.inflate(R.layout.sign_up_success_poppu, null)
 
                     builder.setView(view)
                     builder.setCanceledOnTouchOutside(false)
@@ -167,13 +188,14 @@ class FragmentOTPEnter : BaseFragment() {
 
 
                     makeToast(message)
-                }else{
+                } else {
                     makeToast(message)
                 }
 
             }
             binding.progressBar.visibility = View.GONE
         }
+
 
     }
 
@@ -182,7 +204,7 @@ class FragmentOTPEnter : BaseFragment() {
     private fun createAccountApiCall() {
 
 
-        val hashMap = java.util.HashMap<String, String>()
+        val hashMap = HashMap<String, String>()
         hashMap["email"] = email
         hashMap["password"] = password
         hashMap["first_name"] = first_name

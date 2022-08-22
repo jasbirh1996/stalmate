@@ -5,6 +5,8 @@ import com.stalmate.user.model.*
 import com.stalmate.user.utilities.Constants
 
 import com.slatmate.user.model.*
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 
 import retrofit2.Call
 import retrofit2.http.*
@@ -58,6 +60,26 @@ interface ApiInterface {
     @GET(Constants.GET_OTHER_USER_PROFILE_API)
     fun getOtherUserProfileDetails(@Query("id_user") id_user :String): Call<ModelUser>
 
+    @GET(Constants.URL_OTP_REGISTRATION)
+    fun setOtpVerifyRegistration(@Query("email") email :String, @Query("otp") otp :String): Call<CommonModelResponse>
+
+    @Multipart
+    @PATCH(Constants.UPDATE_PROFILE_API)
+    fun updateUserProfile(
+        @Part("first_name") firstName: RequestBody,
+        @Part("last_name") lastName: RequestBody,
+        @Part("about") about: RequestBody,
+        @Part("number") number: RequestBody,
+        @Part("dob") dob: RequestBody,
+        @Part("marital_status") maritalStatus: RequestBody,
+        @Part("url") url: RequestBody,
+        @Part("company") company: RequestBody,
+        @Part("gender") gender: RequestBody,
+        @Part("city") city: RequestBody,
+        @Part("home_town") home_town: RequestBody,
+       /* @Part file1: MultipartBody.Part? = null,
+        @Part file2: MultipartBody.Part? = null*/
+    ): Call<CommonModelResponse>
 
 /*
     @HTTP(method = "DELETE", path = "delete_post" ,hasBody = true)
