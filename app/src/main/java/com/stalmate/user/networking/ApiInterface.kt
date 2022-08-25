@@ -27,7 +27,7 @@ interface ApiInterface {
     fun getFeedList(): Call<ModelFeed>
 
     @POST(Constants.url_friend_list)
-    fun getFriendList(): Call<ModelFriend>
+    fun getFriendList(@Body map: HashMap<String, String>): Call<ModelFriend>
 
 
     @POST(Constants.URL_SIGN_UP)
@@ -49,8 +49,8 @@ interface ApiInterface {
     fun updateFriendRequest(@Body map: HashMap<String, String>): Call<ModelSuccess>
 
 
-    @PUT(Constants.url_send_follower_request)
-    fun requestBeFollower(@Body map: HashMap<String, String>): Call<ModelLoginResponse>
+    @POST(Constants.url_send_follower_request)
+    fun requestBeFollower(@Body map: HashMap<String, String>): Call<ModelSuccess>
 
 
     @GET(Constants.GET_PROFILE_API)

@@ -49,7 +49,7 @@ open class AppViewModel : ViewModel() {
     fun getFriendList(token: String, map: HashMap<String, String>) {
         val temp = MutableLiveData<ModelFriend?>()
         friendLiveData = temp
-        getResult(temp, apiInterface.getFriendList())
+        getResult(temp, apiInterface.getFriendList(map))
     }
 
 
@@ -67,6 +67,12 @@ open class AppViewModel : ViewModel() {
         getResult(temp, apiInterface.sendFriendRequest(map))
     }
 
+    var followRequestLiveData: LiveData<ModelSuccess?> = MutableLiveData<ModelSuccess?>()
+    fun sendFollowRequest(token: String, map: HashMap<String, String>) {
+        val temp = MutableLiveData<ModelSuccess?>()
+        followRequestLiveData = temp
+        getResult(temp, apiInterface.requestBeFollower(map))
+    }
 
     var categoryLiveData: LiveData<ModelCategory?> = MutableLiveData<ModelCategory?>()
     fun getCategoryList(token: String, map: HashMap<String, String>) {

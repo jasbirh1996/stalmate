@@ -9,7 +9,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
-
 import com.stalmate.user.base.callbacks.BaseCallBacks
 import com.stalmate.user.viewmodel.AppViewModel
 import java.util.*
@@ -82,4 +81,7 @@ open class BaseFragment : Fragment(), BaseCallBacks {
         context.createConfigurationContext(config)
         context.resources.updateConfiguration(config, context.resources.displayMetrics)
     }
+
+
+
 }

@@ -16,4 +16,16 @@ object Constants {
     const val UPDATE_PROFILE_API="auth_service/auth_api/profile_update"
 
     const val START_DATE = "01"
+
+
+    const val TYPE_FRIEND_REQUEST = "friend_requests"
+    const val TYPE_FRIEND_SUGGESTIONS = "suggestions"
+    const val TYPE_MY_FRIENDS = "friends"
+
+
+
+    const val TYPE_FRIEND_SUGGESTIONS_SUGGESTED = "01"
+    const val TYPE_FRIEND_SUGGESTIONS_FOLLOWERS = "01"
+    const val TYPE_FRIEND_FOLLOWING = "following"
+    const val TYPE_FRIEND_FOLLOWER = "follower"
 }

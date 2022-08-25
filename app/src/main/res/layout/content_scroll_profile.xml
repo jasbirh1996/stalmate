@@ -4,11 +4,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
 
-<androidx.core.widget.NestedScrollView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:fillViewport="true">
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -117,6 +112,7 @@
                 android:layout_height="wrap_content"
 
                 android:text="@string/edit_profile"
+                android:visibility="gone"
                 app:backgroundTint="@null"
                 app:layout_constraintBottom_toBottomOf="@+id/layoutFollowing"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -218,5 +214,4 @@
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.core.widget.NestedScrollView>
 </layout>

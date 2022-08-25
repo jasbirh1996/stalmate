@@ -41,7 +41,7 @@ class FragmentGroupSuggestionList : BaseFragment(), FriendAdapter.Callbackk {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        friendAdapter = FriendAdapter(networkViewModel, context!!, this)
+        friendAdapter = FriendAdapter(networkViewModel, context!!, this,"","")
 
         binding.rvUsers.adapter=friendAdapter
         binding.rvUsers.layoutManager= LinearLayoutManager(context)

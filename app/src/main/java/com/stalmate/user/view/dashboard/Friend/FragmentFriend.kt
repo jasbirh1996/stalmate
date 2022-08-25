@@ -16,6 +16,7 @@ import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.commonadapters.FragmentViewPagerAdapter
 import com.stalmate.user.databinding.FragmentFriendBinding
 import com.stalmate.user.model.User
+import com.stalmate.user.utilities.Constants
 
 import com.stalmate.user.view.adapter.FriendAdapter
 import com.stalmate.user.view.adapter.ProfileFriendAdapter
@@ -35,33 +36,32 @@ class FragmentFriend : BaseFragment(), FriendAdapter.Callbackk {
         binding=DataBindingUtil.bind<FragmentFriendBinding>(inflater.inflate(R.layout.fragment_friend, container, false))!!
         return binding.root
     }
-
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
    
         var list=ArrayList<Fragment>()
-        list.add(FragmentFriendList())
-        list.add(FragmentFriendList())
+        list.add(FragmentFriendCategory(Constants.TYPE_FRIEND_REQUEST))
+        list.add(FragmentFriendCategory(Constants.TYPE_FRIEND_SUGGESTIONS))
+        list.add(FragmentFriendCategory(Constants.TYPE_MY_FRIENDS))
         var pagerAdapter=FragmentViewPagerAdapter(requireActivity(),requireContext())
         pagerAdapter.addFragments(list)
         binding.viewPager.adapter=pagerAdapter
 
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
-          if (position == 0) tab.text = "Followers" else if (position == 1) {
-                tab.text = "Following"
-            }
+          if (position == 0) tab.text = "Friend Requests" else if (position == 1) {
+                tab.text = "Suggestions"
+            }else if (position == 2) {
+              tab.text = "My Friends"
+          }
         }.attach()
     }
-
-
 
     override fun onClickOnUpdateFriendRequest(friend: User, status: String) {
 
     }
 
     override fun onClickOnProfile(friend: User) {
-        TODO("Not yet implemented")
+
     }
 }
