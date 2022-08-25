@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import com.stalmate.user.modules.reels.activity.ActivityVideoRecorder
 import com.stalmate.user.view.authentication.FragmentOTPEnter
+import com.stalmate.user.view.profile.ActivityFollowersFollowingScreen
 import com.stalmate.user.view.profile.ActivityOtherUserProfile
 import com.stalmate.user.view.profile.ActivityProfile
 import com.stalmate.user.view.profile.ActivityProfileEdit
@@ -31,6 +32,11 @@ public class IntentHelper {
         }
         fun getCreateReelsScreen(context: Context?): Intent? {
             return Intent(context, ActivityVideoRecorder::class.java)
+                .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        }
+
+        fun getFollowersFollowingScreen(context: Context?): Intent? {
+            return Intent(context, ActivityFollowersFollowingScreen::class.java)
                 .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
         }
 

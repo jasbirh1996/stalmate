@@ -81,6 +81,12 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
 
     fun setupData() {
 
+        binding.layout.layoutFollowers.setOnClickListener {
+            startActivity(IntentHelper.getFollowersFollowingScreen(this)!!.putExtra("id",userData.id).putExtra("type","follower"))
+        }
+        binding.layout.layoutFollowing.setOnClickListener {
+            startActivity(IntentHelper.getFollowersFollowingScreen(this)!!.putExtra("id",userData.id).putExtra("type","following"))
+        }
 
         binding.idCoverPhoto.setOnClickListener {
 
@@ -99,9 +105,6 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
         }
 
 
-        binding.layout.layoutFollowers.setOnClickListener {
-
-        }
 
         binding.layout.buttonEditProfile.setOnClickListener {
 

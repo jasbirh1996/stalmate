@@ -13,17 +13,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
-import com.stalmate.user.databinding.FragmentFriendListBinding
+import com.stalmate.user.databinding.FragmentAllFollowersFollowingListBinding
 import com.stalmate.user.model.User
 import com.stalmate.user.utilities.Constants
 
 import com.stalmate.user.view.adapter.FriendAdapter
 import com.stalmate.user.view.adapter.ProfileFriendAdapter
 
-class FragmentFriendList(var type: String, var subtype: String,var userId:String) : BaseFragment(),
+class FragmentAllFollowersFollowingList(var type: String, var subtype: String) : BaseFragment(),
     FriendAdapter.Callbackk {
     lateinit var friendAdapter: FriendAdapter
-    lateinit var binding: FragmentFriendListBinding
+    lateinit var binding: FragmentAllFollowersFollowingListBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -33,9 +33,9 @@ class FragmentFriendList(var type: String, var subtype: String,var userId:String
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = DataBindingUtil.bind<FragmentFriendListBinding>(
+        binding = DataBindingUtil.bind<FragmentAllFollowersFollowingListBinding>(
             inflater.inflate(
-                R.layout.fragment_friend_list,
+                R.layout.fragment_all_followers_following_list,
                 container,
                 false
             )
@@ -49,7 +49,6 @@ class FragmentFriendList(var type: String, var subtype: String,var userId:String
         binding.rvFriends.adapter = friendAdapter
         binding.rvFriends.layoutManager = LinearLayoutManager(context)
         var hashmap = HashMap<String, String>()
-        hashmap.put("id_user", userId)
         hashmap.put("type", type)
         hashmap.put("sub_type", subtype)
         hashmap.put("search", "")

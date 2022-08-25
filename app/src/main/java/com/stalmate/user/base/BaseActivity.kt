@@ -41,6 +41,8 @@ abstract class BaseActivity : AppCompatActivity(), View.OnClickListener,
     private var context: Context? = null
     abstract fun onClick(viewId: Int, view: View?)
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        Thread.setDefaultUncaughtExceptionHandler { p0, p1 -> makeToast(p1.message) }
         super.onCreate(savedInstanceState)
         progressDialog = com.stalmate.user.view.dialogs.ProgressDialog(this)
         context = this

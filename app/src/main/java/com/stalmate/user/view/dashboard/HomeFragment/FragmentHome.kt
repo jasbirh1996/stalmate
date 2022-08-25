@@ -14,12 +14,16 @@ import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.commonadapters.AdapterFeed
 import com.stalmate.user.databinding.FragmentHomeBinding
+import com.stalmate.user.model.Feed
+import com.stalmate.user.model.User
+import com.stalmate.user.view.adapter.UserHomeStoryAdapter
 
 
-class FragmentHome : BaseFragment(), AdapterFeed.Callbackk {
+class FragmentHome : BaseFragment(), AdapterFeed.Callbackk, UserHomeStoryAdapter.Callbackk {
 
     private lateinit var binding: FragmentHomeBinding
     lateinit var feedAdapter: AdapterFeed
+    lateinit var homeStoryAdapter: UserHomeStoryAdapter
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,11 +47,12 @@ class FragmentHome : BaseFragment(), AdapterFeed.Callbackk {
 
 
         feedAdapter = AdapterFeed(networkViewModel, requireContext(), this)
-
+        homeStoryAdapter = UserHomeStoryAdapter(networkViewModel, requireContext(), this)
 
         binding.rvFeeds.adapter=feedAdapter
+        binding.rvStory.adapter=homeStoryAdapter
         binding.rvFeeds.layoutManager= LinearLayoutManager(context)
-
+        binding.rvStory.layoutManager= LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
         networkViewModel.getFeedList("", HashMap())
         networkViewModel.feedLiveData.observe(viewLifecycleOwner, Observer {
             Log.d("asdasdasd","oaspiasddsad")
@@ -55,6 +60,16 @@ class FragmentHome : BaseFragment(), AdapterFeed.Callbackk {
                 feedAdapter.submitList(it!!.results)
             }
         })
+
+
+
+        networkViewModel.feedLiveData.observe(viewLifecycleOwner, Observer {
+            Log.d("asdasdasd","oaspiasddsad")
+            it.let {
+                homeStoryAdapter.submitList(it!!.results)
+            }
+        })
+
 
 
         binding.postContant.userImage.setOnClickListener {
@@ -65,6 +80,10 @@ class FragmentHome : BaseFragment(), AdapterFeed.Callbackk {
     }
 
     override fun onClickOnViewComments(postId: Int) {
+
+    }
+
+    override fun onClickOnProfile(user: Feed) {
 
     }
 

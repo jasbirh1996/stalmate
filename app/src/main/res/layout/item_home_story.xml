@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<layout xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+<androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
@@ -11,13 +13,14 @@
         android:id="@+id/story_image"
         android:layout_width="70dp"
         android:layout_height="100dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="10dp"
         app:cardCornerRadius="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/ivImage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scaleType="center"
@@ -26,14 +29,18 @@
     </androidx.cardview.widget.CardView>
 
     <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:fontFamily="@font/poppins"
         android:text="Abhay"
-        android:layout_marginTop="10dp"
-        android:textSize="18sp"
+        android:textColor="@color/black"
+        android:textSize="10sp"
         app:layout_constraintEnd_toEndOf="@+id/story_image"
         app:layout_constraintStart_toStartOf="@+id/story_image"
         app:layout_constraintTop_toBottomOf="@+id/story_image" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
