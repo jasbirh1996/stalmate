@@ -30,10 +30,10 @@ public class IntentHelper {
             return Intent(context, ActivityProfileEdit::class.java)
                 .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
         }
-        fun getCreateReelsScreen(context: Context?): Intent? {
+/*        fun getCreateReelsScreen(context: Context?): Intent? {
             return Intent(context, ActivityVideoRecorder::class.java)
                 .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-        }
+        }*/
 
         fun getFollowersFollowingScreen(context: Context?): Intent? {
             return Intent(context, ActivityFollowersFollowingScreen::class.java)
