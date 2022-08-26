@@ -16,16 +16,18 @@ import com.stalmate.user.commonadapters.AdapterFeed
 import com.stalmate.user.databinding.FragmentHomeBinding
 import com.stalmate.user.model.Feed
 import com.stalmate.user.model.User
+import com.stalmate.user.view.adapter.SuggestedFriendAdapter
 import com.stalmate.user.view.adapter.UserHomeStoryAdapter
 
 
-class FragmentHome : BaseFragment(), AdapterFeed.Callbackk, UserHomeStoryAdapter.Callbackk {
+class FragmentHome : BaseFragment(), AdapterFeed.Callbackk, UserHomeStoryAdapter.Callbackk,
+    SuggestedFriendAdapter.Callbackk {
 
     private lateinit var binding: FragmentHomeBinding
     lateinit var feedAdapter: AdapterFeed
     lateinit var homeStoryAdapter: UserHomeStoryAdapter
 
-
+    lateinit var suggestedFriendAdapter:  SuggestedFriendAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -48,16 +50,19 @@ class FragmentHome : BaseFragment(), AdapterFeed.Callbackk, UserHomeStoryAdapter
 
         feedAdapter = AdapterFeed(networkViewModel, requireContext(), this)
         homeStoryAdapter = UserHomeStoryAdapter(networkViewModel, requireContext(), this)
-
+        suggestedFriendAdapter = SuggestedFriendAdapter(networkViewModel, requireContext(), this)
         binding.rvFeeds.adapter=feedAdapter
         binding.rvStory.adapter=homeStoryAdapter
+        binding.rvSuggestedFriends.adapter=suggestedFriendAdapter
         binding.rvFeeds.layoutManager= LinearLayoutManager(context)
         binding.rvStory.layoutManager= LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
+        binding.rvSuggestedFriends.layoutManager= LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
         networkViewModel.getFeedList("", HashMap())
         networkViewModel.feedLiveData.observe(viewLifecycleOwner, Observer {
             Log.d("asdasdasd","oaspiasddsad")
             it.let {
                 feedAdapter.submitList(it!!.results)
+                suggestedFriendAdapter.submitList(ArrayList<User>())
             }
         })
 
@@ -84,6 +89,14 @@ class FragmentHome : BaseFragment(), AdapterFeed.Callbackk, UserHomeStoryAdapter
     }
 
     override fun onClickOnProfile(user: Feed) {
+
+    }
+
+    override fun onClickOnUpdateFriendRequest(friend: User, status: String) {
+
+    }
+
+    override fun onClickOnProfile(friend: User) {
 
     }
 

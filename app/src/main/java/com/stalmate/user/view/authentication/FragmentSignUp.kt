@@ -36,6 +36,7 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
 
     var dates: String = ""
     var month: String = ""
+    var currentYear: String = ""
     var year: String = ""
     var spinnerArrayFeb = arrayOf("Feb")
     var spinnerArrayFull = arrayOf("Jan", "Mar", "May", "July", "Aug", "Oct", "Dec")
@@ -87,6 +88,10 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
 
 
         var cal = Calendar.getInstance()
+
+//        Log.d("ajhcbjahc", cal.get(Calendar.YEAR).toString())
+        currentYear = (cal.get(Calendar.YEAR) - 13).toString()
+
 
         /*val dateSetListener =
             DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
@@ -218,7 +223,7 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
                     p3: Long
                 ) {
                     month = p0!!.getItemAtPosition(position).toString()
-                    Log.d("jcaujc", month)
+
                 }
 
                 override fun onNothingSelected(p0: AdapterView<*>?) {
@@ -328,32 +333,32 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
             })
 
 
-            binding.etschoolcollege.addTextChangedListener(object : TextWatcher {
-                @SuppressLint("ResourceAsColor")
-                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-
-                    if (binding.etschoolcollege.text!!.isEmpty()) {
-                        binding.appCompatImageView16.visibility = View.GONE
-                    } else {
-
-                        binding.appCompatImageView16.visibility = View.VISIBLE
-                    }
-
-                }
-
-                override fun beforeTextChanged(
-                    s: CharSequence,
-                    start: Int,
-                    count: Int,
-                    after: Int
-                ) {
-
-                }
-
-                override fun afterTextChanged(s: Editable) {
-
-                }
-            })
+//            binding.etschoolcollege.addTextChangedListener(object : TextWatcher {
+//                @SuppressLint("ResourceAsColor")
+//                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+//
+//                    if (binding.etschoolcollege.text!!.isEmpty()) {
+//                        binding.appCompatImageView16.visibility = View.GONE
+//                    } else {
+//
+//                        binding.appCompatImageView16.visibility = View.VISIBLE
+//                    }
+//
+//                }
+//
+//                override fun beforeTextChanged(
+//                    s: CharSequence,
+//                    start: Int,
+//                    count: Int,
+//                    after: Int
+//                ) {
+//
+//                }
+//
+//                override fun afterTextChanged(s: Editable) {
+//
+//                }
+//            })
 
             binding.etPassword.addTextChangedListener(object : TextWatcher {
                 @SuppressLint("ResourceAsColor")
@@ -424,7 +429,12 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
 
         binding.btnCrateAccount.setOnClickListener {
             if (isValid()) {
-                createAccountApiCall()
+
+                if (currentYear < year) {
+                    makeToast("Your age should be 13 years or more")
+                }else {
+                    createAccountApiCall()
+                }
             }
 //            findNavController().navigate(R.id.fragmentOTPEnter)
         }
@@ -449,18 +459,19 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
         } else if (!binding.rdmale.isChecked && !binding.rdFamel.isChecked && !binding.rdOthers.isChecked) {
             makeToast(getString(R.string.select_gendar_error))
             return false
-        } else if (ValidationHelper.isNull(binding.etschoolcollege.text.toString())) {
+        } else /*if (ValidationHelper.isNull(binding.etschoolcollege.text.toString())) {
             makeToast(getString(R.string.pleaseenterschoolcollegename))
             return false
-        } else if (ValidationHelper.isNull(binding.etPassword.text.toString())) {
+        } else*/ if (ValidationHelper.isNull(binding.etPassword.text.toString())) {
             makeToast(getString(R.string.password_error_toast))
             return false
-        } else if (!isValidPassword(binding.etPassword.text.toString().trim())) {
-            makeToast("Password Must Include Atleast: 1 uppercase,\n 1 Lowercase,\n 1 Number & 1 Spaecial Character")
-            return false
-        } else if (!binding.tmcheckbox.isChecked) {
-            makeToast(getString(R.string.accept_tnc))
-            return false
+        } else  if (!isValidPassword(binding.etPassword.text.toString().trim())) {
+                makeToast("Password Must Include Atleast: 1 uppercase,\n1 Lowercase,\n1 Number & 1 Spaecial Character")
+                return false
+            } else if (!binding.tmcheckbox.isChecked) {
+                makeToast(getString(R.string.accept_tnc))
+                return false
+
         }
         return true
     }
@@ -490,14 +501,18 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
         }
 
 
+
         val bundle = Bundle()
         bundle.putString("email", binding.etEmail.text.toString())
         bundle.putString("password", binding.etPassword.text.toString())
         bundle.putString("first_name", binding.etName.text.toString())
         bundle.putString("last_name", binding.etLastName.text.toString())
         bundle.putString("gender",  gander_name)
-        bundle.putString("schoolandcollege", binding.etschoolcollege.text.toString())
+//        bundle.putString("schoolandcollege", binding.etschoolcollege.text.toString())
         bundle.putString("dob",  year+"-"+month+"-"+dates)
+        bundle.putString("year",  year)
+        bundle.putString("month", month)
+        bundle.putString("date",  dates)
         bundle.putString("device_token", App.getInstance().firebaseToken.toString())
         bundle.putString("device_type", "android")
         bundle.putString("layout", "SignUp")
@@ -567,5 +582,6 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
     override fun onNothingSelected(p0: AdapterView<*>?) {
 
     }
+
 
 }

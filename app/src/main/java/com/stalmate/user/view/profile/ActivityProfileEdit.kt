@@ -3,37 +3,51 @@ package com.stalmate.user.view.profile
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.media.Image
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.BaseColumns._ID
 import android.provider.DocumentsContract
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
-import android.widget.Toast
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
-import com.canhub.cropper.CropImage
+import com.canhub.cropper.CropImageContract
+import com.canhub.cropper.CropImageView
+import com.canhub.cropper.options
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.databinding.ActivityProfileEditBinding
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import java.io.File
-import java.util.HashMap
 
 class ActivityProfileEdit : BaseActivity() {
 
     private lateinit var binding : ActivityProfileEditBinding
-    val PICK_IMAGE_PROFILE = 1
+    val PICK_IMAGE_PROFILE = 2
     val PICK_IMAGE_COVER = 1
     var WRITE_REQUEST_CODE = 100
-    var permissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    private var GANDER: String = ""
+    var dates: String = ""
+    var month: String = ""
+    var year: String = ""
+    var merriage: String = ""
+    var permissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
     val requiredPermission = Manifest.permission.WRITE_EXTERNAL_STORAGE
     var isImageSelected = false
     var imageFile: File? = null
-
-
+    var imageCoverFile: MultipartBody.Part? = null
+    var imageProfileFile: MultipartBody.Part? = null
+    var spinnerArrayFeb = arrayOf("Feb")
+    var spinnerArrayFull = arrayOf("Jan", "Mar", "May", "July", "Aug", "Oct", "Dec")
+    var spinnerArrayFullSemihalf = arrayOf("Apr", "Jun", "Sep", "Nov")
+    var spinnerArrayFullhalf =
+        arrayOf("jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+    var spinnerArrayBlank = arrayOf("")
 
     override fun onClick(viewId: Int, view: View?) {
 
@@ -42,7 +56,141 @@ class ActivityProfileEdit : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_profile_edit)
+        requestPermissions(permissions, WRITE_REQUEST_CODE)
+        binding.layout.rdmale.setOnCheckedChangeListener { compoundButton, ischeck ->
+            if (ischeck) {
+                GANDER = "1"
+                binding.layout.rdmale.setChecked(true)
+                binding.layout.rdFamel.setChecked(false)
+                binding.layout.rdOthers.setChecked(false)
+            }
+        }
 
+        binding.layout.rdFamel.setOnCheckedChangeListener { compoundButton, ischeck ->
+            if (ischeck) {
+                GANDER = "2"
+                binding.layout.rdmale.setChecked(false)
+                binding.layout.rdFamel.setChecked(true)
+                binding.layout.rdOthers.setChecked(false)
+            }
+        }
+
+
+        binding.layout.rdOthers.setOnCheckedChangeListener { compoundButton, ischeck ->
+            if (ischeck) {
+                GANDER = "3"
+                binding.layout.rdmale.setChecked(false)
+                binding.layout.rdFamel.setChecked(false)
+                binding.layout.rdOthers.setChecked(true)
+            }
+        }
+
+
+
+        binding.layout.spDate.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                p0: AdapterView<*>?,
+                p1: View?,
+                position: Int,
+                p3: Long
+            ) {
+                dates = p0!!.getItemAtPosition(position).toString()
+
+
+                Log.d("jcaujc", dates)
+                if (dates == "31") {
+
+                    val dataAdapter: ArrayAdapter<String> = ArrayAdapter(
+                        this@ActivityProfileEdit,
+                        android.R.layout.simple_spinner_item,
+                        spinnerArrayFull
+                    )
+
+                    // Drop down layout style - list view with radio button
+                    dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+                    // attaching data adapter to spinner
+                    binding.layout.spMonth.setAdapter(dataAdapter);
+                } else if (dates == "30") {
+                    val dataAdapter: ArrayAdapter<String> = ArrayAdapter(
+                        this@ActivityProfileEdit,
+                        android.R.layout.simple_spinner_item,
+                        spinnerArrayFullSemihalf
+                    )
+
+                    // Drop down layout style - list view with radio button
+                    dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+                    // attaching data adapter to spinner
+                    binding.layout.spMonth.setAdapter(dataAdapter);
+                } else if (dates == "28") {
+                    val dataAdapter: ArrayAdapter<String> = ArrayAdapter(
+                       this@ActivityProfileEdit,
+                        android.R.layout.simple_spinner_item,
+                        spinnerArrayFeb
+                    )
+
+                    // Drop down layout style - list view with radio button
+                    dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+                    // attaching data adapter to spinner
+                    binding.layout.spMonth.setAdapter(dataAdapter);
+                } else if (dates != "30" || dates != "31" || dates != "28") {
+                    val dataAdapter: ArrayAdapter<String> = ArrayAdapter(
+                        this@ActivityProfileEdit,
+                        android.R.layout.simple_spinner_item,
+                        spinnerArrayFullhalf
+                    )
+
+                    // Drop down layout style - list view with radio button
+                    dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+                    // attaching data adapter to spinner
+                    binding.layout.spMonth.setAdapter(dataAdapter);
+
+
+                }
+
+            }
+
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+
+            }
+        }
+
+        binding.layout.spMonth.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                p0: AdapterView<*>?,
+                p1: View?,
+                position: Int,
+                p3: Long
+            ) {
+                month = p0!!.getItemAtPosition(position).toString()
+                Log.d("jcaujc", month)
+            }
+
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+
+            }
+
+        }
+
+
+        binding.layout.spYear.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                p0: AdapterView<*>?,
+                p1: View?,
+                position: Int,
+                p3: Long
+            ) {
+                year = p0!!.getItemAtPosition(position).toString()
+                Log.d("jcaujc", year)
+            }
+
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+
+            }
+        }
 
         clickLister()
     }
@@ -59,25 +207,70 @@ class ActivityProfileEdit : BaseActivity() {
                 intent.addCategory(Intent.CATEGORY_OPENABLE)
                 intent.type = "image/*"
                 startActivityForResult(intent, PICK_IMAGE_COVER)
-            }else{
-                Toast.makeText(this,"Please enable Write permission from Setting", Toast.LENGTH_SHORT).show()
             }
-
         }
 
         binding.idCameraProfile.setOnClickListener {
+
             val checkVal: Int = checkCallingOrSelfPermission(requiredPermission)
             requestPermissions(permissions, WRITE_REQUEST_CODE)
+
             if (checkVal==PackageManager.PERMISSION_GRANTED) {
                 val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
                 intent.addCategory(Intent.CATEGORY_OPENABLE)
                 intent.type = "image/*"
                 startActivityForResult(intent, PICK_IMAGE_PROFILE)
 
-            } else {
-                Toast.makeText(this,"Please enable Write permission from Setting", Toast.LENGTH_SHORT).show()
+
+
+//                cropImage
             }
         }
+
+
+        binding.btnCrateAccount.setOnClickListener {
+            updateProfileApiHit()
+        }
+
+        binding.layout.tvMarriage.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                p0: AdapterView<*>?,
+                p1: View?,
+                position: Int,
+                p3: Long
+            ) {
+                merriage = p0!!.getItemAtPosition(position).toString()
+                Log.d("jcaujc", year)
+            }
+
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+
+            }
+
+        }
+
+    }
+
+    private fun updateProfileApiHit() {
+
+        fun getRequestBody(str :String?) : RequestBody = RequestBody.create("text/plain".toMediaTypeOrNull(), str.toString())
+
+        networkViewModel.etsProfileApi(getRequestBody(binding.layout.etName.text.toString()),getRequestBody( binding.layout.etLastName.text.toString())
+        , getRequestBody(binding.layout.bio.text.toString()),getRequestBody(binding.layout.etNumber.text.toString()), getRequestBody(year+"-"+month+"-"+dates),
+            getRequestBody(merriage), getRequestBody(binding.layout.etHowTown.text.toString())
+        , getRequestBody(binding.layout.etCurrentCity.text.toString()),
+            getRequestBody(""),  getRequestBody(binding.layout.etCompany.text.toString()), getRequestBody(GANDER), imageProfileFile, imageCoverFile)
+
+        networkViewModel.UpdateProfileLiveData.observe(this, Observer {
+
+            it.let {
+
+                makeToast(it!!.message)
+
+            }
+
+        })
+
     }
 
 
@@ -94,16 +287,11 @@ class ActivityProfileEdit : BaseActivity() {
         var filePath : String? = ""
 
         if (resultCode == RESULT_OK){
+            Log.d("acjkbjab", requestCode.toString())
+
             if (requestCode == PICK_IMAGE_COVER) {
-               /* val result: CropImage.ActivityResult = CropImage.getActivityResult(data)!!
-                val resultUri: Uri = result.uriContent!!
 
-
-                imageFile = File(result.getUriFilePath(this, true))
-               *//* isImageSelected = true*//*
-
-                Glide.with(this).load(resultUri).circleCrop().into(binding.ivBackground)
-*/
+                Log.d("acjkbjab", "abhay1")
                 val imageUri = data?.data
 
                 val uri: Uri? = data!!.getData()
@@ -128,16 +316,89 @@ class ActivityProfileEdit : BaseActivity() {
                 }
                 cursor.close()
 
-
+//                imageCoverFile = filePath
                 binding.ivBackground.setImageURI(imageUri)
 
                 Log.d("kcjkasdcb", "Chosen path = $filePath")
-                Log.d("kcjkasdcb", uri.toString())
+            }else  if (requestCode == PICK_IMAGE_PROFILE){
+
+                Log.d("acjkbjab", "abhay2")
+                val imageUri = data?.data
+
+                val uri: Uri? = data!!.getData()
+                val wholeID = DocumentsContract.getDocumentId(uri)
+
+                // Split at colon, use second item in the array
+                val id = wholeID.split(":").toTypedArray()[1]
+
+                val column = arrayOf(MediaStore.MediaColumns.DATA)
+
+                // where id is equal to
+                val sel = MediaStore.Images.Media._ID  + "=?"
+
+                val cursor = contentResolver.query(
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                    column, sel, arrayOf(id), null
+                )
+                val columnIndex = cursor!!.getColumnIndex(column[0])
+
+                if (cursor.moveToFirst()) {
+                    filePath = cursor.getString(columnIndex)
+                }
+                cursor.close()
+
+//                imageProfileFile = filePath
+                binding.ivUserThumb.setImageURI(imageUri)
+
+                Log.d("kcjkasdcb", "Chosen path = $filePath")
             }
-
-
-        }else if (resultCode == RESULT_OK){
-
         }
+    }
+
+
+
+
+    val cropImage = registerForActivityResult(CropImageContract()) { result ->
+        if (result.isSuccessful) {
+            // use the returned uri
+            val uriContent = result.uriContent
+            val uriFilePath = result.getUriFilePath(this) // optional usage
+            imageFile = File(result.getUriFilePath(this, true))
+            Glide.with(this).load(uriFilePath).circleCrop().into(binding!!.ivUserThumb)
+
+            Log.d("ucdaujsdgc", uriFilePath.toString())
+
+        } else {
+            // an error occurred
+            val exception = result.error
+        }
+    }
+
+    fun startCrop() {
+        // start picker to get image for cropping and then use the image in cropping activity
+        cropImage.launch(
+            options {
+                setGuidelines(CropImageView.Guidelines.ON)
+            }
+        )
+
+        /*       //start picker to get image for cropping from only gallery and then use the image in
+        //cropping activity
+        cropImage.launch(
+            options {
+                setImagePickerContractOptions(
+                    PickImageContractOptions(includeGallery = true, includeCamera = false)
+                )
+            }
+        )*/
+
+        /* // start cropping activity for pre-acquired image saved on the device and customize settings
+         cropImage.launch(
+             options() {
+                 setGuidelines(CropImageView.Guidelines.ON)
+                 setOutputCompressFormat(Bitmap.CompressFormat.PNG)
+             }
+         )*/
+
     }
 }

@@ -1,6 +1,5 @@
 package com.stalmate.user.view.authentication
 
-import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
@@ -20,6 +19,7 @@ import com.stalmate.user.databinding.FragmentOTPEnterBinding
 import com.stalmate.user.databinding.SignUpSuccessPoppuBinding
 import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.view.dashboard.ActivityDashboard
+import java.util.*
 
 
 class FragmentOTPEnter : BaseFragment() {
@@ -58,14 +58,13 @@ class FragmentOTPEnter : BaseFragment() {
 
         startTimer()
 
-        getOtpApiCall()
 
         email = requireArguments().getString("email").toString()
         password = requireArguments().getString("password").toString()
         first_name = requireArguments().getString("first_name").toString()
         last_name = requireArguments().getString("last_name").toString()
         gender = requireArguments().getString("gender").toString()
-        schoolandcollege = requireArguments().getString("schoolandcollege").toString()
+//        schoolandcollege = requireArguments().getString("schoolandcollege").toString()
         dob = requireArguments().getString("dob").toString()
         device_token = requireArguments().getString("device_token").toString()
         device_type = requireArguments().getString("device_type").toString()
@@ -73,6 +72,9 @@ class FragmentOTPEnter : BaseFragment() {
         forgetPasswordScreen = requireArguments().getString("layout").toString()
 
         Log.d("emiasljkcn", email)
+        getOtpApiCall()
+        getOtpRegistrationApiCall()
+
 
         binding.btnProcess.setOnClickListener {
             /*Otp Verify Api Call*/
@@ -82,7 +84,26 @@ class FragmentOTPEnter : BaseFragment() {
             }else if (forgetPasswordScreen == "ForgetPassword"){
                 otpVerifyForgotApiCall()
             }
+        }
+    }
 
+    private fun getOtpRegistrationApiCall() {
+        val hashMap = HashMap<String, String>()
+
+        hashMap["email"] = email
+
+        binding.progressBar.visibility = View.VISIBLE
+        networkViewModel.otpVerifyRegistration(hashMap,email = email, otp = "")
+
+        networkViewModel.otpVerifyRegistarionData.observe(requireActivity()){
+
+            it?.let {
+
+                if (it.status == true){
+                    binding.progressBar.visibility = View.GONE
+                }
+            }
+            binding.progressBar.visibility = View.GONE
         }
     }
 
@@ -140,16 +161,15 @@ class FragmentOTPEnter : BaseFragment() {
         hashMap["email"] = email
         hashMap["otp"] = binding.pinView.text.toString()
         binding.progressBar.visibility = View.VISIBLE
-        networkViewModel.otpVerify(hashMap)
-        networkViewModel.otpVerifyData.observe(requireActivity()){
-
+        networkViewModel.otpVerifyRegistration(hashMap, email = email, otp = binding.pinView.text.toString())
+        networkViewModel.otpVerifyRegistarionData.observe(requireActivity()) {
             it?.let {
                 val message = it.message
 
-                if (it.status == true){
+                if (it.status == true) {
 
                     val builder = AlertDialog.Builder(requireContext(), R.style.CustomAlertDialog).create()
-                    val view = layoutInflater.inflate(R.layout.sign_up_success_poppu,null)
+                    val view = layoutInflater.inflate(R.layout.sign_up_success_poppu, null)
 
                     builder.setView(view)
                     builder.setCanceledOnTouchOutside(false)
@@ -167,13 +187,14 @@ class FragmentOTPEnter : BaseFragment() {
 
 
                     makeToast(message)
-                }else{
+                } else {
                     makeToast(message)
                 }
 
             }
             binding.progressBar.visibility = View.GONE
         }
+
 
     }
 
@@ -182,35 +203,36 @@ class FragmentOTPEnter : BaseFragment() {
     private fun createAccountApiCall() {
 
 
-        val hashMap = java.util.HashMap<String, String>()
-        hashMap["email"] = email
-        hashMap["password"] = password
-        hashMap["first_name"] = first_name
-        hashMap["last_name"] = last_name
-        hashMap["gender"] = gender
-        hashMap["schoolandcollege"] = schoolandcollege
-        hashMap["dob"] = dob
-        hashMap["device_id"] = ""
-        hashMap["device_token"] = App.getInstance().firebaseToken.toString()
-        hashMap["device_type"] = "android"
-        binding.progressBar.visibility = View.VISIBLE
-        networkViewModel.registration(hashMap)
-        networkViewModel.registerData.observe(requireActivity()) {
+            val hashMap = HashMap<String, String>()
+            hashMap["email"] = email
+            hashMap["password"] = password
+            hashMap["first_name"] = first_name
+            hashMap["last_name"] = last_name
+            hashMap["gender"] = gender
+//        hashMap["schoolandcollege"] = schoolandcollege
+            hashMap["dob"] = dob
+            hashMap["device_id"] = ""
+            hashMap["device_token"] = App.getInstance().firebaseToken.toString()
+            hashMap["device_type"] = "android"
+            binding.progressBar.visibility = View.VISIBLE
+            networkViewModel.registration(hashMap)
+            networkViewModel.registerData.observe(requireActivity()) {
 
-            it?.let {
-                val message = it.message
+                it?.let {
+                    val message = it.message
 
-                if (it.status == true) {
+                    if (it.status == true) {
 
-                    PrefManager.getInstance(requireContext())!!.userDetail = it
+                        PrefManager.getInstance(requireContext())!!.userDetail = it
 
-                } else {
-                    makeToast(message)
+                    } else {
+                        makeToast(message)
+                    }
                 }
+                binding.progressBar.visibility = View.GONE
             }
-            binding.progressBar.visibility = View.GONE
         }
-    }
+
 
     private fun toolbarSetUp() {
         binding.toolbar.toolBarCenterText.visibility = View.VISIBLE
@@ -253,5 +275,9 @@ class FragmentOTPEnter : BaseFragment() {
         return "00:$ss"
     }
 
-
 }
+
+
+
+
+
