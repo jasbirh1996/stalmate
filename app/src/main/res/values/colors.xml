@@ -22,6 +22,8 @@
     <color name="colorLightGray">#E3E2E2</color>
     <color name="background">#dddddd</color>
     <color name="grey2">#8A8A8A</color>
+    <color name="grey_my_story">#EBEDF0</color>
+    <color name="grey_switch">#F6F6F7</color>
 
 
     <color name="blur_color">#EFF2F6</color>

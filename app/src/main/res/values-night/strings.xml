@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="welcome_to_satalment" translatable="false">Welcome To Stalment</string>
+    <string name="welcome_to_satalment" translatable="false">Welcome to Stalment</string>
     <string name="enter_your_email_id" translatable="false">Email*</string>
     <string name="enter_your_password" translatable="false">Enter Your Password</string>
+    <string name="creates_password">Create Password</string>
     <string name="forget_password" translatable="false">Forget Password?</string>
     <string name="log_in" translatable="false">Login</string>
     <string name="don_t_have_an_account" translatable="false">Don\'t have an account?</string>
@@ -52,9 +53,9 @@
     <string name="saved" translatable="false">Saved</string>
     <string name="first_name_toast" translatable="false">Please Enter First Name</string>
     <string name="last_name_toast" translatable="false">Please Enter Last Name</string>
-    <string name="email_error_toast" translatable="false">Please Enter Email</string>
+    <string name="email_error_toast" translatable="false">Please Enter Your Email Id</string>
     <string name="select_gendar_error" translatable="false">Please Select Gender</string>
-    <string name="password_error_toast" translatable="false">Please Enter Password</string>
+    <string name="password_error_toast" translatable="false">Please Enter Valid Password</string>
     <string name="accept_tnc" translatable="false">Please Accept TnC</string>
     <string name="process" translatable="false">Process</string>
     <string name="choose_language" translatable="false">Choose Your Language</string>
