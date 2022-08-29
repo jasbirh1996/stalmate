@@ -21,6 +21,7 @@ object Constants {
     const val TYPE_FRIEND_REQUEST = "friend_requests"
     const val TYPE_FRIEND_SUGGESTIONS = "suggestions"
     const val TYPE_MY_FRIENDS = "friends"
+    const val TYPE_ALL_FOLLOWERS_FOLLOWING = "following_follower"
 
 
 

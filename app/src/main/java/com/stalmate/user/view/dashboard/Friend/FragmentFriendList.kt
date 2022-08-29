@@ -20,7 +20,7 @@ import com.stalmate.user.utilities.Constants
 import com.stalmate.user.view.adapter.FriendAdapter
 import com.stalmate.user.view.adapter.ProfileFriendAdapter
 
-class FragmentFriendList(var type: String, var subtype: String) : BaseFragment(),
+class FragmentFriendList(var type: String, var subtype: String,var userId:String) : BaseFragment(),
     FriendAdapter.Callbackk {
     lateinit var friendAdapter: FriendAdapter
     lateinit var binding: FragmentFriendListBinding
@@ -49,6 +49,7 @@ class FragmentFriendList(var type: String, var subtype: String) : BaseFragment()
         binding.rvFriends.adapter = friendAdapter
         binding.rvFriends.layoutManager = LinearLayoutManager(context)
         var hashmap = HashMap<String, String>()
+        hashmap.put("id_user", userId)
         hashmap.put("type", type)
         hashmap.put("sub_type", subtype)
         hashmap.put("search", "")

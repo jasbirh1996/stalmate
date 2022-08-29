@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
@@ -38,7 +39,7 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
         super.onCreate(savedInstanceState)
 
 
-//        getUserProfileData()
+        getUserProfileData()
         binding = DataBindingUtil.setContentView(this, R.layout.activity_profile)
         binding.layout.buttonEditProfile.visibility=View.VISIBLE
         feedAdapter = AdapterFeed(networkViewModel, this, this)
@@ -54,7 +55,7 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
         })
 
 
-/*
+
         friendAdapter = ProfileFriendAdapter(networkViewModel, this, this)
         binding.layout.rvFriends.adapter = friendAdapter
         binding.layout.rvFriends.layoutManager = GridLayoutManager(this, 3)
@@ -71,7 +72,6 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
                 friendAdapter.submitList(it!!.results)
             }
         })
-        })*/
 
 
 
@@ -82,6 +82,12 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
 
     fun setupData() {
 
+        binding.layout.layoutFollowers.setOnClickListener {
+            startActivity(IntentHelper.getFollowersFollowingScreen(this)!!.putExtra("id",userData.id).putExtra("type","follower"))
+        }
+        binding.layout.layoutFollowing.setOnClickListener {
+            startActivity(IntentHelper.getFollowersFollowingScreen(this)!!.putExtra("id",userData.id).putExtra("type","following"))
+        }
 
         binding.idCoverPhoto.setOnClickListener {
 
@@ -100,9 +106,6 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
         }
 
 
-        binding.layout.layoutFollowers.setOnClickListener {
-
-        }
 
         binding.layout.buttonEditProfile.setOnClickListener {
 
@@ -150,7 +153,7 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
 
 
 
-    /*fun getUserProfileData() {
+    fun getUserProfileData() {
         var hashMap = HashMap<String, String>()
         networkViewModel.getProfileData( hashMap)
         networkViewModel.profileLiveData.observe(this, Observer {
@@ -159,7 +162,7 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
                 setUpAboutUI()
             }
         })
-    }*/
+    }
 
 
     fun setUpAboutUI() {

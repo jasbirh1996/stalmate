@@ -173,7 +173,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
                         android:minHeight="0dp"
-                        android:text="buttonFriends"
+                        android:text="Friends"
                         app:backgroundTint="@null"
                         app:layout_constraintBottom_toBottomOf="@+id/buttonFollow"
                         app:layout_constraintEnd_toStartOf="@+id/buttonSendFriendRequest"
@@ -185,11 +185,12 @@
 
                 <ImageView
                     android:id="@+id/ivDelete"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_friends_friend_requests_delete"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                 android:src="@color/black" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

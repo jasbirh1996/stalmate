@@ -121,7 +121,9 @@ open class AppViewModel : ViewModel() {
         getResult(temp, apiInterface.setProfileDetails())
     }
 
-    var otherUserProfileLiveData: LiveData<ModelUser?> = MutableLiveData<ModelUser?>()
+
+
+    var otherUserProfileLiveData: MutableLiveData<ModelUser?> = MutableLiveData<ModelUser?>()
     fun getOtherUserProfileData(map: HashMap<String, String>, user_id: String) {
         val temp = MutableLiveData<ModelUser?>()
         otherUserProfileLiveData = temp

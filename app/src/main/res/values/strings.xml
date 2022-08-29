@@ -570,11 +570,25 @@
     <string name="company">Company</string>
     <string name="add_friend">Add Friend</string>
     <string name="block">Block</string>
+
+    <string name="lets_get_started">Let\'s get started</string>
+    <string name="we_will_help_your_profile">We\'ll help your profile \nFind friends, groups and pages you like</string>
+    <string name="try_now">Try Now</string>
+    <string name="remove">Remove</string>
+    <string name="suggested_for_you">Suggested for you</string>
+    <string name="whats_on_your_mind">What\'s on your mind</string>
+
     <string name="please_enter_password">Please Enter Password</string>
     <string name="quite_mode">Quite Mode</string>
     <string name="off">Off</string>
     <string name="schedule_quite_mode">Schedule Quite Mode</string>
+<<<<<<< HEAD
     <string name="Schedulequite_mode">Schedule Quite Mode</string>
+    <string name="your_quite_mode_schedule">Your Quite Mode Schedule</string>
+    <string name="start_time">Start Time</string>
+    =======
+>>>>>>> f7fc3aa8e9d7ebfe9379c0922d204bc56b00a666
+>>>>>>> f3475ba7408bf09e2e6cd788135f7a844b362974
 
     <string-array name="marrage">
         <item><font fgcolor="#B7B7B7">Signle</font></item>
