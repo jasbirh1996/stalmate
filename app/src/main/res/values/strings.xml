@@ -574,6 +574,7 @@
     <string name="quite_mode">Quite Mode</string>
     <string name="off">Off</string>
     <string name="schedule_quite_mode">Schedule Quite Mode</string>
+    <string name="Schedulequite_mode">Schedule Quite Mode</string>
 
     <string-array name="marrage">
         <item><font fgcolor="#B7B7B7">Signle</font></item>

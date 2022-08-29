@@ -41,14 +41,17 @@ class FragmentSchaduleQuickMode : Fragment() {
     @SuppressLint("UseCompatLoadingForDrawables")
     private fun toolbarSetUp() {
 
-        binding.toolbar.backButtonLeftText.visibility = View.VISIBLE
-        binding.toolbar.backButtonLeftText.text =  getString(R.string.quite_mode)
-        binding.toolbar.menuChat.visibility = View.VISIBLE
-        binding.toolbar.menuChat.setImageDrawable((getResources().getDrawable(R.drawable.ic_quitemode_tick))
+        binding.toolbar.back.setOnClickListener {
+            requireActivity().onBackPressed()
+        }
 
-      /*  binding.toolbar.back.setOnClickListener {
-            activity?.onBackPressed()
-        }*/
+
+        binding.toolbar.backButtonLeftText.visibility = View.VISIBLE
+        binding.toolbar.backButtonLeftText.text =  getString(R.string.Schedulequite_mode)
+        binding.toolbar.menuChat.visibility = View.VISIBLE
+        binding.toolbar.menuChat.setImageDrawable(getResources().getDrawable(R.drawable.ic_quitemode_tick))
+
+
     }
 
 }
