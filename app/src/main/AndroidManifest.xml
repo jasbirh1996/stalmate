@@ -24,12 +24,15 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
-<<<<<<< HEAD
-            android:name=".ActivityCreatePost"
-=======
-            android:name=".ActivityMyStory"
->>>>>>> f7fc3aa8e9d7ebfe9379c0922d204bc56b00a666
+
+            android:name=".view.myStory.ActivityMyStory"
             android:exported="false" />
+        <activity
+
+            android:name=".view.ActivityCreatePost"
+
+            android:exported="false" />
+
         <activity
             android:name="com.canhub.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" /> <!-- optional (needed if default theme has no action bar) -->
@@ -43,12 +46,10 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
-<<<<<<< HEAD
         <activity
             android:name=".view.profile.ActivityFollowersFollowingScreen"
             android:exported="false" />
-=======
->>>>>>> f7fc3aa8e9d7ebfe9379c0922d204bc56b00a666
+
         <activity
             android:name=".view.profile.ActivityOtherUserProfile"
             android:exported="false" />

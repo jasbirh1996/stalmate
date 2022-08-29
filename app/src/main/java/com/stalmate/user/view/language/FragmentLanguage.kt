@@ -69,7 +69,7 @@ class FragmentLanguage : BaseFragment(), AdapterLanguage.Callbackk {
         binding.toolbar.toolBarCenterText.text = getString(R.string.choose_language)
         binding.toolbar.back.visibility = View.GONE
         binding.toolbar.toolBarCenterText.visibility = View.VISIBLE
-        binding.toolbar.backButtonRightText.visibility = View.GONE
+        binding.toolbar.backButtonLeftText.visibility = View.GONE
         binding.toolbar.menuChat.visibility = View.GONE
 
         binding.toolbar.back.setOnClickListener {

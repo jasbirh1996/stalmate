@@ -155,7 +155,7 @@ class FragmentOtpForgetPassword : BaseFragment() {
     private fun toolbarSetUp() {
         binding.toolbar.toolBarCenterText.visibility = View.VISIBLE
         binding.toolbar.toolBarCenterText.text =  getString(R.string.forget_post)
-        binding.toolbar.backButtonRightText.visibility = View.GONE
+      //  binding.toolbar.backButtonRightText.visibility = View.GONE
 
         binding.toolbar.back.setOnClickListener {
             activity?.onBackPressed()
