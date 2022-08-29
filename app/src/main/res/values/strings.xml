@@ -474,9 +474,10 @@
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
 
 
-    <string name="welcome_to_satalment">Welcome To <font fgcolor="#0F52BA">Stalmate</font></string>
+    <string name="welcome_to_satalment">Welcome to <font fgcolor="#0F52BA">Stalmate</font></string>
     <string name="enter_your_email_id">Email*</string>
     <string name="enter_your_password">Enter Your Password</string>
+    <string name="creates_password">Create Password</string>
     <string name="forget_password">Forgot Password?</string>
     <string name="log_in">Login</string>
     <string name="don_t_have_an_account">Don\'t have an account?</string>
@@ -535,9 +536,9 @@
 
     <string name="first_name_toast">Please Enter First Name</string>
     <string name="last_name_toast">Please Enter Last Name</string>
-    <string name="email_error_toast">Please Enter Email</string>
+    <string name="email_error_toast">Please Enter Your Email Id</string>
     <string name="select_gendar_error">Please Select Gender</string>
-    <string name="password_error_toast">Please Enter Password</string>
+    <string name="password_error_toast">Please Enter Valid Password</string>
     <string name="accept_tnc">Please Accept TnC</string>
     <string name="process">Process</string>
     <string name="choose_language">Choose Your Language</string>
@@ -569,6 +570,10 @@
     <string name="company">Company</string>
     <string name="add_friend">Add Friend</string>
     <string name="block">Block</string>
+    <string name="please_enter_password">Please Enter Password</string>
+    <string name="quite_mode">Quite Mode</string>
+    <string name="off">Off</string>
+    <string name="schedule_quite_mode">Schedule Quite Mode</string>
 
     <string-array name="marrage">
         <item><font fgcolor="#B7B7B7">Signle</font></item>

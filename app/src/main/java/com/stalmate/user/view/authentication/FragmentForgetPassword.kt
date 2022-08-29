@@ -115,7 +115,7 @@ class FragmentForgetPassword : BaseFragment() {
         binding.toolbar.toolBarCenterText.visibility = View.VISIBLE
         binding.toolbar.toolBarCenterText.text =  getString(R.string.forget_post)
         binding.toolbar.toolBarCenterText.visibility = View.VISIBLE
-        binding.toolbar.backButtonRightText.visibility = View.GONE
+        binding.toolbar.backButtonLeftText.visibility = View.GONE
 
         binding.toolbar.back.setOnClickListener {
             activity?.onBackPressed()

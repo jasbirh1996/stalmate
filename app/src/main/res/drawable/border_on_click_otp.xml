@@ -5,7 +5,7 @@
 
 
 
-    <item android:drawable="@drawable/otp_box_border" android:state_active="true" />
+    <item android:drawable="@drawable/otp_box_border_filted" android:state_active="true" />
     <item android:drawable="@drawable/otp_box_border_filted" android:state_selected="true" />
     <item android:drawable="@drawable/otp_box_border_filted" android:state_focused="true"/>
 

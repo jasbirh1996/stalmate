@@ -354,7 +354,7 @@
                             android:drawableStart="@drawable/ic_login_lock_inactive"
                             android:drawablePadding="8dp"
                             android:backgroundTint="@color/grey1"
-                            android:hint="@string/enter_your_password"
+                            android:hint="@string/creates_password"
                             style="@style/customEditbox"
                             android:inputType="textPassword"
                             android:textSize="14sp" />

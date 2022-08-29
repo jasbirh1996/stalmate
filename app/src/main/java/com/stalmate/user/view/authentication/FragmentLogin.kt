@@ -73,26 +73,26 @@ class FragmentLogin : BaseFragment() {
         })
 
 
-        binding.etPassword.addTextChangedListener(object : TextWatcher {
-            @SuppressLint("ResourceAsColor")
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-
-                if (binding.etPassword.text!!.isEmpty()){
-                    binding.appCompatImageView17.visibility = View.GONE
-                }else {
-                    binding.appCompatImageView17.visibility = View.VISIBLE
-                }
-
-            }
-
-            override fun beforeTextChanged(s: CharSequence,start: Int,count: Int,after: Int) {
-
-            }
-
-            override fun afterTextChanged(s: Editable) {
-
-            }
-        })
+//        binding.etPassword.addTextChangedListener(object : TextWatcher {
+//            @SuppressLint("ResourceAsColor")
+//            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+//
+//                if (binding.etPassword.text!!.isEmpty()){
+//                    binding.appCompatImageView17.visibility = View.GONE
+//                }else {
+//                    binding.appCompatImageView17.visibility = View.VISIBLE
+//                }
+//
+//            }
+//
+//            override fun beforeTextChanged(s: CharSequence,start: Int,count: Int,after: Int) {
+//
+//            }
+//
+//            override fun afterTextChanged(s: Editable) {
+//
+//            }
+//        })
 
 
         binding.createAccount.setOnClickListener {

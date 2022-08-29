@@ -39,10 +39,9 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
     var currentYear: String = ""
     var year: String = ""
     var spinnerArrayFeb = arrayOf("Feb")
-    var spinnerArrayFull = arrayOf("Jan", "Mar", "May", "July", "Aug", "Oct", "Dec")
+    var spinnerArrayFullTwentyEhight = arrayOf("Jan", "Mar", "May", "July", "Aug", "Oct", "Dec")
     var spinnerArrayFullSemihalf = arrayOf("Apr", "Jun", "Sep", "Nov")
-    var spinnerArrayFullhalf =
-        arrayOf("jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+    var spinnerArrayFullhalf = arrayOf("jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
     var spinnerArrayBlank = arrayOf("")
 
 
@@ -146,7 +145,7 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
                         val dataAdapter: ArrayAdapter<String> = ArrayAdapter(
                             requireContext(),
                             android.R.layout.simple_spinner_item,
-                            spinnerArrayFull
+                            spinnerArrayFullTwentyEhight
                         )
 
                         // Drop down layout style - list view with radio button
@@ -158,7 +157,7 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
                         val dataAdapter: ArrayAdapter<String> = ArrayAdapter(
                             requireContext(),
                             android.R.layout.simple_spinner_item,
-                            spinnerArrayFullSemihalf
+                            spinnerArrayFullTwentyEhight
                         )
 
                         // Drop down layout style - list view with radio button
@@ -170,7 +169,7 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
                         val dataAdapter: ArrayAdapter<String> = ArrayAdapter(
                             requireContext(),
                             android.R.layout.simple_spinner_item,
-                            spinnerArrayFeb
+                            spinnerArrayFullhalf
                         )
 
                         // Drop down layout style - list view with radio button
@@ -277,60 +276,60 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
                 }
             })
 
-            binding.etName.addTextChangedListener(object : TextWatcher {
-                @SuppressLint("ResourceAsColor")
-                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+//            binding.etName.addTextChangedListener(object : TextWatcher {
+//                @SuppressLint("ResourceAsColor")
+//                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+//
+//                    if (binding.etName.text!!.isEmpty()) {
+//                        binding.appCompatImageView14.visibility = View.GONE
+//                    } else {
+//
+//                        binding.appCompatImageView14.visibility = View.VISIBLE
+//                    }
+//
+//                }
+//
+//                override fun beforeTextChanged(
+//                    s: CharSequence,
+//                    start: Int,
+//                    count: Int,
+//                    after: Int
+//                ) {
+//
+//                }
+//
+//                override fun afterTextChanged(s: Editable) {
+//
+//                }
+//            })
 
-                    if (binding.etName.text!!.isEmpty()) {
-                        binding.appCompatImageView14.visibility = View.GONE
-                    } else {
-
-                        binding.appCompatImageView14.visibility = View.VISIBLE
-                    }
-
-                }
-
-                override fun beforeTextChanged(
-                    s: CharSequence,
-                    start: Int,
-                    count: Int,
-                    after: Int
-                ) {
-
-                }
-
-                override fun afterTextChanged(s: Editable) {
-
-                }
-            })
-
-            binding.etLastName.addTextChangedListener(object : TextWatcher {
-                @SuppressLint("ResourceAsColor")
-                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-
-
-                    if (binding.etLastName.text!!.isEmpty()) {
-                        binding.appCompatImageView13.visibility = View.GONE
-                    } else {
-
-                        binding.appCompatImageView13.visibility = View.VISIBLE
-                    }
-
-                }
-
-                override fun beforeTextChanged(
-                    s: CharSequence,
-                    start: Int,
-                    count: Int,
-                    after: Int
-                ) {
-
-                }
-
-                override fun afterTextChanged(s: Editable) {
-
-                }
-            })
+//            binding.etLastName.addTextChangedListener(object : TextWatcher {
+//                @SuppressLint("ResourceAsColor")
+//                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+//
+//
+//                    if (binding.etLastName.text!!.isEmpty()) {
+//                        binding.appCompatImageView13.visibility = View.GONE
+//                    } else {
+//
+//                        binding.appCompatImageView13.visibility = View.VISIBLE
+//                    }
+//
+//                }
+//
+//                override fun beforeTextChanged(
+//                    s: CharSequence,
+//                    start: Int,
+//                    count: Int,
+//                    after: Int
+//                ) {
+//
+//                }
+//
+//                override fun afterTextChanged(s: Editable) {
+//
+//                }
+//            })
 
 
 //            binding.etschoolcollege.addTextChangedListener(object : TextWatcher {
@@ -360,32 +359,32 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
 //                }
 //            })
 
-            binding.etPassword.addTextChangedListener(object : TextWatcher {
-                @SuppressLint("ResourceAsColor")
-                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-
-                    if (!binding.etPassword.text!!.isEmpty() && isValidPassword(binding.etPassword.text.toString().trim())) {
-
-                        binding.appCompatImageView17.visibility = View.VISIBLE
-                    } else {
-                        binding.appCompatImageView17.visibility = View.GONE
-                    }
-
-                }
-
-                override fun beforeTextChanged(
-                    s: CharSequence,
-                    start: Int,
-                    count: Int,
-                    after: Int
-                ) {
-
-                }
-
-                override fun afterTextChanged(s: Editable) {
-
-                }
-            })
+//            binding.etPassword.addTextChangedListener(object : TextWatcher {
+//                @SuppressLint("ResourceAsColor")
+//                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+//
+//                    if (!binding.etPassword.text!!.isEmpty() && isValidPassword(binding.etPassword.text.toString().trim())) {
+//
+//                        binding.appCompatImageView17.visibility = View.VISIBLE
+//                    } else {
+//                        binding.appCompatImageView17.visibility = View.GONE
+//                    }
+//
+//                }
+//
+//                override fun beforeTextChanged(
+//                    s: CharSequence,
+//                    start: Int,
+//                    count: Int,
+//                    after: Int
+//                ) {
+//
+//                }
+//
+//                override fun afterTextChanged(s: Editable) {
+//
+//                }
+//            })
         }
 
         return binding.root
@@ -566,7 +565,7 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
         binding.toolbar.toolBarCenterText.visibility = View.VISIBLE
         binding.toolbar.toolBarCenterText.text = getString(R.string.sign_up)
         binding.toolbar.toolBarCenterText.visibility = View.VISIBLE
-        binding.toolbar.backButtonRightText.visibility = View.GONE
+        binding.toolbar.backButtonLeftText.visibility = View.GONE
         binding.toolbar.menuChat.visibility = View.VISIBLE
         binding.toolbar.menuChat.setImageDrawable(getResources().getDrawable(R.drawable.ic_signup_top_logo));
 

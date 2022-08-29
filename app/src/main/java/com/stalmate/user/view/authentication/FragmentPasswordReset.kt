@@ -68,52 +68,54 @@ class FragmentPasswordReset : BaseFragment() {
         }
 
 
-        binding.etPassword.addTextChangedListener(object : TextWatcher {
-            @SuppressLint("ResourceAsColor")
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+//        binding.etPassword.addTextChangedListener(object : TextWatcher {
+//            @SuppressLint("ResourceAsColor")
+//            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+//
+//                /*if (!binding.etPassword.text!!.isEmpty() && isValidPassword(binding.etPassword.text.toString().trim())){
+//
+//                    binding.appCompatImageView17.visibility = View.VISIBLE
+//                }else {
+//                    binding.appCompatImageView17.visibility = View.GONE
+//
+//                }*/
+//                binding.appCompatImageView17.visibility = View.VISIBLE
+//
+//            }
+//
+//            override fun beforeTextChanged(s: CharSequence,start: Int,count: Int,after: Int) {
+//                binding.appCompatImageView17.visibility = View.VISIBLE
+//            }
+//
+//            override fun afterTextChanged(s: Editable) {
+//                binding.appCompatImageView17.visibility = View.VISIBLE
+//
+//            }
+//        })
 
-                if (!binding.etPassword.text!!.isEmpty() && isValidPassword(binding.etPassword.text.toString().trim())){
-
-                    binding.appCompatImageView17.visibility = View.VISIBLE
-                }else {
-                    binding.appCompatImageView17.visibility = View.GONE
-
-                }
-
-            }
-
-            override fun beforeTextChanged(s: CharSequence,start: Int,count: Int,after: Int) {
-
-            }
-
-            override fun afterTextChanged(s: Editable) {
-
-            }
-        })
-
-        binding.etConfirmPassword.addTextChangedListener(object : TextWatcher {
-            @SuppressLint("ResourceAsColor")
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-
-                if (!binding.etConfirmPassword.text!!.isEmpty() && isValidPassword(binding.etPassword.text.toString().trim())){
-
-                    binding.appCompatImageView18.visibility = View.VISIBLE
-                }else {
-                    binding.appCompatImageView18.visibility = View.GONE
-
-                }
-
-
-            }
-
-            override fun beforeTextChanged(s: CharSequence,start: Int,count: Int,after: Int) {
-
-            }
-
-            override fun afterTextChanged(s: Editable) {
-
-            }
-        })
+//        binding.etConfirmPassword.addTextChangedListener(object : TextWatcher {
+//            @SuppressLint("ResourceAsColor")
+//            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+//
+//                if (!binding.etConfirmPassword.text!!.isEmpty() && isValidPassword(binding.etPassword.text.toString().trim())){
+//
+//                    binding.appCompatImageView18.visibility = View.VISIBLE
+//                }else {
+//                    binding.appCompatImageView18.visibility = View.GONE
+//
+//                }
+//
+//
+//            }
+//
+//            override fun beforeTextChanged(s: CharSequence,start: Int,count: Int,after: Int) {
+//
+//            }
+//
+//            override fun afterTextChanged(s: Editable) {
+//
+//            }
+//        })
 
 
         binding.appCompatTextView3.setOnClickListener {
@@ -172,7 +174,7 @@ class FragmentPasswordReset : BaseFragment() {
         binding.toolbar.toolBarCenterText.visibility = View.VISIBLE
         binding.toolbar.toolBarCenterText.text = getString(R.string.reset_password)
         binding.toolbar.toolBarCenterText.visibility = View.VISIBLE
-        binding.toolbar.backButtonRightText.visibility = View.GONE
+        binding.toolbar.backButtonLeftText.visibility = View.GONE
 
         binding.toolbar.back.setOnClickListener {
             activity?.onBackPressed()
@@ -182,16 +184,13 @@ class FragmentPasswordReset : BaseFragment() {
     fun isValid():Boolean {
 
         if(binding.etPassword.text!!.isEmpty() || binding.etConfirmPassword.text!!.isEmpty()) {
-            makeToast("Please Enter Password")
+            makeToast(getString(R.string.please_enter_password))
             return false
         } else if(ValidationHelper.isValidPassword(binding.etPassword.text.toString())) {
             makeToast(getString(R.string.password_error_toast))
             return false
         } else if (binding.etPassword.text.toString() != binding.etConfirmPassword.text.toString()) {
             makeToast(getString(R.string.password_not_match))
-            return false
-        }else if (!isValidPassword(binding.etPassword.text.toString().trim())){
-            makeToast("Password Must Include Atleast: 1 uppercase,\n 1 Lowercase,\n 1 Number & 1 Spaecial Character")
             return false
         }
 

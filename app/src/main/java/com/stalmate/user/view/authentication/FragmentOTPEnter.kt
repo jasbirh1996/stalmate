@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import com.stalmate.user.R
@@ -79,10 +80,15 @@ class FragmentOTPEnter : BaseFragment() {
         binding.btnProcess.setOnClickListener {
             /*Otp Verify Api Call*/
 
-            if (forgetPasswordScreen == "SignUp") {
-                otpVerifyApiCall()
-            }else if (forgetPasswordScreen == "ForgetPassword"){
-                otpVerifyForgotApiCall()
+            if (binding.pinView.text.toString() == "1234") {
+
+                if (forgetPasswordScreen == "SignUp") {
+                    otpVerifyApiCall()
+                } else if (forgetPasswordScreen == "ForgetPassword") {
+                    otpVerifyForgotApiCall()
+                }
+            }else{
+                makeToast("Please Enter Valid Otp")
             }
         }
     }
