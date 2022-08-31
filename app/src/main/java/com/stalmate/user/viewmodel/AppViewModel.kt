@@ -163,11 +163,19 @@ open class AppViewModel : ViewModel() {
                 gender,
                 city,
                 home_town,
-                /*file_Profile_Image!!,
-                file_Cover_image!!*/
+                file_Profile_Image!!,
+                file_Cover_image!!
             )
         )
 
+    }
+
+
+    var blockData: LiveData<CommonModelResponse?> = MutableLiveData<CommonModelResponse?>()
+    fun block(map: HashMap<String, String>) {
+        val temp = MutableLiveData<CommonModelResponse?>()
+        blockData = temp
+        getResult(temp, apiInterface.setBlock(map))
     }
 
 

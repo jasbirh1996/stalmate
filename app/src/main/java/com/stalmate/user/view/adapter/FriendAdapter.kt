@@ -24,8 +24,7 @@ class FriendAdapter(
     val viewModel: AppViewModel,
     val context: Context,
     var callback: Callbackk,
-    var type:String,var subtype:String
-) :
+    var type:String,var subtype:String) :
     RecyclerView.Adapter<FriendAdapter.FeedViewHolder>(){
     var list = ArrayList<User>()
     override fun onCreateViewHolder(
@@ -33,8 +32,7 @@ class FriendAdapter(
         viewType: Int,
     ): FriendAdapter.FeedViewHolder {
 
-        var view =
-            LayoutInflater.from(parent.context).inflate(R.layout.item_friend_big, parent, false)
+        var view = LayoutInflater.from(parent.context).inflate(R.layout.item_friend_big, parent, false)
         return FeedViewHolder(DataBindingUtil.bind<ItemFriendBigBinding>(view)!!)
     }
 
@@ -44,8 +42,7 @@ class FriendAdapter(
     override fun getItemCount(): Int {
         return list.size
     }
-    inner class FeedViewHolder(var binding: ItemFriendBigBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    inner class FeedViewHolder(var binding: ItemFriendBigBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(friend: User) {
             setupViewsForAdapter(binding)
             binding.buttonFollow.setOnClickListener {

@@ -20,6 +20,7 @@ import com.canhub.cropper.options
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.databinding.ActivityProfileEditBinding
+import okhttp3.MediaType.Companion.parse
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -39,7 +40,8 @@ class ActivityProfileEdit : BaseActivity() {
     var permissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
     val requiredPermission = Manifest.permission.WRITE_EXTERNAL_STORAGE
     var isImageSelected = false
-    var imageFile: File? = null
+    var coverImageFile: String? = null
+    var profileImageFile: String? = null
     var imageCoverFile: MultipartBody.Part? = null
     var imageProfileFile: MultipartBody.Part? = null
     var spinnerArrayFeb = arrayOf("Feb")
@@ -48,6 +50,10 @@ class ActivityProfileEdit : BaseActivity() {
     var spinnerArrayFullhalf =
         arrayOf("jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
     var spinnerArrayBlank = arrayOf("")
+    var ImageFile: File? = null
+    var ImageCoverFile: File? = null
+
+
 
     override fun onClick(viewId: Int, view: View?) {
 
@@ -146,9 +152,7 @@ class ActivityProfileEdit : BaseActivity() {
                     dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
                     // attaching data adapter to spinner
-                    binding.layout.spMonth.setAdapter(dataAdapter);
-
-
+                    binding.layout.spMonth.setAdapter(dataAdapter)
                 }
 
             }
@@ -203,10 +207,14 @@ class ActivityProfileEdit : BaseActivity() {
             requestPermissions(permissions, WRITE_REQUEST_CODE)
 
             if (checkVal==PackageManager.PERMISSION_GRANTED) {
-                val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+               /* val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
                 intent.addCategory(Intent.CATEGORY_OPENABLE)
                 intent.type = "image/*"
-                startActivityForResult(intent, PICK_IMAGE_COVER)
+                startActivityForResult(intent, PICK_IMAGE_COVER)*/
+
+                */
+
+                startCrop()
             }
         }
 
@@ -216,14 +224,14 @@ class ActivityProfileEdit : BaseActivity() {
             requestPermissions(permissions, WRITE_REQUEST_CODE)
 
             if (checkVal==PackageManager.PERMISSION_GRANTED) {
-                val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+               /* val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
                 intent.addCategory(Intent.CATEGORY_OPENABLE)
                 intent.type = "image/*"
                 startActivityForResult(intent, PICK_IMAGE_PROFILE)
+//                cropImage*/
+                */
 
-
-
-//                cropImage
+                startCropProfile()
             }
         }
 
@@ -254,30 +262,39 @@ class ActivityProfileEdit : BaseActivity() {
     private fun updateProfileApiHit() {
 
         fun getRequestBody(str :String?) : RequestBody = RequestBody.create("text/plain".toMediaTypeOrNull(), str.toString())
+        val thumbnailBody: RequestBody = RequestBody.create("image/*".toMediaTypeOrNull(), ImageFile!!)
+        fun getMultipart(str : File) : MultipartBody.Part = MultipartBody.Part.createFormData(
+            "image",
+            str.name,
+            thumbnailBody
+        )
+
+        val thumbnailBodyCover: RequestBody = RequestBody.create("image/*".toMediaTypeOrNull(), ImageCoverFile!!)
+        fun getMultipartCover(str : File) : MultipartBody.Part = MultipartBody.Part.createFormData(
+            "image",
+            str.name,
+            thumbnailBodyCover
+        )
 
         networkViewModel.etsProfileApi(getRequestBody(binding.layout.etName.text.toString()),getRequestBody( binding.layout.etLastName.text.toString())
         , getRequestBody(binding.layout.bio.text.toString()),getRequestBody(binding.layout.etNumber.text.toString()), getRequestBody(year+"-"+month+"-"+dates),
             getRequestBody(merriage), getRequestBody(binding.layout.etHowTown.text.toString())
-        , getRequestBody(binding.layout.etCurrentCity.text.toString()),
-            getRequestBody(""),  getRequestBody(binding.layout.etCompany.text.toString()), getRequestBody(GANDER), imageProfileFile, imageCoverFile)
+            , getRequestBody(binding.layout.etCurrentCity.text.toString()),
+            getRequestBody(""),  getRequestBody(binding.layout.etCompany.text.toString())
+            , getRequestBody(GANDER), getMultipart(ImageFile!!), getMultipartCover(ImageCoverFile!!))
 
         networkViewModel.UpdateProfileLiveData.observe(this, Observer {
 
             it.let {
 
                 makeToast(it!!.message)
-
             }
-
         })
-
     }
 
 
     override fun onDestroy() {
-
         super.onDestroy()
-
     }
 
 
@@ -356,49 +373,99 @@ class ActivityProfileEdit : BaseActivity() {
     }
 
 
+    /*Cover Image Picker */
+       private val cropImage = registerForActivityResult(CropImageContract()) { result ->
+           if (result.isSuccessful) {
+               // use the returned uri
+               val uriContent = result.uriContent
+               var uriFilePath = result.getUriFilePath(this) // optional usage
+               coverImageFile = uriFilePath
+               Log.d("imageUrl======", uriContent.toString())
+               Log.d("imageUrl======", uriFilePath.toString())
+               ImageCoverFile = File(uriContent!!.getPath())
+               Glide.with(this).load(uriContent).into(binding.ivBackground)
+           } else {
+               // an error occurred
+               val exception = result.error
+           }
+       }
+
+       private fun startCrop() {
+           // start picker to get image for cropping and then use the image in cropping activity
+           cropImage.launch(
+               options {
+                   setGuidelines(CropImageView.Guidelines.ON)
+               }
+           )
+
+         /*  //start picker to get image for cropping from only gallery and then use the image in
+           //cropping activity
+           cropImage.launch(
+               options {
+                   setImagePickerContractOptions(
+                       PickImageContractOptions(includeGallery = true, includeCamera = false)
+                   )
+               }
+           )*/
+
+          /* // start cropping activity for pre-acquired image saved on the device and customize settings
+           cropImage.launch(
+               options(uri = uriContents) {
+                   setGuidelines(CropImageView.Guidelines.ON)
+                   setOutputCompressFormat(Bitmap.CompressFormat.PNG)
+               }
+           )*/
+       }
 
 
-    val cropImage = registerForActivityResult(CropImageContract()) { result ->
+    /*Profile Image Picker*/
+
+    private val cropImageProfile = registerForActivityResult(CropImageContract()) { result ->
         if (result.isSuccessful) {
             // use the returned uri
             val uriContent = result.uriContent
-            val uriFilePath = result.getUriFilePath(this) // optional usage
-            imageFile = File(result.getUriFilePath(this, true))
-            Glide.with(this).load(uriFilePath).circleCrop().into(binding!!.ivUserThumb)
+            var uriFilePath = result.getUriFilePath(this) // optional usage
+            profileImageFile = uriFilePath
 
-            Log.d("ucdaujsdgc", uriFilePath.toString())
+            ImageFile = File(uriContent!!.getPath())
 
+
+            Log.d("imageUrl======", uriContent.toString())
+            Log.d("imageUrl======", uriFilePath.toString())
+
+            Glide.with(this).load(uriContent).into(binding.ivUserThumb)
         } else {
             // an error occurred
             val exception = result.error
         }
     }
 
-    fun startCrop() {
+    private fun startCropProfile() {
         // start picker to get image for cropping and then use the image in cropping activity
-        cropImage.launch(
+        cropImageProfile.launch(
             options {
                 setGuidelines(CropImageView.Guidelines.ON)
             }
         )
 
-        /*       //start picker to get image for cropping from only gallery and then use the image in
-        //cropping activity
-        cropImage.launch(
-            options {
-                setImagePickerContractOptions(
-                    PickImageContractOptions(includeGallery = true, includeCamera = false)
-                )
-            }
-        )*/
+        /*  //start picker to get image for cropping from only gallery and then use the image in
+          //cropping activity
+          cropImage.launch(
+              options {
+                  setImagePickerContractOptions(
+                      PickImageContractOptions(includeGallery = true, includeCamera = false)
+                  )
+              }
+          )*/
 
         /* // start cropping activity for pre-acquired image saved on the device and customize settings
          cropImage.launch(
-             options() {
+             options(uri = uriContents) {
                  setGuidelines(CropImageView.Guidelines.ON)
                  setOutputCompressFormat(Bitmap.CompressFormat.PNG)
              }
          )*/
-
     }
+
+
 }

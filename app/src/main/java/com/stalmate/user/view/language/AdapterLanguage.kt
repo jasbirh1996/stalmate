@@ -36,11 +36,6 @@ class AdapterLanguage(
 
         holder.bind(list.get(position))
 
-
-
-
-
-
     }
 
     override fun getItemCount(): Int {

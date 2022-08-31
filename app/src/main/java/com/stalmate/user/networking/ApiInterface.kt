@@ -41,6 +41,7 @@ interface ApiInterface {
     @POST(Constants.URL_LOGIN)
     fun setLoginDetails(@Body map: HashMap<String, String>): Call<ModelLoginResponse>
 
+
     @POST(Constants.url_send_friend_request)
     fun sendFriendRequest(@Body map: HashMap<String, String>): Call<ModelSuccess>
 
@@ -55,6 +56,9 @@ interface ApiInterface {
 
     @GET(Constants.GET_PROFILE_API)
     fun setProfileDetails(): Call<ModelUser>
+
+    @POST(Constants.BLOCK_API)
+    fun setBlock(@Body map: HashMap<String, String>): Call<CommonModelResponse>
 
 
     @GET(Constants.GET_OTHER_USER_PROFILE_API)
@@ -77,9 +81,11 @@ interface ApiInterface {
         @Part("gender") gender: RequestBody,
         @Part("city") city: RequestBody,
         @Part("home_town") home_town: RequestBody,
-       /* @Part file1: MultipartBody.Part? = null,
-        @Part file2: MultipartBody.Part? = null*/
+        @Part profile_img: MultipartBody.Part? = null,
+        @Part cover_img: MultipartBody.Part? = null
     ): Call<CommonModelResponse>
+
+
 
 /*
     @HTTP(method = "DELETE", path = "delete_post" ,hasBody = true)

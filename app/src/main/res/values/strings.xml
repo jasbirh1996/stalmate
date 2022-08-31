@@ -582,14 +582,14 @@
     <string name="quite_mode">Quite Mode</string>
     <string name="off">Off</string>
     <string name="schedule_quite_mode">Schedule Quite Mode</string>
-<<<<<<< HEAD
     <string name="Schedulequite_mode">Schedule Quite Mode</string>
     <string name="your_quite_mode_schedule">Your Quite Mode Schedule</string>
     <string name="start_time">Start Time</string>
-    =======
->>>>>>> f7fc3aa8e9d7ebfe9379c0922d204bc56b00a666
->>>>>>> f3475ba7408bf09e2e6cd788135f7a844b362974
-
+    <string name="end_time">End Time</string>
+    <string name="days">Days</string>
+    <string name="quite_mode_for">Quite Mode for</string>
+    <string name="add_schedule">Add Schedule</string>
+    <string name="delete_schedule">Delete Schedule</string>
     <string-array name="marrage">
         <item><font fgcolor="#B7B7B7">Signle</font></item>
         <item><font fgcolor="#B7B7B7">Merriage</font></item>
@@ -707,6 +707,7 @@
         <item>2020</item>
         <item>2021</item>
         <item>2022</item>
+
     </string-array>
 
 </resources>
