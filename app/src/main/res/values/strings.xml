@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">Stalmate</string>
+    <string name="app_name" translatable="false">Test Module</string>
     <string name="action_settings" translatable="false">Settings</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label" translatable="false">First Fragment</string>
@@ -582,7 +582,6 @@
     <string name="quite_mode">Quite Mode</string>
     <string name="off">Off</string>
     <string name="schedule_quite_mode">Schedule Quite Mode</string>
->>>>>>> f7fc3aa8e9d7ebfe9379c0922d204bc56b00a666
 
     <string-array name="marrage">
         <item><font fgcolor="#B7B7B7">Signle</font></item>
