@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Lifecycle
@@ -24,9 +25,12 @@ class FriendAdapter(
     val viewModel: AppViewModel,
     val context: Context,
     var callback: Callbackk,
-    var type:String,var subtype:String) :
+    var type:String,
+    var subtype:String) :
     RecyclerView.Adapter<FriendAdapter.FeedViewHolder>(){
     var list = ArrayList<User>()
+
+    private lateinit var binding : ItemFriendBigBinding
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -47,9 +51,20 @@ class FriendAdapter(
             setupViewsForAdapter(binding)
             binding.buttonFollow.setOnClickListener {
            //   callback.onClickOnUpdateFriendRequest(friend,"Accept")
+                updateFriendStatus("follow",friend.id, (binding.root.context as? LifecycleOwner)!!)
+            }
+
+            binding.buttonSendFriendRequest.setOnClickListener {
+           //   callback.onClickOnUpdateFriendRequest(friend,"Accept")
                 updateFriendStatus("add_friend",friend.id, (binding.root.context as? LifecycleOwner)!!)
             }
+
+
             binding.root.setOnClickListener {
+                callback.onClickOnProfile(friend)
+            }
+
+            binding.buttonConfirm.setOnClickListener {
                 callback.onClickOnProfile(friend)
             }
 
@@ -60,11 +75,6 @@ class FriendAdapter(
 
         }
     }
-
-
-
-
-
 
     fun submitList(feedList: List<User>) {
         list.clear()
@@ -91,12 +101,13 @@ class FriendAdapter(
                 }
             })
         }
+
         if (status.equals("follow")){
 
             viewModel.sendFollowRequest("", hashMap)
             viewModel.followRequestLiveData.observe(lifecycleOwner, Observer {
                 it.let {
-
+                    binding.buttonFollow.text = "Following"
                 }
             })
         }
@@ -111,7 +122,7 @@ class FriendAdapter(
             binding.ivDelete.visibility=View.VISIBLE
             setupButtonColor("Confirm",true,binding.buttonConfirm)
 
-        } else if (type.equals(Constants.TYPE_FRIEND_SUGGESTIONS_SUGGESTED)) {
+        } else if (type.equals(Constants.TYPE_FRIEND_SUGGESTIONS)) {
             binding.layoutButtons.visibility= View.VISIBLE
             binding.buttonConfirm.visibility=View.GONE
             binding.layoutFriendRequestExtra.visibility=View.GONE
@@ -119,7 +130,7 @@ class FriendAdapter(
             setupButtonColor("Follow",false,binding.buttonFollow)
             setupButtonColor("Send Friend Request",true,binding.buttonSendFriendRequest)
 
-            binding.buttonFriend.visibility=View.GONE
+//            binding.buttonFriend.visibility=View.GONE
 
 
         } else if (type.equals(Constants.TYPE_FRIEND_SUGGESTIONS_FOLLOWERS)) {
@@ -129,7 +140,7 @@ class FriendAdapter(
             binding.ivDelete.visibility=View.GONE
             setupButtonColor("Send Friend Request",true,binding.buttonSendFriendRequest)
 
-            binding.buttonFriend.visibility=View.GONE
+//            binding.buttonFriend.visibility=View.GONE
             binding.buttonFollow.visibility=View.GONE
 
 
@@ -140,7 +151,8 @@ class FriendAdapter(
             binding.ivDelete.visibility=View.GONE
             setupButtonColor("Following",false,binding.buttonFollow)
             setupButtonColor("Friends",true,binding.buttonSendFriendRequest)
-            binding.buttonFriend.visibility=View.GONE
+//            binding.buttonFriend.visibility=View.GONE
+
         } else if (type.equals(Constants.TYPE_MY_FRIENDS) && subtype.equals(Constants.TYPE_FRIEND_FOLLOWER)) {
             binding.layoutButtons.visibility= View.VISIBLE
             binding.buttonConfirm.visibility=View.GONE
@@ -148,9 +160,7 @@ class FriendAdapter(
             binding.ivDelete.visibility=View.GONE
             setupButtonColor("Friends",true,binding.buttonSendFriendRequest)
             setupButtonColor("Following",false,binding.buttonFollow)
-            binding.buttonFriend.visibility=View.GONE
-
-
+//            binding.buttonFriend.visibility=View.GONE
         }
     }
 
@@ -160,7 +170,6 @@ class FriendAdapter(
         if (isPrimary){
             view.background=ContextCompat.getDrawable(context,R.drawable.primary_button_background)
             view.setTextColor(context.getColor(R.color.white))
-
             return  view
         }
         view.background=ContextCompat.getDrawable(context,R.drawable.large_round_corner_light_primary_border_light_gray_filled)

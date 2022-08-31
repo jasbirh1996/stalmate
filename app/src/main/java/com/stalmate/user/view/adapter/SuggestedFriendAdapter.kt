@@ -60,13 +60,13 @@ class SuggestedFriendAdapter(
             binding.tvUserName.text=friend.first_name
 */
 
+            binding.buttonAddFriend.setOnClickListener {
+                updateFriendStatus("add_friend",friend.id, (binding.root.context as? LifecycleOwner)!!)
+            }
+
+
         }
     }
-
-
-
-
-
 
     fun submitList(feedList: List<User>) {
     /*    list.clear()
@@ -90,10 +90,11 @@ class SuggestedFriendAdapter(
             viewModel.sendFriendRequestLiveData.observe( lifecycleOwner , Observer {
                 it.let {
 
+
                 }
             })
         }
-        if (status.equals("follow")){
+        /*if (status.equals("follow")){
 
             viewModel.sendFollowRequest("", hashMap)
             viewModel.followRequestLiveData.observe(lifecycleOwner, Observer {
@@ -101,7 +102,7 @@ class SuggestedFriendAdapter(
 
                 }
             })
-        }
+        }*/
     }
 
 

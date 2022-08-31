@@ -39,6 +39,7 @@
             android:layout_marginEnd="20dp"
             android:layout_marginBottom="10dp"
             android:padding="8dp"
+            android:visibility="gone"
             android:background="@drawable/round_small_corner_white"
             android:elevation="10dp"
             app:layout_constraintBottom_toBottomOf="@+id/iv_background"
@@ -216,9 +217,35 @@
             android:text="abhay Kashyap"
             android:textColor="@color/black"
             android:textSize="16sp"
-
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/iv_user_thumb" />
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/accept"
+            style="@style/customButtonStyle"
+            android:layout_width="86dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="8dp"
+            android:gravity="center"
+            android:text="@string/accept"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_user_name"
+            app:layout_constraintEnd_toStartOf="@+id/reject"
+            app:layout_constraintTop_toTopOf="@+id/tv_user_name" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/reject"
+            android:background="@drawable/large_round_corner_light_primary_border_light_gray_filled"
+            android:layout_width="86dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="16dp"
+            android:gravity="center"
+            android:text="@string/reject"
+            android:textColor="@color/app_color"
+            app:layout_constraintBottom_toBottomOf="@+id/accept"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/accept" />
 
 
         <androidx.appcompat.widget.AppCompatTextView

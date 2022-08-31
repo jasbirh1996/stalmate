@@ -47,7 +47,7 @@ interface ApiInterface {
 
 
     @PUT(Constants.url_update_friend_request)
-    fun updateFriendRequest(@Body map: HashMap<String, String>): Call<ModelSuccess>
+    fun updateFriendRequest(@Body map: HashMap<String, String>): Call<CommonModelResponse>
 
 
     @POST(Constants.url_send_follower_request)

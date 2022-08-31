@@ -58,10 +58,6 @@ class FragmentFriendCategory(var type: String) : BaseFragment(), FriendAdapter.C
         }
 
 
-
-
-
-
         var pagerAdapter = FragmentViewPagerAdapter(requireActivity(), requireContext())
         pagerAdapter.addFragments(list)
         binding.viewPager.adapter = pagerAdapter

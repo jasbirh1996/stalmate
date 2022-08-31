@@ -53,9 +53,9 @@ open class AppViewModel : ViewModel() {
     }
 
 
-    var updateFriendRequestLiveData: LiveData<ModelSuccess?> = MutableLiveData<ModelSuccess?>()
-    fun updateFriendRequest(token: String, map: HashMap<String, String>) {
-        val temp = MutableLiveData<ModelSuccess?>()
+    var updateFriendRequestLiveData: LiveData<CommonModelResponse?> = MutableLiveData<CommonModelResponse?>()
+    fun updateFriendRequest(map: HashMap<String, String>) {
+        val temp = MutableLiveData<CommonModelResponse?>()
         updateFriendRequestLiveData = temp
         getResult(temp, apiInterface.updateFriendRequest(map))
     }

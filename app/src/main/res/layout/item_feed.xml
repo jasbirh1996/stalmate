@@ -206,7 +206,7 @@
                         android:id="@+id/appCompatImageView8"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/like_background"
+                        android:src="@drawable/ic_funtime_post_like_unfill"
                         android:tint="@color/grey_dark"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -240,7 +240,7 @@
                         android:id="@+id/appCompatImageView9"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/like_background"
+                        android:src="@drawable/ic_funtime_post_comments"
                         android:tint="@color/grey_dark"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -276,7 +276,7 @@
                         android:id="@+id/appCompatImageView10"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/like_background"
+                        android:src="@drawable/ic_post_share_icon"
                         android:tint="@color/grey_dark"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />

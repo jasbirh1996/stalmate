@@ -1,21 +1,14 @@
 package com.stalmate.user.view.profile
 
-import android.app.ActionBar
-import android.app.ActivityOptions
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.view.Window
-import android.view.WindowManager
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
-import com.stalmate.user.base.App
 import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.commonadapters.AdapterFeed
 import com.stalmate.user.databinding.ActivityOtherUserProfileBinding
@@ -24,11 +17,9 @@ import com.stalmate.user.model.AboutProfileLine
 import com.stalmate.user.model.ModelUser
 import com.stalmate.user.model.User
 import com.stalmate.user.utilities.ImageLoaderHelperGlide
-import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.view.adapter.ProfileAboutAdapter
 
 import com.stalmate.user.view.adapter.ProfileFriendAdapter
-import com.stalmate.user.view.dashboard.ActivityDashboard
 
 class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdapter.Callbackk, ProfileAboutAdapter.Callbackk {
 
@@ -89,6 +80,11 @@ class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileF
     }
 
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+    }
+
+
     fun setupData() {
 
 
@@ -112,6 +108,47 @@ class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileF
         binding.buttonBlock.setOnClickListener {
             hitBlockApi()
         }
+
+        binding.accept.setOnClickListener {
+            hitAcceptRejectApi("Accept")
+        }
+
+        binding.reject.setOnClickListener {
+            hitAcceptRejectApi("Reject")
+        }
+
+        binding.ivBack.setOnClickListener {
+            onBackPressed()
+        }
+
+    }
+
+    private fun hitAcceptRejectApi(type : String) {
+        showLoader()
+        val hashMap = HashMap<String, String>()
+        hashMap["id_user"] =userId
+        hashMap["type"] = type
+
+        networkViewModel.updateFriendRequest(hashMap)
+        networkViewModel.updateFriendRequestLiveData.observe(this, Observer {
+
+            it.let {
+                if (it!!.status== true){
+
+                    if (type == "Accept") {
+                        binding.accept.visibility = View.GONE
+                        binding.reject.visibility = View.GONE
+                        binding.layoutTopControlls.visibility = View.VISIBLE
+                    }else {
+                        onBackPressed()
+                    }
+
+                    dismissLoader()
+                    makeToast(it.message)
+                }
+            }
+
+        })
 
     }
 
@@ -269,6 +306,8 @@ class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileF
 
 
     }
+
+
 
 }
 
