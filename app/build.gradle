@@ -111,7 +111,9 @@ dependencies {
     implementation 'info.hoang8f:android-segmented:1.0.6'
     implementation 'com.github.MasayukiSuda:Mp4Composer-android:v0.4.0'  //slow video
     implementation 'androidx.concurrent:concurrent-futures:1.1.0'
+
     implementation 'com.google.android.exoplayer:exoplayer:2.18.1'
+
     implementation "com.airbnb.android:lottie:5.0.3"
     implementation 'com.writingminds:FFmpegAndroid:0.3.2'
     implementation 'com.tbuonomo:dotsindicator:4.3'

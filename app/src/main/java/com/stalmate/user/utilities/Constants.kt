@@ -14,6 +14,7 @@ object Constants {
     const val GET_PROFILE_API="auth_service/auth_api/get_profile_data"
     const val GET_OTHER_USER_PROFILE_API="auth_service/auth_api/get_profile_user"
     const val UPDATE_PROFILE_API="auth_service/auth_api/profile_update"
+    const val BLOCK_API="/auth_service/friend_api/block_user"
 
     const val START_DATE = "01"
 

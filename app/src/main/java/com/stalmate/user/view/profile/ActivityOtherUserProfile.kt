@@ -2,6 +2,7 @@ package com.stalmate.user.view.profile
 
 import android.app.ActionBar
 import android.app.ActivityOptions
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
+import com.stalmate.user.base.App
 import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.commonadapters.AdapterFeed
 import com.stalmate.user.databinding.ActivityOtherUserProfileBinding
@@ -22,13 +24,14 @@ import com.stalmate.user.model.AboutProfileLine
 import com.stalmate.user.model.ModelUser
 import com.stalmate.user.model.User
 import com.stalmate.user.utilities.ImageLoaderHelperGlide
+import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.view.adapter.ProfileAboutAdapter
 
 import com.stalmate.user.view.adapter.ProfileFriendAdapter
+import com.stalmate.user.view.dashboard.ActivityDashboard
 
-class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk,
-    ProfileFriendAdapter.Callbackk,
-    ProfileAboutAdapter.Callbackk {
+class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdapter.Callbackk, ProfileAboutAdapter.Callbackk {
+
     lateinit var binding: ActivityOtherUserProfileBinding
     lateinit var feedAdapter: AdapterFeed
     lateinit var friendAdapter: ProfileFriendAdapter
@@ -44,9 +47,11 @@ class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk,
             userId = intent.getSerializableExtra("id").toString()
         }
         getUserProfileData()
+
         binding = DataBindingUtil.setContentView(this, R.layout.activity_other_user_profile)
         friendAdapter = ProfileFriendAdapter(networkViewModel, this, this)
         binding.layout.rvFriends.adapter = friendAdapter
+        binding.layout.rvFriends.setNestedScrollingEnabled(false);
         binding.layout.rvFriends.layoutManager = GridLayoutManager(this, 3)
         var hashmap = HashMap<String, String>()
         hashmap.put("type", "profile_friends")
@@ -61,12 +66,9 @@ class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk,
             }
         })
 
-
-
-
-
         feedAdapter = AdapterFeed(networkViewModel, this, this)
         binding.layout.rvFeeds.adapter = feedAdapter
+        binding.layout.rvFeeds.setNestedScrollingEnabled(false);
         binding.layout.rvFeeds.layoutManager = LinearLayoutManager(this)
         networkViewModel.getFeedList("", HashMap())
         networkViewModel.feedLiveData.observe(this, Observer {
@@ -80,10 +82,12 @@ class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk,
 
         })
 
-
-
-
         setupData()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        getUserProfileData()
     }
 
 
@@ -105,6 +109,34 @@ class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk,
         binding.buttonFollow.setOnClickListener {
             updateFriendStatus("follow")
         }
+
+
+        binding.buttonBlock.setOnClickListener {
+            hitBlockApi()
+        }
+
+    }
+
+    private fun hitBlockApi() {
+
+        showLoader()
+        val hashMap = HashMap<String, String>()
+        hashMap["id_user"] =userId
+
+        networkViewModel.block(hashMap)
+        networkViewModel.blockData.observe(this, Observer {
+
+            it.let {
+                if (it!!.status== true){
+                    dismissLoader()
+                    makeToast(it.message)
+                }
+            }
+
+        })
+
+
+
 
     }
 

@@ -38,7 +38,7 @@ abstract class BaseActivity : AppCompatActivity(), View.OnClickListener,
     private var progressDialog: com.stalmate.user.view.dialogs.ProgressDialog? = null
     private var mProgressDialog: ProgressDialog? = null
     private val isInBAckground = false
-    private var context: Context? = null
+    private lateinit var context: Context
     abstract fun onClick(viewId: Int, view: View?)
     override fun onCreate(savedInstanceState: Bundle?) {
 

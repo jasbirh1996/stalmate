@@ -122,7 +122,6 @@ open class AppViewModel : ViewModel() {
     }
 
 
-
     var otherUserProfileLiveData: MutableLiveData<ModelUser?> = MutableLiveData<ModelUser?>()
     fun getOtherUserProfileData(map: HashMap<String, String>, user_id: String) {
         val temp = MutableLiveData<ModelUser?>()
@@ -130,7 +129,8 @@ open class AppViewModel : ViewModel() {
         getResult(temp, apiInterface.getOtherUserProfileDetails(user_id))
     }
 
-    var UpdateProfileLiveData: LiveData<CommonModelResponse?> = MutableLiveData<CommonModelResponse?>()
+    var UpdateProfileLiveData: LiveData<CommonModelResponse?> =
+        MutableLiveData<CommonModelResponse?>()
 
     fun etsProfileApi(
         @Part("first_name") first_name: RequestBody,
@@ -144,14 +144,14 @@ open class AppViewModel : ViewModel() {
         @Part("url") url: RequestBody,
         @Part("company") company: RequestBody,
         @Part("gender") gender: RequestBody,
-        @Part file_Profile_Image: MultipartBody.Part? = null,
-        @Part file_Cover_image: MultipartBody.Part? = null
 
-    ) {
+
+        ) {
         val temp = MutableLiveData<CommonModelResponse?>()
         UpdateProfileLiveData = temp
 
-        getResult(temp, apiInterface.updateUserProfile(
+        getResult(
+            temp, apiInterface.updateUserProfile(
                 first_name,
                 last_name,
                 about,
@@ -163,11 +163,32 @@ open class AppViewModel : ViewModel() {
                 gender,
                 city,
                 home_town,
-                /*file_Profile_Image!!,
-                file_Cover_image!!*/
+                )
+        )
+
+    }
+
+
+    fun etsProfileApi(
+        @Part file_Profile_Image: MultipartBody.Part? = null,
+    ) {
+        val temp = MutableLiveData<CommonModelResponse?>()
+        UpdateProfileLiveData = temp
+
+        getResult(
+            temp, apiInterface.updateUserProfileImage(
+                file_Profile_Image!!
             )
         )
 
+    }
+
+
+    var blockData: LiveData<CommonModelResponse?> = MutableLiveData<CommonModelResponse?>()
+    fun block(map: HashMap<String, String>) {
+        val temp = MutableLiveData<CommonModelResponse?>()
+        blockData = temp
+        getResult(temp, apiInterface.setBlock(map))
     }
 
 

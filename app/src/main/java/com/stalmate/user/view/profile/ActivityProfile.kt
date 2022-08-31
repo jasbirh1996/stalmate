@@ -9,6 +9,10 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.canhub.cropper.CropImageContract
+import com.canhub.cropper.CropImageView
+import com.canhub.cropper.options
 import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseActivity
@@ -21,6 +25,10 @@ import com.stalmate.user.utilities.ImageLoaderHelperGlide
 import com.stalmate.user.view.adapter.ProfileAboutAdapter
 
 import com.stalmate.user.view.adapter.ProfileFriendAdapter
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import java.io.File
 
 class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdapter.Callbackk,
     ProfileAboutAdapter.Callbackk {
@@ -29,7 +37,8 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
     lateinit var friendAdapter: ProfileFriendAdapter
     val PICK_IMAGE_PROFILE = 1
     val PICK_IMAGE_COVER = 1
-
+    var imageFile: File? = null
+    var isCoverImage = false
     lateinit var userData: User
 
     override fun onClick(viewId: Int, view: View?) {
@@ -43,7 +52,9 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
         binding = DataBindingUtil.setContentView(this, R.layout.activity_profile)
         binding.layout.buttonEditProfile.visibility=View.VISIBLE
         feedAdapter = AdapterFeed(networkViewModel, this, this)
+        binding.layout.rvFeeds.setNestedScrollingEnabled(false);
         binding.layout.rvFeeds.adapter = feedAdapter
+
         binding.layout.rvFeeds.layoutManager = LinearLayoutManager(this)
 
         networkViewModel.getFeedList("", HashMap())
@@ -58,6 +69,7 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
 
         friendAdapter = ProfileFriendAdapter(networkViewModel, this, this)
         binding.layout.rvFriends.adapter = friendAdapter
+        binding.layout.rvFriends.setNestedScrollingEnabled(false);
         binding.layout.rvFriends.layoutManager = GridLayoutManager(this, 3)
 
         var hashmap=HashMap<String,String>()
@@ -91,18 +103,13 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
 
         binding.idCoverPhoto.setOnClickListener {
 
-            val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
-            intent.addCategory(Intent.CATEGORY_OPENABLE)
-            intent.type = "image/*"
-            startActivityForResult(intent,PICK_IMAGE_COVER )
+            isCoverImage=true
+            startCrop()
         }
 
         binding.idCameraProfile.setOnClickListener {
-
-            val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
-            intent.addCategory(Intent.CATEGORY_OPENABLE)
-            intent.type = "image/*"
-            startActivityForResult(intent,PICK_IMAGE_PROFILE)
+            isCoverImage=false
+            startCrop()
         }
 
 
@@ -125,6 +132,9 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
     }
 
 
+
+
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -137,7 +147,40 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
         }
     }
 
+    /*Cover Image Picker */
+    private val cropImage = registerForActivityResult(CropImageContract()) { result ->
+        if (result.isSuccessful) {
+            // use the returned uri
+            val uriContent = result.uriContent
+            var uriFilePath = result.getUriFilePath(this) // optional usage
+            imageFile = File(result.getUriFilePath(this, true)!!)
+            Log.d("imageUrl======", uriContent.toString())
+            Log.d("imageUrl======", uriFilePath.toString())
 
+            if (isCoverImage){
+                Glide.with(this).load(uriContent).into(binding.ivBackground)
+            }else{
+                Glide.with(this).load(uriContent).into(binding.ivUserThumb)
+            }
+
+
+
+            updateProfileImageApiHit()
+
+        } else {
+            // an error occurred
+            val exception = result.error
+        }
+    }
+
+    private fun startCrop() {
+        // start picker to get image for cropping and then use the image in cropping activity
+        cropImage.launch(
+            options {
+                setGuidelines(CropImageView.Guidelines.ON)
+            }
+        )
+    }
     override fun onDestroy() {
         super.onDestroy()
     }
@@ -150,7 +193,25 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
 
     }
 
+    private fun updateProfileImageApiHit() {
 
+
+
+
+        val thumbnailBody: RequestBody = RequestBody.create("image/*".toMediaTypeOrNull(), imageFile!!)
+        val profile_image1: MultipartBody.Part = MultipartBody.Part.Companion.createFormData(
+            "cover_img".takeIf { isCoverImage } ?: "profile_img",
+            imageFile!!.name,
+            thumbnailBody
+        ) //image[] for multiple image
+
+
+
+
+        networkViewModel.etsProfileApi(profile_image1)
+
+
+    }
 
 
     fun getUserProfileData() {
@@ -177,7 +238,7 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
 
         ImageLoaderHelperGlide.setGlide(this,binding.ivBackground,userData.img_url+userData.cover_img1)
         ImageLoaderHelperGlide.setGlide(this,binding.ivUserThumb,userData.img_url+userData.profile_img1)
-
+                Log.d("asdjasda",userData.img_url+userData.profile_img1)
 
         var aboutArrayList = ArrayList<AboutProfileLine>()
         aboutArrayList.add(AboutProfileLine("", "Student", "IMS Ghaziabad", "at"))
