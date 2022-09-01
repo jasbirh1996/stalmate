@@ -59,7 +59,6 @@ class FriendAdapter(
                 updateFriendStatus("add_friend",friend.id, (binding.root.context as? LifecycleOwner)!!)
             }
 
-
             binding.root.setOnClickListener {
                 callback.onClickOnProfile(friend)
             }
@@ -67,7 +66,6 @@ class FriendAdapter(
             binding.buttonConfirm.setOnClickListener {
                 callback.onClickOnProfile(friend)
             }
-
 
             ImageLoaderHelperGlide.setGlideCorner(context,binding.ivUserImage,friend.url+"/"+friend.img)
             binding.tvUserName.text=friend.first_name

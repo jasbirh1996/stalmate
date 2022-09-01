@@ -30,7 +30,6 @@ class ActivityDashboard : AppCompatActivity() {
 
         binding = ActivityDashboardBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        Log.d("token=======", PrefManager.getInstance(App.getInstance())!!.userDetailLogin.results.toString())
         setupBottomBar()
 
       //  setBottomNavigationInNormalWay(savedInstanceState)

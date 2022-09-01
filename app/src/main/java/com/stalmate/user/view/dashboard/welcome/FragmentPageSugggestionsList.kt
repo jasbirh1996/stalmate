@@ -44,11 +44,11 @@ class FragmentPageSugggestionsList : BaseFragment(), FriendAdapter.Callbackk {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        friendAdapter = FriendAdapter(networkViewModel, context!!, this,"","")
+        friendAdapter = FriendAdapter(networkViewModel, requireContext(), this,"","")
 
         binding.rvUsers.adapter=friendAdapter
         binding.rvUsers.layoutManager= LinearLayoutManager(context)
-        networkViewModel.getFriendList("", HashMap())
+        networkViewModel.getFriendList( HashMap())
         networkViewModel.friendLiveData.observe(viewLifecycleOwner, Observer {
             it.let {
                 friendAdapter.submitList(it!!.results)

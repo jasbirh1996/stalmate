@@ -50,7 +50,7 @@ class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileF
         hashmap.put("search", "")
         hashmap.put("page", "1")
         hashmap.put("limit", "6")
-        networkViewModel.getFriendList("", hashmap)
+        networkViewModel.getFriendList(hashmap)
         networkViewModel.friendLiveData.observe(this, Observer {
             it.let {
                 friendAdapter.submitList(it!!.results)
