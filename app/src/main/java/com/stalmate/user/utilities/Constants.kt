@@ -27,7 +27,7 @@ object Constants {
 
 
     const val TYPE_FRIEND_SUGGESTIONS_SUGGESTED = "01"
-    const val TYPE_FRIEND_SUGGESTIONS_FOLLOWERS = "01"
+    const val TYPE_FRIEND_SUGGESTIONS_FOLLOWERS = "02"
     const val TYPE_FRIEND_FOLLOWING = "following"
     const val TYPE_FRIEND_FOLLOWER = "follower"
 }

@@ -50,16 +50,12 @@ class FragmentFriendCategory(var type: String) : BaseFragment(), FriendAdapter.C
         if (type.equals(Constants.TYPE_FRIEND_REQUEST)) {
             list.add(FragmentFriendList(Constants.TYPE_FRIEND_REQUEST, "",""))
         } else if (type.equals(Constants.TYPE_FRIEND_SUGGESTIONS)) {
-            list.add(FragmentFriendList(Constants.TYPE_FRIEND_SUGGESTIONS, Constants.TYPE_FRIEND_SUGGESTIONS_SUGGESTED,""))
-            list.add(FragmentFriendList(Constants.TYPE_FRIEND_SUGGESTIONS, Constants.TYPE_FRIEND_SUGGESTIONS_FOLLOWERS,""))
+            list.add(FragmentFriendList(Constants.TYPE_FRIEND_SUGGESTIONS, "",""))
+            list.add(FragmentFriendList(Constants.TYPE_FRIEND_SUGGESTIONS, "",""))
         } else if (type.equals(Constants.TYPE_MY_FRIENDS)) {
             list.add(FragmentFriendList(Constants.TYPE_MY_FRIENDS, Constants.TYPE_FRIEND_FOLLOWING,""))
             list.add(FragmentFriendList(Constants.TYPE_MY_FRIENDS, Constants.TYPE_FRIEND_FOLLOWER,""))
         }
-
-
-
-
 
 
         var pagerAdapter = FragmentViewPagerAdapter(requireActivity(), requireContext())

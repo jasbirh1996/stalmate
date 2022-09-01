@@ -594,6 +594,8 @@
     <string name="add_schedule">Add Schedule</string>
     <string name="delete_schedule">Delete Schedule</string>
 
+    <string name="accept">Accept</string>
+    <string name="reject">Reject</string>
     <string-array name="marrage">
         <item><font fgcolor="#B7B7B7">Signle</font></item>
         <item><font fgcolor="#B7B7B7">Merriage</font></item>
