@@ -47,8 +47,6 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
-        getUserProfileData()
         binding = DataBindingUtil.setContentView(this, R.layout.activity_profile)
         binding.layout.buttonEditProfile.visibility=View.VISIBLE
         feedAdapter = AdapterFeed(networkViewModel, this, this)
@@ -65,7 +63,7 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
             }
         })
 
-
+        getUserProfileData()
 
         friendAdapter = ProfileFriendAdapter(networkViewModel, this, this)
         binding.layout.rvFriends.adapter = friendAdapter

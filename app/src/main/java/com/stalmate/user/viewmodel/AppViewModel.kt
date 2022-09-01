@@ -26,6 +26,23 @@ open class AppViewModel : ViewModel() {
 
     var apiInterface = ApiInterface.init(App.getInstance())
 
+    fun <T : Any> getResult(data: MutableLiveData<T?>, call: Call<T>) {
+        call.enqueue(object : retrofit2.Callback<T?> {
+            override fun onResponse(call: Call<T?>, response: Response<T?>) {
+                Log.d("asdasdas", "spfoksdf")
+                data.value = response.body()
+                Log.d("akjsdasd", Gson().toJson(response.body()))
+
+            }
+
+            override fun onFailure(call: Call<T?>, t: Throwable) {
+                data.value = null
+            }
+        })
+    }
+
+
+
 
     var feedLiveData: LiveData<ModelFeed?> = MutableLiveData<ModelFeed?>()
     fun getFeedList(token: String, map: HashMap<String, String>) {
@@ -192,20 +209,7 @@ open class AppViewModel : ViewModel() {
     }
 
 
-    fun <T : Any> getResult(data: MutableLiveData<T?>, call: Call<T>) {
-        call.enqueue(object : retrofit2.Callback<T?> {
-            override fun onResponse(call: Call<T?>, response: Response<T?>) {
-                Log.d("asdasdas", "spfoksdf")
-                data.value = response.body()
-                Log.d("akjsdasd", Gson().toJson(response.body()))
 
-            }
-
-            override fun onFailure(call: Call<T?>, t: Throwable) {
-                data.value = null
-            }
-        })
-    }
 }
 
 

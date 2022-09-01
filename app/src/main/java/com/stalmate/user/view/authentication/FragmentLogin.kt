@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -117,24 +118,24 @@ class FragmentLogin : BaseFragment() {
                 val message = it.message
 
                 if (it.status){
-                    PrefManager.getInstance(requireContext())!!.userDetailLogin= it
-                    binding.progressBar.visibility = View.GONE
                     PrefManager.getInstance(requireContext())!!.keyIsLoggedIn = true
+                    PrefManager.getInstance(requireContext())!!.userDetailLogin = it
+                    binding.progressBar.visibility = View.GONE
+
+                    Log.d("token=======", PrefManager.getInstance(App.getInstance())!!.userDetailLogin.results.toString())
+
                     val intent = Intent(requireContext(), ActivityDashboard::class.java)
                     startActivity(intent)
-
                     makeToast(message)
+
                 }else{
+
                     binding.progressBar.visibility = View.GONE
                     makeToast(message)
+
                 }
-
             }
-
-
         }
-
-
     }
 
 

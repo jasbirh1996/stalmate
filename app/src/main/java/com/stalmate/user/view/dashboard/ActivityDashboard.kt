@@ -4,6 +4,7 @@ package com.stalmate.user.view.dashboard
 import com.simform.custombottomnavigation.Model
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -11,7 +12,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.irfaan008.irbottomnavigation.SpaceItem
 import com.stalmate.user.R
+import com.stalmate.user.base.App
 import com.stalmate.user.databinding.ActivityDashboardBinding
+import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.view.dashboard.Chat.FragmentChatNCallBase
 import com.stalmate.user.view.dashboard.Friend.FragmentFriend
 import com.stalmate.user.view.dashboard.HomeFragment.FragmentHome
@@ -27,7 +30,7 @@ class ActivityDashboard : AppCompatActivity() {
 
         binding = ActivityDashboardBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        Log.d("token=======", PrefManager.getInstance(App.getInstance())!!.userDetailLogin.results.toString())
         setupBottomBar()
 
       //  setBottomNavigationInNormalWay(savedInstanceState)

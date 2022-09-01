@@ -13,6 +13,16 @@ import retrofit2.http.*
 
 interface ApiInterface {
 
+    companion object Factory {
+        @Volatile
+        private var instance: ApiInterface? = null
+        fun init(context: Context): ApiInterface {
+            return (instance ?: synchronized(this) {
+                instance ?: RestClient.inst.mRestService
+            })!!
+        }
+    }
+
     @POST("signup")
     fun setSignupDetails(@Body map: String, map1: HashMap<String, String>): Call<ModelFeed>
 
@@ -52,6 +62,7 @@ interface ApiInterface {
 
     @POST(Constants.url_send_follower_request)
     fun requestBeFollower(@Body map: HashMap<String, String>): Call<ModelSuccess>
+
 
 
     @GET(Constants.GET_PROFILE_API)
@@ -95,13 +106,5 @@ interface ApiInterface {
 
 */
 
-    companion object Factory {
-        @Volatile
-        private var instance: ApiInterface? = null
-        fun init(context: Context): ApiInterface {
-            return (instance ?: synchronized(this) {
-                instance ?: RestClient.inst.mRestService
-            })!!
-        }
-    }
+
 }

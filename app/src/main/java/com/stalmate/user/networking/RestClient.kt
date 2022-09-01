@@ -33,7 +33,7 @@ class RestClient private constructor() {
         // Should be used only in Debug Mode.
         if (true) {
             val interceptor = HttpLoggingInterceptor()
-            interceptor.setLevel(if (true) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE) //// TODO: 21-07-2016
+            interceptor.setLevel(if (true) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE)
             builder.addInterceptor(interceptor)
         }
         val gson = GsonBuilder()
