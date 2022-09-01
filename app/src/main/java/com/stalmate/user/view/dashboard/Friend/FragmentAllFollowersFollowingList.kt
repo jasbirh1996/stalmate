@@ -54,7 +54,7 @@ class FragmentAllFollowersFollowingList(var type: String, var subtype: String) :
         hashmap.put("search", "")
         hashmap.put("page", "1")
         hashmap.put("limit", "")
-        networkViewModel.getFriendList("", hashmap)
+        networkViewModel.getFriendList( hashmap)
         networkViewModel.friendLiveData.observe(viewLifecycleOwner, Observer {
             it.let {
                 friendAdapter.submitList(it!!.results)

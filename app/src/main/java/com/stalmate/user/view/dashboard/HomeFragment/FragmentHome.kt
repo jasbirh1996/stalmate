@@ -19,6 +19,7 @@ import com.stalmate.user.model.Feed
 import com.stalmate.user.model.ModelLoginResponse
 import com.stalmate.user.model.User
 import com.stalmate.user.utilities.PrefManager
+import com.stalmate.user.view.adapter.FriendAdapter
 import com.stalmate.user.view.adapter.SuggestedFriendAdapter
 import com.stalmate.user.view.adapter.UserHomeStoryAdapter
 
@@ -30,9 +31,9 @@ class FragmentHome : BaseFragment(), AdapterFeed.Callbackk, UserHomeStoryAdapter
     lateinit var feedAdapter: AdapterFeed
     lateinit var homeStoryAdapter: UserHomeStoryAdapter
     lateinit var suggestedFriendAdapter:  SuggestedFriendAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("token=======", PrefManager.getInstance(App.getInstance())!!.userDetailLogin.results[0].token)
 
     }
 
@@ -43,12 +44,10 @@ class FragmentHome : BaseFragment(), AdapterFeed.Callbackk, UserHomeStoryAdapter
         // Inflate the layout for this fragment
         var view=inflater.inflate(R.layout.fragment_home, container, false)
         binding=DataBindingUtil.bind<FragmentHomeBinding>(view)!!
-
-
-        Log.d("token=======", PrefManager.getInstance(App.getInstance())!!.userDetailLogin.results[0].token)
-
         return binding.root
     }
+
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -56,23 +55,23 @@ class FragmentHome : BaseFragment(), AdapterFeed.Callbackk, UserHomeStoryAdapter
 
         feedAdapter = AdapterFeed(networkViewModel, requireContext(), this)
         homeStoryAdapter = UserHomeStoryAdapter(networkViewModel, requireContext(), this)
-        suggestedFriendAdapter = SuggestedFriendAdapter(networkViewModel, requireContext(), this)
+
         binding.rvFeeds.adapter=feedAdapter
         binding.rvStory.adapter=homeStoryAdapter
-        binding.rvSuggestedFriends.adapter=suggestedFriendAdapter
+
+
         binding.rvFeeds.layoutManager= LinearLayoutManager(context)
         binding.rvStory.layoutManager= LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
-        binding.rvSuggestedFriends.layoutManager= LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
+
+
         networkViewModel.getFeedList("", HashMap())
         networkViewModel.feedLiveData.observe(viewLifecycleOwner, Observer {
             Log.d("asdasdasd","oaspiasddsad")
             it.let {
                 feedAdapter.submitList(it!!.results)
-                suggestedFriendAdapter.submitList(ArrayList<User>())
+
             }
         })
-
-
 
         networkViewModel.feedLiveData.observe(viewLifecycleOwner, Observer {
             Log.d("asdasdasd","oaspiasddsad")
@@ -81,6 +80,7 @@ class FragmentHome : BaseFragment(), AdapterFeed.Callbackk, UserHomeStoryAdapter
             }
         })
 
+        getFriendSuggestionListing()
 
 
         binding.postContant.userImage.setOnClickListener {
@@ -104,6 +104,28 @@ class FragmentHome : BaseFragment(), AdapterFeed.Callbackk, UserHomeStoryAdapter
 
     override fun onClickOnProfile(friend: User) {
 
+    }
+
+
+    private fun getFriendSuggestionListing() {
+        var hashmap = HashMap<String, String>()
+        hashmap.put("id_user", "")
+        hashmap.put("type","suggestions")
+        hashmap.put("sub_type", "")
+        hashmap.put("search", "")
+        hashmap.put("page", "1")
+        hashmap.put("limit", "")
+
+        networkViewModel.getFriendList(hashmap)
+        networkViewModel.friendLiveData.observe(viewLifecycleOwner, Observer {
+            it.let {
+
+                suggestedFriendAdapter = SuggestedFriendAdapter(networkViewModel, requireContext(), this)
+                binding.rvSuggestedFriends.layoutManager= LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
+                binding.rvSuggestedFriends.adapter=suggestedFriendAdapter
+                suggestedFriendAdapter.submitList(it!!.results)
+            }
+        })
     }
 
 }

@@ -55,7 +55,7 @@ class FragmentFriendList(var type: String, var subtype: String,var userId:String
         hashmap.put("search", "")
         hashmap.put("page", "1")
         hashmap.put("limit", "")
-        networkViewModel.getFriendList("", hashmap)
+        networkViewModel.getFriendList(hashmap)
         networkViewModel.friendLiveData.observe(viewLifecycleOwner, Observer {
             it.let {
                 friendAdapter.submitList(it!!.results)
@@ -78,8 +78,31 @@ class FragmentFriendList(var type: String, var subtype: String,var userId:String
 
 
     override fun onClickOnProfile(friend: User) {
-        startActivity(
+       /* startActivity(
             IntentHelper.getOtherUserProfileScreen(requireContext())!!.putExtra("id", friend.id)
-        )
+        )*/
+        hitAcceptRejectApi("Accept")
+    }
+
+    private fun hitAcceptRejectApi(type : String) {
+        showLoader()
+        val hashMap = HashMap<String, String>()
+        hashMap["id_user"] =userId
+        hashMap["type"] = type
+
+        networkViewModel.updateFriendRequest(hashMap)
+        networkViewModel.updateFriendRequestLiveData.observe(this, Observer {
+
+            it.let {
+                if (it!!.status== true){
+
+                    friendAdapter.notifyDataSetChanged()
+                    dismissLoader()
+                    makeToast(it.message)
+                }
+            }
+
+        })
+
     }
 }
