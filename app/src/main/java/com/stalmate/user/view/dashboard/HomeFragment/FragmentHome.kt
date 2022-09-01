@@ -11,11 +11,14 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
+import com.stalmate.user.base.App
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.commonadapters.AdapterFeed
 import com.stalmate.user.databinding.FragmentHomeBinding
 import com.stalmate.user.model.Feed
+import com.stalmate.user.model.ModelLoginResponse
 import com.stalmate.user.model.User
+import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.view.adapter.SuggestedFriendAdapter
 import com.stalmate.user.view.adapter.UserHomeStoryAdapter
 
@@ -26,11 +29,10 @@ class FragmentHome : BaseFragment(), AdapterFeed.Callbackk, UserHomeStoryAdapter
     private lateinit var binding: FragmentHomeBinding
     lateinit var feedAdapter: AdapterFeed
     lateinit var homeStoryAdapter: UserHomeStoryAdapter
-
     lateinit var suggestedFriendAdapter:  SuggestedFriendAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        Log.d("token=======", PrefManager.getInstance(App.getInstance())!!.userDetailLogin.results[0].token)
 
     }
 
@@ -41,6 +43,10 @@ class FragmentHome : BaseFragment(), AdapterFeed.Callbackk, UserHomeStoryAdapter
         // Inflate the layout for this fragment
         var view=inflater.inflate(R.layout.fragment_home, container, false)
         binding=DataBindingUtil.bind<FragmentHomeBinding>(view)!!
+
+
+        Log.d("token=======", PrefManager.getInstance(App.getInstance())!!.userDetailLogin.results[0].token)
+
         return binding.root
     }
 
@@ -78,7 +84,7 @@ class FragmentHome : BaseFragment(), AdapterFeed.Callbackk, UserHomeStoryAdapter
 
 
         binding.postContant.userImage.setOnClickListener {
-            startActivity(IntentHelper.getProfileScreen(context!!))
+            startActivity(IntentHelper.getProfileScreen(requireContext()))
         }
 
 
