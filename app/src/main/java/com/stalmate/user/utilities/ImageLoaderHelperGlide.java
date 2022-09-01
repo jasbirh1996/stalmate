@@ -25,17 +25,17 @@ public class ImageLoaderHelperGlide extends Activity {
                 .dontAnimate()
 
                /* .transform(new CenterCrop(), new RoundedCorners(0))*/
-                .placeholder(R.drawable.image)
+              .placeholder(R.drawable.image)
                 .priority(Priority.IMMEDIATE)
                 .encodeFormat(Bitmap.CompressFormat.PNG)
                 .format(DecodeFormat.DEFAULT);
         Glide.with(context)
                 .applyDefaultRequestOptions(requestOptions)
                 .load(imageLink).transition(DrawableTransitionOptions.withCrossFade())
-                .error(Glide.with(context)
-                        .load(R.drawable.image))
+               /* .error(Glide.with(context)
+                        .load(R.drawable.image))*/
                 .into(imageView);
-        Glide.get(context).clearMemory();
+      //  Glide.get(context).clearMemory();
     }
 
 
@@ -56,7 +56,7 @@ public class ImageLoaderHelperGlide extends Activity {
        /*         .error(Glide.with(context)
                         .load(R.drawable.image))*/
                 .into(imageView);
-        Glide.get(context).clearMemory();
+      //  Glide.get(context).clearMemory();
     }
 
 }

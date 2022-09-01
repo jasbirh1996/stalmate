@@ -82,7 +82,7 @@
             app:layout_constraintTop_toBottomOf="@+id/iv_background" />
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/id_camera_profile"
+            android:id="@+id/ivUserProfileImage"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:background="@drawable/circle_blue_background_stock"

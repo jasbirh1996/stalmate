@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">Stalmate</string>
+    <string name="app_name" translatable="false">Test Module</string>
     <string name="action_settings" translatable="false">Settings</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label" translatable="false">First Fragment</string>
@@ -582,6 +582,9 @@
     <string name="quite_mode">Quite Mode</string>
     <string name="off">Off</string>
     <string name="schedule_quite_mode">Schedule Quite Mode</string>
+
+
+
     <string name="Schedulequite_mode">Schedule Quite Mode</string>
     <string name="your_quite_mode_schedule">Your Quite Mode Schedule</string>
     <string name="start_time">Start Time</string>

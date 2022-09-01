@@ -42,6 +42,7 @@ class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileF
         binding = DataBindingUtil.setContentView(this, R.layout.activity_other_user_profile)
         friendAdapter = ProfileFriendAdapter(networkViewModel, this, this)
         binding.layout.rvFriends.adapter = friendAdapter
+        binding.layout.rvFriends.setNestedScrollingEnabled(false);
         binding.layout.rvFriends.layoutManager = GridLayoutManager(this, 3)
         var hashmap = HashMap<String, String>()
         hashmap.put("type", "profile_friends")
@@ -58,6 +59,7 @@ class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileF
 
         feedAdapter = AdapterFeed(networkViewModel, this, this)
         binding.layout.rvFeeds.adapter = feedAdapter
+        binding.layout.rvFeeds.setNestedScrollingEnabled(false);
         binding.layout.rvFeeds.layoutManager = LinearLayoutManager(this)
         networkViewModel.getFeedList("", HashMap())
         networkViewModel.feedLiveData.observe(this, Observer {

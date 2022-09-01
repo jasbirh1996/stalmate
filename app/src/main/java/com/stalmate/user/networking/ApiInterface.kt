@@ -92,11 +92,13 @@ interface ApiInterface {
         @Part("gender") gender: RequestBody,
         @Part("city") city: RequestBody,
         @Part("home_town") home_town: RequestBody,
-        @Part profile_img: MultipartBody.Part? = null,
-        @Part cover_img: MultipartBody.Part? = null
     ): Call<CommonModelResponse>
 
-
+    @Multipart
+    @PATCH(Constants.UPDATE_PROFILE_API)
+    fun updateUserProfileImage(
+        @Part cover_img: MultipartBody.Part
+    ): Call<CommonModelResponse>
 
 /*
     @HTTP(method = "DELETE", path = "delete_post" ,hasBody = true)
