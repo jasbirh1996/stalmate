@@ -50,8 +50,8 @@ class FragmentFriendCategory(var type: String) : BaseFragment(), FriendAdapter.C
         if (type.equals(Constants.TYPE_FRIEND_REQUEST)) {
             list.add(FragmentFriendList(Constants.TYPE_FRIEND_REQUEST, "",""))
         } else if (type.equals(Constants.TYPE_FRIEND_SUGGESTIONS)) {
-            list.add(FragmentFriendList(Constants.TYPE_FRIEND_SUGGESTIONS, Constants.TYPE_FRIEND_SUGGESTIONS_SUGGESTED,""))
-            list.add(FragmentFriendList(Constants.TYPE_FRIEND_SUGGESTIONS, Constants.TYPE_FRIEND_SUGGESTIONS_FOLLOWERS,""))
+            list.add(FragmentFriendList(Constants.TYPE_FRIEND_SUGGESTIONS, "",""))
+         //   list.add(FragmentFriendList(Constants.TYPE_FRIEND_SUGGESTIONS, "",""))
         } else if (type.equals(Constants.TYPE_MY_FRIENDS)) {
             list.add(FragmentFriendList(Constants.TYPE_MY_FRIENDS, Constants.TYPE_FRIEND_FOLLOWING,""))
             list.add(FragmentFriendList(Constants.TYPE_MY_FRIENDS, Constants.TYPE_FRIEND_FOLLOWER,""))
@@ -70,11 +70,14 @@ class FragmentFriendCategory(var type: String) : BaseFragment(), FriendAdapter.C
                 }
             }.attach()
         } else if (type.equals(Constants.TYPE_FRIEND_SUGGESTIONS)) {
-            TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
+       /*     TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
                 if (position == 0) tab.text = "Suggested" else if (position == 1) {
                     tab.text = "Followers"
                 }
-            }.attach()
+            }.attach()*/
+
+            binding.tabLayout.visibility=View.GONE
+
         } else if (type.equals(Constants.TYPE_MY_FRIENDS)) {
             TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
                 if (position == 0) tab.text = "Following" else if (position == 1) {

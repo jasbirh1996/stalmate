@@ -21,6 +21,7 @@ import com.stalmate.user.databinding.ActivityProfileBinding
 
 import com.stalmate.user.model.AboutProfileLine
 import com.stalmate.user.model.User
+import com.stalmate.user.utilities.Constants
 import com.stalmate.user.utilities.ImageLoaderHelperGlide
 import com.stalmate.user.view.adapter.ProfileAboutAdapter
 
@@ -71,7 +72,7 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
         binding.layout.rvFriends.layoutManager = GridLayoutManager(this, 3)
 
         var hashmap=HashMap<String,String>()
-        hashmap.put("type","profile_friends")
+        hashmap.put("type",Constants.TYPE_PROFILE_FRIENDS)
         hashmap.put("sub_type","")
         hashmap.put("search","")
         hashmap.put("page","1")
