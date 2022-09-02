@@ -15,6 +15,7 @@ data class User(
     val img:String,
     var isFriend:Int,
     var isFollowed:Int,
+    var isFriendRemovedFromSuggestion:Int,
     var isBlocked:Int,
     val friends_count:Int,
     val about: String,

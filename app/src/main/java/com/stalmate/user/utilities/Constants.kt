@@ -19,10 +19,11 @@ object Constants {
     const val START_DATE = "01"
 
 
-    const val TYPE_FRIEND_REQUEST = "requests"
+    const val TYPE_FRIEND_REQUEST = "request"
     const val TYPE_FRIEND_SUGGESTIONS = "suggestions"
     const val TYPE_MY_FRIENDS = "friends"
     const val TYPE_ALL_FOLLOWERS_FOLLOWING = "following_follower"
+    const val TYPE_PROFILE_FRIENDS = "profile_friends"
 
 
 
@@ -30,4 +31,11 @@ object Constants {
     const val TYPE_FRIEND_SUGGESTIONS_FOLLOWERS = "02"
     const val TYPE_FRIEND_FOLLOWING = "following"
     const val TYPE_FRIEND_FOLLOWER = "follower"
+
+
+
+    const val TYPE_USER_ACTION_ADD_FRIEND = "add_friend"
+
+
+
 }

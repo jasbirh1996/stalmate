@@ -1,18 +1,20 @@
 package com.stalmate.user.view.adapter
 
 import android.content.Context
-import android.util.DisplayMetrics
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.stalmate.user.R
 import com.stalmate.user.databinding.ItemSuggestedFriendBinding
+import com.stalmate.user.model.ModelFriend
 import com.stalmate.user.model.User
+import com.stalmate.user.utilities.Constants
+import com.stalmate.user.utilities.Constants.TYPE_USER_ACTION_ADD_FRIEND
 import com.stalmate.user.utilities.ImageLoaderHelperGlide
 import com.stalmate.user.viewmodel.AppViewModel
 
@@ -24,7 +26,6 @@ class SuggestedFriendAdapter(
 ) :
     RecyclerView.Adapter<SuggestedFriendAdapter.FeedViewHolder>(){
     var list = ArrayList<User>()
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -33,11 +34,8 @@ class SuggestedFriendAdapter(
         var view = LayoutInflater.from(parent.context).inflate(R.layout.item_suggested_friend, parent, false)
         return FeedViewHolder(DataBindingUtil.bind<ItemSuggestedFriendBinding>(view)!!)
     }
-
     override fun onBindViewHolder(holder: SuggestedFriendAdapter.FeedViewHolder, position: Int) {
-
         holder.bind(list.get(position))
-
     }
     override fun getItemCount(): Int {
         return list.size
@@ -50,16 +48,47 @@ class SuggestedFriendAdapter(
             ImageLoaderHelperGlide.setGlideCorner(context,binding.ivUserImage,friend.url+"/"+friend.img)
             binding.tvUserName.text=friend.first_name
 
-
+            Log.d("asdasdasd",friend.url+"/"+friend.img)
 
             binding.buttonAddFriend.setOnClickListener {
-                updateFriendStatus("add_friend",friend.id, (binding.root.context as? LifecycleOwner)!!)
+                updateFriendStatus(TYPE_USER_ACTION_ADD_FRIEND,friend.id, (binding.root.context as? LifecycleOwner)!!,bindingAdapterPosition)
             }
+
+
+            binding.buttonRemove.setOnClickListener {
+                friend.isFriendRemovedFromSuggestion=1
+                notifyItemChanged(bindingAdapterPosition)
+            }
+            binding.buttonAfterAction.setOnClickListener {
+
+            }
+
+
+            if (friend.isFriend==1 || friend.isFriendRemovedFromSuggestion==1){
+                binding.buttonAddFriend.visibility= View.GONE
+                binding.buttonRemove.visibility= View.GONE
+                binding.buttonAfterAction.visibility= View.VISIBLE
+            }else{
+                binding.buttonAddFriend.visibility= View.VISIBLE
+                binding.buttonRemove.visibility= View.VISIBLE
+                binding.buttonAfterAction.visibility= View.GONE
+            }
+
+
+
+
+            if (friend.isFriendRemovedFromSuggestion==1){
+               binding.tvAfterbuttonText.text="Removed"
+            }
+            if (friend.isFriend==1){
+                binding.tvAfterbuttonText.text="Friend Request Sent"
+            }
+
+
         }
     }
 
     fun submitList(feedList: List<User>) {
-        list.clear()
         list.addAll(feedList)
         notifyDataSetChanged()
     }
@@ -69,32 +98,29 @@ class SuggestedFriendAdapter(
         fun onClickOnProfile(friend:User)
     }
 
-    fun updateFriendStatus(status:String,userId:String,lifecycleOwner: LifecycleOwner) {
+    fun updateFriendStatus(
+        status: String,
+        userId: String,
+        lifecycleOwner: LifecycleOwner,
+        bindingAdapterPosition: Int
+    ) {
         var hashMap = HashMap<String, String>()
         hashMap.put("id_user", userId)
-
-        if (status.equals("add_friend")){
+        if (status.equals(TYPE_USER_ACTION_ADD_FRIEND)){
             viewModel.sendFriendRequest("", hashMap)
             viewModel.sendFriendRequestLiveData.observe( lifecycleOwner , Observer {
                 it.let {
-
+                    if ( list[bindingAdapterPosition].isFriend==0){
+                        list[bindingAdapterPosition].isFriend=1
+                    }else{
+                        list[bindingAdapterPosition].isFriend=0
+                    }
+                    notifyItemChanged(bindingAdapterPosition)
 
                 }
             })
         }
     }
 
- /*   fun setupButtonColor(text:String,isPrimary: Boolean,view:Button):Button{
-        view.setText(text)
-        if (isPrimary){
-            view.background=ContextCompat.getDrawable(context,R.drawable.primary_button_background)
-            view.setTextColor(context.getColor(R.color.white))
 
-            return  view
-        }
-        view.background=ContextCompat.getDrawable(context,R.drawable.large_round_corner_light_primary_border_light_gray_filled)
-        view.setTextColor(context.getColor(R.color.colorPrimary))
-        return  view
-
-    }*/
 }

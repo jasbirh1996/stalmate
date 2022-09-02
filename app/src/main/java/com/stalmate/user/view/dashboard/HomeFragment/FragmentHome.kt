@@ -18,6 +18,7 @@ import com.stalmate.user.databinding.FragmentHomeBinding
 import com.stalmate.user.model.Feed
 import com.stalmate.user.model.ModelLoginResponse
 import com.stalmate.user.model.User
+import com.stalmate.user.utilities.Constants
 import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.view.adapter.FriendAdapter
 import com.stalmate.user.view.adapter.SuggestedFriendAdapter
@@ -110,16 +111,16 @@ class FragmentHome : BaseFragment(), AdapterFeed.Callbackk, UserHomeStoryAdapter
     private fun getFriendSuggestionListing() {
         var hashmap = HashMap<String, String>()
         hashmap.put("id_user", "")
-        hashmap.put("type","suggestions")
+        hashmap.put("type",Constants.TYPE_FRIEND_SUGGESTIONS)
         hashmap.put("sub_type", "")
         hashmap.put("search", "")
         hashmap.put("page", "1")
-        hashmap.put("limit", "")
+        hashmap.put("limit", "6")
 
         networkViewModel.getFriendList(hashmap)
         networkViewModel.friendLiveData.observe(viewLifecycleOwner, Observer {
             it.let {
-
+                Log.d("asdasdasd","asdasdasdasd")
                 suggestedFriendAdapter = SuggestedFriendAdapter(networkViewModel, requireContext(), this)
                 binding.rvSuggestedFriends.layoutManager= LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
                 binding.rvSuggestedFriends.adapter=suggestedFriendAdapter

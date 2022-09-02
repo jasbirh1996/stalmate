@@ -62,7 +62,7 @@ open class AppViewModel : ViewModel() {
     }
 
 
-    var friendLiveData: LiveData<ModelFriend?> = MutableLiveData<ModelFriend?>()
+    var friendLiveData: MutableLiveData<ModelFriend?> = MutableLiveData<ModelFriend?>()
     fun getFriendList(map: HashMap<String, String>) {
         val temp = MutableLiveData<ModelFriend?>()
         friendLiveData = temp
