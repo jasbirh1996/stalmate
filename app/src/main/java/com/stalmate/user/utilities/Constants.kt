@@ -10,6 +10,9 @@ object Constants {
     const val url_friend_list="auth_service/friend_api/get_friend_list"
     const val url_send_friend_request="auth_service/friend_api/send_friend_request"
     const val url_update_friend_request="auth_service/friend_api/update_friend_request"
+    const val url_remove_user_from_suggestions="auth_service/friend_api/remove_suggestions"
+
+
     const val url_send_follower_request="auth_service/friend_api/send_follower_request"
     const val GET_PROFILE_API="auth_service/auth_api/get_profile_data"
     const val GET_OTHER_USER_PROFILE_API="auth_service/auth_api/get_profile_user"
@@ -24,7 +27,8 @@ object Constants {
     const val TYPE_MY_FRIENDS = "friends"
     const val TYPE_ALL_FOLLOWERS_FOLLOWING = "following_follower"
     const val TYPE_PROFILE_FRIENDS = "profile_friends"
-
+    const val TYPE_USER_TYPE_FOLLOWERS = "follower"
+    const val TYPE_USER_TYPE_FOLLOWINGS = "following"
 
 
     const val TYPE_FRIEND_SUGGESTIONS_SUGGESTED = "01"
@@ -35,7 +39,11 @@ object Constants {
 
 
     const val TYPE_USER_ACTION_ADD_FRIEND = "add_friend"
-
-
+    const val TYPE_USER_ACTION_CANCEL_FRIEND_REQUEST = "add_friend"
+    const val TYPE_USER_ACTION_REMOVE_FROM_SUGGESTIONS = "remove from suggestion"
+    const val TYPE_USER_ACTION_ACCEPT_FRIEND_REQUEST = "Accept"
+    const val TYPE_USER_ACTION_DELETE_FRIEND_REQUEST = "delete"
+    const val TYPE_USER_ACTION_FOLLOW = "follow"
+    const val TYPE_USER_ACTION_UNFOLLOW = "unfollow"
 
 }
