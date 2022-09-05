@@ -60,6 +60,13 @@ interface ApiInterface {
     fun updateFriendRequest(@Body map: HashMap<String, String>): Call<CommonModelResponse>
 
 
+    @POST(Constants.url_remove_user_from_suggestions)
+    fun removeUserFromSuggestions(@Body map: HashMap<String, String>): Call<CommonModelResponse>
+
+
+
+
+
     @POST(Constants.url_send_follower_request)
     fun requestBeFollower(@Body map: HashMap<String, String>): Call<ModelSuccess>
 

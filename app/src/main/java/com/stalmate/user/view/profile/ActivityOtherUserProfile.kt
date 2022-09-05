@@ -45,6 +45,9 @@ class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileF
         binding.layout.rvFriends.setNestedScrollingEnabled(false);
         binding.layout.rvFriends.layoutManager = GridLayoutManager(this, 3)
         var hashmap = HashMap<String, String>()
+
+
+        hashmap.put("other_user_id", userId)
         hashmap.put("type", "profile_friends")
         hashmap.put("sub_type", "")
         hashmap.put("search", "")
@@ -126,7 +129,7 @@ class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileF
     }
 
     private fun hitAcceptRejectApi(type : String) {
-        showLoader()
+
         val hashMap = HashMap<String, String>()
         hashMap["id_user"] =userId
         hashMap["type"] = type
@@ -166,7 +169,13 @@ class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileF
             it.let {
                 if (it!!.status== true){
                     dismissLoader()
-                    makeToast(it.message)
+
+                    if (userData.results.isBlocked==0){
+                        userData.results.isBlocked=1
+                    }else{
+                        userData.results.isBlocked=0
+                    }
+                    networkViewModel.otherUserProfileLiveData.postValue(userData)
                 }
             }
 
@@ -299,13 +308,30 @@ class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileF
         }else{
             binding.tvFollowStatus.text = "Follow"
         }
-
         if (userData.results.isBlocked == 1) {
             binding.tvBlockStatus.text = "Blocked"
         }else{
             binding.tvBlockStatus.text = "Block"
         }
 
+
+        if (userData.results.isFriend == 1) {
+            binding.accept.visibility = View.GONE
+            binding.reject.visibility = View.GONE
+            binding.layoutTopControlls.visibility = View.VISIBLE
+        }else{//not a friend
+            if (userData.results.hasFriendRequest==1){
+                binding.accept.visibility = View.VISIBLE
+                binding.reject.visibility = View.VISIBLE
+                binding.layoutTopControlls.visibility = View.GONE
+            }
+        }
+
+/*        if (userData.results.isFriend == 1) {
+            binding.tvBlockStatus.text = "Blocked"
+        }else{
+            binding.tvBlockStatus.text = "Block"
+        }*/
 
     }
 

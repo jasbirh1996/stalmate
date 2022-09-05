@@ -78,10 +78,9 @@ class FragmentFriendList(var type: String, var subtype: String,var userId:String
 
 
     override fun onClickOnProfile(friend: User) {
-       /* startActivity(
+      startActivity(
             IntentHelper.getOtherUserProfileScreen(requireContext())!!.putExtra("id", friend.id)
-        )*/
-        hitAcceptRejectApi("Accept")
+        )
     }
 
     private fun hitAcceptRejectApi(type : String) {

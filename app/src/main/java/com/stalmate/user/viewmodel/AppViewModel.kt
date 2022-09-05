@@ -77,6 +77,16 @@ open class AppViewModel : ViewModel() {
         getResult(temp, apiInterface.updateFriendRequest(map))
     }
 
+    var removeUserFromSuggestionLiveData: LiveData<CommonModelResponse?> = MutableLiveData<CommonModelResponse?>()
+    fun removeUserFromSuggestion(map: HashMap<String, String>) {
+        val temp = MutableLiveData<CommonModelResponse?>()
+        removeUserFromSuggestionLiveData = temp
+        getResult(temp, apiInterface.removeUserFromSuggestions(map))
+    }
+
+
+
+
     var sendFriendRequestLiveData: LiveData<ModelSuccess?> = MutableLiveData<ModelSuccess?>()
     fun sendFriendRequest(token: String, map: HashMap<String, String>) {
         val temp = MutableLiveData<ModelSuccess?>()

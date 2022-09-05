@@ -140,9 +140,9 @@
 
                   <androidx.appcompat.widget.AppCompatImageView
                       android:id="@+id/ivBlock"
-                      android:layout_width="24dp"
-                      android:layout_height="24dp"
-                      android:src="@drawable/primary_button_background"
+                      android:layout_width="20dp"
+                      android:layout_height="20dp"
+                      android:src="@drawable/ic_block_contact_icon"
                       app:layout_constraintBottom_toBottomOf="parent"
                       app:layout_constraintEnd_toStartOf="@+id/tvBlockStatus"
                       app:layout_constraintHorizontal_chainStyle="packed"
@@ -191,8 +191,8 @@
 
                   <androidx.appcompat.widget.AppCompatImageView
                       android:id="@+id/ivShare"
-                      android:layout_width="24dp"
-                      android:layout_height="24dp"
+                      android:layout_width="20dp"
+                      android:layout_height="20dp"
                       android:src="@drawable/primary_button_background"
                       app:layout_constraintBottom_toBottomOf="parent"
                       app:layout_constraintEnd_toEndOf="parent"

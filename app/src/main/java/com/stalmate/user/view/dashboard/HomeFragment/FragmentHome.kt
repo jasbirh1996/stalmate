@@ -104,11 +104,15 @@ class FragmentHome : BaseFragment(), AdapterFeed.Callbackk, UserHomeStoryAdapter
     }
 
     override fun onClickOnProfile(friend: User) {
-
+        startActivity(
+            IntentHelper.getOtherUserProfileScreen(requireContext())!!.putExtra("id", friend.id)
+        )
     }
 
 
     private fun getFriendSuggestionListing() {
+        Log.d("tokenn",PrefManager.getInstance(App.getInstance())!!.userDetailLogin.results[0].token)
+
         var hashmap = HashMap<String, String>()
         hashmap.put("id_user", "")
         hashmap.put("type",Constants.TYPE_FRIEND_SUGGESTIONS)
