@@ -11,6 +11,8 @@ import com.slatmate.user.model.ModelRegisterResponse
 import com.stalmate.user.base.App
 import com.stalmate.user.model.*
 import com.stalmate.user.networking.ApiInterface
+import com.stalmate.user.view.photoalbum.ModelAlbumCreateResponse
+import com.stalmate.user.view.photoalbum.ModelPhotoResponse
 import okhttp3.MediaType.Companion.parse
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -59,6 +61,13 @@ open class AppViewModel : ViewModel() {
         val temp = MutableLiveData<ModelLanguageResponse?>()
         languageLiveData = temp
         getResult(temp, apiInterface.getLanguageList())
+    }
+
+    var photoLiveData: LiveData<ModelPhotoResponse?> = MutableLiveData<ModelPhotoResponse?>()
+    fun photoLiveData(map: HashMap<String, String>) {
+        val temp = MutableLiveData<ModelPhotoResponse?>()
+        photoLiveData = temp
+        getResult(temp, apiInterface.getPhotoList(map))
     }
 
 
@@ -123,6 +132,15 @@ open class AppViewModel : ViewModel() {
         loginData = temp
         getResult(temp, apiInterface.setLoginDetails(map))
     }
+
+    var createAlbumData: LiveData<ModelAlbumCreateResponse?> = MutableLiveData<ModelAlbumCreateResponse?>()
+    fun createAlbum(map: HashMap<String, String>) {
+        val temp = MutableLiveData<ModelAlbumCreateResponse?>()
+        createAlbumData = temp
+        getResult(temp, apiInterface.setCreateAlbumDetails(map))
+    }
+
+
 
 
     var otpVerifyData: LiveData<CommonModelResponse?> = MutableLiveData<CommonModelResponse?>()
@@ -216,6 +234,15 @@ open class AppViewModel : ViewModel() {
         val temp = MutableLiveData<CommonModelResponse?>()
         blockData = temp
         getResult(temp, apiInterface.setBlock(map))
+    }
+
+
+    var albumLiveData: LiveData<ModelAlbumsResponse?> = MutableLiveData<ModelAlbumsResponse?>()
+
+    fun albumLiveDatas(token: String, map: HashMap<String, String>) {
+        val temp = MutableLiveData<ModelAlbumsResponse?>()
+        albumLiveData = temp
+        getResult(temp, apiInterface.getAlbumList())
     }
 
 

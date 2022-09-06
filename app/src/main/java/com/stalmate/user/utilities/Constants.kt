@@ -11,6 +11,9 @@ object Constants {
     const val url_send_friend_request="auth_service/friend_api/send_friend_request"
     const val url_update_friend_request="auth_service/friend_api/update_friend_request"
     const val url_remove_user_from_suggestions="auth_service/friend_api/remove_suggestions"
+    const val URL_PHOTO_ALBUM="auth_service/auth_api/get_albums"
+    const val URL_PHOTO_ALBUM_NAME="auth_service/auth_api/add_update_albums"
+    const val URL_PHOTO_ALBUM_PHOTO="auth_service/auth_api/get_albums_img"
 
 
     const val url_send_follower_request="auth_service/friend_api/send_follower_request"

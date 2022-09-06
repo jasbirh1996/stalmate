@@ -34,7 +34,7 @@ class FragmentEventSuggestionsList : BaseFragment(), FriendAdapter.Callbackk {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding=DataBindingUtil.bind<FragmentEventSuggestionListBinding>(inflater.inflate(R.layout.fragment_event_suggestion_list, container, false))!!
+        binding=DataBindingUtil.bind<FragmentEventSuggestionListBinding>(inflater.inflate(R.layout.fragment_event_suggestiaon_list, container, false))!!
         return binding.root
     }
 
@@ -44,14 +44,14 @@ class FragmentEventSuggestionsList : BaseFragment(), FriendAdapter.Callbackk {
 
         friendAdapter = FriendAdapter(networkViewModel, requireContext(), this,"","")
 
-        binding.rvUsers.adapter=friendAdapter
+   /*     binding.rvUsers.adapter=friendAdapter
         binding.rvUsers.layoutManager= LinearLayoutManager(context)
         networkViewModel.getFriendList( HashMap())
         networkViewModel.friendLiveData.observe(viewLifecycleOwner, Observer {
             it.let {
                 friendAdapter.submitList(it!!.results)
             }
-        })
+        })*/
     }
 
 

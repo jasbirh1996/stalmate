@@ -596,6 +596,17 @@
     <string name="accept">Accept</string>
     <string name="reject">Reject</string>
     <string name="friend_request_sent">Friend Request Sent</string>
+    <string name="add_post">Add Post</string>
+    <string name="crate_album">Crate Album</string>
+    <string name="albums">Albums</string>
+    <string name="albums_photo">Album Photos</string>
+    <string name="please_enter_album_name">Please Enter Album Name</string>
+    <string name="submit">Submit</string>
+    <string name="graduation">Graduation</string>
+    <string name="major_in">Major in</string>
+    <string name="country">Country</string>
+    <string name="city">city</string>
+    <string name="events">Events</string>
     <string-array name="marrage">
         <item><font fgcolor="#B7B7B7">Signle</font></item>
         <item><font fgcolor="#B7B7B7">Merriage</font></item>

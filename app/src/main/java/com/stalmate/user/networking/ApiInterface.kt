@@ -5,6 +5,8 @@ import com.stalmate.user.model.*
 import com.stalmate.user.utilities.Constants
 
 import com.slatmate.user.model.*
+import com.stalmate.user.view.photoalbum.ModelAlbumCreateResponse
+import com.stalmate.user.view.photoalbum.ModelPhotoResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 
@@ -32,6 +34,9 @@ interface ApiInterface {
     @GET(Constants.url_language_list)
     fun getLanguageList(): Call<ModelLanguageResponse>
 
+    @POST(Constants.URL_PHOTO_ALBUM_PHOTO)
+    fun getPhotoList(@Body map: HashMap<String, String>): Call<ModelPhotoResponse>
+
 
     @GET(Constants.url_language_list)
     fun getFeedList(): Call<ModelFeed>
@@ -50,6 +55,9 @@ interface ApiInterface {
 
     @POST(Constants.URL_LOGIN)
     fun setLoginDetails(@Body map: HashMap<String, String>): Call<ModelLoginResponse>
+
+    @POST(Constants.URL_PHOTO_ALBUM_NAME)
+    fun setCreateAlbumDetails(@Body map: HashMap<String, String>): Call<ModelAlbumCreateResponse>
 
 
     @POST(Constants.url_send_friend_request)
@@ -106,6 +114,10 @@ interface ApiInterface {
     fun updateUserProfileImage(
         @Part cover_img: MultipartBody.Part
     ): Call<CommonModelResponse>
+
+    @GET(Constants.URL_PHOTO_ALBUM)
+    fun getAlbumList(): Call<ModelAlbumsResponse>
+
 
 /*
     @HTTP(method = "DELETE", path = "delete_post" ,hasBody = true)

@@ -246,8 +246,6 @@ class ActivityProfileEdit : BaseActivity() {
             RequestBody.create("text/plain".toMediaTypeOrNull(), str.toString())
 
 
-
-
         networkViewModel.etsProfileApi(
             getRequestBody(binding.layout.etName.text.toString()),
             getRequestBody(binding.layout.etLastName.text.toString()),

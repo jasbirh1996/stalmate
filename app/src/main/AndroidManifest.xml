@@ -25,7 +25,11 @@
         android:usesCleartextTraffic="true">
         <activity
             android:name=".view.dashboard.welcome.ActivityWelcome"
-            android:exported="false" />
+
+    />
+        <activity
+
+            android:name=".view.photoalbum.ActivityPhotoGallery"/>
         <activity
             android:name=".view.myStory.ActivityMyStory"
             android:exported="false" />
