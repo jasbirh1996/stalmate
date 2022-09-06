@@ -16,9 +16,18 @@ import com.stalmate.user.view.dashboard.Friend.FragmentFriendList
 
 class ActivityFollowersFollowingScreen : AppCompatActivity() {
     lateinit var binding: ActivityFollowersFollowingScreenBinding
+    var userId=""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_followers_following_screen)
+
+
+
+        if (intent.getSerializableExtra("id") != null) {
+            userId = intent.getSerializableExtra("id").toString()
+        }
+
+
 
 
         var list = ArrayList<Fragment>()
@@ -27,14 +36,14 @@ class ActivityFollowersFollowingScreen : AppCompatActivity() {
             FragmentFriendList(
                 Constants.TYPE_ALL_FOLLOWERS_FOLLOWING,
                 Constants.TYPE_USER_TYPE_FOLLOWERS,
-                ""
+                userId
             )
         )
         list.add(
             FragmentFriendList(
                 Constants.TYPE_ALL_FOLLOWERS_FOLLOWING,
                 Constants.TYPE_USER_TYPE_FOLLOWINGS,
-                ""
+                userId
             )
         )
         var adapter=FragmentViewPagerAdapter(this,this)
