@@ -28,8 +28,7 @@ class CallUserAdapter(
         viewType: Int,
     ): CallUserAdapter.FeedViewHolder {
 
-        var view =
-            LayoutInflater.from(parent.context).inflate(R.layout.item_chat_user, parent, false)
+        var view = LayoutInflater.from(parent.context).inflate(R.layout.item_chat_user, parent, false)
         return FeedViewHolder(DataBindingUtil.bind<ItemFriendBinding>(view)!!)
     }
 

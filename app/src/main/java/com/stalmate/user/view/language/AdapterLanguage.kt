@@ -28,7 +28,7 @@ class AdapterLanguage(
     ): AdapterLanguage.LanguageViewHolder {
 
         var view = LayoutInflater.from(parent.context).inflate(R.layout.item_language_layout, parent, false)
-        return LanguageViewHolder(DataBindingUtil.bind<ItemLanguageLayoutBinding>(view)!!)
+        return LanguageViewHolder(DataBindingUtil.bind(view)!!)
 
     }
 

@@ -245,15 +245,6 @@ class ActivityProfileEdit : BaseActivity() {
         fun getRequestBody(str: String?): RequestBody =
             RequestBody.create("text/plain".toMediaTypeOrNull(), str.toString())
 
-        val thumbnailBody: RequestBody =
-            RequestBody.create("image/*".toMediaTypeOrNull(), imageFile!!)
-
-        fun getMultipart(str: File): MultipartBody.Part = MultipartBody.Part.createFormData(
-            "cover_img".takeIf { isCoverImage } ?: "profile_img",
-            str.name,
-            thumbnailBody
-        )
-
 
         networkViewModel.etsProfileApi(
             getRequestBody(binding.layout.etName.text.toString()),

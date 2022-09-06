@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/albumnavigation"
+    app:startDestination="@id/fragmentAlbumListing">
+
+    <fragment
+        android:id="@+id/fragmentAlbumListing"
+        android:name="com.stalmate.user.view.photoalbum.FragmentAlbumListing"
+        android:label="fragment_album_listing"
+        tools:layout="@layout/fragment_album_listing" >
+        <action
+            android:id="@+id/action_fragmentAlbumListing_to_fragmentAlbumPhoto"
+            app:destination="@id/fragmentAlbumPhoto" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentAlbumPhoto"
+        android:name="com.stalmate.user.view.photoalbum.FragmentAlbumPhoto"
+        android:label="FragmentAlbumPhoto" />
+</navigation>

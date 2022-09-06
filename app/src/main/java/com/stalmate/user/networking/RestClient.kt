@@ -54,8 +54,6 @@ class RestClient private constructor() {
             client =  builder.build()
         }
 
-
-
         retrofit = Retrofit.Builder()
             .baseUrl(UrlFactory.baseUrl)
             .client(client!!) //.addCallAdapterFactory(RxJavaCallAdapterFactory.create())

@@ -26,6 +26,7 @@ import com.stalmate.user.utilities.ImageLoaderHelperGlide
 import com.stalmate.user.view.adapter.ProfileAboutAdapter
 
 import com.stalmate.user.view.adapter.ProfileFriendAdapter
+import com.stalmate.user.view.photoalbum.ActivityPhotoGallery
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -90,6 +91,11 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
         setupData()
     }
 
+    override fun onResume() {
+        super.onResume()
+        getUserProfileData()
+    }
+
 
     fun setupData() {
 
@@ -109,6 +115,10 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
         binding.idCameraProfile.setOnClickListener {
             isCoverImage=false
             startCrop()
+        }
+
+        binding.layout.btnphoto.setOnClickListener {
+            startActivity(Intent(this, ActivityPhotoGallery::class.java))
         }
 
 
@@ -157,9 +167,14 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
             Log.d("imageUrl======", uriFilePath.toString())
 
             if (isCoverImage){
-                Glide.with(this).load(uriContent).into(binding.ivBackground)
+                Glide.with(this)
+                    .load(uriContent)
+                    .placeholder(R.drawable.profileplaceholder)
+                    .into(binding.ivBackground)
             }else{
-                Glide.with(this).load(uriContent).into(binding.ivUserThumb)
+                Glide.with(this).load(uriContent)
+                    .placeholder(R.drawable.profileplaceholder)
+                    .into(binding.ivUserThumb)
             }
 
 
@@ -227,6 +242,9 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
 
     fun setUpAboutUI() {
 
+        if (userData.about.isEmpty()){
+            binding.tvUserAbout.visibility = View.GONE
+        }
 
         binding.tvUserName.text=userData.first_name+" "+userData.last_name
         binding.layout.tvFollowerCount.text=userData.follower.toString()
