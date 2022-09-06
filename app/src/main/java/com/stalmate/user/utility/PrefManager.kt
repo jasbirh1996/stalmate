@@ -32,21 +32,9 @@ class PrefManager(private val context: Context) {
     val keyIsOldusere: Boolean
         get() = getBooleanValue(KEY_IS_OLD_USER)
 
-    var userDetail: ModelRegisterResponse
-        get() {
-            val gson = Gson()
-            val json = preferences.getString(KEY_USER_DETAILS, "")
-            return gson.fromJson(json, ModelRegisterResponse::class.java)
-        }
-        set(user) {
-            val gson = Gson()
-            val json: String = gson.toJson(user)
-            editor.putString(KEY_USER_DETAILS, json)
-            editor.commit()
-        }
 
 
-    var userDetailLogin: ModelLoginResponse
+    var userDetail: ModelLoginResponse
         get() {
             val gson = Gson()
             val json = preferences.getString(KEY_USER_DETAILS, "")

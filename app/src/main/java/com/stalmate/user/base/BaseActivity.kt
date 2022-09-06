@@ -47,7 +47,7 @@ abstract class BaseActivity : AppCompatActivity(), View.OnClickListener,
         progressDialog = com.stalmate.user.view.dialogs.ProgressDialog(this)
         context = this
         try {
-          debugPrint("tokenn", PrefManager.getInstance(App.getInstance())!!.userDetailLogin.results[0].token)
+          debugPrint("tokenn", PrefManager.getInstance(App.getInstance())!!.userDetail.results[0].token)
         }catch (e:Exception){
 
         }

@@ -65,7 +65,7 @@ object UrlFactory {
     //  appHeaders.put(kHeaderAccessToken, App.getInstance().getAccessToken());
     val appHeaders: HashMap<String, String>
         get() {
-            defaultHeaders.put(kHeaderAccessToken, PrefManager.getInstance(App.getInstance())!!.userDetailLogin.results[0].token)
+            defaultHeaders.put(kHeaderAccessToken, PrefManager.getInstance(App.getInstance())!!.userDetail.results[0].token)
             return  defaultHeaders
         }
 

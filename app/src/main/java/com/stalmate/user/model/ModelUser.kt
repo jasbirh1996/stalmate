@@ -15,8 +15,11 @@ data class User(
     val img:String,
     var isFriend:Int,
     var isFollowed:Int,
-    var hasFriendRequest:Int,
 
+
+    var hasFriendRequest:Int,
+        var request_status:String,
+    var friendRequestsent:Int,
 
     var isFriendRemovedFromSuggestion:Int,
     var isBlocked:Int,
@@ -24,12 +27,13 @@ data class User(
     val about: String,
     val albums: List<Any>,
     val city: String,
+
     val company: String,
     val cover_img: List<CoverImg>,
     val cover_img1: String,
     val dob: String,
-    var follower:Int,
-    var following:Int,
+    var follower_count:Int,
+    var following_count:Int,
     val email: String,
     val first_name: String,
     val gender: String,

@@ -29,13 +29,27 @@
                 android:padding="10dp">
 
                 <Button
-                    android:id="@+id/buttonConfirm"
+                    android:id="@+id/buttonAccept"
+                    style="@style/customButtonStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:minHeight="0dp"
+                    android:text="Accept"
+                    android:textSize="10sp"
+                    android:visibility="gone"
+                    app:backgroundTint="@null"
+                    app:layout_constraintEnd_toEndOf="@+id/ivDelete"
+                    app:layout_constraintTop_toBottomOf="@+id/tvLineOne" />
+
+                <Button
+                    android:id="@+id/buttonOuterFollow"
                     style="@style/customButtonStyle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:minHeight="0dp"
                     android:text="Following"
                     android:textSize="10sp"
+                    android:visibility="gone"
                     app:backgroundTint="@null"
                     app:layout_constraintEnd_toEndOf="@+id/ivDelete"
                     app:layout_constraintTop_toBottomOf="@+id/tvLineOne" />
@@ -76,7 +90,7 @@
                     android:textColor="@color/black"
                     android:textSize="10sp"
                     app:layout_constraintBottom_toTopOf="@+id/tvLineTwo"
-                    app:layout_constraintEnd_toStartOf="@+id/buttonConfirm"
+                    app:layout_constraintEnd_toStartOf="@+id/buttonAccept"
                     app:layout_constraintStart_toStartOf="@+id/tvUserName"
                     app:layout_constraintTop_toBottomOf="@+id/tvUserName" />
 
@@ -142,48 +156,30 @@
                     <Button
                         android:id="@+id/buttonFollow"
                         style="@style/customButtonStyle"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:minHeight="0dp"
                         android:text="Following"
                         android:textSize="10sp"
                         app:backgroundTint="@null"
-                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/buttonFriend"
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <Button
-                        android:id="@+id/buttonSendFriendRequest"
-                        style="@style/customButtonStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:minHeight="0dp"
-                        android:text="Send Friend Request"
-                        android:textSize="10sp"
-                        app:backgroundTint="@null"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.5"
-                        app:layout_constraintStart_toEndOf="@+id/buttonFollow"
-                        app:layout_constraintTop_toTopOf="@+id/buttonFollow" />
-
-                    <Button
                         android:id="@+id/buttonFriend"
                         style="@style/customButtonStyle"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
                         android:minHeight="0dp"
-                        android:visibility="gone"
                         android:text="Friends"
                         android:textSize="10sp"
+                        android:visibility="visible"
                         app:backgroundTint="@null"
                         app:layout_constraintBottom_toBottomOf="@+id/buttonFollow"
-                        app:layout_constraintEnd_toStartOf="@+id/buttonSendFriendRequest"
-                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/buttonFollow"
                         app:layout_constraintTop_toTopOf="@+id/buttonFollow" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -194,6 +190,7 @@
                     android:layout_height="wrap_content"
                     android:padding="10dp"
                     android:src="@drawable/ic_friends_friend_requests_delete"
+                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 

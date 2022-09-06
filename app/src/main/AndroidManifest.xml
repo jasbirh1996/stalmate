@@ -24,15 +24,14 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
-
+            android:name=".view.dashboard.welcome.ActivityWelcome"
+            android:exported="false" />
+        <activity
             android:name=".view.myStory.ActivityMyStory"
             android:exported="false" />
         <activity
-
             android:name=".view.ActivityCreatePost"
-
             android:exported="false" />
-
         <activity
             android:name="com.canhub.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" /> <!-- optional (needed if default theme has no action bar) -->
@@ -49,7 +48,6 @@
         <activity
             android:name=".view.profile.ActivityFollowersFollowingScreen"
             android:exported="false" />
-
         <activity
             android:name=".view.profile.ActivityOtherUserProfile"
             android:exported="false" />
@@ -81,12 +79,14 @@
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".view.profile.ActivityProfile"
             android:exported="true">
+
             <!--
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

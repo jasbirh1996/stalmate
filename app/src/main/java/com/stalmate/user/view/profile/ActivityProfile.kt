@@ -94,10 +94,10 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
     fun setupData() {
 
         binding.layout.layoutFollowers.setOnClickListener {
-            startActivity(IntentHelper.getFollowersFollowingScreen(this)!!.putExtra("id",userData.id).putExtra("type","follower"))
+            startActivity(IntentHelper.getFollowersFollowingScreen(this)!!.putExtra("id",userData.id).putExtra("type",Constants.TYPE_USER_TYPE_FOLLOWERS))
         }
         binding.layout.layoutFollowing.setOnClickListener {
-            startActivity(IntentHelper.getFollowersFollowingScreen(this)!!.putExtra("id",userData.id).putExtra("type","following"))
+            startActivity(IntentHelper.getFollowersFollowingScreen(this)!!.putExtra("id",userData.id).putExtra("type",Constants.TYPE_USER_TYPE_FOLLOWINGS))
         }
 
         binding.idCoverPhoto.setOnClickListener {
@@ -229,15 +229,17 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
 
 
         binding.tvUserName.text=userData.first_name+" "+userData.last_name
-        binding.layout.tvFollowerCount.text=userData.follower.toString()
-        binding.layout.tvFollowingCount.text=userData.following.toString()
+        binding.layout.tvFollowerCount.text=userData.follower_count.toString()
+        binding.layout.tvFollowingCount.text=userData.following_count.toString()
         binding.tvUserAbout.text=userData.about
         binding.layout.tvFriendCount.text=userData.friends_count.toString()
 
 
         ImageLoaderHelperGlide.setGlide(this,binding.ivBackground,userData.img_url+userData.cover_img1)
+     //   Glide.with(this).load(userData.img_url+userData.profile_img1).into(binding.ivUserThumb)
         ImageLoaderHelperGlide.setGlide(this,binding.ivUserThumb,userData.img_url+userData.profile_img1)
                 Log.d("asdjasda",userData.img_url+userData.profile_img1)
+        Log.d("asdjasda",userData.img_url+userData.cover_img1)
 
         var aboutArrayList = ArrayList<AboutProfileLine>()
         aboutArrayList.add(AboutProfileLine("", "Student", "IMS Ghaziabad", "at"))

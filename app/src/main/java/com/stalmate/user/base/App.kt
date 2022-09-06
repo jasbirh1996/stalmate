@@ -84,4 +84,9 @@ class App :Application(){
             return null;
         }
     }*/
+
+    fun setupApis(){
+        RestClient.inst.setup()
+    }
+
 }

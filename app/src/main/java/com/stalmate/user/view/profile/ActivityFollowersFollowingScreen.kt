@@ -26,14 +26,14 @@ class ActivityFollowersFollowingScreen : AppCompatActivity() {
         list.add(
             FragmentFriendList(
                 Constants.TYPE_ALL_FOLLOWERS_FOLLOWING,
-                Constants.TYPE_FRIEND_FOLLOWER,
+                Constants.TYPE_USER_TYPE_FOLLOWERS,
                 ""
             )
         )
         list.add(
             FragmentFriendList(
                 Constants.TYPE_ALL_FOLLOWERS_FOLLOWING,
-                Constants.TYPE_FRIEND_FOLLOWING,
+                Constants.TYPE_USER_TYPE_FOLLOWINGS,
                 ""
             )
         )

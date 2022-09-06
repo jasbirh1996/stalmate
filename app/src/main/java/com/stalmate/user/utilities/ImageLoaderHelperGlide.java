@@ -22,7 +22,7 @@ public class ImageLoaderHelperGlide extends Activity {
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                 .skipMemoryCache(false)
                 .centerCrop()
-                .dontAnimate()
+              //  .dontAnimate()
 
                /* .transform(new CenterCrop(), new RoundedCorners(0))*/
               .placeholder(R.drawable.image)
@@ -44,7 +44,7 @@ public class ImageLoaderHelperGlide extends Activity {
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                 .skipMemoryCache(false)
                 .centerCrop()
-                .dontAnimate()
+               // .dontAnimate()
                 .apply(RequestOptions.bitmapTransform(new RoundedCorners(20)))
            /*    .placeholder(R.drawable.image)*/
                 .priority(Priority.IMMEDIATE)

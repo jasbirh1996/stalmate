@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <Button
+                android:id="@+id/buttonAccept"
+                style="@style/customButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:minHeight="0dp"
+                android:text="Accept"
+                android:textSize="10sp"
+                android:visibility="gone"
+                app:backgroundTint="@null"
+                app:layout_constraintEnd_toEndOf="@+id/ivDelete"
+                app:layout_constraintTop_toBottomOf="@+id/tvLineOne" />
+
+            <Button
+                android:id="@+id/buttonOuterFollow"
+                style="@style/customButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:minHeight="0dp"
+                android:text="Following"
+                android:textSize="10sp"
+                android:visibility="gone"
+                app:backgroundTint="@null"
+                app:layout_constraintEnd_toEndOf="@+id/ivDelete"
+                app:layout_constraintTop_toBottomOf="@+id/tvLineOne" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/ivUserImage"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:scaleType="centerCrop"
+                android:src="@color/colorShimmer"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <TextView
+                android:id="@+id/tvUserName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:background="@color/colorShimmer"
+                android:fontFamily="@font/poppins_medium"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toTopOf="@+id/tvLineOne"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/ivUserImage"
+                app:layout_constraintTop_toTopOf="@+id/ivUserImage"
+                app:layout_constraintVertical_chainStyle="packed" />
+
+            <TextView
+                android:id="@+id/tvLineOne"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:background="@color/colorShimmer"
+                android:fontFamily="@font/poppins_light"
+                android:textSize="10sp"
+                app:layout_constraintBottom_toTopOf="@+id/tvLineTwo"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/tvUserName"
+                app:layout_constraintTop_toBottomOf="@+id/tvUserName" />
+
+            <TextView
+                android:id="@+id/tvLineTwo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:background="@color/colorShimmer"
+                android:fontFamily="@font/poppins_light"
+                android:textSize="10sp"
+                app:layout_constraintBottom_toBottomOf="@+id/ivUserImage"
+                app:layout_constraintEnd_toEndOf="@+id/tvLineOne"
+                app:layout_constraintStart_toStartOf="@+id/tvLineOne"
+                app:layout_constraintTop_toBottomOf="@+id/tvLineOne" />
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+
+                android:id="@+id/layoutFriendRequestExtra"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:background="@color/colorShimmer"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/tvLineTwo"
+                app:layout_constraintTop_toBottomOf="@+id/layoutButtons">
+
+                <TextView
+                    android:id="@+id/tvMutualFirnds"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_light"
+
+                    android:textSize="10sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tvMessge"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+
+                    android:fontFamily="@font/poppins_light"
+
+                    android:textSize="10sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/tvMutualFirnds"
+                    app:layout_constraintTop_toBottomOf="@+id/tvMutualFirnds" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layoutButtons"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/tvLineOne"
+                app:layout_constraintTop_toBottomOf="@+id/tvLineTwo">
+
+
+                <Button
+                    android:id="@+id/buttonFollow"
+                    style="@style/customButtonStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:minHeight="0dp"
+                    android:text="Following"
+                    android:textSize="10sp"
+                    app:backgroundTint="@null"
+                    app:layout_constraintEnd_toStartOf="@+id/buttonFriend"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <Button
+                    android:id="@+id/buttonFriend"
+                    style="@style/customButtonStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:minHeight="0dp"
+                    android:text="Friends"
+                    android:textSize="10sp"
+                    android:visibility="visible"
+                    app:backgroundTint="@null"
+                    app:layout_constraintBottom_toBottomOf="@+id/buttonFollow"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/buttonFollow"
+                    app:layout_constraintTop_toTopOf="@+id/buttonFollow" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <ImageView
+                android:id="@+id/ivDelete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:src="@drawable/ic_friends_friend_requests_delete"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

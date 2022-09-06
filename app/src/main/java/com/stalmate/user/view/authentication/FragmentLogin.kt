@@ -119,15 +119,13 @@ class FragmentLogin : BaseFragment() {
 
                 if (it.status){
                     PrefManager.getInstance(requireContext())!!.keyIsLoggedIn = true
-                    PrefManager.getInstance(requireContext())!!.userDetailLogin = it
+                    PrefManager.getInstance(requireContext())!!.userDetail = it
+                    App.getInstance().setupApis()
                     binding.progressBar.visibility = View.GONE
-
-                    Log.d("token=======", PrefManager.getInstance(App.getInstance())!!.userDetailLogin.results.toString())
-
+                    Log.d("token=======", PrefManager.getInstance(App.getInstance())!!.userDetail.results[0].token)
                     val intent = Intent(requireContext(), ActivityDashboard::class.java)
                     startActivity(intent)
                     makeToast(message)
-
                 }else{
 
                     binding.progressBar.visibility = View.GONE

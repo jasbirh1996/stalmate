@@ -108,9 +108,9 @@ open class AppViewModel : ViewModel() {
         getResult(temp, apiInterface.getCategorList())
     }
 
-    var registerData: LiveData<ModelRegisterResponse?> = MutableLiveData<ModelRegisterResponse?>()
+    var registerData: LiveData<ModelLoginResponse?> = MutableLiveData<ModelLoginResponse?>()
     fun registration(map: HashMap<String, String>) {
-        val temp = MutableLiveData<ModelRegisterResponse?>()
+        val temp = MutableLiveData<ModelLoginResponse?>()
         registerData = temp
         getResult(temp, apiInterface.setSignupDetails(map))
 

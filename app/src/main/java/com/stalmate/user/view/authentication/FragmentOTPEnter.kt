@@ -226,11 +226,10 @@ class FragmentOTPEnter : BaseFragment() {
 
                 it?.let {
                     val message = it.message
-
-                    if (it.status == true) {
-
+                    if (it.status) {
+                        PrefManager.getInstance(requireContext())!!.keyIsLoggedIn=true
                         PrefManager.getInstance(requireContext())!!.userDetail = it
-
+                        App.getInstance().setupApis()
                     } else {
                         makeToast(message)
                     }

@@ -56,6 +56,7 @@ class ProfileFriendAdapter(
                     callback.onClickOnProfile(friend)
                 }
             ImageLoaderHelperGlide.setGlideCorner(context,binding.ivUserImage,friend.url+"/"+friend.img)
+
             binding.tvUserName.text=friend.first_name
 
 

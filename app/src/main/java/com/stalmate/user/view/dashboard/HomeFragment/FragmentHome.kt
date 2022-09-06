@@ -87,6 +87,11 @@ class FragmentHome : BaseFragment(), AdapterFeed.Callbackk, UserHomeStoryAdapter
         }
 
 
+        binding.layoutNewUser.setOnClickListener {
+            startActivity(IntentHelper.getActivityWelcomeScreen(requireContext()))
+        }
+
+
     }
 
     override fun onClickOnViewComments(postId: Int) {
@@ -109,7 +114,6 @@ class FragmentHome : BaseFragment(), AdapterFeed.Callbackk, UserHomeStoryAdapter
 
 
     private fun getFriendSuggestionListing() {
-        Log.d("tokenn",PrefManager.getInstance(App.getInstance())!!.userDetailLogin.results[0].token)
 
         var hashmap = HashMap<String, String>()
         hashmap.put("id_user", "")
@@ -123,6 +127,7 @@ class FragmentHome : BaseFragment(), AdapterFeed.Callbackk, UserHomeStoryAdapter
         networkViewModel.friendLiveData.observe(viewLifecycleOwner, Observer {
             it.let {
                 Log.d("asdasdasd","asdasdasdasd")
+
                 suggestedFriendAdapter = SuggestedFriendAdapter(networkViewModel, requireContext(), this)
                 binding.rvSuggestedFriends.layoutManager= LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
                 binding.rvSuggestedFriends.adapter=suggestedFriendAdapter

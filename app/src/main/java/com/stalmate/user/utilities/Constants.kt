@@ -39,11 +39,19 @@ object Constants {
 
 
     const val TYPE_USER_ACTION_ADD_FRIEND = "add_friend"
+    const val TYPE_USER_ACTION_REMOVE_FRIEND = "add_friend"
     const val TYPE_USER_ACTION_CANCEL_FRIEND_REQUEST = "add_friend"
     const val TYPE_USER_ACTION_REMOVE_FROM_SUGGESTIONS = "remove from suggestion"
     const val TYPE_USER_ACTION_ACCEPT_FRIEND_REQUEST = "Accept"
     const val TYPE_USER_ACTION_DELETE_FRIEND_REQUEST = "delete"
     const val TYPE_USER_ACTION_FOLLOW = "follow"
     const val TYPE_USER_ACTION_UNFOLLOW = "unfollow"
+
+
+
+
+
+    const val FRIEND_CONNECTION_STATUS_PENDING = "Pending"
+    const val FRIEND_CONNECTION_STATUS_ACCEPT = "Accept"
 
 }

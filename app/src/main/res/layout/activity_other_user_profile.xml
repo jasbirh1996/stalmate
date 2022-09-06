@@ -34,8 +34,6 @@
               app:tint="@color/white" />
 
 
-          -
-
           <androidx.constraintlayout.widget.ConstraintLayout
               android:id="@+id/layoutTopControlls"
               android:layout_width="0dp"
@@ -229,31 +227,70 @@
               app:layout_constraintStart_toStartOf="parent"
               app:layout_constraintTop_toBottomOf="@+id/iv_user_thumb" />
 
-          <androidx.appcompat.widget.AppCompatTextView
-              android:id="@+id/accept"
-              style="@style/customButtonStyle"
-              android:layout_width="86dp"
-              android:layout_height="24dp"
-              android:layout_marginEnd="8dp"
-              android:gravity="center"
-              android:text="@string/accept"
-              android:textColor="@color/white"
+          <androidx.constraintlayout.widget.ConstraintLayout
+              android:id="@+id/layoutButtonsAcceptReject"
+              android:layout_width="0dp"
+              android:layout_height="wrap_content"
+              android:visibility="gone"
               app:layout_constraintBottom_toBottomOf="@+id/tv_user_name"
-              app:layout_constraintEnd_toStartOf="@+id/reject"
-              app:layout_constraintTop_toTopOf="@+id/tv_user_name" />
-
-          <androidx.appcompat.widget.AppCompatTextView
-              android:id="@+id/reject"
-              android:layout_width="86dp"
-              android:layout_height="24dp"
-              android:layout_marginEnd="16dp"
-              android:background="@drawable/large_round_corner_light_primary_border_light_gray_filled"
-              android:gravity="center"
-              android:text="@string/reject"
-              android:textColor="@color/app_color"
-              app:layout_constraintBottom_toBottomOf="@+id/accept"
               app:layout_constraintEnd_toEndOf="parent"
-              app:layout_constraintTop_toTopOf="@+id/accept" />
+              app:layout_constraintStart_toEndOf="@+id/tv_user_name"
+              app:layout_constraintTop_toTopOf="@+id/tv_user_name">
+
+              <androidx.appcompat.widget.AppCompatTextView
+                  android:id="@+id/accept"
+                  style="@style/customButtonStyle"
+                  android:layout_width="wrap_content"
+                  android:layout_height="24dp"
+                  android:layout_marginEnd="8dp"
+                  android:gravity="center"
+                  android:text="@string/accept"
+
+                  android:textColor="@color/white"
+                  app:layout_constraintEnd_toStartOf="@+id/reject"
+                  app:layout_constraintTop_toTopOf="parent" />
+
+              <androidx.appcompat.widget.AppCompatTextView
+                  android:id="@+id/reject"
+                  android:layout_width="wrap_content"
+                  android:layout_height="24dp"
+                  android:layout_marginEnd="16dp"
+                  android:background="@drawable/large_round_corner_light_primary_border_light_gray_filled"
+                  android:gravity="center"
+                  android:text="@string/reject"
+                  android:textColor="@color/app_color"
+                  app:layout_constraintBottom_toBottomOf="@+id/accept"
+                  app:layout_constraintEnd_toEndOf="parent"
+                  app:layout_constraintTop_toTopOf="@+id/accept" />
+
+          </androidx.constraintlayout.widget.ConstraintLayout>
+
+          <androidx.constraintlayout.widget.ConstraintLayout
+              android:id="@+id/layoutButtonsFriends"
+              android:layout_width="0dp"
+              android:layout_height="wrap_content"
+              android:visibility="gone"
+              app:layout_constraintBottom_toBottomOf="@+id/tv_user_name"
+              app:layout_constraintEnd_toEndOf="parent"
+              app:layout_constraintStart_toEndOf="@+id/tv_user_name"
+              app:layout_constraintTop_toTopOf="@+id/tv_user_name">
+
+              <androidx.appcompat.widget.AppCompatTextView
+                  android:id="@+id/buttonFriend"
+                  style="@style/customButtonStyle"
+                  android:layout_width="wrap_content"
+                  android:layout_height="24dp"
+                  android:layout_marginEnd="20dp"
+                  android:gravity="center"
+
+                  android:text="@string/add_friend"
+
+                  android:textColor="@color/white"
+                  app:layout_constraintEnd_toEndOf="parent"
+                  app:layout_constraintTop_toTopOf="parent" />
+
+
+          </androidx.constraintlayout.widget.ConstraintLayout>
 
           <androidx.appcompat.widget.AppCompatTextView
               android:id="@+id/buttonFriendUpdate"
@@ -279,6 +316,7 @@
               android:id="@+id/tv_user_about"
               android:layout_width="0dp"
               android:layout_height="wrap_content"
+              android:layout_marginTop="10dp"
               android:ellipsize="end"
               android:text="If you think you are bad, then its ok"
               app:layout_constraintEnd_toStartOf="@+id/buttonFriendUpdate"

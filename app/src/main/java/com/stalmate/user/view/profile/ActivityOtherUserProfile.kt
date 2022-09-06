@@ -16,12 +16,14 @@ import com.stalmate.user.model.AboutProfileLine
 
 import com.stalmate.user.model.ModelUser
 import com.stalmate.user.model.User
+import com.stalmate.user.utilities.Constants
 import com.stalmate.user.utilities.ImageLoaderHelperGlide
 import com.stalmate.user.view.adapter.ProfileAboutAdapter
 
 import com.stalmate.user.view.adapter.ProfileFriendAdapter
 
-class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdapter.Callbackk, ProfileAboutAdapter.Callbackk {
+class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk,
+    ProfileFriendAdapter.Callbackk, ProfileAboutAdapter.Callbackk {
 
     lateinit var binding: ActivityOtherUserProfileBinding
     lateinit var feedAdapter: AdapterFeed
@@ -68,7 +70,6 @@ class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileF
         networkViewModel.feedLiveData.observe(this, Observer {
 
 
-
             Log.d("asdasdasd", "oaspiasddsad")
             it.let {
                 feedAdapter.submitList(it!!.results)
@@ -94,10 +95,16 @@ class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileF
 
 
         binding.layout.layoutFollowers.setOnClickListener {
-            startActivity(IntentHelper.getFollowersFollowingScreen(this)!!.putExtra("id",userData.results.id).putExtra("type","follower"))
+            startActivity(
+                IntentHelper.getFollowersFollowingScreen(this)!!.putExtra("id", userData.results.id)
+                    .putExtra("type", "follower")
+            )
         }
         binding.layout.layoutFollowing.setOnClickListener {
-            startActivity(IntentHelper.getFollowersFollowingScreen(this)!!.putExtra("id",userData.results.id).putExtra("type","following"))
+            startActivity(
+                IntentHelper.getFollowersFollowingScreen(this)!!.putExtra("id", userData.results.id)
+                    .putExtra("type", "following")
+            )
         }
 
 
@@ -126,25 +133,29 @@ class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileF
             onBackPressed()
         }
 
+        binding.buttonFriend.setOnClickListener {
+     updateFriendStatus(Constants.TYPE_USER_ACTION_ADD_FRIEND)
+        }
+
     }
 
-    private fun hitAcceptRejectApi(type : String) {
+    private fun hitAcceptRejectApi(type: String) {
 
         val hashMap = HashMap<String, String>()
-        hashMap["id_user"] =userId
+        hashMap["id_user"] = userId
         hashMap["type"] = type
 
         networkViewModel.updateFriendRequest(hashMap)
         networkViewModel.updateFriendRequestLiveData.observe(this, Observer {
 
             it.let {
-                if (it!!.status== true){
+                if (it!!.status == true) {
 
                     if (type == "Accept") {
                         binding.accept.visibility = View.GONE
                         binding.reject.visibility = View.GONE
                         binding.layoutTopControlls.visibility = View.VISIBLE
-                    }else {
+                    } else {
                         onBackPressed()
                     }
 
@@ -161,27 +172,25 @@ class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileF
 
         showLoader()
         val hashMap = HashMap<String, String>()
-        hashMap["id_user"] =userId
+        hashMap["id_user"] = userId
 
         networkViewModel.block(hashMap)
         networkViewModel.blockData.observe(this, Observer {
 
             it.let {
-                if (it!!.status== true){
+                if (it!!.status == true) {
                     dismissLoader()
 
-                    if (userData.results.isBlocked==0){
-                        userData.results.isBlocked=1
-                    }else{
-                        userData.results.isBlocked=0
+                    if (userData.results.isBlocked == 0) {
+                        userData.results.isBlocked = 1
+                    } else {
+                        userData.results.isBlocked = 0
                     }
                     networkViewModel.otherUserProfileLiveData.postValue(userData)
                 }
             }
 
         })
-
-
 
 
     }
@@ -202,30 +211,50 @@ class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileF
     fun updateFriendStatus(status: String) {
         var hashMap = HashMap<String, String>()
         hashMap.put("id_user", userId)
-
-        if (status.equals("add_friend")) {
+        Log.d("a;ksda","akjasdasdsd;asd")
+        if (status.equals(Constants.TYPE_USER_ACTION_ADD_FRIEND)) {
             networkViewModel.sendFriendRequest("", hashMap)
             networkViewModel.sendFriendRequestLiveData.observe(this, Observer {
                 it.let {
-                    if (networkViewModel.otherUserProfileLiveData.value!!.results.isFriend == 1) {
-                        userData.results.isFollowed=0
-                        networkViewModel.otherUserProfileLiveData.value!!.results.isFriend = 0
-                    } else {
-                        networkViewModel.otherUserProfileLiveData.value!!.results.isFriend = 1
-                    }
+
+
+                        if (userData.results.isFriend==1){
+                            userData.results.isFriend=0
+                            userData.results.isFollowed=0
+                        }else{
+                            userData.results.isFollowed=1
+                            userData.results.friendRequestsent=1
+                            if (userData.results.friendRequestsent==1){
+                                userData.results.friendRequestsent=0
+                            }
+                        }
+
+
+                        Log.d("a;ksda","akjsd;asd")
+
+
+
+                    notifyData()
+
+
+
+
                 }
+
+
+
             })
         }
-        if (status.equals("follow")) {
+        if (status.equals(Constants.TYPE_USER_ACTION_FOLLOW)) {
             networkViewModel.sendFollowRequest("", hashMap)
             networkViewModel.followRequestLiveData.observe(this, Observer {
                 it.let {
                     if (networkViewModel.otherUserProfileLiveData.value!!.results.isFollowed == 1) {
                         userData.results.isFollowed = 0
-                        userData.results.follower = userData.results.follower-1
+                        userData.results.follower_count = userData.results.follower_count - 1
                     } else {
                         userData.results.isFollowed = 1
-                        userData.results.follower = userData.results.follower+1
+                        userData.results.follower_count = userData.results.follower_count + 1
                     }
                     notifyData()
                 }
@@ -235,9 +264,8 @@ class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileF
     }
 
 
-
-    fun notifyData(){
-        networkViewModel.otherUserProfileLiveData.value=userData
+    fun notifyData() {
+        networkViewModel.otherUserProfileLiveData.postValue(userData)
     }
 
 
@@ -258,8 +286,8 @@ class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileF
 
 
         binding.tvUserName.text = userData.results.first_name + " " + userData.results.last_name
-        binding.layout.tvFollowerCount.text = userData.results.follower.toString()
-        binding.layout.tvFollowingCount.text = userData.results.following.toString()
+        binding.layout.tvFollowerCount.text = userData.results.follower_count.toString()
+        binding.layout.tvFollowingCount.text = userData.results.following_count.toString()
         binding.tvUserAbout.text = userData.results.about
         binding.layout.tvFriendCount.text = userData.results.friends_count.toString()
 
@@ -294,8 +322,22 @@ class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileF
                 "at"
             )
         )
-        aboutArrayList.add(AboutProfileLine("", "From", userData.results.profile_data[0].location, ""))
-        aboutArrayList.add(AboutProfileLine("", "", userData.results.profile_data[0].marital_status, ""))
+        aboutArrayList.add(
+            AboutProfileLine(
+                "",
+                "From",
+                userData.results.profile_data[0].location,
+                ""
+            )
+        )
+        aboutArrayList.add(
+            AboutProfileLine(
+                "",
+                "",
+                userData.results.profile_data[0].marital_status,
+                ""
+            )
+        )
         binding.layout.rvAbout.layoutManager = LinearLayoutManager(this)
         var profileAboutAdapter = ProfileAboutAdapter(networkViewModel, this, this)
         profileAboutAdapter.submitList(aboutArrayList)
@@ -305,25 +347,40 @@ class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileF
 
         if (userData.results.isFollowed == 1) {
             binding.tvFollowStatus.text = "Following"
-        }else{
+        } else {
             binding.tvFollowStatus.text = "Follow"
         }
         if (userData.results.isBlocked == 1) {
             binding.tvBlockStatus.text = "Blocked"
-        }else{
+        } else {
             binding.tvBlockStatus.text = "Block"
         }
 
 
         if (userData.results.isFriend == 1) {
-            binding.accept.visibility = View.GONE
-            binding.reject.visibility = View.GONE
+            binding.layoutButtonsAcceptReject.visibility = View.GONE
             binding.layoutTopControlls.visibility = View.VISIBLE
-        }else{//not a friend
-            if (userData.results.hasFriendRequest==1){
-                binding.accept.visibility = View.VISIBLE
-                binding.reject.visibility = View.VISIBLE
+            binding.layoutButtonsFriends.visibility = View.VISIBLE
+            binding.buttonFriend.text = "Unfriend"
+
+        } else {//not a friend
+            if (userData.results.hasFriendRequest == 1) {
+                binding.layoutButtonsFriends.visibility = View.GONE
+                binding.layoutButtonsAcceptReject.visibility = View.VISIBLE
                 binding.layoutTopControlls.visibility = View.GONE
+            } else {
+                if (userData.results.friendRequestsent == 1) {
+                    binding.layoutButtonsFriends.visibility = View.VISIBLE
+                    binding.buttonFriend.text = "Friend Request Sent"
+                    binding.layoutButtonsAcceptReject.visibility = View.GONE
+                }else{
+                    binding.layoutTopControlls.visibility = View.VISIBLE
+                    binding.layoutButtonsFriends.visibility = View.VISIBLE
+                    binding.buttonFriend.text = "Add Friend"
+                    binding.layoutButtonsAcceptReject.visibility = View.GONE
+                }
+
+
             }
         }
 
@@ -334,7 +391,6 @@ class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileF
         }*/
 
     }
-
 
 
 }

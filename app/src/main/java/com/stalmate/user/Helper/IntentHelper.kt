@@ -3,6 +3,7 @@ package com.stalmate.user.Helper
 import android.content.Context
 import android.content.Intent
 import com.stalmate.user.view.authentication.FragmentOTPEnter
+import com.stalmate.user.view.dashboard.welcome.ActivityWelcome
 import com.stalmate.user.view.profile.ActivityFollowersFollowingScreen
 import com.stalmate.user.view.profile.ActivityOtherUserProfile
 import com.stalmate.user.view.profile.ActivityProfile
@@ -36,6 +37,10 @@ public class IntentHelper {
 
         fun getFollowersFollowingScreen(context: Context?): Intent? {
             return Intent(context, ActivityFollowersFollowingScreen::class.java)
+                .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        }
+        fun getActivityWelcomeScreen(context: Context?): Intent? {
+            return Intent(context, ActivityWelcome::class.java)
                 .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
         }
 

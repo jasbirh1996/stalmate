@@ -60,7 +60,7 @@ class FragmentPageSugggestionsList : BaseFragment(), FriendAdapter.Callbackk {
 
 
     override fun onClickOnUpdateFriendRequest(friend: User, status: String) {
-        TODO("Not yet implemented")
+
     }
 
     override fun onClickOnProfile(friend: User) {

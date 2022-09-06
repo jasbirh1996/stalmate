@@ -41,7 +41,7 @@ interface ApiInterface {
 
 
     @POST(Constants.URL_SIGN_UP)
-    fun setSignupDetails(@Body map: HashMap<String, String>): Call<ModelRegisterResponse>
+    fun setSignupDetails(@Body map: HashMap<String, String>): Call<ModelLoginResponse>
 
 
     @PATCH(Constants.URL_OTP)
