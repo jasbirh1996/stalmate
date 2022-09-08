@@ -75,6 +75,8 @@
                     android:drawablePadding="5dp"
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="5dp"
+                    android:textSize="9sp"
+
                     android:text="@string/add_friends"
                     android:textColor="@color/white"
                     app:drawableTint="@color/white"

@@ -25,7 +25,7 @@ public class ImageLoaderHelperGlide extends Activity {
               //  .dontAnimate()
 
                /* .transform(new CenterCrop(), new RoundedCorners(0))*/
-              .placeholder(R.drawable.image)
+              .placeholder(R.drawable.user_placeholder)
                 .priority(Priority.IMMEDIATE)
                 .encodeFormat(Bitmap.CompressFormat.PNG)
                 .format(DecodeFormat.DEFAULT);
@@ -46,7 +46,7 @@ public class ImageLoaderHelperGlide extends Activity {
                 .centerCrop()
                // .dontAnimate()
                 .apply(RequestOptions.bitmapTransform(new RoundedCorners(20)))
-           /*    .placeholder(R.drawable.image)*/
+               .placeholder(R.drawable.user_placeholder)
                 .priority(Priority.IMMEDIATE)
                 .encodeFormat(Bitmap.CompressFormat.PNG)
                 .format(DecodeFormat.DEFAULT);

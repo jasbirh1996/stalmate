@@ -54,12 +54,6 @@ class FriendAdapter(
         RecyclerView.ViewHolder(binding.root) {
         fun bind(friend: User) {
             setupViewsForAdapter(binding,friend,bindingAdapterPosition)
-
-
-
-
-
-
         }
     }
 
@@ -84,42 +78,21 @@ class FriendAdapter(
     ) {
         var hashMap = HashMap<String, String>()
         hashMap.put("id_user", userId)
-        Log.d("asdasd",status)
         if (status.equals(Constants.TYPE_USER_ACTION_ADD_FRIEND)) {
             viewModel.sendFriendRequest("", hashMap)
             viewModel.sendFriendRequestLiveData.observe(lifecycleOwner, Observer {
                 it.let {
-
-
-
                     if (list[position].isFriend==0){
-
-
-
-                        Log.d("askldmlasda","pp")
                         if  (!ValidationHelper.isNull(list[position].request_status)){
-                            Log.d("askldmlasda","ppf")
                             if (list[position].request_status == Constants.FRIEND_CONNECTION_STATUS_PENDING) {
                                 list[position].request_status=""
-                                Log.d("askldmlasda","psdfsp")
                             }
                         }else{
-                            Log.d("askldmlasda","pdfhfuhp")
                             list[position].request_status=Constants.FRIEND_CONNECTION_STATUS_PENDING
                         }
-
-
-
-
-
-
-
                     }else{
-                        Log.d("askldmlasda","pdfhfghkuhp")
                         list[position].isFriend=1
                     }
-
-                    Log.d("askldmlasda","pdfhfufghjhp")
 
                     notifyItemChanged(position)
                 }
@@ -173,12 +146,17 @@ class FriendAdapter(
         Log.d("asdasdauiou",type+subtype)
         if (type.equals(Constants.TYPE_FRIEND_REQUEST)) {
             binding.layoutButtons.visibility = View.GONE
-            binding.buttonAccept.visibility = View.VISIBLE
+            binding.buttonAccept.visibility  = View.VISIBLE
             binding.layoutFriendRequestExtra.visibility = View.VISIBLE
             binding.ivDelete.visibility = View.VISIBLE
             setupButtonColor("Confirm", true, binding.buttonAccept)
             binding.buttonAccept.visibility=View.VISIBLE
             binding.buttonOuterFollow.visibility=View.GONE
+
+            binding.tvMutualFirnds.text="Mutual Friends : 7"
+            binding.tvMessge.text="Hi How are you? I am \n Stanley from yoga class"
+
+            binding.mainCardView.cardElevation=0f
 
         } else if (type.equals(Constants.TYPE_FRIEND_SUGGESTIONS)) {
             binding.layoutButtons.visibility = View.VISIBLE
@@ -261,28 +239,6 @@ class FriendAdapter(
         }
 
 
-
-
-        if (type.equals(TYPE_MY_FRIENDS) && type.equals(Constants.TYPE_USER_TYPE_FOLLOWERS)) {
-            if (friend.isFriend == 1) {
-                binding.buttonFriend.text = "Unfriend"
-            } else {
-                binding.buttonFriend.text = "Friend"
-            }
-
-        }
-
-
-        if (type.equals(TYPE_MY_FRIENDS) && type.equals(Constants.TYPE_USER_TYPE_FOLLOWINGS)) {
-            if (friend.isFriend == 1) {
-                binding.buttonFriend.text = "Unfriend"
-            } else {
-                binding.buttonFriend.text = "Friend"
-            }
-        }
-
-
-
         if (friend.request_status.equals(Constants.FRIEND_CONNECTION_STATUS_PENDING)) {
             binding.buttonFriend.text="Friend Request Sent"
         } else {
@@ -291,15 +247,29 @@ class FriendAdapter(
 
 
 
+        if (type.equals(TYPE_MY_FRIENDS) && subtype.equals(Constants.TYPE_USER_TYPE_FOLLOWERS)) {
+            if (friend.isFriend == 1) {
+                binding.buttonFriend.text = "Unfriend"
+            } else {
+                binding.buttonFriend.text = "Friend"
+            }
+
+        }
+
+
+        if (type.equals(TYPE_MY_FRIENDS) && subtype.equals(Constants.TYPE_USER_TYPE_FOLLOWINGS)) {
+            if (friend.isFriend == 1) {
+                binding.buttonFriend.text = "Unfriend"
+            } else {
+                binding.buttonFriend.text = "Friend"
+            }
+        }
 
 
 
-        /*       if (friend.isFriendRequestSent == 1) {
-                   binding.buttonSendFriendRequest.text = "Cancel Request"
-               } else {
-                   binding.buttonSendFriendRequest.text = "Send Request"
-               }
-       */
+
+
+
         binding.buttonFriend.setOnClickListener {
             updateFriendStatus(
                 TYPE_USER_ACTION_ADD_FRIEND,
@@ -366,7 +336,6 @@ class FriendAdapter(
         binding.tvUserName.text = friend.first_name
 
 
-
     }
 
 
@@ -385,19 +354,6 @@ class FriendAdapter(
         view.setTextColor(context.getColor(R.color.colorPrimary))
         return view
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

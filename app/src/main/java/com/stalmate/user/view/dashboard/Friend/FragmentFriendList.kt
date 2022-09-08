@@ -51,6 +51,23 @@ class FragmentFriendList(var type: String, var subtype: String,var userId:String
         binding.shimmerViewContainer.startShimmer()
         binding.rvFriends.adapter = friendAdapter
         binding.rvFriends.layoutManager = LinearLayoutManager(context)
+        hitApi()
+
+
+        // Refresh function for the layout
+        binding.refreshLayout.setOnRefreshListener{
+
+            hitApi()
+
+        }
+
+
+    }
+
+    fun hitApi(){
+
+
+
         var hashmap = HashMap<String, String>()
         hashmap.put("other_user_id", userId)
         hashmap.put("type", type)
@@ -61,6 +78,9 @@ class FragmentFriendList(var type: String, var subtype: String,var userId:String
         networkViewModel.getFriendList(hashmap)
         networkViewModel.friendLiveData.observe(viewLifecycleOwner, Observer {
             it.let {
+
+                binding.refreshLayout.isRefreshing=false
+
                 binding.shimmerViewContainer.stopShimmer()
                 binding.shimmerViewContainer.visibility=View.GONE
                 friendAdapter.submitList(it!!.results)

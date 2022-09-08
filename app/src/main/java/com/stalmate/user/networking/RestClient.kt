@@ -42,14 +42,11 @@ class RestClient private constructor() {
 
 
         if (PrefManager.getInstance(App.getInstance())!!.keyIsLoggedIn){
-
             Log.d("tokenn",PrefManager.getInstance(App.getInstance())!!.userDetail.results[0].token)
-
             client =  (builder.addInterceptor { chain ->
                 val request = chain.request().newBuilder().addHeader("Authorization", "Bearer ${PrefManager.getInstance(App.getInstance())!!.userDetail.results[0].token}").build()
                 chain.proceed(request)
             }.build())
-
         }else{
             client =  builder.build()
         }

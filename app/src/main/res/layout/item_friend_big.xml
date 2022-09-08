@@ -14,6 +14,7 @@
             android:layout_marginStart="6dp"
             android:layout_marginTop="6dp"
             android:layout_marginEnd="6dp"
+            android:id="@+id/mainCardView"
             android:layout_marginBottom="6dp"
             app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="10dp"
@@ -59,7 +60,7 @@
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/image"
+                    android:src="@drawable/user_placeholder"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -85,10 +86,10 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
-                    android:fontFamily="@font/poppins_light"
+                    android:fontFamily="@font/poppins"
                     android:text="Software Engineer"
                     android:textColor="@color/black"
-                    android:textSize="10sp"
+                    android:textSize="12sp"
                     app:layout_constraintBottom_toTopOf="@+id/tvLineTwo"
                     app:layout_constraintEnd_toStartOf="@+id/buttonAccept"
                     app:layout_constraintStart_toStartOf="@+id/tvUserName"
@@ -98,7 +99,7 @@
                     android:id="@+id/tvLineTwo"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins_light"
+                    android:fontFamily="@font/poppins"
                     android:text="United States"
                     android:textColor="@color/colorGray"
                     android:textSize="10sp"
@@ -121,25 +122,33 @@
                         android:id="@+id/tvMutualFirnds"
                         android:layout_width="80dp"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/poppins_light"
+                        android:fontFamily="@font/poppins"
                         android:text="United States"
                         android:textColor="@color/colorGray"
                         android:textSize="10sp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintStart_toStartOf="parent" />
 
                     <TextView
                         android:id="@+id/tvMessge"
-                        android:layout_width="0dp"
+                        android:layout_width="296dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
                         android:fontFamily="@font/poppins_light"
                         android:text="United States"
-                        android:textColor="@color/black"
-                        android:textSize="10sp"
 
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="@+id/tvMutualFirnds"
+                        android:textColor="@color/black"
+                        android:textSize="11sp"
+                        app:layout_constraintStart_toEndOf="@+id/imageView4"
                         app:layout_constraintTop_toBottomOf="@+id/tvMutualFirnds" />
+
+                    <ImageView
+                        android:id="@+id/imageView4"
+                        android:layout_width="8dp"
+                        android:layout_height="8dp"
+                        android:layout_marginTop="4dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/tvMessge"
+                        app:srcCompat="@drawable/ic_post_green_dot" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

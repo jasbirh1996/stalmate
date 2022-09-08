@@ -57,4 +57,15 @@ object Constants {
     const val FRIEND_CONNECTION_STATUS_PENDING = "Pending"
     const val FRIEND_CONNECTION_STATUS_ACCEPT = "Accept"
 
+
+
+
+
+    const val PARAMETER_EMAIL = "email"
+
+
+
+
+
+
 }

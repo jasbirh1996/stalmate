@@ -12,22 +12,22 @@ import android.view.WindowInsets
 import android.view.WindowManager
 import androidx.annotation.RequiresApi
 import com.stalmate.user.R
+import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.view.OnBoarding.ActivityOnBoardingScreen
 import com.stalmate.user.view.dashboard.ActivityDashboard
 
-class ActivitySplash : AppCompatActivity() {
+class ActivitySplash : BaseActivity() {
     val SPLASH_DURATION: Long = 2000
    private lateinit var prefManager: PrefManager
     private  lateinit var context: ActivitySplash
+    override fun onClick(viewId: Int, view: View?) {
+
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
-
         window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         setContentView(R.layout.activity_splash)
         context = this
