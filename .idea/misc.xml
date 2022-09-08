@@ -17,18 +17,42 @@
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/drawable/secondary_button_background.xml" value="0.1065" />
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/drawable/select_language.xml" value="0.1145" />
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/drawable/strike.xml" value="0.1065" />
+        <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/drawable/style_spinner.xml" value="0.1545" />
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/activity_activitytest.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/activity_authentication.xml" value="0.18" />
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/activity_dashboard.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/activity_filter.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/activity_on_boarding_screen.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/activity_profile.xml" value="0.22" />
+        <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/activity_profile_edit.xml" value="0.25" />
+        <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/activity_search.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/activity_single_search.xml" value="0.2840172786177106" />
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/activity_splash.xml" value="0.17447916666666666" />
+        <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/activity_welcome.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/activity_welcome_page.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/common_toolbar.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/content_scroll_profile.xml" value="0.20416666666666666" />
+
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/fragment_bottom_custom_effect_dialog.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/fragment_forget_password.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/fragment_friend.xml" value="0.20416666666666666" />
+
+        <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/content_scroll_profile_edit.xml" value="0.25" />
+        <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/create_album_layout.xml" value="0.25" />
+        <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/dialouge_add_education.xml" value="0.22" />
+        <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/fragment_album_listing.xml" value="0.19010416666666666" />
+        <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/fragment_album_photo.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/fragment_bottom_custom_effect_dialog.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/fragment_create_post.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/fragment_event_details.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/fragment_event_suggestion_list.xml" value="0.2" />
+        <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/fragment_forget_password.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/fragment_friend.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/fragment_group_suggestion_list.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/fragment_home.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/fragment_information_suggestions.xml" value="0.25" />
+        <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/fragment_interest_suggestion_list.xml" value="0.20416666666666666" />
+
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/fragment_language.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/fragment_login.xml" value="0.25" />
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/fragment_o_t_p.xml" value="0.1" />
@@ -36,10 +60,21 @@
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/fragment_otp_forget_password.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/fragment_password_reset.xml" value="0.2" />
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/fragment_sign_up.xml" value="0.22" />
+
+        <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/fragment_sync.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/fragment_welcome_page.xml" value="0.20416666666666666" />
+
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/fragmentsignup.xml" value="0.25" />
+        <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/home_page_toolbar.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/item_feed.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/item_fun_time.xml" value="0.2" />
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/item_language_layout.xml" value="0.14" />
+
+        <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/item_photo_layout.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/item_search.xml" value="0.1675213675213675" />
+        <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/item_suggestion.xml" value="0.2" />
+        <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/item_suggetion_group.xml" value="0.20416666666666666" />
+
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/layout_profile_data_lines.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/layout_splash.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/sign_up_success_poppu.xml" value="0.16" />
@@ -75,12 +110,11 @@
         <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/activity_followers_following_screen.xml" value="0.3625" />
         <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/activity_main.xml" value="0.290625" />
         <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/activity_on_boarding_screen.xml" value="0.14739583333333334" />
-        <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/activity_other_user_profile.xml" value="0.3338267949666913" />
+        <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/activity_other_user_profile.xml" value="0.22" />
         <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/activity_profile.xml" value="0.33" />
         <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/activity_profile_edit.xml" value="0.28020833333333334" />
         <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/activity_profile_edit2.xml" value="0.28020833333333334" />
         <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/activity_song_picker.xml" value="0.7219647822057461" />
-        <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/activity_welcome.xml" value="0.2609375" />
         <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/app_toolbar.xml" value="0.16" />
         <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/common_toolbar.xml" value="0.12" />
         <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/content_activity_song_picker.xml" value="0.290625" />
@@ -91,6 +125,7 @@
         <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/fragment_create_post.xml" value="0.13" />
         <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/fragment_event_suggestion_list.xml" value="0.2796875" />
         <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/fragment_first.xml" value="0.290625" />
+
         <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/fragment_friend.xml" value="0.5" />
         <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/fragment_friend_category.xml" value="0.3931372549019608" />
         <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/fragment_friend_list.xml" value="0.2" />
@@ -98,6 +133,11 @@
         <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/fragment_home.xml" value="0.33" />
         <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/fragment_interest_suggestion_list.xml" value="0.28229166666666666" />
         <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/fragment_login.xml" value="0.22" />
+
+        <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/fragment_friend_category.xml" value="0.5928449744463373" />
+        <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/fragment_friend_list.xml" value="0.3416666666666667" />
+        <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/fragment_home.xml" value="0.12" />
+
         <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/fragment_my_story.xml" value="0.3328125" />
         <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/fragment_o_t_p_enter.xml" value="0.26875" />
         <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/fragment_quick_mode.xml" value="0.3328125" />
@@ -105,13 +145,15 @@
         <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/fragment_second.xml" value="0.290625" />
         <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/home_page_toolbar.xml" value="0.33" />
         <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/home_post_tool_bar.xml" value="0.18" />
-        <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/item_chat_user.xml" value="0.27395833333333336" />
         <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/item_days_layout.xml" value="0.3328125" />
         <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/item_feed.xml" value="0.12" />
         <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/item_friend.xml" value="0.3416666666666667" />
+
         <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/item_friend_big.xml" value="0.5" />
         <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/item_friends_shimmer.xml" value="0.25" />
         <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/item_home_friends_suggestion.xml" value="0.67" />
+
+        <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/item_friend_big.xml" value="0.25" />
         <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/item_home_story.xml" value="0.22644927536231885" />
         <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/item_home_user_post.xml" value="0.3625" />
         <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/layout/item_profile_friend.xml" value="0.140625" />

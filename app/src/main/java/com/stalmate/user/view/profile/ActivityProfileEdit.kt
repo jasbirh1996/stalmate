@@ -1,6 +1,7 @@
 package com.stalmate.user.view.profile
 
 import android.Manifest
+import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -8,9 +9,13 @@ import android.os.Bundle
 import android.provider.DocumentsContract
 import android.provider.MediaStore
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.EditText
+import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -42,8 +47,7 @@ class ActivityProfileEdit : BaseActivity() {
     var month: String = ""
     var year: String = ""
     var merriage: String = ""
-    var permissions =
-        arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
+    var permissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
     val requiredPermission = Manifest.permission.WRITE_EXTERNAL_STORAGE
     lateinit var userData: User
     var spinnerArrayFeb = arrayOf("Feb")
@@ -104,13 +108,10 @@ class ActivityProfileEdit : BaseActivity() {
             ) {
                 dates = p0!!.getItemAtPosition(position).toString()
 
-
                 Log.d("jcaujc", dates)
                 if (dates == "31") {
 
-                    val dataAdapter: ArrayAdapter<String> = ArrayAdapter(
-                        this@ActivityProfileEdit,
-                        android.R.layout.simple_spinner_item,
+                    val dataAdapter: ArrayAdapter<String> = ArrayAdapter(this@ActivityProfileEdit, android.R.layout.simple_spinner_item,
                         spinnerArrayFull
                     )
 
@@ -220,6 +221,40 @@ class ActivityProfileEdit : BaseActivity() {
             updateProfileApiHit()
         }
 
+        binding.layout.tvAddMore.setOnClickListener {
+
+            val builder = AlertDialog.Builder(this)
+            val viewGroup = findViewById<ViewGroup>(android.R.id.content)
+            val dialogView: View = LayoutInflater.from(this).inflate(R.layout.dialouge_add_education, viewGroup, false)
+            builder.setView(dialogView)
+            val alertDialog = builder.create()
+
+            var btnSave  = dialogView.findViewById<TextView>(R.id.btnSave)
+
+            btnSave.setOnClickListener {
+
+                var graduation = dialogView.findViewById<EditText>(R.id.etGraduation)
+                var bachlore = dialogView.findViewById<EditText>(R.id.etBachlore)
+                var bachloreType = dialogView.findViewById<EditText>(R.id.etBachloreType)
+
+                if (graduation.text.isEmpty()){
+                    makeToast("Please Enter College And University Name")
+                }else if (bachlore.text.isEmpty()){
+                    makeToast("Please Enter Education Type")
+                }else if (bachloreType.text.isEmpty()){
+                    makeToast("Please Enter Subject Type")
+                }else{
+
+                }
+
+
+            }
+
+            alertDialog.show()
+            alertDialog.setCancelable(true)
+        }
+
+
         binding.layout.tvMarriage.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
@@ -256,7 +291,7 @@ class ActivityProfileEdit : BaseActivity() {
             getRequestBody(binding.layout.etHowTown.text.toString()),
             getRequestBody(binding.layout.etCurrentCity.text.toString()),
             getRequestBody(""),
-            getRequestBody(binding.layout.etCompany.text.toString()),
+           /* getRequestBody(binding.layout.etCompany.text.toString()),*/
             getRequestBody(GANDER),
         )
 

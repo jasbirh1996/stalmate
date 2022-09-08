@@ -14,6 +14,8 @@ object Constants {
     const val URL_PHOTO_ALBUM="auth_service/auth_api/get_albums"
     const val URL_PHOTO_ALBUM_NAME="auth_service/auth_api/add_update_albums"
     const val URL_PHOTO_ALBUM_PHOTO="auth_service/auth_api/get_albums_img"
+    const val URL_SEARCH_UNIVERCITY="auth_service/auth_api/university_list"
+    const val URL_SEARCH_BRACNCHLIST="auth_service/auth_api/branch_list"
 
 
     const val url_send_follower_request="auth_service/friend_api/send_follower_request"

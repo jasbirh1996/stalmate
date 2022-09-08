@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/welcomenavigation"
+    app:startDestination="@id/fragmentWelcomePage">
+    <fragment
+        android:id="@+id/fragmentWelcomePage"
+        android:name="com.stalmate.user.view.dashboard.welcome.FragmentWelcomePage"
+        android:label="FragmentWelcomePage" >
+        <action
+            android:id="@+id/action_fragmentWelcomePage_to_fragmentInformationSuggestions"
+            app:destination="@id/fragmentInformationSuggestions" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentInformationSuggestions"
+        android:name="com.stalmate.user.view.dashboard.welcome.FragmentInformationSuggestions"
+        android:label="FragmentInformationSuggestions" >
+        <action
+            android:id="@+id/action_fragmentInformationSuggestions_to_fragmentSync"
+            app:destination="@id/fragmentSync" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentSync"
+        android:name="com.stalmate.user.view.dashboard.welcome.FragmentSync"
+        android:label="fragment_sync"
+        tools:layout="@layout/fragment_sync" >
+        <action
+            android:id="@+id/action_fragmentSync_to_fragmentGroupSuggestionList"
+            app:destination="@id/fragmentGroupSuggestionList" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentGroupSuggestionList"
+        android:name="com.stalmate.user.view.dashboard.welcome.FragmentGroupSuggestionList"
+        android:label="FragmentGroupSuggestionList" >
+        <action
+            android:id="@+id/action_fragmentGroupSuggestionList_to_fragmentPageSugggestionsList"
+            app:destination="@id/fragmentPageSugggestionsList" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentPageSugggestionsList"
+        android:name="com.stalmate.user.view.dashboard.welcome.FragmentPageSugggestionsList"
+        android:label="FragmentPageSugggestionsList" >
+        <action
+            android:id="@+id/action_fragmentPageSugggestionsList_to_fragmentEventSuggestionsList"
+            app:destination="@id/fragmentEventSuggestionsList" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentEventSuggestionsList"
+        android:name="com.stalmate.user.view.dashboard.welcome.FragmentEventSuggestionsList"
+        android:label="FragmentEventSuggestionsList" />
+</navigation>

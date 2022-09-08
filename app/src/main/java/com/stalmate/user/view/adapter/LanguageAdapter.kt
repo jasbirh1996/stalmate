@@ -25,8 +25,7 @@ class LanguageAdapter(
         viewType: Int,
     ): LanguageAdapter.FeedViewHolder {
 
-        var view =
-            LayoutInflater.from(parent.context).inflate(R.layout.item_feed, parent, false)
+        var view = LayoutInflater.from(parent.context).inflate(R.layout.item_feed, parent, false)
         return FeedViewHolder(DataBindingUtil.bind<ItemFeedBinding>(view)!!)
     }
 

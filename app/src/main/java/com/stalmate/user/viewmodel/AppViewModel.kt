@@ -13,6 +13,7 @@ import com.stalmate.user.model.*
 import com.stalmate.user.networking.ApiInterface
 import com.stalmate.user.view.photoalbum.ModelAlbumCreateResponse
 import com.stalmate.user.view.photoalbum.ModelPhotoResponse
+import com.stalmate.user.view.singlesearch.ModelSearch
 import okhttp3.MediaType.Companion.parse
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -61,6 +62,21 @@ open class AppViewModel : ViewModel() {
         val temp = MutableLiveData<ModelLanguageResponse?>()
         languageLiveData = temp
         getResult(temp, apiInterface.getLanguageList())
+    }
+
+    var searchLiveData: LiveData<ModelSearch?> = MutableLiveData<ModelSearch?>()
+
+    fun searchLiveData(map: HashMap<String, String>,  search: String) {
+        val temp = MutableLiveData<ModelSearch?>()
+        searchLiveData = temp
+        getResult(temp, apiInterface.setSearch(search))
+    }
+    var searchBranchLiveData: LiveData<ModelSearch?> = MutableLiveData<ModelSearch?>()
+
+    fun searchBranchLiveData(map: HashMap<String, String>,  search: String) {
+        val temp = MutableLiveData<ModelSearch?>()
+        searchBranchLiveData = temp
+        getResult(temp, apiInterface.setSearchBranch(search))
     }
 
     var photoLiveData: LiveData<ModelPhotoResponse?> = MutableLiveData<ModelPhotoResponse?>()
@@ -150,8 +166,7 @@ open class AppViewModel : ViewModel() {
         getResult(temp, apiInterface.setOtpVerify(map))
     }
 
-    var otpVerifyRegistarionData: LiveData<CommonModelResponse?> =
-        MutableLiveData<CommonModelResponse?>()
+    var otpVerifyRegistarionData: LiveData<CommonModelResponse?> = MutableLiveData<CommonModelResponse?>()
 
     fun otpVerifyRegistration(map: HashMap<String, String>, email: String, otp: String) {
         val temp = MutableLiveData<CommonModelResponse?>()
@@ -187,7 +202,7 @@ open class AppViewModel : ViewModel() {
         @Part("home_town") home_town: RequestBody,
         @Part("city") city: RequestBody,
         @Part("url") url: RequestBody,
-        @Part("company") company: RequestBody,
+       /* @Part("company") company: RequestBody,*/
         @Part("gender") gender: RequestBody,
 
 
@@ -204,7 +219,7 @@ open class AppViewModel : ViewModel() {
                 dob,
                 marital_status,
                 url,
-                company,
+               /* company,*/
                 gender,
                 city,
                 home_town,
