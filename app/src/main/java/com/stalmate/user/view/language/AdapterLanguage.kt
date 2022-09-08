@@ -10,7 +10,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.stalmate.user.R
 import com.stalmate.user.databinding.ItemLanguageLayoutBinding
-import com.stalmate.user.model.Feed
 import com.stalmate.user.model.Result
 import com.stalmate.user.viewmodel.AppViewModel
 
@@ -22,6 +21,7 @@ class AdapterLanguage(
 ) : RecyclerView.Adapter<AdapterLanguage.LanguageViewHolder>() {
     var row_index = 0
     var list = ArrayList<Result>()
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -55,9 +55,9 @@ class AdapterLanguage(
     inner class LanguageViewHolder(var binding: ItemLanguageLayoutBinding): RecyclerView.ViewHolder(binding.root){
 
         @SuppressLint("ResourceAsColor", "ResourceType")
-        fun bind(feed: Result) {
+        fun bind(languageResponse: Result) {
 
-            binding.item.text = feed.name
+            binding.item.text = languageResponse.name
 
             binding.itemLayout.setOnClickListener {
 

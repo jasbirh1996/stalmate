@@ -559,7 +559,7 @@
     <string name="enter_bio">Enter Bio</string>
     <string name="profession">Profession</string>
     <string name="mobile_number">Mobile Number</string>
-    <string name="add_more">+Add More</string>
+    <string name="add_more">+Add</string>
     <string name="marital_status">Marital Status</string>
     <string name="home_town">Home Town</string>
     <string name="school_college">School College</string>
@@ -607,6 +607,13 @@
     <string name="country">Country</string>
     <string name="city">city</string>
     <string name="events">Events</string>
+    <string name="join">Join</string>
+    <string name="welcome">Welcome</string>
+    <string name="bachelors_in_technology">Bachelors in Technology</string>
+    <string name="electronics_amp_communication_engineering"><![CDATA[Electronics & Communication Engineering]]></string>
+    <string name="save">Save</string>
+    <string name="add_education">Add Education</string>
+    <string name="education">Education</string>
     <string-array name="marrage">
         <item><font fgcolor="#B7B7B7">Signle</font></item>
         <item><font fgcolor="#B7B7B7">Merriage</font></item>

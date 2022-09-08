@@ -17,7 +17,7 @@
         android:layout_marginTop="8dp"
         android:fontFamily="@font/poppins_medium"
         android:text="Let's get started"
-        android:textColor="@color/app_color"
+        android:textColor="@color/obboard_indicator"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -42,31 +42,24 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.google.android.material.textfield.TextInputLayout
+        <TextView
             android:id="@+id/filledTextGraduation"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textColorHint="@color/app_color"
-            app:hintEnabled="false"
+            android:layout_height="45dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/style_spinner"
             app:layout_constraintEnd_toStartOf="@+id/gradutionHeading"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/gradutionHeading">
+            app:layout_constraintTop_toBottomOf="@+id/gradutionHeading"/>
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etEmail"
-                style="@style/customEditbox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/grey1"
-                android:drawableEnd="@drawable/ic_welcome_edit"
-                android:drawablePadding="8dp"
-                android:textColor="@color/black"
-                android:hint="Please Enter Graduation Type"
-                android:maxLines="1"
-                android:textSize="14sp" />
 
-        </com.google.android.material.textfield.TextInputLayout>
+        <View
+            android:id="@+id/viewGradution"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/grey2"
+            app:layout_constraintTop_toBottomOf="@+id/filledTextGraduation"/>
 
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -78,33 +71,25 @@
             android:text="@string/major_in"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/filledTextGraduation" />
+            app:layout_constraintTop_toBottomOf="@+id/viewGradution" />
 
-        <com.google.android.material.textfield.TextInputLayout
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/filledTextMajor"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textColorHint="@color/app_color"
-            app:hintEnabled="false"
+            android:layout_height="45dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/style_spinner"
             app:layout_constraintEnd_toStartOf="@+id/majorHeading"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/majorHeading">
+            app:layout_constraintTop_toBottomOf="@+id/majorHeading"/>
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etMajor"
-                style="@style/customEditbox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/grey1"
-                android:drawableEnd="@drawable/ic_welcome_edit"
-                android:drawablePadding="8dp"
-                android:textColor="@color/black"
-                android:hint="Please Enter Major Type"
-                android:maxLines="1"
-                android:textSize="14sp" />
-
-        </com.google.android.material.textfield.TextInputLayout>
+        <View
+            android:id="@+id/viewMajor"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/grey2"
+            app:layout_constraintTop_toBottomOf="@+id/filledTextMajor"/>
 
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -118,31 +103,59 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/filledTextMajor" />
 
-        <com.google.android.material.textfield.TextInputLayout
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/filledTextCountry"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textColorHint="@color/app_color"
-            app:hintEnabled="false"
+            android:layout_height="45dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/style_spinner"
+            android:paddingVertical="15dp"
             app:layout_constraintEnd_toStartOf="@+id/countryHeading"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/countryHeading">
+            app:layout_constraintTop_toBottomOf="@+id/countryHeading"/>
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etCountry"
-                style="@style/customEditbox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/grey1"
-                android:drawableEnd="@drawable/ic_welcome_edit"
-                android:drawablePadding="8dp"
-                android:textColor="@color/black"
-                android:hint="Please Enter Country"
-                android:maxLines="1"
-                android:textSize="14sp" />
 
-        </com.google.android.material.textfield.TextInputLayout>
+        <View
+            android:id="@+id/viewCountry"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/grey2"
+            app:layout_constraintTop_toBottomOf="@+id/filledTextCountry"/>
+
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/stateHeading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/poppins"
+            android:text="State"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/viewCountry" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/filledTextState"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/style_spinner"
+            android:paddingVertical="15dp"
+            app:layout_constraintEnd_toStartOf="@+id/stateHeading"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/stateHeading"/>
+
+
+        <View
+            android:id="@+id/viewState"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/grey2"
+            app:layout_constraintTop_toBottomOf="@+id/filledTextState"/>
+
 
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -154,48 +167,26 @@
             android:text="@string/city"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/filledTextCountry" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/filledTextCity"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textColorHint="@color/app_color"
-            app:hintEnabled="false"
-            app:layout_constraintEnd_toStartOf="@+id/cityHeading"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cityHeading">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etcity"
-                style="@style/customEditbox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/grey1"
-                android:drawableEnd="@drawable/ic_welcome_edit"
-                android:drawablePadding="8dp"
-                android:textColor="@color/black"
-                android:hint="Please Enter Country"
-                android:maxLines="1"
-                android:textSize="14sp" />
-
-        </com.google.android.material.textfield.TextInputLayout>
+            app:layout_constraintTop_toBottomOf="@+id/viewState" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/btn_next"
-            style="@style/customButtonStyle"
-            android:layout_width="290dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            android:gravity="center"
-            android:padding="14dp"
-            android:text="@string/next"
-            android:textColor="@color/white"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:id="@+id/filledTextCity"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/style_spinner"
+            app:layout_constraintEnd_toStartOf="@+id/cityHeading"
             app:layout_constraintStart_toStartOf="parent"
-            app:textAllCaps="false" />
+            app:layout_constraintTop_toBottomOf="@+id/cityHeading"/>
+
+        <View
+            android:id="@+id/viewCity"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/grey2"
+            app:layout_constraintTop_toBottomOf="@+id/filledTextCity"/>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

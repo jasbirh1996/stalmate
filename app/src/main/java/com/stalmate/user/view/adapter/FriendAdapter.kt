@@ -54,12 +54,6 @@ class FriendAdapter(
         RecyclerView.ViewHolder(binding.root) {
         fun bind(friend: User) {
             setupViewsForAdapter(binding,friend,bindingAdapterPosition)
-
-
-
-
-
-
         }
     }
 

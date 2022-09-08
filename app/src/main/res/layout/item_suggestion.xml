@@ -58,7 +58,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
-        android:background="@color/blueLight"
+        android:backgroundTint="@color/blueLight"
         android:elevation="10dp"
         app:cardCornerRadius="5dp"
         app:layout_constraintBottom_toBottomOf="@+id/tvMemberCount"
@@ -71,7 +71,7 @@
             android:paddingHorizontal="30dp"
             android:paddingVertical="10dp"
             android:textColor="@color/app_color"
-            android:text="Join" />
+            android:text="@string/join" />
 
     </androidx.cardview.widget.CardView>
 

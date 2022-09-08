@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/eventImage"
+            android:layout_width="match_parent"
+            android:layout_height="375dp"
+            android:src="@drawable/profileplaceholder"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@drawable/drawal_top_left_right_corve"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="320dp"
+            app:layout_constraintStart_toEndOf="@+id/eventImage"
+            app:layout_constraintTop_toTopOf="@+id/eventImage">
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="20dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tvDateTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
+                        android:fontFamily="@font/poppins"
+                        android:text="Fri, Jan 14, 2022 - Jan 15, 2022"
+                        android:textSize="12sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tvEventName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="@font/poppins_bold"
+                        android:text="JUNOON"
+                        android:textColor="@color/black"
+                        android:textSize="21sp"
+                        app:layout_constraintStart_toStartOf="@+id/tvDateTime"
+                        app:layout_constraintTop_toBottomOf="@+id/tvDateTime" />
+
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tvEventLocation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/location_icon"
+                        android:drawablePadding="8dp"
+                        android:fontFamily="@font/poppins"
+                        android:text="Abu Dhabi"
+                        android:textColor="@color/grey2"
+                        android:textSize="14sp"
+                        app:layout_constraintStart_toStartOf="@+id/tvEventName"
+                        app:layout_constraintTop_toBottomOf="@+id/tvEventName" />
+
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tvEventInterestedPeopleCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:drawablePadding="8dp"
+                        android:fontFamily="@font/poppins"
+                        android:text="225 Interested ."
+                        android:textColor="@color/grey2"
+                        android:textSize="14sp"
+                        app:layout_constraintStart_toStartOf="@+id/tvEventLocation"
+                        app:layout_constraintTop_toBottomOf="@+id/tvEventLocation" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tvEventPeopleCountGoing"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:drawablePadding="8dp"
+                        android:fontFamily="@font/poppins"
+                        android:text="40 Going"
+                        android:textColor="@color/grey2"
+                        android:textSize="14sp"
+                        app:layout_constraintStart_toEndOf="@+id/tvEventInterestedPeopleCount"
+                        app:layout_constraintTop_toBottomOf="@+id/tvEventLocation" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tvEventDescription"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:drawablePadding="8dp"
+                        android:fontFamily="@font/poppins_medium"
+                        android:text="Description"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        app:layout_constraintStart_toStartOf="@+id/tvEventInterestedPeopleCount"
+                        app:layout_constraintTop_toBottomOf="@+id/tvEventInterestedPeopleCount" />
+
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tvEventDescriptionText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:drawablePadding="8dp"
+                        android:fontFamily="@font/poppins_medium"
+                        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/tvEventDescription"
+                        app:layout_constraintTop_toBottomOf="@+id/tvEventDescription" />
+
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tvEventTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="30dp"
+                        android:drawableStart="@drawable/ic_event_time"
+                        android:drawablePadding="8dp"
+                        android:fontFamily="@font/poppins_medium"
+                        android:text="12 Hour"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+                        app:layout_constraintStart_toStartOf="@+id/tvEventDescriptionText"
+                        app:layout_constraintTop_toBottomOf="@+id/tvEventDescriptionText" />
+
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tvEventGlobal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="33dp"
+                        android:layout_marginTop="30dp"
+                        android:drawableStart="@drawable/ic_event_globe"
+                        android:drawablePadding="8dp"
+                        android:fontFamily="@font/poppins_medium"
+                        android:text="Anyone on or off stalmate"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+                        app:layout_constraintStart_toEndOf="@+id/tvEventTime"
+                        app:layout_constraintTop_toBottomOf="@+id/tvEventDescriptionText" />
+
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="30dp"
+                        android:layout_marginBottom="16dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tvEventGlobal">
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"
+                            android:weightSum="2">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginHorizontal="10dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/rectangle_sky_backgorund"
+                                android:gravity="center"
+                                android:paddingVertical="12dp"
+                                android:text="Going"
+                                android:textColor="@color/app_color" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginHorizontal="10dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/rectangle_sky_backgorund"
+                                android:gravity="center"
+                                android:paddingVertical="12dp"
+                                android:text="Going"
+                                android:textColor="@color/app_color" />
+
+
+                        </LinearLayout>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            </ScrollView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+</layout>

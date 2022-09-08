@@ -7,6 +7,7 @@ import com.stalmate.user.utilities.Constants
 import com.slatmate.user.model.*
 import com.stalmate.user.view.photoalbum.ModelAlbumCreateResponse
 import com.stalmate.user.view.photoalbum.ModelPhotoResponse
+import com.stalmate.user.view.singlesearch.ModelSearch
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 
@@ -33,6 +34,8 @@ interface ApiInterface {
 
     @GET(Constants.url_language_list)
     fun getLanguageList(): Call<ModelLanguageResponse>
+
+
 
     @POST(Constants.URL_PHOTO_ALBUM_PHOTO)
     fun getPhotoList(@Body map: HashMap<String, String>): Call<ModelPhotoResponse>
@@ -93,6 +96,12 @@ interface ApiInterface {
     @GET(Constants.URL_OTP_REGISTRATION)
     fun setOtpVerifyRegistration(@Query("email") email :String, @Query("otp") otp :String): Call<CommonModelResponse>
 
+    @GET(Constants.URL_SEARCH_UNIVERCITY)
+    fun setSearch(@Query("search") search :String): Call<ModelSearch>
+
+    @GET(Constants.URL_SEARCH_BRACNCHLIST)
+    fun setSearchBranch(@Query("search") search :String): Call<ModelSearch>
+
     @Multipart
     @PATCH(Constants.UPDATE_PROFILE_API)
     fun updateUserProfile(
@@ -103,7 +112,7 @@ interface ApiInterface {
         @Part("dob") dob: RequestBody,
         @Part("marital_status") maritalStatus: RequestBody,
         @Part("url") url: RequestBody,
-        @Part("company") company: RequestBody,
+       /* @Part("company") company: RequestBody,*/
         @Part("gender") gender: RequestBody,
         @Part("city") city: RequestBody,
         @Part("home_town") home_town: RequestBody,

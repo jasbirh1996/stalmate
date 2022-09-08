@@ -88,12 +88,12 @@ picker=view.findViewById(R.id.picker)
         colors.recycle()
         images.recycle()
 
-        picker!!.bubbleSize = 20
+        /*picker!!.bubbleSize = 20
         picker!!.listener = object : BubblePickerListener {
             override fun onBubbleSelected(item: PickerItem) = toast("${item.title} selected")
 
             override fun onBubbleDeselected(item: PickerItem) = toast("${item.title} deselected")
-        }
+        }*/
 
 
 
