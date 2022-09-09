@@ -54,6 +54,7 @@
     <color name="colorGreen">#56DA52</color>
     <color name="colorLightOrange">#FF5722</color>
     <color name="colorShimmer">#ADECFF</color>
+    <color name="colorRedDeleteIcon">#DB1B1B</color>
 
     <color name="colorRed">#EC2568</color>
     <color name="colorBlue">#14B5FF</color>
@@ -69,6 +70,7 @@
     <color name="blueLight">#F2F7FF</color>
     <color name="colorVeryLightPrimary">#F2F7FF</color>
     <color name="colorVeryLightDarkPrimary">#DEEBFF</color>
+    <color name="colorVeryLightsky">#F4F4FC</color>
 
     <color name="colorGolden">#D3BE57</color>
 

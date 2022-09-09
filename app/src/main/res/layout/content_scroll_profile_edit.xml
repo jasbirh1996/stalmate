@@ -316,8 +316,9 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/poppins"
             android:text="@string/education"
-            android:textColor="@color/grey_darks"
+            android:textColor="@color/black"
             android:textSize="14sp"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="@+id/tv_addMore"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tv_addMore" />
@@ -333,8 +334,15 @@
             android:textColor="@color/text_add_more"
             android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/filledTextnumber" />
+            app:layout_constraintTop_toBottomOf="@+id/filledTextschoolcollege" />
 
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvEducation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/tv_addMore"/>
 
         <Spinner
             android:id="@+id/tv_marriage"
@@ -349,7 +357,7 @@
             android:text="@string/marital_status"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_addMore" />
+            app:layout_constraintTop_toBottomOf="@+id/filledTextnumber" />
 
         <View
             android:id="@+id/view_mar"
@@ -434,45 +442,37 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_addMore_college"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins"
+            android:text="@string/profession"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_addMore_Profession"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_addMore_Profession" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_addMore_Profession"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:fontFamily="@font/poppins"
             android:text="@string/add_more"
+            app:layout_goneMarginTop="20dp"
             android:textColor="@color/text_add_more"
             android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/filledTextschoolcollege" />
+            app:layout_constraintTop_toBottomOf="@+id/rvEducation" />
 
 
-
-
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/filledTextCompany"
-            android:layout_width="0dp"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvProfession"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:textColorHint="@color/app_color"
-            app:hintEnabled="false"
-            app:layout_constraintEnd_toEndOf="@+id/filledTextCurrent_city"
-            app:layout_constraintStart_toStartOf="@+id/filledTextCurrent_city"
-            app:layout_constraintTop_toBottomOf="@+id/tv_addMore_college">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etCompany"
-                style="@style/customEditbox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_login_mail_inactive"
-                android:drawablePadding="8dp"
-                android:hint="@string/company"
-                android:maxLines="1"
-                android:paddingVertical="15dp"
-                android:textSize="14sp" />
-
-        </com.google.android.material.textfield.TextInputLayout>
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@+id/tv_addMore_Profession"/>
 
 
 

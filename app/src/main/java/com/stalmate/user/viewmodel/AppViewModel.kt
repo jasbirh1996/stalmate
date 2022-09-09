@@ -7,23 +7,17 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.gson.Gson
 import com.slatmate.user.model.CommonModelResponse
-import com.slatmate.user.model.ModelRegisterResponse
 import com.stalmate.user.base.App
 import com.stalmate.user.model.*
 import com.stalmate.user.networking.ApiInterface
 import com.stalmate.user.view.photoalbum.ModelAlbumCreateResponse
 import com.stalmate.user.view.photoalbum.ModelPhotoResponse
 import com.stalmate.user.view.singlesearch.ModelSearch
-import okhttp3.MediaType.Companion.parse
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.MultipartBody.Part.Companion.createFormData
 import okhttp3.RequestBody
 import retrofit2.Call
-import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.http.Part
-import java.io.File
 
 open class AppViewModel : ViewModel() {
 
@@ -149,11 +143,18 @@ open class AppViewModel : ViewModel() {
         getResult(temp, apiInterface.setLoginDetails(map))
     }
 
-    var educationData: LiveData<ModelEdutionAddResponse?> = MutableLiveData<ModelEdutionAddResponse?>()
+    var educationData: LiveData<ModelCommonAddEducationAndProfessionResponse?> = MutableLiveData<ModelCommonAddEducationAndProfessionResponse?>()
     fun educationData(map: HashMap<String, String>) {
-        val temp = MutableLiveData<ModelEdutionAddResponse?>()
+        val temp = MutableLiveData<ModelCommonAddEducationAndProfessionResponse?>()
         educationData = temp
         getResult(temp, apiInterface.setEducationAddDetails(map))
+    }
+
+    var professionData: LiveData<ModelCommonAddEducationAndProfessionResponse?> = MutableLiveData<ModelCommonAddEducationAndProfessionResponse?>()
+    fun professionData(map: HashMap<String, String>) {
+        val temp = MutableLiveData<ModelCommonAddEducationAndProfessionResponse?>()
+        educationData = temp
+        getResult(temp, apiInterface.setProfessionAddDetails(map))
     }
 
     var createAlbumData: LiveData<ModelAlbumCreateResponse?> = MutableLiveData<ModelAlbumCreateResponse?>()
