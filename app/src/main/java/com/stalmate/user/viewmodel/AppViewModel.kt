@@ -149,6 +149,13 @@ open class AppViewModel : ViewModel() {
         getResult(temp, apiInterface.setLoginDetails(map))
     }
 
+    var educationData: LiveData<ModelEdutionAddResponse?> = MutableLiveData<ModelEdutionAddResponse?>()
+    fun educationData(map: HashMap<String, String>) {
+        val temp = MutableLiveData<ModelEdutionAddResponse?>()
+        educationData = temp
+        getResult(temp, apiInterface.setEducationAddDetails(map))
+    }
+
     var createAlbumData: LiveData<ModelAlbumCreateResponse?> = MutableLiveData<ModelAlbumCreateResponse?>()
     fun createAlbum(map: HashMap<String, String>) {
         val temp = MutableLiveData<ModelAlbumCreateResponse?>()

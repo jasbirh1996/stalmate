@@ -59,6 +59,10 @@ interface ApiInterface {
     @POST(Constants.URL_LOGIN)
     fun setLoginDetails(@Body map: HashMap<String, String>): Call<ModelLoginResponse>
 
+
+    @POST(Constants.URL_EDUCATION_ADD)
+    fun setEducationAddDetails(@Body map: HashMap<String, String>): Call<ModelEdutionAddResponse>
+
     @POST(Constants.URL_PHOTO_ALBUM_NAME)
     fun setCreateAlbumDetails(@Body map: HashMap<String, String>): Call<ModelAlbumCreateResponse>
 

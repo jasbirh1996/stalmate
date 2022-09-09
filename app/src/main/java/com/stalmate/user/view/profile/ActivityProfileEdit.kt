@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.DocumentsContract
@@ -12,10 +13,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.EditText
-import android.widget.TextView
+import android.view.Window
+import android.widget.*
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,6 +22,7 @@ import com.bumptech.glide.Glide
 import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.CropImageView
 import com.canhub.cropper.options
+import com.igalata.bubblepicker.model.Color
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.databinding.ActivityProfileEditBinding
@@ -226,10 +226,14 @@ class ActivityProfileEdit : BaseActivity() {
             val builder = AlertDialog.Builder(this)
             val viewGroup = findViewById<ViewGroup>(android.R.id.content)
             val dialogView: View = LayoutInflater.from(this).inflate(R.layout.dialouge_add_education, viewGroup, false)
+
             builder.setView(dialogView)
             val alertDialog = builder.create()
 
+            alertDialog.getWindow()!!.setBackgroundDrawable(ColorDrawable(android.graphics.Color.TRANSPARENT));
+
             var btnSave  = dialogView.findViewById<TextView>(R.id.btnSave)
+            var btnClose  = dialogView.findViewById<ImageView>(R.id.ivClose)
 
             btnSave.setOnClickListener {
 
@@ -245,9 +249,27 @@ class ActivityProfileEdit : BaseActivity() {
                     makeToast("Please Enter Subject Type")
                 }else{
 
+                    val hashMap = HashMap<String, String>()
+
+                    hashMap["sehool"] =graduation.text.toString()
+                    hashMap["branch"] =bachlore.text.toString()
+                    hashMap["course"] = bachloreType.text.toString()
+
+                    networkViewModel.educationData(hashMap)
+                    networkViewModel.educationData.observe(this){
+                        it?.let {
+                            if (it.status){
+                                makeToast(it.message)
+                            }
+                        }
+                    }
+
                 }
 
+            }
 
+            btnClose.setOnClickListener {
+                alertDialog.dismiss()
             }
 
             alertDialog.show()
@@ -274,6 +296,7 @@ class ActivityProfileEdit : BaseActivity() {
             }
 
     }
+
 
     private fun updateProfileApiHit() {
 
