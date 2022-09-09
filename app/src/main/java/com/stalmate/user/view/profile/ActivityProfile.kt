@@ -253,43 +253,40 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
         Log.d("asdjasda",userData.img_url+userData.cover_img1)
 
         var aboutArrayList = ArrayList<AboutProfileLine>()
-        aboutArrayList.add(AboutProfileLine("", "Student", "IMS Ghaziabad", "at"))
-        aboutArrayList.add(AboutProfileLine("", "Designer", "Flupper", "at"))
-        /*     for (i in 0 until userData.profile_data[0].education.size){
 
-             }
-             for (i in 0 until userData.profile_data[0].profession.size){
+        if (userData.profile_data[0].profession.isNotEmpty()){
+            aboutArrayList.add(AboutProfileLine(R.drawable.ic_profile_designation_icon, userData.profile_data[0].profession[0].designation, userData.profile_data[0].profession[0].company_name, "at"))
+        }
 
-             }*/
+        if (userData.profile_data[0].education.isNotEmpty()){
+            aboutArrayList.add(AboutProfileLine(R.drawable.ic_profile_graduation, "Student", userData.profile_data[0].education[0].sehool, "at"))
+        }
+
+
         aboutArrayList.add(
             AboutProfileLine(
-                "",
+                R.drawable.ic_profile_location,
                 "Lives at",
                 userData.profile_data[0].home_town,
                 "at"
             )
         )
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        aboutArrayList.add(AboutProfileLine("", "From", userData.profile_data[0].location, ""))
-        aboutArrayList.add(AboutProfileLine("", "", userData.profile_data[0].marital_status, ""))
+        aboutArrayList.add(
+            AboutProfileLine(
+                R.drawable.ic_profile_location,
+                "From",
+                userData.profile_data[0].location,
+                ""
+            )
+        )
+        aboutArrayList.add(
+            AboutProfileLine(
+                R.drawable.ic_profile_heart_icon,
+                "",
+                userData.profile_data[0].marital_status,
+                ""
+            )
+        )
         binding.layout.rvAbout.layoutManager = LinearLayoutManager(this)
         var profileAboutAdapter = ProfileAboutAdapter(networkViewModel, this, this)
         profileAboutAdapter.submitList(aboutArrayList)

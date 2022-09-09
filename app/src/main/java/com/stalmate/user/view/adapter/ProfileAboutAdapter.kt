@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.stalmate.user.R
 import com.stalmate.user.databinding.ItemFriendBinding
 import com.stalmate.user.databinding.LayoutProfileDataLinesBinding
@@ -51,6 +52,9 @@ class ProfileAboutAdapter(
            binding.tvKey.text=about.key
             binding.tvValue.text=" "+about.middle+" "+about.value
             Log.d("asdasd","pp")
+
+            Glide.with(context).load(about.icon).into(binding.icon)
+
         }
 
     }
