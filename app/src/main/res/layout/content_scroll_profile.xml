@@ -25,10 +25,13 @@
             android:id="@+id/view2"
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
             android:background="@color/colorGray"
-            app:layout_constraintTop_toBottomOf="@+id/rvAbout"
-            tools:layout_editor_absoluteX="10dp" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rvAbout" />
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -182,7 +185,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:fontFamily="@font/poppins_medium"
-                    android:text="3"
+                    android:text="0"
                     android:textColor="@color/colorPrimary"
                     android:textSize="14sp"
                     app:layout_constraintStart_toEndOf="@+id/appCompatTextView11"
@@ -195,10 +198,10 @@
                 android:id="@+id/etSearchFriend"
                 android:layout_width="195dp"
                 android:layout_height="wrap_content"
-                android:background="@drawable/large_round_corner_light_primary_border_light_gray_filled"
-                android:drawableStart="@drawable/search"
+                android:background="@drawable/search_background"
+                android:drawableStart="@drawable/ic_header_search"
                 android:drawablePadding="10dp"
-                android:fontFamily="@font/poppins_light"
+                android:fontFamily="@font/poppins"
                 android:hint="@string/search_friends"
                 android:includeFontPadding="false"
                 android:minHeight="0dp"
