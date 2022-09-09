@@ -28,6 +28,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
+                android:layout_marginStart="4dp"
                 android:fontFamily="@font/poppins_medium"
                 android:text="@string/add_education"
                 android:textColor="@color/black"
@@ -49,7 +50,7 @@
 
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/filledGraduation"
+                android:id="@+id/filledCompany"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -59,14 +60,14 @@
                 app:layout_constraintTop_toBottomOf="@+id/tveducation">
 
                 <EditText
-                    android:id="@+id/etGraduation"
+                    android:id="@+id/etCompany"
                     style="@style/customEditbox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/grey1"
                     android:drawablePadding="8dp"
-                    android:drawableStart="@drawable/ic_profile_collage_icon"
-                    android:hint="@string/school_college"
+                    android:drawableStart="@drawable/ic_profile_designation_icon"
+                    android:hint="@string/company_name"
                     android:maxLines="1"
                     android:textSize="14sp" />
 
@@ -75,23 +76,24 @@
 
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/filledBachlore"
+                android:id="@+id/filledDesignation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:textColorHint="@color/app_color"
                 app:hintEnabled="false"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/filledGraduation">
+                app:layout_constraintTop_toBottomOf="@+id/filledCompany">
 
                 <EditText
-                    android:id="@+id/etBachlore"
+                    android:id="@+id/etDesignation"
                     style="@style/customEditbox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/grey1"
                     android:drawablePadding="8dp"
-                    android:hint="@string/bachelors_in_technology"
+                    android:drawableStart="@drawable/ic_profile_designation_icon"
+                    android:hint="@string/designation"
                     android:maxLines="1"
                     android:textSize="14sp" />
 
@@ -99,29 +101,86 @@
             </com.google.android.material.textfield.TextInputLayout>
 
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/filledBachloreType"
+            <LinearLayout
+                android:id="@+id/workPeriod"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="1"
+                android:layout_marginHorizontal="5dp"
                 android:layout_marginTop="10dp"
-                android:textColorHint="@color/app_color"
-                app:hintEnabled="false"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/filledBachlore">
+                app:layout_constraintTop_toBottomOf="@+id/filledDesignation">
 
-                <EditText
-                    android:id="@+id/etBachloreType"
-                    style="@style/customEditbox"
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvCdFrom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/from"
+                android:textColor="@color/grey1"
+                android:layout_weight=".5"
+                android:layout_marginEnd="10dp"
+                android:drawableEnd="@drawable/ic_poll_calendar_gray"/>
+
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvCdTo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="@color/grey1"
-                    android:drawablePadding="8dp"
-                    android:hint="@string/electronics_amp_communication_engineering"
-                    android:maxLines="1"
-                    android:textSize="14sp" />
+                    android:hint="@string/to"
+                    android:textColor="@color/grey1"
+                    android:layout_weight=".5"
+                    android:layout_marginStart="10dp"
+                    android:drawableEnd="@drawable/ic_poll_calendar_gray"/>
 
 
-            </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="1"
+                android:layout_marginTop="5dp"
+                app:layout_constraintTop_toBottomOf="@+id/workPeriod">
+
+                <View
+                    android:id="@+id/viewfrom"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/grey2"
+                    android:layout_weight=".5"
+                    android:layout_marginEnd="10dp"
+                    android:drawableEnd="@drawable/ic_poll_calendar_gray"/>
+
+
+
+                <View
+                    android:id="@+id/viewTo"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_weight=".5"
+                    android:background="@color/grey2"
+                    android:layout_marginStart="10dp"
+                    android:drawableEnd="@drawable/ic_poll_calendar_gray"/>
+
+
+            </LinearLayout>
+
+
+            <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/radioButtonCurrentWork"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="-5dp"
+                android:layout_marginTop="16dp"
+
+                android:buttonTint="@color/grey1"
+                android:text="@string/currently_working_here"
+                android:textColor="@color/grey1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/workPeriod" />
 
 
 
@@ -140,7 +199,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/filledBachloreType"
+                app:layout_constraintTop_toBottomOf="@id/radioButtonCurrentWork"
                 app:textAllCaps="false" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

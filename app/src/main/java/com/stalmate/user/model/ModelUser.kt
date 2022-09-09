@@ -1,5 +1,3 @@
-
-
 package com.stalmate.user.model
 
 import java.io.Serializable
@@ -11,29 +9,24 @@ data class ModelUser(
 )
 
 data class User(
-
-    val img:String,
-    var isFriend:Int,
-    var isFollowed:Int,
-
-
-    var hasFriendRequest:Int,
-        var request_status:String,
-    var friendRequestsent:Int,
-
-    var isFriendRemovedFromSuggestion:Int,
-    var isBlocked:Int,
-    val friends_count:Int,
+    val img: String,
+    var isFriend: Int,
+    var isFollowed: Int,
+    var hasFriendRequest: Int,
+    var request_status: String,
+    var friendRequestsent: Int,
+    var isFriendRemovedFromSuggestion: Int,
+    var isBlocked: Int,
+    val friends_count: Int,
     val about: String,
     val albums: List<Any>,
     val city: String,
-
     val company: String,
     val cover_img: List<CoverImg>,
     val cover_img1: String,
     val dob: String,
-    var follower_count:Int,
-    var following_count:Int,
+    var follower_count: Int,
+    var following_count: Int,
     val email: String,
     val first_name: String,
     val gender: String,
@@ -47,22 +40,51 @@ data class User(
     val schoolandcollege: String,
     val schoolandcollegename: String,
     val url: String
-):Serializable
+) : Serializable
 
 data class CoverImg(
     val _id: String,
     val img: String
-):Serializable
+) : Serializable
 
 data class ProfileData(
-    val education: List<Any>,
+    val education: List<Education>,
     val home_town: String,
     val location: String,
     val marital_status: String,
-    val profession: List<Any>
-):Serializable
+    val profession: List<Profession>
+) : Serializable
 
 data class ProfileImg(
     val _id: String,
     val img: String
-):Serializable
+) : Serializable
+
+
+data class Education(
+    val Created_date: String,
+    val Updated_date: String,
+    val __v: Int,
+    val _id: String,
+    val branch: String,
+    val course: String,
+    val is_delete: String,
+    val sehool: String,
+    val status: String,
+    val user_id: String
+) : Serializable
+
+data class Profession(
+    val Created_date: String,
+    val Updated_date: String,
+    val __v: Int,
+    val _id: String,
+    val company_name: String,
+    val currently_working_here: String,
+    val designation: String,
+    val from: String,
+    val is_delete: String,
+    val status: String,
+    val to: String,
+    val user_id: String
+) : Serializable
