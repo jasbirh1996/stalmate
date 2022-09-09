@@ -15,6 +15,7 @@ import com.stalmate.user.R
 import com.stalmate.user.base.App
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentLoginBinding
+import com.stalmate.user.utilities.Constants
 import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.utilities.ValidationHelper
 import com.stalmate.user.utilities.ValidationHelper.isValidEmail
@@ -47,7 +48,6 @@ class FragmentLogin : BaseFragment() {
 
         binding.btnLogin.setOnClickListener {
             if (isValid()){
-
                 hitLoginApi()
             }
         }
@@ -74,37 +74,15 @@ class FragmentLogin : BaseFragment() {
         })
 
 
-//        binding.etPassword.addTextChangedListener(object : TextWatcher {
-//            @SuppressLint("ResourceAsColor")
-//            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-//
-//                if (binding.etPassword.text!!.isEmpty()){
-//                    binding.appCompatImageView17.visibility = View.GONE
-//                }else {
-//                    binding.appCompatImageView17.visibility = View.VISIBLE
-//                }
-//
-//            }
-//
-//            override fun beforeTextChanged(s: CharSequence,start: Int,count: Int,after: Int) {
-//
-//            }
-//
-//            override fun afterTextChanged(s: Editable) {
-//
-//            }
-//        })
-
-
         binding.createAccount.setOnClickListener {
             findNavController().navigate(R.id.fragmentSignUp)
         }
     }
 
     private fun hitLoginApi() {
-
+Constants.TYPE_ALL_FOLLOWERS_FOLLOWING
         val hashMap = HashMap<String, String>()
-        hashMap["email"] =binding.etEmail.text.toString()
+        hashMap[Constants.PARAMETER_EMAIL] =binding.etEmail.text.toString()
         hashMap["password"] =binding.etPassword.text.toString()
         hashMap["deviceID"] = ""
         hashMap["deviceToken"] = App.getInstance().firebaseToken.toString()
@@ -142,8 +120,7 @@ class FragmentLogin : BaseFragment() {
         if (ValidationHelper.isNull(binding.etEmail.text.toString())){
             makeToast(getString(R.string.email_error_toast))
             return false;
-        }else
-        if (!isValidEmail(binding.etEmail.text.toString())){
+        }else if (!isValidEmail(binding.etEmail.text.toString())){
             makeToast(getString(R.string.please_enter_valid_email))
             return false;
         }else if (ValidationHelper.isNull(binding.etPassword.text.toString())) {

@@ -16,7 +16,7 @@ import com.stalmate.user.databinding.FragmentLanguageBinding
 class FragmentLanguage : BaseFragment(), AdapterLanguage.Callbackk {
 
     private lateinit var binding : FragmentLanguageBinding
-    lateinit var feedAdapter: AdapterLanguage
+    lateinit var languageAdapter: AdapterLanguage
 
 
 
@@ -42,28 +42,22 @@ class FragmentLanguage : BaseFragment(), AdapterLanguage.Callbackk {
         /*Common ToolBar SetUp*/
         toolbarSetUp()
 
-        feedAdapter = AdapterLanguage(networkViewModel, requireContext(),this )
-        binding.rvLanguage.adapter=feedAdapter
+        languageAdapter = AdapterLanguage(networkViewModel, requireContext(),this )
+        binding.rvLanguage.adapter=languageAdapter
         binding.rvLanguage.layoutManager= GridLayoutManager(requireContext(), 3 )
 
         networkViewModel.languageLiveData("", HashMap())
         networkViewModel.languageLiveData.observe(requireActivity()) {
             it.let {
-                feedAdapter.submitList(it!!.results)
+                languageAdapter.submitList(it!!.results)
             }
         }
-        setupData()
 
         binding.btnNext.setOnClickListener {
             findNavController().navigate(R.id.fragmentLogin)
         }
 
     }
-
-    private fun setupData() {
-
-    }
-
 
     private fun toolbarSetUp() {
         binding.toolbar.toolBarCenterText.text = getString(R.string.choose_language)

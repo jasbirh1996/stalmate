@@ -13,8 +13,8 @@ class ActivityOnBoardingScreen : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var onBoardingViewPagerAdapter: OnBoardingAdapter
     private lateinit var binding : ActivityOnBoardingScreenBinding
-    private var position = 0
-    private val onBoardingData: MutableList<OnBoardingModel> = ArrayList()
+    private var currentPageIndex = 0
+    private val onBoardingPages: MutableList<OnBoardingModel> = ArrayList()
 
 
 
@@ -25,49 +25,32 @@ class ActivityOnBoardingScreen : AppCompatActivity(), View.OnClickListener {
         setContentView(view)
 
 
-        onBoardingData.add(OnBoardingModel(resources.getString(R.string.first_screen_title), resources.getString(R.string.find_lorem), R.raw.walkthrough_one))
-        onBoardingData.add(OnBoardingModel(resources.getString(R.string.second_screen_title), resources.getString(R.string.description_second_screen), R.raw.walkthrough_two))
-        onBoardingData.add(OnBoardingModel(resources.getString(R.string.third_screen_title), resources.getString(R.string.third_screen_description), R.raw.walkthrough_three))
-        onBoardingData.add(OnBoardingModel(resources.getString(R.string.four_screen_title), resources.getString(R.string.four_screen_description), R.raw.walkthrough_four))
-        setOnBoardingViewPager(onBoardingData)
-        position = binding.viewpager.currentItem
+        onBoardingPages.add(OnBoardingModel(resources.getString(R.string.first_screen_title), resources.getString(R.string.find_lorem), R.raw.walkthrough_one))
+        onBoardingPages.add(OnBoardingModel(resources.getString(R.string.second_screen_title), resources.getString(R.string.description_second_screen), R.raw.walkthrough_two))
+        onBoardingPages.add(OnBoardingModel(resources.getString(R.string.third_screen_title), resources.getString(R.string.third_screen_description), R.raw.walkthrough_three))
+        onBoardingPages.add(OnBoardingModel(resources.getString(R.string.four_screen_title), resources.getString(R.string.four_screen_description), R.raw.walkthrough_four))
+        setOnBoardingViewPager(onBoardingPages)
+        currentPageIndex = binding.viewpager.currentItem
         binding.dotsIndicator.setViewPager(binding.viewpager)
-
-
-        addSlideChangeListener()
+        activateSlideChangeListener()
         binding.viewpager.offscreenPageLimit=4
 
 
-        binding.skip.setOnClickListener {
-            startActivity(Intent(applicationContext, ActivityAuthentication::class.java))
-            finish()
-        }
+        binding.skip.setOnClickListener(this)
 
-        binding.btnNext.setOnClickListener {
-
-            val current = getItem(+1)
-            if (current < onBoardingData.size) {
-                binding.viewpager.currentItem = current
-            } else {
-                startActivity(Intent(applicationContext, ActivityAuthentication::class.java))
-                finish()
-            }
-
-        }
-    }
-    private fun getItem(i: Int): Int {
-        return binding.viewpager.currentItem + i
+        binding.btnNext.setOnClickListener(this)
     }
 
-    private fun addSlideChangeListener() {
+    private fun activateSlideChangeListener() {
 
 
         binding.viewpager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+            override fun onPageScrolled(currentPageIndex: Int, currentPageIndexOffset: Float, currentPageIndexOffsetPixels: Int) {
 
             }
 
-            override fun onPageSelected(position: Int) {
+            override fun onPageSelected(currentPageIndex: Int) {
+                this@ActivityOnBoardingScreen.currentPageIndex=currentPageIndex
             }
 
             override fun onPageScrollStateChanged(state: Int) {
@@ -86,10 +69,20 @@ class ActivityOnBoardingScreen : AppCompatActivity(), View.OnClickListener {
         when (view!!.id) {
 
           R.id.btn_next ->{
-
-
+              if (currentPageIndex < onBoardingPages.size-1) {
+                  currentPageIndex++
+                  binding.viewpager.setCurrentItem(currentPageIndex,true)
+              } else {
+                  startActivity(Intent(applicationContext, ActivityAuthentication::class.java))
+                  finish()
+              }
 
           }
+
+            R.id.skip->{
+                startActivity(Intent(applicationContext, ActivityAuthentication::class.java))
+                finish()
+            }
 
         }
     }

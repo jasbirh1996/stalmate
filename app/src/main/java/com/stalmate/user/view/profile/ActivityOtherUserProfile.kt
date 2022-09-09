@@ -222,11 +222,14 @@ class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk,
                             userData.results.isFriend=0
                             userData.results.isFollowed=0
                         }else{
-                            userData.results.isFollowed=1
-                            userData.results.friendRequestsent=1
-                            if (userData.results.friendRequestsent==1){
+
+                            if (userData.results.friendRequestsent==0){
+                                userData.results.isFollowed=1
+                                userData.results.friendRequestsent=1
+                            }else{
                                 userData.results.friendRequestsent=0
                             }
+                            Log.d("alkshdasldaupdating",userData.results.friendRequestsent.toString())
                         }
 
 
@@ -367,12 +370,15 @@ class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk,
             if (userData.results.hasFriendRequest == 1) {
                 binding.layoutButtonsFriends.visibility = View.GONE
                 binding.layoutButtonsAcceptReject.visibility = View.VISIBLE
-                binding.layoutTopControlls.visibility = View.GONE
+                binding.layoutTopControlls.visibility = View.VISIBLE
             } else {
+                Log.d("alkshdasldaview",userData.results.friendRequestsent.toString())
+
                 if (userData.results.friendRequestsent == 1) {
                     binding.layoutButtonsFriends.visibility = View.VISIBLE
                     binding.buttonFriend.text = "Friend Request Sent"
                     binding.layoutButtonsAcceptReject.visibility = View.GONE
+                    binding.layoutTopControlls.visibility = View.VISIBLE
                 }else{
                     binding.layoutTopControlls.visibility = View.VISIBLE
                     binding.layoutButtonsFriends.visibility = View.VISIBLE

@@ -14,10 +14,12 @@
             android:id="@+id/tabLayout"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginTop="10dp"
             android:background="@color/white"
-            app:tabTextColor="@color/app_color"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+
+            app:tabTextAppearance="@style/MineCustomTabText"
+            app:tabTextColor="@color/app_color" />
 
 
         <androidx.viewpager2.widget.ViewPager2
