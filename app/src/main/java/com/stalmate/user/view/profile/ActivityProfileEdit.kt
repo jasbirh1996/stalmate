@@ -3,18 +3,12 @@ package com.stalmate.user.view.profile
 import android.Manifest
 import android.app.AlertDialog
 import android.app.DatePickerDialog
-import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.drawable.ColorDrawable
-import android.net.Uri
 import android.os.Bundle
-import android.provider.DocumentsContract
-import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
 import android.widget.*
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -23,28 +17,23 @@ import com.bumptech.glide.Glide
 import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.CropImageView
 import com.canhub.cropper.options
-import com.igalata.bubblepicker.model.Color
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseActivity
+import com.stalmate.user.commonadapters.AdapterFeed
 import com.stalmate.user.databinding.ActivityProfileEditBinding
-import com.stalmate.user.model.AboutProfileLine
-import com.stalmate.user.model.Education
-import com.stalmate.user.model.Profession
-import com.stalmate.user.model.User
+import com.stalmate.user.model.*
 import com.stalmate.user.utilities.ImageLoaderHelperGlide
-import com.stalmate.user.view.adapter.ProfileAboutAdapter
-import com.stalmate.user.view.photoalbum.AlbumAdapter
-import okhttp3.MediaType.Companion.parse
+import com.stalmate.user.view.dialogs.DialogAddEditEducation
+import com.stalmate.user.view.dialogs.DialogAddEditProfession
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
-import javax.security.auth.callback.Callback
 import kotlin.collections.HashMap
 
-class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, ProfessionListAdapter.Callbackk{
+class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, ProfessionListAdapter.Callbackk, ProfilePictureAdapter.Callbackk, CoverPictureAdapter.Callbackk, AdapterFeed.Callbackk{
 
     private lateinit var binding: ActivityProfileEditBinding
     val PICK_IMAGE_PROFILE = 2
@@ -57,7 +46,7 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, Prof
     var merriage: String = ""
     var permissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
     val requiredPermission = Manifest.permission.WRITE_EXTERNAL_STORAGE
-    lateinit var userData: User
+    lateinit var userData: ModelUser
     var spinnerArrayFeb = arrayOf("Feb")
     var spinnerArrayFull = arrayOf("Jan", "Mar", "May", "July", "Aug", "Oct", "Dec")
     var spinnerArrayFullSemihalf = arrayOf("Apr", "Jun", "Sep", "Nov")
@@ -68,7 +57,9 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, Prof
     var isCoverImage = false
     private lateinit var educationAdapter: EducationListAdapter
     private lateinit var professionListAdapter: ProfessionListAdapter
-
+    private lateinit var profilePictureAdapter : ProfilePictureAdapter
+    private lateinit var coverPictureAdapter: CoverPictureAdapter
+    lateinit var feedAdapter: AdapterFeed
     override fun onClick(viewId: Int, view: View?) {
 
     }
@@ -77,10 +68,16 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, Prof
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_profile_edit)
         getUserProfileData()
+
+        feedAdapter = AdapterFeed(networkViewModel, this, this)
+        binding.rvFeeds.setNestedScrollingEnabled(false);
+        binding.rvFeeds.adapter = feedAdapter
+
+
         requestPermissions(permissions, WRITE_REQUEST_CODE)
         binding.layout.rdmale.setOnCheckedChangeListener { compoundButton, ischeck ->
             if (ischeck) {
-                GANDER = "1"
+                GANDER = "Male"
                 binding.layout.rdmale.setChecked(true)
                 binding.layout.rdFamel.setChecked(false)
                 binding.layout.rdOthers.setChecked(false)
@@ -89,7 +86,7 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, Prof
 
         binding.layout.rdFamel.setOnCheckedChangeListener { compoundButton, ischeck ->
             if (ischeck) {
-                GANDER = "2"
+                GANDER = "Female"
                 binding.layout.rdmale.setChecked(false)
                 binding.layout.rdFamel.setChecked(true)
                 binding.layout.rdOthers.setChecked(false)
@@ -99,7 +96,7 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, Prof
 
         binding.layout.rdOthers.setOnCheckedChangeListener { compoundButton, ischeck ->
             if (ischeck) {
-                GANDER = "3"
+                GANDER = "Other"
                 binding.layout.rdmale.setChecked(false)
                 binding.layout.rdFamel.setChecked(false)
                 binding.layout.rdOthers.setChecked(true)
@@ -232,175 +229,30 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, Prof
 
         binding.layout.tvAddMore.setOnClickListener {
 
-            val builder = AlertDialog.Builder(this)
-            val viewGroup = findViewById<ViewGroup>(android.R.id.content)
-            val dialogView: View = LayoutInflater.from(this).inflate(R.layout.dialouge_add_education, viewGroup, false)
 
-            builder.setView(dialogView)
-            val alertDialog = builder.create()
-
-            alertDialog.getWindow()!!.setBackgroundDrawable(ColorDrawable(android.graphics.Color.TRANSPARENT));
-
-            var btnSave  = dialogView.findViewById<TextView>(R.id.btnSave)
-            var btnClose  = dialogView.findViewById<ImageView>(R.id.ivClose)
-
-            btnSave.setOnClickListener {
-
-                var graduation = dialogView.findViewById<EditText>(R.id.etGraduation)
-                var bachlore = dialogView.findViewById<EditText>(R.id.etBachlore)
-                var bachloreType = dialogView.findViewById<EditText>(R.id.etBachloreType)
-
-                if (graduation.text.isEmpty()){
-                    makeToast("Please Enter College And University Name")
-                }else if (bachlore.text.isEmpty()){
-                    makeToast("Please Enter Education Type")
-                }else if (bachloreType.text.isEmpty()){
-                    makeToast("Please Enter Subject Type")
-                }else{
-
-                    val hashMap = HashMap<String, String>()
-
-                    hashMap["sehool"] =graduation.text.toString()
-                    hashMap["branch"] =bachlore.text.toString()
-                    hashMap["course"] = bachloreType.text.toString()
-
-                    networkViewModel.educationData(hashMap)
-                    networkViewModel.educationData.observe(this){
-                        it?.let {
-                            if (it.status){
-                                makeToast(it.message)
-                                getUserProfileData()
-                                alertDialog.dismiss()
-
-                            }
-                        }
-                    }
-
+            var dialogAddEditEducation=DialogAddEditEducation(this, Education("","",0,"","","","","","",""),networkViewModel,false,object :DialogAddEditEducation.Callbackk
+            {
+                override fun onSuccessfullyEditedEducation(education: Education) {
+                    userData.results.profile_data[0].education.add(education)
+                    networkViewModel.profileLiveData.postValue(userData)
                 }
+            })
+            dialogAddEditEducation.show()
 
-            }
 
-            btnClose.setOnClickListener {
-                alertDialog.dismiss()
-            }
-
-            alertDialog.show()
-            alertDialog.setCancelable(true)
         }
 
-        binding.layout.tvAddMoreProfession.setOnClickListener {
+        binding.layout.tvaddMoreProfession.setOnClickListener {
 
-            val builder = AlertDialog.Builder(this)
-            val viewGroup = findViewById<ViewGroup>(android.R.id.content)
-            val dialogView: View = LayoutInflater.from(this).inflate(R.layout.dialouge_add_profession, viewGroup, false)
-            var curretlyWorkingStatus = "No"
-
-            builder.setView(dialogView)
-            val alertDialog = builder.create()
-
-            alertDialog.getWindow()!!.setBackgroundDrawable(ColorDrawable(android.graphics.Color.TRANSPARENT));
-
-            var btnSave  = dialogView.findViewById<TextView>(R.id.btnSave)
-            var btnClose  = dialogView.findViewById<ImageView>(R.id.ivClose)
-            var from = dialogView.findViewById<TextView>(R.id.tvCdFrom)
-            var to = dialogView.findViewById<TextView>(R.id.tvCdTo)
-
-            var cal = Calendar.getInstance()
-
-            var companyName = dialogView.findViewById<EditText>(R.id.etCompany)
-            var designation = dialogView.findViewById<EditText>(R.id.etDesignation)
-
-            var radio = dialogView.findViewById<RadioButton>(R.id.radioButtonCurrentWork)
-
-
-
-            // Display Selected date in textbox
-            val dateSetListener =
-                DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-                    cal.set(Calendar.YEAR, year)
-                    cal.set(Calendar.MONTH, monthOfYear)
-                    cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-
-                    val myFormat = "dd-MM-yyyy" // mention the format you need
-                    val sdf = SimpleDateFormat(myFormat, Locale.US)
-                    from.text = sdf.format(cal.time)
+            var dialogAddEditProfession=DialogAddEditProfession(this,Profession("","",0,"","","","","","","","",""),networkViewModel,false,object :DialogAddEditProfession.Callbackk
+            {
+                override fun onSuccessfullyEditedProfession(profession: Profession) {
+                    userData.results.profile_data[0].profession.add(profession)
+                    networkViewModel.profileLiveData.postValue(userData)
 
                 }
-
-            from.setOnClickListener {
-                DatePickerDialog(
-                    this, dateSetListener,
-                    cal.get(Calendar.YEAR),
-                    cal.get(Calendar.MONTH),
-                    cal.get(Calendar.DAY_OF_MONTH)
-                ).show()
-            }
-
-            // Display Selected End date in textbox
-            val dateEndSetListener =
-                DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-                    cal.set(Calendar.YEAR, year)
-                    cal.set(Calendar.MONTH, monthOfYear)
-                    cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-
-                    val myFormat = "dd-MM-yyyy" // mention the format you need
-                    val sdf = SimpleDateFormat(myFormat, Locale.US)
-                    to.text = sdf.format(cal.time)
-
-                }
-
-            to.setOnClickListener {
-                DatePickerDialog(
-                    this, dateEndSetListener,
-                    cal.get(Calendar.YEAR),
-                    cal.get(Calendar.MONTH),
-                    cal.get(Calendar.DAY_OF_MONTH)
-                ).show()
-            }
-
-            btnSave.setOnClickListener {
-
-                if (companyName.text.isEmpty()){
-                    makeToast("Please Enter Company Name")
-                }else if (designation.text.isEmpty()){
-                    makeToast("Please Enter Desigantion")
-                }else if (from.text.isEmpty()){
-                    makeToast("Please Enter Starting Date")
-                }else if (!radio.isChecked) {
-                           if (to.text.isEmpty()) {
-                               makeToast("Please Enter End Date")
-                           }
-                }else {
-
-                        val hashMap = HashMap<String, String>()
-
-                        hashMap["company_name"] =companyName.text.toString()
-                        hashMap["currently_working_here"] =curretlyWorkingStatus
-                        hashMap["to"] = to.text.toString()
-                        hashMap["from"] = from.text.toString()
-                        hashMap["designation"] = designation.text.toString()
-
-                        networkViewModel.professionData(hashMap)
-                        networkViewModel.professionData.observe(this){
-                            it?.let {
-                                if (it.status == true){
-                                    makeToast(it.message)
-                                    getUserProfileData()
-                                    alertDialog.dismiss()
-
-                                }
-                            }
-                        }
-
-                    }
-            }
-
-            btnClose.setOnClickListener {
-                alertDialog.dismiss()
-            }
-
-            alertDialog.show()
-            alertDialog.setCancelable(true)
+            })
+            dialogAddEditProfession.show()
         }
 
 
@@ -435,21 +287,19 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, Prof
             getRequestBody(binding.layout.etName.text.toString()),
             getRequestBody(binding.layout.etLastName.text.toString()),
             getRequestBody(binding.layout.bio.text.toString()),
-            getRequestBody(binding.layout.etNumber.text.toString()),
+            /*getRequestBody(binding.layout.etNumber.text.toString()),*/
             getRequestBody(year + "-" + month + "-" + dates),
             getRequestBody(merriage),
             getRequestBody(binding.layout.etHowTown.text.toString()),
             getRequestBody(binding.layout.etCurrentCity.text.toString()),
             getRequestBody(""),
-           /* getRequestBody(binding.layout.etCompany.text.toString()),*/
+            getRequestBody(binding.etWebsite.text.toString()),
             getRequestBody(GANDER),
         )
 
         networkViewModel.UpdateProfileLiveData.observe(this, Observer {
 
             it.let {
-
-
                 makeToast(it!!.message)
             }
         })
@@ -458,7 +308,6 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, Prof
 
     private fun updateProfileImageApiHit() {
 
-        fun getRequestBody(str: String?): RequestBody = RequestBody.create("text/plain".toMediaTypeOrNull(), str.toString())
 
         val thumbnailBody: RequestBody =
             RequestBody.create("image/*".toMediaTypeOrNull(), imageFile!!)
@@ -468,13 +317,8 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, Prof
             str.name,
             thumbnailBody
         )
-
-
-        networkViewModel.etsProfileApi(getMultipart(imageFile!!),)
-
+        networkViewModel.etsProfileApi(getMultipart(imageFile!!))
     }
-
-
 
     override fun onDestroy() {
         super.onDestroy()
@@ -520,7 +364,7 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, Prof
         networkViewModel.getProfileData( hashMap)
         networkViewModel.profileLiveData.observe(this, Observer {
             it.let {
-                userData = it!!.results
+                userData = it!!
                 setUpAboutUI()
 
                 if (it.results.profile_data[0].education.isNotEmpty()){
@@ -531,256 +375,108 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, Prof
                     binding.layout.rvProfession.visibility = View.VISIBLE
                 }
 
+
+
             }
         })
     }
 
 
     fun setUpAboutUI() {
-        binding.layout.etName.setText(userData.first_name)
-        binding.layout.etLastName.setText(userData.last_name)
-        binding.layout.bio.setText(userData.about)
-        binding.layout.etEmail.setText(userData.email)
-        binding.layout.etNumber.setText(userData.number)
-        ImageLoaderHelperGlide.setGlide(this,binding.ivBackground,userData.img_url+userData.cover_img1)
-        ImageLoaderHelperGlide.setGlide(this,binding.ivUserThumb,userData.img_url+userData.profile_img1)
+        binding.layout.etName.setText(userData.results.first_name)
+        binding.layout.etLastName.setText(userData.results.last_name)
+        binding.layout.bio.setText(userData.results.about)
+        binding.layout.etEmail.setText(userData.results.email)
+        binding.layout.etNumber.setText(userData.results.number)
+        binding.layout.etHowTown.setText(userData.results.profile_data[0].home_town)
+        binding.layout.etCurrentCity.setText(userData.results.city)
+
+        ImageLoaderHelperGlide.setGlide(this,binding.ivBackground,userData.results.img_url+userData.results.cover_img1)
+        ImageLoaderHelperGlide.setGlide(this,binding.ivUserThumb,userData.results.img_url+userData.results.profile_img1)
+
+
+        binding.etWebsite.setText(userData.results.company)
+
+        if (userData.results.profile_data[0].marital_status == "Male"){
+            binding.layout.rdmale.setChecked(true)
+        }else if (userData.results.profile_data[0].marital_status == "Female"){
+            binding.layout.rdFamel.setChecked(true)
+        }else if (userData.results.profile_data[0].marital_status == "Other"){
+            binding.layout.rdOthers.setChecked(true)
+        }
 
 
         educationAdapter = EducationListAdapter(networkViewModel,this, this)
         binding.layout.rvEducation.adapter=educationAdapter
         binding.layout.rvEducation.layoutManager= LinearLayoutManager(this)
 
-        educationAdapter.submitList(userData.profile_data.get(0).education)
+        educationAdapter.submitList(userData.results.profile_data.get(0).education)
 
 
         professionListAdapter = ProfessionListAdapter(networkViewModel,this, this)
         binding.layout.rvProfession.adapter=professionListAdapter
         binding.layout.rvProfession.layoutManager= LinearLayoutManager(this)
 
-        professionListAdapter.submitList(userData.profile_data.get(0).profession)
+        professionListAdapter.submitList(userData.results.profile_data.get(0).profession)
 
+
+        profilePictureAdapter =  ProfilePictureAdapter(networkViewModel, this, this)
+        binding.rvProfilePicture.adapter=profilePictureAdapter
+
+        profilePictureAdapter.submitList(userData.results.profile_img)
+
+
+        coverPictureAdapter =  CoverPictureAdapter(networkViewModel, this, this)
+        binding.rvCoverPicture.adapter=profilePictureAdapter
+
+        coverPictureAdapter.submitList(userData.results.cover_img)
+
+
+        binding.rvFeeds.layoutManager = LinearLayoutManager(this)
+
+        networkViewModel.getFeedList("", HashMap())
+        networkViewModel.feedLiveData.observe(this, Observer {
+            Log.d("asdasdasd", "oaspiasddsad")
+            it.let {
+                feedAdapter.submitList(it!!.results)
+            }
+        })
 
     }
 
-    override fun onClickItemDelete(position: Int) {
-        val hashMap = HashMap<String, String>()
 
-        hashMap["id"] = position.toString()
-        hashMap["is_delete"] = "1"
+    override fun onClickItemEdit(position: Education, index: Int) {
+        var dialogAddEditProfession= DialogAddEditEducation(this,position,networkViewModel,true,object :DialogAddEditEducation.Callbackk{
 
-        networkViewModel.educationData(hashMap)
-        networkViewModel.educationData.observe(this){
-            it?.let {
-                if (it.status){
-                    makeToast(it.message)
-                }
+
+            override fun onSuccessfullyEditedEducation(education: Education) {
+                userData.results.profile_data[0].education[0]=education
+                networkViewModel.profileLiveData.postValue(userData)
             }
-        }
+        })
+        dialogAddEditProfession.show()
     }
 
-    override fun onClickItemEdit(position: Int) {
-
-        var list = ArrayList<Education>()
-
-        val builder = AlertDialog.Builder(this)
-        val viewGroup = findViewById<ViewGroup>(android.R.id.content)
-        val dialogView: View = LayoutInflater.from(this).inflate(R.layout.dialouge_add_education, viewGroup, false)
-
-        builder.setView(dialogView)
-        val alertDialog = builder.create()
-
-        alertDialog.getWindow()!!.setBackgroundDrawable(ColorDrawable(android.graphics.Color.TRANSPARENT));
-
-        var btnSave  = dialogView.findViewById<TextView>(R.id.btnSave)
-        var btnClose  = dialogView.findViewById<ImageView>(R.id.ivClose)
-
-        btnSave.setOnClickListener {
-
-            var graduation = dialogView.findViewById<EditText>(R.id.etGraduation)
-            var bachlore = dialogView.findViewById<EditText>(R.id.etBachlore)
-            var bachloreType = dialogView.findViewById<EditText>(R.id.etBachloreType)
-
-
-            graduation.setText(list.get(position).sehool)
-            bachlore.setText(list.get(position).branch)
-            bachloreType.setText(list.get(position).course)
-
-
-            if (graduation.text.isEmpty()){
-                makeToast("Please Enter College And University Name")
-            }else if (bachlore.text.isEmpty()){
-                makeToast("Please Enter Education Type")
-            }else if (bachloreType.text.isEmpty()){
-                makeToast("Please Enter Subject Type")
-            }else{
-
-                val hashMap = HashMap<String, String>()
-
-                hashMap["sehool"] =graduation.text.toString()
-                hashMap["branch"] =bachlore.text.toString()
-                hashMap["course"] = bachloreType.text.toString()
-                hashMap["id"] = position.toString()
-
-                networkViewModel.educationData(hashMap)
-                networkViewModel.educationData.observe(this){
-                    it?.let {
-                        if (it.status){
-                            makeToast(it.message)
-                            alertDialog.dismiss()
-                        }
-                    }
-                }
-
+    override fun onClickItemProfessionEdit(position: Profession, index: Int) {
+        var dialogAddEditProfession= DialogAddEditProfession(this,position,networkViewModel,true,object :DialogAddEditProfession.Callbackk{
+            override fun onSuccessfullyEditedProfession(profession: Profession) {
+                userData.results.profile_data[0].profession[0]=profession
+                networkViewModel.profileLiveData.postValue(userData)
             }
+        })
+        dialogAddEditProfession.show()
+    }
 
-        }
-
-        btnClose.setOnClickListener {
-            alertDialog.dismiss()
-        }
-
-        alertDialog.show()
-        alertDialog.setCancelable(true)
-
+    override fun onClickItemEdit(position: ProfileImg, index: Int) {
 
     }
 
-    override fun onClickItemProfessionDelete(position: Int) {
-
-        val hashMap = HashMap<String, String>()
-
-        hashMap["id"] = position.toString()
-        hashMap["is_delete"] = "1"
-
-        networkViewModel.professionData(hashMap)
-        networkViewModel.professionData.observe(this){
-            it?.let {
-                if (it.status == true){
-                    makeToast(it.message)
-                }
-            }
-        }
-
+    override fun onClickItemEdit(position: CoverImg, index: Int) {
+        TODO("Not yet implemented")
     }
 
-    override fun onClickItemProfessionEdit(position: Int) {
-
-        var list = ArrayList<Profession>()
-
-        val builder = AlertDialog.Builder(this)
-        val viewGroup = findViewById<ViewGroup>(android.R.id.content)
-        val dialogView: View = LayoutInflater.from(this).inflate(R.layout.dialouge_add_profession, viewGroup, false)
-        var curretlyWorkingStatus = "No"
-
-        builder.setView(dialogView)
-        val alertDialog = builder.create()
-
-        alertDialog.getWindow()!!.setBackgroundDrawable(ColorDrawable(android.graphics.Color.TRANSPARENT));
-
-        var btnSave  = dialogView.findViewById<TextView>(R.id.btnSave)
-        var btnClose  = dialogView.findViewById<ImageView>(R.id.ivClose)
-        var from = dialogView.findViewById<TextView>(R.id.tvCdFrom)
-        var to = dialogView.findViewById<TextView>(R.id.tvCdTo)
-
-        var cal = Calendar.getInstance()
-
-        var companyName = dialogView.findViewById<EditText>(R.id.etCompany)
-        var designation = dialogView.findViewById<EditText>(R.id.etDesignation)
-
-        var radio = dialogView.findViewById<RadioButton>(R.id.radioButtonCurrentWork)
-
-
-        companyName.setText(list.get(position).company_name)
-        designation.setText(list.get(position).designation)
-        from.setText(list.get(position).from)
-        to.setText(list.get(position).to)
-
-
-        // Display Selected date in textbox
-        val dateSetListener =
-            DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-                cal.set(Calendar.YEAR, year)
-                cal.set(Calendar.MONTH, monthOfYear)
-                cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-
-                val myFormat = "dd-MM-yyyy" // mention the format you need
-                val sdf = SimpleDateFormat(myFormat, Locale.US)
-                from.text = sdf.format(cal.time)
-
-            }
-
-        from.setOnClickListener {
-            DatePickerDialog(
-                this, dateSetListener,
-                cal.get(Calendar.YEAR),
-                cal.get(Calendar.MONTH),
-                cal.get(Calendar.DAY_OF_MONTH)
-            ).show()
-        }
-
-        // Display Selected End date in textbox
-        val dateEndSetListener =
-            DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-                cal.set(Calendar.YEAR, year)
-                cal.set(Calendar.MONTH, monthOfYear)
-                cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-
-                val myFormat = "dd-MM-yyyy" // mention the format you need
-                val sdf = SimpleDateFormat(myFormat, Locale.US)
-                to.text = sdf.format(cal.time)
-
-            }
-
-        to.setOnClickListener {
-            DatePickerDialog(
-                this, dateEndSetListener,
-                cal.get(Calendar.YEAR),
-                cal.get(Calendar.MONTH),
-                cal.get(Calendar.DAY_OF_MONTH)
-            ).show()
-        }
-
-        btnSave.setOnClickListener {
-
-            if (companyName.text.isEmpty()){
-                makeToast("Please Enter Company Name")
-            }else if (designation.text.isEmpty()){
-                makeToast("Please Enter Desigantion")
-            }else if (from.text.isEmpty()){
-                makeToast("Please Enter Starting Date")
-            }else if (!radio.isChecked) {
-                if (to.text.isEmpty()) {
-                    makeToast("Please Enter End Date")
-                }
-            }else {
-
-                val hashMap = HashMap<String, String>()
-
-                hashMap["company_name"] =companyName.text.toString()
-                hashMap["currently_working_here"] =curretlyWorkingStatus
-                hashMap["to"] = to.text.toString()
-                hashMap["from"] = from.text.toString()
-                hashMap["designation"] = designation.text.toString()
-
-                networkViewModel.professionData(hashMap)
-                networkViewModel.professionData.observe(this){
-                    it?.let {
-                        if (it.status == true){
-                            makeToast(it.message)
-                        }
-                    }
-                }
-
-            }
-        }
-
-        btnClose.setOnClickListener {
-            alertDialog.dismiss()
-        }
-
-        alertDialog.show()
-        alertDialog.setCancelable(true)
+    override fun onClickOnViewComments(postId: Int) {
+        TODO("Not yet implemented")
     }
-
 
 }

@@ -25,92 +25,114 @@ class ActivityWelcome : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_welcome)
-
         var pagerAdapter = MyPagerAdapter(supportFragmentManager)
         binding.viewpager.adapter = pagerAdapter
-
         binding.indicator.setViewPager(binding.viewpager)
-
         count = binding.viewpager.currentItem
-
         binding.viewpager.setOnTouchListener(OnTouchListener { v, event -> true })
         binding.viewpager.offscreenPageLimit = 0
-
-
-
         binding.toolbar.topAppBar.setNavigationOnClickListener {
             onBackPressed()
         }
-
 
 
         binding.btnNext.setOnClickListener {
 
             var page = pagerAdapter.getItem(count)
 
+
             if (page is FragmentWelcomePage) {
                 count = +1
                 binding.viewpager.setCurrentItem(count, true)
-            }
 
-            if (page is FragmentInformationSuggestions) {
 
-                count = +1
-                binding.viewpager.setCurrentItem(count, true)
 
-                /*if (page.isValid()){
+                if (page is FragmentWelcomePage) {
+                    count = count + 1
+                    binding.viewpager.setCurrentItem(count, true)
+
+                }
+
+                if (page is FragmentInformationSuggestions) {
+
+
+                    count = count + 1
+                    binding.viewpager.setCurrentItem(count, true)
+
+
+                    /*if (page.isValid()){
                     count = +1
                     binding.viewpager.setCurrentItem(count,true)
                 }*/
-            }
-        }
+                }
 
+                if (page is FragmentSync) {
+                    count = count + 1
+                    binding.viewpager.setCurrentItem(count, true)
+                }
 
+                if (page is FragmentGroupSuggestionList) {
+                    count = count + 1
+                    binding.viewpager.setCurrentItem(count, true)
+                }
+                if (page is FragmentPageSugggestionsList) {
+                    count = count + 1
+                    binding.viewpager.setCurrentItem(count, true)
+                }
 
-        binding.viewpager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageScrolled(
-                position: Int,
-                positionOffset: Float,
-                positionOffsetPixels: Int
-            ) {
-
-            }
-
-            override fun onPageSelected(position: Int) {
-                when (position) {
-                    0 -> {
-                       toolbar(true,"Welcome")
-                    }
-                    1 -> {
-                        toolbar(true,"Welcome")
-                    }
-                   2 -> {
-                       toolbar(false,"Group")
-                    }
-                    3 -> {
-                        toolbar(false,"Pages")
-                    }
-                    4 -> {
-                        toolbar(false,"Events")
-
-                    }
-
-
+                if (page is FragmentPageSugggestionsList) {
+                    count = count + 1
+                    binding.viewpager.setCurrentItem(count, true)
                 }
             }
 
-            override fun onPageScrollStateChanged(state: Int) {
-
-            }
-        })
 
 
-        /*ToolBar Set*/
-        toolbar(true,"Welcome")
+            binding.viewpager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+                override fun onPageScrolled(
+                    position: Int,
+                    positionOffset: Float,
+                    positionOffsetPixels: Int
+                ) {
 
+                }
+
+                override fun onPageSelected(position: Int) {
+                    when (position) {
+                        0 -> {
+                            toolbar(true, "Welcome")
+                        }
+                        1 -> {
+                            toolbar(true, "Welcome")
+                        }
+                        2 -> {
+                            toolbar(false, "Group")
+                        }
+                        3 -> {
+                            toolbar(false, "Pages")
+                        }
+                        4 -> {
+                            toolbar(false, "Events")
+
+                        }
+
+
+                    }
+                }
+
+                override fun onPageScrollStateChanged(state: Int) {
+
+                }
+            })
+
+
+            /*ToolBar Set*/
+            toolbar(true, "Welcome")
+
+        }
     }
 
-    private fun toolbar(isCenterVisible:Boolean,text:String) {
+     fun toolbar(isCenterVisible:Boolean,text:String) {
 
         if (isCenterVisible){
             binding.toolbar.tvhead.visibility = View.GONE

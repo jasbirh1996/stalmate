@@ -150,10 +150,10 @@ open class AppViewModel : ViewModel() {
         getResult(temp, apiInterface.setEducationAddDetails(map))
     }
 
-    var professionData: LiveData<ModelCommonAddEducationAndProfessionResponse?> = MutableLiveData<ModelCommonAddEducationAndProfessionResponse?>()
-    fun professionData(map: HashMap<String, String>) {
+    var addUpdateProfessionLiveData: LiveData<ModelCommonAddEducationAndProfessionResponse?> = MutableLiveData<ModelCommonAddEducationAndProfessionResponse?>()
+    fun addUpdateProfessionData(map: HashMap<String, String>) {
         val temp = MutableLiveData<ModelCommonAddEducationAndProfessionResponse?>()
-        educationData = temp
+        addUpdateProfessionLiveData = temp
         getResult(temp, apiInterface.setProfessionAddDetails(map))
     }
 
@@ -182,7 +182,7 @@ open class AppViewModel : ViewModel() {
         getResult(temp, apiInterface.setOtpVerifyRegistration(email, otp))
     }
 
-    var profileLiveData: LiveData<ModelUser?> = MutableLiveData<ModelUser?>()
+    var profileLiveData: MutableLiveData<ModelUser?> = MutableLiveData<ModelUser?>()
     fun getProfileData(map: HashMap<String, String>) {
         val temp = MutableLiveData<ModelUser?>()
         profileLiveData = temp
@@ -204,13 +204,13 @@ open class AppViewModel : ViewModel() {
         @Part("first_name") first_name: RequestBody,
         @Part("last_name") last_name: RequestBody,
         @Part("about") about: RequestBody,
-        @Part("number") number: RequestBody,
+       /* @Part("number") number: RequestBody,*/
         @Part("dob") dob: RequestBody,
         @Part("marital_status") marital_status: RequestBody,
         @Part("home_town") home_town: RequestBody,
         @Part("city") city: RequestBody,
         @Part("url") url: RequestBody,
-       /* @Part("company") company: RequestBody,*/
+        @Part("company") company: RequestBody,
         @Part("gender") gender: RequestBody,
 
 
@@ -223,11 +223,11 @@ open class AppViewModel : ViewModel() {
                 first_name,
                 last_name,
                 about,
-                number,
+                /*number,*/
                 dob,
                 marital_status,
                 url,
-               /* company,*/
+                company,
                 gender,
                 city,
                 home_town,

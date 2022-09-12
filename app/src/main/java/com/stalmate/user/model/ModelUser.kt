@@ -48,12 +48,14 @@ data class CoverImg(
 ) : Serializable
 
 data class ProfileData(
-    val education: List<Education>,
+    val education: ArrayList<Education>,
     val home_town: String,
     val location: String,
     val marital_status: String,
-    val profession: List<Profession>
-) : Serializable
+
+
+    val profession: ArrayList<Profession>
+):Serializable
 
 data class ProfileImg(
     val _id: String,
@@ -66,10 +68,10 @@ data class Education(
     val Updated_date: String,
     val __v: Int,
     val _id: String,
-    val branch: String,
-    val course: String,
+    var branch: String,
+    var course: String,
     val is_delete: String,
-    val sehool: String,
+    var sehool: String,
     val status: String,
     val user_id: String
 ) : Serializable
@@ -79,12 +81,12 @@ data class Profession(
     val Updated_date: String,
     val __v: Int,
     val _id: String,
-    val company_name: String,
-    val currently_working_here: String,
-    val designation: String,
-    val from: String,
+    var company_name: String,
+    var currently_working_here: String,
+    var designation: String,
+    var from: String,
     val is_delete: String,
     val status: String,
-    val to: String,
+    var to: String,
     val user_id: String
 ) : Serializable

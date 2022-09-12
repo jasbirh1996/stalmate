@@ -2,27 +2,31 @@ package com.stalmate.user.view.profile
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.stalmate.user.R
-import com.stalmate.user.databinding.ItemEducationprofileBinding
-import com.stalmate.user.databinding.ItemGalleryBinding
+import com.stalmate.user.databinding.ItemProfessionProfileBinding
 import com.stalmate.user.model.*
-import com.stalmate.user.view.language.AdapterLanguage
 import com.stalmate.user.viewmodel.AppViewModel
-import java.util.*
 import kotlin.collections.ArrayList
 
-class ProfessionListAdapter(val viewModel: AppViewModel, val context: Context, var callback: Callbackk) : RecyclerView.Adapter<ProfessionListAdapter.AlbumViewHolder>() {
+class ProfessionListAdapter(
+    val viewModel: AppViewModel,
+    val context: Context,
+    var callback: Callbackk
+) : RecyclerView.Adapter<ProfessionListAdapter.AlbumViewHolder>() {
 
     var list = ArrayList<Profession>()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProfessionListAdapter.AlbumViewHolder {
-        var view = LayoutInflater.from(parent.context).inflate(R.layout.item_educationprofile, parent, false)
-        return AlbumViewHolder(DataBindingUtil.bind<ItemEducationprofileBinding>(view)!!)
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): ProfessionListAdapter.AlbumViewHolder {
+        var view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_profession_profile, parent, false)
+        return AlbumViewHolder(DataBindingUtil.bind<ItemProfessionProfileBinding>(view)!!)
 
     }
 
@@ -33,6 +37,7 @@ class ProfessionListAdapter(val viewModel: AppViewModel, val context: Context, v
     override fun getItemCount(): Int {
         return list.size
     }
+
     fun submitList(albumList: List<Profession>) {
         list.clear()
         list.addAll(albumList)
@@ -41,27 +46,55 @@ class ProfessionListAdapter(val viewModel: AppViewModel, val context: Context, v
 
 
     public interface Callbackk {
-        fun onClickItemProfessionDelete(position: Int)
-        fun onClickItemProfessionEdit(position: Int)
+        fun onClickItemProfessionEdit(position: Profession, index: Int)
     }
 
-    inner class AlbumViewHolder(var binding: ItemEducationprofileBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class AlbumViewHolder(var binding: ItemProfessionProfileBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(response : Profession){
+        fun bind(profession: Profession) {
 
 
-          /*  binding.tveducation.text =response.sehool
-            binding.tvcource.text = response.branch
-            binding.tvcourcetype.text = response.course
-*/
+            binding.tvComapny.text = profession.company_name
+            binding.tvgesignation.text = profession.designation
+            binding.tvFrom.text = profession.from
+            binding.tvTo.text = profession.to
+
             binding.ivDelete.setOnClickListener {
-             callback.onClickItemProfessionDelete(list[position].user_id.toInt())
+
+                deleteProfessoin(
+                    profession._id,
+                    bindingAdapterPosition,
+                    (binding.root.context as? LifecycleOwner)!!
+                )
+
+
             }
 
             binding.ivedit.setOnClickListener {
-                callback.onClickItemProfessionEdit(list[position].user_id.toInt())
+                callback.onClickItemProfessionEdit(
+                    list[bindingAdapterPosition],
+                    bindingAdapterPosition
+                )
             }
 
+        }
+    }
+
+    fun deleteProfessoin(id: String, position: Int, lifecycleObserver: LifecycleOwner) {
+        val hashMap = HashMap<String, String>()
+
+        hashMap["id"] = id
+        hashMap["is_delete"] = "1"
+
+        viewModel.addUpdateProfessionData(hashMap)
+        viewModel.addUpdateProfessionLiveData.observe(lifecycleObserver) {
+            it?.let {
+                if (it.status) {
+                    list.removeAt(position)
+                    notifyItemRemoved(position)
+                }
+            }
         }
     }
 }

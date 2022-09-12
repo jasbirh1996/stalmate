@@ -51,8 +51,6 @@ class FragmentAlbumPhoto : BaseFragment() {
                 feedAdapter.submitList(it!!.results)
             }
         }
-
-
     }
 
 
