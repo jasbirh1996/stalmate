@@ -51,7 +51,8 @@ data class User(
 
 data class CoverImg(
     val _id: String,
-    val img: String
+    val img: String,
+    val url : String
 ):Serializable
 
 data class ProfileData(
@@ -64,7 +65,9 @@ data class ProfileData(
 
 data class ProfileImg(
     val _id: String,
-    val img: String
+    val img: String,
+    val url: String
+
 ):Serializable
 
 
