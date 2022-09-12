@@ -115,11 +115,11 @@ interface ApiInterface {
         @Part("first_name") firstName: RequestBody,
         @Part("last_name") lastName: RequestBody,
         @Part("about") about: RequestBody,
-        @Part("number") number: RequestBody,
+       /* @Part("number") number: RequestBody,*/
         @Part("dob") dob: RequestBody,
         @Part("marital_status") maritalStatus: RequestBody,
         @Part("url") url: RequestBody,
-       /* @Part("company") company: RequestBody,*/
+        @Part("company") company: RequestBody,
         @Part("gender") gender: RequestBody,
         @Part("city") city: RequestBody,
         @Part("home_town") home_town: RequestBody,

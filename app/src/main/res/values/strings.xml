@@ -619,9 +619,17 @@
     <string name="from">From</string>
     <string name="to">To</string>
     <string name="currently_working_here">Currently working here</string>
+    <string name="website">Website</string>
+    <string name="enter_url">Enter The Url</string>
+    <string name="uploaded_profile_picture">Uploaded profile Picture</string>
+    <string name="see_more">See More</string>
+    <string name="uploaded_cover_image">Uploaded Cover Image</string>
+    <string name="see_all">See all</string>
+    <string name="blocked_lists">Blocked Lists</string>
+    <string name="activity_log">Activity Log</string>
     <string-array name="marrage">
-        <item><font fgcolor="#B7B7B7">Signle</font></item>
-        <item><font fgcolor="#B7B7B7">Merriage</font></item>
+        <item><font fgcolor="#B7B7B7">Single</font></item>
+        <item><font fgcolor="#B7B7B7">Marriage</font></item>
     </string-array>
 
     <string-array name="date">

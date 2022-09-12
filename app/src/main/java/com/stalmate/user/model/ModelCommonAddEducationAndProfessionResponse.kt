@@ -2,11 +2,11 @@ package com.stalmate.user.model
 
 data class ModelCommonAddEducationAndProfessionResponse(
     val message: String,
-    val results: ResultsEdutionResponse,
+    val results: EducationProfession,
     val status: Boolean
 )
 
-data class ResultsEdutionResponse(
+data class EducationProfession(
     val Created_date: String,
     val Updated_date: String,
     val branch: String,

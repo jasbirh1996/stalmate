@@ -38,6 +38,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/poppins"
             android:text="@string/graduation"
+            android:textColor="@color/grey1"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -45,10 +46,13 @@
         <TextView
             android:id="@+id/filledTextGraduation"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:gravity="center"
+            android:gravity="center_vertical"
+            android:textSize="14sp"
+            android:paddingVertical="10dp"
+            android:textColor="@color/black"
             android:background="@drawable/style_spinner"
             app:layout_constraintEnd_toStartOf="@+id/gradutionHeading"
             app:layout_constraintStart_toStartOf="parent"
@@ -59,7 +63,7 @@
             android:id="@+id/viewGradution"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/grey2"
+            android:background="@color/grey1"
             app:layout_constraintTop_toBottomOf="@+id/filledTextGraduation"/>
 
 
@@ -71,16 +75,20 @@
             android:fontFamily="@font/poppins"
             android:text="@string/major_in"
             android:textSize="14sp"
+            android:textColor="@color/grey1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/viewGradution" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/filledTextMajor"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="wrap_content"
+            android:paddingVertical="10dp"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:gravity="center"
+            android:textSize="14sp"
+            android:gravity="center_vertical"
+            android:textColor="@color/black"
             android:background="@drawable/style_spinner"
             app:layout_constraintEnd_toStartOf="@+id/majorHeading"
             app:layout_constraintStart_toStartOf="parent"
@@ -90,7 +98,7 @@
             android:id="@+id/viewMajor"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/grey2"
+            android:background="@color/grey1"
             app:layout_constraintTop_toBottomOf="@+id/filledTextMajor"/>
 
 
@@ -102,18 +110,21 @@
             android:fontFamily="@font/poppins"
             android:text="@string/country"
             android:textSize="14sp"
+            android:textColor="@color/grey1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/filledTextMajor" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/filledTextCountry"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="wrap_content"
+            android:paddingVertical="10dp"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:gravity="center"
+            android:gravity="center_vertical"
+            android:textSize="14sp"
+            android:textColor="@color/black"
             android:background="@drawable/style_spinner"
-            android:paddingVertical="15dp"
             app:layout_constraintEnd_toStartOf="@+id/countryHeading"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/countryHeading"/>
@@ -123,7 +134,7 @@
             android:id="@+id/viewCountry"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/grey2"
+            android:background="@color/grey1"
             app:layout_constraintTop_toBottomOf="@+id/filledTextCountry"/>
 
 
@@ -135,6 +146,7 @@
             android:layout_marginTop="20dp"
             android:fontFamily="@font/poppins"
             android:text="State"
+            android:textColor="@color/grey1"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/viewCountry" />
@@ -142,12 +154,14 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/filledTextState"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="wrap_content"
+            android:paddingVertical="10dp"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:gravity="center"
+            android:gravity="center_vertical"
+            android:textSize="14sp"
+            android:textColor="@color/black"
             android:background="@drawable/style_spinner"
-            android:paddingVertical="15dp"
             app:layout_constraintEnd_toStartOf="@+id/stateHeading"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/stateHeading"/>
@@ -157,7 +171,7 @@
             android:id="@+id/viewState"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/grey2"
+            android:background="@color/grey1"
             app:layout_constraintTop_toBottomOf="@+id/filledTextState"/>
 
 
@@ -170,16 +184,20 @@
             android:fontFamily="@font/poppins"
             android:text="@string/city"
             android:textSize="14sp"
+            android:textColor="@color/grey1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/viewState" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/filledTextCity"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:gravity="center"
+            android:gravity="center_vertical"
+            android:textSize="14sp"
+            android:paddingVertical="10dp"
+            android:textColor="@color/black"
             android:background="@drawable/style_spinner"
             app:layout_constraintEnd_toStartOf="@+id/cityHeading"
             app:layout_constraintStart_toStartOf="parent"
@@ -189,7 +207,7 @@
             android:id="@+id/viewCity"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/grey2"
+            android:background="@color/grey1"
             app:layout_constraintTop_toBottomOf="@+id/filledTextCity"/>
 
 

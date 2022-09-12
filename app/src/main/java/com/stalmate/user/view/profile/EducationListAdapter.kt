@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.stalmate.user.R
@@ -44,8 +45,7 @@ class EducationListAdapter(val viewModel: AppViewModel, val context: Context, va
 
 
     public interface Callbackk {
-        fun onClickItemDelete(position: Int)
-        fun onClickItemEdit(position: Int)
+        fun onClickItemEdit(position: Education, index: Int)
     }
 
     inner class AlbumViewHolder(var binding: ItemEducationprofileBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -58,13 +58,34 @@ class EducationListAdapter(val viewModel: AppViewModel, val context: Context, va
             binding.tvcourcetype.text = response.course
 
             binding.ivDelete.setOnClickListener {
-             callback.onClickItemDelete(list[position].user_id.toInt())
+                onClickItemDelete(response._id, bindingAdapterPosition, (binding.root.context as? LifecycleOwner)!!)
             }
 
             binding.ivedit.setOnClickListener {
-                callback.onClickItemEdit(list[position].user_id.toInt())
+                callback.onClickItemEdit(
+                    list[bindingAdapterPosition],
+                    bindingAdapterPosition)
             }
 
+        }
+    }
+
+
+
+    fun onClickItemDelete(id: String, position: Int, lifecycleObserver: LifecycleOwner) {
+        val hashMap = HashMap<String, String>()
+
+        hashMap["id"] = id
+        hashMap["is_delete"] = "1"
+
+        viewModel.educationData(hashMap)
+        viewModel.educationData.observe(lifecycleObserver){
+            it?.let {
+                if (it.status){
+                    list.removeAt(position)
+                    notifyItemRemoved(position)
+                }
+            }
         }
     }
 }

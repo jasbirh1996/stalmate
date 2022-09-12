@@ -15,7 +15,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="10dp"
         android:fontFamily="@font/poppins_medium"
-        android:text="Abhay"
+        android:text=""
         android:textColor="@color/black"
         android:textSize="14sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -49,7 +49,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Abhay"
+        android:text=""
         app:layout_constraintStart_toStartOf="@+id/tveducation"
         app:layout_constraintTop_toBottomOf="@+id/tveducation" />
 
@@ -60,7 +60,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="16dp"
-        android:text="Abahajjakakkaka"
+        android:text=""
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/tvcource"
         app:layout_constraintTop_toBottomOf="@+id/tvcource" />

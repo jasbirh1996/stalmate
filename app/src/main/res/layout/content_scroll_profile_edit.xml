@@ -259,18 +259,8 @@
         </com.google.android.material.textfield.TextInputLayout>
 
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/filledTextnumber"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:textColorHint="@color/app_color"
-            app:hintEnabled="false"
-            app:layout_constraintEnd_toEndOf="@+id/radio_group"
-            app:layout_constraintStart_toStartOf="@+id/radio_group"
-            app:layout_constraintTop_toBottomOf="@+id/filledTextEmail">
 
-            <com.google.android.material.textfield.TextInputEditText
+            <TextView
                 android:id="@+id/etNumber"
                 style="@style/customEditbox"
                 android:layout_width="match_parent"
@@ -279,11 +269,19 @@
                 android:drawablePadding="8dp"
                 android:hint="@string/mobile_number"
                 android:maxLines="1"
+                android:maxLength="10"
                 android:paddingVertical="15dp"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="@+id/radio_group"
+                app:layout_constraintStart_toStartOf="@+id/radio_group"
+                app:layout_constraintTop_toBottomOf="@+id/filledTextEmail"/>
 
-        </com.google.android.material.textfield.TextInputLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/grey1"
+            app:layout_constraintTop_toBottomOf="@+id/etNumber"/>
 
      <!--   <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/filledTextProfedession"
@@ -357,7 +355,7 @@
             android:text="@string/marital_status"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/filledTextnumber" />
+            app:layout_constraintTop_toBottomOf="@+id/etNumber" />
 
         <View
             android:id="@+id/view_mar"
@@ -449,12 +447,12 @@
             android:textColor="@color/black"
             android:textSize="14sp"
             android:visibility="visible"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_addMore_Profession"
+            app:layout_constraintBottom_toBottomOf="@+id/tvaddMoreProfession"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/tv_addMore_Profession" />
+            app:layout_constraintTop_toTopOf="@+id/tvaddMoreProfession" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_addMore_Profession"
+            android:id="@+id/tvaddMoreProfession"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -472,7 +470,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@+id/tv_addMore_Profession"/>
+            app:layout_constraintTop_toBottomOf="@+id/tvaddMoreProfession"/>
 
 
 

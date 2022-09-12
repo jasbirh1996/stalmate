@@ -10,13 +10,13 @@
     android:background="@drawable/circle_light_sky">
 
     <TextView
-        android:id="@+id/tveducation"
+        android:id="@+id/tvComapny"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="10dp"
         android:fontFamily="@font/poppins_medium"
-        android:text="Abhay"
+        android:text=""
         android:textColor="@color/black"
         android:textSize="14sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -46,13 +46,13 @@
         />
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tvcource"
+        android:id="@+id/tvgesignation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Abhay"
-        app:layout_constraintStart_toStartOf="@+id/tveducation"
-        app:layout_constraintTop_toBottomOf="@+id/tveducation" />
+        android:text=""
+        app:layout_constraintStart_toStartOf="@+id/tvComapny"
+        app:layout_constraintTop_toBottomOf="@+id/tvComapny" />
 
 
     <LinearLayout
@@ -63,8 +63,8 @@
         android:weightSum="1"
         android:layout_marginHorizontal="16dp"
         app:layout_constraintEnd_toEndOf="@+id/ivedit"
-        app:layout_constraintStart_toStartOf="@+id/tvcource"
-        app:layout_constraintTop_toBottomOf="@+id/tvcource">
+        app:layout_constraintStart_toStartOf="@+id/tvgesignation"
+        app:layout_constraintTop_toBottomOf="@+id/tvgesignation">
 
 
         <TextView
@@ -110,7 +110,7 @@
             android:layout_marginTop="4dp"
             android:layout_weight=".5"
             android:fontFamily="@font/poppins_medium"
-            android:text="From"
+            android:text=""
             android:textSize="14sp" />
 
 
@@ -120,9 +120,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:layout_weight=".5"
-            android:fontFamily="@font/poppins_light"
-            android:text="To"
-            android:textSize="12sp" />
+            android:layout_marginStart="10dp"
+            android:fontFamily="@font/poppins_medium"
+            android:text=""
+            android:textSize="14sp" />
 
     </LinearLayout>
 
