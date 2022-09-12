@@ -1,4 +1,4 @@
-package com.mechanicforyou.user.FirebaseNotification
+package com.stalmate.user.services
 
 import android.app.NotificationChannel
 import android.app.NotificationManager

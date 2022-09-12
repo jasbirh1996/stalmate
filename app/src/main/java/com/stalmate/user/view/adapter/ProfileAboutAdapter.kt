@@ -24,15 +24,11 @@ class ProfileAboutAdapter(
 ) :
     RecyclerView.Adapter<ProfileAboutAdapter.FeedViewHolder>() {
     var list = ArrayList<AboutProfileLine>()
-
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
     ): ProfileAboutAdapter.FeedViewHolder {
-
-        var view =
-            LayoutInflater.from(parent.context).inflate(R.layout.layout_profile_data_lines, parent, false)
+        var view = LayoutInflater.from(parent.context).inflate(R.layout.layout_profile_data_lines, parent, false)
         return FeedViewHolder(DataBindingUtil.bind<LayoutProfileDataLinesBinding>(view)!!)
     }
 
@@ -44,24 +40,14 @@ class ProfileAboutAdapter(
         return list.size
     }
 
-
     inner class FeedViewHolder(var binding: LayoutProfileDataLinesBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(about: AboutProfileLine) {
-
-           binding.tvKey.text=about.key
+            binding.tvKey.text=about.key
             binding.tvValue.text=" "+about.middle+" "+about.value
-            Log.d("asdasd","pp")
-
             Glide.with(context).load(about.icon).into(binding.icon)
-
         }
-
     }
-
-
-
-
 
     fun submitList(feedList: List<AboutProfileLine>) {
         list.clear()

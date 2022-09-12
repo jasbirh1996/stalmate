@@ -218,122 +218,174 @@
             app:layout_constraintTop_toBottomOf="@+id/websiteurlcontainer" />
 
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/profileTg"
-            android:layout_width="wrap_content"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layoutProfileImages"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:fontFamily="@font/poppins_medium"
-            android:text="@string/uploaded_profile_picture"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="@+id/websiteurlcontainer"
-            app:layout_constraintTop_toBottomOf="@+id/etWebsite" />
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/etWebsite"
+            tools:visibility="gone">
 
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:layout_width="wrap_content"
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/profileTg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_medium"
+                android:text="@string/uploaded_profile_picture"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/buttonSeemoreProfile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="10dp"
+                android:drawableTint="@color/black"
+                android:text="@string/see_more"
+                android:textColor="@color/app_color"
+                android:textSize="11sp"
+                android:visibility="visible"
+                app:fontFamily="@font/poppins"
+                app:layout_constraintBottom_toBottomOf="@+id/profileTg"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/profileTg" />
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvProfilePicture"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/profileTg"
+                app:layout_constraintTop_toBottomOf="@+id/profileTg"
+                tools:itemCount="5"
+                tools:listitem="@layout/item_profile_cover" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layoutCoverImages"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableEnd="@drawable/ic_quitemode_rightarrow"
-            android:drawablePadding="10dp"
-            android:drawableTint="@color/black"
-            android:text="@string/see_more"
-            android:textColor="@color/app_color"
-            app:layout_constraintBottom_toBottomOf="@+id/profileTg"
-            app:layout_constraintEnd_toEndOf="@+id/etWebsite"
-            app:layout_constraintTop_toTopOf="@+id/profileTg" />
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layoutProfileImages"
+            tools:visibility="gone">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/coverTg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/poppins_medium"
+                android:text="@string/uploaded_cover_image"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/buttonSeeMoreCover"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:drawablePadding="10dp"
+                android:drawableTint="@color/black"
+                android:text="@string/see_more"
+                android:textColor="@color/app_color"
+                android:textSize="11sp"
+                android:visibility="visible"
+                app:fontFamily="@font/poppins"
+                app:layout_constraintBottom_toBottomOf="@+id/coverTg"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/coverTg" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvCoverPicture"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintStart_toStartOf="@+id/coverTg"
+
+                app:layout_constraintTop_toBottomOf="@+id/coverTg"
+                tools:itemCount="5"
+                tools:listitem="@layout/item_profile_cover" />
 
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvProfilePicture"
-            android:layout_width="0dp"
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layoutBlockList"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal"
-            tools:listitem="@layout/item_profile_cover"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintEnd_toEndOf="@+id/etWebsite"
-            app:layout_constraintStart_toStartOf="@+id/profileTg"
-            app:layout_constraintTop_toBottomOf="@+id/profileTg"
-            tools:itemCount="5" />
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layoutCoverImages"
+            tools:visibility="gone">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/blockListTg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/poppins_medium"
+                android:text="Blocked Lists"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/coverTg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:fontFamily="@font/poppins_medium"
-            android:text="@string/uploaded_cover_image"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="@+id/rvProfilePicture"
-            app:layout_constraintTop_toBottomOf="@+id/rvProfilePicture" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawableEnd="@drawable/ic_quitemode_rightarrow"
-            android:drawablePadding="10dp"
-            android:drawableTint="@color/black"
-            android:text="@string/see_more"
-            android:textColor="@color/app_color"
-            app:layout_constraintBottom_toBottomOf="@+id/coverTg"
-            app:layout_constraintEnd_toEndOf="@+id/etWebsite"
-            app:layout_constraintTop_toTopOf="@+id/coverTg" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvCoverPicture"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal"
-            tools:listitem="@layout/item_profile_cover"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintEnd_toEndOf="@+id/etWebsite"
-            app:layout_constraintStart_toStartOf="@+id/coverTg"
-            app:layout_constraintTop_toBottomOf="@+id/coverTg"
-            tools:itemCount="5" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/blockListTg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:fontFamily="@font/poppins_medium"
-            android:text="Blocked Lists"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="@+id/rvCoverPicture"
-            app:layout_constraintTop_toBottomOf="@+id/rvCoverPicture" />
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/buttonSeeAllBlockList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="10dp"
+                android:drawableTint="@color/black"
+                android:text="@string/see_all"
+                android:textColor="@color/app_color"
+                android:textSize="11sp"
+                app:fontFamily="@font/poppins"
+                app:layout_constraintBottom_toBottomOf="@+id/blockListTg"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/blockListTg" />
 
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/appCompatTextView22"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawablePadding="10dp"
-            android:drawableTint="@color/black"
-            android:text="@string/see_all"
-            android:textColor="@color/app_color"
-            app:layout_constraintBottom_toBottomOf="@+id/blockListTg"
-            app:layout_constraintEnd_toEndOf="@+id/etWebsite"
-            app:layout_constraintTop_toTopOf="@+id/blockListTg" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvBlockList"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintStart_toStartOf="@+id/blockListTg"
+
+                app:layout_constraintTop_toBottomOf="@+id/blockListTg"
+                tools:itemCount="5"
+                tools:listitem="@layout/item_profile_cover" />
 
 
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvBlockList"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal"
-            tools:listitem="@layout/item_profile_cover"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintEnd_toEndOf="@+id/etWebsite"
-            app:layout_constraintStart_toStartOf="@+id/blockListTg"
-            app:layout_constraintTop_toBottomOf="@+id/blockListTg"
-            tools:itemCount="5" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/btn_crate_account"
@@ -341,26 +393,27 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="30dp"
-            android:layout_marginTop="32dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginTop="20dp"
             android:gravity="center"
             android:text="Update"
             android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rvBlockList"
+            app:layout_constraintTop_toBottomOf="@+id/layoutBlockList"
             app:textAllCaps="false" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/activity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="16dp"
             android:fontFamily="@font/poppins_medium"
             android:text="@string/activity_log"
             android:textColor="@color/black"
+
             android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="@+id/rvProfilePicture"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btn_crate_account" />
 
 
@@ -369,7 +422,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            app:layout_constraintEnd_toEndOf="@+id/appCompatTextView22"
+
             app:layout_constraintStart_toStartOf="@+id/activity"
             app:layout_constraintTop_toBottomOf="@+id/activity" />
 

@@ -6,19 +6,20 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="10dp"
+    android:padding="14dp"
+    android:layout_marginTop="8dp"
     android:background="@drawable/circle_light_sky">
 
     <TextView
         android:id="@+id/tvComapny"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginEnd="20dp"
         android:fontFamily="@font/poppins_medium"
         android:text=""
         android:textColor="@color/black"
         android:textSize="14sp"
+        app:layout_constraintEnd_toStartOf="@+id/ivDelete"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -26,8 +27,6 @@
         android:id="@+id/ivedit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="10dp"
         android:src="@drawable/ic_post_edit"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -47,21 +46,22 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tvgesignation"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:text=""
+        app:layout_constraintEnd_toEndOf="@+id/tvComapny"
         app:layout_constraintStart_toStartOf="@+id/tvComapny"
         app:layout_constraintTop_toBottomOf="@+id/tvComapny" />
 
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/fromTo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+
         android:orientation="horizontal"
         android:weightSum="1"
-        android:layout_marginHorizontal="16dp"
         app:layout_constraintEnd_toEndOf="@+id/ivedit"
         app:layout_constraintStart_toStartOf="@+id/tvgesignation"
         app:layout_constraintTop_toBottomOf="@+id/tvgesignation">
@@ -71,33 +71,41 @@
             android:id="@+id/fromTag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
             android:layout_weight=".5"
             android:fontFamily="@font/poppins_light"
             android:text="From"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
         <TextView
             android:id="@+id/toTag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
             android:layout_weight=".5"
             android:fontFamily="@font/poppins_light"
             android:text="To"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="@+id/guideline2"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    </LinearLayout>
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="192dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/fromToData"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:weightSum="1"
-        android:layout_marginHorizontal="16dp"
         app:layout_constraintEnd_toEndOf="@+id/ivedit"
         app:layout_constraintStart_toStartOf="@+id/fromTo"
         app:layout_constraintTop_toBottomOf="@+id/fromTo">
@@ -107,25 +115,33 @@
             android:id="@+id/tvFrom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
             android:layout_weight=".5"
             android:fontFamily="@font/poppins_medium"
             android:text=""
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
         <TextView
             android:id="@+id/tvTo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:layout_weight=".5"
-            android:layout_marginStart="10dp"
+
             android:fontFamily="@font/poppins_medium"
             android:text=""
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@+id/guideline3"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    </LinearLayout>
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="194dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 

@@ -60,11 +60,11 @@ class SuggestedFriendAdapter(
             ImageLoaderHelperGlide.setGlideCorner(
                 context,
                 binding.ivUserImage,
-                friend.url + "/" + friend.img
+                friend.img
             )
             binding.tvUserName.text = friend.first_name
 
-            Log.d("asdasdasd", friend.url + "/" + friend.img)
+            Log.d("asdasdasd",  friend.img)
 
             binding.buttonAddFriend.setOnClickListener {
                 updateFriendStatus(

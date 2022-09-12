@@ -12,6 +12,7 @@ import com.stalmate.user.databinding.ItemProfileCoverBinding
 import com.stalmate.user.model.CoverImg
 import com.stalmate.user.model.Education
 import com.stalmate.user.model.ProfileImg
+import com.stalmate.user.utilities.ImageLoaderHelperGlide
 import com.stalmate.user.viewmodel.AppViewModel
 
 class CoverPictureAdapter(val viewModel: AppViewModel, val context: Context, var callback: CoverPictureAdapter.Callbackk)
@@ -28,8 +29,9 @@ class CoverPictureAdapter(val viewModel: AppViewModel, val context: Context, var
 
         fun bind(response : CoverImg){
 
-            Glide.with(context).load(response.img).into(binding.ivImage)
 
+
+            ImageLoaderHelperGlide.setGlideCorner(context,binding.ivImage,response.img)
         }
 
 

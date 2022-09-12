@@ -80,7 +80,9 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
             }
         })
 
-
+        binding.ivBack.setOnClickListener {
+            finish()
+        }
 
 
         setupData()
@@ -246,9 +248,9 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
         binding.layout.tvFollowingCount.text=userData.following_count.toString()
         binding.tvUserAbout.text=userData.about
         binding.layout.tvFriendCount.text=userData.friends_count.toString()
-        ImageLoaderHelperGlide.setGlide(this,binding.ivBackground,userData.img_url+userData.cover_img1)
+        ImageLoaderHelperGlide.setGlide(this,binding.ivBackground,userData.cover_img1)
      //   Glide.with(this).load(userData.img_url+userData.profile_img1).into(binding.ivUserThumb)
-        ImageLoaderHelperGlide.setGlide(this,binding.ivUserThumb,userData.img_url+userData.profile_img1)
+        ImageLoaderHelperGlide.setGlide(this,binding.ivUserThumb,userData.profile_img1)
                 Log.d("asdjasda",userData.img_url+userData.profile_img1)
         Log.d("asdjasda",userData.img_url+userData.cover_img1)
 

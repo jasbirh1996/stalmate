@@ -295,13 +295,11 @@ class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk,
 
         ImageLoaderHelperGlide.setGlide(
             this,
-            binding.ivBackground,
-            userData.results.img_url + userData.results.cover_img1
+            binding.ivBackground, userData.results.cover_img1
         )
         ImageLoaderHelperGlide.setGlide(
             this,
-            binding.ivUserThumb,
-            userData.results.img_url + userData.results.profile_img1
+            binding.ivUserThumb, userData.results.profile_img1
         )
 
 
