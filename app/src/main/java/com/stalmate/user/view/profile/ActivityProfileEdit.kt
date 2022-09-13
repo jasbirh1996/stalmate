@@ -274,6 +274,11 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, Prof
 
             }
 
+        binding.ivBack.setOnClickListener {
+            finish()
+        }
+
+
     }
 
 
@@ -391,8 +396,8 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, Prof
         binding.layout.etHowTown.setText(userData.results.profile_data[0].home_town)
         binding.layout.etCurrentCity.setText(userData.results.city)
 
-        ImageLoaderHelperGlide.setGlide(this,binding.ivBackground,userData.results.img_url+userData.results.cover_img1)
-        ImageLoaderHelperGlide.setGlide(this,binding.ivUserThumb,userData.results.img_url+userData.results.profile_img1)
+        ImageLoaderHelperGlide.setGlide(this,binding.ivBackground,userData.results.cover_img1)
+        ImageLoaderHelperGlide.setGlide(this,binding.ivUserThumb,userData.results.profile_img1)
 
 
         binding.etWebsite.setText(userData.results.company)
@@ -421,15 +426,26 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, Prof
 
 
         profilePictureAdapter =  ProfilePictureAdapter(networkViewModel, this, this)
-        binding.rvProfilePicture.adapter=profilePictureAdapter
 
-        profilePictureAdapter.submitList(userData.results.profile_img)
-
+        if (userData.results.profile_img.isNotEmpty()){
+            binding.rvProfilePicture.adapter=profilePictureAdapter
+            profilePictureAdapter.submitList(userData.results.profile_img)
+            binding.layoutProfileImages.visibility=View.VISIBLE
+        }else{
+            binding.layoutProfileImages.visibility=View.GONE
+        }
 
         coverPictureAdapter =  CoverPictureAdapter(networkViewModel, this, this)
-        binding.rvCoverPicture.adapter=profilePictureAdapter
 
-        coverPictureAdapter.submitList(userData.results.cover_img)
+
+        if (userData.results.cover_img.isNotEmpty()){
+            binding.rvCoverPicture.adapter=profilePictureAdapter
+            coverPictureAdapter.submitList(userData.results.cover_img)
+            binding.layoutCoverImages.visibility=View.VISIBLE
+        }else{
+            binding.layoutCoverImages.visibility=View.GONE
+        }
+
 
 
         binding.rvFeeds.layoutManager = LinearLayoutManager(this)

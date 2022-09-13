@@ -11,6 +11,7 @@ import com.stalmate.user.databinding.ItemEducationprofileBinding
 import com.stalmate.user.databinding.ItemProfileCoverBinding
 import com.stalmate.user.model.Education
 import com.stalmate.user.model.ProfileImg
+import com.stalmate.user.utilities.ImageLoaderHelperGlide
 import com.stalmate.user.viewmodel.AppViewModel
 
 class ProfilePictureAdapter(val viewModel: AppViewModel, val context: Context, var callback: ProfilePictureAdapter.Callbackk)
@@ -27,8 +28,8 @@ class ProfilePictureAdapter(val viewModel: AppViewModel, val context: Context, v
 
         fun bind(response : ProfileImg){
 
-            Glide.with(context).load(response.img).into(binding.ivImage)
 
+            ImageLoaderHelperGlide.setGlideCorner(context,binding.ivImage,response.img)
         }
 
 

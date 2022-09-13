@@ -5,6 +5,7 @@
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
+        app:elevation="0dp"
         android:layout_height="wrap_content">
 
         <com.google.android.material.appbar.MaterialToolbar
@@ -14,6 +15,7 @@
             android:layout_height="?attr/actionBarSize"
             app:contentInsetStartWithNavigation="0dp"
             app:titleTextColor="@color/black"
+
 
             android:background="@color/white"
             app:navigationIcon="@drawable/ic_back"
@@ -25,14 +27,31 @@
                 android:layout_height="?android:attr/actionBarSize">
 
 
-
                 <TextView
                     android:id="@+id/tvhead"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="50dp"
                     android:text="head"
                     android:textColor="@color/black"
                     android:textSize="16sp"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_chainStyle="packed" />
+
+                <TextView
+                    android:id="@+id/tvheadCenterHeadBold"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="50dp"
+                    android:gravity="center"
+                    android:text="head"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

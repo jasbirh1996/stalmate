@@ -45,21 +45,16 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
 
     override fun onClick(viewId: Int, view: View?) {
     }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = DataBindingUtil.setContentView(this, R.layout.activity_profile)
         binding.layout.buttonEditProfile.visibility=View.VISIBLE
         feedAdapter = AdapterFeed(networkViewModel, this, this)
         binding.layout.rvFeeds.setNestedScrollingEnabled(false);
         binding.layout.rvFeeds.adapter = feedAdapter
-
         binding.layout.rvFeeds.layoutManager = LinearLayoutManager(this)
-
         networkViewModel.getFeedList("", HashMap())
         networkViewModel.feedLiveData.observe(this, Observer {
-            Log.d("asdasdasd", "oaspiasddsad")
             it.let {
                 feedAdapter.submitList(it!!.results)
             }
@@ -85,7 +80,9 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
             }
         })
 
-
+        binding.ivBack.setOnClickListener {
+            finish()
+        }
 
 
         setupData()
@@ -251,33 +248,47 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
         binding.layout.tvFollowingCount.text=userData.following_count.toString()
         binding.tvUserAbout.text=userData.about
         binding.layout.tvFriendCount.text=userData.friends_count.toString()
-
-
-        ImageLoaderHelperGlide.setGlide(this,binding.ivBackground,userData.img_url+userData.cover_img1)
+        ImageLoaderHelperGlide.setGlide(this,binding.ivBackground,userData.cover_img1)
      //   Glide.with(this).load(userData.img_url+userData.profile_img1).into(binding.ivUserThumb)
-        ImageLoaderHelperGlide.setGlide(this,binding.ivUserThumb,userData.img_url+userData.profile_img1)
+        ImageLoaderHelperGlide.setGlide(this,binding.ivUserThumb,userData.profile_img1)
                 Log.d("asdjasda",userData.img_url+userData.profile_img1)
         Log.d("asdjasda",userData.img_url+userData.cover_img1)
 
         var aboutArrayList = ArrayList<AboutProfileLine>()
-        aboutArrayList.add(AboutProfileLine("", "Student", "IMS Ghaziabad", "at"))
-        aboutArrayList.add(AboutProfileLine("", "Designer", "Flupper", "at"))
-        /*     for (i in 0 until userData.profile_data[0].education.size){
 
-             }
-             for (i in 0 until userData.profile_data[0].profession.size){
+        if (userData.profile_data[0].profession.isNotEmpty()){
+            aboutArrayList.add(AboutProfileLine(R.drawable.ic_profile_designation_icon, userData.profile_data[0].profession[0].designation, userData.profile_data[0].profession[0].company_name, "at"))
+        }
 
-             }*/
+        if (userData.profile_data[0].education.isNotEmpty()){
+            aboutArrayList.add(AboutProfileLine(R.drawable.ic_profile_graduation, "Student", userData.profile_data[0].education[0].sehool, "at"))
+        }
+
+
         aboutArrayList.add(
             AboutProfileLine(
-                "",
+                R.drawable.ic_profile_location,
                 "Lives at",
                 userData.profile_data[0].home_town,
                 "at"
             )
         )
-        aboutArrayList.add(AboutProfileLine("", "From", userData.profile_data[0].location, ""))
-        aboutArrayList.add(AboutProfileLine("", "", userData.profile_data[0].marital_status, ""))
+        aboutArrayList.add(
+            AboutProfileLine(
+                R.drawable.ic_profile_location,
+                "From",
+                userData.profile_data[0].location,
+                ""
+            )
+        )
+        aboutArrayList.add(
+            AboutProfileLine(
+                R.drawable.ic_profile_heart_icon,
+                "",
+                userData.profile_data[0].marital_status,
+                ""
+            )
+        )
         binding.layout.rvAbout.layoutManager = LinearLayoutManager(this)
         var profileAboutAdapter = ProfileAboutAdapter(networkViewModel, this, this)
         profileAboutAdapter.submitList(aboutArrayList)

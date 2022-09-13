@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "338731460723",
+    "project_id": "stalmate-e0447",
+    "storage_bucket": "stalmate-e0447.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:338731460723:android:3b3b0e3010f7aa9d3fe206",
+        "android_client_info": {
+          "package_name": "com.stalmate.user"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "338731460723-k8svk1aidms0ig6r1s11fi6nckok03d1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.stalmate.user",
+            "certificate_hash": "befe1fa46ba44e02de60eae1d7c094c3aa0c410c"
+          }
+        },
+        {
+          "client_id": "338731460723-0d7v1u3q69v0o21tgg3bdujapadcc61s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDS5VNBZ1qXqj0EgOS9zsFHMkazdo6S-WA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "338731460723-0d7v1u3q69v0o21tgg3bdujapadcc61s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

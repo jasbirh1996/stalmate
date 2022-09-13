@@ -60,11 +60,11 @@ class SuggestedFriendAdapter(
             ImageLoaderHelperGlide.setGlideCorner(
                 context,
                 binding.ivUserImage,
-                friend.url + "/" + friend.img
+                friend.img
             )
             binding.tvUserName.text = friend.first_name
 
-            Log.d("asdasdasd", friend.url + "/" + friend.img)
+            Log.d("asdasdasd",  friend.img)
 
             binding.buttonAddFriend.setOnClickListener {
                 updateFriendStatus(
@@ -103,9 +103,10 @@ class SuggestedFriendAdapter(
                     )
                 }
             }
+        Log.d("asdasdasdgg",friend.isFriend.toString())
+            Log.d("asdasdasdgsugestionsg",friend.isFriendRemovedFromSuggestion.toString())
 
-
-            if (friend.isFriend == 1 || friend.isFriendRemovedFromSuggestion == 1) {
+            if (friend.friendRequestsent == 1 || friend.isFriendRemovedFromSuggestion == 1) {
                 binding.buttonAddFriend.visibility = View.GONE
                 binding.buttonRemove.visibility = View.GONE
                 binding.buttonAfterAction.visibility = View.VISIBLE
@@ -155,10 +156,10 @@ class SuggestedFriendAdapter(
             viewModel.sendFriendRequest("", hashMap)
             viewModel.sendFriendRequestLiveData.observe(lifecycleOwner, Observer {
                 it.let {
-                    if (list[bindingAdapterPosition].isFriend == 0) {
-                        list[bindingAdapterPosition].isFriend = 1
+                    if (list[bindingAdapterPosition].friendRequestsent == 0) {
+                        list[bindingAdapterPosition].friendRequestsent = 1
                     } else {
-                        list[bindingAdapterPosition].isFriend = 0
+                        list[bindingAdapterPosition].friendRequestsent = 0
                     }
                     notifyItemChanged(bindingAdapterPosition)
 

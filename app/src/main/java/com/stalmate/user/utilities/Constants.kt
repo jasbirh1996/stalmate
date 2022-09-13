@@ -68,8 +68,12 @@ object Constants {
     const val PARAMETER_EMAIL = "email"
 
 
-
-
+    const val FILTER_NOTIFICATIONS = "com.stalmateuser"
+    const val LOCATION_NOTIFICATION_BROADCAST = "com.stalmateuser"
+    const val CHANNEL_ID = "com.stalmateuser"
+    const val FILTER_NOTIFICATION_BROADCAST = "com.stalmateuser"
+    const val CHANNEL_NAME = "Notification"
+    const val CHANNEL_DESCRIPTION = "Example Partner Notifications"
 
 
 }

@@ -3,9 +3,12 @@ package com.stalmate.user.base
 import android.app.Application
 import android.content.Context
 import android.location.Geocoder
+import android.util.Log
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.FirebaseApp
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.Gson
 import com.stalmate.user.networking.RestClient
-
 
 class App :Application(){
     companion object {
@@ -26,15 +29,14 @@ class App :Application(){
         applicationInstance = this
         appContext = this
 
-
           RestClient.inst.setup()
-            /*         gson = Gson()
+                    gson = Gson()
                    geocoder = Geocoder(this)
                  FirebaseApp.initializeApp(applicationInstance!!)
                        // Initialize the SDK before executing any other operations,
-                       FacebookSdk.sdkInitialize(getApplicationContext());
+                 /*      FacebookSdk.sdkInitialize(getApplicationContext());
                        AppEventsLogger.activateApp(this);
-                   RestClient.getInst().setup()
+            */
                   FirebaseMessaging.getInstance().getToken()
                        .addOnCompleteListener(OnCompleteListener<String?> { task ->
                            if (!task.isSuccessful) {
@@ -47,7 +49,7 @@ class App :Application(){
                            firebaseToken = token
                            // Log and toast
                            Log.d(TAG, token!!)
-                       })*/
+                       })
     }
 
 

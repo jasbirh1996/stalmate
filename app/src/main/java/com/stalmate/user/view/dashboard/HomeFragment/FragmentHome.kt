@@ -54,6 +54,9 @@ class FragmentHome : BaseFragment(), AdapterFeed.Callbackk, UserHomeStoryAdapter
 
         feedAdapter = AdapterFeed(networkViewModel, requireContext(), this)
         homeStoryAdapter = UserHomeStoryAdapter(networkViewModel, requireContext(), this)
+        binding.shimmerViewContainer.startShimmer()
+        binding.shimmerLayoutFeeds.startShimmer()
+
 
         binding.rvFeeds.adapter=feedAdapter
         binding.rvStory.adapter=homeStoryAdapter
@@ -68,13 +71,16 @@ class FragmentHome : BaseFragment(), AdapterFeed.Callbackk, UserHomeStoryAdapter
             Log.d("asdasdasd","oaspiasddsad")
             it.let {
                 feedAdapter.submitList(it!!.results)
-
+                binding.shimmerLayoutFeeds.stopShimmer()
+                binding.rvFeeds.visibility=View.VISIBLE
             }
         })
 
         networkViewModel.feedLiveData.observe(viewLifecycleOwner, Observer {
             Log.d("asdasdasd","oaspiasddsad")
             it.let {
+                binding.shimmerViewContainer.stopShimmer()
+                binding.storyView.visibility=View.VISIBLE
                 homeStoryAdapter.submitList(it!!.results)
             }
         })

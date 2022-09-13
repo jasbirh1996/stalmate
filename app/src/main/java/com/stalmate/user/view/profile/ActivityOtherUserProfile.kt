@@ -134,7 +134,7 @@ class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk,
         }
 
         binding.buttonFriend.setOnClickListener {
-     updateFriendStatus(Constants.TYPE_USER_ACTION_ADD_FRIEND)
+            updateFriendStatus(Constants.TYPE_USER_ACTION_ADD_FRIEND)
         }
 
     }
@@ -211,39 +211,36 @@ class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk,
     fun updateFriendStatus(status: String) {
         var hashMap = HashMap<String, String>()
         hashMap.put("id_user", userId)
-        Log.d("a;ksda","akjasdasdsd;asd")
+        Log.d("a;ksda", "akjasdasdsd;asd")
         if (status.equals(Constants.TYPE_USER_ACTION_ADD_FRIEND)) {
             networkViewModel.sendFriendRequest("", hashMap)
             networkViewModel.sendFriendRequestLiveData.observe(this, Observer {
                 it.let {
 
 
-                        if (userData.results.isFriend==1){
-                            userData.results.isFriend=0
-                            userData.results.isFollowed=0
-                        }else{
+                    if (userData.results.isFriend == 1) {
+                        userData.results.isFriend = 0
+                        userData.results.isFollowed = 0
+                    } else {
 
-                            if (userData.results.friendRequestsent==0){
-                                userData.results.isFollowed=1
-                                userData.results.friendRequestsent=1
-                            }else{
-                                userData.results.friendRequestsent=0
-                            }
-                            Log.d("alkshdasldaupdating",userData.results.friendRequestsent.toString())
+                        if (userData.results.friendRequestsent == 0) {
+                            userData.results.isFollowed = 1
+                            userData.results.friendRequestsent = 1
+                        } else {
+                            userData.results.friendRequestsent = 0
                         }
+                        Log.d("alkshdasldaupdating", userData.results.friendRequestsent.toString())
+                    }
 
 
-                        Log.d("a;ksda","akjsd;asd")
+                    Log.d("a;ksda", "akjsd;asd")
 
 
 
                     notifyData()
 
 
-
-
                 }
-
 
 
             })
@@ -298,28 +295,28 @@ class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk,
 
         ImageLoaderHelperGlide.setGlide(
             this,
-            binding.ivBackground,
-            userData.results.img_url + userData.results.cover_img1
+            binding.ivBackground, userData.results.cover_img1
         )
         ImageLoaderHelperGlide.setGlide(
             this,
-            binding.ivUserThumb,
-            userData.results.img_url + userData.results.profile_img1
+            binding.ivUserThumb, userData.results.profile_img1
         )
 
 
         var aboutArrayList = ArrayList<AboutProfileLine>()
-        aboutArrayList.add(AboutProfileLine("", "Student", "IMS Ghaziabad", "at"))
-        aboutArrayList.add(AboutProfileLine("", "Designer", "Flupper", "at"))
-        /*     for (i in 0 until userData.profile_data[0].education.size){
 
-             }
-             for (i in 0 until userData.profile_data[0].profession.size){
+      if (userData.results.profile_data[0].profession.isNotEmpty()){
+          aboutArrayList.add(AboutProfileLine(R.drawable.ic_profile_designation_icon, userData.results.profile_data[0].profession[0].designation, userData.results.profile_data[0].profession[0].company_name, "at"))
+      }
 
-             }*/
+        if (userData.results.profile_data[0].education.isNotEmpty()){
+            aboutArrayList.add(AboutProfileLine(R.drawable.ic_profile_graduation, "Student", userData.results.profile_data[0].education[0].sehool, "at"))
+        }
+
+
         aboutArrayList.add(
             AboutProfileLine(
-                "",
+                R.drawable.ic_profile_location,
                 "Lives at",
                 userData.results.profile_data[0].home_town,
                 "at"
@@ -327,7 +324,7 @@ class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk,
         )
         aboutArrayList.add(
             AboutProfileLine(
-                "",
+                R.drawable.ic_profile_location,
                 "From",
                 userData.results.profile_data[0].location,
                 ""
@@ -335,7 +332,7 @@ class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk,
         )
         aboutArrayList.add(
             AboutProfileLine(
-                "",
+                R.drawable.ic_profile_heart_icon,
                 "",
                 userData.results.profile_data[0].marital_status,
                 ""
@@ -372,14 +369,14 @@ class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk,
                 binding.layoutButtonsAcceptReject.visibility = View.VISIBLE
                 binding.layoutTopControlls.visibility = View.VISIBLE
             } else {
-                Log.d("alkshdasldaview",userData.results.friendRequestsent.toString())
+                Log.d("alkshdasldaview", userData.results.friendRequestsent.toString())
 
                 if (userData.results.friendRequestsent == 1) {
                     binding.layoutButtonsFriends.visibility = View.VISIBLE
                     binding.buttonFriend.text = "Friend Request Sent"
                     binding.layoutButtonsAcceptReject.visibility = View.GONE
                     binding.layoutTopControlls.visibility = View.VISIBLE
-                }else{
+                } else {
                     binding.layoutTopControlls.visibility = View.VISIBLE
                     binding.layoutButtonsFriends.visibility = View.VISIBLE
                     binding.buttonFriend.text = "Add Friend"
@@ -389,12 +386,6 @@ class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk,
 
             }
         }
-
-/*        if (userData.results.isFriend == 1) {
-            binding.tvBlockStatus.text = "Blocked"
-        }else{
-            binding.tvBlockStatus.text = "Block"
-        }*/
 
     }
 

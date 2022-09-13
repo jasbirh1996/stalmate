@@ -30,7 +30,7 @@ public class ImageLoaderHelperGlide extends Activity {
                 .encodeFormat(Bitmap.CompressFormat.PNG)
                 .format(DecodeFormat.DEFAULT);
         Glide.with(context)
-                .applyDefaultRequestOptions(requestOptions)
+               // .applyDefaultRequestOptions(requestOptions)
                 .load(imageLink).transition(DrawableTransitionOptions.withCrossFade())
                /* .error(Glide.with(context)
                         .load(R.drawable.image))*/
