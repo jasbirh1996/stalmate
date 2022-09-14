@@ -60,7 +60,7 @@ class SuggestedFriendAdapter(
             ImageLoaderHelperGlide.setGlideCorner(
                 context,
                 binding.ivUserImage,
-                friend.img
+                friend.img,R.drawable.user_placeholder
             )
             binding.tvUserName.text = friend.first_name
 

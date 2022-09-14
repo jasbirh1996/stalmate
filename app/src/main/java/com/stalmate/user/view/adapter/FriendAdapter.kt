@@ -338,16 +338,10 @@ class FriendAdapter(
         ImageLoaderHelperGlide.setGlideCorner(
             context,
             binding.ivUserImage,
-             friend.img
+             friend.img,
+            R.drawable.user_placeholder
         )
 
-
-
-        Glide.with(context)
-
-            .load( friend.img)/*         .error(Glide.with(context)
-                        .load(R.drawable.image))*/
-            .into(binding.ivUserImage)
 
 
 

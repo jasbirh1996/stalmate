@@ -29,7 +29,7 @@ class ProfilePictureAdapter(val viewModel: AppViewModel, val context: Context, v
         fun bind(response : ProfileImg){
 
 
-            ImageLoaderHelperGlide.setGlideCorner(context,binding.ivImage,response.img)
+            ImageLoaderHelperGlide.setGlideCorner(context,binding.ivImage,response.img,R.drawable.user_placeholder)
         }
 
 

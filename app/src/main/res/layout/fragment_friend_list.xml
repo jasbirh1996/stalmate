@@ -20,10 +20,9 @@
                     android:id="@+id/rvFriends"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-
+                    app:layout_constraintTop_toBottomOf="@+id/ivFilterIcon" />
 
                 <!--Shimmer Effect-->
                 <com.facebook.shimmer.ShimmerFrameLayout
@@ -89,6 +88,17 @@
 
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <ImageView
+                    android:id="@+id/ivFilterIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+android:visibility="gone"
+                    android:layout_marginEnd="20dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_post_adjust" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

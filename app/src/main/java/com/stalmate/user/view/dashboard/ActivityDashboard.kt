@@ -1,6 +1,7 @@
 package com.stalmate.user.view.dashboard
 
 
+import android.content.Intent
 import com.simform.custombottomnavigation.Model
 
 import android.os.Bundle
@@ -10,7 +11,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import com.google.gson.Gson
 import com.irfaan008.irbottomnavigation.SpaceItem
+import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.base.App
 import com.stalmate.user.databinding.ActivityDashboardBinding
@@ -31,6 +34,7 @@ class ActivityDashboard : AppCompatActivity() {
         binding = ActivityDashboardBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setupBottomBar()
+        onNewIntent(intent)
 
       //  setBottomNavigationInNormalWay(savedInstanceState)
     }
@@ -42,6 +46,15 @@ class ActivityDashboard : AppCompatActivity() {
         private const val ID_NOTIFICATION = 3
         private const val ID_ACCOUNT = 4
     }
+
+
+    override fun onNewIntent(intent: Intent?) {
+        if (intent!!.getStringExtra("notificationType") != null) {
+            startActivity(IntentHelper.getOtherUserProfileScreen(this)!!.putExtra("id",intent.getStringExtra("userId").toString()))
+        }
+        super.onNewIntent(intent)
+    }
+
 
     fun setupBottomBar(){
             binding.bottomNavigationView.selectedItemId = R.id.home

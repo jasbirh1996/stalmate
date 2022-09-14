@@ -97,6 +97,10 @@ class FragmentHome : BaseFragment(), AdapterFeed.Callbackk, UserHomeStoryAdapter
             startActivity(IntentHelper.getActivityWelcomeScreen(requireContext()))
         }
 
+        binding.refreshLayout.setOnRefreshListener {
+            binding.refreshLayout.isRefreshing=false
+        }
+
 
     }
 

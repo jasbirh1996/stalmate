@@ -31,7 +31,7 @@ class CoverPictureAdapter(val viewModel: AppViewModel, val context: Context, var
 
 
 
-            ImageLoaderHelperGlide.setGlideCorner(context,binding.ivImage,response.img)
+            ImageLoaderHelperGlide.setGlideCorner(context,binding.ivImage,response.img,R.drawable.user_placeholder)
         }
 
 

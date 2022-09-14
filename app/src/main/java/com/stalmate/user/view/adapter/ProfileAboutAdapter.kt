@@ -4,6 +4,7 @@ package com.stalmate.user.view.adapter
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -15,6 +16,7 @@ import com.stalmate.user.model.AboutProfileLine
 
 
 import com.stalmate.user.model.Feed
+import com.stalmate.user.utilities.ValidationHelper
 import com.stalmate.user.viewmodel.AppViewModel
 
 class ProfileAboutAdapter(
@@ -28,7 +30,8 @@ class ProfileAboutAdapter(
         parent: ViewGroup,
         viewType: Int,
     ): ProfileAboutAdapter.FeedViewHolder {
-        var view = LayoutInflater.from(parent.context).inflate(R.layout.layout_profile_data_lines, parent, false)
+        var view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.layout_profile_data_lines, parent, false)
         return FeedViewHolder(DataBindingUtil.bind<LayoutProfileDataLinesBinding>(view)!!)
     }
 
@@ -43,8 +46,22 @@ class ProfileAboutAdapter(
     inner class FeedViewHolder(var binding: LayoutProfileDataLinesBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(about: AboutProfileLine) {
-            binding.tvKey.text=about.key
-            binding.tvValue.text=" "+about.middle+" "+about.value
+
+
+            if (!ValidationHelper.isNull(about.key) && !ValidationHelper.isNull(about.middle)) {
+                binding.tvValue.text = " " + about.middle + " " + about.value
+                binding.tvKey.text = about.key
+                binding.tvKey.visibility = View.VISIBLE
+            } else if (ValidationHelper.isNull(about.key) && ValidationHelper.isNull(about.middle)) {
+                binding.tvValue.text = about.value
+                binding.tvKey.visibility = View.GONE
+            } else if (!ValidationHelper.isNull(about.key) && ValidationHelper.isNull(about.middle)) {
+                binding.tvValue.text = " " + about.value
+                binding.tvKey.text = about.key
+                binding.tvKey.visibility = View.VISIBLE
+            }
+
+
             Glide.with(context).load(about.icon).into(binding.icon)
         }
     }

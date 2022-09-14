@@ -173,6 +173,17 @@ open class AppViewModel : ViewModel() {
         otpVerifyData = temp
         getResult(temp, apiInterface.setOtpVerify(map))
     }
+    var blockListLiveData: LiveData<ModelBlockedUser?> = MutableLiveData<ModelBlockedUser?>()
+    fun getBlockList(map: HashMap<String, String>) {
+        val temp = MutableLiveData<ModelBlockedUser?>()
+        blockListLiveData = temp
+        getResult(temp, apiInterface.getBlockedList(map))
+    }
+
+
+
+
+
 
     var otpVerifyRegistarionData: LiveData<CommonModelResponse?> = MutableLiveData<CommonModelResponse?>()
 

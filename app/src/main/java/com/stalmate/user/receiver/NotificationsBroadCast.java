@@ -19,7 +19,7 @@ public class NotificationsBroadCast extends BroadcastReceiver {
 
     Bundle notificationBundle;
     String notificationType;
-    String order_id;
+    String userId;
     String title, body;
     private Context contextt;
 
@@ -29,9 +29,9 @@ public class NotificationsBroadCast extends BroadcastReceiver {
         notificationBundle = intent.getExtras();
         if (notificationBundle != null) {
             Log.d("asdasda", new Gson().toJson(notificationBundle));
-            notificationType = notificationBundle.getString("notification_type");
+            notificationType = notificationBundle.getString("notificationType");
             try {
-                order_id = notificationBundle.getString("order_id");
+                userId = notificationBundle.getString("userId");
 
             }catch (Exception e){
                 Log.d("exceppppp",e.getMessage());
@@ -42,19 +42,19 @@ public class NotificationsBroadCast extends BroadcastReceiver {
 
        /*         switch (notificationType) {
                     case Constants.order_confirmed:
-                        notifyState(callBacks, ORDER_CONFIRMED, order_id, title);
+                        notifyState(callBacks, ORDER_CONFIRMED, userId, title);
                         break;
 
                     case Constants.order_cancel:
-                        notifyState(callBacks, ORDER_CANCELLED, order_id, title);
+                        notifyState(callBacks, ORDER_CANCELLED, userId, title);
                         break;
 
                     case Constants.order_pickup:
-                        notifyState(callBacks, PICK_UP, order_id, title);
+                        notifyState(callBacks, PICK_UP, userId, title);
                         break;
 
                     case Constants.order_complete:
-                        notifyState(callBacks, ORDER_COMPLETED, order_id, title);
+                        notifyState(callBacks, ORDER_COMPLETED, userId, title);
                         break;
 
 
@@ -65,27 +65,27 @@ public class NotificationsBroadCast extends BroadcastReceiver {
             }
         }
     }
-    private void notifyState(NotificationCallBacks callBack, int notificationType, String order_id, String titile) {
+    private void notifyState(NotificationCallBacks callBack, int notificationType, String userId, String titile) {
         switch (notificationType) {
 
             case ORDER_CONFIRMED:
-                callBack.onOrderConfirmed(order_id);
+                callBack.onOrderConfirmed(userId);
                 return;
 
 
             case  PICK_UP:
 
-                callBack.onOrderPickUp(order_id);
+                callBack.onOrderPickUp(userId);
                 break;
 
             case  ORDER_COMPLETED:
 
-                callBack.onOrderCompleted(order_id);
+                callBack.onOrderCompleted(userId);
                 break;
 
             case  ORDER_CANCELLED:
 
-                callBack.onOrderCancelled(order_id);
+                callBack.onOrderCancelled(userId);
                 break;
 
 
@@ -106,7 +106,7 @@ public class NotificationsBroadCast extends BroadcastReceiver {
     }
 
     public interface NotificationCallBacks {
-        void onOrderConfirmed(String order_id);
+        void onOrderConfirmed(String userId);
         void onOrderPickUp(String orderId);
         void onOrderCompleted(String orderId);
         void onOrderCancelled(String orderId);

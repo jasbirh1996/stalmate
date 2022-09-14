@@ -9,9 +9,9 @@ import android.media.RingtoneManager
 import android.os.Build
 import android.os.SystemClock
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.bumptech.glide.Glide
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.stalmate.user.R
@@ -37,6 +37,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
+        Log.d("a;lskd;asd","remotee")
         val notificationIntent = Intent(Constants.FILTER_NOTIFICATION_BROADCAST)
         val nData = remoteMessage.data
         if (nData != null && nData.isNotEmpty()) {
@@ -57,19 +58,32 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             mChannel.description = description
             mChannel.enableLights(true)
             mChannel.lightColor = Color.RED
-            notificationManager?.createNotificationChannel(mChannel)
+            notificationManager.createNotificationChannel(mChannel)
             val intent = Intent(this, ActivityDashboard::class.java)
-
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
 
             if (remoteMessage.data["title"] != null) {
                 intent.putExtra("title", remoteMessage.data["title"])
             }
-            intent.putExtra("notificationType", remoteMessage.data["notificationType"])
+            if (remoteMessage.data["userId"] != null) {
+                intent.putExtra("userId", remoteMessage.data["userId"])
+            }
 
+
+            /*           intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
+                    Intent.FLAG_ACTIVITY_CLEAR_TOP);*/
+           //  intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP || Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+
+
+
+
+
+
+            intent.putExtra("notificationType", remoteMessage.data["notificationType"])
             //   intent.setFlags( Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            val pendingIntent =
-                PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_MUTABLE)
             val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
             val mBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
             mBuilder.setSmallIcon(R.drawable.add_friend_icon)
@@ -80,11 +94,23 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                 mBuilder.setContentTitle(remoteMessage.data["title"])
                 mBuilder.setContentText(remoteMessage.data["text"])
             }
+
+
+
+            val futureTarget = Glide.with(this)
+                .asBitmap()
+                .load(R.drawable.app_logo)
+                .submit()
+
+            val bitmap = futureTarget.get()
+
+
             mBuilder.color = getColor(R.color.colorLightGray)
             mBuilder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
             mBuilder.priority = NotificationCompat.PRIORITY_DEFAULT
             mBuilder.setContentIntent(pendingIntent)
             mBuilder.setCategory(NotificationCompat.CATEGORY_PROMO)
+            mBuilder.setLargeIcon(bitmap)
             mBuilder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             mBuilder.setSound(defaultSoundUri)
             mBuilder.setAutoCancel(true)
@@ -96,7 +122,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         } else {
             val notificationIntent = Intent(Constants.FILTER_NOTIFICATION_BROADCAST)
             val nData = remoteMessage.data
-            if (nData != null && nData.isNotEmpty()) {
+            if (nData.isNotEmpty()) {
                 Log.d("Notification", "From: $nData")
                 for (key in nData.keys) {
                     notificationIntent.putExtra(key, nData[key])
@@ -110,7 +136,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             intent.putExtra("notificationType", remoteMessage.data["notificationType"])
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
             val pendingIntent =
-                PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT)
+                PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
             val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
             val mBuilder = NotificationCompat.Builder(this)
             mBuilder.setSmallIcon(R.mipmap.ic_launcher)
