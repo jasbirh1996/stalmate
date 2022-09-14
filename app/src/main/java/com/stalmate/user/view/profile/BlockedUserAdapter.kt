@@ -22,7 +22,7 @@ import com.stalmate.user.model.User
 import com.stalmate.user.utilities.ImageLoaderHelperGlide
 import com.stalmate.user.viewmodel.AppViewModel
 
-class BlockedUserAdapter(val viewModel: AppViewModel, val context: Context)
+class BlockedUserAdapter(val viewModel: AppViewModel, val context: Context,val callback:Callback)
     : RecyclerView.Adapter<BlockedUserAdapter.AlbumViewHolder>() {
 
     var list = ArrayList<User>()
@@ -42,12 +42,19 @@ class BlockedUserAdapter(val viewModel: AppViewModel, val context: Context)
             }
 
 
-
+            if (list.isEmpty()){
+                callback.onListEmpty()
+            }
 
         }
 
 
     }
+
+    public interface Callback{
+        fun onListEmpty()
+    }
+
 
     private fun hitBlockApi( position: Int,id:String,owner:LifecycleOwner) {
 
@@ -63,7 +70,9 @@ class BlockedUserAdapter(val viewModel: AppViewModel, val context: Context)
 
                     list.removeAt(position)
                     notifyItemRemoved(position)
-
+                    if (list.isEmpty()){
+                        callback.onListEmpty()
+                    }
                 }
             }
 

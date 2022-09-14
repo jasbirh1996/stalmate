@@ -9,6 +9,7 @@
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        tools:openDrawer="start"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -71,6 +72,13 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+        <FrameLayout
+            android:id="@+id/frameDrawer"
+            android:layout_gravity="end"
+            android:layout_width="match_parent"
+            android:layout_marginStart="-64dp"
+            android:layout_height="match_parent" />
 
     </androidx.drawerlayout.widget.DrawerLayout>
 </layout>

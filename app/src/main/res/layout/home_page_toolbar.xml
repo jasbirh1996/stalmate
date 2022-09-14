@@ -39,7 +39,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/constraintLayout9"
+                    android:id="@+id/layoutSearchBox"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:layout_gravity="center"
@@ -47,19 +47,19 @@
                     android:layout_marginEnd="10dp"
                     android:background="@drawable/search_background"
                     app:layout_constraintBottom_toBottomOf="@+id/profile_photo"
-                    app:layout_constraintEnd_toStartOf="@+id/appCompatImageView11"
+                    app:layout_constraintEnd_toStartOf="@+id/ivButtonMenu"
                     app:layout_constraintStart_toEndOf="@+id/profile_photo"
                     app:layout_constraintTop_toTopOf="@+id/profile_photo">
 
-                    <androidx.appcompat.widget.AppCompatEditText
+                    <TextView
+
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="12dp"
                         android:layout_marginEnd="4dp"
                         android:background="@null"
                         android:fontFamily="@font/poppins"
-                        android:hint="@string/search"
-                        android:inputType="textAutoComplete"
+                        android:text="@string/search"
                         android:textSize="12sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/appCompatImageView6"
@@ -80,7 +80,7 @@
 
 
                 <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/appCompatImageView11"
+                    android:id="@+id/ivButtonMenu"
                     android:layout_width="40dp"
                     android:layout_height="30dp"
                     android:layout_gravity="center"
@@ -88,9 +88,9 @@
                     android:layout_weight=".1"
                     android:padding="5dp"
                     android:src="@drawable/ic_header_menu_icon"
-                    app:layout_constraintBottom_toBottomOf="@+id/constraintLayout9"
+                    app:layout_constraintBottom_toBottomOf="@+id/layoutSearchBox"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/constraintLayout9" />
+                    app:layout_constraintTop_toTopOf="@+id/layoutSearchBox" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -1,13 +1,17 @@
 package com.stalmate.user.view.dashboard.HomeFragment
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
@@ -23,9 +27,10 @@ import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.view.adapter.FriendAdapter
 import com.stalmate.user.view.adapter.SuggestedFriendAdapter
 import com.stalmate.user.view.adapter.UserHomeStoryAdapter
+import com.stalmate.user.view.dialogs.DialogFragmentLoader
 
 
-class FragmentHome : BaseFragment(), AdapterFeed.Callbackk, UserHomeStoryAdapter.Callbackk,
+class FragmentHome(var callback:Callback) : BaseFragment(), AdapterFeed.Callbackk, UserHomeStoryAdapter.Callbackk,
     SuggestedFriendAdapter.Callbackk {
 
     private lateinit var binding: FragmentHomeBinding
@@ -36,6 +41,10 @@ class FragmentHome : BaseFragment(), AdapterFeed.Callbackk, UserHomeStoryAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+    }
+
+    public interface Callback{
+        fun onCLickOnMenuButton()
     }
 
     override fun onCreateView(
@@ -51,7 +60,7 @@ class FragmentHome : BaseFragment(), AdapterFeed.Callbackk, UserHomeStoryAdapter
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
+        setupSearchBox()
         feedAdapter = AdapterFeed(networkViewModel, requireContext(), this)
         homeStoryAdapter = UserHomeStoryAdapter(networkViewModel, requireContext(), this)
         binding.shimmerViewContainer.startShimmer()
@@ -101,6 +110,11 @@ class FragmentHome : BaseFragment(), AdapterFeed.Callbackk, UserHomeStoryAdapter
             binding.refreshLayout.isRefreshing=false
         }
 
+        binding.toolbar.ivButtonMenu.setOnClickListener {
+            callback.onCLickOnMenuButton()
+        }
+
+
 
     }
 
@@ -144,6 +158,40 @@ class FragmentHome : BaseFragment(), AdapterFeed.Callbackk, UserHomeStoryAdapter
                 suggestedFriendAdapter.submitList(it!!.results)
             }
         })
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private  fun setupSearchBox(){
+      binding.toolbar.layoutSearchBox.setOnTouchListener(View.OnTouchListener { v, event ->
+          val x = event.x.toInt()
+          val y = event.y.toInt()
+          when (event.action) {
+              MotionEvent.ACTION_DOWN ->{
+                  binding.toolbar.layoutSearchBox.background=ContextCompat.getDrawable(requireContext(),R.drawable.tapped_search_background)
+              }
+              MotionEvent.ACTION_MOVE -> Log.i("TAG", "moving: ($x, $y)")
+              MotionEvent.ACTION_UP ->{
+                  binding.toolbar.layoutSearchBox.background=ContextCompat.getDrawable(requireContext(),R.drawable.search_background)
+
+
+
+
+                  var  dialogLoaderFragment=DialogFragmentLoader(FragmentSearch("",""),"Search")
+                  dialogLoaderFragment.show(childFragmentManager,"asd")
+
+
+
+
+
+
+              }
+          }
+          true
+      })
+
+
+
+
     }
 
 }

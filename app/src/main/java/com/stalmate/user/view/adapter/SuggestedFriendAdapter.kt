@@ -122,7 +122,8 @@ class SuggestedFriendAdapter(
             if (friend.isFriendRemovedFromSuggestion == 1) {
                 binding.tvAfterbuttonText.text = "Removed"
             }
-            if (friend.isFriend == 1) {
+
+            if (friend.friendRequestsent == 1) {
                 binding.tvAfterbuttonText.text = "Friend Request Sent"
             }
 

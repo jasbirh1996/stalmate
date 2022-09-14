@@ -208,8 +208,43 @@ open class AppViewModel : ViewModel() {
         getResult(temp, apiInterface.getOtherUserProfileDetails(user_id))
     }
 
+
+
+
+
+
+
+
     var UpdateProfileLiveData: LiveData<CommonModelResponse?> =
+
         MutableLiveData<CommonModelResponse?>()
+
+
+
+
+
+
+
+
+
+
+
+    var globalSearchLiveData: MutableLiveData<ModelGlobalSearch?> = MutableLiveData<ModelGlobalSearch?>()
+    fun getGlobalSearch(map: HashMap<String, String>) {
+        val temp = MutableLiveData<ModelGlobalSearch?>()
+        globalSearchLiveData = temp
+        getResult(temp, apiInterface.getGlobalSearch(map))
+    }
+
+
+
+
+
+
+
+
+
+
 
     fun etsProfileApi(
         @Part("first_name") first_name: RequestBody,
@@ -259,7 +294,6 @@ open class AppViewModel : ViewModel() {
                 file_Profile_Image!!
             )
         )
-
     }
 
 

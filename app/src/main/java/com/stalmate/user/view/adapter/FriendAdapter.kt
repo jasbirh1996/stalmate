@@ -164,7 +164,6 @@ class FriendAdapter(
             binding.tvMutualFirnds.text="Mutual Friends : 7"
             binding.tvMessge.text="Hi How are you? I am \n Stanley from yoga class"
 
-            binding.mainCardView.cardElevation=0f
 
         } else if (type.equals(Constants.TYPE_FRIEND_SUGGESTIONS)) {
             binding.layoutButtons.visibility = View.VISIBLE

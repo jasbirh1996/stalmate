@@ -5,4 +5,7 @@
     <dimen name="normal_margin">8dp</dimen>
     <dimen name="large_margin">16dp</dimen>
     <dimen name="top_tool_icon_width">50dp</dimen>
+    <dimen name="dp_15">15dp</dimen>
+    <dimen name="dp_1">1dp</dimen>
+    <dimen name="dp_05">0.5dp</dimen>
 </resources>

@@ -112,6 +112,11 @@ interface ApiInterface {
     @GET(Constants.URL_SEARCH_BRACNCHLIST)
     fun setSearchBranch(@Query("search") search :String): Call<ModelSearch>
 
+
+    @POST(Constants.URL_GLOBAL_SEARCH)
+    fun getGlobalSearch(@Body map: HashMap<String, String>): Call<ModelGlobalSearch>
+
+
     @Multipart
     @POST(Constants.UPDATE_PROFILE_API)
     fun updateUserProfile(

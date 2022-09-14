@@ -627,6 +627,8 @@
     <string name="see_all">See all</string>
     <string name="blocked_lists">Blocked Lists</string>
     <string name="activity_log">Activity Log</string>
+    <string name="people">People</string>
+    <string name="groups">Groups</string>
     <string-array name="marrage">
         <item><font fgcolor="#B7B7B7">Single</font></item>
         <item><font fgcolor="#B7B7B7">Marriage</font></item>

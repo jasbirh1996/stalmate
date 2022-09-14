@@ -5,6 +5,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
+
         android:layout_height="match_parent">
         <!--Swipe Refresh Layout -->
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -14,6 +15,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+
                 tools:context=".view.dashboard.Friend.FragmentFriendList">
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -98,7 +100,7 @@ android:visibility="gone"
                     android:layout_marginEnd="20dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_post_adjust" />
+                    app:srcCompat="@drawable/ic_friends_friend_requests_filter" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

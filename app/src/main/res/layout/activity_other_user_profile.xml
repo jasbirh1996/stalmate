@@ -44,7 +44,7 @@
               android:background="@drawable/round_small_corner_white"
               android:elevation="10dp"
               android:padding="8dp"
-              android:visibility="gone"
+              android:visibility="visible"
               app:layout_constraintBottom_toBottomOf="@+id/iv_background"
               app:layout_constraintEnd_toEndOf="parent"
               app:layout_constraintStart_toEndOf="@+id/iv_user_thumb"
@@ -63,9 +63,10 @@
 
                   <androidx.appcompat.widget.AppCompatImageView
                       android:id="@+id/ivChat"
-                      android:layout_width="24dp"
-                      android:layout_height="24dp"
-                      android:src="@drawable/primary_button_background"
+                      android:layout_width="20dp"
+                      android:layout_height="20dp"
+                      app:tint="@color/colorPrimary"
+                      android:src="@drawable/ic_search_message"
                       app:layout_constraintBottom_toBottomOf="parent"
                       app:layout_constraintEnd_toEndOf="parent"
                       app:layout_constraintStart_toStartOf="parent"
@@ -74,7 +75,6 @@
               </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-              -
 
               <androidx.constraintlayout.widget.ConstraintLayout
                   android:id="@+id/buttonFollow"
@@ -135,8 +135,8 @@
 
                   <androidx.appcompat.widget.AppCompatImageView
                       android:id="@+id/ivBlock"
-                      android:layout_width="20dp"
-                      android:layout_height="20dp"
+                      android:layout_width="18dp"
+                      android:layout_height="18dp"
                       android:src="@drawable/ic_block_contact_icon"
                       app:layout_constraintBottom_toBottomOf="parent"
                       app:layout_constraintEnd_toStartOf="@+id/tvBlockStatus"
@@ -188,7 +188,8 @@
                       android:id="@+id/ivShare"
                       android:layout_width="20dp"
                       android:layout_height="20dp"
-                      android:src="@drawable/primary_button_background"
+                      android:src="@drawable/ic_share"
+                      app:tint="@color/colorGray"
                       app:layout_constraintBottom_toBottomOf="parent"
                       app:layout_constraintEnd_toEndOf="parent"
                       app:layout_constraintStart_toStartOf="parent"

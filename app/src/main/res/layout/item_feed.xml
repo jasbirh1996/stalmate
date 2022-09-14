@@ -96,7 +96,7 @@
 
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/appCompatTextView7"
+                android:id="@+id/tvPostDescription"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
 
@@ -113,14 +113,14 @@
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/appCompatImageView5"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="360dp"
                 android:layout_marginTop="10dp"
                 android:adjustViewBounds="true"
-                android:scaleType="centerInside"
+                android:scaleType="centerCrop"
                 android:src="@drawable/image"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/appCompatTextView7" />
+                app:layout_constraintTop_toBottomOf="@+id/tvPostDescription" />
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/love_like_icon"

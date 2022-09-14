@@ -10,12 +10,13 @@
         android:paddingBottom="4dp"
         android:layout_height="wrap_content">
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/icon"
             android:layout_width="18dp"
             android:layout_height="18dp"
-            android:scaleType="fitXY"
-            android:src="@color/colorShimmer"
+        android:scaleType="centerInside"
+
+            android:src="@drawable/ic_profile_heart_icon"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

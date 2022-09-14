@@ -205,10 +205,6 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
     }
 
     private fun updateProfileImageApiHit() {
-
-
-
-
         val thumbnailBody: RequestBody = RequestBody.create("image/*".toMediaTypeOrNull(), imageFile!!)
         val profile_image1: MultipartBody.Part = MultipartBody.Part.Companion.createFormData(
             "cover_img".takeIf { isCoverImage } ?: "profile_img",
@@ -216,14 +212,16 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
             thumbnailBody
         ) //image[] for multiple image
 
-
-
-
         networkViewModel.etsProfileApi(profile_image1)
-
+        networkViewModel.UpdateProfileLiveData.observe(this, Observer {
+            it.let {
+                makeToast(it!!.message)
+                var hashMap = HashMap<String, String>()
+                networkViewModel.getProfileData(hashMap)
+            }
+        })
 
     }
-
 
     fun getUserProfileData() {
         var hashMap = HashMap<String, String>()

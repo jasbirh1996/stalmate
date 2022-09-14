@@ -314,6 +314,8 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
 
             it.let {
                 makeToast(it!!.message)
+                var hashMap = HashMap<String, String>()
+                networkViewModel.getProfileData(hashMap)
             }
         })
     }
@@ -403,20 +405,17 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
 
                 if (it!!.status){
 
-                    blockedUserAdapter = BlockedUserAdapter(networkViewModel, this)
+                    blockedUserAdapter = BlockedUserAdapter(networkViewModel, this,object :BlockedUserAdapter.Callback{
+                        override fun onListEmpty() {
+                            binding.layoutBlockList.visibility=View.GONE
+                        }
+                    })
 
-                    if (it.results.isNotEmpty()) {
-                        binding.rvBlockList.adapter = blockedUserAdapter
-                        blockedUserAdapter.submitList(it.results as ArrayList<User>)
-                        binding.layoutBlockList.visibility = View.VISIBLE
-                    } else {
-                        binding.layoutBlockList.visibility = View.GONE
-                    }
+                    binding.rvBlockList.adapter = blockedUserAdapter
+                    blockedUserAdapter.submitList(it.results as ArrayList<User>)
+                    binding.layoutBlockList.visibility = View.VISIBLE
 
                 }
-
-
-
 
             }
         })
@@ -478,7 +477,7 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
 
 
         if (userData.results.cover_img.isNotEmpty()) {
-            binding.rvCoverPicture.adapter = profilePictureAdapter
+            binding.rvCoverPicture.adapter = coverPictureAdapter
             coverPictureAdapter.submitList(userData.results.cover_img)
             binding.layoutCoverImages.visibility = View.VISIBLE
         } else {
