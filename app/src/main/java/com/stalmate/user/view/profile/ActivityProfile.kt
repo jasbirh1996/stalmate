@@ -45,10 +45,11 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
 
     override fun onClick(viewId: Int, view: View?) {
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_profile)
-        binding.layout.buttonEditProfile.visibility=View.VISIBLE
+        binding.layout.buttonEditProfile.visibility = View.VISIBLE
         feedAdapter = AdapterFeed(networkViewModel, this, this)
         binding.layout.rvFeeds.setNestedScrollingEnabled(false);
         binding.layout.rvFeeds.adapter = feedAdapter
@@ -67,12 +68,12 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
         binding.layout.rvFriends.setNestedScrollingEnabled(false);
         binding.layout.rvFriends.layoutManager = GridLayoutManager(this, 3)
 
-        var hashmap=HashMap<String,String>()
-        hashmap.put("type",Constants.TYPE_PROFILE_FRIENDS)
-        hashmap.put("sub_type","")
-        hashmap.put("search","")
-        hashmap.put("page","1")
-        hashmap.put("limit","6")
+        var hashmap = HashMap<String, String>()
+        hashmap.put("type", Constants.TYPE_PROFILE_FRIENDS)
+        hashmap.put("sub_type", "")
+        hashmap.put("search", "")
+        hashmap.put("page", "1")
+        hashmap.put("limit", "6")
         networkViewModel.getFriendList(hashmap)
         networkViewModel.friendLiveData.observe(this, Observer {
             it.let {
@@ -97,20 +98,26 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
     fun setupData() {
 
         binding.layout.layoutFollowers.setOnClickListener {
-            startActivity(IntentHelper.getFollowersFollowingScreen(this)!!.putExtra("id",userData.id).putExtra("type",Constants.TYPE_USER_TYPE_FOLLOWERS))
+            startActivity(
+                IntentHelper.getFollowersFollowingScreen(this)!!.putExtra("id", userData.id)
+                    .putExtra("type", Constants.TYPE_USER_TYPE_FOLLOWERS)
+            )
         }
         binding.layout.layoutFollowing.setOnClickListener {
-            startActivity(IntentHelper.getFollowersFollowingScreen(this)!!.putExtra("id",userData.id).putExtra("type",Constants.TYPE_USER_TYPE_FOLLOWINGS))
+            startActivity(
+                IntentHelper.getFollowersFollowingScreen(this)!!.putExtra("id", userData.id)
+                    .putExtra("type", Constants.TYPE_USER_TYPE_FOLLOWINGS)
+            )
         }
 
         binding.idCoverPhoto.setOnClickListener {
 
-            isCoverImage=true
+            isCoverImage = true
             startCrop()
         }
 
         binding.idCameraProfile.setOnClickListener {
-            isCoverImage=false
+            isCoverImage = false
             startCrop()
         }
 
@@ -121,7 +128,6 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
 
 
         binding.layout.buttonEditProfile.setOnClickListener {
-
 
 
             // create an options object that defines the transition
@@ -138,17 +144,14 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
     }
 
 
-
-
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        var filePath : String? = ""
+        var filePath: String? = ""
 
-        if (requestCode == PICK_IMAGE_PROFILE && resultCode == RESULT_OK){
+        if (requestCode == PICK_IMAGE_PROFILE && resultCode == RESULT_OK) {
 
-        }else if (requestCode == PICK_IMAGE_COVER && resultCode == RESULT_OK){
+        } else if (requestCode == PICK_IMAGE_COVER && resultCode == RESULT_OK) {
 
         }
     }
@@ -163,12 +166,12 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
             Log.d("imageUrl======", uriContent.toString())
             Log.d("imageUrl======", uriFilePath.toString())
 
-            if (isCoverImage){
+            if (isCoverImage) {
                 Glide.with(this)
                     .load(uriContent)
                     .placeholder(R.drawable.profileplaceholder)
                     .into(binding.ivBackground)
-            }else{
+            } else {
                 Glide.with(this).load(uriContent)
                     .placeholder(R.drawable.profileplaceholder)
                     .into(binding.ivUserThumb)
@@ -192,6 +195,7 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
             }
         )
     }
+
     override fun onDestroy() {
         super.onDestroy()
     }
@@ -205,29 +209,28 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
     }
 
     private fun updateProfileImageApiHit() {
-
-
-
-
-        val thumbnailBody: RequestBody = RequestBody.create("image/*".toMediaTypeOrNull(), imageFile!!)
+        val thumbnailBody: RequestBody =
+            RequestBody.create("image/*".toMediaTypeOrNull(), imageFile!!)
         val profile_image1: MultipartBody.Part = MultipartBody.Part.Companion.createFormData(
             "cover_img".takeIf { isCoverImage } ?: "profile_img",
             imageFile!!.name,
             thumbnailBody
         ) //image[] for multiple image
 
-
-
-
         networkViewModel.etsProfileApi(profile_image1)
-
+        networkViewModel.UpdateProfileLiveData.observe(this, Observer {
+            it.let {
+                makeToast(it!!.message)
+                var hashMap = HashMap<String, String>()
+                networkViewModel.getProfileData(hashMap)
+            }
+        })
 
     }
 
-
     fun getUserProfileData() {
         var hashMap = HashMap<String, String>()
-        networkViewModel.getProfileData( hashMap)
+        networkViewModel.getProfileData(hashMap)
         networkViewModel.profileLiveData.observe(this, Observer {
             it.let {
                 userData = it!!.results
@@ -239,29 +242,43 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
 
     fun setUpAboutUI() {
 
-        if (userData.about.isEmpty()){
+        if (userData.about.isEmpty()) {
             binding.tvUserAbout.visibility = View.GONE
         }
 
-        binding.tvUserName.text=userData.first_name+" "+userData.last_name
-        binding.layout.tvFollowerCount.text=userData.follower_count.toString()
-        binding.layout.tvFollowingCount.text=userData.following_count.toString()
-        binding.tvUserAbout.text=userData.about
-        binding.layout.tvFriendCount.text=userData.friends_count.toString()
-        ImageLoaderHelperGlide.setGlide(this,binding.ivBackground,userData.cover_img1)
-     //   Glide.with(this).load(userData.img_url+userData.profile_img1).into(binding.ivUserThumb)
-        ImageLoaderHelperGlide.setGlide(this,binding.ivUserThumb,userData.profile_img1)
-                Log.d("asdjasda",userData.img_url+userData.profile_img1)
-        Log.d("asdjasda",userData.img_url+userData.cover_img1)
+        binding.tvUserName.text = userData.first_name + " " + userData.last_name
+        binding.layout.tvFollowerCount.text = userData.follower_count.toString()
+        binding.layout.tvFollowingCount.text = userData.following_count.toString()
+        binding.tvUserAbout.text = userData.about
+        binding.layout.tvFriendCount.text = userData.friends_count.toString()
+        ImageLoaderHelperGlide.setGlide(this, binding.ivBackground, userData.cover_img1)
+        //   Glide.with(this).load(userData.img_url+userData.profile_img1).into(binding.ivUserThumb)
+        ImageLoaderHelperGlide.setGlide(this, binding.ivUserThumb, userData.profile_img1)
+        Log.d("asdjasda", userData.img_url + userData.profile_img1)
+        Log.d("asdjasda", userData.img_url + userData.cover_img1)
 
         var aboutArrayList = ArrayList<AboutProfileLine>()
 
-        if (userData.profile_data[0].profession.isNotEmpty()){
-            aboutArrayList.add(AboutProfileLine(R.drawable.ic_profile_designation_icon, userData.profile_data[0].profession[0].designation, userData.profile_data[0].profession[0].company_name, "at"))
+        if (userData.profile_data[0].profession.isNotEmpty()) {
+            aboutArrayList.add(
+                AboutProfileLine(
+                    R.drawable.ic_profile_designation_icon,
+                    userData.profile_data[0].profession[0].designation,
+                    userData.profile_data[0].profession[0].company_name,
+                    "at"
+                )
+            )
         }
 
-        if (userData.profile_data[0].education.isNotEmpty()){
-            aboutArrayList.add(AboutProfileLine(R.drawable.ic_profile_graduation, "Student", userData.profile_data[0].education[0].sehool, "at"))
+        if (userData.profile_data[0].education.isNotEmpty()) {
+            aboutArrayList.add(
+                AboutProfileLine(
+                    R.drawable.ic_profile_graduation,
+                    "Student",
+                    userData.profile_data[0].education[0].sehool,
+                    "at"
+                )
+            )
         }
 
 
@@ -281,6 +298,7 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
                 ""
             )
         )
+
         aboutArrayList.add(
             AboutProfileLine(
                 R.drawable.ic_profile_heart_icon,
@@ -293,9 +311,5 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
         var profileAboutAdapter = ProfileAboutAdapter(networkViewModel, this, this)
         profileAboutAdapter.submitList(aboutArrayList)
         binding.layout.rvAbout.adapter = profileAboutAdapter
-
     }
-
-
 }
-

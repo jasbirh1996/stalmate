@@ -1,10 +1,8 @@
 package com.stalmate.user.view.dashboard.welcome
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.View.OnTouchListener
-import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -36,11 +34,54 @@ class ActivityWelcome : BaseActivity() {
         }
 
         binding.btnNext.setOnClickListener {
-            if (count==6){
+           /* if (count==6){
                 finish()
             }else{
                 count++
                 binding.viewpager.setCurrentItem(count, true)
+            }*/
+
+            var page = pagerAdapter.getItem(count)
+
+            if (page is FragmentWelcomePage){
+                count = count +1
+                binding.viewpager.setCurrentItem(count,true)
+            }
+
+            if (page is FragmentInformationSuggestions){
+
+                count = count +1
+                binding.viewpager.setCurrentItem(count,true)
+
+                /*if (page.isValid()){
+                    count = +1
+                    binding.viewpager.setCurrentItem(count,true)
+                }*/
+            }
+
+            if(page is FragmentSync){
+                count = count +1
+                binding.viewpager.setCurrentItem(count,true)
+            }
+
+            if(page is FragmentGroupSuggestionList){
+                count = count +1
+                binding.viewpager.setCurrentItem(count,true)
+            }
+            if(page is FragmentPageSugggestionsList){
+                count = count +1
+                binding.viewpager.setCurrentItem(count,true)
+            }
+
+            if(page is FragmentEventSuggestionsList){
+                count = count +1
+                binding.viewpager.setCurrentItem(count,true)
+            }
+
+            if(page is FragmentInterestSuggestionList){
+                count = count +1
+                binding.viewpager.setCurrentItem(count,true)
+                finish()
             }
         }
 
@@ -80,7 +121,6 @@ class ActivityWelcome : BaseActivity() {
 
             }
         })
-
 
         /*ToolBar Set*/
         toolbar(true, "Welcome")

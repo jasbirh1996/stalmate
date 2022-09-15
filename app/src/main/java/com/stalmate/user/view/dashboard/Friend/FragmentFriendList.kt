@@ -2,13 +2,10 @@ package com.stalmate.user.view.dashboard.Friend
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import androidx.appcompat.widget.PopupMenu
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
@@ -16,17 +13,20 @@ import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentFriendListBinding
 import com.stalmate.user.model.User
 import com.stalmate.user.utilities.Constants
-
 import com.stalmate.user.view.adapter.FriendAdapter
-import com.stalmate.user.view.adapter.ProfileFriendAdapter
 
 class FragmentFriendList(var type: String, var subtype: String,var userId:String) : BaseFragment(),
     FriendAdapter.Callbackk {
     lateinit var friendAdapter: FriendAdapter
     lateinit var binding: FragmentFriendListBinding
+    var sortBy=""
+    var currentPage=1
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true);
     }
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,30 +51,37 @@ class FragmentFriendList(var type: String, var subtype: String,var userId:String
         binding.shimmerViewContainer.startShimmer()
         binding.rvFriends.adapter = friendAdapter
         binding.rvFriends.layoutManager = LinearLayoutManager(context)
-        hitApi()
+        binding.ivFilterIcon.setOnClickListener {
+            showMenuFilter(binding.ivFilterIcon)
+        }
+        hitApi(true)
 
 
         // Refresh function for the layout
         binding.refreshLayout.setOnRefreshListener{
 
-            hitApi()
+            hitApi(true)
 
         }
 
 
     }
 
-    fun hitApi(){
+    fun hitApi(isFresh:Boolean){
 
-
+        if (isFresh){
+            currentPage=1
+        }
 
         var hashmap = HashMap<String, String>()
         hashmap.put("other_user_id", userId)
         hashmap.put("type", type)
         hashmap.put("sub_type", subtype)
         hashmap.put("search", "")
-        hashmap.put("page", "1")
+        hashmap.put("page", currentPage.toString())
         hashmap.put("limit", "")
+        hashmap.put("sortBy",sortBy)
+
         networkViewModel.getFriendList(hashmap)
         networkViewModel.friendLiveData.observe(viewLifecycleOwner, Observer {
             it.let {
@@ -83,10 +90,17 @@ class FragmentFriendList(var type: String, var subtype: String,var userId:String
 
                 binding.shimmerViewContainer.stopShimmer()
                 binding.shimmerViewContainer.visibility=View.GONE
-                friendAdapter.submitList(it!!.results)
+                if (isFresh){
+                    friendAdapter.submitList(it!!.results)
+                }else{
+                    friendAdapter.submitList(it!!.results)
+                }
+
                 if (it.results.isEmpty()){
+
                     binding.layoutNoData.visibility=View.VISIBLE
                 }else{
+                    binding.ivFilterIcon.visibility=View.VISIBLE
                     binding.layoutNoData.visibility=View.GONE
                 }
             }
@@ -120,25 +134,50 @@ class FragmentFriendList(var type: String, var subtype: String,var userId:String
 
 
 
-    private fun hitAcceptRejectApi(type : String) {
-        showLoader()
-        val hashMap = HashMap<String, String>()
-        hashMap["id_user"] =userId
-        hashMap["type"] = type
-        networkViewModel.updateFriendRequest(hashMap)
-        networkViewModel.updateFriendRequestLiveData.observe(this, Observer {
 
-            it.let {
-                if (it!!.status== true){
-                    friendAdapter.notifyDataSetChanged()
-                    dismissLoader()
-                    makeToast(it.message)
+
+
+
+
+
+    fun showMenuFilter(v : View){
+
+
+
+
+
+
+        val popup = PopupMenu(requireContext(), v)
+        val inflater: MenuInflater = popup.menuInflater
+        inflater.inflate(R.menu.user_filter_menu, popup.menu)
+        popup.setOnMenuItemClickListener { menuItem ->
+
+            Log.d("klasjdlsad",";lasjd;a")
+
+            when(menuItem.itemId){
+                R.id.actionSortByAZ-> {
+                    sortBy="ascending"
+                    currentPage=1
+                    hitApi(true)
+                }
+                R.id.actionSortByZA-> {
+                    sortBy="descending"
+                    currentPage=1
+                    hitApi(true)
+                }
+                R.id.actionSortByLatest-> {
+                    sortBy="recentlyAdded"
+                    currentPage=1
+                    hitApi(true)
                 }
             }
-
-        })
-
+            true
+        }
+        popup.show()
     }
+
+
+
 
 
     fun setupUI(){

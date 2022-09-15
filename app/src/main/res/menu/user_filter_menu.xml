@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/actionSortByAZ"
+        android:title="First Name"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/actionSortByZA"
+        android:title="Last Name"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/actionSortByLatest"
+        android:title="Recently Added"
+        app:showAsAction="never"/>
+</menu>

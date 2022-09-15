@@ -7,7 +7,9 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
+import android.view.View.OnTouchListener
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
@@ -20,6 +22,7 @@ import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.utilities.ValidationHelper
 import com.stalmate.user.utilities.ValidationHelper.isValidEmail
 import com.stalmate.user.view.dashboard.ActivityDashboard
+
 
 class FragmentLogin : BaseFragment() {
 
@@ -130,4 +133,8 @@ Constants.TYPE_ALL_FOLLOWERS_FOLLOWING
 
         return true
     }
+
+
+
+
 }

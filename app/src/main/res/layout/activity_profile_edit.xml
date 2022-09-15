@@ -75,6 +75,7 @@
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_marginStart="20dp"
+            app:civ_border_color="@color/white"
             android:src="@drawable/user_placeholder"
             app:civ_border_width="2dp"
             app:layout_constraintBottom_toBottomOf="@+id/iv_background"
@@ -172,7 +173,7 @@
                 android:fontFamily="@font/poppins_medium"
                 android:text="@string/website"
                 android:textColor="@color/black"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -237,7 +238,7 @@
                 android:fontFamily="@font/poppins_medium"
                 android:text="@string/uploaded_profile_picture"
                 android:textColor="@color/black"
-                android:textSize="16sp"
+                android:textSize="14sp"
 
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -294,7 +295,7 @@
                 android:fontFamily="@font/poppins_medium"
                 android:text="@string/uploaded_cover_image"
                 android:textColor="@color/black"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -350,7 +351,7 @@
                 android:fontFamily="@font/poppins_medium"
                 android:text="Blocked Lists"
                 android:textColor="@color/black"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -375,10 +376,11 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintStart_toStartOf="@+id/blockListTg"
+                app:layout_constraintEnd_toEndOf="parent"
 
+                app:layout_constraintStart_toStartOf="@+id/blockListTg"
                 app:layout_constraintTop_toBottomOf="@+id/blockListTg"
                 tools:itemCount="5"
                 tools:listitem="@layout/item_profile_cover" />
@@ -412,7 +414,7 @@
             android:text="@string/activity_log"
             android:textColor="@color/black"
 
-            android:textSize="16sp"
+            android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btn_crate_account" />
 

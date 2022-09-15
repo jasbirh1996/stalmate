@@ -33,7 +33,6 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
     var PASSWORDPATTERN = "\"^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$\""
     private var GANDER: String = ""
     val c = Calendar.getInstance()
-
     var dates: String = ""
     var month: String = ""
     var currentYear: String = ""

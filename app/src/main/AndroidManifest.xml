@@ -70,6 +70,7 @@
             android:exported="false" />
         <activity
             android:name=".view.dashboard.ActivityDashboard"
+            android:launchMode="singleTask"
             android:exported="false" />
         <activity
             android:name=".modules.reels.activity.ActivityVideoEditor"

@@ -35,8 +35,6 @@ interface ApiInterface {
     @GET(Constants.url_language_list)
     fun getLanguageList(): Call<ModelLanguageResponse>
 
-
-
     @POST(Constants.URL_PHOTO_ALBUM_PHOTO)
     fun getPhotoList(@Body map: HashMap<String, String>): Call<ModelPhotoResponse>
 
@@ -52,8 +50,13 @@ interface ApiInterface {
     fun setSignupDetails(@Body map: HashMap<String, String>): Call<ModelLoginResponse>
 
 
-    @PATCH(Constants.URL_OTP)
+    @POST(Constants.URL_OTP)
     fun setOtpVerify(@Body map: HashMap<String, String>): Call<CommonModelResponse>
+
+    @POST(Constants.URL_BLOCKED_LIST)
+    fun getBlockedList(@Body map: HashMap<String, String>): Call<ModelBlockedUser>
+
+
 
 
     @POST(Constants.URL_LOGIN)
@@ -109,8 +112,13 @@ interface ApiInterface {
     @GET(Constants.URL_SEARCH_BRACNCHLIST)
     fun setSearchBranch(@Query("search") search :String): Call<ModelSearch>
 
+
+    @POST(Constants.URL_GLOBAL_SEARCH)
+    fun getGlobalSearch(@Body map: HashMap<String, String>): Call<ModelGlobalSearch>
+
+
     @Multipart
-    @PATCH(Constants.UPDATE_PROFILE_API)
+    @POST(Constants.UPDATE_PROFILE_API)
     fun updateUserProfile(
         @Part("first_name") firstName: RequestBody,
         @Part("last_name") lastName: RequestBody,
@@ -126,7 +134,7 @@ interface ApiInterface {
     ): Call<CommonModelResponse>
 
     @Multipart
-    @PATCH(Constants.UPDATE_PROFILE_API)
+    @POST(Constants.UPDATE_PROFILE_API)
     fun updateUserProfileImage(
         @Part cover_img: MultipartBody.Part
     ): Call<CommonModelResponse>

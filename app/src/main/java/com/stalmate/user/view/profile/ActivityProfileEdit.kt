@@ -1,14 +1,9 @@
 package com.stalmate.user.view.profile
 
 import android.Manifest
-import android.app.AlertDialog
-import android.app.DatePickerDialog
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.*
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -29,11 +24,11 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
-import java.text.SimpleDateFormat
-import java.util.*
 import kotlin.collections.HashMap
 
-class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, ProfessionListAdapter.Callbackk, ProfilePictureAdapter.Callbackk, CoverPictureAdapter.Callbackk, AdapterFeed.Callbackk{
+class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
+    ProfessionListAdapter.Callbackk, ProfilePictureAdapter.Callbackk, CoverPictureAdapter.Callbackk,
+    AdapterFeed.Callbackk {
 
     private lateinit var binding: ActivityProfileEditBinding
     val PICK_IMAGE_PROFILE = 2
@@ -44,7 +39,8 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, Prof
     var month: String = ""
     var year: String = ""
     var merriage: String = ""
-    var permissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
+    var permissions =
+        arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
     val requiredPermission = Manifest.permission.WRITE_EXTERNAL_STORAGE
     lateinit var userData: ModelUser
     var spinnerArrayFeb = arrayOf("Feb")
@@ -57,8 +53,11 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, Prof
     var isCoverImage = false
     private lateinit var educationAdapter: EducationListAdapter
     private lateinit var professionListAdapter: ProfessionListAdapter
-    private lateinit var profilePictureAdapter : ProfilePictureAdapter
+    private lateinit var profilePictureAdapter: ProfilePictureAdapter
     private lateinit var coverPictureAdapter: CoverPictureAdapter
+    private lateinit var blockedUserAdapter: BlockedUserAdapter
+
+
     lateinit var feedAdapter: AdapterFeed
     override fun onClick(viewId: Int, view: View?) {
 
@@ -117,7 +116,8 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, Prof
                 Log.d("jcaujc", dates)
                 if (dates == "31") {
 
-                    val dataAdapter: ArrayAdapter<String> = ArrayAdapter(this@ActivityProfileEdit, android.R.layout.simple_spinner_item,
+                    val dataAdapter: ArrayAdapter<String> = ArrayAdapter(
+                        this@ActivityProfileEdit, android.R.layout.simple_spinner_item,
                         spinnerArrayFull
                     )
 
@@ -213,12 +213,12 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, Prof
 
         binding.idCoverPhoto.setOnClickListener {
 
-            isCoverImage=true
+            isCoverImage = true
             startCrop()
         }
 
         binding.ivUserProfileImage.setOnClickListener {
-            isCoverImage=false
+            isCoverImage = false
             startCrop()
         }
 
@@ -230,13 +230,17 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, Prof
         binding.layout.tvAddMore.setOnClickListener {
 
 
-            var dialogAddEditEducation=DialogAddEditEducation(this, Education("","",0,"","","","","","",""),networkViewModel,false,object :DialogAddEditEducation.Callbackk
-            {
-                override fun onSuccessfullyEditedEducation(education: Education) {
-                    userData.results.profile_data[0].education.add(education)
-                    networkViewModel.profileLiveData.postValue(userData)
-                }
-            })
+            var dialogAddEditEducation = DialogAddEditEducation(
+                this,
+                Education("", "", 0, "", "", "", "", "", "", ""),
+                networkViewModel,
+                false,
+                object : DialogAddEditEducation.Callbackk {
+                    override fun onSuccessfullyEditedEducation(education: Education) {
+                        userData.results.profile_data[0].education.add(education)
+                        networkViewModel.profileLiveData.postValue(userData)
+                    }
+                })
             dialogAddEditEducation.show()
 
 
@@ -244,14 +248,18 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, Prof
 
         binding.layout.tvaddMoreProfession.setOnClickListener {
 
-            var dialogAddEditProfession=DialogAddEditProfession(this,Profession("","",0,"","","","","","","","",""),networkViewModel,false,object :DialogAddEditProfession.Callbackk
-            {
-                override fun onSuccessfullyEditedProfession(profession: Profession) {
-                    userData.results.profile_data[0].profession.add(profession)
-                    networkViewModel.profileLiveData.postValue(userData)
+            var dialogAddEditProfession = DialogAddEditProfession(
+                this,
+                Profession("", "", 0, "", "", "", "", "", "", "", "", ""),
+                networkViewModel,
+                false,
+                object : DialogAddEditProfession.Callbackk {
+                    override fun onSuccessfullyEditedProfession(profession: Profession) {
+                        userData.results.profile_data[0].profession.add(profession)
+                        networkViewModel.profileLiveData.postValue(userData)
 
-                }
-            })
+                    }
+                })
             dialogAddEditProfession.show()
         }
 
@@ -306,6 +314,8 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, Prof
 
             it.let {
                 makeToast(it!!.message)
+                var hashMap = HashMap<String, String>()
+                networkViewModel.getProfileData(hashMap)
             }
         })
     }
@@ -340,12 +350,12 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, Prof
             Log.d("imageUrl======", uriContent.toString())
             Log.d("imageUrl======", uriFilePath.toString())
 
-            if (isCoverImage){
+            if (isCoverImage) {
                 Glide.with(this).load(uriContent).into(binding.ivBackground)
-            }else{
+            } else {
                 Glide.with(this).load(uriContent).into(binding.ivUserThumb)
             }
-           updateProfileImageApiHit()
+            updateProfileImageApiHit()
 
         } else {
             // an error occurred
@@ -363,28 +373,56 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, Prof
     }
 
 
-
     fun getUserProfileData() {
         var hashMap = HashMap<String, String>()
-        networkViewModel.getProfileData( hashMap)
+        networkViewModel.getProfileData(hashMap)
+        hashMap.put("limit","6")
+        hashMap.put("page","1")
+        networkViewModel.getBlockList(hashMap)
+
+
         networkViewModel.profileLiveData.observe(this, Observer {
             it.let {
                 userData = it!!
                 setUpAboutUI()
 
-                if (it.results.profile_data[0].education.isNotEmpty()){
+                if (it.results.profile_data[0].education.isNotEmpty()) {
                     binding.layout.rvEducation.visibility = View.VISIBLE
                 }
 
-                if (it.results.profile_data[0].profession.isNotEmpty()){
+                if (it.results.profile_data[0].profession.isNotEmpty()) {
                     binding.layout.rvProfession.visibility = View.VISIBLE
                 }
 
 
+            }
+        })
+
+
+        networkViewModel.blockListLiveData.observe(this, Observer {
+            it.let {
+
+
+                if (it!!.status){
+
+                    blockedUserAdapter = BlockedUserAdapter(networkViewModel, this,object :BlockedUserAdapter.Callback{
+                        override fun onListEmpty() {
+                            binding.layoutBlockList.visibility=View.GONE
+                        }
+                    })
+
+                    binding.rvBlockList.adapter = blockedUserAdapter
+                    blockedUserAdapter.submitList(it.results as ArrayList<User>)
+                    binding.layoutBlockList.visibility = View.VISIBLE
+
+                }
 
             }
         })
     }
+
+
+
 
 
     fun setUpAboutUI() {
@@ -396,54 +434,54 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, Prof
         binding.layout.etHowTown.setText(userData.results.profile_data[0].home_town)
         binding.layout.etCurrentCity.setText(userData.results.city)
 
-        ImageLoaderHelperGlide.setGlide(this,binding.ivBackground,userData.results.cover_img1)
-        ImageLoaderHelperGlide.setGlide(this,binding.ivUserThumb,userData.results.profile_img1)
+        ImageLoaderHelperGlide.setGlide(this, binding.ivBackground, userData.results.cover_img1)
+        ImageLoaderHelperGlide.setGlide(this, binding.ivUserThumb, userData.results.profile_img1)
 
 
         binding.etWebsite.setText(userData.results.company)
 
-        if (userData.results.profile_data[0].marital_status == "Male"){
+        if (userData.results.profile_data[0].marital_status == "Male") {
             binding.layout.rdmale.setChecked(true)
-        }else if (userData.results.profile_data[0].marital_status == "Female"){
+        } else if (userData.results.profile_data[0].marital_status == "Female") {
             binding.layout.rdFamel.setChecked(true)
-        }else if (userData.results.profile_data[0].marital_status == "Other"){
+        } else if (userData.results.profile_data[0].marital_status == "Other") {
             binding.layout.rdOthers.setChecked(true)
         }
 
 
-        educationAdapter = EducationListAdapter(networkViewModel,this, this)
-        binding.layout.rvEducation.adapter=educationAdapter
-        binding.layout.rvEducation.layoutManager= LinearLayoutManager(this)
+        educationAdapter = EducationListAdapter(networkViewModel, this, this)
+        binding.layout.rvEducation.adapter = educationAdapter
+        binding.layout.rvEducation.layoutManager = LinearLayoutManager(this)
 
         educationAdapter.submitList(userData.results.profile_data.get(0).education)
 
 
-        professionListAdapter = ProfessionListAdapter(networkViewModel,this, this)
-        binding.layout.rvProfession.adapter=professionListAdapter
-        binding.layout.rvProfession.layoutManager= LinearLayoutManager(this)
+        professionListAdapter = ProfessionListAdapter(networkViewModel, this, this)
+        binding.layout.rvProfession.adapter = professionListAdapter
+        binding.layout.rvProfession.layoutManager = LinearLayoutManager(this)
 
         professionListAdapter.submitList(userData.results.profile_data.get(0).profession)
 
 
-        profilePictureAdapter =  ProfilePictureAdapter(networkViewModel, this, this)
+        profilePictureAdapter = ProfilePictureAdapter(networkViewModel, this, this)
 
-        if (userData.results.profile_img.isNotEmpty()){
-            binding.rvProfilePicture.adapter=profilePictureAdapter
+        if (userData.results.profile_img.isNotEmpty()) {
+            binding.rvProfilePicture.adapter = profilePictureAdapter
             profilePictureAdapter.submitList(userData.results.profile_img)
-            binding.layoutProfileImages.visibility=View.VISIBLE
-        }else{
-            binding.layoutProfileImages.visibility=View.GONE
+            binding.layoutProfileImages.visibility = View.VISIBLE
+        } else {
+            binding.layoutProfileImages.visibility = View.GONE
         }
 
-        coverPictureAdapter =  CoverPictureAdapter(networkViewModel, this, this)
+        coverPictureAdapter = CoverPictureAdapter(networkViewModel, this, this)
 
 
-        if (userData.results.cover_img.isNotEmpty()){
-            binding.rvCoverPicture.adapter=profilePictureAdapter
+        if (userData.results.cover_img.isNotEmpty()) {
+            binding.rvCoverPicture.adapter = coverPictureAdapter
             coverPictureAdapter.submitList(userData.results.cover_img)
-            binding.layoutCoverImages.visibility=View.VISIBLE
-        }else{
-            binding.layoutCoverImages.visibility=View.GONE
+            binding.layoutCoverImages.visibility = View.VISIBLE
+        } else {
+            binding.layoutCoverImages.visibility = View.GONE
         }
 
 
@@ -458,28 +496,41 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, Prof
             }
         })
 
+
+
+
     }
 
 
     override fun onClickItemEdit(position: Education, index: Int) {
-        var dialogAddEditProfession= DialogAddEditEducation(this,position,networkViewModel,true,object :DialogAddEditEducation.Callbackk{
+        var dialogAddEditProfession = DialogAddEditEducation(
+            this,
+            position,
+            networkViewModel,
+            true,
+            object : DialogAddEditEducation.Callbackk {
 
 
-            override fun onSuccessfullyEditedEducation(education: Education) {
-                userData.results.profile_data[0].education[0]=education
-                networkViewModel.profileLiveData.postValue(userData)
-            }
-        })
+                override fun onSuccessfullyEditedEducation(education: Education) {
+                    userData.results.profile_data[0].education[0] = education
+                    networkViewModel.profileLiveData.postValue(userData)
+                }
+            })
         dialogAddEditProfession.show()
     }
 
     override fun onClickItemProfessionEdit(position: Profession, index: Int) {
-        var dialogAddEditProfession= DialogAddEditProfession(this,position,networkViewModel,true,object :DialogAddEditProfession.Callbackk{
-            override fun onSuccessfullyEditedProfession(profession: Profession) {
-                userData.results.profile_data[0].profession[0]=profession
-                networkViewModel.profileLiveData.postValue(userData)
-            }
-        })
+        var dialogAddEditProfession = DialogAddEditProfession(
+            this,
+            position,
+            networkViewModel,
+            true,
+            object : DialogAddEditProfession.Callbackk {
+                override fun onSuccessfullyEditedProfession(profession: Profession) {
+                    userData.results.profile_data[0].profession[0] = profession
+                    networkViewModel.profileLiveData.postValue(userData)
+                }
+            })
         dialogAddEditProfession.show()
     }
 
@@ -488,11 +539,11 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, Prof
     }
 
     override fun onClickItemEdit(position: CoverImg, index: Int) {
-        TODO("Not yet implemented")
+
     }
 
     override fun onClickOnViewComments(postId: Int) {
-        TODO("Not yet implemented")
+
     }
 
 }

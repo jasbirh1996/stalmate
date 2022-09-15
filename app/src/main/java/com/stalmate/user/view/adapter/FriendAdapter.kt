@@ -164,7 +164,6 @@ class FriendAdapter(
             binding.tvMutualFirnds.text="Mutual Friends : 7"
             binding.tvMessge.text="Hi How are you? I am \n Stanley from yoga class"
 
-            binding.mainCardView.cardElevation=0f
 
         } else if (type.equals(Constants.TYPE_FRIEND_SUGGESTIONS)) {
             binding.layoutButtons.visibility = View.VISIBLE
@@ -338,16 +337,10 @@ class FriendAdapter(
         ImageLoaderHelperGlide.setGlideCorner(
             context,
             binding.ivUserImage,
-             friend.img
+             friend.img,
+            R.drawable.user_placeholder
         )
 
-
-
-        Glide.with(context)
-
-            .load( friend.img)/*         .error(Glide.with(context)
-                        .load(R.drawable.image))*/
-            .into(binding.ivUserImage)
 
 
 

@@ -7,6 +7,11 @@ object Constants {
     const val URL_SIGN_UP="auth_service/auth_api/user_register"
     const val URL_LOGIN="auth_service/auth_api/user_login"
     const val URL_OTP="auth_service/auth_api/update_password"
+    const val URL_BLOCKED_LIST="auth_service/friend_api/get_block_user_list"
+
+
+
+
     const val URL_OTP_REGISTRATION="auth_service/auth_api/otp_register_process"
     const val url_friend_list="auth_service/friend_api/get_friend_list"
     const val url_send_friend_request="auth_service/friend_api/send_friend_request"
@@ -26,7 +31,7 @@ object Constants {
     const val GET_OTHER_USER_PROFILE_API="auth_service/auth_api/get_profile_user"
     const val UPDATE_PROFILE_API="auth_service/auth_api/profile_update"
     const val BLOCK_API="/auth_service/friend_api/block_user"
-
+    const val URL_GLOBAL_SEARCH="auth_service/friend_api/search_list"
     const val START_DATE = "01"
 
 
@@ -75,6 +80,16 @@ object Constants {
     const val FILTER_NOTIFICATION_BROADCAST = "com.stalmateuser"
     const val CHANNEL_NAME = "Notification"
     const val CHANNEL_DESCRIPTION = "Example Partner Notifications"
+
+
+
+
+
+    const val NOTIFICATION_TYPE_FRIEND_REQUEST_ACCEPTED = "friendRequestAccepted"
+    const val NOTIFICATION_TYPE_NEW_FOLLOWER_REQUEST = "newFollowerRequest"
+    const val NOTIFICATION_TYPE_NEW_FRIEND_REQUEST = "newFriendRequest"
+    const val NOTIFICATION_TYPE_FOLLOWER_REQUESTED_ACCEPTED = "followRequestAccepted"
+
 
 
 }
