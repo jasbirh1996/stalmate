@@ -24,12 +24,16 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".view.dashboard.HomeFragment.ActivitySearch"
+            android:theme="@style/noAnimTheme"
+
+            android:exported="false" />
+        <activity
             android:name=".view.singlesearch.ActivitySingleSearch"
             android:exported="false" />
         <activity
             android:name=".view.dashboard.welcome.ActivityWelcome"
             android:exported="false" />
-
         <activity android:name=".view.photoalbum.ActivityPhotoGallery" />
         <activity
             android:name=".view.myStory.ActivityMyStory"
@@ -70,8 +74,8 @@
             android:exported="false" />
         <activity
             android:name=".view.dashboard.ActivityDashboard"
-            android:launchMode="singleTask"
-            android:exported="false" />
+            android:exported="false"
+            android:launchMode="singleTask" />
         <activity
             android:name=".modules.reels.activity.ActivityVideoEditor"
             android:exported="false" />
@@ -105,15 +109,12 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-
-
-
         <service
             android:name=".services.MyFirebaseMessagingService"
             android:enabled="true"
-            tools:node="merge"
             android:exported="false"
-            android:stopWithTask="false">
+            android:stopWithTask="false"
+            tools:node="merge">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
@@ -125,7 +126,6 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorPrimary" />
-
     </application>
 
 </manifest>

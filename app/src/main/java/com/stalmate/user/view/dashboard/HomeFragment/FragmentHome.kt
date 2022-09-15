@@ -9,22 +9,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
-import com.stalmate.user.base.App
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.commonadapters.AdapterFeed
 import com.stalmate.user.databinding.FragmentHomeBinding
 import com.stalmate.user.model.Feed
-import com.stalmate.user.model.ModelLoginResponse
 import com.stalmate.user.model.User
 import com.stalmate.user.utilities.Constants
-import com.stalmate.user.utilities.PrefManager
-import com.stalmate.user.view.adapter.FriendAdapter
 import com.stalmate.user.view.adapter.SuggestedFriendAdapter
 import com.stalmate.user.view.adapter.UserHomeStoryAdapter
 import com.stalmate.user.view.dialogs.DialogFragmentLoader
@@ -174,13 +168,7 @@ class FragmentHome(var callback:Callback) : BaseFragment(), AdapterFeed.Callback
                   binding.toolbar.layoutSearchBox.background=ContextCompat.getDrawable(requireContext(),R.drawable.search_background)
 
 
-
-
-                  var  dialogLoaderFragment=DialogFragmentLoader(FragmentSearch("",""),"Search")
-                  dialogLoaderFragment.show(childFragmentManager,"asd")
-
-
-
+                  startActivity(IntentHelper.getSearchScreen(requireContext()))
 
 
 
@@ -193,5 +181,6 @@ class FragmentHome(var callback:Callback) : BaseFragment(), AdapterFeed.Callback
 
 
     }
+
 
 }

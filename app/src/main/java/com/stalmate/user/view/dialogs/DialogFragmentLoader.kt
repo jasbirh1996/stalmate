@@ -46,6 +46,7 @@ class DialogFragmentLoader(var fragment: Fragment, var title: String) : DialogFr
         dialog.setContentView(dialogView)
         dialog.setCancelable(true)
         if (dialog.window != null) {
+            dialog.window!!.setStatusBarColor(ContextCompat.getColor(requireContext(),R.color.white));
             dialog.window!!.setBackgroundDrawable(
                 ContextCompat.getDrawable(
                     requireContext(),

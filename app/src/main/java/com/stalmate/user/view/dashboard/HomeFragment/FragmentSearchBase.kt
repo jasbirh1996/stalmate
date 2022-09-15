@@ -1,27 +1,44 @@
 package com.stalmate.user.view.dashboard.HomeFragment
 
-import android.os.Bundle
+import android.content.Context
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
+
+
+import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
+import androidx.databinding.DataBindingUtil
 import com.stalmate.user.R
+import com.stalmate.user.base.BaseFragment
+import com.stalmate.user.commonadapters.AdapterFeed
+import com.stalmate.user.databinding.FragmentSearchBaseBinding
+import com.stalmate.user.view.adapter.SuggestedFriendAdapter
+import com.stalmate.user.view.adapter.UserHomeStoryAdapter
 
-// TODO: Rename parameter arguments, choose names that match
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-class FragmentSearchBase : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+class FragmentSearchBase : BaseFragment(), FragmentGlobalSearch.Callback {
+    var searchData = ""
+    private lateinit var binding: FragmentSearchBaseBinding
+    lateinit var feedAdapter: AdapterFeed
+    lateinit var homeStoryAdapter: UserHomeStoryAdapter
+    lateinit var suggestedFriendAdapter: SuggestedFriendAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+
+    }
+
+    public interface Callback {
+        fun onCLickOnMenuButton()
     }
 
     override fun onCreateView(
@@ -29,23 +46,118 @@ class FragmentSearchBase : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_search_base, container, false)
+        var view = inflater.inflate(R.layout.fragment_search_base, container, false)
+        binding = DataBindingUtil.bind<FragmentSearchBaseBinding>(view)!!
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+      //  loadFragment(FragmentGlobalSearch("", this))
 
-    }
 
-    companion object {
+        binding.ivBack.setOnClickListener {
+            onClickOnBackPress()
+        }
 
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            FragmentSearchBase().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+        binding.etSearch.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
             }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                if (p0 != null) {
+                    searchData = p0.toString()
+                    Log.d(
+                        "asdasdsa",
+                        childFragmentManager.findFragmentById(binding.frame.id)!!.tag.toString()
+                    )
+                    Handler(Looper.myLooper()!!).post {
+                        if (childFragmentManager.findFragmentById(binding.frame.id) is FragmentGlobalSearch) {
+                            var fragment =
+                                childFragmentManager.findFragmentByTag(backStateName) as FragmentGlobalSearch
+                            fragment.hitApi(true, searchData)
+                        } else if (childFragmentManager.findFragmentById(binding.frame.id) is FragmentPeopleSearch) {
+                            var fragment =
+                                childFragmentManager.findFragmentByTag(backStateName) as FragmentPeopleSearch
+                            fragment.hitApi(true, searchData)
+                        }
+                    }
+
+                }
+
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+
+            }
+        })
+
+
     }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        val callback: OnBackPressedCallback = object :
+            OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                onClickOnBackPress()
+
+
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
+    }
+
+    fun onClickOnBackPress() {
+        if (childFragmentManager.backStackEntryCount == 1) {
+            requireActivity()!!.finish()
+        } else {
+            childFragmentManager.popBackStack()
+        }
+    }
+
+
+/*    private fun getFriendSuggestionListing() {
+
+        var hashmap = HashMap<String, String>()
+        hashmap.put("id_user", "")
+        hashmap.put("type",Constants.TYPE_FRIEND_SUGGESTIONS)
+        hashmap.put("sub_type", "")
+        hashmap.put("search", "")
+        hashmap.put("page", "1")
+        hashmap.put("limit", "6")
+
+        networkViewModel.getFriendList(hashmap)
+        networkViewModel.friendLiveData.observe(viewLifecycleOwner, Observer {
+            it.let {
+                Log.d("asdasdasd","asdasdasdasd")
+
+                suggestedFriendAdapter = SuggestedFriendAdapter(networkViewModel, requireContext(), this)
+                binding.rvSuggestedFriends.layoutManager= LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
+                binding.rvSuggestedFriends.adapter=suggestedFriendAdapter
+                suggestedFriendAdapter.submitList(it!!.results)
+            }
+        })
+    }*/
+
+    var backStateName = ""
+    private fun loadFragment(fragment: Fragment) {
+        backStateName = fragment.javaClass.name
+        val fragmentTag = backStateName
+        val manager: FragmentManager = childFragmentManager
+        val fragmentPopped = manager.popBackStackImmediate(backStateName, 0)
+        if (!fragmentPopped && manager.findFragmentByTag(fragmentTag) == null) { //fragment not in back stack, create it.
+            val ft = manager.beginTransaction()
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+            ft.replace(binding.frame.id, fragment, fragmentTag)
+            ft.addToBackStack(backStateName)
+            ft.commit()
+        }
+    }
+
+    override fun onClickOnSeeMore(searData: String, type: String) {
+       // loadFragment(FragmentPeopleSearch(searData))
+    }
+
 }
