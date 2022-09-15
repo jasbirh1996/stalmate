@@ -4,27 +4,25 @@ package com.stalmate.user.view.dashboard.HomeFragment
 import android.graphics.Color
 import android.graphics.drawable.ShapeDrawable
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.*
 import androidx.appcompat.widget.PopupMenu
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
-import com.stalmate.user.databinding.FragmentSearchBinding
+import com.stalmate.user.databinding.FragmentGlobalSearchBinding
 import com.stalmate.user.model.User
 import com.stalmate.user.view.adapter.SearchedUserAdapter
 
-class FragmentSearch(var type: String, var subtype: String) : BaseFragment(),
+class FragmentGlobalSearch : BaseFragment(),
     SearchedUserAdapter.Callbackk {
     lateinit var userAdapter: SearchedUserAdapter
-    lateinit var binding: FragmentSearchBinding
+    lateinit var binding: FragmentGlobalSearchBinding
     var sortBy = ""
     var currentPage = 1
     var searchData = ""
@@ -33,14 +31,19 @@ class FragmentSearch(var type: String, var subtype: String) : BaseFragment(),
     }
 
 
+    public interface Callback{
+        fun onClickOnSeeMore(searData:String,type:String)
+    }
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = DataBindingUtil.bind<FragmentSearchBinding>(
+        binding = DataBindingUtil.bind<FragmentGlobalSearchBinding>(
             inflater.inflate(
-                R.layout.fragment_search,
+                R.layout.fragment_global_search,
                 container,
                 false
             )
@@ -53,39 +56,33 @@ class FragmentSearch(var type: String, var subtype: String) : BaseFragment(),
         super.onViewCreated(view, savedInstanceState)
 
 
-        hitApi(true)
+        hitApi(true, searchData)
 
+        binding.buttonSeeMoreGroups.setOnClickListener {
+          //  callback.onClickOnSeeMore(searchData,"groups")
+            findNavController().navigate(R.id.action_fragmentGlobalToFragmentPeopleSearch)
+        }
+        binding.buttonSeeMoreUsers.setOnClickListener {
+          //  callback.onClickOnSeeMore(searchData,"users")
+            findNavController().navigate(R.id.action_fragmentGlobalToFragmentPeopleSearch)
+        }
+        binding.buttonSeeMoreEvents.setOnClickListener {
+          //  callback.onClickOnSeeMore(searchData,"events")
+            findNavController().navigate(R.id.action_fragmentGlobalToFragmentPeopleSearch)
+        }
 
-
-        binding.etSearch.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if (p0 != null) {
-                    searchData = p0.toString()
-                    hitApi(true)
-                }
-
-            }
-
-            override fun afterTextChanged(p0: Editable?) {
-
-            }
-        })
 
 
     }
 
-    fun hitApi(isFresh: Boolean) {
-
+    fun hitApi(isFresh: Boolean, searchData: String) {
+        this.searchData=searchData
         if (isFresh) {
             currentPage = 1
         }
 
         var hashmap = HashMap<String, String>()
-        hashmap.put("search", searchData)
+        hashmap.put("search", this.searchData)
         hashmap.put("page", currentPage.toString())
         hashmap.put("limit", "5")
 
@@ -105,7 +102,7 @@ class FragmentSearch(var type: String, var subtype: String) : BaseFragment(),
                         DividerItemDecoration.VERTICAL)
 
                     divider.setDrawable(ShapeDrawable().apply {
-                        intrinsicHeight = resources.getDimensionPixelOffset(R.dimen.dp_05)
+                        intrinsicHeight = resources.getDimensionPixelOffset(R.dimen.dp_1)
                         paint.color = Color.GRAY // Note:
                         //   Currently (support version 28.0.0), we
                         //   can not use tranparent color here. If
@@ -197,8 +194,7 @@ class FragmentSearch(var type: String, var subtype: String) : BaseFragment(),
     override fun onClickOnProfile(friend: User) {
 
 
-        startActivity(
-            IntentHelper.getOtherUserProfileScreen(requireContext())!!.putExtra("id", friend.id)
+        startActivity(IntentHelper.getOtherUserProfileScreen(requireContext())!!.putExtra("id", friend.id)
         )
     }
 
@@ -217,17 +213,17 @@ class FragmentSearch(var type: String, var subtype: String) : BaseFragment(),
                 R.id.actionSortByAZ -> {
                     sortBy = "ascending"
                     currentPage = 1
-                    hitApi(true)
+                    hitApi(true, searchData)
                 }
                 R.id.actionSortByZA -> {
                     sortBy = "descending"
                     currentPage = 1
-                    hitApi(true)
+                    hitApi(true, searchData)
                 }
                 R.id.actionSortByLatest -> {
                     sortBy = "recentlyAdded"
                     currentPage = 1
-                    hitApi(true)
+                    hitApi(true, searchData)
                 }
             }
             true

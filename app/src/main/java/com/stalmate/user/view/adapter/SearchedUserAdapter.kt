@@ -140,14 +140,14 @@ class SearchedUserAdapter(
                 binding.ivFriend.setImageDrawable(
                     ContextCompat.getDrawable(
                         context,
-                        R.drawable.ic_friends_friend_requests_filter
+                        R.drawable.user_request_sent
                     )
                 )
             } else {
                 binding.ivFriend.setImageDrawable(
                     ContextCompat.getDrawable(
                         context,
-                        R.drawable.add_friend_icon
+                        R.drawable.user_add_request
                     )
                 )
             }

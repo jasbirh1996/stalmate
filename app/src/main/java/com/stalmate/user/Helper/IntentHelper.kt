@@ -3,6 +3,7 @@ package com.stalmate.user.Helper
 import android.content.Context
 import android.content.Intent
 import com.stalmate.user.view.authentication.FragmentOTPEnter
+import com.stalmate.user.view.dashboard.HomeFragment.ActivitySearch
 import com.stalmate.user.view.dashboard.welcome.ActivityWelcome
 import com.stalmate.user.view.profile.ActivityFollowersFollowingScreen
 import com.stalmate.user.view.profile.ActivityOtherUserProfile
@@ -26,6 +27,13 @@ public class IntentHelper {
             return Intent(context, ActivityOtherUserProfile::class.java)
             /*   .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)*/
         }
+
+
+        fun getSearchScreen(context: Context?): Intent? {
+            return Intent(context, ActivitySearch::class.java)
+                .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        }
+
         fun getProfileEditScreen(context: Context?): Intent? {
             return Intent(context, ActivityProfileEdit::class.java)
                 .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)

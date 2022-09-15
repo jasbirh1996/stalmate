@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/search_navigation"
+    app:startDestination="@id/idFragmentGlobalSearch">
+
+
+    <fragment
+        android:id="@+id/idFragmentGlobalSearch"
+        android:name="com.stalmate.user.view.dashboard.HomeFragment.FragmentGlobalSearch"
+        android:label="FragmentGlobalSearch">
+        <action
+            android:id="@+id/action_fragmentGlobalToFragmentPeopleSearch"
+            app:destination="@id/idFragmentPeopleSearch" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/idFragmentPeopleSearch"
+        android:name="com.stalmate.user.view.dashboard.HomeFragment.FragmentPeopleSearch"
+        android:label="fragment_people_search"
+        tools:layout="@layout/fragment_search" >
+
+    </fragment>
+</navigation>
