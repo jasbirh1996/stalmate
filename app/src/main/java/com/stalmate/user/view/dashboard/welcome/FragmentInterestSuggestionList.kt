@@ -27,9 +27,12 @@ import com.stalmate.user.view.adapter.FriendAdapter
 
 
 class FragmentInterestSuggestionList : BaseFragment(), FriendAdapter.Callbackk{
+
     lateinit var friendAdapter: FriendAdapter
-    private var picker: BubblePicker? = null
+    private lateinit var picker: BubblePicker
     lateinit var binding: FragmentInterestSuggestionListBinding
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -53,10 +56,7 @@ class FragmentInterestSuggestionList : BaseFragment(), FriendAdapter.Callbackk{
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-picker=view.findViewById(R.id.picker)
-/*        binding.rv.adapter=friendAdapter
-        binding.rvUsers.layoutManager= LinearLayoutManager(context)
+      /*  binding.rvIntrast.adapter=friendAdapter
         networkViewModel.getFriendList("", HashMap())
         networkViewModel.friendLiveData.observe(viewLifecycleOwner, Observer {
             it.let {
@@ -64,13 +64,13 @@ picker=view.findViewById(R.id.picker)
             }
         })*/
 
-
+/*
         val titles = resources.getStringArray(R.array.countries)
         val colors = resources.obtainTypedArray(R.array.colors)
         val images = resources.obtainTypedArray(R.array.images)
        // binding.picker.centerImmediately = true
 
-        picker!!.adapter = object : BubblePickerAdapter {
+        picker.adapter = object : BubblePickerAdapter {
 
             override val totalCount = titles.size
 
@@ -79,27 +79,24 @@ picker=view.findViewById(R.id.picker)
                     title = titles[position]
                     gradient = BubbleGradient(colors.getColor((position * 2) % 8, 0),
                         colors.getColor((position * 2) % 8 + 1, 0), BubbleGradient.VERTICAL)
+//                    typeface = mediumTypeface
                     textColor = ContextCompat.getColor(requireContext(), android.R.color.white)
                     backgroundImage = ContextCompat.getDrawable(requireContext(), images.getResourceId(position, 0))
                 }
             }
         }
 
-        colors.recycle()
-        images.recycle()
+      */
+/*  colors.recycle()
+        images.recycle()*//*
 
-        /*picker!!.bubbleSize = 20
+
+//        picker!!.bubbleSize = 20
         picker!!.listener = object : BubblePickerListener {
             override fun onBubbleSelected(item: PickerItem) = toast("${item.title} selected")
 
             override fun onBubbleDeselected(item: PickerItem) = toast("${item.title} deselected")
-        }*/
-
-
-
-
-
-
+        }
     }
 
     override fun onResume() {
@@ -113,6 +110,9 @@ picker=view.findViewById(R.id.picker)
     }
 
     private fun toast(text: String) = Toast.makeText(requireContext(), text, Toast.LENGTH_SHORT).show()
+*/
+
+    }
 
     override fun onClickOnUpdateFriendRequest(friend: User, status: String) {
 

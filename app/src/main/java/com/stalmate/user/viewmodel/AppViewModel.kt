@@ -58,6 +58,15 @@ open class AppViewModel : ViewModel() {
         getResult(temp, apiInterface.getLanguageList())
     }
 
+    /*var categoryIntrestLiveData: LiveData<ModelIntrestResponse?> = MutableLiveData<ModelIntrestResponse?>()
+
+    fun categoryIntrestLiveData(token: String, map: HashMap<String, String>) {
+        val temp = MutableLiveData<ModelIntrestResponse?>()
+        categoryIntrestLiveData = temp
+        getResult(temp, apiInterface.getLanguageList())
+    }*/
+
+
     var searchLiveData: LiveData<ModelSearch?> = MutableLiveData<ModelSearch?>()
 
     fun searchLiveData(map: HashMap<String, String>,  search: String) {

@@ -35,19 +35,14 @@ class ActivityWelcome : BaseActivity() {
             onBackPressed()
         }
 
-
         binding.btnNext.setOnClickListener {
-            if (count==5){
+            if (count==6){
                 finish()
             }else{
                 count++
                 binding.viewpager.setCurrentItem(count, true)
             }
-
-
         }
-
-
 
         binding.viewpager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrolled(
@@ -122,13 +117,14 @@ class MyPagerAdapter(fragmentManager: FragmentManager?) :
             3 -> FragmentGroupSuggestionList()
             4 -> FragmentPageSugggestionsList()
             5 -> FragmentEventSuggestionsList()
+            6 -> FragmentInterestSuggestionList()
             else -> Fragment()
         }
 
     }
 
     override fun getCount(): Int {
-        return 6
+        return 7
     }
 }
 
