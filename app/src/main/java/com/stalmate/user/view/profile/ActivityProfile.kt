@@ -265,9 +265,6 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
         ImageLoaderHelperGlide.setGlide(this, binding.ivBackground, userData.cover_img1)
         //   Glide.with(this).load(userData.img_url+userData.profile_img1).into(binding.ivUserThumb)
         ImageLoaderHelperGlide.setGlide(this, binding.ivUserThumb, userData.profile_img1)
-        Log.d("asdjasda", userData.img_url + userData.profile_img1)
-        Log.d("asdjasda", userData.img_url + userData.cover_img1)
-
         var aboutArrayList = ArrayList<AboutProfileLine>()
 
         if (userData.profile_data[0].profession.isNotEmpty()) {

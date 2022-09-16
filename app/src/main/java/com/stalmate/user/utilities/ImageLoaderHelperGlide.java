@@ -27,7 +27,7 @@ public class ImageLoaderHelperGlide extends Activity {
 
 
                /* .transform(new CenterCrop(), new RoundedCorners(0))*/
-              .placeholder(R.drawable.user_placeholder)
+            //  .placeholder(R.drawable.user_placeholder)
                 .priority(Priority.IMMEDIATE)
                 .encodeFormat(Bitmap.CompressFormat.PNG)
                 .format(DecodeFormat.DEFAULT);

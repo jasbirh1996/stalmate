@@ -25,6 +25,8 @@ class FragmentPeopleSearch : BaseFragment(), SearchedUserAdapter.Callbackk {
     var currentPage = 1
     var searchData = ""
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        searchData= requireArguments().getString("dataSearch").toString()
         super.onCreate(savedInstanceState)
     }
 

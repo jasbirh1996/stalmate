@@ -1,5 +1,9 @@
 package com.stalmate.user.view.dashboard.welcome
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -14,10 +18,13 @@ import androidx.viewpager.widget.ViewPager
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.databinding.ActivityWelcomeBinding
+import com.stalmate.user.modules.contactSync.SyncService
+import com.stalmate.user.utilities.Constants
 
 
 class ActivityWelcome : BaseActivity() {
     lateinit var binding: ActivityWelcomeBinding
+    lateinit var syncBroadcastreceiver: SyncBroadcasReceiver
     var count = 0
     override fun onClick(viewId: Int, view: View?) {
 
@@ -26,44 +33,48 @@ class ActivityWelcome : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_welcome)
+        val filter = IntentFilter()
+        filter.addAction(Constants.ACTION_SYNC_COMPLETED)
+        syncBroadcastreceiver = SyncBroadcasReceiver()
+        registerReceiver(syncBroadcastreceiver, filter)
+        var viewpagerAdapter = ViewPagerAdapter(supportFragmentManager)
+        viewpagerAdapter.add(FragmentSync(), "title")
+        viewpagerAdapter.add(FragmentWelcomePage(), "title")
+        viewpagerAdapter.add(FragmentInformationSuggestions(), "title")
+        // viewpagerAdapter.add(FragmentSync(),"title")
+        viewpagerAdapter.add(FragmentGroupSuggestionList(), "title")
+        viewpagerAdapter.add(FragmentPageSugggestionsList(), "title")
+        viewpagerAdapter.add(FragmentEventSuggestionsList(), "title")
+        viewpagerAdapter.add(FragmentInterestSuggestionList(), "title")
 
-        var viewpagerAdapter=ViewPagerAdapter(supportFragmentManager)
-        viewpagerAdapter.add(FragmentWelcomePage(),"title")
-        viewpagerAdapter.add(FragmentInformationSuggestions(),"title")
-        viewpagerAdapter.add(FragmentSync(),"title")
-        viewpagerAdapter.add(FragmentGroupSuggestionList(),"title")
-        viewpagerAdapter.add(FragmentPageSugggestionsList(),"title")
-        viewpagerAdapter.add(FragmentEventSuggestionsList(),"title")
-        viewpagerAdapter.add(FragmentInterestSuggestionList(),"title")
-
-        binding.viewpager.adapter=viewpagerAdapter
+        binding.viewpager.adapter = viewpagerAdapter
         binding.indicator.setViewPager(binding.viewpager)
 
 
         count = binding.viewpager.currentItem
         binding.viewpager.setOnTouchListener(OnTouchListener { v, event -> true })
-      /*  binding.viewpager.offscreenPageLimit = 0*/
+        /*  binding.viewpager.offscreenPageLimit = 0*/
         binding.toolbar.topAppBar.setNavigationOnClickListener {
             onBackPressed()
         }
 
         binding.btnNext.setOnClickListener {
-            var page=viewpagerAdapter.getItem(count)
+            var page = viewpagerAdapter.getItem(count)
 
-            Log.d("asghdasd",page.toString())
-            if (count==6){
+            Log.d("asghdasd", page.toString())
+            if (count == 6) {
                 finish()
-            }else{
-                if (page is FragmentInformationSuggestions){
+            } else {
+                if (page is FragmentInformationSuggestions) {
 
                     /* count = count +1
                      binding.viewpager.setCurrentItem(count,true)
      */
-                    if (page.isValid()){
+                    if (page.isValid()) {
                         count = +1
-                        binding.viewpager.setCurrentItem(count,true)
+                        binding.viewpager.setCurrentItem(count, true)
                     }
-                }else{
+                } else {
                     count++
                     binding.viewpager.setCurrentItem(count, true)
                 }
@@ -113,25 +124,56 @@ class ActivityWelcome : BaseActivity() {
 
         /*ToolBar Set*/
         toolbar(true, "Welcome")
+        var permissionArray = arrayOf(
+            android.Manifest.permission.READ_CONTACTS,
+        )
+        if (isPermissionGranted(permissionArray)) {
+            Log.d("alskjdasd", ";aosjldsad")
+
+
+
+            startService(
+                Intent(
+                    this,
+                    SyncService::class.java
+                )
+            )
+        }
+
 
     }
 
 
-fun toolbar(isCenterVisible: Boolean, text: String) {
+    inner class SyncBroadcasReceiver : BroadcastReceiver() {
+        override fun onReceive(p0: Context?, p1: Intent?) {
+            if (p1!!.action == Constants.ACTION_SYNC_COMPLETED) {
+                makeToast("Synced")
+            }
+        }
 
-    if (isCenterVisible) {
-        binding.toolbar.tvhead.visibility = View.GONE
-        binding.toolbar.tvheadCenterHeadBold.visibility = View.VISIBLE
-        binding.toolbar.tvheadCenterHeadBold.text = text
-    } else {
-        binding.toolbar.tvhead.visibility = View.VISIBLE
-        binding.toolbar.tvheadCenterHeadBold.visibility = View.GONE
-        binding.toolbar.tvhead.text = text
     }
 
 
-}
+    fun toolbar(isCenterVisible: Boolean, text: String) {
 
+        if (isCenterVisible) {
+            binding.toolbar.tvhead.visibility = View.GONE
+            binding.toolbar.tvheadCenterHeadBold.visibility = View.VISIBLE
+            binding.toolbar.tvheadCenterHeadBold.text = text
+        } else {
+            binding.toolbar.tvhead.visibility = View.VISIBLE
+            binding.toolbar.tvheadCenterHeadBold.visibility = View.GONE
+            binding.toolbar.tvhead.text = text
+        }
+
+
+    }
+
+    override fun onDestroy() {
+        unregisterReceiver(syncBroadcastreceiver)
+        super.onDestroy()
+
+    }
 
 
     class ViewPagerAdapter(@NonNull fm: FragmentManager?) :
@@ -159,21 +201,14 @@ fun toolbar(isCenterVisible: Boolean, text: String) {
     }
 
 
-
-
-
-
-
-
-override fun onBackPressed() {
-
-    if (count != 0) {
-        count--
-        binding.viewpager.setCurrentItem(count, true)
-    } else {
-        super.onBackPressed()
+    override fun onBackPressed() {
+        if (count != 0) {
+            count--
+            binding.viewpager.setCurrentItem(count, true)
+        } else {
+            super.onBackPressed()
+        }
     }
-}
 
 
 }

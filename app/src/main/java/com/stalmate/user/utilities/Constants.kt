@@ -92,4 +92,12 @@ object Constants {
 
 
 
+    const val ACCOUNT_TYPE: String = "com.stalmate.user"
+    const val ACCOUNT_NAME: String = "SyncContacts"
+
+
+
+
+    const val ACTION_SYNC_COMPLETED: String = "ACTION_SYNC_COMPLETED"
+
 }

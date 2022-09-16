@@ -62,23 +62,24 @@
           android:id="@+id/layoutChangeBackgroundImage"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
+          android:layout_marginEnd="16dp"
           android:layout_marginBottom="10dp"
           app:layout_constraintBottom_toBottomOf="@+id/back"
           app:layout_constraintEnd_toEndOf="parent">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/id_cover_photo"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginEnd="20dp"
-            android:padding="10dp"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
             android:background="@drawable/circle_blue_background_dark"
-            android:src="@drawable/ic_camera"
+            android:padding="10dp"
+            android:src="@drawable/ic_profile_camera"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-    <!--    <TextView
+        <!--    <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
@@ -93,12 +94,12 @@
 
       <de.hdodenhof.circleimageview.CircleImageView
           android:id="@+id/iv_user_thumb"
-          android:layout_width="80dp"
-          android:layout_height="80dp"
+          android:layout_width="100dp"
+          android:layout_height="100dp"
           android:layout_marginStart="20dp"
+          android:src="@drawable/profileplaceholder"
           app:civ_border_color="@color/white"
           app:civ_border_width="2dp"
-          android:src="@drawable/profileplaceholder"
           app:layout_constraintBottom_toBottomOf="@+id/back"
           app:layout_constraintStart_toStartOf="parent"
           app:layout_constraintTop_toBottomOf="@+id/back" />
@@ -106,17 +107,19 @@
 
       <androidx.appcompat.widget.AppCompatImageView
           android:id="@+id/id_camera_profile"
-          android:layout_width="30dp"
-          android:layout_height="30dp"
+          android:layout_width="24dp"
+          android:layout_height="24dp"
+          android:layout_marginEnd="6dp"
+          android:layout_marginBottom="6dp"
           android:background="@drawable/circle_blue_background_stock"
-          android:padding="8dp"
-          android:src="@drawable/ic_camera"
+          android:padding="@dimen/dp_5"
+          android:src="@drawable/ic_profile_camera"
           app:layout_constraintBottom_toBottomOf="@+id/iv_user_thumb"
           app:layout_constraintEnd_toEndOf="@+id/iv_user_thumb" />
 
       <androidx.appcompat.widget.AppCompatTextView
           android:id="@+id/tv_user_name"
-          android:layout_width="wrap_content"
+          android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:layout_marginStart="20dp"
           android:layout_marginTop="8dp"
@@ -124,8 +127,9 @@
           android:fontFamily="@font/poppins_semibold"
           android:text="abhay Kashyap"
           android:textColor="@color/black"
-          android:textSize="16sp"
+          android:textSize="18sp"
 
+          app:layout_constraintEnd_toStartOf="@+id/appCompatTextView17"
           app:layout_constraintStart_toStartOf="parent"
           app:layout_constraintTop_toBottomOf="@+id/iv_user_thumb" />
 
@@ -153,7 +157,9 @@
           android:layout_height="wrap_content"
           android:layout_marginTop="10dp"
           android:ellipsize="end"
-          android:text=""
+          android:fontFamily="@font/poppins"
+          android:textColor="@color/colorTextGray"
+          android:textSize="14sp"
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintStart_toStartOf="@+id/tv_user_name"
           app:layout_constraintTop_toBottomOf="@+id/tv_user_name" />
