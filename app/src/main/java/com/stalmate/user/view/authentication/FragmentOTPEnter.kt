@@ -159,7 +159,7 @@ class FragmentOTPEnter : BaseFragment() {
                 binding.progressBar.visibility = View.GONE
         }
     }
-
+lateinit var successdialogBuilder:AlertDialog
     private fun otpVerifyApiCall() {
 
         val hashMap = HashMap<String, String>()
@@ -174,23 +174,16 @@ class FragmentOTPEnter : BaseFragment() {
 
                 if (it.status == true) {
 
-                    val builder = AlertDialog.Builder(requireContext(), R.style.CustomAlertDialog).create()
+                    successdialogBuilder = AlertDialog.Builder(requireContext(), R.style.CustomAlertDialog).create()
                     val view = layoutInflater.inflate(R.layout.sign_up_success_poppu, null)
 
-                    builder.setView(view)
-                    builder.setCanceledOnTouchOutside(false)
+                    successdialogBuilder.setView(view)
+                    successdialogBuilder.setCanceledOnTouchOutside(false)
+                    successdialogBuilder.show()
 
-                    PrefManager.getInstance(requireContext())!!.keyIsLoggedIn = true
 
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        val intent = Intent(requireContext(), ActivityDashboard::class.java)
-                        startActivity(intent)
-                        createAccountApiCall()
-                        builder.dismiss()
-                        activity?.finish()
-                    }, DURATION)
-                    builder.show()
 
+                    createAccountApiCall()
 
                     makeToast(message)
                 } else {
@@ -227,9 +220,19 @@ class FragmentOTPEnter : BaseFragment() {
                 it?.let {
                     val message = it.message
                     if (it.status) {
+
                         PrefManager.getInstance(requireContext())!!.keyIsLoggedIn=true
                         PrefManager.getInstance(requireContext())!!.userDetail = it
                         App.getInstance().setupApis()
+
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            val intent = Intent(requireContext(), ActivityDashboard::class.java)
+                            startActivity(intent)
+                            successdialogBuilder.dismiss()
+                            activity?.finish()
+                        }, DURATION)
+
+
                     } else {
                         makeToast(message)
                     }

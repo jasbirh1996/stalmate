@@ -65,6 +65,9 @@ class ActivitySingleSearch : BaseActivity(), SearchAdapter.Callbackk, SearchUniv
         /*SetUp Search Adapter*/
         searchAdapter = SearchAdapter(networkViewModel, this,this )
         binding.rvSearch.adapter=searchAdapter
+        searchUnivercityAdapter = SearchUnivercityAdapter(networkViewModel, this, this)
+        binding.rvSearch.adapter = searchUnivercityAdapter
+
 
         val hashMap = HashMap<String, String>()
 
@@ -100,7 +103,7 @@ class ActivitySingleSearch : BaseActivity(), SearchAdapter.Callbackk, SearchUniv
                         stateList.add(state)
                         searchUnivercityAdapter.submitList(stateList)
                     } else {
-                        searchAdapter.submitList(it.results)
+                        searchUnivercityAdapter.submitList(it.results)
                     }
                 }
             }

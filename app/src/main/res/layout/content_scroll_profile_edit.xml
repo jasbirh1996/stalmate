@@ -8,8 +8,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -124,11 +122,13 @@
             android:layout_marginTop="16dp"
             android:text="@string/date_of_birth"
             android:textSize="12sp"
+            android:textColor="@color/grey1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/bio" />
 
 
         <LinearLayout
+            android:id="@+id/llDob"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
@@ -164,6 +164,13 @@
         </LinearLayout>
 
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_1"
+            android:background="@color/grey1"
+            app:layout_constraintTop_toBottomOf="@+id/llDob"/>
+
+
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/gender"
@@ -172,6 +179,7 @@
             android:text="@string/gender"
             android:layout_marginTop="15dp"
             android:textSize="16dp"
+            android:textColor="@color/grey_dark"
             app:layout_constraintStart_toStartOf="@+id/appCompatTextView4"
             app:layout_constraintTop_toBottomOf="@+id/appCompatTextView4" />
 
@@ -196,8 +204,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/male"
-                    android:textColor="@color/black"
-                    android:theme="@style/customButtonStyle"
+                    android:buttonTint="@color/grey1"
+                    android:textColor="@color/grey1"
+                    android:fontFamily="@font/poppins"
                     app:layout_constraintStart_toStartOf="@+id/gender"
                     app:layout_constraintTop_toBottomOf="@+id/gender" />
 
@@ -208,8 +217,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/female"
-                    android:textColor="@color/black"
-                    android:theme="@style/customButtonStyle"
+                    android:buttonTint="@color/grey1"
+                    android:textColor="@color/grey1"
+                    android:fontFamily="@font/poppins"
                     app:layout_constraintBottom_toBottomOf="@+id/rdmale"
                     app:layout_constraintEnd_toStartOf="@+id/radioButton2"
                     app:layout_constraintStart_toEndOf="@+id/rdmale"
@@ -222,8 +232,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/others"
-                    android:textColor="@color/black"
-                    android:theme="@style/customButtonStyle"
+                    android:buttonTint="@color/grey1"
+                    android:textColor="@color/grey1"
+                    android:fontFamily="@font/poppins"
                     app:layout_constraintBottom_toBottomOf="@+id/radioButton"
                     app:layout_constraintEnd_toEndOf="@+id/filledTextEmail"
                     app:layout_constraintTop_toTopOf="@+id/radioButton" />
@@ -252,6 +263,7 @@
                 android:drawableStart="@drawable/ic_login_mail_inactive"
                 android:drawablePadding="8dp"
                 android:hint="@string/enter_your_email_id"
+
                 android:maxLines="1"
                 android:paddingVertical="15dp"
                 android:textSize="14sp" />
@@ -314,7 +326,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/poppins"
             android:text="@string/education"
-            android:textColor="@color/black"
+            android:textColor="@color/grey_dark"
             android:textSize="14sp"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="@+id/tv_addMore"
@@ -444,7 +456,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/poppins"
             android:text="@string/profession"
-            android:textColor="@color/black"
+            android:textColor="@color/grey_dark"
             android:textSize="14sp"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="@+id/tvaddMoreProfession"

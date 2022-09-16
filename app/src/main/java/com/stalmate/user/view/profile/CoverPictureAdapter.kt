@@ -20,7 +20,6 @@ class CoverPictureAdapter(val viewModel: AppViewModel, val context: Context, var
 
     var list = ArrayList<CoverImg>()
 
-
     public interface Callbackk {
         fun onClickItemEdit(position: CoverImg, index: Int)
     }
@@ -28,13 +27,8 @@ class CoverPictureAdapter(val viewModel: AppViewModel, val context: Context, var
     inner class AlbumViewHolder(var binding : ItemProfileCoverBinding): RecyclerView.ViewHolder(binding.root) {
 
         fun bind(response : CoverImg){
-
-
-
             ImageLoaderHelperGlide.setGlideCorner(context,binding.ivImage,response.img,R.drawable.user_placeholder)
         }
-
-
     }
 
     fun submitList(albumList: List<CoverImg>) {

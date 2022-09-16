@@ -1,8 +1,11 @@
 package com.stalmate.user.view.dashboard.welcome
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.View.OnTouchListener
+import androidx.annotation.NonNull
+import androidx.annotation.Nullable
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -23,66 +26,52 @@ class ActivityWelcome : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_welcome)
-        var pagerAdapter = MyPagerAdapter(supportFragmentManager)
-        binding.viewpager.adapter = pagerAdapter
+
+        var viewpagerAdapter=ViewPagerAdapter(supportFragmentManager)
+        viewpagerAdapter.add(FragmentWelcomePage(),"title")
+        viewpagerAdapter.add(FragmentInformationSuggestions(),"title")
+        viewpagerAdapter.add(FragmentSync(),"title")
+        viewpagerAdapter.add(FragmentGroupSuggestionList(),"title")
+        viewpagerAdapter.add(FragmentPageSugggestionsList(),"title")
+        viewpagerAdapter.add(FragmentEventSuggestionsList(),"title")
+        viewpagerAdapter.add(FragmentInterestSuggestionList(),"title")
+
+        binding.viewpager.adapter=viewpagerAdapter
         binding.indicator.setViewPager(binding.viewpager)
+
+
         count = binding.viewpager.currentItem
         binding.viewpager.setOnTouchListener(OnTouchListener { v, event -> true })
-        binding.viewpager.offscreenPageLimit = 0
+      /*  binding.viewpager.offscreenPageLimit = 0*/
         binding.toolbar.topAppBar.setNavigationOnClickListener {
             onBackPressed()
         }
 
         binding.btnNext.setOnClickListener {
-           /* if (count==6){
+            var page=viewpagerAdapter.getItem(count)
+
+            Log.d("asghdasd",page.toString())
+            if (count==6){
                 finish()
             }else{
-                count++
-                binding.viewpager.setCurrentItem(count, true)
-            }*/
+                if (page is FragmentInformationSuggestions){
 
-            var page = pagerAdapter.getItem(count)
+                    /* count = count +1
+                     binding.viewpager.setCurrentItem(count,true)
+     */
+                    if (page.isValid()){
+                        count = +1
+                        binding.viewpager.setCurrentItem(count,true)
+                    }
+                }else{
+                    count++
+                    binding.viewpager.setCurrentItem(count, true)
+                }
 
-            if (page is FragmentWelcomePage){
-                count = count +1
-                binding.viewpager.setCurrentItem(count,true)
+
             }
 
-            if (page is FragmentInformationSuggestions){
 
-                count = count +1
-                binding.viewpager.setCurrentItem(count,true)
-
-                /*if (page.isValid()){
-                    count = +1
-                    binding.viewpager.setCurrentItem(count,true)
-                }*/
-            }
-
-            if(page is FragmentSync){
-                count = count +1
-                binding.viewpager.setCurrentItem(count,true)
-            }
-
-            if(page is FragmentGroupSuggestionList){
-                count = count +1
-                binding.viewpager.setCurrentItem(count,true)
-            }
-            if(page is FragmentPageSugggestionsList){
-                count = count +1
-                binding.viewpager.setCurrentItem(count,true)
-            }
-
-            if(page is FragmentEventSuggestionsList){
-                count = count +1
-                binding.viewpager.setCurrentItem(count,true)
-            }
-
-            if(page is FragmentInterestSuggestionList){
-                count = count +1
-                binding.viewpager.setCurrentItem(count,true)
-                finish()
-            }
         }
 
         binding.viewpager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
@@ -143,30 +132,38 @@ fun toolbar(isCenterVisible: Boolean, text: String) {
 
 }
 
-class MyPagerAdapter(fragmentManager: FragmentManager?) :
-    FragmentPagerAdapter(fragmentManager!!) {
-    // Returns the fragment to display for that page
-    override
-    fun getItem(position: Int): Fragment {
 
-        return when (position) {
 
-            0 -> FragmentWelcomePage()
-            1 -> FragmentInformationSuggestions()
-            2 -> FragmentSync()
-            3 -> FragmentGroupSuggestionList()
-            4 -> FragmentPageSugggestionsList()
-            5 -> FragmentEventSuggestionsList()
-            6 -> FragmentInterestSuggestionList()
-            else -> Fragment()
+    class ViewPagerAdapter(@NonNull fm: FragmentManager?) :
+        FragmentPagerAdapter(fm!!) {
+        private val fragments: MutableList<Fragment> = ArrayList()
+        private val fragmentTitle: MutableList<String> = ArrayList()
+        fun add(fragment: Fragment, title: String) {
+            fragments.add(fragment)
+            fragmentTitle.add(title)
         }
 
+        @NonNull
+        override fun getItem(position: Int): Fragment {
+            return fragments[position]
+        }
+
+        override fun getCount(): Int {
+            return fragments.size
+        }
+
+        @Nullable
+        override fun getPageTitle(position: Int): CharSequence? {
+            return fragmentTitle[position]
+        }
     }
 
-    override fun getCount(): Int {
-        return 7
-    }
-}
+
+
+
+
+
+
 
 override fun onBackPressed() {
 

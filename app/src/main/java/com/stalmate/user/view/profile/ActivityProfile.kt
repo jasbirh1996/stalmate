@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide
 import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.CropImageView
 import com.canhub.cropper.options
+import com.google.android.material.shape.CornerFamily
 import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseActivity
@@ -31,6 +32,10 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
+
+
+
+
 
 class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdapter.Callbackk,
     ProfileAboutAdapter.Callbackk {
@@ -60,6 +65,12 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
                 feedAdapter.submitList(it!!.results)
             }
         })
+        val radius = resources.getDimension(R.dimen.dp_10)
+        binding.ivBackground.setShapeAppearanceModel(binding.ivBackground.getShapeAppearanceModel()
+            .toBuilder()
+            .setBottomLeftCorner(CornerFamily.ROUNDED,radius)
+            .setBottomRightCorner(CornerFamily.ROUNDED,radius)
+            .build());
 
         getUserProfileData()
 
@@ -262,7 +273,7 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
         if (userData.profile_data[0].profession.isNotEmpty()) {
             aboutArrayList.add(
                 AboutProfileLine(
-                    R.drawable.ic_profile_designation_icon,
+                    R.drawable.ic_profile_job,
                     userData.profile_data[0].profession[0].designation,
                     userData.profile_data[0].profession[0].company_name,
                     "at"
@@ -280,7 +291,6 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
                 )
             )
         }
-
 
         aboutArrayList.add(
             AboutProfileLine(

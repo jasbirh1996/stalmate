@@ -69,7 +69,7 @@ class AdapterCategory(
 
             if (list.get(position).isSelected){
 
-                list.get(position).isSelected = false
+                list.get(position).isSelected = true
                 binding.item.setBackground(
                     ContextCompat.getDrawable(
                         context,
@@ -79,7 +79,6 @@ class AdapterCategory(
                 binding.item.setTextColor(ContextCompat.getColor(context, R.color.white))
 
             }else{
-
                 binding.item.setBackground(
                     ContextCompat.getDrawable(
                         context,
@@ -88,7 +87,10 @@ class AdapterCategory(
                 )
                 binding.item.setTextColor(ContextCompat.getColor(context, R.color.black))
 
-                list.get(position).isSelected = true
+
+                list.get(position).isSelected = false
+
+
             }
             binding.item.text = categoryResponse.name
 
@@ -99,6 +101,7 @@ class AdapterCategory(
                callback.onClickIntrastedItem(list[position].id, list[position].name)
 
                 list.get(position).isSelected = !list.get(position).isSelected
+
                 notifyItemChanged(absoluteAdapterPosition)
 
             }

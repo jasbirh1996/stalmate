@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide
 import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.CropImageView
 import com.canhub.cropper.options
+import com.google.android.material.shape.CornerFamily
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.commonadapters.AdapterFeed
@@ -71,6 +72,12 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
         feedAdapter = AdapterFeed(networkViewModel, this, this)
         binding.rvFeeds.setNestedScrollingEnabled(false);
         binding.rvFeeds.adapter = feedAdapter
+        val radius = resources.getDimension(R.dimen.dp_10)
+        binding.ivBackground.setShapeAppearanceModel(binding.ivBackground.getShapeAppearanceModel()
+            .toBuilder()
+            .setBottomLeftCorner(CornerFamily.ROUNDED,radius)
+            .setBottomRightCorner(CornerFamily.ROUNDED,radius)
+            .build());
 
 
         requestPermissions(permissions, WRITE_REQUEST_CODE)

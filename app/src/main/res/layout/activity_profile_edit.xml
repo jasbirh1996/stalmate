@@ -9,17 +9,43 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/white">
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/iv_background"
-            android:layout_width="wrap_content"
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/back"
+            android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:scaleType="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/image" />
+            app:layout_constraintTop_toTopOf="parent">
+
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:cardCornerRadius="20dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/iv_background"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:scaleType="center"
+                    app:srcCompat="@drawable/image" />
+
+            </androidx.cardview.widget.CardView>
+
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
         <ImageView
             android:id="@+id/iv_back"
@@ -78,15 +104,15 @@
             app:civ_border_color="@color/white"
             android:src="@drawable/user_placeholder"
             app:civ_border_width="2dp"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_background"
+            app:layout_constraintBottom_toBottomOf="@+id/back"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/iv_background" />
+            app:layout_constraintTop_toBottomOf="@+id/back" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/ivUserProfileImage"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:background="@drawable/circle_blue_background_stock"
+            android:background="@drawable/circle_primary_background_stock"
             android:padding="8dp"
             android:src="@drawable/ic_camera"
             app:layout_constraintBottom_toBottomOf="@+id/iv_user_thumb"
@@ -103,10 +129,10 @@
             android:elevation="10dp"
             android:paddingTop="10sp"
             android:paddingBottom="10sp"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_background"
+            app:layout_constraintBottom_toBottomOf="@+id/back"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/iv_user_thumb"
-            app:layout_constraintTop_toBottomOf="@+id/iv_background">
+            app:layout_constraintTop_toBottomOf="@+id/back">
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/buttonSyncContacts"
@@ -151,7 +177,6 @@
             layout="@layout/content_scroll_profile_edit"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="5dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/iv_user_thumb" />
@@ -160,8 +185,8 @@
             android:id="@+id/websiteurlcontainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
             android:background="@color/grey_website"
+            android:paddingHorizontal="16dp"
             android:paddingVertical="16dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/layout">
@@ -198,6 +223,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_grup_website"
+            android:paddingHorizontal="16dp"
             app:layout_constraintBottom_toBottomOf="@+id/etWebsite"
             app:layout_constraintStart_toStartOf="@+id/websiteurlcontainer"
             app:layout_constraintTop_toTopOf="@+id/etWebsite" />
@@ -208,7 +234,6 @@
             style="@style/customEditbox"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginStart="10dp"
             android:drawablePadding="10dp"
             android:hint="@string/enter_url"
             android:maxLines="1"
@@ -227,8 +252,7 @@
             android:layout_marginEnd="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/etWebsite"
-            tools:visibility="gone">
+            app:layout_constraintTop_toBottomOf="@+id/etWebsite">
 
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -239,7 +263,6 @@
                 android:text="@string/uploaded_profile_picture"
                 android:textColor="@color/black"
                 android:textSize="14sp"
-
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -285,7 +308,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/layoutProfileImages"
-            tools:visibility="gone">
+            >
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/coverTg"

@@ -7,6 +7,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.shape.CornerFamily
 import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseActivity
@@ -40,6 +41,12 @@ class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk,
             userId = intent.getSerializableExtra("id").toString()
         }
         getUserProfileData()
+        val radius = resources.getDimension(R.dimen.dp_10)
+        binding.ivBackground.setShapeAppearanceModel(binding.ivBackground.getShapeAppearanceModel()
+            .toBuilder()
+            .setBottomLeftCorner(CornerFamily.ROUNDED,radius)
+            .setBottomRightCorner(CornerFamily.ROUNDED,radius)
+            .build());
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_other_user_profile)
         friendAdapter = ProfileFriendAdapter(networkViewModel, this, this)

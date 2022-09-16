@@ -65,4 +65,8 @@ class FragmentInterestSuggestionList : BaseFragment(), AdapterCategory.Callbackk
 
 
     }
+
+
 }
+
+

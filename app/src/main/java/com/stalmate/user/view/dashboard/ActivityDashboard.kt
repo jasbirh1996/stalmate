@@ -231,7 +231,8 @@ class ActivityDashboard : AppCompatActivity(), FragmentHome.Callback {
         if (binding.drawerLayout.isDrawerOpen(Gravity.RIGHT)) {
             binding.drawerLayout.closeDrawer(Gravity.RIGHT);
         } else {
-            binding.drawerLayout.openDrawer(Gravity.RIGHT);
+            binding.drawerLayout.openDrawer(Gravity.RIGHT
+            );
         }
     }
 

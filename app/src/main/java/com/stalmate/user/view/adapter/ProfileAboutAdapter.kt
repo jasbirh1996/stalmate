@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.stalmate.user.R
 import com.stalmate.user.databinding.ItemFriendBinding
+import com.stalmate.user.databinding.ItemProfileAboutDataBinding
 import com.stalmate.user.databinding.LayoutProfileDataLinesBinding
 import com.stalmate.user.model.AboutProfileLine
 
@@ -32,19 +33,22 @@ class ProfileAboutAdapter(
         viewType: Int,
     ): ProfileAboutAdapter.FeedViewHolder {
         var view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.layout_profile_data_lines, parent, false)
-        return FeedViewHolder(DataBindingUtil.bind<LayoutProfileDataLinesBinding>(view)!!)
+            .inflate(R.layout.item_profile_about_data, parent, false)
+        return FeedViewHolder(DataBindingUtil.bind<ItemProfileAboutDataBinding>(view)!!)
     }
 
     override fun onBindViewHolder(holder: ProfileAboutAdapter.FeedViewHolder, position: Int) {
         holder.bind(list.get(position))
+
+
+
     }
 
     override fun getItemCount(): Int {
         return list.size
     }
 
-    inner class FeedViewHolder(var binding: LayoutProfileDataLinesBinding) :
+    inner class FeedViewHolder(var binding: ItemProfileAboutDataBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(about: AboutProfileLine) {
 
@@ -61,15 +65,11 @@ class ProfileAboutAdapter(
                 binding.tvKey.text = about.key
                 binding.tvKey.visibility = View.VISIBLE
             }
-
-
-
-  /*          Glide.with(context)
+          /*  Glide.with(context)
                 .load(about.icon)
-                .apply(
-                    RequestOptions.placeholderOf(R.drawable.ic_profile_location)
-                    .override(60,60))
                 .into(binding.iconn);*/
+
+            binding.iconn.setImageResource(about.icon)
         }
     }
 
