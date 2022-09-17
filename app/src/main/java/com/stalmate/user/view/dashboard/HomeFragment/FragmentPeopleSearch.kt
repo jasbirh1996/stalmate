@@ -23,10 +23,17 @@ class FragmentPeopleSearch : BaseFragment(), SearchedUserAdapter.Callbackk {
     lateinit var binding: FragmentSearchBinding
     var sortBy = ""
     var currentPage = 1
+    var contactString = ""
     var searchData = ""
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        searchData= requireArguments().getString("dataSearch").toString()
+
+        if ( requireArguments().getString("dataSearch")!=null){
+            searchData= requireArguments().getString("dataSearch").toString()
+        }
+        if ( requireArguments().getString("contacts")!=null){
+            contactString=requireArguments().getString("contacts").toString()
+        }
         super.onCreate(savedInstanceState)
     }
 
@@ -60,6 +67,7 @@ class FragmentPeopleSearch : BaseFragment(), SearchedUserAdapter.Callbackk {
         Log.d("asdasdsa", "asdasfdg")
         var hashmap = HashMap<String, String>()
         hashmap.put("search", this.searchData)
+        hashmap.put("number_array", contactString)
         hashmap.put("page", currentPage.toString())
         hashmap.put("limit", "")
 

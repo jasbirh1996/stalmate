@@ -4,6 +4,8 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.Color
+import android.graphics.drawable.ShapeDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -14,12 +16,18 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager.widget.ViewPager
+import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
+import com.stalmate.user.base.App
 import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.databinding.ActivityWelcomeBinding
 import com.stalmate.user.modules.contactSync.SyncService
 import com.stalmate.user.utilities.Constants
+import com.stalmate.user.utilities.PrefManager
+import com.stalmate.user.view.dashboard.ActivityDashboard
 
 
 class ActivityWelcome : BaseActivity() {
@@ -148,10 +156,14 @@ class ActivityWelcome : BaseActivity() {
         override fun onReceive(p0: Context?, p1: Intent?) {
             if (p1!!.action == Constants.ACTION_SYNC_COMPLETED) {
                 makeToast("Synced")
-            }
+                if (p1.extras!!.getString("contacts")!=null){
+                    startActivity(IntentHelper.getSearchScreen(this@ActivityWelcome)!!.putExtra("contacts",p1.extras!!.getString("contacts").toString()))
+                }
+           }
         }
 
     }
+
 
 
     fun toolbar(isCenterVisible: Boolean, text: String) {

@@ -254,7 +254,6 @@ open class AppViewModel : ViewModel() {
 
 
 
-
     fun etsProfileApi(
         @Part("first_name") first_name: RequestBody,
         @Part("last_name") last_name: RequestBody,
