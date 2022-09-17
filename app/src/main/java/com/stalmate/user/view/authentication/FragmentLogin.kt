@@ -13,6 +13,7 @@ import android.view.View.OnTouchListener
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
+import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.base.App
 import com.stalmate.user.base.BaseFragment
@@ -106,8 +107,8 @@ Constants.TYPE_ALL_FOLLOWERS_FOLLOWING
                     App.getInstance().setupApis()
                     binding.progressBar.visibility = View.GONE
                     Log.d("token=======", PrefManager.getInstance(App.getInstance())!!.userDetail.results[0].token)
-                    val intent = Intent(requireContext(), ActivityDashboard::class.java)
-                    startActivity(intent)
+                    startActivity(IntentHelper.getDashboardScreen(context))
+                    activity!!.finish()
                     makeToast(message)
                 }else{
 

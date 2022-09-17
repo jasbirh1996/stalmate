@@ -308,7 +308,7 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
 
         aboutArrayList.add(
             AboutProfileLine(
-                R.drawable.ic_profile_heart_icon,
+                R.drawable.ic_profile_status,
                 "",
                 userData.profile_data[0].marital_status,
                 ""

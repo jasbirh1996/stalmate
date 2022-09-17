@@ -20,6 +20,7 @@ import com.stalmate.user.R
 import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.databinding.ActivityWelcomeBinding
 import com.stalmate.user.model.Category
+import com.stalmate.user.modules.contactSync.SyncService
 import com.stalmate.user.view.adapter.AdapterCategory
 import com.stalmate.user.utilities.Constants
 
@@ -44,7 +45,7 @@ class ActivityWelcome : BaseActivity(), FragmentInformationSuggestions.Callbackk
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_welcome)
-
+/*
         var viewpagerAdapter = ViewPagerAdapter(supportFragmentManager)
         viewpagerAdapter.add(FragmentWelcomePage(), "title")
         viewpagerAdapter.add(FragmentInformationSuggestions(this), "title")
@@ -52,10 +53,10 @@ class ActivityWelcome : BaseActivity(), FragmentInformationSuggestions.Callbackk
         viewpagerAdapter.add(FragmentSync(), "title")
         viewpagerAdapter.add(FragmentGroupSuggestionList(), "title")
         viewpagerAdapter.add(FragmentPageSugggestionsList(), "title")
-        viewpagerAdapter.add(FragmentEventSuggestionsList(), "title")
+        viewpagerAdapter.add(FragmentEventSuggestionsList(), "title")*/
 
 
-        binding.viewpager.adapter = viewpagerAdapter
+//        binding.viewpager.adapter = viewpagerAdapter
         val filter = IntentFilter()
         filter.addAction(Constants.ACTION_SYNC_COMPLETED)
         syncBroadcastreceiver = SyncBroadcasReceiver()
@@ -63,7 +64,7 @@ class ActivityWelcome : BaseActivity(), FragmentInformationSuggestions.Callbackk
         var viewpagerAdapter = ViewPagerAdapter(supportFragmentManager)
         viewpagerAdapter.add(FragmentSync(), "title")
         viewpagerAdapter.add(FragmentWelcomePage(), "title")
-        viewpagerAdapter.add(FragmentInformationSuggestions(), "title")
+        viewpagerAdapter.add(FragmentInformationSuggestions(this), "title")
         // viewpagerAdapter.add(FragmentSync(),"title")
         viewpagerAdapter.add(FragmentGroupSuggestionList(), "title")
         viewpagerAdapter.add(FragmentPageSugggestionsList(), "title")
@@ -126,7 +127,7 @@ class ActivityWelcome : BaseActivity(), FragmentInformationSuggestions.Callbackk
                      binding.viewpager.setCurrentItem(count,true)
      */
                         if (page.isValid()) {
-                            count = +1
+                            count++
                             binding.viewpager.setCurrentItem(count, true)
                         }
                     } else {
@@ -134,80 +135,84 @@ class ActivityWelcome : BaseActivity(), FragmentInformationSuggestions.Callbackk
                         binding.viewpager.setCurrentItem(count, true)
 
 
-                    }else if (page is FragmentInterestSuggestionList) {
+                    }
 
-                        if (page.isvalid()) {
+                    if (page is FragmentInterestSuggestionList) {
+
+                        /*  if (page.isvalid()) {
 
 
-                            /* var adapterCategory : AdapterCategory? = null
-                       makeToast(adapterCategory!!.getSelected()!!.name)*/
+                            *//* var adapterCategory : AdapterCategory? = null
+                       makeToast(adapterCategory!!.getSelected()!!.name)*//*
 
                         }
                     }else{
                         count++
                         binding.viewpager.setCurrentItem(count, true)
-                    }
-                }
-            }
-
-            binding.viewpager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-                override fun onPageScrolled(
-                    position: Int,
-                    positionOffset: Float,
-                    positionOffsetPixels: Int
-                ) {
-
-                }
-
-                override fun onPageSelected(position: Int) {
-                    when (position) {
-                        0 -> {
-                            toolbar(true, "Welcome")
-                        }
-                        1 -> {
-                            toolbar(true, "Welcome")
-                        }
-                        2 -> {
-                            toolbar(false, "Group")
-                        }
-                        3 -> {
-                            toolbar(false, "Pages")
-                        }
-                        4 -> {
-                            toolbar(false, "Events")
-
-                        }
-
-
+                    }*/
                     }
                 }
 
-                override fun onPageScrollStateChanged(state: Int) {
+                binding.viewpager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+                    override fun onPageScrolled(
+                        position: Int,
+                        positionOffset: Float,
+                        positionOffsetPixels: Int
+                    ) {
 
-                }
-            })
+                    }
 
-            /*ToolBar Set*/
-            toolbar(true, "Welcome")
-            var permissionArray = arrayOf(
-                android.Manifest.permission.READ_CONTACTS,
-            )
-            if (isPermissionGranted(permissionArray)) {
-                Log.d("alskjdasd", ";aosjldsad")
+                    override fun onPageSelected(position: Int) {
+                        when (position) {
+                            0 -> {
+                                toolbar(true, "Welcome")
+                            }
+                            1 -> {
+                                toolbar(true, "Welcome")
+                            }
+                            2 -> {
+                                toolbar(false, "Group")
+                            }
+                            3 -> {
+                                toolbar(false, "Pages")
+                            }
+                            4 -> {
+                                toolbar(false, "Events")
+
+                            }
 
 
+                        }
+                    }
 
-                startService(
-                    Intent(
-                        this,
-                        SyncS::class.java
-                    )
+                    override fun onPageScrollStateChanged(state: Int) {
+
+                    }
+                })
+
+                /*ToolBar Set*/
+                toolbar(true, "Welcome")
+
+                var permissionArray = arrayOf(
+                    android.Manifest.permission.READ_CONTACTS,
                 )
-            }
+                if (isPermissionGranted(permissionArray)) {
+                    Log.d("alskjdasd", ";aosjldsad")
 
+
+
+                    startService(
+                        Intent(
+                            this,
+                            SyncService::class.java
+                        )
+                    )
+                }
+
+
+            }
 
         }
-
     }
 
 
@@ -275,14 +280,8 @@ override fun onBackPressed() {
         binding.viewpager.setCurrentItem(count, true)
     } else {
         super.onBackPressed()
-    override fun onBackPressed() {
-        if (count != 0) {
-            count--
-            binding.viewpager.setCurrentItem(count, true)
-        } else {
-            super.onBackPressed()
-        }
     }
+}
 
     override fun onCallBackData(
         graducation: String,

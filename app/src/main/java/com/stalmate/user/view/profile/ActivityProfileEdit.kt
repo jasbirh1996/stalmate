@@ -21,6 +21,7 @@ import com.stalmate.user.model.*
 import com.stalmate.user.utilities.ImageLoaderHelperGlide
 import com.stalmate.user.view.dialogs.DialogAddEditEducation
 import com.stalmate.user.view.dialogs.DialogAddEditProfession
+import com.wedguruphotographer.adapter.CustumSpinAdapter
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -40,13 +41,12 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
     var month: String = ""
     var year: String = ""
     var merriage: String = ""
-    var permissions =
-        arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
-    val requiredPermission = Manifest.permission.WRITE_EXTERNAL_STORAGE
+    var permissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
     lateinit var userData: ModelUser
     var spinnerArrayFeb = arrayOf("Feb")
     var spinnerArrayFull = arrayOf("Jan", "Mar", "May", "July", "Aug", "Oct", "Dec")
     var spinnerArrayFullSemihalf = arrayOf("Apr", "Jun", "Sep", "Nov")
+    var marriageStatus = arrayOf("Single", "Marriage")
     var spinnerArrayFullhalf =
         arrayOf("jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
     var spinnerArrayBlank = arrayOf("")
@@ -57,6 +57,8 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
     private lateinit var profilePictureAdapter: ProfilePictureAdapter
     private lateinit var coverPictureAdapter: CoverPictureAdapter
     private lateinit var blockedUserAdapter: BlockedUserAdapter
+    private lateinit var marriageAdapter: CustumSpinAdapter
+    val marriageList: ArrayList<ModelCustumSpinner> = ArrayList<ModelCustumSpinner>()
 
 
     lateinit var feedAdapter: AdapterFeed
@@ -68,6 +70,18 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_profile_edit)
         getUserProfileData()
+
+/*
+        var state = ModelCustumSpinner(id = "0", name = "Marital Status")
+        marriageList.add(state)
+
+        marriageAdapter = CustumSpinAdapter(
+            this,
+            android.R.layout.simple_spinner_item,
+            marriageList, false
+        )
+        binding.layout.tvMarriage.setAdapter(marriageAdapter)*/
+
 
         feedAdapter = AdapterFeed(networkViewModel, this, this)
         binding.rvFeeds.setNestedScrollingEnabled(false);
@@ -231,7 +245,12 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
 
 
         binding.btnCrateAccount.setOnClickListener {
-            updateProfileApiHit()
+
+            if (merriage=="Marital Status"){
+                makeToast("Please select marriage Status")
+            }else {
+                updateProfileApiHit()
+            }
         }
 
         binding.layout.tvAddMore.setOnClickListener {
@@ -280,7 +299,6 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
                     p3: Long
                 ) {
                     merriage = p0!!.getItemAtPosition(position).toString()
-                    Log.d("jcaujc", year)
                 }
 
                 override fun onNothingSelected(p0: AdapterView<*>?) {
@@ -299,8 +317,8 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
 
     private fun updateProfileApiHit() {
 
-        fun getRequestBody(str: String?): RequestBody =
-            RequestBody.create("text/plain".toMediaTypeOrNull(), str.toString())
+        fun getRequestBody(str: String?): RequestBody = RequestBody.create("text/plain".toMediaTypeOrNull(), str.toString())
+
 
 
         networkViewModel.etsProfileApi(
@@ -428,15 +446,11 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
         })
     }
 
-
-
-
-
     fun setUpAboutUI() {
         binding.layout.etName.setText(userData.results.first_name)
         binding.layout.etLastName.setText(userData.results.last_name)
         binding.layout.bio.setText(userData.results.about)
-        binding.layout.etEmail.setText(userData.results.email)
+        binding.layout.filledTextEmail.setText(userData.results.email)
         binding.layout.etNumber.setText(userData.results.number)
         binding.layout.etHowTown.setText(userData.results.profile_data[0].home_town)
         binding.layout.etCurrentCity.setText(userData.results.city)
@@ -454,6 +468,8 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
         } else if (userData.results.profile_data[0].marital_status == "Other") {
             binding.layout.rdOthers.setChecked(true)
         }
+
+
 
 
         educationAdapter = EducationListAdapter(networkViewModel, this, this)
