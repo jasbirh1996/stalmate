@@ -36,7 +36,7 @@ class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk,
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_other_user_profile)
         if (intent.getSerializableExtra("id") != null) {
             userId = intent.getSerializableExtra("id").toString()
         }
@@ -48,7 +48,7 @@ class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk,
             .setBottomRightCorner(CornerFamily.ROUNDED,radius)
             .build());
 
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_other_user_profile)
+
         friendAdapter = ProfileFriendAdapter(networkViewModel, this, this)
         binding.layout.rvFriends.adapter = friendAdapter
         binding.layout.rvFriends.setNestedScrollingEnabled(false);

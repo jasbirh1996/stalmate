@@ -224,7 +224,7 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
             startCrop()
         }
 
-        binding.ivUserProfileImage.setOnClickListener {
+        binding.idCoverPhoto.setOnClickListener {
             isCoverImage = false
             startCrop()
         }

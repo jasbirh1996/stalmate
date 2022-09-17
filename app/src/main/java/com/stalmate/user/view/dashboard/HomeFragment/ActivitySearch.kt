@@ -2,15 +2,14 @@ package com.stalmate.user.view.dashboard.HomeFragment
 
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.navigation.NavController
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseActivity
@@ -43,15 +42,15 @@ class ActivitySearch : BaseActivity() {
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 if (p0 != null) {
                     searchData = p0.toString()
-                 //   val currentFragment = supportFragmentManager.findFragmentById(binding.navHostContainer.id)
-                   val currentFragment = supportFragmentManager.findFragmentById(R.id.nav_host_container)
+                  val currentFragment = getCurrentVisibleFragment()
+
+
+             //      val currentFragment = supportFragmentManager.findFragmentById(binding.layoutSearchBox)
                     Log.d("asdasdasd",currentFragment!!.toString())
-                    Handler(Looper.myLooper()!!).post {
-                       if (currentFragment is FragmentGlobalSearch) {
-                           currentFragment.hitApi(true, searchData)
-                        } else if (currentFragment is FragmentPeopleSearch) {
-                           currentFragment.hitApi(true, searchData)
-                        }
+                    if (currentFragment is FragmentGlobalSearch) {
+                        currentFragment.hitApi(true, searchData)
+                    } else if (currentFragment is FragmentPeopleSearch) {
+                        currentFragment.hitApi(true, searchData)
                     }
                 }
             }
@@ -63,7 +62,14 @@ class ActivitySearch : BaseActivity() {
 
         }
 
-
+    private fun getCurrentVisibleFragment(): Fragment? {
+        val navHostFragment = supportFragmentManager.primaryNavigationFragment as NavHostFragment?
+        val fragmentManager: FragmentManager = navHostFragment!!.childFragmentManager
+        val fragment: Fragment = fragmentManager.getPrimaryNavigationFragment()!!
+        return if (fragment is Fragment) {
+            fragment
+        } else null
+    }
 
 
 }

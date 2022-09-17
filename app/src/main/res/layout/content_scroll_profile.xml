@@ -13,11 +13,12 @@
             android:id="@+id/rvAbout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            tools:listitem="@layout/layout_profile_data_lines"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:listitem="@layout/layout_profile_data_lines" />
 
 
         <View
@@ -70,7 +71,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins_light"
                     android:text="@string/followers"
-                    android:textColor="@color/grey_dark"
+                    android:textColor="@color/colorTextGray"
                     android:textSize="14sp"
                     app:layout_constraintStart_toStartOf="@+id/tvFollowerCount"
                     app:layout_constraintTop_toBottomOf="@+id/tvFollowerCount" />
@@ -105,7 +106,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins_light"
                     android:text="@string/folllowing"
-                    android:textColor="@color/grey_dark"
+                    android:textColor="@color/colorTextGray"
                     android:textSize="14sp"
                     app:layout_constraintStart_toStartOf="@+id/tvFollowingCount"
                     app:layout_constraintTop_toBottomOf="@+id/tvFollowingCount" />
@@ -131,31 +132,104 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layoutWebsite"
+            android:background="@color/white"
+            android:layout_width="match_parent"
+            android:padding="@dimen/dp_10"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            app:layout_constraintTop_toBottomOf="@+id/layout_friend">
+
+            <TextView
+                android:id="@+id/textView7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_medium"
+                android:text="@string/website"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/imageView6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/ic_profile_website"
+                app:layout_constraintStart_toStartOf="@+id/textView7"
+                app:layout_constraintTop_toBottomOf="@+id/textView7"
+                app:tint="@color/colorPrimary" />
+
+
+            <TextView
+                android:id="@+id/tvWebsite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:fontFamily="@font/poppins"
+                android:text="https://www.foodmenia.com"
+                android:textColor="@color/colorPrimary"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="@+id/imageView6"
+                app:layout_constraintStart_toEndOf="@+id/imageView6"
+                app:layout_constraintTop_toTopOf="@+id/imageView6" />
+
+
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <include
             android:id="@+id/layoutcreatepost"
             layout="@layout/layout_create_post"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            app:layout_constraintTop_toBottomOf="@+id/layout_friend"
+            app:layout_constraintTop_toBottomOf="@+id/layoutWebsite"
             tools:layout_editor_absoluteX="10dp" />
 
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvFeeds"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             app:layout_constraintTop_toBottomOf="@+id/layoutcreatepost"
-            tools:layout_editor_absoluteX="10dp" />
+            tools:layout_editor_absoluteX="10dp"
+            android:id="@+id/layoutFeeds">
+
+            <TextView
+                android:id="@+id/textView8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/poppins_medium"
+                android:text="@string/activity_log"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvFeeds"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView8" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_friend"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
             android:layout_marginTop="20dp"
-            android:layout_marginEnd="10dp"
+            android:background="@color/white"
+            android:padding="@dimen/dp_10"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/layoutFollowersFolling">
@@ -177,7 +251,7 @@
                     android:textColor="@color/black"
                     android:textSize="14sp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                     app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tvFriendCount"
@@ -223,29 +297,26 @@
                 app:layout_constraintTop_toBottomOf="@+id/etSearchFriend" />
 
 
-
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                app:layout_constraintTop_toBottomOf="@id/rvFriends"
                 android:layout_marginTop="20dp"
-                android:background="@drawable/rectangle_grey_backgorund">
+                android:background="@drawable/rectangle_grey_backgorund"
+                app:layout_constraintTop_toBottomOf="@id/rvFriends">
 
 
                 <TextView
                     android:id="@+id/btnphoto"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
                     android:background="@drawable/large_round_corner_light_primary_border_light_gray_filled"
-                    android:text="@string/photos"
                     android:gravity="center_vertical"
                     android:paddingHorizontal="30dp"
-                    android:layout_marginStart="10dp"
+                    android:text="@string/photos"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
-
-
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

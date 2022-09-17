@@ -287,7 +287,6 @@ class FragmentOTPEnter : BaseFragment() {
         val ss = if (secondsLeft < 10) "0$secondsLeft" else "" + secondsLeft
         return "00:$ss"
     }
-
 }
 
 

@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.shape.CornerFamily
 import com.stalmate.user.R
 import com.stalmate.user.databinding.ItemProfileFriendBinding
 
@@ -47,6 +48,13 @@ class ProfileFriendAdapter(
         fun bind(friend: User) {
 
 
+            val radius = context.resources.getDimension(R.dimen.dp_15)
+            binding.ivUserImage.setShapeAppearanceModel(binding.ivUserImage.getShapeAppearanceModel()
+                .toBuilder()
+                .setAllCorners(CornerFamily.ROUNDED,radius)
+                .build());
+
+
 /*            binding.ivUserImage.setShapeAppearanceModel(binding.ivUserImage.getShapeAppearanceModel()
                     .toBuilder()
                     .setAllCornerSizes(20f)
@@ -55,7 +63,7 @@ class ProfileFriendAdapter(
                 binding.root.setOnClickListener {
                     callback.onClickOnProfile(friend)
                 }
-            ImageLoaderHelperGlide.setGlideCorner(context,binding.ivUserImage,friend.img,R.drawable.user_placeholder)
+            ImageLoaderHelperGlide.setGlide(context,binding.ivUserImage,friend.img)
 
             binding.tvUserName.text=friend.first_name
 
