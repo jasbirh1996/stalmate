@@ -11,14 +11,26 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
+import com.google.gson.Gson
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.databinding.ActivityWelcomeBinding
+import com.stalmate.user.model.Category
+import com.stalmate.user.view.adapter.AdapterCategory
 
 
-class ActivityWelcome : BaseActivity() {
+class ActivityWelcome : BaseActivity(), FragmentInformationSuggestions.Callbackk, AdapterCategory.Callbackk {
     lateinit var binding: ActivityWelcomeBinding
     var count = 0
+    var countryText = ""
+    var graduationText = ""
+    var graduationTextId = ""
+    var majorTextText = ""
+    var majorTextTextId = ""
+    var cityText = ""
+    private var datasss: ArrayList<Category>? = null
+    private var datasssaa: ArrayList<String>? = null
+
     override fun onClick(viewId: Int, view: View?) {
 
     }
@@ -29,12 +41,13 @@ class ActivityWelcome : BaseActivity() {
 
         var viewpagerAdapter=ViewPagerAdapter(supportFragmentManager)
         viewpagerAdapter.add(FragmentWelcomePage(),"title")
-        viewpagerAdapter.add(FragmentInformationSuggestions(),"title")
+        viewpagerAdapter.add(FragmentInformationSuggestions(this),"title")
+        viewpagerAdapter.add(FragmentInterestSuggestionList(),"title")
         viewpagerAdapter.add(FragmentSync(),"title")
         viewpagerAdapter.add(FragmentGroupSuggestionList(),"title")
         viewpagerAdapter.add(FragmentPageSugggestionsList(),"title")
         viewpagerAdapter.add(FragmentEventSuggestionsList(),"title")
-        viewpagerAdapter.add(FragmentInterestSuggestionList(),"title")
+
 
         binding.viewpager.adapter=viewpagerAdapter
         binding.indicator.setViewPager(binding.viewpager)
@@ -50,28 +63,61 @@ class ActivityWelcome : BaseActivity() {
         binding.btnNext.setOnClickListener {
             var page=viewpagerAdapter.getItem(count)
 
-            Log.d("asghdasd",page.toString())
             if (count==6){
                 finish()
             }else{
                 if (page is FragmentInformationSuggestions){
 
-                    /* count = count +1
-                     binding.viewpager.setCurrentItem(count,true)
-     */
-                    if (page.isValid()){
-                        count = +1
-                        binding.viewpager.setCurrentItem(count,true)
+                   /* if (page.isValid()){
+                        val hashMap = HashMap<String, String>()
+                        hashMap["university_name"] = graduationText
+                        hashMap["university_id"] = graduationTextId
+                        hashMap["branch_name"] = majorTextText
+                        hashMap["branch_id"] = majorTextTextId
+                        hashMap["country"] = countryText
+                        hashMap["city"] = cityText
+
+                       showLoader()
+
+                        networkViewModel.aboutProfileUpdate(hashMap)
+                        networkViewModel.aboutProfileData.observe(this){
+
+                            it?.let {
+                                val message = it.message
+
+                                if (it.status == true){
+                                    dismissLoader()
+                                    count++
+                                    binding.viewpager.setCurrentItem(count, true)
+                                }else{
+
+                                    dismissLoader()
+                                    makeToast(message)
+
+                                }
+                            }
+                        }
+
+                    }*/
+
+                    count++
+                    binding.viewpager.setCurrentItem(count, true)
+
+
+                }else if (page is FragmentInterestSuggestionList) {
+
+                    if (page.isvalid()) {
+
+
+                      /* var adapterCategory : AdapterCategory? = null
+                       makeToast(adapterCategory!!.getSelected()!!.name)*/
+
                     }
                 }else{
                     count++
                     binding.viewpager.setCurrentItem(count, true)
                 }
-
-
             }
-
-
         }
 
         binding.viewpager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
@@ -159,12 +205,6 @@ fun toolbar(isCenterVisible: Boolean, text: String) {
     }
 
 
-
-
-
-
-
-
 override fun onBackPressed() {
 
     if (count != 0) {
@@ -174,6 +214,31 @@ override fun onBackPressed() {
         super.onBackPressed()
     }
 }
+
+    override fun onCallBackData(
+        graducation: String,
+        graducationId: String,
+        major: String,
+        majorId: String,
+        country: String,
+        state: String,
+        city: String
+    ) {
+
+        graduationText = graducation
+        majorTextText = major
+        countryText = country
+        cityText = city
+        graduationTextId = graducationId
+        majorTextTextId = majorId
+
+    }
+    override fun onClickIntrastedItem(data: ArrayList<Category>) {
+
+        datasss = data
+
+
+    }
 
 
 }

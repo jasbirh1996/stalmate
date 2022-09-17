@@ -16,18 +16,25 @@
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/activity_dashboard.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/activity_profile.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/activity_profile_edit.xml" value="0.25" />
+        <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/activity_single_search.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/activity_welcome.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/app_toolbar.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/common_toolbar.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/content_scroll_profile.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/content_scroll_profile_edit.xml" value="0.33" />
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/fragment_home.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/fragment_information_suggestions.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/fragment_interest_suggestion_list.xml" value="0.20416666666666666" />
-        <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/fragmentsignup.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/fragment_language.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/fragment_login.xml" value="0.25" />
+        <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/fragment_o_t_p_enter.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/fragmentsignup.xml" value="0.25" />
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/home_page_toolbar.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/item_feed.xml" value="0.1" />
+        <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/item_language_layout.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/item_profile_about_data.xml" value="0.5006180469715699" />
         <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/layout_profile_data_lines.xml" value="0.33" />
+        <entry key="..\:/Users/Windows 10/AndroidStudioProjects/slatmate-user-android/app/src/main/res/layout/reset_success_poppu.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/drawable/ic_block_contact_icon.xml" value="0.1" />
         <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/drawable/ic_profile_heart_icon.xml" value="0.146" />
         <entry key="..\:/Users/vaibh/AndroidStudioProjects/Slatmate/app/src/main/res/drawable/ic_profile_location.xml" value="0.146" />

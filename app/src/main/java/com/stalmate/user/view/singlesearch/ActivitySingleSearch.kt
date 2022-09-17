@@ -22,6 +22,9 @@ class ActivitySingleSearch : BaseActivity(), SearchAdapter.Callbackk, SearchUniv
     private lateinit var searchAdapter: SearchAdapter
     private lateinit var searchUnivercityAdapter: SearchUnivercityAdapter
 
+    var position = ""
+    var nameText = ""
+
     var Type : String =""
 
     override fun onClick(viewId: Int, view: View?) {
@@ -39,6 +42,27 @@ class ActivitySingleSearch : BaseActivity(), SearchAdapter.Callbackk, SearchUniv
 
         binding.ivBack.setOnClickListener {
             onBackPressed()
+        }
+
+        binding.searchAdd.setOnClickListener {
+
+            if (Type == "graduation") {
+                var intent =Intent()
+                intent.putExtra("postId","")
+                intent.putExtra("name",binding.etSearch.text.toString())
+                intent.putExtra("type",Type)
+                setResult(Activity.RESULT_OK,intent)
+                finish()
+
+            }else if(Type == "major"){
+                var intent =Intent()
+                intent.putExtra("postId","")
+                intent.putExtra("name",binding.etSearch.text.toString())
+                intent.putExtra("type",Type)
+                setResult(Activity.RESULT_OK,intent)
+                finish()
+            }
+
         }
 
         binding.etSearch.addTextChangedListener(object : TextWatcher{
@@ -65,8 +89,9 @@ class ActivitySingleSearch : BaseActivity(), SearchAdapter.Callbackk, SearchUniv
         /*SetUp Search Adapter*/
         searchAdapter = SearchAdapter(networkViewModel, this,this )
         binding.rvSearch.adapter=searchAdapter
-        searchUnivercityAdapter = SearchUnivercityAdapter(networkViewModel, this, this)
-        binding.rvSearch.adapter = searchUnivercityAdapter
+
+        /*searchUnivercityAdapter = SearchUnivercityAdapter(networkViewModel, this, this)
+        binding.rvSearch.adapter = searchUnivercityAdapter*/
 
 
         val hashMap = HashMap<String, String>()
@@ -82,10 +107,13 @@ class ActivitySingleSearch : BaseActivity(), SearchAdapter.Callbackk, SearchUniv
                     if (it.results.isEmpty()) {
 
                         var state = ResultSearch(id = "0", name = "No Result Found")
+                        binding.searchAdd.visibility = View.VISIBLE
+                        binding.addGraduationList.text = binding.etSearch.text.toString()
                         stateList.add(state)
                         searchAdapter.submitList(stateList)
 
                     } else {
+                        binding.searchAdd.visibility = View.GONE
                         searchAdapter.submitList(it.results)
                     }
                 }
@@ -101,9 +129,9 @@ class ActivitySingleSearch : BaseActivity(), SearchAdapter.Callbackk, SearchUniv
 
                         var state = ResultSearch(id = "0", name = "No Result Found")
                         stateList.add(state)
-                        searchUnivercityAdapter.submitList(stateList)
+                        searchAdapter.submitList(stateList)
                     } else {
-                        searchUnivercityAdapter.submitList(it.results)
+                        searchAdapter.submitList(it.results)
                     }
                 }
             }
@@ -112,6 +140,9 @@ class ActivitySingleSearch : BaseActivity(), SearchAdapter.Callbackk, SearchUniv
 
     override fun onClickSearchItem(postId: String, name: String) {
 
+
+        position = postId
+        nameText = name
 
         var intent =Intent()
         intent.putExtra("postId",postId)
@@ -128,6 +159,9 @@ class ActivitySingleSearch : BaseActivity(), SearchAdapter.Callbackk, SearchUniv
     }
 
     override fun onClickSearchUnivercityItem(id: String, name: String) {
+
+        position = id
+        nameText = name
 
 
         var intent =Intent()

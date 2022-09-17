@@ -152,6 +152,13 @@ open class AppViewModel : ViewModel() {
         getResult(temp, apiInterface.setLoginDetails(map))
     }
 
+    var aboutProfileData: LiveData<CommonModelResponse?> = MutableLiveData<CommonModelResponse?>()
+    fun aboutProfileUpdate(map: HashMap<String, String>) {
+        val temp = MutableLiveData<CommonModelResponse?>()
+        aboutProfileData = temp
+        getResult(temp, apiInterface.setUpdateAbout(map))
+    }
+
     var educationData: LiveData<ModelCommonAddEducationAndProfessionResponse?> = MutableLiveData<ModelCommonAddEducationAndProfessionResponse?>()
     fun educationData(map: HashMap<String, String>) {
         val temp = MutableLiveData<ModelCommonAddEducationAndProfessionResponse?>()

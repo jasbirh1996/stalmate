@@ -33,6 +33,7 @@ class SearchAdapter(val viewModel: AppViewModel,
                 callback.onClickSearchItem(searchResponse.id, searchResponse.name)
             }
 
+
         }
 
     }

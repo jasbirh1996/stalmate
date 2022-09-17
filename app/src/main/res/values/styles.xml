@@ -37,11 +37,12 @@
     </style>
 
     <style name="customEditbox" >
-        <item name="android:textColor">@color/grey_dark</item>
         <item name="android:textSize">12sp</item>
         <item name="textAllCaps">false</item>
         <item name="backgroundTint">@color/grey1</item>
         <item name="android:fontFamily">@font/poppins</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="hintTextColor">@color/app_color</item>
        <!-- <item name="android:background">@drawable/secondary_button_background</item>-->
     </style>
 

@@ -43,6 +43,8 @@ class FragmentLogin : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        
+
         /*click on page */
        binding.forgetPassword.setOnClickListener {
            findNavController().navigate(R.id.fragmentForgetPassword)

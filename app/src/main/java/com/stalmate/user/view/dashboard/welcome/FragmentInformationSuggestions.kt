@@ -12,18 +12,22 @@ import androidx.databinding.DataBindingUtil
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentInformationSuggestionsBinding
+import com.stalmate.user.model.Education
 import com.stalmate.user.model.ModelCustumSpinner
 import com.stalmate.user.utilities.ValidationHelper
+import com.stalmate.user.view.profile.EducationListAdapter
 import com.stalmate.user.view.singlesearch.ActivitySingleSearch
 import com.wedguruphotographer.adapter.CustumSpinAdapter
 
-class FragmentInformationSuggestions : BaseFragment() {
+class FragmentInformationSuggestions(val callback: Callbackk ) : BaseFragment() {
 
     private lateinit var binding : FragmentInformationSuggestionsBinding
 
     var graduation = ""
     var majorText = ""
     var name = ""
+    var graduationId = ""
+    var majorTextId = ""
     var type = ""
     var country = ""
     var state = ""
@@ -42,10 +46,6 @@ class FragmentInformationSuggestions : BaseFragment() {
         binding = DataBindingUtil.bind<FragmentInformationSuggestionsBinding>(view)!!
 
 
-        graduation = binding.filledTextGraduation.text as String
-        country = binding.filledTextCountry.text.toString()
-        state = binding.filledTextState.text.toString()
-        city = binding.filledTextCity.text.toString()
 
         binding.filledTextGraduation.setOnClickListener {
             startActivityForResult(Intent(requireActivity(), ActivitySingleSearch::class.java).putExtra("TYPE", "graduation"),120)
@@ -66,20 +66,26 @@ class FragmentInformationSuggestions : BaseFragment() {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode==Activity.RESULT_OK && requestCode==120){
 
-           val id = data!!.getSerializableExtra("postId").toString()
-           name = data.getSerializableExtra("name").toString()
+
+
+           name = data!!.getSerializableExtra("name").toString()
            type = data.getSerializableExtra("type").toString()
 
             Log.d("anjcnkan", type)
+            Log.d("anjcnkan", name)
 
             if (type == "graduation") {
                 binding.filledTextGraduation.text = name
-               var graduation = name
+                graduationId = data!!.getSerializableExtra("postId").toString()
             }else if (type == "major"){
                 binding.filledTextMajor.text = name
-                majorText = name
+                majorTextId = data!!.getSerializableExtra("postId").toString()
             }
         }
+    }
+
+    interface Callbackk {
+        fun onCallBackData(graducation : String, graducationId: String , major : String, majorId : String, country : String , state : String, city : String )
     }
 
     fun isValid() : Boolean{
@@ -100,6 +106,16 @@ class FragmentInformationSuggestions : BaseFragment() {
                 makeToast("Please Select City ")
                 return false
             }
+
+        callback.onCallBackData(
+            binding.filledTextGraduation.text.toString(),
+            graduationId,
+            binding.filledTextMajor.text.toString(),
+            majorTextId,
+            binding.filledTextCountry.text.toString(),
+            binding.filledTextState.text.toString(),
+            binding.filledTextCity.text.toString()
+        )
 
         return true
 

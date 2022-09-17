@@ -54,8 +54,7 @@ class FragmentOTPEnter : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        /*Common ToolBar SetUp*/
-        toolbarSetUp()
+
 
         startTimer()
 
@@ -65,14 +64,15 @@ class FragmentOTPEnter : BaseFragment() {
         first_name = requireArguments().getString("first_name").toString()
         last_name = requireArguments().getString("last_name").toString()
         gender = requireArguments().getString("gender").toString()
-//        schoolandcollege = requireArguments().getString("schoolandcollege").toString()
         dob = requireArguments().getString("dob").toString()
         device_token = requireArguments().getString("device_token").toString()
         device_type = requireArguments().getString("device_type").toString()
         forgetPasswordScreen = requireArguments().getString("signUp").toString()
         forgetPasswordScreen = requireArguments().getString("layout").toString()
 
-        Log.d("emiasljkcn", email)
+        /*Common ToolBar SetUp*/
+        toolbarSetUp()
+        Log.d("emiasljkcn", forgetPasswordScreen)
         getOtpApiCall()
         getOtpRegistrationApiCall()
 
@@ -159,7 +159,7 @@ class FragmentOTPEnter : BaseFragment() {
                 binding.progressBar.visibility = View.GONE
         }
     }
-lateinit var successdialogBuilder:AlertDialog
+    lateinit var successdialogBuilder:AlertDialog
     private fun otpVerifyApiCall() {
 
         val hashMap = HashMap<String, String>()
@@ -232,7 +232,6 @@ lateinit var successdialogBuilder:AlertDialog
                             activity?.finish()
                         }, DURATION)
 
-
                     } else {
                         makeToast(message)
                     }
@@ -244,8 +243,14 @@ lateinit var successdialogBuilder:AlertDialog
 
     private fun toolbarSetUp() {
         binding.toolbar.toolBarCenterText.visibility = View.VISIBLE
-        binding.toolbar.toolBarCenterText.text =  getString(R.string.forget_post)
-     //   binding.toolbar.backButtonRightText.visibility = View.GONE
+
+        if (forgetPasswordScreen == "SignUp") {
+
+            binding.toolbar.toolBarCenterText.text =  getString(R.string.sign_up)
+        } else if (forgetPasswordScreen == "ForgetPassword") {
+
+            binding.toolbar.toolBarCenterText.text =  getString(R.string.forget_post)
+        }
 
         binding.toolbar.back.setOnClickListener {
             activity?.onBackPressed()
