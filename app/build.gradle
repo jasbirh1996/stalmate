@@ -136,4 +136,6 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:30.0.2')
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-messaging:23.0.8'
+
+    implementation 'com.google.android.libraries.places:places:2.6.0'
 }

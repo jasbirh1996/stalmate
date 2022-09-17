@@ -124,6 +124,8 @@ interface ApiInterface {
     fun getGlobalSearch(@Body map: HashMap<String, String>): Call<ModelGlobalSearch>
 
 
+
+
     @Multipart
     @POST(Constants.UPDATE_PROFILE_API)
     fun updateUserProfile(
@@ -141,7 +143,7 @@ interface ApiInterface {
     ): Call<CommonModelResponse>
 
     @Multipart
-    @POST(Constants.UPDATE_PROFILE_API)
+    @POST(Constants.UPDATE_PROFILE_API_FILE)
     fun updateUserProfileImage(
         @Part cover_img: MultipartBody.Part
     ): Call<CommonModelResponse>

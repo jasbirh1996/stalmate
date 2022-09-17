@@ -7,14 +7,13 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.stalmate.user.R
 import com.stalmate.user.databinding.ItemSearchBinding
-import com.stalmate.user.model.Result
 import com.stalmate.user.viewmodel.AppViewModel
 
-class SearchUnivercityAdapter(val viewModel: AppViewModel,
-                              val context: Context,
-                              var callback: Callbackk
+class SingleSearchAdapter(val viewModel: AppViewModel, var type:String,
+                          val context: Context,
+                          var callback: Callbackk
 
-) : RecyclerView.Adapter<SearchUnivercityAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<SingleSearchAdapter.ViewHolder>() {
     var list = ArrayList<ResultSearch>()
 
     fun submitList(searchList: List<ResultSearch>) {
@@ -24,17 +23,12 @@ class SearchUnivercityAdapter(val viewModel: AppViewModel,
     }
 
     inner class ViewHolder(val binding : ItemSearchBinding): RecyclerView.ViewHolder(binding.root) {
-
         fun bind(searchResponse :ResultSearch){
-
-            binding.tvSearchName.text = searchResponse.name
-
-            binding.tvSearchName.setOnClickListener {
-                callback.onClickSearchUnivercityItem(searchResponse.id, searchResponse.name)
+            binding.tvValue.text = searchResponse.name
+            binding.tvValue.setOnClickListener {
+                callback.onClickSearchItem(searchResponse.id, searchResponse.name)
             }
-
         }
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -51,7 +45,7 @@ class SearchUnivercityAdapter(val viewModel: AppViewModel,
     }
 
     public interface Callbackk {
-        fun onClickSearchUnivercityItem(id: String, name: String)
+        fun onClickSearchItem(id: String, name: String)
     }
 
 }

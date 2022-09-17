@@ -25,7 +25,7 @@ class FragmentInterestSuggestionList : BaseFragment(), AdapterCategory.Callbackk
     var datass = ""
 
     var list = ArrayList<Category>()
-    var selectedVideoList = ArrayList<String>()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,7 +58,6 @@ class FragmentInterestSuggestionList : BaseFragment(), AdapterCategory.Callbackk
             it.let {
                 list.addAll(it!!.results)
                 adapterCategory.submitList(list)
-
             }
         })
 
@@ -77,15 +76,14 @@ class FragmentInterestSuggestionList : BaseFragment(), AdapterCategory.Callbackk
             makeToast("ajkcnackn")
             return false
         }
-
         return true
     }
 
 
 
-    /*fun getSelectedDAta(): SelectedList? {
-       return adapterCategory.selectedList
-    }*/
+   fun getSelectedDAta(): ArrayList<String> {
+       return adapterCategory.getSelected()
+    }
 
 }
 

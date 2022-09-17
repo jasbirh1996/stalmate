@@ -32,6 +32,7 @@ object Constants {
     const val GET_PROFILE_API="auth_service/auth_api/get_profile_data"
     const val GET_OTHER_USER_PROFILE_API="auth_service/auth_api/get_profile_user"
     const val UPDATE_PROFILE_API="auth_service/auth_api/profile_update"
+    const val UPDATE_PROFILE_API_FILE="auth_service/auth_api/profile_update_file"
     const val BLOCK_API="/auth_service/friend_api/block_user"
     const val URL_GLOBAL_SEARCH="auth_service/friend_api/search_list"
     const val START_DATE = "01"
@@ -98,7 +99,7 @@ object Constants {
     const val ACCOUNT_NAME: String = "SyncContacts"
 
 
-
+    const val MESSAGE_LOC_API_EMPTY_RESULT = "Pin Location"
 
     const val ACTION_SYNC_COMPLETED: String = "ACTION_SYNC_COMPLETED"
 

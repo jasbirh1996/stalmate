@@ -107,26 +107,18 @@ class AdapterCategory(
         }
     }
 
-    fun getSelected(): Category? {
-        return if (checkedPosition != -1) {
-            list.get(checkedPosition)
-        } else null
-    }
+    fun getSelected():ArrayList<String>  {
 
-    /*fun  getAllSelectedItem(position: String, name : String){
-
-        for (i in 0 until list.size) {
-
-            if (list[i].isSelected) {
-
-
-                selectedItemList.add(position, name)
-
+        var selectedList=ArrayList<String>()
+        for (i in 0 until list.size){
+            if (list[i].isSelected){
+                selectedList.add(list[i].id)
 
             }
         }
+        return selectedList
+    }
 
-    }*/
 
 }
 

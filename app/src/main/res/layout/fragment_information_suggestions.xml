@@ -114,7 +114,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/filledTextMajor" />
 
-        <androidx.appcompat.widget.AppCompatEditText
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/filledTextCountry"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -138,44 +138,6 @@
             app:layout_constraintTop_toBottomOf="@+id/filledTextCountry"/>
 
 
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/stateHeading"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:fontFamily="@font/poppins"
-            android:text="State"
-            android:textColor="@color/grey1"
-            android:textSize="14sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/viewCountry" />
-
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/filledTextState"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingVertical="10dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:gravity="center_vertical"
-            android:textSize="14sp"
-            android:textColor="@color/black"
-            android:background="@drawable/style_spinner"
-            app:layout_constraintEnd_toStartOf="@+id/stateHeading"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/stateHeading"/>
-
-
-        <View
-            android:id="@+id/viewState"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/grey1"
-            app:layout_constraintTop_toBottomOf="@+id/filledTextState"/>
-
-
-
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/cityHeading"
             android:layout_width="wrap_content"
@@ -183,12 +145,12 @@
             android:layout_marginTop="20dp"
             android:fontFamily="@font/poppins"
             android:text="@string/city"
-            android:textSize="14sp"
             android:textColor="@color/grey1"
+            android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/viewState" />
+            app:layout_constraintTop_toBottomOf="@+id/viewCountry" />
 
-        <androidx.appcompat.widget.AppCompatEditText
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/filledTextCity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

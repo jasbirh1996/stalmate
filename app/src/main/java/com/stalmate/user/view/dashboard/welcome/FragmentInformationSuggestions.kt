@@ -7,30 +7,26 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.setFragmentResultListener
+import androidx.navigation.fragment.findNavController
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentInformationSuggestionsBinding
-import com.stalmate.user.model.Education
-import com.stalmate.user.model.ModelCustumSpinner
 import com.stalmate.user.utilities.ValidationHelper
-import com.stalmate.user.view.profile.EducationListAdapter
 import com.stalmate.user.view.singlesearch.ActivitySingleSearch
-import com.wedguruphotographer.adapter.CustumSpinAdapter
+import com.stalmate.user.view.singlesearch.FragmentSingleSearch
 
-class FragmentInformationSuggestions(val callback: Callbackk ) : BaseFragment() {
+class FragmentInformationSuggestions(var callback: Callbackk) : BaseFragment() {
 
     private lateinit var binding : FragmentInformationSuggestionsBinding
 
-    var graduation = ""
-    var majorText = ""
+
     var name = ""
     var graduationId = ""
     var majorTextId = ""
     var type = ""
     var country = ""
-    var state = ""
     var city = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,14 +41,27 @@ class FragmentInformationSuggestions(val callback: Callbackk ) : BaseFragment() 
         var view =   inflater.inflate(R.layout.fragment_information_suggestions, container, false)
         binding = DataBindingUtil.bind<FragmentInformationSuggestionsBinding>(view)!!
 
-
-
+        var intentt=Intent(requireContext(),ActivitySingleSearch::class.java)
         binding.filledTextGraduation.setOnClickListener {
-            startActivityForResult(Intent(requireActivity(), ActivitySingleSearch::class.java).putExtra("TYPE", "graduation"),120)
-        }
+            intentt.putExtra("type","graduation")
+            startActivityForResult(intentt,120)
+       }
 
         binding.filledTextMajor.setOnClickListener {
-            startActivityForResult(Intent(requireActivity(), ActivitySingleSearch::class.java).putExtra("TYPE", "major"),120)
+            intentt.putExtra("type","major")
+            startActivityForResult(intentt,120)
+        }
+
+
+
+
+        binding.filledTextCountry.setOnClickListener {
+            intentt.putExtra("type","autoCompleteCountries")
+            startActivityForResult(intentt,121)
+        }
+        binding.filledTextCity.setOnClickListener {
+            intentt.putExtra("type","autoCompleteCities")
+            startActivityForResult(intentt,121)
         }
 
         return binding.root
@@ -61,12 +70,9 @@ class FragmentInformationSuggestions(val callback: Callbackk ) : BaseFragment() 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
     }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode==Activity.RESULT_OK && requestCode==120){
-
-
 
            name = data!!.getSerializableExtra("name").toString()
            type = data.getSerializableExtra("type").toString()
@@ -76,11 +82,18 @@ class FragmentInformationSuggestions(val callback: Callbackk ) : BaseFragment() 
 
             if (type == "graduation") {
                 binding.filledTextGraduation.text = name
-                graduationId = data!!.getSerializableExtra("postId").toString()
+                graduationId = data!!.getSerializableExtra("id").toString()
             }else if (type == "major"){
                 binding.filledTextMajor.text = name
-                majorTextId = data!!.getSerializableExtra("postId").toString()
+                majorTextId = data!!.getSerializableExtra("id").toString()
             }
+        }
+
+        if (resultCode==Activity.RESULT_OK && requestCode==121){
+            city=data!!.getSerializableExtra("city").toString()
+            country=data.getSerializableExtra("country").toString()
+            binding.filledTextCountry.setText(country)
+            binding.filledTextCity.setText(city)
         }
     }
 
@@ -99,10 +112,7 @@ class FragmentInformationSuggestions(val callback: Callbackk ) : BaseFragment() 
             } else if (ValidationHelper.isNull(binding.filledTextCountry.text.toString())) {
                 makeToast("Please Select Country ")
                 return false
-            } else if (ValidationHelper.isNull(binding.filledTextState.text.toString())) {
-                makeToast("Please Select State ")
-                return false
-            } else if (ValidationHelper.isNull(binding.filledTextCity.text.toString())) {
+            }  else if (ValidationHelper.isNull(binding.filledTextCity.text.toString())) {
                 makeToast("Please Select City ")
                 return false
             }
@@ -113,13 +123,16 @@ class FragmentInformationSuggestions(val callback: Callbackk ) : BaseFragment() 
             binding.filledTextMajor.text.toString(),
             majorTextId,
             binding.filledTextCountry.text.toString(),
-            binding.filledTextState.text.toString(),
+            "",
             binding.filledTextCity.text.toString()
         )
 
         return true
 
     }
+
+
+
 
 
 }
