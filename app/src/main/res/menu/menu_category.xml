@@ -1,0 +1,15 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.user.vaibhavmodules.MainActivity">
+
+    <item  android:id="@+id/category_A"
+        android:title="Category A"/>
+
+    <item android:id="@+id/Category_B"
+        android:title="Category B"/>
+
+    <item android:id="@+id/Category_Other"
+        android:title="Others"/>
+
+</menu>

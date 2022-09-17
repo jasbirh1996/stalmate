@@ -1,5 +1,6 @@
 package com.stalmate.user.view.profile
 
+import android.Manifest
 import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Bundle
@@ -42,6 +43,8 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
     lateinit var binding: ActivityProfileBinding
     lateinit var feedAdapter: AdapterFeed
     lateinit var friendAdapter: ProfileFriendAdapter
+    var permissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
+    var WRITE_REQUEST_CODE = 100
     val PICK_IMAGE_PROFILE = 1
     val PICK_IMAGE_COVER = 1
     var imageFile: File? = null
@@ -54,6 +57,9 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_profile)
+
+        requestPermissions(permissions, WRITE_REQUEST_CODE)
+
         binding.layout.buttonEditProfile.visibility = View.VISIBLE
         feedAdapter = AdapterFeed(networkViewModel, this, this)
         binding.layout.rvFeeds.setNestedScrollingEnabled(false);

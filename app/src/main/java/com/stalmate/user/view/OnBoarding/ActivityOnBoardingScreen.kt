@@ -16,8 +16,6 @@ class ActivityOnBoardingScreen : AppCompatActivity(), View.OnClickListener {
     private var currentPageIndex = 0
     private val onBoardingPages: MutableList<OnBoardingModel> = ArrayList()
 
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityOnBoardingScreenBinding.inflate(layoutInflater)

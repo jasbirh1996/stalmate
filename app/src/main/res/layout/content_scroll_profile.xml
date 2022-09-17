@@ -116,13 +116,15 @@
 
             <Button
                 android:id="@+id/buttonEditProfile"
-                style="@style/customButtonStyle"
-                android:layout_width="wrap_content"
+                android:background="@drawable/custum_button_background"
+                android:layout_width="130dp"
                 android:layout_height="wrap_content"
                 android:text="@string/edit_profile"
-                android:visibility="gone"
+                android:textColor="@color/white"
+                android:visibility="visible"
                 android:layout_marginTop="5dp"
                 app:backgroundTint="@null"
+                android:textAllCaps="false"
                 app:layout_constraintBottom_toBottomOf="@+id/layoutFollowing"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"

@@ -30,12 +30,20 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".view.singlesearch.ActivitySingleSearch"
+
+            android:name=".view.dashboard.Friend.ActivityCategoryCreate"
+            android:exported="false" />
+        <activity
+            android:name=".view.ActivityAllPictureShow"
             android:exported="false" />
         <activity
             android:name=".view.dashboard.HomeFragment.ActivitySearch"
             android:exported="false"
             android:theme="@style/noAnimTheme" />
+        <activity
+            android:name=".view.singlesearch.ActivitySingleSearch"
+            android:exported="false" />
+
         <activity
             android:name=".view.dashboard.welcome.ActivityWelcome"
             android:exported="false" />

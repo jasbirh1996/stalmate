@@ -5,6 +5,7 @@ import com.stalmate.user.model.*
 import com.stalmate.user.utilities.Constants
 
 import com.slatmate.user.model.*
+import com.stalmate.user.view.dashboard.Friend.categorymodel.ModelCategoryResponse
 import com.stalmate.user.view.photoalbum.ModelAlbumCreateResponse
 import com.stalmate.user.view.photoalbum.ModelPhotoResponse
 import com.stalmate.user.view.singlesearch.ModelSearch
@@ -34,6 +35,9 @@ interface ApiInterface {
 
     @GET(Constants.url_language_list)
     fun getLanguageList(): Call<ModelLanguageResponse>
+
+    @GET(Constants.URL_CATEGORY_LIST)
+    fun getCategoryList(): Call<ModelCategoryResponse>
 
     @POST(Constants.URL_PHOTO_ALBUM_PHOTO)
     fun getPhotoList(@Body map: HashMap<String, String>): Call<ModelPhotoResponse>
