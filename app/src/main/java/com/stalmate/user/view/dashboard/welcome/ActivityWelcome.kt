@@ -104,7 +104,7 @@ class ActivityWelcome : BaseActivity(), FragmentInformationSuggestions.Callbackk
             } else {
                 if (page is FragmentInformationSuggestions) {
 
-                    /* if (page.isValid()){
+                     if (page.isValid()){
                     val hashMap = HashMap<String, String>()
                     hashMap["university_name"] = graduationText
                     hashMap["university_id"] = graduationTextId
@@ -134,20 +134,46 @@ class ActivityWelcome : BaseActivity(), FragmentInformationSuggestions.Callbackk
                         }
                     }
 
-                }*/
+                }
                     /* count = count +1
                  binding.viewpager.setCurrentItem(count,true)
  */
-                    if (page.isValid()) {
+                    /*if (page.isValid()) {
                         count++
                         binding.viewpager.setCurrentItem(count, true)
-                    }
+                    }*/
                 } else if (page is FragmentInterestSuggestionList) {
 
                     if (page.getSelectedDAta().size > 0) {
                         val selectedInterestString: String =
                             java.lang.String.join(",", page.getSelectedDAta())
-                        Log.d("asdhasd", selectedInterestString)
+
+                            val hashMap = HashMap<String, String>()
+                            hashMap["category_id"] = selectedInterestString
+
+                            showLoader()
+
+                            networkViewModel.aboutProfileUpdate(hashMap)
+                            networkViewModel.aboutProfileData.observe(this){
+
+                                it?.let {
+                                    val message = it.message
+
+                                    if (it.status == true){
+                                        dismissLoader()
+                                        count++
+                                        binding.viewpager.setCurrentItem(count, true)
+                                    }else{
+
+                                        dismissLoader()
+                                        makeToast(message)
+
+                                    }
+                                }
+
+
+                        }
+
 
                     } else {
                         makeToast("Select atleast one interest")

@@ -5,11 +5,13 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.stalmate.user.R
 import com.stalmate.user.databinding.ItemCategoryLayoutBinding
 import com.stalmate.user.view.dashboard.Friend.categorymodel.CategoryResponse
 import com.stalmate.user.viewmodel.AppViewModel
+import java.util.HashMap
 
 class AdapterCategory(val viewModel: AppViewModel,
                       val context: Context,
@@ -26,11 +28,12 @@ class AdapterCategory(val viewModel: AppViewModel,
         binding.tvCategoryName.text = categoryResponse.name
 
            binding.iveditCategory.setOnClickListener {
-
+               callback.onClickEditItem(list[bindingAdapterPosition], bindingAdapterPosition)
            }
 
            binding.ivDelete.setOnClickListener {
 
+               onClickItemDelete(categoryResponse.id, bindingAdapterPosition, (binding.root.context as? LifecycleOwner)!!)
            }
 
        }
@@ -43,8 +46,7 @@ class AdapterCategory(val viewModel: AppViewModel,
     }
 
     public interface Callbackk {
-        fun onClickItem(id: String, name : String)
-        fun onClickDeleteItem(id: String, name : String)
+        fun onClickEditItem(categoryResponse: CategoryResponse, index: Int)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
@@ -58,6 +60,24 @@ class AdapterCategory(val viewModel: AppViewModel,
 
     override fun getItemCount(): Int {
         return list.size
+    }
+
+
+    fun onClickItemDelete(id: String, position: Int, lifecycleObserver: LifecycleOwner) {
+        val hashMap = HashMap<String, String>()
+
+        hashMap["id"] = id
+        hashMap["is_delete"] = "1"
+
+        viewModel.updateFriendCategoryData(hashMap)
+        viewModel.updateFriendCategoryLiveData.observe(lifecycleObserver){
+            it?.let {
+                if (it.status == true){
+                    list.removeAt(position)
+                    notifyItemRemoved(position)
+                }
+            }
+        }
     }
 
 

@@ -55,12 +55,14 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
     private lateinit var profilePictureAdapter: ProfilePictureAdapter
     private lateinit var coverPictureAdapter: CoverPictureAdapter
     private lateinit var blockedUserAdapter: BlockedUserAdapter
+
     private lateinit var marriageAdapter: CustumSpinAdapter
     val marriageList: ArrayList<ModelCustumSpinner> = ArrayList<ModelCustumSpinner>()
-
+    private lateinit var selectedMarriageStatus: ModelCustumSpinner
 
     lateinit var feedAdapter: AdapterFeed
     override fun onClick(viewId: Int, view: View?) {
+
 
     }
 
@@ -69,16 +71,23 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
         binding = DataBindingUtil.setContentView(this, R.layout.activity_profile_edit)
         getUserProfileData()
 
-/*
-        var state = ModelCustumSpinner(id = "0", name = "Marital Status")
-        marriageList.add(state)
+        binding.layout.tvmarriage.setOnItemSelectedListener(object :
+            AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View,
+                position: Int,
+                id: Long
+            ) {
 
-        marriageAdapter = CustumSpinAdapter(
-            this,
-            android.R.layout.simple_spinner_item,
-            marriageList, false
-        )
-        binding.layout.tvMarriage.setAdapter(marriageAdapter)*/
+                selectedMarriageStatus = parent!!.getItemAtPosition(position) as ModelCustumSpinner
+
+                merriage = selectedMarriageStatus.name
+
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        })
 
 
         feedAdapter = AdapterFeed(networkViewModel, this, this)
@@ -111,7 +120,6 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
             }
         }
 
-
         binding.layout.rdOthers.setOnCheckedChangeListener { compoundButton, ischeck ->
             if (ischeck) {
                 GANDER = "Other"
@@ -120,8 +128,6 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
                 binding.layout.rdOthers.setChecked(true)
             }
         }
-
-
 
         binding.layout.spDate.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
@@ -244,7 +250,7 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
 
         binding.btnCrateAccount.setOnClickListener {
 
-            if (merriage=="Marital Status"){
+            if (!this::selectedMarriageStatus.isInitialized){
                 makeToast("Please select marriage Status")
             }else {
                 updateProfileApiHit()
@@ -286,24 +292,6 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
                 })
             dialogAddEditProfession.show()
         }
-
-
-        binding.layout.tvMarriage.onItemSelectedListener =
-            object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    p0: AdapterView<*>?,
-                    p1: View?,
-                    position: Int,
-                    p3: Long
-                ) {
-                    merriage = p0!!.getItemAtPosition(position).toString()
-                }
-
-                override fun onNothingSelected(p0: AdapterView<*>?) {
-
-                }
-
-            }
 
         binding.ivBack.setOnClickListener {
             finish()
@@ -457,6 +445,32 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
         ImageLoaderHelperGlide.setGlide(this, binding.ivUserThumb, userData.results.profile_img1)
 
 
+
+        if (userData.results.profile_data[0].marital_status == "Single"){
+            var marriageType  = ModelCustumSpinner(id = "0", name = "Single")
+            marriageList.add(marriageType)
+            marriageList.add(ModelCustumSpinner(id = "0", name = "Marriage"))
+
+        }else if(userData.results.profile_data[0].marital_status == "Marriage"){
+            var marriageType  = ModelCustumSpinner(id = "0", name = "Marriage")
+            marriageList.add(marriageType)
+            marriageList.add(ModelCustumSpinner(id = "0", name = "Single"))
+        }else{
+            var marriageType = ModelCustumSpinner(id = "0", name = "Marital Status")
+            marriageList.add(marriageType)
+            marriageList.add(ModelCustumSpinner(id = "0", name = "Single"))
+            marriageList.add(ModelCustumSpinner(id = "0", name = "Marriage"))
+
+        }
+
+
+
+
+        marriageAdapter = CustumSpinAdapter(this, android.R.layout.simple_spinner_item, marriageList, false)
+        binding.layout.tvmarriage.setAdapter(marriageAdapter)
+
+
+
         binding.etWebsite.setText(userData.results.company)
 
         if (userData.results.profile_data[0].marital_status == "Male") {
@@ -468,30 +482,7 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
         }
 
 
-        if (userData.results.profile_data[0].marital_status=="Single"){
 
-            var marriage = ModelCustumSpinner(id = "0", name = "Single")
-            marriageList.add(marriage)
-
-            marriageAdapter = CustumSpinAdapter(
-                this,
-                android.R.layout.simple_spinner_item,
-                marriageList, false
-            )
-            binding.layout.tvMarriage.setAdapter(marriageAdapter)
-
-        }else if(userData.results.profile_data[0].marital_status=="Marriage"){
-
-            var marriage = ModelCustumSpinner(id = "0", name = "Marriage")
-            marriageList.add(marriage)
-
-            marriageAdapter = CustumSpinAdapter(
-                this,
-                android.R.layout.simple_spinner_item,
-                marriageList, false
-            )
-            binding.layout.tvMarriage.setAdapter(marriageAdapter)
-        }
 
 
         educationAdapter = EducationListAdapter(networkViewModel, this, this)

@@ -2,7 +2,7 @@ package com.stalmate.user.view.dashboard.Friend.categorymodel
 
 data class ModelCategoryResponse(
     val message: String,
-    val results: List<CategoryResponse>,
+    val results: ArrayList<CategoryResponse>,
     val status: Boolean
 )
 

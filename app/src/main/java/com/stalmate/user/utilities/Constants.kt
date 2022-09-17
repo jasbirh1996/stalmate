@@ -26,6 +26,7 @@ object Constants {
     const val URL_SEARCH_BRACNCHLIST="auth_service/auth_api/branch_list"
     const val URL_EDUCATION_ADD="auth_service/auth_api/add_update_usereducation"
     const val URL_PROFESSION_ADD="auth_service/auth_api/add_update_userwork"
+    const val URL_UPDATE_FRIEND_CATEGORY="auth_service/friend_api/add_update_friend_category"
 
 
     const val url_send_follower_request="auth_service/friend_api/send_follower_request"

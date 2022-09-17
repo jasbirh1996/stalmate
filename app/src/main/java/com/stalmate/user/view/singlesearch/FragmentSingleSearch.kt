@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,6 +34,9 @@ class FragmentSingleSearch(var Type:String) : BaseFragment(), SingleSearchAdapte
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+
+        Log.d("ancjka", Type)
+
     }
 
 
@@ -40,7 +44,7 @@ class FragmentSingleSearch(var Type:String) : BaseFragment(), SingleSearchAdapte
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.buttonAdd.setOnClickListener {
+        binding.itemView.setOnClickListener {
             finishFragment("", binding.etSearch.text.toString())
         }
 
@@ -52,6 +56,8 @@ class FragmentSingleSearch(var Type:String) : BaseFragment(), SingleSearchAdapte
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
                 if (binding.etSearch.text.toString().isNotEmpty()){
+
+                    binding.tvValue.text = "You want to add"+" "+ "-"+ " "+binding.etSearch.text
                     hitSearchListApi(Type)
                 }
             }
@@ -81,12 +87,11 @@ class FragmentSingleSearch(var Type:String) : BaseFragment(), SingleSearchAdapte
                     if (it.results.isEmpty()) {
 
                         var state = ResultSearch(id = "0", name = "No Result Found")
-                        binding.buttonAdd.visibility = View.VISIBLE
+                        binding.itemView.visibility = View.VISIBLE
                         stateList.add(state)
                         searchAdapter.submitList(stateList)
 
                     } else {
-                        binding.buttonAdd.visibility = View.GONE
                         searchAdapter.submitList(it.results)
                     }
                 }
@@ -101,6 +106,7 @@ class FragmentSingleSearch(var Type:String) : BaseFragment(), SingleSearchAdapte
                     if (it.results.isEmpty()) {
 
                         var state = ResultSearch(id = "0", name = "No Result Found")
+                        binding.itemView.visibility = View.VISIBLE
                         stateList.add(state)
                         searchAdapter.submitList(stateList)
                     } else {
@@ -123,7 +129,7 @@ class FragmentSingleSearch(var Type:String) : BaseFragment(), SingleSearchAdapte
         bundle.putExtra("id",id)
         bundle.putExtra("name",name)
         bundle.putExtra("type",Type)
-     requireActivity().setResult(Activity.RESULT_OK,bundle)
+        requireActivity().setResult(Activity.RESULT_OK,bundle)
         requireActivity().finish()
     }
 

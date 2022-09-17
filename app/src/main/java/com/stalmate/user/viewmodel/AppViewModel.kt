@@ -59,7 +59,7 @@ open class AppViewModel : ViewModel() {
     }
 
 
-    var categoryFriendLiveData: LiveData<ModelCategoryResponse?> = MutableLiveData<ModelCategoryResponse?>()
+    var categoryFriendLiveData: MutableLiveData<ModelCategoryResponse?> = MutableLiveData<ModelCategoryResponse?>()
     fun categoryFriendLiveData() {
         val temp = MutableLiveData<ModelCategoryResponse?>()
         categoryFriendLiveData = temp
@@ -172,6 +172,13 @@ open class AppViewModel : ViewModel() {
         val temp = MutableLiveData<ModelCommonAddEducationAndProfessionResponse?>()
         educationData = temp
         getResult(temp, apiInterface.setEducationAddDetails(map))
+    }
+
+    var updateFriendCategoryLiveData: LiveData<CommonModelResponse?> = MutableLiveData<CommonModelResponse?>()
+    fun updateFriendCategoryData(map: HashMap<String, String>) {
+        val temp = MutableLiveData<CommonModelResponse?>()
+        updateFriendCategoryLiveData = temp
+        getResult(temp, apiInterface.setUpdateFriendCategoryDetails(map))
     }
 
     var addUpdateProfessionLiveData: LiveData<ModelCommonAddEducationAndProfessionResponse?> = MutableLiveData<ModelCommonAddEducationAndProfessionResponse?>()

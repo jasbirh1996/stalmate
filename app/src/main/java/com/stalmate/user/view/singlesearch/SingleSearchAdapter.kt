@@ -9,7 +9,8 @@ import com.stalmate.user.R
 import com.stalmate.user.databinding.ItemSearchBinding
 import com.stalmate.user.viewmodel.AppViewModel
 
-class SingleSearchAdapter(val viewModel: AppViewModel, var type:String,
+class SingleSearchAdapter(val viewModel: AppViewModel,
+                          var type:String,
                           val context: Context,
                           var callback: Callbackk
 

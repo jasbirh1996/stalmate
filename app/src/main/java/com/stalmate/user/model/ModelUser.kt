@@ -52,8 +52,6 @@ data class ProfileData(
     val home_town: String,
     val location: String,
     val marital_status: String,
-
-
     val profession: ArrayList<Profession>
 ):Serializable
 

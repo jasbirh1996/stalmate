@@ -261,10 +261,11 @@
             app:layout_constraintTop_toBottomOf="@+id/radio_group"/>
 
         <View
+            android:id="@+id/view7"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/grey1"
-            app:layout_constraintTop_toBottomOf="@+id/filledTextEmail"/>
+            app:layout_constraintTop_toBottomOf="@+id/filledTextEmail" />
 
 
 
@@ -286,10 +287,11 @@
 
 
         <View
+            android:id="@+id/view6"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/grey1"
-            app:layout_constraintTop_toBottomOf="@+id/etNumber"/>
+            app:layout_constraintTop_toBottomOf="@+id/etNumber" />
 
      <!--   <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/filledTextProfedession"
@@ -318,6 +320,7 @@
 
 
         <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/appCompatTextView22"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/poppins"
@@ -350,17 +353,25 @@
             android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@id/tv_addMore"/>
 
-        <Spinner
-            android:id="@+id/tv_marriage"
-            android:layout_width="match_parent"
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/appCompatImageView19"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:entries="@array/marrage"
-            android:drawableStart="@drawable/love"
-            android:drawablePadding="10dp"
+            android:src="@drawable/ic_profile_heart_icon"
+            app:layout_constraintBottom_toBottomOf="@+id/tvmarriage"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/etNumber" />
+
+        <Spinner
+            android:id="@+id/tvmarriage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/small_spinner_border"
+            android:drawablePadding="7dp"
             android:paddingVertical="10dp"
             android:text="@string/marital_status"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/appCompatImageView19"
             app:layout_constraintTop_toBottomOf="@+id/etNumber" />
 
         <View
@@ -368,7 +379,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="#B7B7B7"
-            app:layout_constraintTop_toBottomOf="@+id/tv_marriage" />
+            app:layout_constraintTop_toBottomOf="@+id/tvmarriage" />
 
 
         <com.google.android.material.textfield.TextInputLayout
