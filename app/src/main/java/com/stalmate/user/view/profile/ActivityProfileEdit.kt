@@ -33,8 +33,6 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
     AdapterFeed.Callbackk {
 
     private lateinit var binding: ActivityProfileEditBinding
-    val PICK_IMAGE_PROFILE = 2
-    val PICK_IMAGE_COVER = 1
     var WRITE_REQUEST_CODE = 100
     private var GANDER: String = ""
     var dates: String = ""
@@ -470,6 +468,30 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
         }
 
 
+        if (userData.results.profile_data[0].marital_status=="Single"){
+
+            var marriage = ModelCustumSpinner(id = "0", name = "Single")
+            marriageList.add(marriage)
+
+            marriageAdapter = CustumSpinAdapter(
+                this,
+                android.R.layout.simple_spinner_item,
+                marriageList, false
+            )
+            binding.layout.tvMarriage.setAdapter(marriageAdapter)
+
+        }else if(userData.results.profile_data[0].marital_status=="Marriage"){
+
+            var marriage = ModelCustumSpinner(id = "0", name = "Marriage")
+            marriageList.add(marriage)
+
+            marriageAdapter = CustumSpinAdapter(
+                this,
+                android.R.layout.simple_spinner_item,
+                marriageList, false
+            )
+            binding.layout.tvMarriage.setAdapter(marriageAdapter)
+        }
 
 
         educationAdapter = EducationListAdapter(networkViewModel, this, this)

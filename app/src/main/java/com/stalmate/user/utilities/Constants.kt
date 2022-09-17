@@ -9,6 +9,7 @@ object Constants {
     const val URL_UPDATE_ABOUT="auth_service/auth_api/update_about"
     const val URL_OTP="auth_service/auth_api/update_password"
     const val URL_BLOCKED_LIST="auth_service/friend_api/get_block_user_list"
+    const val URL_CATEGORY_LIST="auth_service/friend_api/friend_category_list"
 
 
 

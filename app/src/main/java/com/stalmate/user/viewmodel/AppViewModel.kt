@@ -10,6 +10,7 @@ import com.slatmate.user.model.CommonModelResponse
 import com.stalmate.user.base.App
 import com.stalmate.user.model.*
 import com.stalmate.user.networking.ApiInterface
+import com.stalmate.user.view.dashboard.Friend.categorymodel.ModelCategoryResponse
 import com.stalmate.user.view.photoalbum.ModelAlbumCreateResponse
 import com.stalmate.user.view.photoalbum.ModelPhotoResponse
 import com.stalmate.user.view.singlesearch.ModelSearch
@@ -49,13 +50,20 @@ open class AppViewModel : ViewModel() {
     }
 
 
-    var languageLiveData: LiveData<ModelLanguageResponse?> =
-        MutableLiveData<ModelLanguageResponse?>()
+    var languageLiveData: LiveData<ModelLanguageResponse?> = MutableLiveData<ModelLanguageResponse?>()
 
     fun languageLiveData(token: String, map: HashMap<String, String>) {
         val temp = MutableLiveData<ModelLanguageResponse?>()
         languageLiveData = temp
         getResult(temp, apiInterface.getLanguageList())
+    }
+
+
+    var categoryFriendLiveData: LiveData<ModelCategoryResponse?> = MutableLiveData<ModelCategoryResponse?>()
+    fun categoryFriendLiveData() {
+        val temp = MutableLiveData<ModelCategoryResponse?>()
+        categoryFriendLiveData = temp
+        getResult(temp, apiInterface.getCategoryList())
     }
 
     /*var categoryIntrestLiveData: LiveData<ModelIntrestResponse?> = MutableLiveData<ModelIntrestResponse?>()
