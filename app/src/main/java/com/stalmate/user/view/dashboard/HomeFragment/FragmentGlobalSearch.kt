@@ -66,7 +66,7 @@ class FragmentGlobalSearch : BaseFragment(),
           //  callback.onClickOnSeeMore(searchData,"users")
             val bundle = Bundle()
             bundle.putString("dataSearch",searchData)
-            findNavController().navigate(R.id.action_fragmentGlobalToFragmentPeopleSearch)
+            findNavController().navigate(R.id.action_fragmentGlobalToFragmentPeopleSearch,bundle)
         }
         binding.buttonSeeMoreEvents.setOnClickListener {
           //  callback.onClickOnSeeMore(searchData,"events")
