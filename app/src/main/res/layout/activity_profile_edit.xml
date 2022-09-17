@@ -404,7 +404,6 @@
                 android:orientation="vertical"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintEnd_toEndOf="parent"
-
                 app:layout_constraintStart_toStartOf="@+id/blockListTg"
                 app:layout_constraintTop_toBottomOf="@+id/blockListTg"
                 tools:itemCount="5"
@@ -417,9 +416,8 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/btn_crate_account"
             style="@style/primaryButtonStyle"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="30dp"
             android:layout_marginTop="20dp"
             android:gravity="center"
             android:text="Update"
@@ -449,7 +447,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-
             app:layout_constraintStart_toStartOf="@+id/activity"
             app:layout_constraintTop_toBottomOf="@+id/activity" />
 

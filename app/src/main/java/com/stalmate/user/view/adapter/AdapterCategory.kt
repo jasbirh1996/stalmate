@@ -2,17 +2,14 @@ package com.stalmate.user.view.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.core.os.persistableBundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.stalmate.user.R
 import com.stalmate.user.databinding.ItemLanguageLayoutBinding
 import com.stalmate.user.model.Category
-import com.stalmate.user.model.Result
 import com.stalmate.user.viewmodel.AppViewModel
 
 class AdapterCategory(
@@ -24,8 +21,7 @@ class AdapterCategory(
     var row_index = 0
     var list = ArrayList<Category>()
 
-
-
+    private var checkedPosition = 0
 
     fun submitList(categoryList: List<Category>) {
         list.clear()
@@ -47,9 +43,6 @@ class AdapterCategory(
 
         holder.bind(list.get(position))
 
-
-
-
     }
 
     override fun getItemCount(): Int {
@@ -57,7 +50,7 @@ class AdapterCategory(
     }
 
     interface Callbackk {
-        fun onClickIntrastedItem(postId: String, lang : String)
+        fun onClickIntrastedItem(data : ArrayList<Category>)
     }
 
 
@@ -66,19 +59,17 @@ class AdapterCategory(
         @SuppressLint("ResourceAsColor", "ResourceType")
         fun bind(categoryResponse: Category) {
 
-
             if (list.get(position).isSelected){
-
-                list.get(position).isSelected = true
+                //list.get(position).isSelected = true
                 binding.item.setBackground(
                     ContextCompat.getDrawable(
                         context,
                         R.drawable.language_select_background_blue
                     )
                 )
-                binding.item.setTextColor(ContextCompat.getColor(context, R.color.white))
 
-            }else{
+                binding.item.setTextColor(ContextCompat.getColor(context, R.color.white))
+            } else {
                 binding.item.setBackground(
                     ContextCompat.getDrawable(
                         context,
@@ -86,27 +77,48 @@ class AdapterCategory(
                     )
                 )
                 binding.item.setTextColor(ContextCompat.getColor(context, R.color.black))
-
-
-                list.get(position).isSelected = false
-
-
+               // list.get(position).isSelected = false
             }
             binding.item.text = categoryResponse.name
 
             binding.itemLayout.setOnClickListener {
+
+                if(list.get(position).isSelected){
+                    list.get(position).isSelected=false
+                }else{
+                    list.get(position).isSelected=true
+
+
+                }
+
+                if (checkedPosition != getAdapterPosition()) {
+                    notifyItemChanged(checkedPosition);
+                    checkedPosition = getAdapterPosition();
+                }
+
                 row_index = position
 
-
-               callback.onClickIntrastedItem(list[position].id, list[position].name)
-
-                list.get(position).isSelected = !list.get(position).isSelected
+                callback.onClickIntrastedItem(list)
 
                 notifyItemChanged(absoluteAdapterPosition)
 
             }
 
-
         }
     }
+
+    fun getSelected():ArrayList<String>  {
+
+        var selectedList=ArrayList<String>()
+        for (i in 0 until list.size){
+            if (list[i].isSelected){
+                selectedList.add(list[i].id)
+
+            }
+        }
+        return selectedList
+    }
+
+
 }
+

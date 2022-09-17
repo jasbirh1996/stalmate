@@ -32,7 +32,7 @@
                 android:layout_marginHorizontal="40dp"
                 android:fontFamily="@font/poppins"
                 android:gravity="center"
-                android:text="@string/password_reset_successfully"
+                android:text="@string/password_change_successfully"
                 android:textColor="@color/text_succes_color"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">Test Module</string>
+    <string name="app_name" translatable="false">Stalmate</string>
     <string name="action_settings" translatable="false">Settings</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label" translatable="false">First Fragment</string>
@@ -629,7 +629,9 @@
     <string name="activity_log">Activity Log</string>
     <string name="people">People</string>
     <string name="groups">Groups</string>
+    <string name="google_direction_api_key">AIzaSyAghbmbQD2TdXsYf2nmQetEQLtJcdEH-24</string>
     <string-array name="marrage">
+        <item><font fgcolor="#B7B7B7">Marital Status</font></item>
         <item><font fgcolor="#B7B7B7">Single</font></item>
         <item><font fgcolor="#B7B7B7">Marriage</font></item>
     </string-array>

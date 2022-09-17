@@ -62,6 +62,9 @@ interface ApiInterface {
     @POST(Constants.URL_LOGIN)
     fun setLoginDetails(@Body map: HashMap<String, String>): Call<ModelLoginResponse>
 
+    @PATCH(Constants.URL_UPDATE_ABOUT)
+    fun setUpdateAbout(@Body map: HashMap<String, String>): Call<CommonModelResponse>
+
 
     @POST(Constants.URL_EDUCATION_ADD)
     fun setEducationAddDetails(@Body map: HashMap<String, String>): Call<ModelCommonAddEducationAndProfessionResponse>
@@ -115,8 +118,6 @@ interface ApiInterface {
 
     @POST(Constants.URL_GLOBAL_SEARCH)
     fun getGlobalSearch(@Body map: HashMap<String, String>): Call<ModelGlobalSearch>
-    @POST(Constants.URL_GLOBAL_SEARCH)
-    fun uploadContacts(@Body map: HashMap<String, String>): Call<ModelGlobalSearch>
 
 
 

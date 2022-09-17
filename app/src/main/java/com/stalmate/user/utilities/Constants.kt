@@ -6,6 +6,7 @@ object Constants {
     const val URL_INTREST_LIST="auth_service/auth_api/category_list"
     const val URL_SIGN_UP="auth_service/auth_api/user_register"
     const val URL_LOGIN="auth_service/auth_api/user_login"
+    const val URL_UPDATE_ABOUT="auth_service/auth_api/update_about"
     const val URL_OTP="auth_service/auth_api/update_password"
     const val URL_BLOCKED_LIST="auth_service/friend_api/get_block_user_list"
 
@@ -97,7 +98,7 @@ object Constants {
     const val ACCOUNT_NAME: String = "SyncContacts"
 
 
-
+    const val MESSAGE_LOC_API_EMPTY_RESULT = "Pin Location"
 
     const val ACTION_SYNC_COMPLETED: String = "ACTION_SYNC_COMPLETED"
 

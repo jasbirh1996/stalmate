@@ -1,140 +1,55 @@
 package com.stalmate.user.view.singlesearch
 
-import android.app.Activity
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.util.Log
-import android.view.View
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
+import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.api.model.TypeFilter
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.stalmate.user.R
-import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.databinding.ActivitySingleSearchBinding
-import com.stalmate.user.view.language.AdapterLanguage
-import java.util.HashMap
+import com.stalmate.user.view.dashboard.welcome.FragmentPlaceAutoComplete
 
-class ActivitySingleSearch : BaseActivity(), SearchAdapter.Callbackk, SearchUnivercityAdapter.Callbackk {
-
-    private lateinit var binding : ActivitySingleSearchBinding
-
-    private lateinit var searchAdapter: SearchAdapter
-    private lateinit var searchUnivercityAdapter: SearchUnivercityAdapter
-
-    var Type : String =""
-
-    override fun onClick(viewId: Int, view: View?) {
-    }
-
+class ActivitySingleSearch : AppCompatActivity() {
+    lateinit var binding: ActivitySingleSearchBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-       binding = DataBindingUtil.setContentView(this, R.layout.activity_single_search)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_single_search)
 
-        /*here get type for hit search api*/
 
-        Type = intent.getSerializableExtra("TYPE").toString()
+        if (intent.getStringExtra("type").toString() == "graduation") {
 
-        Log.d("tancknak", Type.toString())
+        loadFragment(FragmentSingleSearch(intent.getStringExtra("type").toString()))
+        } else if (intent.getStringExtra("type").toString() == "major") {
+            loadFragment(FragmentSingleSearch(intent.getStringExtra("type").toString()))
 
-        binding.ivBack.setOnClickListener {
-            onBackPressed()
+        } else if (intent.getStringExtra("type").toString() == "autoCompleteCountries") {
+            loadFragment(FragmentPlaceAutoComplete(TypeFilter.REGIONS))
+        }
+        else if (intent.getStringExtra("type").toString() == "autoCompleteCities") {
+            loadFragment(FragmentPlaceAutoComplete(TypeFilter.CITIES))
         }
 
-        binding.etSearch.addTextChangedListener(object : TextWatcher{
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
-                if (binding.etSearch.text.toString().isNotEmpty()){
-                    hitSearchListApi(Type)
-                }
-            }
-
-            override fun afterTextChanged(p0: Editable?) {
-
-            }
-
-        })
 
     }
 
-    private fun hitSearchListApi(type : String) {
-        /*SetUp Search Adapter*/
-        searchAdapter = SearchAdapter(networkViewModel, this,this )
-        binding.rvSearch.adapter=searchAdapter
-        searchUnivercityAdapter = SearchUnivercityAdapter(networkViewModel, this, this)
-        binding.rvSearch.adapter = searchUnivercityAdapter
 
+    private fun loadFragment(fragment: Fragment) {
 
-        val hashMap = HashMap<String, String>()
-
-        hashMap["search"] = binding.etSearch.text.toString()
-
-        if (type == "graduation") {
-            networkViewModel.searchLiveData(hashMap, search = binding.etSearch.text.toString())
-            networkViewModel.searchLiveData.observe(this) {
-                it?.let {
-
-                    val stateList: ArrayList<ResultSearch> = ArrayList<ResultSearch>()
-                    if (it.results.isEmpty()) {
-
-                        var state = ResultSearch(id = "0", name = "No Result Found")
-                        stateList.add(state)
-                        searchAdapter.submitList(stateList)
-
-                    } else {
-                        searchAdapter.submitList(it.results)
-                    }
-                }
-            }
-
-        }else if(type == "major"){
-            networkViewModel.searchBranchLiveData(hashMap, search = binding.etSearch.text.toString())
-            networkViewModel.searchBranchLiveData.observe(this) {
-                it?.let {
-
-                    val stateList: ArrayList<ResultSearch> = ArrayList<ResultSearch>()
-                    if (it.results.isEmpty()) {
-
-                        var state = ResultSearch(id = "0", name = "No Result Found")
-                        stateList.add(state)
-                        searchUnivercityAdapter.submitList(stateList)
-                    } else {
-                        searchUnivercityAdapter.submitList(it.results)
-                    }
-                }
-            }
+        val backStateName = fragment.javaClass.name
+        val fragmentTag = backStateName
+        val manager: FragmentManager = supportFragmentManager
+        val fragmentPopped = manager.popBackStackImmediate(backStateName, 0)
+        if (!fragmentPopped && manager.findFragmentByTag(fragmentTag) == null) { //fragment not in back stack, create it.
+            val ft = manager.beginTransaction()
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+            ft.replace(binding!!.frame.id, fragment, fragmentTag)
+            ft.addToBackStack(backStateName)
+            ft.commit()
         }
-    }
 
-    override fun onClickSearchItem(postId: String, name: String) {
-
-
-        var intent =Intent()
-        intent.putExtra("postId",postId)
-        intent.putExtra("name",name)
-        intent.putExtra("type",Type)
-        setResult(Activity.RESULT_OK,intent)
-        finish()
-
-    }
-
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-    }
-
-    override fun onClickSearchUnivercityItem(id: String, name: String) {
-
-
-        var intent =Intent()
-        intent.putExtra("postId",id)
-        intent.putExtra("name",name)
-        intent.putExtra("type",Type)
-        setResult(Activity.RESULT_OK,intent)
-        finish()
     }
 }

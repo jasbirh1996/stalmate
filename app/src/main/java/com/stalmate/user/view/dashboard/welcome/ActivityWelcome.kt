@@ -19,21 +19,37 @@ import androidx.fragment.app.FragmentPagerAdapter
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager.widget.ViewPager
+
 import com.stalmate.user.Helper.IntentHelper
+
+import com.google.gson.Gson
+
 import com.stalmate.user.R
 import com.stalmate.user.base.App
 import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.databinding.ActivityWelcomeBinding
+import com.stalmate.user.model.Category
 import com.stalmate.user.modules.contactSync.SyncService
+import com.stalmate.user.view.adapter.AdapterCategory
 import com.stalmate.user.utilities.Constants
 import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.view.dashboard.ActivityDashboard
 
 
-class ActivityWelcome : BaseActivity() {
+class ActivityWelcome : BaseActivity(), FragmentInformationSuggestions.Callbackk,
+    AdapterCategory.Callbackk {
     lateinit var binding: ActivityWelcomeBinding
     lateinit var syncBroadcastreceiver: SyncBroadcasReceiver
     var count = 0
+    var countryText = ""
+    var graduationText = ""
+    var graduationTextId = ""
+    var majorTextText = ""
+    var majorTextTextId = ""
+    var cityText = ""
+    private var datasss: ArrayList<Category>? = null
+    private var datasssaa: ArrayList<String>? = null
+
     override fun onClick(viewId: Int, view: View?) {
 
     }
@@ -41,19 +57,32 @@ class ActivityWelcome : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_welcome)
+/*
+        var viewpagerAdapter = ViewPagerAdapter(supportFragmentManager)
+        viewpagerAdapter.add(FragmentWelcomePage(), "title")
+        viewpagerAdapter.add(FragmentInformationSuggestions(this), "title")
+        viewpagerAdapter.add(FragmentInterestSuggestionList(), "title")
+        viewpagerAdapter.add(FragmentSync(), "title")
+        viewpagerAdapter.add(FragmentGroupSuggestionList(), "title")
+        viewpagerAdapter.add(FragmentPageSugggestionsList(), "title")
+        viewpagerAdapter.add(FragmentEventSuggestionsList(), "title")*/
+
+
+//        binding.viewpager.adapter = viewpagerAdapter
         val filter = IntentFilter()
         filter.addAction(Constants.ACTION_SYNC_COMPLETED)
         syncBroadcastreceiver = SyncBroadcasReceiver()
         registerReceiver(syncBroadcastreceiver, filter)
         var viewpagerAdapter = ViewPagerAdapter(supportFragmentManager)
-        viewpagerAdapter.add(FragmentSync(), "title")
+
         viewpagerAdapter.add(FragmentWelcomePage(), "title")
-        viewpagerAdapter.add(FragmentInformationSuggestions(), "title")
-        // viewpagerAdapter.add(FragmentSync(),"title")
+        viewpagerAdapter.add(FragmentInterestSuggestionList(), "title")
+        viewpagerAdapter.add(FragmentInformationSuggestions(this),"title")
+        viewpagerAdapter.add(FragmentSync(), "title")
         viewpagerAdapter.add(FragmentGroupSuggestionList(), "title")
         viewpagerAdapter.add(FragmentPageSugggestionsList(), "title")
         viewpagerAdapter.add(FragmentEventSuggestionsList(), "title")
-        viewpagerAdapter.add(FragmentInterestSuggestionList(), "title")
+
 
         binding.viewpager.adapter = viewpagerAdapter
         binding.indicator.setViewPager(binding.viewpager)
@@ -69,85 +98,129 @@ class ActivityWelcome : BaseActivity() {
         binding.btnNext.setOnClickListener {
             var page = viewpagerAdapter.getItem(count)
 
-            Log.d("asghdasd", page.toString())
+
             if (count == 6) {
                 finish()
             } else {
                 if (page is FragmentInformationSuggestions) {
 
+                    /* if (page.isValid()){
+                    val hashMap = HashMap<String, String>()
+                    hashMap["university_name"] = graduationText
+                    hashMap["university_id"] = graduationTextId
+                    hashMap["branch_name"] = majorTextText
+                    hashMap["branch_id"] = majorTextTextId
+                    hashMap["country"] = countryText
+                    hashMap["city"] = cityText
+
+                   showLoader()
+
+                    networkViewModel.aboutProfileUpdate(hashMap)
+                    networkViewModel.aboutProfileData.observe(this){
+
+                        it?.let {
+                            val message = it.message
+
+                            if (it.status == true){
+                                dismissLoader()
+                                count++
+                                binding.viewpager.setCurrentItem(count, true)
+                            }else{
+
+                                dismissLoader()
+                                makeToast(message)
+
+                            }
+                        }
+                    }
+
+                }*/
                     /* count = count +1
-                     binding.viewpager.setCurrentItem(count,true)
-     */
+                 binding.viewpager.setCurrentItem(count,true)
+ */
                     if (page.isValid()) {
-                        count = +1
+                        count++
                         binding.viewpager.setCurrentItem(count, true)
                     }
+                } else if (page is FragmentInterestSuggestionList) {
+
+                    if (page.getSelectedDAta().size > 0) {
+                        val selectedInterestString: String =
+                            java.lang.String.join(",", page.getSelectedDAta())
+                        Log.d("asdhasd", selectedInterestString)
+
+                    } else {
+                        makeToast("Select atleast one interest")
+                    }
+
                 } else {
                     count++
                     binding.viewpager.setCurrentItem(count, true)
-                }
-
-
-            }
-
-
-        }
-
-        binding.viewpager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageScrolled(
-                position: Int,
-                positionOffset: Float,
-                positionOffsetPixels: Int
-            ) {
-
-            }
-
-            override fun onPageSelected(position: Int) {
-                when (position) {
-                    0 -> {
-                        toolbar(true, "Welcome")
-                    }
-                    1 -> {
-                        toolbar(true, "Welcome")
-                    }
-                    2 -> {
-                        toolbar(false, "Group")
-                    }
-                    3 -> {
-                        toolbar(false, "Pages")
-                    }
-                    4 -> {
-                        toolbar(false, "Events")
-
-                    }
 
 
                 }
+
+
             }
 
-            override fun onPageScrollStateChanged(state: Int) {
+            binding.viewpager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+                override fun onPageScrolled(
+                    position: Int,
+                    positionOffset: Float,
+                    positionOffsetPixels: Int
+                ) {
 
-            }
-        })
+                }
 
-        /*ToolBar Set*/
-        toolbar(true, "Welcome")
-        var permissionArray = arrayOf(
-            android.Manifest.permission.READ_CONTACTS,
-        )
-        if (isPermissionGranted(permissionArray)) {
-            Log.d("alskjdasd", ";aosjldsad")
+                override fun onPageSelected(position: Int) {
+                    when (position) {
+                        0 -> {
+                            toolbar(true, "Welcome")
+                        }
+                        1 -> {
+                            toolbar(true, "Welcome")
+                        }
+                        2 -> {
+                            toolbar(false, "Group")
+                        }
+                        3 -> {
+                            toolbar(false, "Pages")
+                        }
+                        4 -> {
+                            toolbar(false, "Events")
+
+                        }
 
 
+                    }
+                }
 
-            startService(
-                Intent(
-                    this,
-                    SyncService::class.java
-                )
+                override fun onPageScrollStateChanged(state: Int) {
+
+                }
+            })
+
+            /*ToolBar Set*/
+            toolbar(true, "Welcome")
+
+            var permissionArray = arrayOf(
+                android.Manifest.permission.READ_CONTACTS,
             )
-        }
+            if (isPermissionGranted(permissionArray)) {
+                Log.d("alskjdasd", ";aosjldsad")
 
+
+
+                startService(
+                    Intent(
+                        this,
+                        SyncService::class.java
+                    )
+                )
+            }
+
+
+        }
 
     }
 
@@ -156,14 +229,16 @@ class ActivityWelcome : BaseActivity() {
         override fun onReceive(p0: Context?, p1: Intent?) {
             if (p1!!.action == Constants.ACTION_SYNC_COMPLETED) {
                 makeToast("Synced")
-                if (p1.extras!!.getString("contacts")!=null){
-                    startActivity(IntentHelper.getSearchScreen(this@ActivityWelcome)!!.putExtra("contacts",p1.extras!!.getString("contacts").toString()))
+                if (p1.extras!!.getString("contacts") != null) {
+                    startActivity(
+                        IntentHelper.getSearchScreen(this@ActivityWelcome)!!
+                            .putExtra("contacts", p1.extras!!.getString("contacts").toString())
+                    )
                 }
-           }
+            }
         }
 
     }
-
 
 
     fun toolbar(isCenterVisible: Boolean, text: String) {
@@ -214,6 +289,7 @@ class ActivityWelcome : BaseActivity() {
 
 
     override fun onBackPressed() {
+
         if (count != 0) {
             count--
             binding.viewpager.setCurrentItem(count, true)
@@ -222,5 +298,27 @@ class ActivityWelcome : BaseActivity() {
         }
     }
 
+    override fun onCallBackData(
+        graducation: String,
+        graducationId: String,
+        major: String,
+        majorId: String,
+        country: String,
+        state: String,
+        city: String
+    ) {
+
+        graduationText = graducation
+        majorTextText = major
+        countryText = country
+        cityText = city
+        graduationTextId = graducationId
+        majorTextTextId = majorId
+
+    }
+
+    override fun onClickIntrastedItem(data: ArrayList<Category>) {
+        datasss = data
+    }
 
 }

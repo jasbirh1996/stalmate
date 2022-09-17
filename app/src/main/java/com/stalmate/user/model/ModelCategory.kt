@@ -9,5 +9,11 @@ data class Category(
     val id: String,
     val image: String,
     val name: String,
-    var isSelected : Boolean
+    var isSelected : Boolean,
+    val selectedlist: List<SelectedList>,
+)
+
+data class SelectedList(
+    var id: String,
+    var name: String,
 )
