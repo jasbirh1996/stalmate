@@ -200,7 +200,7 @@ class ActivityWelcome : BaseActivity(), FragmentInformationSuggestions.Callbackk
                 startService(
                     Intent(
                         this,
-                        SyncService::class.java
+                        SyncS::class.java
                     )
                 )
             }
