@@ -91,10 +91,7 @@ class ActivityCategoryCreate : BaseActivity(), AdapterCategory.Callbackk {
                 if (it.status == true){
 
                     if (isEdit){
-
-                        onSuccessfullyEditedProfession(categoryResponse)
-                        }else{
-                        onSuccessfullyAdd(categoryResponse)
+                        getCategoryListing()
                     }
                 }
             }
