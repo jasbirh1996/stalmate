@@ -32,13 +32,26 @@ class ActivityPhotoGallery : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
        binding = DataBindingUtil.setContentView(this , R.layout.activity_photo_gallery)
+
+
+
+
         setUpNavigation()
-
-
     }
 
     fun setUpNavigation() {
         navController=findNavController(R.id.nav_host_fragment)
+
+        if (intent.getStringExtra("type")!=null){
+            val bundle = Bundle()
+            bundle.putString("index", intent.getStringExtra("index")!!.toString())
+            bundle.putString("type", intent.getStringExtra("type")!!.toString())
+            navController.navigate(R.id.action_fragmentAlbumListing_to_fragmentAlbumFullView, bundle)
+        }
+
     }
+
+
+
 
 }

@@ -30,7 +30,9 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
-
+            android:name=".view.photoalbum.imageshowindex.ActivityShowPhotoAcordingtoIndex"
+            android:exported="false" />
+        <activity
             android:name=".view.dashboard.Friend.ActivityCategoryCreate"
             android:exported="false" />
         <activity
@@ -43,7 +45,6 @@
         <activity
             android:name=".view.singlesearch.ActivitySingleSearch"
             android:exported="false" />
-
         <activity
             android:name=".view.dashboard.welcome.ActivityWelcome"
             android:exported="false" />

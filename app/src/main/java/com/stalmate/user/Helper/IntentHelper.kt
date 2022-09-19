@@ -7,6 +7,7 @@ import com.stalmate.user.view.dashboard.ActivityDashboard
 import com.stalmate.user.view.dashboard.Friend.ActivityCategoryCreate
 import com.stalmate.user.view.dashboard.HomeFragment.ActivitySearch
 import com.stalmate.user.view.dashboard.welcome.ActivityWelcome
+import com.stalmate.user.view.photoalbum.ActivityPhotoGallery
 import com.stalmate.user.view.profile.ActivityFollowersFollowingScreen
 import com.stalmate.user.view.profile.ActivityOtherUserProfile
 import com.stalmate.user.view.profile.ActivityProfile
@@ -59,6 +60,13 @@ public class IntentHelper {
             return Intent(context, ActivityFollowersFollowingScreen::class.java)
                 .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
         }
+
+        fun getPhotoGalleryAlbumScreen(context: Context?): Intent? {
+            return Intent(context, ActivityPhotoGallery::class.java)
+                .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        }
+
+
         fun getActivityWelcomeScreen(context: Context?): Intent? {
             return Intent(context, ActivityWelcome::class.java)
                 .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)

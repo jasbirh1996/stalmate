@@ -52,7 +52,6 @@ class ActivitySearch : BaseActivity() {
 
 
                     //      val currentFragment = supportFragmentManager.findFragmentById(binding.layoutSearchBox)
-                    Log.d("asdasdasd", currentFragment!!.toString())
                     if (currentFragment is FragmentGlobalSearch) {
                         currentFragment.hitApi(true, searchData)
                     } else if (currentFragment is FragmentPeopleSearch) {

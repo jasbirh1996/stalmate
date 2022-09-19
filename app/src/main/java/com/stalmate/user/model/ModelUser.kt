@@ -22,7 +22,7 @@ data class User(
     val albums: List<Any>,
     val city: String,
     val company: String,
-    val cover_img: List<CoverImg>,
+    val cover_img: List<Photo>,
     val cover_img1: String,
     val dob: String,
     var follower_count: Int,
@@ -35,14 +35,14 @@ data class User(
     val last_name: String,
     val number: String,
     val profile_data: List<ProfileData>,
-    val profile_img: List<ProfileImg>,
+    val profile_img: List<Photo>,
     val profile_img1: String,
     val schoolandcollege: String,
     val schoolandcollegename: String,
     val url: String
 ) : Serializable
 
-data class CoverImg(
+data class Photo(
     val _id: String,
     val img: String
 ) : Serializable
@@ -55,11 +55,6 @@ data class ProfileData(
     val profession: ArrayList<Profession>
 ):Serializable
 
-data class ProfileImg(
-    val _id: String,
-    val img: String,
-
-):Serializable
 
 data class Education(
     val Created_date: String,
