@@ -46,11 +46,15 @@ class FragmentFullViewAlbum : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         /*Common ToolBar SetUp*/
+
         binding.viewpager.adapter = indexPhotoAdapter
         hitphotoListApi()
 
-        requireActivity()!!.onBackPressed()
+        binding.back.setOnClickListener {
+            requireActivity().finish()
+        }
 
 
         binding.viewpager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
@@ -63,12 +67,9 @@ class FragmentFullViewAlbum : BaseFragment() {
                         isFreshApi = false
                         hitphotoListApi()
                     }
-
                 }
             }
-
         })
-
     }
 
     private fun hitphotoListApi() {
@@ -95,9 +96,17 @@ class FragmentFullViewAlbum : BaseFragment() {
                 }
 
 
+
+
+
             }
         }
     }
+
+
+
+
+
 
 
 }
