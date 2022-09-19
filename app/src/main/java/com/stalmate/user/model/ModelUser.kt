@@ -44,7 +44,10 @@ data class User(
 
 data class Photo(
     val _id: String,
-    val img: String
+    val id: String,
+    val img: String,
+    val files: String,
+    val url: String
 ) : Serializable
 
 data class ProfileData(

@@ -347,8 +347,8 @@
                 android:layout_marginTop="10dp"
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/coverTg"
-
                 app:layout_constraintTop_toBottomOf="@+id/coverTg"
                 tools:itemCount="5"
                 tools:listitem="@layout/item_profile_cover" />

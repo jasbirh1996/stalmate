@@ -7,12 +7,14 @@ import android.view.View
 import android.widget.*
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.CropImageView
 import com.canhub.cropper.options
 import com.google.android.material.shape.CornerFamily
+import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.commonadapters.AdapterFeed
@@ -39,7 +41,8 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
     var month: String = ""
     var year: String = ""
     var merriage: String = ""
-    var permissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
+    var permissions =
+        arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
     lateinit var userData: ModelUser
     var spinnerArrayFeb = arrayOf("Feb")
     var spinnerArrayFull = arrayOf("Jan", "Mar", "May", "July", "Aug", "Oct", "Dec")
@@ -94,11 +97,13 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
         binding.rvFeeds.setNestedScrollingEnabled(false);
         binding.rvFeeds.adapter = feedAdapter
         val radius = resources.getDimension(R.dimen.dp_10)
-        binding.ivBackground.setShapeAppearanceModel(binding.ivBackground.getShapeAppearanceModel()
-            .toBuilder()
-            .setBottomLeftCorner(CornerFamily.ROUNDED,radius)
-            .setBottomRightCorner(CornerFamily.ROUNDED,radius)
-            .build());
+        binding.ivBackground.setShapeAppearanceModel(
+            binding.ivBackground.getShapeAppearanceModel()
+                .toBuilder()
+                .setBottomLeftCorner(CornerFamily.ROUNDED, radius)
+                .setBottomRightCorner(CornerFamily.ROUNDED, radius)
+                .build()
+        );
 
 
         requestPermissions(permissions, WRITE_REQUEST_CODE)
@@ -250,9 +255,9 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
 
         binding.btnCrateAccount.setOnClickListener {
 
-            if (!this::selectedMarriageStatus.isInitialized){
+            if (!this::selectedMarriageStatus.isInitialized) {
                 makeToast("Please select marriage Status")
-            }else {
+            } else {
                 updateProfileApiHit()
             }
         }
@@ -297,13 +302,28 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
             finish()
         }
 
+        binding.buttonSeemoreProfile.setOnClickListener {
+            startActivity(IntentHelper.getPhotoGalleryAlbumScreen(this)!!.putExtra("viewType","viewListing").putExtra("type","profile_img"))
+
+        }
+
+        binding.buttonSeeMoreCover.setOnClickListener {
+            startActivity(IntentHelper.getPhotoGalleryAlbumScreen(this)!!.putExtra("viewType","viewListing").putExtra("type","cover_img"))
+
+        }
+
+        binding.buttonSeeAllBlockList.setOnClickListener {
+
+        }
+
 
     }
 
 
     private fun updateProfileApiHit() {
 
-        fun getRequestBody(str: String?): RequestBody = RequestBody.create("text/plain".toMediaTypeOrNull(), str.toString())
+        fun getRequestBody(str: String?): RequestBody =
+            RequestBody.create("text/plain".toMediaTypeOrNull(), str.toString())
 
 
 
@@ -387,8 +407,8 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
     fun getUserProfileData() {
         var hashMap = HashMap<String, String>()
         networkViewModel.getProfileData(hashMap)
-        hashMap.put("limit","6")
-        hashMap.put("page","1")
+        hashMap.put("limit", "5")
+        hashMap.put("page", "1")
         networkViewModel.getBlockList(hashMap)
 
 
@@ -414,22 +434,24 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
             it.let {
 
 
-                if (it!!.status){
+                if (it!!.status) {
 
-                    blockedUserAdapter = BlockedUserAdapter(networkViewModel, this,object :BlockedUserAdapter.Callback{
-                        override fun onListEmpty() {
-                            binding.layoutBlockList.visibility=View.GONE
-                        }
-                    })
+                    blockedUserAdapter = BlockedUserAdapter(
+                        networkViewModel,
+                        this,
+                        object : BlockedUserAdapter.Callback {
+                            override fun onListEmpty() {
+                                binding.layoutBlockList.visibility = View.GONE
+                            }
+                        })
 
-                    if (it.results.isEmpty()){
-                        binding.layoutBlockList.visibility=View.GONE
-                        }else{
-                        binding.layoutBlockList.visibility=View.VISIBLE
-                        }
+                    if (it.results.isEmpty()) {
+                        binding.layoutBlockList.visibility = View.GONE
+                    } else {
+                        binding.layoutBlockList.visibility = View.VISIBLE
+                    }
                     binding.rvBlockList.adapter = blockedUserAdapter
                     blockedUserAdapter.submitList(it.results as ArrayList<User>)
-                    binding.layoutBlockList.visibility = View.VISIBLE
 
                 }
 
@@ -438,6 +460,10 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
     }
 
     fun setUpAboutUI() {
+
+        hitphotoListApi("profile_img")
+        hitphotoListApi("cover_img")
+
         binding.layout.etName.setText(userData.results.first_name)
         binding.layout.etLastName.setText(userData.results.last_name)
         binding.layout.bio.setText(userData.results.about)
@@ -446,21 +472,31 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
         binding.layout.etHowTown.setText(userData.results.profile_data[0].home_town)
         binding.layout.etCurrentCity.setText(userData.results.city)
 
-        ImageLoaderHelperGlide.setGlide(this, binding.ivBackground, userData.results.cover_img1,R.drawable.user_placeholder)
-        ImageLoaderHelperGlide.setGlide(this, binding.ivUserThumb, userData.results.profile_img1,R.drawable.user_placeholder)
+        ImageLoaderHelperGlide.setGlide(
+            this,
+            binding.ivBackground,
+            userData.results.cover_img1,
+            R.drawable.user_placeholder
+        )
+        ImageLoaderHelperGlide.setGlide(
+            this,
+            binding.ivUserThumb,
+            userData.results.profile_img1,
+            R.drawable.user_placeholder
+        )
 
 
 
-        if (userData.results.profile_data[0].marital_status == "Single"){
-            var marriageType  = ModelCustumSpinner(id = "0", name = "Single")
+        if (userData.results.profile_data[0].marital_status == "Single") {
+            var marriageType = ModelCustumSpinner(id = "0", name = "Single")
             marriageList.add(marriageType)
             marriageList.add(ModelCustumSpinner(id = "0", name = "Marriage"))
 
-        }else if(userData.results.profile_data[0].marital_status == "Marriage"){
-            var marriageType  = ModelCustumSpinner(id = "0", name = "Marriage")
+        } else if (userData.results.profile_data[0].marital_status == "Marriage") {
+            var marriageType = ModelCustumSpinner(id = "0", name = "Marriage")
             marriageList.add(marriageType)
             marriageList.add(ModelCustumSpinner(id = "0", name = "Single"))
-        }else{
+        } else {
             var marriageType = ModelCustumSpinner(id = "0", name = "Marital Status")
             marriageList.add(marriageType)
             marriageList.add(ModelCustumSpinner(id = "0", name = "Single"))
@@ -471,7 +507,8 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
 
 
 
-        marriageAdapter = CustumSpinAdapter(this, android.R.layout.simple_spinner_item, marriageList, false)
+        marriageAdapter =
+            CustumSpinAdapter(this, android.R.layout.simple_spinner_item, marriageList, false)
         binding.layout.tvmarriage.setAdapter(marriageAdapter)
 
 
@@ -504,29 +541,6 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
         professionListAdapter.submitList(userData.results.profile_data.get(0).profession)
 
 
-        profilePictureAdapter = ProfileAlbumAdapter(networkViewModel, this, "profile_img")
-
-        if (userData.results.profile_img.isNotEmpty()) {
-            binding.rvProfilePicture.adapter = profilePictureAdapter
-            profilePictureAdapter.submitList(userData.results.profile_img)
-            binding.layoutProfileImages.visibility = View.VISIBLE
-        } else {
-            binding.layoutProfileImages.visibility = View.GONE
-        }
-
-        coverPictureAdapter = ProfileAlbumAdapter(networkViewModel, this, "cover_img")
-
-
-        if (userData.results.cover_img.isNotEmpty()) {
-            binding.rvCoverPicture.adapter = coverPictureAdapter
-            coverPictureAdapter.submitList(userData.results.cover_img)
-            binding.layoutCoverImages.visibility = View.VISIBLE
-        } else {
-            binding.layoutCoverImages.visibility = View.GONE
-        }
-
-
-
         binding.rvFeeds.layoutManager = LinearLayoutManager(this)
 
         networkViewModel.getFeedList("", HashMap())
@@ -536,8 +550,6 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
                 feedAdapter.submitList(it!!.results)
             }
         })
-
-
 
 
     }
@@ -581,4 +593,48 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
     }
 
 
+    private fun hitphotoListApi(type: String) {
+
+
+        val hashMap = HashMap<String, String>()
+        hashMap["img_type"] = type
+        hashMap["page"] = "1"
+        hashMap["limit"] = "5"
+
+        networkViewModel.photoIndexLiveData(hashMap)
+        networkViewModel.photoIndexLiveData.observe(this) {
+            it.let {
+
+                if (it!!.results.isNotEmpty()) {
+                    if (type == "cover_img") {
+                        coverPictureAdapter = ProfileAlbumAdapter(networkViewModel, this, type)
+
+                        binding.rvCoverPicture.layoutManager = GridLayoutManager(this, 5)
+                        if (userData.results.cover_img.isNotEmpty()) {
+                            binding.rvCoverPicture.adapter = coverPictureAdapter
+                            coverPictureAdapter.submitList(it.results)
+                            binding.layoutCoverImages.visibility = View.VISIBLE
+                        } else {
+                            binding.layoutCoverImages.visibility = View.GONE
+                        }
+                    } else if (type == "profile_img") {
+
+                        profilePictureAdapter = ProfileAlbumAdapter(networkViewModel, this, type)
+                        binding.rvProfilePicture.layoutManager = GridLayoutManager(this, 5)
+                        if (userData.results.profile_img.isNotEmpty()) {
+                            binding.rvProfilePicture.adapter = profilePictureAdapter
+                            profilePictureAdapter.submitList(it.results)
+                            binding.layoutProfileImages.visibility = View.VISIBLE
+                        } else {
+                            binding.layoutProfileImages.visibility = View.GONE
+                        }
+
+                    }
+                }
+
+
+            }
+
+        }
+    }
 }

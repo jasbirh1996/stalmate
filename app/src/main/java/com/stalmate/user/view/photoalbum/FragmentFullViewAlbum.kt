@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
@@ -53,7 +54,7 @@ class FragmentFullViewAlbum : BaseFragment() {
         hitphotoListApi()
 
         binding.back.setOnClickListener {
-            requireActivity().finish()
+           findNavController().popBackStack()
         }
 
 

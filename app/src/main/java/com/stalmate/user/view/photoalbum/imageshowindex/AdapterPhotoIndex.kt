@@ -12,15 +12,16 @@ import com.bumptech.glide.Glide
 import com.stalmate.user.R
 import com.stalmate.user.databinding.ItemIndexPhotoAlbumShowBinding
 import com.stalmate.user.databinding.ItemSuggestedFriendBinding
+import com.stalmate.user.model.Photo
 import com.stalmate.user.model.User
 
 class AdapterPhotoIndex(private var context : Context) : RecyclerView.Adapter<AdapterPhotoIndex.ViewHolder>() {
 
-    var onList = ArrayList<PhotoIndexResult>()
+    var onList = ArrayList<Photo>()
 
    inner class ViewHolder(val binding : ItemIndexPhotoAlbumShowBinding): RecyclerView.ViewHolder(binding.root) {
 
-       fun bind(photo : PhotoIndexResult){
+       fun bind(photo : Photo){
 
            Glide.with(context)
                .load(photo.img)
@@ -32,14 +33,14 @@ class AdapterPhotoIndex(private var context : Context) : RecyclerView.Adapter<Ad
 
 
 
-    fun addToList(users: List<PhotoIndexResult>) {
+    fun addToList(users: List<Photo>) {
 
         val size = onList.size
         onList.addAll(users)
         val sizeNew = onList.size
         notifyItemRangeChanged(size, sizeNew)
     }
-    fun setList(users: List<PhotoIndexResult>) {
+    fun setList(users: List<Photo>) {
         onList.clear()
         onList.addAll(users)
         notifyDataSetChanged()

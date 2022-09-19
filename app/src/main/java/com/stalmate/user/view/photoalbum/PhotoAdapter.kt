@@ -9,16 +9,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.stalmate.user.R
 import com.stalmate.user.databinding.ItemPhotoLayoutBinding
-import com.stalmate.user.model.Result
+import com.stalmate.user.model.Photo
 import com.stalmate.user.viewmodel.AppViewModel
 
-class PhotoAdapter(val viewModel: AppViewModel, val context: Context
+class PhotoAdapter(val viewModel: AppViewModel, val context: Context,var callback:Callback
 ) : RecyclerView.Adapter<PhotoAdapter.ViewHolder>(){
 
 
 
 
-    var list = ArrayList<ResultImage>()
+    var list = ArrayList<Photo>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         var view = LayoutInflater.from(parent.context).inflate(R.layout.item_photo_layout, parent, false)
@@ -34,7 +34,7 @@ class PhotoAdapter(val viewModel: AppViewModel, val context: Context
     }
 
 
-    fun submitList(languageList: List<ResultImage>) {
+    fun submitList(languageList: List<Photo>) {
         list.clear()
         list.addAll(languageList)
         notifyDataSetChanged()
@@ -43,14 +43,23 @@ class PhotoAdapter(val viewModel: AppViewModel, val context: Context
     inner class ViewHolder(var binding : ItemPhotoLayoutBinding): RecyclerView.ViewHolder(binding.root) {
 
         @SuppressLint("ResourceAsColor", "ResourceType")
-        fun bind(feed: ResultImage) {
+        fun bind(feed: Photo) {
 
 
-            Glide.with(context).load(feed.url+feed.files)
+            Glide.with(context).load(feed.img)
                 .placeholder(R.drawable.profileplaceholder)
                 .into(binding.image)
 
+
+            binding.image.setOnClickListener {
+                callback.onClickOnPhoto(feed,bindingAdapterPosition)
+            }
+
         }
+    }
+
+    public interface Callback{
+        fun onClickOnPhoto(photo: Photo, bindingAdapterPosition: Int)
     }
 
 }

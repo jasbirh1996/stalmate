@@ -140,7 +140,8 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
         }
 
         binding.layout.btnphoto.setOnClickListener {
-            startActivity(Intent(this, ActivityPhotoGallery::class.java))
+            startActivity(IntentHelper.getPhotoGalleryAlbumScreen(this)!!.putExtra("viewType","viewNormal"))
+
         }
 
 

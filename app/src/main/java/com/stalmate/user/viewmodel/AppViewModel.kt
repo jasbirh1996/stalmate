@@ -14,7 +14,6 @@ import com.stalmate.user.view.dashboard.Friend.categorymodel.ModelCategoryRespon
 import com.stalmate.user.view.photoalbum.ModelAlbumCreateResponse
 import com.stalmate.user.view.photoalbum.ModelPhotoResponse
 import com.stalmate.user.view.photoalbum.imageshowindex.ModelPhotoIndexDataResponse
-import com.stalmate.user.view.photoalbum.imageshowindex.PhotoIndexResult
 import com.stalmate.user.view.singlesearch.ModelSearch
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
