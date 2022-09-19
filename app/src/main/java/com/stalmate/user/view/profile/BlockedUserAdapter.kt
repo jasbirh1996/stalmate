@@ -40,12 +40,6 @@ class BlockedUserAdapter(val viewModel: AppViewModel, val context: Context,val c
             binding.imageView7.setOnClickListener {
                 hitBlockApi(absoluteAdapterPosition,response.id,(binding.root.context as? LifecycleOwner)!!)
             }
-
-
-            if (list.isEmpty()){
-                callback.onListEmpty()
-            }
-
         }
 
 

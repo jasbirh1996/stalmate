@@ -154,13 +154,18 @@ class SearchedUserAdapter(
         }
 
         binding.ivFriend.setOnClickListener {
-            updateFriendStatus(
-                TYPE_USER_ACTION_ADD_FRIEND,
-                friend.id,
-                (binding.root.context as? LifecycleOwner)!!,
-                binding,
-                bindingAdapterPosition
-            )
+
+            if (friend.isFriend==0){
+                updateFriendStatus(
+                    TYPE_USER_ACTION_ADD_FRIEND,
+                    friend.id,
+                    (binding.root.context as? LifecycleOwner)!!,
+                    binding,
+                    bindingAdapterPosition
+                )
+            }
+
+
         }
 
         binding.root.setOnClickListener {

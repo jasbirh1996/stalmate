@@ -142,8 +142,8 @@ class FragmentGlobalSearch : BaseFragment(),
 
 
                     binding.layoutUsers.visibility = View.VISIBLE
-                    binding.layoutEvents.visibility = View.VISIBLE
-                    binding.layoutGroups.visibility = View.VISIBLE
+/*                    binding.layoutEvents.visibility = View.GONE
+                    binding.layoutGroups.visibility = View.GONE*/
 
 
 

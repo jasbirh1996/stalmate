@@ -15,6 +15,7 @@ import androidx.navigation.fragment.findNavController
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.LayoutSingleSearchBinding
+import com.stalmate.user.utilities.ValidationHelper
 import java.util.HashMap
 
 class FragmentSingleSearch(var Type:String) : BaseFragment(), SingleSearchAdapter.Callbackk {
@@ -35,7 +36,7 @@ class FragmentSingleSearch(var Type:String) : BaseFragment(), SingleSearchAdapte
         super.onCreate(savedInstanceState)
 
 
-        Log.d("ancjka", Type)
+      //  hitSearchListApi(Type)
 
     }
 
@@ -45,28 +46,9 @@ class FragmentSingleSearch(var Type:String) : BaseFragment(), SingleSearchAdapte
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.itemView.setOnClickListener {
-            finishFragment("", binding.etSearch.text.toString())
+            finishFragment("", searchData)
         }
 
-        binding.etSearch.addTextChangedListener(object : TextWatcher{
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
-                if (binding.etSearch.text.toString().isNotEmpty()){
-
-                    binding.tvValue.text = "You want to add"+" "+ "-"+ " "+binding.etSearch.text
-                    hitSearchListApi(Type)
-                }
-            }
-
-            override fun afterTextChanged(p0: Editable?) {
-
-            }
-
-        })
     }
     private fun hitSearchListApi(type : String) {
         /*SetUp Search Adapter*/
@@ -76,19 +58,16 @@ class FragmentSingleSearch(var Type:String) : BaseFragment(), SingleSearchAdapte
 
         val hashMap = HashMap<String, String>()
 
-        hashMap["search"] = binding.etSearch.text.toString()
+        hashMap["search"] = searchData
 
         if (type == "graduation") {
-            networkViewModel.searchLiveData(hashMap, search = binding.etSearch.text.toString())
+            networkViewModel.searchLiveData(hashMap, search = searchData)
             networkViewModel.searchLiveData.observe(this) {
                 it?.let {
 
                     val stateList: ArrayList<ResultSearch> = ArrayList<ResultSearch>()
                     if (it.results.isEmpty()) {
-
-                        var state = ResultSearch(id = "0", name = "No Result Found")
                         binding.itemView.visibility = View.VISIBLE
-                        stateList.add(state)
                         searchAdapter.submitList(stateList)
 
                     } else {
@@ -98,16 +77,13 @@ class FragmentSingleSearch(var Type:String) : BaseFragment(), SingleSearchAdapte
             }
 
         }else if(type == "major"){
-            networkViewModel.searchBranchLiveData(hashMap, search = binding.etSearch.text.toString())
+            networkViewModel.searchBranchLiveData(hashMap, search =searchData)
             networkViewModel.searchBranchLiveData.observe(this) {
                 it?.let {
 
                     val stateList: ArrayList<ResultSearch> = ArrayList<ResultSearch>()
                     if (it.results.isEmpty()) {
-
-                        var state = ResultSearch(id = "0", name = "No Result Found")
                         binding.itemView.visibility = View.VISIBLE
-                        stateList.add(state)
                         searchAdapter.submitList(stateList)
                     } else {
                         searchAdapter.submitList(it.results)
@@ -135,6 +111,21 @@ class FragmentSingleSearch(var Type:String) : BaseFragment(), SingleSearchAdapte
 
 
 
+    var searchData=""
+    fun search(searchData:String){
+       this.searchData=searchData
+        if (!ValidationHelper.isNull(searchData)){
+            binding.tvValue.text =searchData
+            hitSearchListApi(Type)
+            Log.d("asdasdasd","notempty")
+            binding.rvList.visibility=View.VISIBLE
+            binding.itemView.visibility=View.VISIBLE
+        }else{
+            binding.rvList.visibility=View.GONE
+            binding.itemView.visibility=View.GONE
+            Log.d("asdasdasd","empty")
+        }
+    }
 
 
 

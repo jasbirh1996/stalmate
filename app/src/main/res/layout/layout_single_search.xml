@@ -14,47 +14,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/layoutSearchBox"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_gravity="center"
-
-                android:layout_marginStart="60dp"
-                android:layout_marginEnd="20dp"
-                android:background="@drawable/search_background"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <EditText
-
-                    android:id="@+id/etSearch"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginEnd="4dp"
-                    android:background="@null"
-                    android:fontFamily="@font/poppins"
-                    android:hint="@string/search"
-                    android:textSize="12sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/appCompatImageView6"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/appCompatImageView6"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:src="@drawable/search"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvList"
                 android:layout_width="match_parent"
@@ -66,14 +25,11 @@
                 app:layout_constraintTop_toBottomOf="@+id/layoutSearchBox" />
 
 
-
-
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/itemView"
-                android:padding="8dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:padding="8dp"
                 android:visibility="gone"
                 app:layout_constraintTop_toBottomOf="@id/rvList">
 

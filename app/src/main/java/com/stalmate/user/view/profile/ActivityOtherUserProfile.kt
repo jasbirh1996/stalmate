@@ -19,6 +19,7 @@ import com.stalmate.user.model.ModelUser
 import com.stalmate.user.model.User
 import com.stalmate.user.utilities.Constants
 import com.stalmate.user.utilities.ImageLoaderHelperGlide
+import com.stalmate.user.utilities.ValidationHelper
 import com.stalmate.user.view.adapter.ProfileAboutAdapter
 
 import com.stalmate.user.view.adapter.ProfileFriendAdapter
@@ -277,11 +278,9 @@ class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk,
 
 
     fun getUserProfileData() {
-        Log.d("asdasdasd", "asdasasdd")
         var hashMap = HashMap<String, String>()
         networkViewModel.getOtherUserProfileData(hashMap, user_id = userId)
         networkViewModel.otherUserProfileLiveData.observe(this, Observer {
-            Log.d("asdasdasd", "asdasdfgdfgdfgasdd//..d")
             it.let {
                 userData = it!!
                 setUpAboutUI()
@@ -290,28 +289,14 @@ class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk,
     }
 
     fun setUpAboutUI() {
-
-
         binding.tvUserName.text = userData.results.first_name + " " + userData.results.last_name
         binding.layout.tvFollowerCount.text = userData.results.follower_count.toString()
         binding.layout.tvFollowingCount.text = userData.results.following_count.toString()
         binding.tvUserAbout.text = userData.results.about
         binding.layout.tvFriendCount.text = userData.results.friends_count.toString()
-
-
-
-        ImageLoaderHelperGlide.setGlide(
-            this,
-            binding.ivBackground, userData.results.cover_img1
-        )
-        ImageLoaderHelperGlide.setGlide(
-            this,
-            binding.ivUserThumb, userData.results.profile_img1
-        )
-
-
+        ImageLoaderHelperGlide.setGlide(this, binding.ivBackground, userData.results.cover_img1,R.drawable.user_placeholder)
+        ImageLoaderHelperGlide.setGlide(this, binding.ivUserThumb, userData.results.profile_img1,R.drawable.user_placeholder)
         var aboutArrayList = ArrayList<AboutProfileLine>()
-
       if (userData.results.profile_data[0].profession.isNotEmpty()){
           aboutArrayList.add(AboutProfileLine(R.drawable.ic_profile_designation_icon, userData.results.profile_data[0].profession[0].designation, userData.results.profile_data[0].profession[0].company_name, "at"))
       }
@@ -337,6 +322,8 @@ class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk,
                 ""
             )
         )
+
+
         aboutArrayList.add(
             AboutProfileLine(
                 R.drawable.ic_profile_heart_icon,
@@ -345,11 +332,16 @@ class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk,
                 ""
             )
         )
+
         binding.layout.rvAbout.layoutManager = LinearLayoutManager(this)
         var profileAboutAdapter = ProfileAboutAdapter(networkViewModel, this, this)
         profileAboutAdapter.submitList(aboutArrayList)
         binding.layout.rvAbout.adapter = profileAboutAdapter
 
+        if (!ValidationHelper.isNull(userData.results.company)){
+            binding.layout.tvWebsite.text=userData.results.company
+            binding.layout.layoutWebsite.visibility=View.VISIBLE
+        }
 
 
         if (userData.results.isFollowed == 1) {
@@ -389,13 +381,8 @@ class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk,
                     binding.buttonFriend.text = "Add Friend"
                     binding.layoutButtonsAcceptReject.visibility = View.GONE
                 }
-
-
             }
         }
-
     }
-
-
 }
 

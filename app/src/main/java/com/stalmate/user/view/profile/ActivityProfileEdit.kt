@@ -422,6 +422,11 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
                         }
                     })
 
+                    if (it.results.isEmpty()){
+                        binding.layoutBlockList.visibility=View.GONE
+                        }else{
+                        binding.layoutBlockList.visibility=View.VISIBLE
+                        }
                     binding.rvBlockList.adapter = blockedUserAdapter
                     blockedUserAdapter.submitList(it.results as ArrayList<User>)
                     binding.layoutBlockList.visibility = View.VISIBLE
@@ -441,8 +446,8 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
         binding.layout.etHowTown.setText(userData.results.profile_data[0].home_town)
         binding.layout.etCurrentCity.setText(userData.results.city)
 
-        ImageLoaderHelperGlide.setGlide(this, binding.ivBackground, userData.results.cover_img1)
-        ImageLoaderHelperGlide.setGlide(this, binding.ivUserThumb, userData.results.profile_img1)
+        ImageLoaderHelperGlide.setGlide(this, binding.ivBackground, userData.results.cover_img1,R.drawable.user_placeholder)
+        ImageLoaderHelperGlide.setGlide(this, binding.ivUserThumb, userData.results.profile_img1,R.drawable.user_placeholder)
 
 
 

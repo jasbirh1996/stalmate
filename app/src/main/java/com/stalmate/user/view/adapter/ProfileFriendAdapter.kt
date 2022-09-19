@@ -63,7 +63,7 @@ class ProfileFriendAdapter(
                 binding.root.setOnClickListener {
                     callback.onClickOnProfile(friend)
                 }
-            ImageLoaderHelperGlide.setGlide(context,binding.ivUserImage,friend.img)
+            ImageLoaderHelperGlide.setGlide(context,binding.ivUserImage,friend.img,R.drawable.user_placeholder)
 
             binding.tvUserName.text=friend.first_name
 

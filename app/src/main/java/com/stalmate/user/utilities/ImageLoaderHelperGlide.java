@@ -3,7 +3,6 @@ package com.stalmate.user.utilities;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -18,45 +17,39 @@ import com.stalmate.user.R;
 
 
 public class ImageLoaderHelperGlide extends Activity {
-    public static void setGlide(Context context, ImageView imageView, String imageLink) {
+    public static void setGlide(Context context, ImageView imageView, String imageLink,int placeholer) {
+        int radius = context.getResources().getDimensionPixelSize(R.dimen.dp_20);
         RequestOptions requestOptions = new RequestOptions()
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                 .skipMemoryCache(false)
-                .centerCrop()
-              //  .dontAnimate()
-
-
-               /* .transform(new CenterCrop(), new RoundedCorners(0))*/
-            //  .placeholder(R.drawable.user_placeholder)
+                // .dontAnimate()
+                .transform(new CenterCrop(), new RoundedCorners(4))
+                .placeholder(placeholer)
                 .priority(Priority.IMMEDIATE)
                 .encodeFormat(Bitmap.CompressFormat.PNG)
                 .format(DecodeFormat.DEFAULT);
         Glide.with(context)
-                .applyDefaultRequestOptions(requestOptions)
-                .load(imageLink).transition(DrawableTransitionOptions.withCrossFade())
-               /* .error(Glide.with(context)
-                        .load(R.drawable.image))*/
+                .load(imageLink)
+                .apply(requestOptions)
                 .into(imageView);
       //  Glide.get(context).clearMemory();
     }
 
 
     public static void setGlideCorner(Context context, ImageView imageView, String imageLink, int placeholer) {
+        int radius = context.getResources().getDimensionPixelSize(R.dimen.dp_20);
         RequestOptions requestOptions = new RequestOptions()
-                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+              .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                 .skipMemoryCache(false)
-                .centerCrop()
                // .dontAnimate()
-                .apply(RequestOptions.bitmapTransform(new RoundedCorners(20)))
-               .placeholder(placeholer)
+                .transform(new CenterCrop(), new RoundedCorners(20))
+              .placeholder(placeholer)
                 .priority(Priority.IMMEDIATE)
                 .encodeFormat(Bitmap.CompressFormat.PNG)
                 .format(DecodeFormat.DEFAULT);
         Glide.with(context)
-                .applyDefaultRequestOptions(requestOptions)
-                .load(imageLink).transition(DrawableTransitionOptions.withCrossFade())
-       /*         .error(Glide.with(context)
-                        .load(R.drawable.image))*/
+                .load(imageLink)
+                .apply(requestOptions)
                 .into(imageView);
       //  Glide.get(context).clearMemory();
     }

@@ -25,6 +25,7 @@ import com.stalmate.user.model.AboutProfileLine
 import com.stalmate.user.model.User
 import com.stalmate.user.utilities.Constants
 import com.stalmate.user.utilities.ImageLoaderHelperGlide
+import com.stalmate.user.utilities.ValidationHelper
 import com.stalmate.user.view.adapter.ProfileAboutAdapter
 
 import com.stalmate.user.view.adapter.ProfileFriendAdapter
@@ -268,9 +269,9 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
         binding.layout.tvFollowingCount.text = userData.following_count.toString()
         binding.tvUserAbout.text = userData.about
         binding.layout.tvFriendCount.text = userData.friends_count.toString()
-        ImageLoaderHelperGlide.setGlide(this, binding.ivBackground, userData.cover_img1)
+        ImageLoaderHelperGlide.setGlide(this, binding.ivBackground, userData.cover_img1,R.drawable.user_placeholder)
         //   Glide.with(this).load(userData.img_url+userData.profile_img1).into(binding.ivUserThumb)
-        ImageLoaderHelperGlide.setGlide(this, binding.ivUserThumb, userData.profile_img1)
+        ImageLoaderHelperGlide.setGlide(this, binding.ivUserThumb, userData.profile_img1,R.drawable.user_placeholder)
         var aboutArrayList = ArrayList<AboutProfileLine>()
 
         if (userData.profile_data[0].profession.isNotEmpty()) {
@@ -324,5 +325,13 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
         var profileAboutAdapter = ProfileAboutAdapter(networkViewModel, this, this)
         profileAboutAdapter.submitList(aboutArrayList)
         binding.layout.rvAbout.adapter = profileAboutAdapter
+
+        if (!ValidationHelper.isNull(userData.company)){
+            binding.layout.tvWebsite.text=userData.company
+            binding.layout.layoutWebsite.visibility=View.VISIBLE
+        }
+
+
+
     }
 }

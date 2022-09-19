@@ -1,11 +1,13 @@
 package com.stalmate.user.view.dashboard.HomeFragment
 
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -65,6 +67,10 @@ class ActivitySearch : BaseActivity() {
 
             }
         })
+        binding.etSearch.requestFocus()
+        val imm: InputMethodManager =
+            getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInput( binding.etSearch, InputMethodManager.SHOW_IMPLICIT)
     }
 
     private fun getCurrentVisibleFragment(): Fragment? {

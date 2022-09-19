@@ -82,23 +82,6 @@ class FragmentPlaceAutoComplete(var type:TypeFilter) : BaseFragment(), AdapterCa
         )
         binding.rvList.setAdapter(mAutoCompleteAdapter)
         mAutoCompleteAdapter!!.notifyDataSetChanged()
-        searchListener()
-    }
-
-    fun searchListener() {
-        binding.etSearch.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable) {
-                if (s.toString() != "") {
-                    mAutoCompleteAdapter!!.getFilter().filter(s.toString())
-                  
-                } else {
-                    
-                }
-            }
-
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
-        })
     }
 
 
@@ -128,6 +111,14 @@ class FragmentPlaceAutoComplete(var type:TypeFilter) : BaseFragment(), AdapterCa
         bundle.putExtra("country",address.countryName)
         requireActivity().setResult(Activity.RESULT_OK,bundle)
         requireActivity().finish()
+    }
+
+    fun search(searchData:String){
+        if (searchData != "") {
+            mAutoCompleteAdapter!!.getFilter().filter(searchData.toString())
+
+        } else {
+        }
     }
 
 
