@@ -15,9 +15,9 @@ import com.stalmate.user.R
 import com.stalmate.user.databinding.ItemBlockedUserBinding
 import com.stalmate.user.databinding.ItemEducationprofileBinding
 import com.stalmate.user.databinding.ItemProfileCoverBinding
-import com.stalmate.user.model.CoverImg
+
 import com.stalmate.user.model.Education
-import com.stalmate.user.model.ProfileImg
+
 import com.stalmate.user.model.User
 import com.stalmate.user.utilities.ImageLoaderHelperGlide
 import com.stalmate.user.viewmodel.AppViewModel

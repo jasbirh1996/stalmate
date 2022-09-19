@@ -121,7 +121,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/edit_profile"
                 android:textColor="@color/white"
-                android:visibility="visible"
+                android:visibility="gone"
                 android:layout_marginTop="5dp"
                 app:backgroundTint="@null"
                 android:textAllCaps="false"

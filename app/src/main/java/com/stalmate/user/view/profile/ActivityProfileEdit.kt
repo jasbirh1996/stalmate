@@ -29,7 +29,7 @@ import java.io.File
 import kotlin.collections.HashMap
 
 class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
-    ProfessionListAdapter.Callbackk, ProfilePictureAdapter.Callbackk, CoverPictureAdapter.Callbackk,
+    ProfessionListAdapter.Callbackk,
     AdapterFeed.Callbackk {
 
     private lateinit var binding: ActivityProfileEditBinding
@@ -52,8 +52,8 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
     var isCoverImage = false
     private lateinit var educationAdapter: EducationListAdapter
     private lateinit var professionListAdapter: ProfessionListAdapter
-    private lateinit var profilePictureAdapter: ProfilePictureAdapter
-    private lateinit var coverPictureAdapter: CoverPictureAdapter
+    private lateinit var profilePictureAdapter: ProfileAlbumAdapter
+    private lateinit var coverPictureAdapter: ProfileAlbumAdapter
     private lateinit var blockedUserAdapter: BlockedUserAdapter
 
     private lateinit var marriageAdapter: CustumSpinAdapter
@@ -499,7 +499,7 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
         professionListAdapter.submitList(userData.results.profile_data.get(0).profession)
 
 
-        profilePictureAdapter = ProfilePictureAdapter(networkViewModel, this, this)
+        profilePictureAdapter = ProfileAlbumAdapter(networkViewModel, this, "profile_img")
 
         if (userData.results.profile_img.isNotEmpty()) {
             binding.rvProfilePicture.adapter = profilePictureAdapter
@@ -509,7 +509,7 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
             binding.layoutProfileImages.visibility = View.GONE
         }
 
-        coverPictureAdapter = CoverPictureAdapter(networkViewModel, this, this)
+        coverPictureAdapter = ProfileAlbumAdapter(networkViewModel, this, "cover_img")
 
 
         if (userData.results.cover_img.isNotEmpty()) {
@@ -570,16 +570,10 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
         dialogAddEditProfession.show()
     }
 
-    override fun onClickItemEdit(position: ProfileImg, index: Int) {
-
-    }
-
-    override fun onClickItemEdit(position: CoverImg, index: Int) {
-
-    }
 
     override fun onClickOnViewComments(postId: Int) {
 
     }
+
 
 }

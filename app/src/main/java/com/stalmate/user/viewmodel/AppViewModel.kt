@@ -13,6 +13,8 @@ import com.stalmate.user.networking.ApiInterface
 import com.stalmate.user.view.dashboard.Friend.categorymodel.ModelCategoryResponse
 import com.stalmate.user.view.photoalbum.ModelAlbumCreateResponse
 import com.stalmate.user.view.photoalbum.ModelPhotoResponse
+import com.stalmate.user.view.photoalbum.imageshowindex.ModelPhotoIndexDataResponse
+import com.stalmate.user.view.photoalbum.imageshowindex.PhotoIndexResult
 import com.stalmate.user.view.singlesearch.ModelSearch
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -95,6 +97,14 @@ open class AppViewModel : ViewModel() {
         val temp = MutableLiveData<ModelPhotoResponse?>()
         photoLiveData = temp
         getResult(temp, apiInterface.getPhotoList(map))
+    }
+
+
+    var photoIndexLiveData: LiveData<ModelPhotoIndexDataResponse?> = MutableLiveData<ModelPhotoIndexDataResponse?>()
+    fun photoIndexLiveData(map: HashMap<String, String>) {
+        val temp = MutableLiveData<ModelPhotoIndexDataResponse?>()
+        photoIndexLiveData = temp
+        getResult(temp, apiInterface.getPhotoIndexList(map))
     }
 
 
