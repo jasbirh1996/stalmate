@@ -3,39 +3,42 @@ package com.stalmate.user.view.profile
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat.startActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.databinding.ItemEducationprofileBinding
 import com.stalmate.user.databinding.ItemProfileCoverBinding
 import com.stalmate.user.model.Education
-import com.stalmate.user.model.ProfileImg
+import com.stalmate.user.model.Photo
+
 import com.stalmate.user.utilities.ImageLoaderHelperGlide
 import com.stalmate.user.viewmodel.AppViewModel
 
-class ProfilePictureAdapter(val viewModel: AppViewModel, val context: Context, var callback: ProfilePictureAdapter.Callbackk)
-    : RecyclerView.Adapter<ProfilePictureAdapter.AlbumViewHolder>() {
+class ProfileAlbumAdapter(val viewModel: AppViewModel, val context: Context,var type:String)
+    : RecyclerView.Adapter<ProfileAlbumAdapter.AlbumViewHolder>() {
 
-    var list = ArrayList<ProfileImg>()
+    var list = ArrayList<Photo>()
 
-
-    public interface Callbackk {
-        fun onClickItemEdit(position: ProfileImg, index: Int)
-    }
 
     inner class AlbumViewHolder(var binding : ItemProfileCoverBinding): RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(response : ProfileImg){
-
-
+        fun bind(response : Photo){
             ImageLoaderHelperGlide.setGlideCorner(context,binding.ivImage,response.img,R.drawable.user_placeholder)
+
+            binding.ivImage.setOnClickListener {
+                context.startActivity(IntentHelper.getPhotoGalleryAlbumScreen(context)!!.putExtra("type", type).putExtra("index",bindingAdapterPosition.toString()))
+            }
         }
+
+
 
 
     }
 
-    fun submitList(albumList: List<ProfileImg>) {
+    fun submitList(albumList: List<Photo>) {
         list.clear()
         list.addAll(albumList)
         notifyDataSetChanged()

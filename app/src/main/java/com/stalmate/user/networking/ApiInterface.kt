@@ -8,6 +8,8 @@ import com.slatmate.user.model.*
 import com.stalmate.user.view.dashboard.Friend.categorymodel.ModelCategoryResponse
 import com.stalmate.user.view.photoalbum.ModelAlbumCreateResponse
 import com.stalmate.user.view.photoalbum.ModelPhotoResponse
+import com.stalmate.user.view.photoalbum.imageshowindex.ModelPhotoIndexDataResponse
+import com.stalmate.user.view.photoalbum.imageshowindex.PhotoIndexResult
 import com.stalmate.user.view.singlesearch.ModelSearch
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -41,6 +43,10 @@ interface ApiInterface {
 
     @POST(Constants.URL_PHOTO_ALBUM_PHOTO)
     fun getPhotoList(@Body map: HashMap<String, String>): Call<ModelPhotoResponse>
+
+
+    @POST(Constants.URL_PHOTO_INDEX)
+    fun getPhotoIndexList(@Body map: HashMap<String, String>): Call<ModelPhotoIndexDataResponse>
 
 
     @GET(Constants.url_language_list)
