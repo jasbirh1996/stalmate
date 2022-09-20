@@ -86,7 +86,7 @@ class FragmentLogin : BaseFragment() {
     }
 
     private fun hitLoginApi() {
-Constants.TYPE_ALL_FOLLOWERS_FOLLOWING
+        Constants.TYPE_ALL_FOLLOWERS_FOLLOWING
         val hashMap = HashMap<String, String>()
         hashMap[Constants.PARAMETER_EMAIL] =binding.etEmail.text.toString()
         hashMap["password"] =binding.etPassword.text.toString()

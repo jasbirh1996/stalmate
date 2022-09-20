@@ -19,8 +19,12 @@
     </fragment>
     <fragment
         android:id="@+id/fragmentAlbumPhoto"
-        android:name="com.stalmate.user.view.photoalbum.FragmentAlbumPhoto"
-        android:label="FragmentAlbumPhoto" />
+        android:name="com.stalmate.user.view.photoalbum.FragmentAlbumPhotoList"
+        android:label="FragmentAlbumPhoto">
+        <action
+            android:id="@+id/action_fragmentAlbumListing_to_fragmentAlbumFullView"
+            app:destination="@id/fragmentAlbumFullView" />
+    </fragment>
 
     <fragment
         android:id="@+id/fragmentAlbumFullView"

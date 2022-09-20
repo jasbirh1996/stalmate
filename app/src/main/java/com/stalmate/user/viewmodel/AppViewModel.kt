@@ -10,11 +10,11 @@ import com.slatmate.user.model.CommonModelResponse
 import com.stalmate.user.base.App
 import com.stalmate.user.model.*
 import com.stalmate.user.networking.ApiInterface
+import com.stalmate.user.view.dashboard.Friend.categorymodel.AddCategoryModel
 import com.stalmate.user.view.dashboard.Friend.categorymodel.ModelCategoryResponse
 import com.stalmate.user.view.photoalbum.ModelAlbumCreateResponse
 import com.stalmate.user.view.photoalbum.ModelPhotoResponse
 import com.stalmate.user.view.photoalbum.imageshowindex.ModelPhotoIndexDataResponse
-import com.stalmate.user.view.photoalbum.imageshowindex.PhotoIndexResult
 import com.stalmate.user.view.singlesearch.ModelSearch
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -170,6 +170,13 @@ open class AppViewModel : ViewModel() {
         getResult(temp, apiInterface.setLoginDetails(map))
     }
 
+    var numberVerifyData: LiveData<CommonModelResponse?> = MutableLiveData<CommonModelResponse?>()
+    fun numberVerify(map: HashMap<String, String>) {
+        val temp = MutableLiveData<CommonModelResponse?>()
+        numberVerifyData = temp
+        getResult(temp, apiInterface.setOtpNumberVerify(map))
+    }
+
     var aboutProfileData: LiveData<CommonModelResponse?> = MutableLiveData<CommonModelResponse?>()
     fun aboutProfileUpdate(map: HashMap<String, String>) {
         val temp = MutableLiveData<CommonModelResponse?>()
@@ -184,9 +191,9 @@ open class AppViewModel : ViewModel() {
         getResult(temp, apiInterface.setEducationAddDetails(map))
     }
 
-    var updateFriendCategoryLiveData: LiveData<CommonModelResponse?> = MutableLiveData<CommonModelResponse?>()
+    var updateFriendCategoryLiveData: LiveData<AddCategoryModel?> = MutableLiveData<AddCategoryModel?>()
     fun updateFriendCategoryData(map: HashMap<String, String>) {
-        val temp = MutableLiveData<CommonModelResponse?>()
+        val temp = MutableLiveData<AddCategoryModel?>()
         updateFriendCategoryLiveData = temp
         getResult(temp, apiInterface.setUpdateFriendCategoryDetails(map))
     }
@@ -329,11 +336,7 @@ open class AppViewModel : ViewModel() {
         val temp = MutableLiveData<CommonModelResponse?>()
         UpdateProfileLiveData = temp
 
-        getResult(
-            temp, apiInterface.updateUserProfileImage(
-                file_Profile_Image!!
-            )
-        )
+        getResult(temp, apiInterface.updateUserProfileImage(file_Profile_Image!!))
     }
 
 

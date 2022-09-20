@@ -638,6 +638,9 @@
     <string name="create_new">Create New</string>
     <string name="category_type">Category type</string>
     <string name="category_name">Category Name</string>
+    <string name="otp_verification">OTP Verification</string>
+    <string name="verify_amp_procced"><![CDATA[Verify & Procced]]></string>
+    <string name="please_enter_mobile_number">Please enter mobile number</string>
     <string-array name="marrage">
         <item><font fgcolor="#B7B7B7">Marital Status</font></item>
         <item><font fgcolor="#B7B7B7">Single</font></item>

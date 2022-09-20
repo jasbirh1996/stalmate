@@ -124,7 +124,6 @@ class FragmentAlbumListing : BaseFragment(), AlbumAdapter.Callbackk {
     override fun onClickItem(postId: String) {
 
         val bundle = Bundle()
-
         bundle.putString("id", postId)
         findNavController().navigate(R.id.fragmentAlbumPhoto, bundle)
     }
