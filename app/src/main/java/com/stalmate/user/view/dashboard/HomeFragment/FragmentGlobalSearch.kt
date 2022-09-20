@@ -150,9 +150,9 @@ class FragmentGlobalSearch : BaseFragment(),
 
                     if (isFresh) {
                         if (it.user_list.size>4){
-                            userAdapter.setList(it.user_list.subList(0,4))
+                            userAdapter.submitList(it.user_list.subList(0,4))
                         }else{
-                            userAdapter.setList(it.user_list)
+                            userAdapter.submitList(it.user_list)
                         }
 
 

@@ -71,6 +71,14 @@ class FriendAdapter(
         notifyDataSetChanged()
     }
 
+
+    fun addToList(feedList: List<User>) {
+        val size = list.size
+        list.addAll(feedList)
+        val sizeNew = list.size
+        notifyItemRangeChanged(size, sizeNew)
+    }
+
     public interface Callbackk {
         fun onClickOnUpdateFriendRequest(friend: User, status: String)
         fun onClickOnProfile(friend: User)

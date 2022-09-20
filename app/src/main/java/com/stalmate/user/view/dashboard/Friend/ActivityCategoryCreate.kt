@@ -23,8 +23,6 @@ class ActivityCategoryCreate : BaseActivity(), AdapterCategory.Callbackk {
     lateinit var adapterCategory: AdapterCategory
     var isEdit : Boolean = false
     var isId : String = ""
-    lateinit var modelCategoryResponse: ModelCategoryResponse
-    lateinit var categoryResponse: CategoryResponse
 
     override fun onClick(viewId: Int, view: View?) {
 
@@ -41,13 +39,12 @@ class ActivityCategoryCreate : BaseActivity(), AdapterCategory.Callbackk {
         /*getcateoryListing*/
         getCategoryListing()
 
+        binding.toolbar.back.setOnClickListener {
+            onBackPressed()
+        }
 
         binding.btnAdd.setOnClickListener {
-
-
                 hitAddEditApi()
-
-
         }
 
 
@@ -76,27 +73,24 @@ class ActivityCategoryCreate : BaseActivity(), AdapterCategory.Callbackk {
 
     private fun hitAddEditApi() {
 
+//        showLoader()
         val hashMap = HashMap<String, String>()
 
-        if (isEdit){
+        if (isEdit) {
             hashMap["id"] = isId
         }
-
         hashMap["type"] = "Category A"
         hashMap["name"] = binding.etCategoryName.text.toString()
 
         networkViewModel.updateFriendCategoryData(hashMap)
         networkViewModel.updateFriendCategoryLiveData.observe(this){
-            it?.let {
-                if (it.status == true){
 
-                    if (isEdit){
+                if (it!!.status){
                         getCategoryListing()
-                    }
                 }
-            }
-        }
 
+            makeToast(it.message)
+        }
     }
 
 
@@ -108,8 +102,7 @@ class ActivityCategoryCreate : BaseActivity(), AdapterCategory.Callbackk {
         networkViewModel.categoryFriendLiveData()
         networkViewModel.categoryFriendLiveData.observe(this) {
 
-            it.let {
-                modelCategoryResponse = it!!
+           if (it!!.status){
                 adapterCategory.submitList(it.results)
             }
         }
@@ -117,10 +110,8 @@ class ActivityCategoryCreate : BaseActivity(), AdapterCategory.Callbackk {
     }
 
     private fun setUpToolbar() {
-
         binding.toolbar.backButtonLeftText.visibility = View.VISIBLE
         binding.toolbar.backButtonLeftText.text = getString(R.string.category)
-
     }
 
     override fun onClickEditItem(categoryResponse: CategoryResponse, index: Int) {
@@ -128,17 +119,12 @@ class ActivityCategoryCreate : BaseActivity(), AdapterCategory.Callbackk {
         binding.etCategoryName.setText(categoryResponse.name)
         isEdit = true
         isId = categoryResponse.id
+        binding.btnAdd.text = "Edit"
 
     }
 
-    fun onSuccessfullyEditedProfession(categoryResponse: CategoryResponse) {
-        modelCategoryResponse.results[0] = categoryResponse
-        networkViewModel.categoryFriendLiveData.postValue(modelCategoryResponse)
-    }
-
-    fun onSuccessfullyAdd(categoryResponse: CategoryResponse) {
-        modelCategoryResponse.results.add(categoryResponse)
-        networkViewModel.categoryFriendLiveData.postValue(modelCategoryResponse)
+    override fun onBackPressed() {
+        super.onBackPressed()
     }
 
 

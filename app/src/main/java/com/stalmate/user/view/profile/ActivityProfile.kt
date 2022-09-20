@@ -15,6 +15,7 @@ import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.CropImageView
 import com.canhub.cropper.options
 import com.google.android.material.shape.CornerFamily
+import com.google.android.material.tabs.TabLayout
 import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseActivity
@@ -35,10 +36,6 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
 
-
-
-
-
 class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdapter.Callbackk,
     ProfileAboutAdapter.Callbackk {
     lateinit var binding: ActivityProfileBinding
@@ -51,6 +48,10 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
     var imageFile: File? = null
     var isCoverImage = false
     lateinit var userData: User
+    var albumTabType = ""
+    private lateinit var albumImageAdapter: ProfileAlbumImageAdapter
+    private lateinit var AlbumAdapter: ProfileAlbumImageAdapter
+
 
     override fun onClick(viewId: Int, view: View?) {
     }
@@ -102,6 +103,27 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
         binding.ivBack.setOnClickListener {
             finish()
         }
+
+//        binding.layout.photoTab.addOnTabSelectedListener(object :TabLayout.OnTabSelectedListener {
+//            override fun onTabSelected(tab: TabLayout.Tab?) {
+//                val position = tab!!.position
+//                 if (position == 0){
+//                     setUpAboutUI("Photos")
+//                 }else if(position == 1){
+//                     setUpAboutUI("Albums")
+//                 }
+//
+//            }
+//
+//            override fun onTabUnselected(tab: TabLayout.Tab?) {
+//
+//            }
+//
+//            override fun onTabReselected(tab: TabLayout.Tab?) {
+//
+//            }
+//
+//        })
 
 
         setupData()
@@ -196,8 +218,6 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
                     .into(binding.ivUserThumb)
             }
 
-
-
             updateProfileImageApiHit()
 
         } else {
@@ -228,8 +248,7 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
     }
 
     private fun updateProfileImageApiHit() {
-        val thumbnailBody: RequestBody =
-            RequestBody.create("image/*".toMediaTypeOrNull(), imageFile!!)
+        val thumbnailBody: RequestBody = RequestBody.create("image/*".toMediaTypeOrNull(), imageFile!!)
         val profile_image1: MultipartBody.Part = MultipartBody.Part.Companion.createFormData(
             "cover_img".takeIf { isCoverImage } ?: "profile_img",
             imageFile!!.name,
@@ -253,13 +272,13 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
         networkViewModel.profileLiveData.observe(this, Observer {
             it.let {
                 userData = it!!.results
-                setUpAboutUI()
+                setUpAboutUI("Photo")
             }
         })
     }
 
 
-    fun setUpAboutUI() {
+    fun setUpAboutUI(tabType : String) {
 
         if (userData.about.isEmpty()) {
             binding.tvUserAbout.visibility = View.GONE
@@ -275,64 +294,70 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
         ImageLoaderHelperGlide.setGlide(this, binding.ivUserThumb, userData.profile_img1,R.drawable.user_placeholder)
         var aboutArrayList = ArrayList<AboutProfileLine>()
 
-        if (userData.profile_data[0].profession.isNotEmpty()) {
+        /*if (tabType== "Photo") {
+            albumImageAdapter = ProfileAlbumImageAdapter(networkViewModel, this, "Photo")
+//            binding.layout.rvPhotoAlbumData.adapter = albumImageAdapter
+            albumImageAdapter.submitList(userData.albums_img)
+        }*/
+
+            if (userData.profile_data[0].profession.isNotEmpty()) {
+                aboutArrayList.add(
+                    AboutProfileLine(
+                        R.drawable.ic_profile_job,
+                        userData.profile_data[0].profession[0].designation,
+                        userData.profile_data[0].profession[0].company_name,
+                        "at"
+                    )
+                )
+            }
+
+            if (userData.profile_data[0].education.isNotEmpty()) {
+                aboutArrayList.add(
+                    AboutProfileLine(
+                        R.drawable.ic_profile_graduation,
+                        "Student",
+                        userData.profile_data[0].education[0].sehool,
+                        "at"
+                    )
+                )
+            }
+
             aboutArrayList.add(
                 AboutProfileLine(
-                    R.drawable.ic_profile_job,
-                    userData.profile_data[0].profession[0].designation,
-                    userData.profile_data[0].profession[0].company_name,
+                    R.drawable.ic_profile_location,
+                    "Lives at",
+                    userData.profile_data[0].home_town,
                     "at"
                 )
             )
-        }
-
-        if (userData.profile_data[0].education.isNotEmpty()) {
             aboutArrayList.add(
                 AboutProfileLine(
-                    R.drawable.ic_profile_graduation,
-                    "Student",
-                    userData.profile_data[0].education[0].sehool,
-                    "at"
+                    R.drawable.ic_profile_location,
+                    "From",
+                    userData.profile_data[0].location,
+                    ""
                 )
             )
-        }
 
-        aboutArrayList.add(
-            AboutProfileLine(
-                R.drawable.ic_profile_location,
-                "Lives at",
-                userData.profile_data[0].home_town,
-                "at"
+            aboutArrayList.add(
+                AboutProfileLine(
+                    R.drawable.ic_profile_status,
+                    "",
+                    userData.profile_data[0].marital_status,
+                    ""
+                )
             )
-        )
-        aboutArrayList.add(
-            AboutProfileLine(
-                R.drawable.ic_profile_location,
-                "From",
-                userData.profile_data[0].location,
-                ""
-            )
-        )
+            binding.layout.rvAbout.layoutManager = LinearLayoutManager(this)
+            var profileAboutAdapter = ProfileAboutAdapter(networkViewModel, this, this)
+            profileAboutAdapter.submitList(aboutArrayList)
+            binding.layout.rvAbout.adapter = profileAboutAdapter
 
-        aboutArrayList.add(
-            AboutProfileLine(
-                R.drawable.ic_profile_status,
-                "",
-                userData.profile_data[0].marital_status,
-                ""
-            )
-        )
-        binding.layout.rvAbout.layoutManager = LinearLayoutManager(this)
-        var profileAboutAdapter = ProfileAboutAdapter(networkViewModel, this, this)
-        profileAboutAdapter.submitList(aboutArrayList)
-        binding.layout.rvAbout.adapter = profileAboutAdapter
+            if (!ValidationHelper.isNull(userData.company)) {
+                binding.layout.tvWebsite.text = userData.company
+                binding.layout.layoutWebsite.visibility = View.VISIBLE
+            }
 
-        if (!ValidationHelper.isNull(userData.company)){
-            binding.layout.tvWebsite.text=userData.company
-            binding.layout.layoutWebsite.visibility=View.VISIBLE
         }
 
 
-
-    }
 }

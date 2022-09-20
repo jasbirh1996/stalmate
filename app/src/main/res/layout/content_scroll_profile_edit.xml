@@ -339,7 +339,7 @@
 
 
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/etNumber"
                 style="@style/customEditbox"
                 android:layout_width="match_parent"
@@ -349,11 +349,26 @@
                 android:hint="@string/mobile_number"
                 android:maxLines="1"
                 android:maxLength="10"
+                android:inputType="number"
+                android:background="@null"
+                android:textColorHint="@color/black"
                 android:paddingVertical="15dp"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="@+id/radio_group"
                 app:layout_constraintStart_toStartOf="@+id/radio_group"
                 app:layout_constraintTop_toBottomOf="@+id/filledTextEmail"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/btnverify"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:fontFamily="@font/poppins"
+            android:text="Verify"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/etNumber"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view7" />
 
 
         <View

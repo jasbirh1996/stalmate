@@ -19,7 +19,7 @@ data class User(
     var isBlocked: Int,
     val friends_count: Int,
     val about: String,
-    val albums: List<Any>,
+    val albums: List<Albums>,
     val city: String,
     val company: String,
     val cover_img: List<Photo>,
@@ -39,6 +39,7 @@ data class User(
     val profile_img1: String,
     val schoolandcollege: String,
     val schoolandcollegename: String,
+    val albums_img: ArrayList<AlbumImage>,
     val url: String
 ) : Serializable
 
@@ -50,12 +51,15 @@ data class Photo(
     val url: String
 ) : Serializable
 
+
+
 data class ProfileData(
     val education: ArrayList<Education>,
     val home_town: String,
     val location: String,
     val marital_status: String,
-    val profession: ArrayList<Profession>
+    val profession: ArrayList<Profession>,
+
 ):Serializable
 
 
@@ -85,4 +89,23 @@ data class Profession(
     val status: String,
     var to: String,
     val user_id: String
+) : Serializable
+
+
+data class AlbumImage(
+    val album_id: String,
+    val user_id: String,
+    val Created_date: String,
+    val Updated_date: String,
+    val is_delete: String,
+    val _id: String,
+    val files: String,
+    val __v: String
+) : Serializable
+
+
+data class Albums(
+    val id: String,
+    val files: ArrayList<AlbumImage>,
+    val name: String
 ) : Serializable

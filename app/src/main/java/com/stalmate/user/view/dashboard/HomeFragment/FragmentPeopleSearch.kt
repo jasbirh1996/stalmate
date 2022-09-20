@@ -25,14 +25,16 @@ class FragmentPeopleSearch : BaseFragment(), SearchedUserAdapter.Callbackk {
     var currentPage = 1
     var contactString = ""
     var searchData = ""
+    var isLastPage = false
+    var isLoading = false
     override fun onCreate(savedInstanceState: Bundle?) {
 
 
-        if ( requireArguments().getString("dataSearch")!=null){
-            searchData= requireArguments().getString("dataSearch").toString()
+        if (requireArguments().getString("dataSearch") != null) {
+            searchData = requireArguments().getString("dataSearch").toString()
         }
-        if ( requireArguments().getString("contacts")!=null){
-            contactString=requireArguments().getString("contacts").toString()
+        if (requireArguments().getString("contacts") != null) {
+            contactString = requireArguments().getString("contacts").toString()
         }
         super.onCreate(savedInstanceState)
     }
@@ -56,6 +58,31 @@ class FragmentPeopleSearch : BaseFragment(), SearchedUserAdapter.Callbackk {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val divider = DividerItemDecoration(
+            context,
+            DividerItemDecoration.VERTICAL
+        )
+        divider.setDrawable(ShapeDrawable().apply {
+            intrinsicHeight = resources.getDimensionPixelOffset(R.dimen.dp_1)
+            paint.color = Color.GRAY // Note:
+            //   Currently (support version 28.0.0), we
+            //   can not use tranparent color here. If
+            //   we use transparent, we still see a
+            //   small divider line. So if we want
+            //   to display transparent space, we
+            //   can set color = background color
+            //   or we can create a custom ItemDecoration
+            //   instead of DividerItemDecoration.
+        })
+        binding.rvItems.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvItems.addItemDecoration(divider)
+        binding.rvItems.adapter = userAdapter
+
+
+
+
+
         hitApi(true, searchData)
     }
 
@@ -64,12 +91,11 @@ class FragmentPeopleSearch : BaseFragment(), SearchedUserAdapter.Callbackk {
         if (isFresh) {
             currentPage = 1
         }
-        Log.d("asdasdsa", "asdasfdg")
         var hashmap = HashMap<String, String>()
         hashmap.put("search", this.searchData)
         hashmap.put("number_array", contactString)
         hashmap.put("page", currentPage.toString())
-        hashmap.put("limit", "")
+        hashmap.put("limit", "20")
 
         networkViewModel.getGlobalSearch(hashmap)
         networkViewModel.globalSearchLiveData.observe(viewLifecycleOwner, Observer {
@@ -78,39 +104,36 @@ class FragmentPeopleSearch : BaseFragment(), SearchedUserAdapter.Callbackk {
 
                 if (it!!.user_list.isNotEmpty()) {
 
-
-                    val divider = DividerItemDecoration(
-                        context,
-                        DividerItemDecoration.VERTICAL
-                    )
-
-                    divider.setDrawable(ShapeDrawable().apply {
-                        intrinsicHeight = resources.getDimensionPixelOffset(R.dimen.dp_1)
-                        paint.color = Color.GRAY // Note:
-                        //   Currently (support version 28.0.0), we
-                        //   can not use tranparent color here. If
-                        //   we use transparent, we still see a
-                        //   small divider line. So if we want
-                        //   to display transparent space, we
-                        //   can set color = background color
-                        //   or we can create a custom ItemDecoration
-                        //   instead of DividerItemDecoration.
-                    })
-
-
-                    binding.rvItems.layoutManager = LinearLayoutManager(requireContext())
-                    binding.rvItems.addItemDecoration(divider)
-                    binding.rvItems.adapter = userAdapter
-                    binding.layoutUsers.visibility = View.VISIBLE
-                    Log.d("aasdasf", it.user_list.size.toString())
                     if (isFresh) {
-                        userAdapter.setList(it.user_list)
+                        userAdapter.submitList(it!!.user_list as java.util.ArrayList<User>)
                     } else {
-                        userAdapter.addToList(it.user_list)
+                        userAdapter.addToList(it!!.user_list as java.util.ArrayList<User>)
                     }
+
+
+                    isLastPage = false
+                    if (it!!.user_list.size < 6) {
+                        binding.progressLoading.visibility = View.GONE
+                    } else {
+                        binding.progressLoading.visibility = View.VISIBLE
+                    }
+
+
                 } else {
-                    binding.layoutUsers.visibility = View.GONE
+                    isLastPage = true
+                    binding.progressLoading.visibility = View.GONE
+                    if (isFresh) {
+                        userAdapter.submitList(it!!.user_list as java.util.ArrayList<User>)
+                    }
+
                 }
+
+                if (it.user_list.isEmpty()) {
+                    binding.layoutNoData.visibility = View.VISIBLE
+                } else {
+                    binding.layoutNoData.visibility = View.GONE
+                }
+
 
             }
         })

@@ -19,12 +19,15 @@ import com.stalmate.user.R
 import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.commonadapters.AdapterFeed
 import com.stalmate.user.databinding.ActivityProfileEditBinding
+import com.stalmate.user.databinding.DialogueNumberVerifyBinding
 import com.stalmate.user.model.*
+import com.stalmate.user.utilities.Constants
 import com.stalmate.user.utilities.ImageLoaderHelperGlide
 import com.stalmate.user.utilities.PriceFormatter
 import com.stalmate.user.utilities.ValidationHelper
 import com.stalmate.user.view.dialogs.DialogAddEditEducation
 import com.stalmate.user.view.dialogs.DialogAddEditProfession
+import com.stalmate.user.view.dialogs.DialogVerifyNumber
 import com.wedguruphotographer.adapter.CustumSpinAdapter
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -112,6 +115,7 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
             }
         }
 
+
         clickLister()
     }
 
@@ -123,7 +127,7 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
             startCrop()
         }
 
-        binding.idCoverPhoto.setOnClickListener {
+        binding.idCameraProfile.setOnClickListener {
             isCoverImage = false
             startCrop()
         }
@@ -172,6 +176,32 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
                     }
                 })
             dialogAddEditProfession.show()
+        }
+
+
+        binding.layout.btnverify.setOnClickListener {
+
+           if (binding.layout.etNumber.text.toString().isNotEmpty()) {
+
+               val hashMap = HashMap<String, String>()
+               hashMap["number"] = binding.layout.etNumber.text.toString()
+               networkViewModel.numberVerify(hashMap)
+               networkViewModel.numberVerifyData.observe(this) {
+
+                   it.let {
+                       if (it!!.status == true) {
+                           var dialoguenumberVerify = DialogVerifyNumber(this, networkViewModel, binding.layout.etNumber.text.toString())
+                           dialoguenumberVerify.show()
+
+                       }else{
+                           makeToast(it.message)
+                       }
+                   }
+               }
+           }else{
+               makeToast(getString(R.string.please_enter_mobile_number))
+           }
+
         }
 
         binding.ivBack.setOnClickListener {
@@ -237,15 +267,21 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
     private fun updateProfileImageApiHit() {
 
 
-        val thumbnailBody: RequestBody =
-            RequestBody.create("image/*".toMediaTypeOrNull(), imageFile!!)
+        val thumbnailBody: RequestBody = RequestBody.create("image/*".toMediaTypeOrNull(), imageFile!!)
 
-        fun getMultipart(str: File): MultipartBody.Part = MultipartBody.Part.createFormData(
+        val profile_image1: MultipartBody.Part = MultipartBody.Part.Companion.createFormData(
             "cover_img".takeIf { isCoverImage } ?: "profile_img",
-            str.name,
+            imageFile!!.name,
             thumbnailBody
-        )
-        networkViewModel.etsProfileApi(getMultipart(imageFile!!))
+        ) //image[] for multiple image
+        networkViewModel.etsProfileApi(profile_image1)
+        networkViewModel.UpdateProfileLiveData.observe(this, Observer {
+            it.let {
+                makeToast(it!!.message)
+                var hashMap = HashMap<String, String>()
+                networkViewModel.getProfileData(hashMap)
+            }
+        })
     }
 
     override fun onDestroy() {
@@ -369,6 +405,7 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
 
 
         binding.etWebsite.setText(userData.results.company)
+
 
 
         educationAdapter = EducationListAdapter(networkViewModel, this, this)
@@ -497,10 +534,6 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
         binding.layout.spDate.setSelection(selectedDayIndex)
 
 
-
-
-
-
         if (userData.results.gender  == "Male") {
             binding.layout.rdmale.isChecked=true
         } else if (userData.results.gender  == "Female") {
@@ -509,8 +542,8 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
             binding.layout.rdOthers.isChecked=true
         }
 
-        val selectedGenderIndex = resources.getStringArray(R.array.marrage).indexOf(userData.results.gender)
-        binding.layout.tvmarriage.setSelection(selectedGenderIndex)
+        val selecteMarriegeStatus = resources.getStringArray(R.array.marrage).indexOf(userData.results.profile_data[0].marital_status)
+        binding.layout.tvmarriage.setSelection(selecteMarriegeStatus)
 
     }
 

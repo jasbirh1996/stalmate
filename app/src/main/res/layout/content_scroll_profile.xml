@@ -285,13 +285,61 @@
                 app:layout_constraintTop_toBottomOf="@+id/etSearchFriend" />
 
 
+        <!--    <com.google.android.material.tabs.TabLayout
+                android:id="@+id/photoTab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="@+id/rvFriends"
+                app:layout_constraintTop_toBottomOf="@+id/rvFriends">
+
+                <com.google.android.material.tabs.TabItem
+                    android:id="@+id/tbPhtoso"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Photos" />
+
+                <com.google.android.material.tabs.TabItem
+                    android:id="@+id/tbalbums"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Albums" />
+
+            </com.google.android.material.tabs.TabLayout>
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvPhotos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_10"
+                android:fontFamily="@font/poppins_medium"
+                android:text="Photos"
+                android:visibility="gone"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="@+id/rvFriends"
+                app:layout_constraintTop_toBottomOf="@+id/rvFriends" />
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvPhotoAlbumData"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:orientation="horizontal"
+                tools:itemCount="5"
+                android:layout_marginTop="@dimen/dp_10"
+                app:layout_constraintStart_toStartOf="@+id/tvPhotos"
+                app:layout_constraintTop_toBottomOf="@+id/photoTab"/>
+-->
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_marginTop="20dp"
+                android:visibility="gone"
                 android:background="@drawable/rectangle_grey_backgorund"
                 app:layout_constraintTop_toBottomOf="@id/rvFriends">
-
 
                 <TextView
                     android:id="@+id/btnphoto"

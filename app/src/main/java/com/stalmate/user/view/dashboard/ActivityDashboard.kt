@@ -236,6 +236,16 @@ class ActivityDashboard : AppCompatActivity(), FragmentHome.Callback {
         }
     }
 
+    override fun onBackPressed() {
+        if (binding.drawerLayout.isDrawerOpen(Gravity.RIGHT)) {
+            toggleDrawer()
+        } else {
+           super.onBackPressed()
+        }
+
+    }
+
+
 
 
     private fun loadDrawerFragment(fragment: Fragment) {
@@ -248,7 +258,7 @@ class ActivityDashboard : AppCompatActivity(), FragmentHome.Callback {
             val ft = manager.beginTransaction()
             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
             ft.replace(binding.frameDrawer.id, fragment, fragmentTag)
-            ft.addToBackStack(backStateName)
+           // ft.addToBackStack(backStateName)
             ft.commit()
         }
 

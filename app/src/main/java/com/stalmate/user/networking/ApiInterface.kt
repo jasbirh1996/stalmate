@@ -5,6 +5,7 @@ import com.stalmate.user.model.*
 import com.stalmate.user.utilities.Constants
 
 import com.slatmate.user.model.*
+import com.stalmate.user.view.dashboard.Friend.categorymodel.AddCategoryModel
 import com.stalmate.user.view.dashboard.Friend.categorymodel.ModelCategoryResponse
 import com.stalmate.user.view.photoalbum.ModelAlbumCreateResponse
 import com.stalmate.user.view.photoalbum.ModelPhotoResponse
@@ -71,6 +72,10 @@ interface ApiInterface {
     @POST(Constants.URL_LOGIN)
     fun setLoginDetails(@Body map: HashMap<String, String>): Call<ModelLoginResponse>
 
+
+    @POST(Constants.URL_NUMBER_VERIFY_UPDATE)
+    fun setOtpNumberVerify(@Body map: HashMap<String, String>): Call<CommonModelResponse>
+
     @PATCH(Constants.URL_UPDATE_ABOUT)
     fun setUpdateAbout(@Body map: HashMap<String, String>): Call<CommonModelResponse>
 
@@ -80,7 +85,7 @@ interface ApiInterface {
 
 
     @POST(Constants.URL_UPDATE_FRIEND_CATEGORY)
-    fun setUpdateFriendCategoryDetails(@Body map: HashMap<String, String>): Call<CommonModelResponse>
+    fun setUpdateFriendCategoryDetails(@Body map: HashMap<String, String>): Call<AddCategoryModel>
 
     @POST(Constants.URL_PROFESSION_ADD)
     fun setProfessionAddDetails(@Body map: HashMap<String, String>): Call<ModelCommonAddEducationAndProfessionResponse>

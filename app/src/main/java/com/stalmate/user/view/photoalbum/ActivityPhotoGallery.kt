@@ -21,7 +21,6 @@ import com.stalmate.user.databinding.CreateAlbumLayoutBinding
 class ActivityPhotoGallery : BaseActivity() {
 
     private lateinit var binding : ActivityPhotoGalleryBinding
-    private lateinit var bindingPop : CreateAlbumLayoutBinding
 
     lateinit var navController: NavController
 
@@ -32,9 +31,6 @@ class ActivityPhotoGallery : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
        binding = DataBindingUtil.setContentView(this , R.layout.activity_photo_gallery)
-
-
-
 
         setUpNavigation()
     }
@@ -57,17 +53,5 @@ class ActivityPhotoGallery : BaseActivity() {
             navController.navigate(R.id.action_fragmentAlbumListing_to_fragmentAlbumPhoto, bundle)
         }
 
-
-
-
     }
-
-
-
-
-
-
-
-
-
 }
