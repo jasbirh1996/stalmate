@@ -54,6 +54,7 @@ class FragmentFullViewAlbum : BaseFragment() {
 
         binding.back.setOnClickListener {
             requireActivity().finish()
+
         }
 
 
@@ -73,8 +74,8 @@ class FragmentFullViewAlbum : BaseFragment() {
     }
 
     private fun hitphotoListApi() {
-        currentIndex++
 
+        currentIndex++
         val hashMap = HashMap<String, String>()
         hashMap["img_type"] = type
         hashMap["page"] = currentIndex.toString()
@@ -92,21 +93,8 @@ class FragmentFullViewAlbum : BaseFragment() {
                     } else {
                         indexPhotoAdapter.addToList(it!!.results)
                     }
-
                 }
-
-
-
-
-
             }
         }
     }
-
-
-
-
-
-
-
 }

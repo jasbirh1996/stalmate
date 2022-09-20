@@ -35,10 +35,6 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
 
-
-
-
-
 class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdapter.Callbackk,
     ProfileAboutAdapter.Callbackk {
     lateinit var binding: ActivityProfileBinding

@@ -43,11 +43,7 @@ class ActivityCategoryCreate : BaseActivity(), AdapterCategory.Callbackk {
 
 
         binding.btnAdd.setOnClickListener {
-
-
                 hitAddEditApi()
-
-
         }
 
 
@@ -76,9 +72,10 @@ class ActivityCategoryCreate : BaseActivity(), AdapterCategory.Callbackk {
 
     private fun hitAddEditApi() {
 
+        showLoader()
         val hashMap = HashMap<String, String>()
 
-        if (isEdit){
+        if (isEdit) {
             hashMap["id"] = isId
         }
 
@@ -90,9 +87,10 @@ class ActivityCategoryCreate : BaseActivity(), AdapterCategory.Callbackk {
             it?.let {
                 if (it.status == true){
 
-                    if (isEdit){
                         getCategoryListing()
-                    }
+                        adapterCategory.notifyDataSetChanged()
+                    dismissLoader()
+
                 }
             }
         }
@@ -129,16 +127,6 @@ class ActivityCategoryCreate : BaseActivity(), AdapterCategory.Callbackk {
         isEdit = true
         isId = categoryResponse.id
 
-    }
-
-    fun onSuccessfullyEditedProfession(categoryResponse: CategoryResponse) {
-        modelCategoryResponse.results[0] = categoryResponse
-        networkViewModel.categoryFriendLiveData.postValue(modelCategoryResponse)
-    }
-
-    fun onSuccessfullyAdd(categoryResponse: CategoryResponse) {
-        modelCategoryResponse.results.add(categoryResponse)
-        networkViewModel.categoryFriendLiveData.postValue(modelCategoryResponse)
     }
 
 
