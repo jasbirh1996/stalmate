@@ -9,17 +9,86 @@
         android:layout_height="wrap_content">
 
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvAbout"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layoutabout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:listitem="@layout/layout_profile_data_lines" />
+            app:layout_constraintTop_toTopOf="parent">
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvAbout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                app:layout_constraintEnd_toStartOf="@+id/layoutConnectionDetails"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:listitem="@layout/layout_profile_data_lines" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layoutConnectionDetails"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/connection"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
+                    android:fontFamily="@font/poppins"
+                    android:text="Connections : 17"
+                    android:textColor="@color/app_color"
+                    android:textSize="12sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/closeFriend"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="@font/poppins"
+                    android:text="Close Friend"
+                    android:textColor="@color/app_color"
+                    android:textSize="12sp"
+                    app:layout_constraintStart_toStartOf="@+id/connection"
+                    app:layout_constraintTop_toBottomOf="@+id/connection" />
+
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/closeedit"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginTop="8dp"
+                    android:src="@drawable/ic_post_edit"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/closeFriend"
+                    app:layout_constraintStart_toEndOf="@+id/closeFriend"
+                    app:layout_constraintTop_toBottomOf="@+id/connection"
+                    app:tint="@color/app_color" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvsince"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Connected since 2007"
+            android:gravity="center"
+            android:visibility="gone"
+            android:textColor="@color/grey1"
+            app:layout_constraintTop_toBottomOf="@+id/layoutabout"/>
 
         <View
             android:id="@+id/view2"
@@ -31,7 +100,7 @@
             android:background="@color/colorGray"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rvAbout" />
+            app:layout_constraintTop_toBottomOf="@+id/tvsince" />
 
 
         <androidx.constraintlayout.widget.ConstraintLayout

@@ -44,7 +44,10 @@ class ActivityCategoryCreate : BaseActivity(), AdapterCategory.Callbackk {
         }
 
         binding.btnAdd.setOnClickListener {
-                hitAddEditApi()
+            hitAddEditApi()
+            isId = ""
+            isEdit = false
+            binding.etCategoryName.setText(" ")
         }
 
 
