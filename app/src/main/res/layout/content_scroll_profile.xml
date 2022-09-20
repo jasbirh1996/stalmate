@@ -11,39 +11,27 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvAbout"
+            android:background="@color/white"
+            android:padding="@dimen/dp_10"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:listitem="@layout/layout_profile_data_lines" />
 
 
-        <View
-            android:id="@+id/view2"
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="20dp"
-            android:background="@color/colorGray"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rvAbout" />
-
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layoutFollowersFolling"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
+
+            android:background="@color/white"
+            android:padding="@dimen/dp_10"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/view2">
+            app:layout_constraintTop_toBottomOf="@+id/rvAbout">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/layoutFollowers"
@@ -116,15 +104,15 @@
 
             <Button
                 android:id="@+id/buttonEditProfile"
-                android:background="@drawable/custum_button_background"
                 android:layout_width="130dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/custum_button_background"
                 android:text="@string/edit_profile"
+                android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:visibility="gone"
-                android:layout_marginTop="5dp"
                 app:backgroundTint="@null"
-                android:textAllCaps="false"
                 app:layout_constraintBottom_toBottomOf="@+id/layoutFollowing"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
@@ -223,12 +211,11 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_friend"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:background="@color/white"
             android:padding="@dimen/dp_10"
             app:layout_constraintEnd_toEndOf="parent"
@@ -252,7 +239,7 @@
                     android:textColor="@color/black"
                     android:textSize="14sp"
                     app:layout_constraintStart_toStartOf="parent"
-                     app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tvFriendCount"

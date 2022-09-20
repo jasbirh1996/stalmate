@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Handler
 import android.os.Looper
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -78,6 +80,10 @@ class FragmentOTPEnter : BaseFragment() {
 
 
         binding.btnProcess.setOnClickListener {
+
+
+
+
             /*Otp Verify Api Call*/
 
             if (binding.pinView.text.toString() == "1234") {
@@ -91,6 +97,26 @@ class FragmentOTPEnter : BaseFragment() {
                 makeToast("Please Enter Valid Otp")
             }
         }
+
+
+        binding.pinView.addTextChangedListener(object :TextWatcher{
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+                if (p0!=null && p0.length==4){
+                    hideKeyboard(binding.root)
+                }
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+
+            }
+
+        })
+
     }
 
     private fun getOtpRegistrationApiCall() {

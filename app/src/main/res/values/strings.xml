@@ -645,15 +645,15 @@
     </string-array>
 
     <string-array name="date">
-        <item>02</item>
-        <item>01</item>
-        <item>03</item>
-        <item>04</item>
-        <item>05</item>
-        <item>06</item>
-        <item>07</item>
-        <item>08</item>
-        <item>09</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
         <item>11</item>
         <item>12</item>
         <item>13</item>
@@ -678,19 +678,48 @@
     </string-array>
 
     <string-array name="month">
-        <item><font fgcolor="#B7B7B7">Jan</font></item>
-        <item><font fgcolor="#B7B7B7">Fab</font></item>
-        <item><font fgcolor="#B7B7B7">Mar</font></item>
-        <item><font fgcolor="#B7B7B7">Apr</font></item>
+        <item><font fgcolor="#B7B7B7">January</font></item>
+        <item><font fgcolor="#B7B7B7">February</font></item>
+        <item><font fgcolor="#B7B7B7">March</font></item>
+        <item><font fgcolor="#B7B7B7">April</font></item>
         <item><font fgcolor="#B7B7B7">May</font></item>
-        <item><font fgcolor="#B7B7B7">Jun</font></item>
-        <item><font fgcolor="#B7B7B7">Jul</font></item>
-        <item><font fgcolor="#B7B7B7">Aug</font></item>
-        <item><font fgcolor="#B7B7B7">Sep</font></item>
-        <item><font fgcolor="#B7B7B7">Oct</font></item>
-        <item><font fgcolor="#B7B7B7">Nov</font></item>
-        <item><font fgcolor="#B7B7B7">Dec</font></item>
+        <item><font fgcolor="#B7B7B7">June</font></item>
+        <item><font fgcolor="#B7B7B7">July</font></item>
+        <item><font fgcolor="#B7B7B7">August</font></item>
+        <item><font fgcolor="#B7B7B7">September</font></item>
+        <item><font fgcolor="#B7B7B7">October</font></item>
+        <item><font fgcolor="#B7B7B7">November</font></item>
+        <item><font fgcolor="#B7B7B7">December</font></item>
     </string-array>
+
+    <string-array name="monthOfthreeOne">
+        <item><font fgcolor="#B7B7B7">January</font></item>
+        <item><font fgcolor="#B7B7B7">February</font></item>
+        <item><font fgcolor="#B7B7B7">March</font></item>
+        <item><font fgcolor="#B7B7B7">April</font></item>
+        <item><font fgcolor="#B7B7B7">May</font></item>
+        <item><font fgcolor="#B7B7B7">June</font></item>
+        <item><font fgcolor="#B7B7B7">July</font></item>
+        <item><font fgcolor="#B7B7B7">August</font></item>
+        <item><font fgcolor="#B7B7B7">September</font></item>
+        <item><font fgcolor="#B7B7B7">October</font></item>
+        <item><font fgcolor="#B7B7B7">November</font></item>
+        <item><font fgcolor="#B7B7B7">December</font></item>
+    </string-array>
+
+    <string-array name="monthOfThirty">
+        <item><font fgcolor="#B7B7B7">January</font></item>
+        <item><font fgcolor="#B7B7B7">March</font></item>
+        <item><font fgcolor="#B7B7B7">May</font></item>
+        <item><font fgcolor="#B7B7B7">July</font></item>
+        <item><font fgcolor="#B7B7B7">August</font></item>
+        <item><font fgcolor="#B7B7B7">October</font></item>
+        <item><font fgcolor="#B7B7B7">December</font></item>
+    </string-array>
+    <string-array name="monthOfTwentyEight">
+        <item><font fgcolor="#B7B7B7">February</font></item>
+    </string-array>
+
 
 
     <string-array name="year">

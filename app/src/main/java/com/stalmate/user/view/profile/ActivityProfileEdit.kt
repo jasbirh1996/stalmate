@@ -21,6 +21,8 @@ import com.stalmate.user.commonadapters.AdapterFeed
 import com.stalmate.user.databinding.ActivityProfileEditBinding
 import com.stalmate.user.model.*
 import com.stalmate.user.utilities.ImageLoaderHelperGlide
+import com.stalmate.user.utilities.PriceFormatter
+import com.stalmate.user.utilities.ValidationHelper
 import com.stalmate.user.view.dialogs.DialogAddEditEducation
 import com.stalmate.user.view.dialogs.DialogAddEditProfession
 import com.wedguruphotographer.adapter.CustumSpinAdapter
@@ -28,7 +30,7 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
-import kotlin.collections.HashMap
+import java.util.*
 
 class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
     ProfessionListAdapter.Callbackk,
@@ -37,20 +39,12 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
     private lateinit var binding: ActivityProfileEditBinding
     var WRITE_REQUEST_CODE = 100
     private var GANDER: String = ""
-    var dates: String = ""
-    var month: String = ""
-    var year: String = ""
+
     var merriage: String = ""
     var permissions =
         arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
     lateinit var userData: ModelUser
-    var spinnerArrayFeb = arrayOf("Feb")
-    var spinnerArrayFull = arrayOf("Jan", "Mar", "May", "July", "Aug", "Oct", "Dec")
-    var spinnerArrayFullSemihalf = arrayOf("Apr", "Jun", "Sep", "Nov")
     var marriageStatus = arrayOf("Single", "Marriage")
-    var spinnerArrayFullhalf =
-        arrayOf("jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
-    var spinnerArrayBlank = arrayOf("")
     var imageFile: File? = null
     var isCoverImage = false
     private lateinit var educationAdapter: EducationListAdapter
@@ -61,7 +55,7 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
 
     private lateinit var marriageAdapter: CustumSpinAdapter
     val marriageList: ArrayList<ModelCustumSpinner> = ArrayList<ModelCustumSpinner>()
-    private lateinit var selectedMarriageStatus: ModelCustumSpinner
+    private  var selectedMarriageStatus=""
 
     lateinit var feedAdapter: AdapterFeed
     override fun onClick(viewId: Int, view: View?) {
@@ -72,25 +66,9 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_profile_edit)
+        setupSpinnerListener()
         getUserProfileData()
 
-        binding.layout.tvmarriage.setOnItemSelectedListener(object :
-            AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View,
-                position: Int,
-                id: Long
-            ) {
-
-                selectedMarriageStatus = parent!!.getItemAtPosition(position) as ModelCustumSpinner
-
-                merriage = selectedMarriageStatus.name
-
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
-        })
 
 
         feedAdapter = AdapterFeed(networkViewModel, this, this)
@@ -134,108 +112,6 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
             }
         }
 
-        binding.layout.spDate.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                p0: AdapterView<*>?,
-                p1: View?,
-                position: Int,
-                p3: Long
-            ) {
-                dates = p0!!.getItemAtPosition(position).toString()
-
-                Log.d("jcaujc", dates)
-                if (dates == "31") {
-
-                    val dataAdapter: ArrayAdapter<String> = ArrayAdapter(
-                        this@ActivityProfileEdit, android.R.layout.simple_spinner_item,
-                        spinnerArrayFull
-                    )
-
-                    // Drop down layout style - list view with radio button
-                    dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-                    // attaching data adapter to spinner
-                    binding.layout.spMonth.setAdapter(dataAdapter);
-                } else if (dates == "30") {
-                    val dataAdapter: ArrayAdapter<String> = ArrayAdapter(
-                        this@ActivityProfileEdit,
-                        android.R.layout.simple_spinner_item,
-                        spinnerArrayFullSemihalf
-                    )
-
-                    // Drop down layout style - list view with radio button
-                    dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-                    // attaching data adapter to spinner
-                    binding.layout.spMonth.setAdapter(dataAdapter);
-                } else if (dates == "28") {
-                    val dataAdapter: ArrayAdapter<String> = ArrayAdapter(
-                        this@ActivityProfileEdit,
-                        android.R.layout.simple_spinner_item,
-                        spinnerArrayFeb
-                    )
-
-                    // Drop down layout style - list view with radio button
-                    dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-                    // attaching data adapter to spinner
-                    binding.layout.spMonth.setAdapter(dataAdapter);
-                } else if (dates != "30" || dates != "31" || dates != "28") {
-                    val dataAdapter: ArrayAdapter<String> = ArrayAdapter(
-                        this@ActivityProfileEdit,
-                        android.R.layout.simple_spinner_item,
-                        spinnerArrayFullhalf
-                    )
-
-                    // Drop down layout style - list view with radio button
-                    dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-                    // attaching data adapter to spinner
-                    binding.layout.spMonth.setAdapter(dataAdapter)
-                }
-
-            }
-
-            override fun onNothingSelected(p0: AdapterView<*>?) {
-
-            }
-        }
-
-        binding.layout.spMonth.onItemSelectedListener =
-            object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    p0: AdapterView<*>?,
-                    p1: View?,
-                    position: Int,
-                    p3: Long
-                ) {
-                    month = p0!!.getItemAtPosition(position).toString()
-                    Log.d("jcaujc", month)
-                }
-
-                override fun onNothingSelected(p0: AdapterView<*>?) {
-
-                }
-
-            }
-
-
-        binding.layout.spYear.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                p0: AdapterView<*>?,
-                p1: View?,
-                position: Int,
-                p3: Long
-            ) {
-                year = p0!!.getItemAtPosition(position).toString()
-                Log.d("jcaujc", year)
-            }
-
-            override fun onNothingSelected(p0: AdapterView<*>?) {
-
-            }
-        }
-
         clickLister()
     }
 
@@ -255,7 +131,7 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
 
         binding.btnCrateAccount.setOnClickListener {
 
-            if (!this::selectedMarriageStatus.isInitialized) {
+            if (ValidationHelper.isNull(selectedMarriageStatus)) {
                 makeToast("Please select marriage Status")
             } else {
                 updateProfileApiHit()
@@ -303,12 +179,18 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
         }
 
         binding.buttonSeemoreProfile.setOnClickListener {
-            startActivity(IntentHelper.getPhotoGalleryAlbumScreen(this)!!.putExtra("viewType","viewListing").putExtra("type","profile_img"))
+            startActivity(
+                IntentHelper.getPhotoGalleryAlbumScreen(this)!!.putExtra("viewType", "viewListing")
+                    .putExtra("type", "profile_img")
+            )
 
         }
 
         binding.buttonSeeMoreCover.setOnClickListener {
-            startActivity(IntentHelper.getPhotoGalleryAlbumScreen(this)!!.putExtra("viewType","viewListing").putExtra("type","cover_img"))
+            startActivity(
+                IntentHelper.getPhotoGalleryAlbumScreen(this)!!.putExtra("viewType", "viewListing")
+                    .putExtra("type", "cover_img")
+            )
 
         }
 
@@ -332,7 +214,7 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
             getRequestBody(binding.layout.etLastName.text.toString()),
             getRequestBody(binding.layout.bio.text.toString()),
             /*getRequestBody(binding.layout.etNumber.text.toString()),*/
-            getRequestBody(year + "-" + month + "-" + dates),
+            getRequestBody(selectedYear +"-" + selectedMonth + "-" + selectedDay),
             getRequestBody(merriage),
             getRequestBody(binding.layout.etHowTown.text.toString()),
             getRequestBody(binding.layout.etCurrentCity.text.toString()),
@@ -444,7 +326,6 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
                                 binding.layoutBlockList.visibility = View.GONE
                             }
                         })
-
                     if (it.results.isEmpty()) {
                         binding.layoutBlockList.visibility = View.GONE
                     } else {
@@ -463,7 +344,7 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
 
         hitphotoListApi("profile_img")
         hitphotoListApi("cover_img")
-
+        fetchDOB(userData.results.dob)
         binding.layout.etName.setText(userData.results.first_name)
         binding.layout.etLastName.setText(userData.results.last_name)
         binding.layout.bio.setText(userData.results.about)
@@ -487,53 +368,13 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
 
 
 
-        if (userData.results.profile_data[0].marital_status == "Single") {
-            var marriageType = ModelCustumSpinner(id = "0", name = "Single")
-            marriageList.add(marriageType)
-            marriageList.add(ModelCustumSpinner(id = "0", name = "Marriage"))
-
-        } else if (userData.results.profile_data[0].marital_status == "Marriage") {
-            var marriageType = ModelCustumSpinner(id = "0", name = "Marriage")
-            marriageList.add(marriageType)
-            marriageList.add(ModelCustumSpinner(id = "0", name = "Single"))
-        } else {
-            var marriageType = ModelCustumSpinner(id = "0", name = "Marital Status")
-            marriageList.add(marriageType)
-            marriageList.add(ModelCustumSpinner(id = "0", name = "Single"))
-            marriageList.add(ModelCustumSpinner(id = "0", name = "Marriage"))
-
-        }
-
-
-
-
-        marriageAdapter =
-            CustumSpinAdapter(this, android.R.layout.simple_spinner_item, marriageList, false)
-        binding.layout.tvmarriage.setAdapter(marriageAdapter)
-
-
-
         binding.etWebsite.setText(userData.results.company)
-
-        if (userData.results.profile_data[0].marital_status == "Male") {
-            binding.layout.rdmale.setChecked(true)
-        } else if (userData.results.profile_data[0].marital_status == "Female") {
-            binding.layout.rdFamel.setChecked(true)
-        } else if (userData.results.profile_data[0].marital_status == "Other") {
-            binding.layout.rdOthers.setChecked(true)
-        }
-
-
-
 
 
         educationAdapter = EducationListAdapter(networkViewModel, this, this)
         binding.layout.rvEducation.adapter = educationAdapter
         binding.layout.rvEducation.layoutManager = LinearLayoutManager(this)
-
         educationAdapter.submitList(userData.results.profile_data.get(0).education)
-
-
         professionListAdapter = ProfessionListAdapter(networkViewModel, this, this)
         binding.layout.rvProfession.adapter = professionListAdapter
         binding.layout.rvProfession.layoutManager = LinearLayoutManager(this)
@@ -586,8 +427,6 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
             })
         dialogAddEditProfession.show()
     }
-
-
     override fun onClickOnViewComments(postId: Int) {
 
     }
@@ -637,4 +476,150 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
 
         }
     }
+
+    var selectedDay="1"
+    var selectedMonth="January"
+    var selectedYear="1996"
+    lateinit var dataAdapter: ArrayAdapter<String>
+
+    fun fetchDOB(date:String){
+        val calender=Calendar.getInstance()
+        val datee=PriceFormatter.getDateObject(date)
+        calender.time=datee
+        selectedYear= calender.get(Calendar.YEAR).toString()
+        selectedMonth= PriceFormatter.getMonth(date)
+        selectedDay = calender.get(Calendar.DAY_OF_MONTH).toString()
+        val selectedYearIndex = getResources().getStringArray(R.array.year).indexOf(selectedYear.toString())
+        val selectedMonthIndex = getResources().getStringArray(R.array.month).indexOf(selectedMonth.toString())
+        val selectedDayIndex = getResources().getStringArray(R.array.date).indexOf(selectedDay.toString())
+        binding.layout.spYear.setSelection(selectedYearIndex)
+        binding.layout.spMonth.setSelection(selectedMonthIndex)
+        binding.layout.spDate.setSelection(selectedDayIndex)
+
+
+
+
+
+
+        if (userData.results.gender  == "Male") {
+            binding.layout.rdmale.isChecked=true
+        } else if (userData.results.gender  == "Female") {
+            binding.layout.rdFamel.isChecked=true
+        } else if (userData.results.gender  == "Other") {
+            binding.layout.rdOthers.isChecked=true
+        }
+
+        val selectedGenderIndex = resources.getStringArray(R.array.marrage).indexOf(userData.results.gender)
+        binding.layout.tvmarriage.setSelection(selectedGenderIndex)
+
+    }
+
+
+    fun setupSpinnerListener(){
+
+        binding.layout.spDate.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                p0: AdapterView<*>?,
+                p1: View?,
+                position: Int,
+                p3: Long
+            ) {
+                selectedDay = p0!!.getItemAtPosition(position).toString()
+                dataAdapter= ArrayAdapter(
+                    this@ActivityProfileEdit,
+                    android.R.layout.simple_spinner_item,
+                    resources.getStringArray(R.array.month)
+                )
+
+                if (selectedDay.toInt() ==31){
+                   dataAdapter= ArrayAdapter(
+                        this@ActivityProfileEdit,
+                        android.R.layout.simple_spinner_item,
+                        resources.getStringArray(R.array.monthOfthreeOne)
+                    )
+                }
+
+
+                if (selectedDay.toInt() ==30){
+                    dataAdapter= ArrayAdapter(
+                        this@ActivityProfileEdit,
+                        android.R.layout.simple_spinner_item,
+                        resources.getStringArray(R.array.month)
+                    )
+                }
+
+                if (selectedDay.toInt() ==28){
+                    dataAdapter= ArrayAdapter(
+                        this@ActivityProfileEdit,
+                        android.R.layout.simple_spinner_item,
+                        resources.getStringArray(R.array.monthOfTwentyEight)
+                    )
+                }
+
+
+                // Drop down layout style - list view with radio button
+                dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+                // attaching data adapter to spinner
+                binding.layout.spMonth.setAdapter(dataAdapter)
+
+            }
+
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+
+            }
+        }
+
+        binding.layout.spMonth.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    p0: AdapterView<*>?,
+                    p1: View?,
+                    position: Int,
+                    p3: Long
+                ) {
+                    selectedMonth = p0!!.getItemAtPosition(position).toString()
+                    Log.d("jcaujc", selectedMonth)
+                }
+
+                override fun onNothingSelected(p0: AdapterView<*>?) {
+
+                }
+
+            }
+
+
+        binding.layout.spYear.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                p0: AdapterView<*>?,
+                p1: View?,
+                position: Int,
+                p3: Long
+            ) {
+                selectedYear = p0!!.getItemAtPosition(position).toString()
+                Log.d("jcaujc", selectedYear)
+            }
+
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+
+            }
+        }
+
+        binding.layout.tvmarriage.setOnItemSelectedListener(object :
+            AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View,
+                position: Int,
+                id: Long
+            ) {
+                selectedMarriageStatus = parent!!.getItemAtPosition(position).toString()
+                merriage = selectedMarriageStatus
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        })
+
+    }
+
 }

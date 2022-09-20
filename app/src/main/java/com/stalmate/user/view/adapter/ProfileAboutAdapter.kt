@@ -52,6 +52,10 @@ class ProfileAboutAdapter(
         RecyclerView.ViewHolder(binding.root) {
         fun bind(about: AboutProfileLine) {
 
+                if (ValidationHelper.isNull(about.key) && ValidationHelper.isNull(about.middle) && ValidationHelper.isNull(about.value)){
+
+                    itemView.layoutParams.height = 0
+                }else
 
             if (!ValidationHelper.isNull(about.key) && !ValidationHelper.isNull(about.middle)) {
                 binding.tvValue.text = " " + about.middle + " " + about.value
@@ -64,6 +68,9 @@ class ProfileAboutAdapter(
                 binding.tvValue.text = " " + about.value
                 binding.tvKey.text = about.key
                 binding.tvKey.visibility = View.VISIBLE
+            }else{
+
+                itemView.layoutParams.height = 0
             }
           /*  Glide.with(context)
                 .load(about.icon)
