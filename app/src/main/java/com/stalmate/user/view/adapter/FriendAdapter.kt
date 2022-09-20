@@ -173,6 +173,7 @@ class FriendAdapter(
             binding.tvMessge.text="Hi How are you? I am \n Stanley from yoga class"
 
 
+
         } else if (type.equals(Constants.TYPE_FRIEND_SUGGESTIONS)) {
             binding.layoutButtons.visibility = View.VISIBLE
             binding.buttonAccept.visibility = View.GONE
@@ -349,18 +350,25 @@ class FriendAdapter(
             R.drawable.user_placeholder
         )
 
-
-
-
-
-
-
-
-
-
-
-
         binding.tvUserName.text = friend.first_name
+        if (friend.profile_data[0].profession.isNotEmpty()){
+            binding.tvLineOne.text = friend.profile_data[0].profession[0].designation
+            binding.tvLineOne.visibility = View.VISIBLE
+        }else  if (friend.profile_data[0].education.isNotEmpty()){
+            binding.tvLineOne.text = friend.profile_data[0].education[0].sehool
+            binding.tvLineOne.visibility = View.VISIBLE
+        }
+
+        if (friend.mutual_friend.isNotEmpty()){
+            binding.tvMutualFirnds.text = friend.mutual_friend
+            binding.tvMutualFirnds.visibility = View.VISIBLE
+        }
+
+        if (!ValidationHelper.isNull(friend.profile_data[0].home_town)){
+            binding.tvLineTwo.text = friend.profile_data[0].home_town
+            binding.tvLineTwo.visibility = View.VISIBLE
+
+        }
 
 
     }

@@ -9,29 +9,110 @@
         android:layout_height="wrap_content">
 
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvAbout"
-            android:background="@color/white"
-            android:padding="@dimen/dp_10"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layoutabout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:listitem="@layout/layout_profile_data_lines" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvAbout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                app:layout_constraintEnd_toStartOf="@+id/layoutConnectionDetails"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:listitem="@layout/layout_profile_data_lines" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layoutConnectionDetails"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/connection"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
+                    android:fontFamily="@font/poppins"
+                    android:text="Connections : 17"
+                    android:textColor="@color/app_color"
+                    android:textSize="12sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/closeFriend"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="@font/poppins"
+                    android:text="Close Friend"
+                    android:textColor="@color/app_color"
+                    android:textSize="12sp"
+                    app:layout_constraintStart_toStartOf="@+id/connection"
+                    app:layout_constraintTop_toBottomOf="@+id/connection" />
+
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/closeedit"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginTop="8dp"
+                    android:src="@drawable/ic_post_edit"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/closeFriend"
+                    app:layout_constraintStart_toEndOf="@+id/closeFriend"
+                    app:layout_constraintTop_toBottomOf="@+id/connection"
+                    app:tint="@color/app_color" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvsince"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Connected since 2007"
+            android:gravity="center"
+            android:visibility="gone"
+            android:textColor="@color/grey1"
+            app:layout_constraintTop_toBottomOf="@+id/layoutabout"/>
+
+        <View
+            android:id="@+id/view2"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
+            android:background="@color/colorGray"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvsince" />
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layoutFollowersFolling"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
-
-            android:background="@color/white"
-            android:padding="@dimen/dp_10"
+            android:layout_marginEnd="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rvAbout">
+            app:layout_constraintTop_toBottomOf="@+id/view2">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/layoutFollowers"
@@ -104,15 +185,15 @@
 
             <Button
                 android:id="@+id/buttonEditProfile"
+                android:background="@drawable/custum_button_background"
                 android:layout_width="130dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:background="@drawable/custum_button_background"
                 android:text="@string/edit_profile"
-                android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:visibility="gone"
+                android:layout_marginTop="5dp"
                 app:backgroundTint="@null"
+                android:textAllCaps="false"
                 app:layout_constraintBottom_toBottomOf="@+id/layoutFollowing"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
@@ -211,11 +292,12 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_friend"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
             android:background="@color/white"
             android:padding="@dimen/dp_10"
             app:layout_constraintEnd_toEndOf="parent"
@@ -285,53 +367,53 @@
                 app:layout_constraintTop_toBottomOf="@+id/etSearchFriend" />
 
 
-        <!--    <com.google.android.material.tabs.TabLayout
-                android:id="@+id/photoTab"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="@+id/rvFriends"
-                app:layout_constraintTop_toBottomOf="@+id/rvFriends">
-
-                <com.google.android.material.tabs.TabItem
-                    android:id="@+id/tbPhtoso"
+            <!--    <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/photoTab"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Photos" />
+                    app:layout_constraintStart_toStartOf="@+id/rvFriends"
+                    app:layout_constraintTop_toBottomOf="@+id/rvFriends">
 
-                <com.google.android.material.tabs.TabItem
-                    android:id="@+id/tbalbums"
+                    <com.google.android.material.tabs.TabItem
+                        android:id="@+id/tbPhtoso"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Photos" />
+
+                    <com.google.android.material.tabs.TabItem
+                        android:id="@+id/tbalbums"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Albums" />
+
+                </com.google.android.material.tabs.TabLayout>
+
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvPhotos"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Albums" />
-
-            </com.google.android.material.tabs.TabLayout>
-
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tvPhotos"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_10"
-                android:fontFamily="@font/poppins_medium"
-                android:text="Photos"
-                android:visibility="gone"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                app:layout_constraintStart_toStartOf="@+id/rvFriends"
-                app:layout_constraintTop_toBottomOf="@+id/rvFriends" />
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:fontFamily="@font/poppins_medium"
+                    android:text="Photos"
+                    android:visibility="gone"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    app:layout_constraintStart_toStartOf="@+id/rvFriends"
+                    app:layout_constraintTop_toBottomOf="@+id/rvFriends" />
 
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvPhotoAlbumData"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                android:orientation="horizontal"
-                tools:itemCount="5"
-                android:layout_marginTop="@dimen/dp_10"
-                app:layout_constraintStart_toStartOf="@+id/tvPhotos"
-                app:layout_constraintTop_toBottomOf="@+id/photoTab"/>
--->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvPhotoAlbumData"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    android:orientation="horizontal"
+                    tools:itemCount="5"
+                    android:layout_marginTop="@dimen/dp_10"
+                    app:layout_constraintStart_toStartOf="@+id/tvPhotos"
+                    app:layout_constraintTop_toBottomOf="@+id/photoTab"/>
+    -->
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"

@@ -2,24 +2,20 @@ package com.stalmate.user.view.dashboard
 
 
 import android.content.Intent
-import com.simform.custombottomnavigation.Model
-
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
-import com.google.gson.Gson
-import com.irfaan008.irbottomnavigation.SpaceItem
+import com.simform.custombottomnavigation.Model
 import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
-import com.stalmate.user.base.App
 import com.stalmate.user.databinding.ActivityDashboardBinding
-import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.view.dashboard.Chat.FragmentChatNCallBase
 import com.stalmate.user.view.dashboard.Friend.FragmentFriend
 import com.stalmate.user.view.dashboard.HomeFragment.FragmentHome
@@ -223,27 +219,29 @@ class ActivityDashboard : AppCompatActivity(), FragmentHome.Callback {
 
     override fun onCLickOnMenuButton() {
         toggleDrawer()
-
     }
 
-
     private fun toggleDrawer() {
-        if (binding.drawerLayout.isDrawerOpen(Gravity.RIGHT)) {
-            binding.drawerLayout.closeDrawer(Gravity.RIGHT);
+
+        val drawerLayout: DrawerLayout = findViewById(R.id.drawerLayout)
+        if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
+            drawerLayout.closeDrawer(GravityCompat.END)
+            onBackPressed()
         } else {
-            binding.drawerLayout.openDrawer(Gravity.RIGHT
-            );
+            drawerLayout.openDrawer(GravityCompat.END)
         }
     }
 
+
     override fun onBackPressed() {
-        if (binding.drawerLayout.isDrawerOpen(Gravity.RIGHT)) {
+        if (binding.drawerLayout.isDrawerOpen(GravityCompat.END)) {
             toggleDrawer()
         } else {
            super.onBackPressed()
         }
 
     }
+
 
 
 
@@ -258,9 +256,11 @@ class ActivityDashboard : AppCompatActivity(), FragmentHome.Callback {
             val ft = manager.beginTransaction()
             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
             ft.replace(binding.frameDrawer.id, fragment, fragmentTag)
+
            // ft.addToBackStack(backStateName)
+
             ft.commit()
         }
-
     }
+
 }

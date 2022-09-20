@@ -115,7 +115,7 @@ class FragmentSingleSearch(var Type:String) : BaseFragment(), SingleSearchAdapte
     fun search(searchData:String){
        this.searchData=searchData
         if (!ValidationHelper.isNull(searchData)){
-            binding.tvValue.text =searchData
+            binding.tvValue.text ="You Want Add"+ " "+searchData
             hitSearchListApi(Type)
             Log.d("asdasdasd","notempty")
             binding.rvList.visibility=View.VISIBLE

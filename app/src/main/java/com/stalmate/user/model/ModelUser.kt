@@ -29,6 +29,7 @@ data class User(
     var following_count: Int,
     val email: String,
     val first_name: String,
+    val mutual_friend: String,
     val id: String,
     val img_url: String,
     val gender:String,

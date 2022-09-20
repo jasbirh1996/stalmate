@@ -360,6 +360,8 @@ class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk,
             binding.layoutButtonsAcceptReject.visibility = View.GONE
             binding.layoutTopControlls.visibility = View.VISIBLE
             binding.layoutButtonsFriends.visibility = View.VISIBLE
+            binding.layout.layoutConnectionDetails.visibility = View.VISIBLE
+            binding.layout.tvsince.visibility = View.VISIBLE
             binding.buttonFriend.text = "Unfriend"
 
         } else {//not a friend
