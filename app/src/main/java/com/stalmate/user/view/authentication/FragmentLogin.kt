@@ -19,6 +19,7 @@ import com.stalmate.user.base.App
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentLoginBinding
 import com.stalmate.user.utilities.Constants
+import com.stalmate.user.utilities.CustumEditText
 import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.utilities.ValidationHelper
 import com.stalmate.user.utilities.ValidationHelper.isValidEmail
@@ -34,26 +35,34 @@ class FragmentLogin : BaseFragment() {
 
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         // Inflate the layout for this fragment
         var view = inflater.inflate(R.layout.fragment_login, container, false)
         binding = DataBindingUtil.bind<FragmentLoginBinding>(view)!!
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        
+
 
         /*click on page */
-       binding.forgetPassword.setOnClickListener {
-           findNavController().navigate(R.id.fragmentForgetPassword)
+        binding.forgetPassword.setOnClickListener {
+            findNavController().apply {
+                navigate(R.id.fragmentForgetPassword)
 
-       }
+            }
+
+        }
 
         binding.btnLogin.setOnClickListener {
-            if (isValid()){
+            if (isValid()) {
                 hitLoginApi()
             }
         }
@@ -62,15 +71,15 @@ class FragmentLogin : BaseFragment() {
             @SuppressLint("ResourceAsColor")
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
 
-                if (isValidEmail(binding.etEmail.text.toString())){
+                if (isValidEmail(binding.etEmail.text.toString())) {
                     binding.appCompatImageView12.visibility = View.VISIBLE
-                }else{
+                } else {
                     binding.appCompatImageView12.visibility = View.GONE
                 }
 
             }
 
-            override fun beforeTextChanged(s: CharSequence,start: Int,count: Int,after: Int) {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
 
             }
 
@@ -79,38 +88,46 @@ class FragmentLogin : BaseFragment() {
             }
         })
 
-
         binding.createAccount.setOnClickListener {
-            findNavController().navigate(R.id.fragmentSignUp)
+            findNavController().apply {
+                navigate(R.id.fragmentSignUp)
+                backQueue.clear()
+            }
         }
+
+        CustumEditText.setup(binding.filledTextEmail,binding.etEmail)
+        CustumEditText.setup(binding.filledTextPassword,binding.etPassword)
     }
 
     private fun hitLoginApi() {
         Constants.TYPE_ALL_FOLLOWERS_FOLLOWING
         val hashMap = HashMap<String, String>()
-        hashMap[Constants.PARAMETER_EMAIL] =binding.etEmail.text.toString()
-        hashMap["password"] =binding.etPassword.text.toString()
+        hashMap[Constants.PARAMETER_EMAIL] = binding.etEmail.text.toString()
+        hashMap["password"] = binding.etPassword.text.toString()
         hashMap["deviceID"] = ""
         hashMap["deviceToken"] = App.getInstance().firebaseToken.toString()
         hashMap["deviceType"] = "android"
 
         binding.progressBar.visibility = View.VISIBLE
         networkViewModel.login(hashMap)
-        networkViewModel.loginData.observe(requireActivity()){
+        networkViewModel.loginData.observe(requireActivity()) {
 
             it?.let {
                 val message = it.message
 
-                if (it.status){
+                if (it.status) {
                     PrefManager.getInstance(requireContext())!!.keyIsLoggedIn = true
                     PrefManager.getInstance(requireContext())!!.userDetail = it
                     App.getInstance().setupApis()
                     binding.progressBar.visibility = View.GONE
-                    Log.d("token=======", PrefManager.getInstance(App.getInstance())!!.userDetail.results[0].token)
+                    Log.d(
+                        "token=======",
+                        PrefManager.getInstance(App.getInstance())!!.userDetail.results[0].token
+                    )
                     startActivity(IntentHelper.getDashboardScreen(context))
-                    activity!!.finish()
+                    requireActivity().finish()
                     makeToast(message)
-                }else{
+                } else {
 
                     binding.progressBar.visibility = View.GONE
                     makeToast(message)
@@ -121,23 +138,20 @@ class FragmentLogin : BaseFragment() {
     }
 
 
-
-    fun isValid():Boolean{
-        if (ValidationHelper.isNull(binding.etEmail.text.toString())){
+    fun isValid(): Boolean {
+        if (ValidationHelper.isNull(binding.etEmail.text.toString())) {
             makeToast(getString(R.string.email_error_toast))
             return false;
-        }else if (!isValidEmail(binding.etEmail.text.toString())){
+        } else if (!isValidEmail(binding.etEmail.text.toString())) {
             makeToast(getString(R.string.please_enter_valid_email))
             return false;
-        }else if (ValidationHelper.isNull(binding.etPassword.text.toString())) {
+        } else if (ValidationHelper.isNull(binding.etPassword.text.toString())) {
             makeToast(getString(R.string.password_error_toast))
             return false
         }
 
         return true
     }
-
-
 
 
 }

@@ -45,6 +45,7 @@
         <item name="android:fontFamily">@font/poppins</item>
         <item name="android:textColor">@color/app_color</item>
         <item name="hintTextColor">@color/grey1</item>
+
        <!-- <item name="android:background">@drawable/secondary_button_background</item>-->
     </style>
 

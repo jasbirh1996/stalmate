@@ -71,7 +71,7 @@ class SearchedUserAdapter(
         val sizeNew = list.size
         notifyItemRangeChanged(size, sizeNew)
     }
-    fun setList(users: List<User>) {
+    fun submitList(users: List<User>) {
         list.clear()
         list.addAll(users)
         notifyDataSetChanged()

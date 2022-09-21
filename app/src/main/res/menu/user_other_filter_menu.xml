@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/actionFilterCollege"
+        android:title="College"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/actionFilterWorkplace"
+        android:title="Workplace"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/actionFilterInterest"
+        android:title="Interest"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/actionFilterLocation"
+        android:title="Location"
+        app:showAsAction="never"/>
+</menu>

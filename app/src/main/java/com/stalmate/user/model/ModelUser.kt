@@ -30,9 +30,9 @@ data class User(
     val email: String,
     val first_name: String,
     val mutual_friend: String,
-    val gender: String,
     val id: String,
     val img_url: String,
+    val gender:String,
     val last_name: String,
     val number: String,
     val profile_data: List<ProfileData>,
@@ -41,7 +41,8 @@ data class User(
     val schoolandcollege: String,
     val schoolandcollegename: String,
     val albums_img: ArrayList<AlbumImage>,
-    val url: String
+    val url: String,
+    val mes:String,
 ) : Serializable
 
 data class Photo(

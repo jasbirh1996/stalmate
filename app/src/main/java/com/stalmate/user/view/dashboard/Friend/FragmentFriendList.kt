@@ -20,7 +20,10 @@ class FragmentFriendList(var type: String, var subtype: String,var userId:String
     lateinit var friendAdapter: FriendAdapter
     lateinit var binding: FragmentFriendListBinding
     var sortBy=""
+    var filter=""
     var currentPage=1
+    var isLastPage = false
+    var isLoading = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true);
@@ -54,6 +57,10 @@ class FragmentFriendList(var type: String, var subtype: String,var userId:String
         binding.ivFilterIcon.setOnClickListener {
             showMenuFilter(binding.ivFilterIcon)
         }
+        binding.tvFilter.setOnClickListener {
+            showMenuOtherFilter(binding.tvFilter)
+        }
+
         hitApi(true)
 
 
@@ -64,8 +71,30 @@ class FragmentFriendList(var type: String, var subtype: String,var userId:String
 
         }
 
+        binding!!.nestedScrollView.getViewTreeObserver()
+            .addOnScrollChangedListener(ViewTreeObserver.OnScrollChangedListener {
+                val view =
+                    binding!!.nestedScrollView.getChildAt(binding!!.nestedScrollView.getChildCount() - 1) as View
+                val diff: Int =
+                    view.bottom - (binding!!.nestedScrollView.getHeight() + binding!!.nestedScrollView
+                        .getScrollY())
+                if (diff == 0) {
+                    if (!isLastPage) {
+                        binding!!.progressLoading.visibility = View.VISIBLE
+                        loadMoreItems()
+                    }
+                }
+            })
+
 
     }
+
+    private fun loadMoreItems() {
+        isLoading = true
+        currentPage++
+        hitApi(false)
+    }
+
 
     fun hitApi(isFresh:Boolean){
 
@@ -79,8 +108,9 @@ class FragmentFriendList(var type: String, var subtype: String,var userId:String
         hashmap.put("sub_type", subtype)
         hashmap.put("search", "")
         hashmap.put("page", currentPage.toString())
-        hashmap.put("limit", "")
+        hashmap.put("limit", "20")
         hashmap.put("sortBy",sortBy)
+        hashmap.put("filter",filter)
 
         networkViewModel.getFriendList(hashmap)
         networkViewModel.friendLiveData.observe(viewLifecycleOwner, Observer {
@@ -90,19 +120,45 @@ class FragmentFriendList(var type: String, var subtype: String,var userId:String
 
                 binding.shimmerViewContainer.stopShimmer()
                 binding.shimmerViewContainer.visibility=View.GONE
-                if (isFresh){
-                    friendAdapter.submitList(it!!.results)
+
+                if (it!!.results.isNotEmpty()){
+
+                    if (isFresh){
+                        friendAdapter.submitList(it.results as java.util.ArrayList<User>)
+                    }else{
+                        friendAdapter.addToList(it.results as java.util.ArrayList<User>)
+                    }
+
+                    isLastPage=false
+                    if (it.results.size<6){
+                        binding.progressLoading.visibility = View.GONE
+                    }else{
+                        binding.progressLoading.visibility = View.VISIBLE
+                    }
                 }else{
-                    friendAdapter.submitList(it!!.results)
+                    if (isFresh){
+                        friendAdapter.submitList(it.results as java.util.ArrayList<User>)
+                    }
+                    isLastPage=true
+                    binding.progressLoading.visibility = View.GONE
+
+
+
                 }
 
-                if (it.results.isEmpty()){
 
+                if (it.results.isEmpty()){
                     binding.layoutNoData.visibility=View.VISIBLE
                 }else{
                     binding.ivFilterIcon.visibility=View.VISIBLE
+                    binding.tvFilter.visibility=View.VISIBLE
                     binding.layoutNoData.visibility=View.GONE
                 }
+
+
+
+
+
             }
         })
     }
@@ -120,33 +176,13 @@ class FragmentFriendList(var type: String, var subtype: String,var userId:String
 
 
 
-
     override fun onClickOnProfile(friend: User) {
-
-
-
-
-      startActivity(
-            IntentHelper.getOtherUserProfileScreen(requireContext())!!.putExtra("id", friend.id)
-        )
+      startActivity(IntentHelper.getOtherUserProfileScreen(requireContext())!!.putExtra("id", friend.id))
     }
 
 
 
-
-
-
-
-
-
-
     fun showMenuFilter(v : View){
-
-
-
-
-
-
         val popup = PopupMenu(requireContext(), v)
         val inflater: MenuInflater = popup.menuInflater
         inflater.inflate(R.menu.user_filter_menu, popup.menu)
@@ -167,6 +203,41 @@ class FragmentFriendList(var type: String, var subtype: String,var userId:String
                 }
                 R.id.actionSortByLatest-> {
                     sortBy="recentlyAdded"
+                    currentPage=1
+                    hitApi(true)
+                }
+            }
+            true
+        }
+        popup.show()
+    }
+
+
+    fun showMenuOtherFilter(v : View){
+        val popup = PopupMenu(requireContext(), v)
+        val inflater: MenuInflater = popup.menuInflater
+        inflater.inflate(R.menu.user_other_filter_menu, popup.menu)
+        popup.setOnMenuItemClickListener { menuItem ->
+
+
+            when(menuItem.itemId){
+                R.id.actionFilterLocation-> {
+                    filter="location"
+                    currentPage=1
+                    hitApi(true)
+                }
+                R.id.actionFilterCollege-> {
+                    filter="college"
+                    currentPage=1
+                    hitApi(true)
+                }
+                R.id.actionFilterInterest-> {
+                    filter="interest"
+                    currentPage=1
+                    hitApi(true)
+                }
+                R.id.actionFilterWorkplace-> {
+                    filter="workplace"
                     currentPage=1
                     hitApi(true)
                 }

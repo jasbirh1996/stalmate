@@ -21,6 +21,8 @@ import com.stalmate.user.base.App
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentsignupBinding
 import com.stalmate.user.databinding.TermandconditionpopupBinding
+import com.stalmate.user.utilities.CustumEditText
+import com.stalmate.user.utilities.PriceFormatter
 import com.stalmate.user.utilities.ValidationHelper
 import java.util.*
 import java.util.regex.Matcher
@@ -32,16 +34,8 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
     private lateinit var bindingpopup: TermandconditionpopupBinding
     var PASSWORDPATTERN = "\"^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$\""
     private var GANDER: String = ""
-    val c = Calendar.getInstance()
-    var dates: String = ""
-    var month: String = ""
-    var currentYear: String = ""
-    var year: String = ""
-    var spinnerArrayFeb = arrayOf("Feb")
-    var spinnerArrayFullTwentyEhight = arrayOf("Jan", "Mar", "May", "July", "Aug", "Oct", "Dec")
-    var spinnerArrayFullSemihalf = arrayOf("Apr", "Jun", "Sep", "Nov")
-    var spinnerArrayFullhalf = arrayOf("jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
-    var spinnerArrayBlank = arrayOf("")
+    var currentYear=""
+    var year=""
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,18 +57,10 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragmentsignup, container, false)
         binding = DataBindingUtil.bind(view)!!
-
+        setupSpinnerListener()
         val builder = AlertDialog.Builder(requireContext(), R.style.CustomAlertDialog).create()
         val views = layoutInflater.inflate(R.layout.termandconditionpopup, null)
         bindingpopup = DataBindingUtil.bind(views)!!
-
-
-
-        val dataAdapter: ArrayAdapter<String> = ArrayAdapter(
-            requireContext(),
-            android.R.layout.simple_spinner_item,
-            spinnerArrayFullhalf
-        )
 
         // Drop down layout style - list view with radio button
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -128,76 +114,6 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
                 ).show()
             }*/
 
-            binding.spDate.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    p0: AdapterView<*>?,
-                    p1: View?,
-                    position: Int,
-                    p3: Long
-                ) {
-                    dates = p0!!.getItemAtPosition(position).toString()
-
-
-                    Log.d("jcaujc", dates)
-                    if (dates == "31") {
-
-                        val dataAdapter: ArrayAdapter<String> = ArrayAdapter(
-                            requireContext(),
-                            android.R.layout.simple_spinner_item,
-                            spinnerArrayFullTwentyEhight
-                        )
-
-                        // Drop down layout style - list view with radio button
-                        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-                        // attaching data adapter to spinner
-                        binding.spMonth.setAdapter(dataAdapter);
-                    } else if (dates == "30") {
-                        val dataAdapter: ArrayAdapter<String> = ArrayAdapter(
-                            requireContext(),
-                            android.R.layout.simple_spinner_item,
-                            spinnerArrayFullTwentyEhight
-                        )
-
-                        // Drop down layout style - list view with radio button
-                        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-                        // attaching data adapter to spinner
-                        binding.spMonth.setAdapter(dataAdapter);
-                    } else if (dates == "28") {
-                        val dataAdapter: ArrayAdapter<String> = ArrayAdapter(
-                            requireContext(),
-                            android.R.layout.simple_spinner_item,
-                            spinnerArrayFullhalf
-                        )
-
-                        // Drop down layout style - list view with radio button
-                        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-                        // attaching data adapter to spinner
-                        binding.spMonth.setAdapter(dataAdapter);
-                    } else if (dates != "30" || dates != "31" || dates != "28") {
-                        val dataAdapter: ArrayAdapter<String> = ArrayAdapter(
-                            requireContext(),
-                            android.R.layout.simple_spinner_item,
-                            spinnerArrayFullhalf
-                        )
-
-                        // Drop down layout style - list view with radio button
-                        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-                        // attaching data adapter to spinner
-                        binding.spMonth.setAdapter(dataAdapter);
-
-
-                    }
-
-                }
-
-                override fun onNothingSelected(p0: AdapterView<*>?) {
-
-                }
-            }
 
             binding.tmcondition.setOnClickListener {
                 builder.setView(views)
@@ -213,52 +129,16 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
             }
 
 
-            binding.spMonth.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    p0: AdapterView<*>?,
-                    p1: View?,
-                    position: Int,
-                    p3: Long
-                ) {
-                    month = p0!!.getItemAtPosition(position).toString()
-
-                }
-
-                override fun onNothingSelected(p0: AdapterView<*>?) {
-
-                }
-
-            }
-
-
-            binding.spYear.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    p0: AdapterView<*>?,
-                    p1: View?,
-                    position: Int,
-                    p3: Long
-                ) {
-                    year = p0!!.getItemAtPosition(position).toString()
-                    Log.d("jcaujc", year)
-                }
-
-                override fun onNothingSelected(p0: AdapterView<*>?) {
-
-                }
-
-            }
 
 
             binding.etEmail.addTextChangedListener(object : TextWatcher {
                 @SuppressLint("ResourceAsColor")
                 override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-
                     if (isValidEmail(binding.etEmail.text.toString())) {
                         binding.appCompatImageView12.visibility = View.VISIBLE
                     } else {
                         binding.appCompatImageView12.visibility = View.GONE
                     }
-
                 }
 
                 override fun beforeTextChanged(
@@ -436,6 +316,13 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
             }
 //            findNavController().navigate(R.id.fragmentOTPEnter)
         }
+
+
+
+
+        CustumEditText.setup(binding.filledTextEmail,binding.etEmail)
+        CustumEditText.setup(binding.filledTextPassword,binding.etPassword)
+
     }
 
 
@@ -507,10 +394,10 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
         bundle.putString("last_name", binding.etLastName.text.toString())
         bundle.putString("gender",  gander_name)
 //        bundle.putString("schoolandcollege", binding.etschoolcollege.text.toString())
-        bundle.putString("dob",  year+"-"+month+"-"+dates)
-        bundle.putString("year",  year)
-        bundle.putString("month", month)
-        bundle.putString("date",  dates)
+        bundle.putString("dob",  selectedYear+"-"+selectedMonth+"-"+selectedDay)
+        bundle.putString("year",  selectedYear)
+        bundle.putString("month", selectedMonth)
+        bundle.putString("date",  selectedDay)
         bundle.putString("device_token", App.getInstance().firebaseToken.toString())
         bundle.putString("device_type", "android")
         bundle.putString("layout", "SignUp")
@@ -578,6 +465,121 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
     }
 
     override fun onNothingSelected(p0: AdapterView<*>?) {
+
+    }
+
+
+
+    var selectedDay="1"
+    var selectedMonth="January"
+    var selectedYear="1996"
+    lateinit var dataAdapter: ArrayAdapter<String>
+
+    fun fetchDOB(date:String){
+        val calender=Calendar.getInstance()
+        val datee= PriceFormatter.getDateObject(date)
+        calender.time=datee
+        selectedYear= calender.get(Calendar.YEAR).toString()
+        selectedMonth= PriceFormatter.getMonth(date)
+        Log.d(";lksdf;l",selectedMonth)
+        selectedDay = calender.get(Calendar.DAY_OF_MONTH).toString()
+        val selectedYearIndex = getResources().getStringArray(R.array.year).indexOf(selectedYear.toString())
+        val selectedMonthIndex = getResources().getStringArray(R.array.month).indexOf(selectedMonth.toString())
+        val selectedDayIndex = getResources().getStringArray(R.array.date).indexOf(selectedDay.toString())
+        binding.spYear.setSelection(selectedYearIndex)
+        binding.spMonth.setSelection(selectedMonthIndex)
+        binding.spDate.setSelection(selectedDayIndex)
+    }
+
+
+    fun setupSpinnerListener(){
+
+        binding.spDate.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                p0: AdapterView<*>?,
+                p1: View?,
+                position: Int,
+                p3: Long
+            ) {
+                selectedDay = p0!!.getItemAtPosition(position).toString()
+                dataAdapter= ArrayAdapter(requireContext(),
+                    android.R.layout.simple_spinner_item,
+                    resources.getStringArray(R.array.month)
+                )
+
+                if (selectedDay.toInt() ==31){
+                    dataAdapter= ArrayAdapter(
+                        requireContext(),
+                        android.R.layout.simple_spinner_item,
+                        resources.getStringArray(R.array.monthOfthreeOne)
+                    )
+                }
+
+
+                if (selectedDay.toInt() ==30){
+                    dataAdapter= ArrayAdapter(
+                        requireContext(),
+                        android.R.layout.simple_spinner_item,
+                        resources.getStringArray(R.array.month)
+                    )
+                }
+
+                if (selectedDay.toInt() ==28){
+                    dataAdapter= ArrayAdapter(
+                        requireContext(),
+                        android.R.layout.simple_spinner_item,
+                        resources.getStringArray(R.array.monthOfTwentyEight)
+                    )
+                }
+
+
+                // Drop down layout style - list view with radio button
+                dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+                // attaching data adapter to spinner
+                binding.spMonth.setAdapter(dataAdapter)
+
+            }
+
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+
+            }
+        }
+
+        binding.spMonth.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    p0: AdapterView<*>?,
+                    p1: View?,
+                    position: Int,
+                    p3: Long
+                ) {
+                    selectedMonth = p0!!.getItemAtPosition(position).toString()
+                    Log.d("jcaujc", selectedMonth)
+                }
+
+                override fun onNothingSelected(p0: AdapterView<*>?) {
+
+                }
+
+            }
+
+
+        binding.spYear.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                p0: AdapterView<*>?,
+                p1: View?,
+                position: Int,
+                p3: Long
+            ) {
+                selectedYear = p0!!.getItemAtPosition(position).toString()
+                Log.d("jcaujc", selectedYear)
+            }
+
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+
+            }
+        }
 
     }
 

@@ -12,7 +12,12 @@
         tools:layout="@layout/fragment_forget_password" >
         <action
             android:id="@+id/action_fragmentForgetPassword_to_fragmentOTPEnter"
-            app:destination="@id/fragmentOTPEnter" />
+            app:destination="@id/fragmentOTPEnter"
+            />
+        <action
+            android:id="@+id/action_fragmentForgetPassword_to_fragmentLogin"
+            app:destination="@id/fragmentLogin"
+            />
     </fragment>
 
     <fragment
@@ -22,7 +27,8 @@
         tools:layout="@layout/fragment_o_t_p_enter" >
         <action
             android:id="@+id/action_fragmentOTPEnter_to_fragmentForgetPassword"
-            app:destination="@id/fragmentForgetPassword" />
+            app:destination="@id/fragmentForgetPassword"
+            />
     </fragment>
 
     <fragment
@@ -40,7 +46,8 @@
         tools:layout="@layout/fragmentsignup" >
         <action
             android:id="@+id/action_fragmentSignUp_to_fragmentOTPEnter"
-            app:destination="@id/fragmentOTPEnter" />
+            app:destination="@id/fragmentOTPEnter"
+            />
     </fragment>
 
     <fragment
@@ -50,10 +57,12 @@
 
         <action
             android:id="@+id/action_fragmentLogin_to_fragmentOTPEnter"
-            app:destination="@id/fragmentOTPEnter" />
+            app:destination="@id/fragmentOTPEnter"
+           />
         <action
             android:id="@+id/action_fragmentLogin_to_fragmentSignUp"
-            app:destination="@id/fragmentSignUp" />
+            app:destination="@id/fragmentSignUp"
+            />
     </fragment>
     <fragment
         android:id="@+id/fragmentLanguage"
@@ -61,7 +70,8 @@
         android:label="FragmentLanguage" >
         <action
             android:id="@+id/action_fragmentLanguage_to_fragmentLogin"
-            app:destination="@id/fragmentLogin" />
+            app:destination="@id/fragmentLogin"
+            />
     </fragment>
 
 </navigation>

@@ -3,6 +3,7 @@ package com.stalmate.user.view.dashboard
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Gravity
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -231,6 +232,20 @@ class ActivityDashboard : AppCompatActivity(), FragmentHome.Callback {
         }
     }
 
+
+    override fun onBackPressed() {
+        if (binding.drawerLayout.isDrawerOpen(GravityCompat.END)) {
+            toggleDrawer()
+        } else {
+           super.onBackPressed()
+        }
+
+    }
+
+
+
+
+
     private fun loadDrawerFragment(fragment: Fragment) {
 
         val backStateName = fragment.javaClass.name
@@ -241,7 +256,9 @@ class ActivityDashboard : AppCompatActivity(), FragmentHome.Callback {
             val ft = manager.beginTransaction()
             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
             ft.replace(binding.frameDrawer.id, fragment, fragmentTag)
-//            ft.addToBackStack(backStateName)
+
+           // ft.addToBackStack(backStateName)
+
             ft.commit()
         }
     }

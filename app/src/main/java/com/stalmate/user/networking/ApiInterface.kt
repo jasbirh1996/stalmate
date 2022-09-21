@@ -60,7 +60,7 @@ interface ApiInterface {
     fun setSignupDetails(@Body map: HashMap<String, String>): Call<ModelLoginResponse>
 
 
-    @POST(Constants.URL_OTP)
+    @PATCH(Constants.URL_OTP)
     fun setOtpVerify(@Body map: HashMap<String, String>): Call<CommonModelResponse>
 
     @POST(Constants.URL_BLOCKED_LIST)
