@@ -41,7 +41,8 @@ data class User(
     val schoolandcollege: String,
     val schoolandcollegename: String,
     val albums_img: ArrayList<AlbumImage>,
-    val url: String
+    val url: String,
+    val mes:String,
 ) : Serializable
 
 data class Photo(

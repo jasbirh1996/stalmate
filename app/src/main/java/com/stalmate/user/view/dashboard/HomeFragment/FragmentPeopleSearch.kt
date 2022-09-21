@@ -59,6 +59,24 @@ class FragmentPeopleSearch : BaseFragment(), SearchedUserAdapter.Callbackk {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
+
+
+        binding!!.nestedScrollView.getViewTreeObserver()
+            .addOnScrollChangedListener(ViewTreeObserver.OnScrollChangedListener {
+                val view =
+                    binding!!.nestedScrollView.getChildAt(binding!!.nestedScrollView.getChildCount() - 1) as View
+                val diff: Int =
+                    view.bottom - (binding!!.nestedScrollView.getHeight() + binding!!.nestedScrollView
+                        .getScrollY())
+                if (diff == 0) {
+                    if (!isLastPage) {
+                        binding!!.progressLoading.visibility = View.VISIBLE
+                        loadMoreItems()
+                    }
+                }
+            })
+
         val divider = DividerItemDecoration(
             context,
             DividerItemDecoration.VERTICAL
@@ -86,6 +104,13 @@ class FragmentPeopleSearch : BaseFragment(), SearchedUserAdapter.Callbackk {
         hitApi(true, searchData)
     }
 
+    private fun loadMoreItems() {
+        isLoading = true
+        currentPage++
+        hitApi(false,searchData)
+    }
+
+
     fun hitApi(isFresh: Boolean, dataSearch: String) {
         this.searchData = dataSearch
         if (isFresh) {
@@ -100,8 +125,6 @@ class FragmentPeopleSearch : BaseFragment(), SearchedUserAdapter.Callbackk {
         networkViewModel.getGlobalSearch(hashmap)
         networkViewModel.globalSearchLiveData.observe(viewLifecycleOwner, Observer {
             it.let {
-
-
                 if (it!!.user_list.isNotEmpty()) {
 
                     if (isFresh) {

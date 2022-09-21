@@ -77,6 +77,7 @@
               android:fontFamily="@font/poppins"
               android:text="Software Engineer"
               android:textColor="@color/black"
+              android:maxLines="1"
               android:textSize="12sp"
               android:visibility="gone"
               app:layout_constraintBottom_toTopOf="@+id/tvLineTwo"
@@ -92,6 +93,7 @@
               android:text="United States"
               android:textColor="@color/colorGray"
               android:textSize="10sp"
+              android:maxLines="1"
               android:visibility="gone"
               app:layout_constraintBottom_toBottomOf="@+id/ivUserImage"
               app:layout_constraintEnd_toEndOf="@+id/tvLineOne"
@@ -103,8 +105,9 @@
               android:id="@+id/layoutFriendRequestExtra"
               android:layout_width="0dp"
               android:layout_height="wrap_content"
+              android:layout_marginEnd="10dp"
               android:visibility="gone"
-              app:layout_constraintEnd_toEndOf="parent"
+              app:layout_constraintEnd_toStartOf="@+id/buttonAccept"
               app:layout_constraintStart_toStartOf="@+id/tvUserName"
               app:layout_constraintTop_toBottomOf="@+id/tvLineTwo">
 
@@ -122,7 +125,7 @@
 
               <TextView
                   android:id="@+id/tvMessge"
-                  android:layout_width="296dp"
+                  android:layout_width="0dp"
                   android:layout_height="wrap_content"
                   android:layout_marginStart="8dp"
                   android:fontFamily="@font/poppins_light"
@@ -130,6 +133,7 @@
 
                   android:textColor="@color/black"
                   android:textSize="11sp"
+                  app:layout_constraintEnd_toEndOf="parent"
                   app:layout_constraintStart_toEndOf="@+id/imageView4"
                   app:layout_constraintTop_toBottomOf="@+id/tvMutualFirnds" />
 

@@ -170,7 +170,7 @@ class FriendAdapter(
             binding.buttonOuterFollow.visibility=View.GONE
 
             binding.tvMutualFirnds.text="Mutual Friends : 7"
-            binding.tvMessge.text="Hi How are you? I am \n Stanley from yoga class"
+            binding.tvMessge.text=friend.mes
 
 
 
@@ -360,7 +360,7 @@ class FriendAdapter(
         }
 
         if (friend.mutual_friend.isNotEmpty()){
-            binding.tvMutualFirnds.text = friend.mutual_friend
+            binding.tvMutualFirnds.text ="Mutual Friends : "+ friend.mutual_friend
             binding.tvMutualFirnds.visibility = View.VISIBLE
         }
 
