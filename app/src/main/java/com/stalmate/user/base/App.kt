@@ -4,6 +4,10 @@ import android.app.Application
 import android.content.Context
 import android.location.Geocoder
 import android.util.Log
+
+import com.google.android.exoplayer2.database.ExoDatabaseProvider
+import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor
+import com.google.android.exoplayer2.upstream.cache.SimpleCache
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.FirebaseApp
 import com.google.firebase.messaging.FirebaseMessaging
@@ -11,7 +15,14 @@ import com.google.gson.Gson
 import com.stalmate.user.networking.RestClient
 
 class App :Application(){
+
+
+    private val cacheSize: Long = 90 * 1024 * 1024
+    private lateinit var cacheEvictor: LeastRecentlyUsedCacheEvictor
+    private lateinit var exoplayerDatabaseProvider: ExoDatabaseProvider
+
     companion object {
+        lateinit var cache: SimpleCache
         private var appContext: Context? = null
         private var gson: Gson? = null
         private var geocoder: Geocoder? = null
@@ -28,7 +39,9 @@ class App :Application(){
         super.onCreate()
         applicationInstance = this
         appContext = this
-
+            cacheEvictor = LeastRecentlyUsedCacheEvictor(cacheSize)
+            exoplayerDatabaseProvider = ExoDatabaseProvider(this)
+            cache = SimpleCache(cacheDir, cacheEvictor, exoplayerDatabaseProvider)
           RestClient.inst.setup()
                     gson = Gson()
                    geocoder = Geocoder(this)

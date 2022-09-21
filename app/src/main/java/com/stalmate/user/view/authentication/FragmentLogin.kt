@@ -53,7 +53,6 @@ class FragmentLogin : BaseFragment() {
         /*click on page */
         binding.forgetPassword.setOnClickListener {
             findNavController().navigate(R.id.fragmentForgetPassword)
-
         }
 
         binding.btnLogin.setOnClickListener {
@@ -143,7 +142,6 @@ class FragmentLogin : BaseFragment() {
             makeToast(getString(R.string.password_error_toast))
             return false
         }
-
         return true
     }
 

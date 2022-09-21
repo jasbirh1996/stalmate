@@ -170,8 +170,6 @@ class FragmentHome(var callback:Callback) : BaseFragment(), AdapterFeed.Callback
 
                   startActivity(IntentHelper.getSearchScreen(requireContext()))
 
-
-
               }
           }
           true

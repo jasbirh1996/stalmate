@@ -29,9 +29,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity
-            android:name=".view.photoalbum.imageshowindex.ActivityShowPhotoAcordingtoIndex"
-            android:exported="false" />
+
+        <activity android:name="com.c2m.storyviewer.screen.StoryActivity"/>
         <activity
             android:name=".view.dashboard.Friend.ActivityCategoryCreate"
             android:exported="false" />

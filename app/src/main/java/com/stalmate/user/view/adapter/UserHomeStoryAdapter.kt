@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.databinding.ItemHomeStoryBinding
 import com.stalmate.user.databinding.ItemProfileFriendBinding
@@ -54,7 +55,7 @@ class UserHomeStoryAdapter(
                     .build());*/
 
             binding.root.setOnClickListener {
-
+                context.startActivity(IntentHelper.getStoryActivity(context))
             }
 
 

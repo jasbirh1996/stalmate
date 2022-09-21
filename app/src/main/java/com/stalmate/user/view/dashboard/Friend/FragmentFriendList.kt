@@ -147,7 +147,7 @@ class FragmentFriendList(var type: String, var subtype: String,var userId:String
                 }
 
 
-                if (it.results.isEmpty()){
+                if (friendAdapter.list.isEmpty()){
                     binding.layoutNoData.visibility=View.VISIBLE
                 }else{
                     binding.ivFilterIcon.visibility=View.VISIBLE

@@ -4,11 +4,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/actionSortByAZ"
-        android:title="First Name"
+        android:title="A-Z"
         app:showAsAction="never"/>
     <item
         android:id="@+id/actionSortByZA"
-        android:title="Last Name"
+        android:title="Z-A"
         app:showAsAction="never"/>
     <item
         android:id="@+id/actionSortByLatest"

@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'com.google.gms.google-services'
+    id 'kotlin-parcelize'
 }
 
 android {
@@ -107,6 +108,11 @@ dependencies {
     implementation project(path: ':SSffmpegVideoOperation')
     implementation project(path: ':bubblepicker')
     implementation project(path: ':custombottomnavigation')
+
+
+
+
+
  //  implementation project(path: ':FBReaction-master')
     implementation 'com.otaliastudios.opengl:egloo:0.6.1' //to create custum filter
     implementation 'com.github.TOrnelas:SegmentedProgressBar:0.0.3'
@@ -137,4 +143,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging:23.0.8'
 
     implementation 'com.google.android.libraries.places:places:2.6.0'
+
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.8'
+
 }

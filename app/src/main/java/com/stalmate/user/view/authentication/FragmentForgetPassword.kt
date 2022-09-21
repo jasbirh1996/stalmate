@@ -43,7 +43,7 @@ class FragmentForgetPassword : BaseFragment() {
         /*Click on page */
 
         binding.loginPage.setOnClickListener {
-            findNavController().navigate(R.id.fragmentLogin)
+            findNavController().popBackStack()
         }
 
         binding.btnProcessOtp.setOnClickListener {
@@ -104,11 +104,7 @@ class FragmentForgetPassword : BaseFragment() {
                 }
 
             }
-
-
         }
-
-
     }
 
     private fun toolbarSetUp() {
@@ -121,8 +117,6 @@ class FragmentForgetPassword : BaseFragment() {
             activity?.onBackPressed()
         }
     }
-
-
 
 
     fun isValid():Boolean{
