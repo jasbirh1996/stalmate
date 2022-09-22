@@ -367,7 +367,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/etSearchFriend" />
 
 
-            <!--    <com.google.android.material.tabs.TabLayout
+                <com.google.android.material.tabs.TabLayout
                     android:id="@+id/photoTab"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -375,13 +375,11 @@
                     app:layout_constraintTop_toBottomOf="@+id/rvFriends">
 
                     <com.google.android.material.tabs.TabItem
-                        android:id="@+id/tbPhtoso"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Photos" />
 
                     <com.google.android.material.tabs.TabItem
-                        android:id="@+id/tbalbums"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Albums" />
@@ -410,10 +408,22 @@
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     android:orientation="horizontal"
                     tools:itemCount="5"
+                    android:visibility="visible"
                     android:layout_marginTop="@dimen/dp_10"
                     app:layout_constraintStart_toStartOf="@+id/tvPhotos"
                     app:layout_constraintTop_toBottomOf="@+id/photoTab"/>
-    -->
+
+
+         <!--   <FrameLayout
+                android:id="@+id/frame"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/tvPhotos"
+                app:layout_constraintTop_toBottomOf="@+id/photoTab" />-->
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"

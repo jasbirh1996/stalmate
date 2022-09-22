@@ -26,6 +26,7 @@
         android:fontFamily="@font/poppins_medium"
         android:layout_marginHorizontal="50dp"
         android:layout_marginTop="26dp"
+        android:gravity="center"
         android:text="Let's connect you with likeminded people"
         android:textColor="@color/obboard_indicator"
         android:textSize="24sp"

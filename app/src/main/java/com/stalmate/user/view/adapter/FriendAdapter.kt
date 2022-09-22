@@ -367,12 +367,8 @@ class FriendAdapter(
         if (!ValidationHelper.isNull(friend.profile_data[0].home_town)){
             binding.tvLineTwo.text = friend.profile_data[0].home_town
             binding.tvLineTwo.visibility = View.VISIBLE
-
         }
-
-
     }
-
 
     fun setupButtonColor(text: String, isPrimary: Boolean, view: Button): Button {
         view.setText(text)
@@ -389,7 +385,4 @@ class FriendAdapter(
         view.setTextColor(context.getColor(R.color.colorPrimary))
         return view
     }
-
-
-
 }

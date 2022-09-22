@@ -64,6 +64,7 @@
                     android:itemBackground="@drawable/otp_box_border_filted"
                     app:hideLineWhenFilled="true"
                     app:itemCount="4"
+                    android:textColor="@color/app_color"
                     app:itemHeight="50dp"
                     app:itemRadius="5dp"
                     app:itemSpacing="18dp"

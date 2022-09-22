@@ -28,7 +28,7 @@
         app:stpi_circleStrokeWidth="1dp"
         app:stpi_indicatorColor="@color/obboard_indicator"
         app:stpi_labelSize="10dp"
-        app:stpi_stepCount="7" />
+        app:stpi_stepCount="4" />
 
 
     <androidx.viewpager.widget.ViewPager

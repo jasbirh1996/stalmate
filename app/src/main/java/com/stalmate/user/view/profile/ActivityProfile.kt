@@ -104,26 +104,25 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
             finish()
         }
 
-//        binding.layout.photoTab.addOnTabSelectedListener(object :TabLayout.OnTabSelectedListener {
-//            override fun onTabSelected(tab: TabLayout.Tab?) {
-//                val position = tab!!.position
-//                 if (position == 0){
-//                     setUpAboutUI("Photos")
-//                 }else if(position == 1){
-//                     setUpAboutUI("Albums")
-//                 }
-//
-//            }
-//
-//            override fun onTabUnselected(tab: TabLayout.Tab?) {
-//
-//            }
-//
-//            override fun onTabReselected(tab: TabLayout.Tab?) {
-//
-//            }
-//
-//        })
+        binding.layout.photoTab.addOnTabSelectedListener(object :TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                val position = tab!!.position
+                 if (position == 0){
+                     setUpAboutUI("Photos")
+                 }else if(position == 1){
+                     setUpAboutUI("Albums")
+                 }
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+
+            }
+
+        })
 
 
         setupData()
@@ -280,6 +279,8 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
 
     fun setUpAboutUI(tabType : String) {
 
+        Log.d("ajkbcb", tabType)
+
         if (userData.about.isEmpty()) {
             binding.tvUserAbout.visibility = View.GONE
         }
@@ -294,11 +295,11 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
         ImageLoaderHelperGlide.setGlide(this, binding.ivUserThumb, userData.profile_img1,R.drawable.user_placeholder)
         var aboutArrayList = ArrayList<AboutProfileLine>()
 
-        /*if (tabType== "Photo") {
+        if (tabType== "Photo") {
             albumImageAdapter = ProfileAlbumImageAdapter(networkViewModel, this, "Photo")
-//            binding.layout.rvPhotoAlbumData.adapter = albumImageAdapter
+            binding.layout.rvPhotoAlbumData.adapter = albumImageAdapter
             albumImageAdapter.submitList(userData.albums_img)
-        }*/
+        }
 
             if (userData.profile_data[0].profession.isNotEmpty()) {
                 aboutArrayList.add(
@@ -347,6 +348,7 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
                     ""
                 )
             )
+
             binding.layout.rvAbout.layoutManager = LinearLayoutManager(this)
             var profileAboutAdapter = ProfileAboutAdapter(networkViewModel, this, this)
             profileAboutAdapter.submitList(aboutArrayList)

@@ -79,9 +79,9 @@ class ActivityWelcome : BaseActivity(), FragmentInformationSuggestions.Callbackk
         viewpagerAdapter.add(FragmentInterestSuggestionList(), "title")
         viewpagerAdapter.add(FragmentInformationSuggestions(this),"title")
         viewpagerAdapter.add(FragmentSync(), "title")
-        viewpagerAdapter.add(FragmentGroupSuggestionList(), "title")
+       /* viewpagerAdapter.add(FragmentGroupSuggestionList(), "title")
         viewpagerAdapter.add(FragmentPageSugggestionsList(), "title")
-        viewpagerAdapter.add(FragmentEventSuggestionsList(), "title")
+        viewpagerAdapter.add(FragmentEventSuggestionsList(), "title")*/
 
 
         binding.viewpager.adapter = viewpagerAdapter
@@ -99,7 +99,7 @@ class ActivityWelcome : BaseActivity(), FragmentInformationSuggestions.Callbackk
             var page = viewpagerAdapter.getItem(count)
 
 
-            if (count == 6) {
+            if (count == 3) {
                 finish()
             } else {
                 if (page is FragmentInformationSuggestions) {

@@ -23,5 +23,12 @@ class ActivityAuthentication : AppCompatActivity() {
 
     fun setUpNavigation() {
         navController=findNavController(R.id.nav_host_fragment)
+
+        /*val navigationController = navController
+        if (navigationController.currentDestination?.id == R.id.fragmentLogin) {
+            navigationController.popBackStack()
+        } else {
+            super.onBackPressed()
+        }*/
     }
 }

@@ -84,7 +84,8 @@
             android:exported="false" />
         <activity
             android:name=".view.authentication.ActivityAuthentication"
-            android:exported="false" />
+            android:exported="false"
+            android:launchMode="singleTask"/>
         <activity
             android:name=".view.dashboard.ActivityDashboard"
             android:exported="false"

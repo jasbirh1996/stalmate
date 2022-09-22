@@ -69,8 +69,8 @@ class FragmentSingleSearch(var Type:String) : BaseFragment(), SingleSearchAdapte
                     if (it.results.isEmpty()) {
                         binding.itemView.visibility = View.VISIBLE
                         searchAdapter.submitList(stateList)
-
                     } else {
+
                         searchAdapter.submitList(it.results)
                     }
                 }
@@ -115,14 +115,15 @@ class FragmentSingleSearch(var Type:String) : BaseFragment(), SingleSearchAdapte
     fun search(searchData:String){
        this.searchData=searchData
         if (!ValidationHelper.isNull(searchData)){
-            binding.tvValue.text ="You Want Add"+ " "+searchData
             hitSearchListApi(Type)
             Log.d("asdasdasd","notempty")
             binding.rvList.visibility=View.VISIBLE
-            binding.itemView.visibility=View.VISIBLE
-        }else{
-            binding.rvList.visibility=View.GONE
             binding.itemView.visibility=View.GONE
+        }else{
+            binding.tvValue.text ="You Want Add"+ " "+searchData
+            binding.itemView.visibility=View.VISIBLE
+            binding.rvList.visibility=View.GONE
+
             Log.d("asdasdasd","empty")
         }
     }

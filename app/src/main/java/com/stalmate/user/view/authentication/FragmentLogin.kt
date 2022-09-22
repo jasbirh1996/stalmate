@@ -43,6 +43,7 @@ class FragmentLogin : BaseFragment() {
         // Inflate the layout for this fragment
         var view = inflater.inflate(R.layout.fragment_login, container, false)
         binding = DataBindingUtil.bind<FragmentLoginBinding>(view)!!
+
         return binding.root
     }
 
@@ -50,9 +51,11 @@ class FragmentLogin : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
+
         /*click on page */
         binding.forgetPassword.setOnClickListener {
             findNavController().navigate(R.id.fragmentForgetPassword)
+
         }
 
         binding.btnLogin.setOnClickListener {
@@ -82,11 +85,12 @@ class FragmentLogin : BaseFragment() {
             }
         })
 
-
         binding.createAccount.setOnClickListener {
-            findNavController().navigate(R.id.fragmentSignUp)
+            findNavController().apply {
+                navigate(R.id.fragmentSignUp)
+                backQueue.clear()
+            }
         }
-
 
         CustumEditText.setup(binding.filledTextEmail,binding.etEmail)
         CustumEditText.setup(binding.filledTextPassword,binding.etPassword)
@@ -118,7 +122,7 @@ class FragmentLogin : BaseFragment() {
                         PrefManager.getInstance(App.getInstance())!!.userDetail.results[0].token
                     )
                     startActivity(IntentHelper.getDashboardScreen(context))
-                    activity!!.finish()
+                    requireActivity().finish()
                     makeToast(message)
                 } else {
 

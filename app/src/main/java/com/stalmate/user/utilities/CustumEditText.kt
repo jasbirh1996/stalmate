@@ -10,7 +10,7 @@ object CustumEditText {
   fun setup(textInputLayout:TextInputLayout, textInputEditText:EditText){
       textInputEditText.setOnFocusChangeListener { _, hasFocus->
           run {
-              val color = if (hasFocus) Color.BLUE else Color.GRAY
+              val color = if (hasFocus) Color.parseColor("#0F52BA") else Color.GRAY
               textInputEditText.compoundDrawableTintList=ColorStateList.valueOf(color)
           }
 

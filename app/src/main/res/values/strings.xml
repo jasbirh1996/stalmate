@@ -475,7 +475,7 @@
 
 
     <string name="welcome_to_satalment">Welcome to <font fgcolor="#0F52BA">Stalmate</font></string>
-    <string name="enter_your_email_id">Email*</string>
+    <string name="enter_your_email_id">Email Your Email id*</string>
     <string name="enter_your_password">Enter Your Password</string>
     <string name="creates_password">Create Password</string>
     <string name="forget_password">Forgot Password?</string>

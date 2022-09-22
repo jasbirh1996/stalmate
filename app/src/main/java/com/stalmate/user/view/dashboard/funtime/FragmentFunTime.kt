@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentFunTimeBinding
@@ -39,8 +40,8 @@ class FragmentFunTime : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.ivAddButton.setOnClickListener {
-            makeToast("Under Development")
-          //  startActivity(IntentHelper.getCreateReelsScreen(requireActivity()))
+         //   makeToast("Under Development")
+          startActivity(IntentHelper.getCreateReelsScreen(requireActivity()))
         }
 
 
