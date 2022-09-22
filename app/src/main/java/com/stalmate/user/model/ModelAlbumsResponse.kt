@@ -8,5 +8,6 @@ data class ModelAlbumsResponse(
 
 data class ResultResponse(
     val id: String,
-    val name: String
+    val name: String,
+    val img : String
 )

@@ -137,7 +137,6 @@
                 android:fontFamily="@font/poppins_semibold"
                 android:text=""
                 android:textColor="@color/black"
-
                 app:layout_constraintEnd_toEndOf="@+id/imageView3"
                 app:layout_constraintStart_toStartOf="@+id/imageView3"
                 app:layout_constraintTop_toBottomOf="@+id/imageView3" />

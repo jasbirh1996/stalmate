@@ -38,10 +38,9 @@ class ActivitySingleSearch : AppCompatActivity() {
                 var fragment = supportFragmentManager.findFragmentById(binding.frame.id)
                 if (p0 != null) {
                     if (fragment is FragmentSingleSearch) {
-                        Log.d("adasd","pp")
-                        fragment.search(p0.toString())
+                        fragment.search(binding.etSearch.text.toString())
                     } else if (fragment is FragmentPlaceAutoComplete) {
-                        fragment.search(p0.toString())
+                        fragment.search(binding.etSearch.text.toString())
                     }
                 }
             }

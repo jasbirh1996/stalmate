@@ -19,7 +19,6 @@ data class User(
     var isBlocked: Int,
     val friends_count: Int,
     val about: String,
-    val albums: List<Albums>,
     val city: String,
     val company: String,
     val cover_img: List<Photo>,
@@ -40,7 +39,8 @@ data class User(
     val profile_img1: String,
     val schoolandcollege: String,
     val schoolandcollegename: String,
-    val albums_img: ArrayList<AlbumImage>,
+    val photos: ArrayList<AlbumImage>,
+    val albums: ArrayList<Albums>,
     val url: String,
     val mes:String,
 ) : Serializable
@@ -108,6 +108,6 @@ data class AlbumImage(
 
 data class Albums(
     val id: String,
-    val files: ArrayList<AlbumImage>,
-    val name: String
+    val name: String,
+    val img: String
 ) : Serializable

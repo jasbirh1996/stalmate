@@ -38,15 +38,15 @@ class ActivityPhotoGallery : BaseActivity() {
     fun setUpNavigation() {
         navController=findNavController(R.id.nav_host_fragment)
         if (intent.getStringExtra("viewType")!=null && intent.getStringExtra("viewType")=="viewNormal"){
-
-
         }
+
         if (intent.getStringExtra("viewType")!=null && intent.getStringExtra("viewType")=="viewFullScreen"){
             val bundle = Bundle()
             bundle.putString("index", intent.getStringExtra("index")!!.toString())
             bundle.putString("type", intent.getStringExtra("type")!!.toString())
             navController.navigate(R.id.action_fragmentAlbumListing_to_fragmentAlbumFullView, bundle)
         }
+
         if (intent.getStringExtra("viewType")!=null && intent.getStringExtra("viewType")=="viewListing"){
             val bundle = Bundle()
             bundle.putString("type", intent.getStringExtra("type")!!.toString())

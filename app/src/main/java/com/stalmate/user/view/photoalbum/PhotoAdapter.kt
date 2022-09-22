@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.databinding.ItemPhotoLayoutBinding
 import com.stalmate.user.model.Photo
@@ -34,9 +35,14 @@ class PhotoAdapter(val viewModel: AppViewModel, val context: Context,var callbac
     }
 
 
-    fun submitList(languageList: List<Photo>) {
+    fun submitList(photoList: List<Photo>) {
         list.clear()
-        list.addAll(languageList)
+        list.addAll(photoList)
+        notifyDataSetChanged()
+    }
+
+    fun clearList(photoList: List<Photo>) {
+        list.clear()
         notifyDataSetChanged()
     }
 
@@ -46,14 +52,14 @@ class PhotoAdapter(val viewModel: AppViewModel, val context: Context,var callbac
         fun bind(feed: Photo) {
 
 
-            Glide.with(context).load(feed.img)
+            Glide.with(context).load(feed.files)
                 .placeholder(R.drawable.profileplaceholder)
                 .into(binding.image)
 
-
             binding.image.setOnClickListener {
-                callback.onClickOnPhoto(feed,bindingAdapterPosition)
+                context.startActivity(IntentHelper.getPhotoGalleryAlbumScreen(context)!!.putExtra("type", "album_image").putExtra("index",bindingAdapterPosition.toString()).putExtra("viewType","viewFullScreen"))
             }
+
 
         }
     }

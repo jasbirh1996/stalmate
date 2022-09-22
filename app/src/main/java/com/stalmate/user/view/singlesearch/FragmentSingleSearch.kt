@@ -123,7 +123,6 @@ class FragmentSingleSearch(var Type:String) : BaseFragment(), SingleSearchAdapte
             binding.tvValue.text ="You Want Add"+ " "+searchData
             binding.itemView.visibility=View.VISIBLE
             binding.rvList.visibility=View.GONE
-
             Log.d("asdasdasd","empty")
         }
     }

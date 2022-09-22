@@ -640,7 +640,10 @@
     <string name="category_name">Category Name</string>
     <string name="otp_verification">OTP Verification</string>
     <string name="verify_amp_procced"><![CDATA[Verify & Procced]]></string>
-    <string name="please_enter_mobile_number">Please enter mobile number</string>
+    <string name="please_enter_mobile_number">Please enter Moblie number</string>
+    <string name="create_album">Create Album</string>
+    <string name="create">CREATE</string>
+    <string name="add_photo_videos">Add Photo/Videos</string>
     <string-array name="marrage">
         <item><font fgcolor="#B7B7B7">Marital Status</font></item>
         <item><font fgcolor="#B7B7B7">Single</font></item>
@@ -722,7 +725,6 @@
     <string-array name="monthOfTwentyEight">
         <item><font fgcolor="#B7B7B7">February</font></item>
     </string-array>
-
 
 
     <string-array name="year">
