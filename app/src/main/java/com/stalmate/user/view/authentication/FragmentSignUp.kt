@@ -493,6 +493,10 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
 
 
     fun setupSpinnerListener(){
+        dataAdapter= ArrayAdapter(requireContext(),
+            android.R.layout.simple_spinner_item,
+            resources.getStringArray(R.array.month)
+        )
 
         binding.spDate.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(

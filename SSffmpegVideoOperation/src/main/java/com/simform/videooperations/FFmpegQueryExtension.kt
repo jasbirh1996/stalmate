@@ -65,26 +65,25 @@ public class FFmpegQueryExtension {
     fun addVideoWaterMark(inputVideo: String, imageInput: String, posX: Float?, posY: Float?, output: String): Array<String> {
         val inputs: ArrayList<String> = ArrayList()
         inputs.apply {
+
+
             add("-i")
             add(inputVideo)
             add("-i")
             add(imageInput)
             add("-filter_complex")
             add("overlay=$posX:$posY")
-
-
             add("-preset")
-           add("ultrafast")
-            add("-crf")
-            add("0")
-       /*     add("-tune")
-            add("film")*/
-
-
+            add("ultrafast")
+/*            add("-crf")
+            add("0")*/
             add(output)
         }
         return inputs.toArray(arrayOfNulls<String>(inputs.size))
     }
+
+
+
 
     fun addTextOnVideo(inputVideo: String, textInput: String, posX: Float?, posY: Float?, fontPath: String, isTextBackgroundDisplay: Boolean, fontSize: Int, fontcolor: String, output: String): Array<String> {
         val inputs: ArrayList<String> = ArrayList()

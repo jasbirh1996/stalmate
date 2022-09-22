@@ -152,7 +152,7 @@ class FragmentPeopleSearch : BaseFragment(), SearchedUserAdapter.Callbackk {
 
                 }
 
-                if (it.user_list.isEmpty()) {
+                if (userAdapter.list.isEmpty()) {
                     binding.layoutNoData.visibility = View.VISIBLE
                 } else {
                     binding.layoutNoData.visibility = View.GONE

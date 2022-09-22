@@ -226,7 +226,6 @@ class ActivityDashboard : AppCompatActivity(), FragmentHome.Callback {
         val drawerLayout: DrawerLayout = findViewById(R.id.drawerLayout)
         if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
             drawerLayout.closeDrawer(GravityCompat.END)
-            onBackPressed()
         } else {
             drawerLayout.openDrawer(GravityCompat.END)
         }
