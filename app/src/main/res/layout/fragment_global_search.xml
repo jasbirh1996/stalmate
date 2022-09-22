@@ -9,6 +9,7 @@
         android:layout_height="match_parent">
         <!--Swipe Refresh Layout -->
         <androidx.core.widget.NestedScrollView
+            android:id="@+id/nestedScrollView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fillViewport="true"
@@ -53,7 +54,7 @@
 
                     <Button
                         android:id="@+id/buttonSeeMoreUsers"
-                        style="@style/customButtonStyle"
+                        style="@style/customButtonGreyStyle"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="60dp"
@@ -166,8 +167,49 @@
 
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
+
+
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+
         </androidx.core.widget.NestedScrollView>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/noDataFound"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/nestedScrollView2">
+
+            <ImageView
+                android:id="@+id/imageView3"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/ic_privacy_specific_friends"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.39"
+                app:tint="@color/colorGray" />
+
+            <TextView
+                android:id="@+id/tvData"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/poppins_semibold"
+                android:text="No data found"
+                android:textColor="@color/black"
+                app:layout_constraintEnd_toEndOf="@+id/imageView3"
+                app:layout_constraintStart_toStartOf="@+id/imageView3"
+                app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

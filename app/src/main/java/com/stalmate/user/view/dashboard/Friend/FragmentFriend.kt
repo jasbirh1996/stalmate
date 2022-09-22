@@ -50,8 +50,10 @@ class FragmentFriend : BaseFragment(), FriendAdapter.Callbackk {
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
           if (position == 0) tab.text = "Friend Requests" else if (position == 1) {
                 tab.text = "Suggestions"
+              binding.btnCreateCategory.visibility = View.GONE
             }else if (position == 2) {
               tab.text = "My Friends"
+              binding.btnCreateCategory.visibility = View.GONE
           }
         }.attach()
     }

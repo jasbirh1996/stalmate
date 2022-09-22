@@ -12,17 +12,131 @@
         android:id="@+id/toolbar"/>
 
 
+    <androidx.cardview.widget.CardView
+        android:id="@+id/PhotoCard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:cardCornerRadius="@dimen/dp_10"
+        app:cardUseCompatPadding="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/photoTabs"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingHorizontal="@dimen/dp_10"
+            android:paddingVertical="12dp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/photoalbumImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_album_photo_gray"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/photoAlbum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="Photos"
+                app:layout_constraintBottom_toBottomOf="@+id/photoalbumImage"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/photoalbumImage"
+                app:layout_constraintTop_toTopOf="@+id/photoalbumImage" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/albumPhotCard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        app:cardCornerRadius="@dimen/dp_10"
+        app:cardUseCompatPadding="true"
+        app:layout_constraintBottom_toBottomOf="@+id/PhotoCard"
+        app:layout_constraintStart_toEndOf="@+id/PhotoCard"
+        app:layout_constraintTop_toTopOf="@+id/PhotoCard">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/albumtab"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingHorizontal="@dimen/dp_10"
+            android:paddingVertical="12dp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/albumsfolder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_album_album_gray"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/albumfoldertext"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="8dp"
+                android:drawablePadding="6dp"
+                android:text="Albums"
+                android:textColor="@color/grey_dark"
+                app:layout_constraintBottom_toBottomOf="@+id/albumsfolder"
+                app:layout_constraintStart_toEndOf="@+id/albumsfolder"
+                app:layout_constraintTop_toTopOf="@+id/albumsfolder" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/photoTab"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:tabIndicator="@drawable/button_album_select_unselect_background"
+        app:layout_constraintBottom_toBottomOf="@+id/albumPhotCard"
+        app:layout_constraintStart_toEndOf="@+id/albumPhotCard"
+        app:layout_constraintTop_toTopOf="@+id/albumPhotCard">
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Photos" />
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Albums" />
+
+    </com.google.android.material.tabs.TabLayout>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/createAlbumbtn"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:src="@drawable/create_album_btn"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@+id/PhotoCard"
+        app:layout_constraintTop_toBottomOf="@+id/albumPhotCard" />
+
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvPhoto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
-        android:layout_marginEnd="4dp"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        android:layout_marginTop="16dp"
+        android:paddingHorizontal="@dimen/dp_10"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        app:spanCount="3"
+        app:layout_constraintTop_toBottomOf="@+id/createAlbumbtn"
         tools:listitem="@layout/item_photo_layout" />
 
 

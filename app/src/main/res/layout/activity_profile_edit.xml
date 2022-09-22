@@ -15,7 +15,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/back"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="220dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -330,7 +330,6 @@
                 android:id="@+id/buttonSeeMoreCover"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
                 android:drawablePadding="10dp"
                 android:drawableTint="@color/black"
                 android:text="@string/see_more"
@@ -438,7 +437,6 @@
             android:fontFamily="@font/poppins_medium"
             android:text="@string/activity_log"
             android:textColor="@color/black"
-
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btn_crate_account" />

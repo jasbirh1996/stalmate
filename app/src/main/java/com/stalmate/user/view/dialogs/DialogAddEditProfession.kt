@@ -197,6 +197,14 @@ class DialogAddEditProfession(
         }else if (binding.tvCdFrom.text.isEmpty()){
             makeToast("Please Enter Starting Date")
             return false
+        }else if (!binding.radioButtonCurrentWork.isChecked){
+
+            binding.tvCdTo.isClickable = false
+            if (binding.tvCdTo.text.isEmpty()){
+
+                makeToast("Please Enter Work Status")
+                return false
+            }
         }
         return true
     }

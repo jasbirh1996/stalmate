@@ -50,6 +50,7 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
     var marriageStatus = arrayOf("Single", "Marriage")
     var imageFile: File? = null
     var isCoverImage = false
+    var isNumberVerify : Boolean = false
     private lateinit var educationAdapter: EducationListAdapter
     private lateinit var professionListAdapter: ProfessionListAdapter
     private lateinit var profilePictureAdapter: ProfileAlbumAdapter
@@ -137,9 +138,12 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
 
             if (ValidationHelper.isNull(selectedMarriageStatus)) {
                 makeToast("Please select marriage Status")
-            } else {
+            } else if (isNumberVerify) {
                 updateProfileApiHit()
+            } else {
+                makeToast("Please verfiy the mobile number")
             }
+
         }
 
         binding.layout.tvAddMore.setOnClickListener {
@@ -256,7 +260,7 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
         networkViewModel.UpdateProfileLiveData.observe(this, Observer {
 
             it.let {
-                makeToast(it!!.message)
+//                makeToast(it!!.message)
                 var hashMap = HashMap<String, String>()
                 networkViewModel.getProfileData(hashMap)
             }
@@ -385,6 +389,10 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
         binding.layout.etLastName.setText(userData.results.last_name)
         binding.layout.bio.setText(userData.results.about)
         binding.layout.filledTextEmail.setText(userData.results.email)
+
+        if (userData.results.number.isNotEmpty()){
+            isNumberVerify =true
+        }
         binding.layout.etNumber.setText(userData.results.number)
         binding.layout.etHowTown.setText(userData.results.profile_data[0].home_town)
         binding.layout.etCurrentCity.setText(userData.results.city)
@@ -402,11 +410,7 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
             R.drawable.user_placeholder
         )
 
-
-
         binding.etWebsite.setText(userData.results.company)
-
-
 
         educationAdapter = EducationListAdapter(networkViewModel, this, this)
         binding.layout.rvEducation.adapter = educationAdapter
@@ -464,6 +468,11 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
             })
         dialogAddEditProfession.show()
     }
+
+    override fun deleteitem() {
+        getUserProfileData()
+    }
+
     override fun onClickOnViewComments(postId: Int) {
 
     }

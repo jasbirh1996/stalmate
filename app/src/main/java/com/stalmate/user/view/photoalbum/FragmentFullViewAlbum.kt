@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
@@ -76,24 +77,44 @@ class FragmentFullViewAlbum : BaseFragment() {
     }
 
     private fun hitphotoListApi() {
-
         currentIndex++
-        val hashMap = HashMap<String, String>()
-        hashMap["img_type"] = type
-        hashMap["page"] = currentIndex.toString()
-        hashMap["limit"] = "1"
+        if (type=="albums_img"){
 
-        networkViewModel.photoIndexLiveData(hashMap)
-        networkViewModel.photoIndexLiveData.observe(viewLifecycleOwner) {
-            it.let {
+            val hashMap = HashMap<String, String>()
+            hashMap["album_id"] = ""
+            networkViewModel.photoLiveData(hashMap)
+            networkViewModel.photoLiveData.observe(requireActivity()) {
+                it.let {
+
+                    if (it!!.results.isNotEmpty()) {
+                        if (isFreshApi) {
+                            indexPhotoAdapter.setList(it.results)
+                        } else {
+                            indexPhotoAdapter.addToList(it.results)
+                        }
+                    }
+                }
+            }
+
+        }else {
+
+            val hashMap = HashMap<String, String>()
+            hashMap["img_type"] = type
+            hashMap["page"] = currentIndex.toString()
+            hashMap["limit"] = "1"
+
+            networkViewModel.photoIndexLiveData(hashMap)
+            networkViewModel.photoIndexLiveData.observe(viewLifecycleOwner) {
+                it.let {
 
 
-                if (it!!.results.isNotEmpty()) {
+                    if (it!!.results.isNotEmpty()) {
 
-                    if (isFreshApi) {
-                        indexPhotoAdapter.setList(it!!.results)
-                    } else {
-                        indexPhotoAdapter.addToList(it!!.results)
+                        if (isFreshApi) {
+                            indexPhotoAdapter.setList(it!!.results)
+                        } else {
+                            indexPhotoAdapter.addToList(it!!.results)
+                        }
                     }
                 }
             }

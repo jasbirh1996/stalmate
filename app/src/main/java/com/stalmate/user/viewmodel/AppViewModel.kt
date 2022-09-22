@@ -257,26 +257,6 @@ open class AppViewModel : ViewModel() {
     }
 
 
-
-
-
-
-
-
-    var UpdateProfileLiveData: LiveData<CommonModelResponse?> =
-
-        MutableLiveData<CommonModelResponse?>()
-
-
-
-
-
-
-
-
-
-
-
     var globalSearchLiveData: MutableLiveData<ModelGlobalSearch?> = MutableLiveData<ModelGlobalSearch?>()
     fun getGlobalSearch(map: HashMap<String, String>) {
         val temp = MutableLiveData<ModelGlobalSearch?>()
@@ -285,14 +265,7 @@ open class AppViewModel : ViewModel() {
     }
 
 
-
-
-
-
-
-
-
-
+    var UpdateProfileLiveData: LiveData<CommonModelResponse?> = MutableLiveData<CommonModelResponse?>()
     fun etsProfileApi(
         @Part("first_name") first_name: RequestBody,
         @Part("last_name") last_name: RequestBody,
@@ -330,15 +303,19 @@ open class AppViewModel : ViewModel() {
     }
 
 
-    fun etsProfileApi(
-        @Part file_Profile_Image: MultipartBody.Part? = null,
-    ) {
+    fun etsProfileApi(@Part file_Profile_Image: MultipartBody.Part? = null, ) {
         val temp = MutableLiveData<CommonModelResponse?>()
         UpdateProfileLiveData = temp
-
         getResult(temp, apiInterface.updateUserProfileImage(file_Profile_Image!!))
     }
 
+
+    var UplodedAlbumImageLiveData: LiveData<CommonModelResponse?> = MutableLiveData<CommonModelResponse?>()
+    fun uploadAlbumImageApi(@Part album_image: MultipartBody.Part? = null, ) {
+        val temp = MutableLiveData<CommonModelResponse?>()
+        UplodedAlbumImageLiveData = temp
+        getResult(temp, apiInterface.uploadAlbumImage(album_image!!))
+    }
 
     var blockData: LiveData<CommonModelResponse?> = MutableLiveData<CommonModelResponse?>()
     fun block(map: HashMap<String, String>) {

@@ -21,6 +21,8 @@
     <color name="grey_light">#F3EFEF</color>
 
     <color name="colorNormalGray">#D2D2D2</color>
+    <color name="colorGrayEdittext">#F6F6F6</color>
+    <color name="colorGrayEdittextColor">#4B5563</color>
 
     <color name="grey_dark">#535353</color>
     <color name="grey_dark_color">#7D7D7D</color>
@@ -34,6 +36,7 @@
     <color name="grey_purpose">#727477</color>
     <color name="grey_darks">#3D3D3D</color>
     <color name="grey_website">#FCFCFC</color>
+    <color name="custom_button_grey">#878787</color>
 
 
     <color name="blur_color">#EFF2F6</color>

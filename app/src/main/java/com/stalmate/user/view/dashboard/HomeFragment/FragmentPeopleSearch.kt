@@ -148,6 +148,7 @@ class FragmentPeopleSearch : BaseFragment(), SearchedUserAdapter.Callbackk {
                     if (isFresh) {
                         userAdapter.submitList(it!!.user_list as java.util.ArrayList<User>)
                     }
+                    binding.layoutNoData.visibility = View.VISIBLE
 
                 }
 

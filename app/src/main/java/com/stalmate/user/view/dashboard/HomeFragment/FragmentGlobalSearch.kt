@@ -92,12 +92,8 @@ class FragmentGlobalSearch : BaseFragment(),
         networkViewModel.globalSearchLiveData.observe(viewLifecycleOwner, Observer {
             it.let {
 
-
-
-
-
                 if (it!!.user_list.isNotEmpty()) {
-
+                    binding.noDataFound.visibility = View.GONE
 
                     val divider = DividerItemDecoration(
                         context,
@@ -116,37 +112,21 @@ class FragmentGlobalSearch : BaseFragment(),
                         //   instead of DividerItemDecoration.
                     })
 
-
-
-
                     binding.rvEvents.layoutManager = LinearLayoutManager(requireContext())
                     binding.rvGroups.layoutManager = LinearLayoutManager(requireContext())
                     binding.rvUsers.layoutManager = LinearLayoutManager(requireContext())
-
 
                     binding.rvEvents.addItemDecoration(divider)
                     binding.rvGroups.addItemDecoration(divider)
                     binding.rvUsers.addItemDecoration(divider)
 
-
-
-
-
                     binding.rvEvents.adapter = userAdapter
                     binding.rvGroups.adapter = userAdapter
                     binding.rvUsers.adapter = userAdapter
 
-
-
-
-
-
                     binding.layoutUsers.visibility = View.VISIBLE
 /*                    binding.layoutEvents.visibility = View.GONE
                     binding.layoutGroups.visibility = View.GONE*/
-
-
-
 
                     if (isFresh) {
                         if (it.user_list.size>4){
@@ -154,13 +134,9 @@ class FragmentGlobalSearch : BaseFragment(),
                         }else{
                             userAdapter.submitList(it.user_list)
                         }
-
-
                     } else {
                         userAdapter.addToList(it.user_list)
                     }
-
-
 
                     if (it.user_list.size>4){
                         binding.buttonSeeMoreEvents.visibility=View.VISIBLE
@@ -173,6 +149,7 @@ class FragmentGlobalSearch : BaseFragment(),
                     }
                 }else{
                     binding.layoutUsers.visibility = View.GONE
+                    binding.noDataFound.visibility = View.VISIBLE
                     binding.layoutEvents.visibility = View.GONE
                     binding.layoutGroups.visibility = View.GONE
                 }

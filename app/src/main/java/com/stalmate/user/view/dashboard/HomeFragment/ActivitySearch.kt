@@ -51,8 +51,6 @@ class ActivitySearch : BaseActivity() {
                 if (p0 != null) {
                     searchData = p0.toString()
                     val currentFragment = getCurrentVisibleFragment()
-
-
                     //      val currentFragment = supportFragmentManager.findFragmentById(binding.layoutSearchBox)
                     if (currentFragment is FragmentGlobalSearch) {
                         currentFragment.hitApi(true, searchData)

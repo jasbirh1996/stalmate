@@ -20,8 +20,6 @@
             android:padding="6dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-
-
             app:layout_constraintTop_toTopOf="parent"
             app:tabBackground="@drawable/round_very_small_corner_very_light_primary"
             app:tabIndicator="@drawable/round_very_small_corner_white"

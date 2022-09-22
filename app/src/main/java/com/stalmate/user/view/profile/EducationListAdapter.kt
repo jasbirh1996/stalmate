@@ -46,6 +46,7 @@ class EducationListAdapter(val viewModel: AppViewModel, val context: Context, va
 
     public interface Callbackk {
         fun onClickItemEdit(position: Education, index: Int)
+        fun deleteitem()
     }
 
     inner class AlbumViewHolder(var binding: ItemEducationprofileBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -84,6 +85,7 @@ class EducationListAdapter(val viewModel: AppViewModel, val context: Context, va
                 if (it.status){
                     list.removeAt(position)
                     notifyItemRemoved(position)
+                    callback.deleteitem()
                 }
             }
         }

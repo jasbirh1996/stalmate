@@ -15,8 +15,7 @@ import com.stalmate.user.model.User
 import com.stalmate.user.utilities.Constants
 import com.stalmate.user.view.adapter.FriendAdapter
 
-class FragmentFriendList(var type: String, var subtype: String,var userId:String) : BaseFragment(),
-    FriendAdapter.Callbackk {
+class FragmentFriendList(var type: String, var subtype: String,var userId:String) : BaseFragment(), FriendAdapter.Callbackk {
     lateinit var friendAdapter: FriendAdapter
     lateinit var binding: FragmentFriendListBinding
     var sortBy=""
@@ -142,10 +141,7 @@ class FragmentFriendList(var type: String, var subtype: String,var userId:String
                     isLastPage=true
                     binding.progressLoading.visibility = View.GONE
 
-
-
                 }
-
 
                 if (it.results.isEmpty()){
                     binding.layoutNoData.visibility=View.VISIBLE
@@ -154,10 +150,6 @@ class FragmentFriendList(var type: String, var subtype: String,var userId:String
                     binding.tvFilter.visibility=View.VISIBLE
                     binding.layoutNoData.visibility=View.GONE
                 }
-
-
-
-
 
             }
         })
@@ -194,16 +186,19 @@ class FragmentFriendList(var type: String, var subtype: String,var userId:String
                 R.id.actionSortByAZ-> {
                     sortBy="ascending"
                     currentPage=1
+                    filter = ""
                     hitApi(true)
                 }
                 R.id.actionSortByZA-> {
                     sortBy="descending"
                     currentPage=1
+                    filter = ""
                     hitApi(true)
                 }
                 R.id.actionSortByLatest-> {
                     sortBy="recentlyAdded"
                     currentPage=1
+                    filter = ""
                     hitApi(true)
                 }
             }
@@ -224,21 +219,25 @@ class FragmentFriendList(var type: String, var subtype: String,var userId:String
                 R.id.actionFilterLocation-> {
                     filter="location"
                     currentPage=1
+                    sortBy = ""
                     hitApi(true)
                 }
                 R.id.actionFilterCollege-> {
                     filter="college"
                     currentPage=1
+                    sortBy = ""
                     hitApi(true)
                 }
                 R.id.actionFilterInterest-> {
                     filter="interest"
                     currentPage=1
+                    sortBy = ""
                     hitApi(true)
                 }
                 R.id.actionFilterWorkplace-> {
                     filter="workplace"
                     currentPage=1
+                    sortBy = ""
                     hitApi(true)
                 }
             }

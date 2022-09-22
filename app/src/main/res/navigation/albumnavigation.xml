@@ -24,11 +24,33 @@
         <action
             android:id="@+id/action_fragmentAlbumListing_to_fragmentAlbumFullView"
             app:destination="@id/fragmentAlbumFullView" />
+        <action
+            android:id="@+id/action_fragmentAlbumPhoto_to_fragmentAlbumPhotoIdListing"
+            app:destination="@id/fragmentAlbumPhotoIdListing" />
     </fragment>
 
     <fragment
         android:id="@+id/fragmentAlbumFullView"
         android:name="com.stalmate.user.view.photoalbum.FragmentFullViewAlbum"
         android:label="FragmentAlbumPhotoFullView" />
+    <fragment
+        android:id="@+id/fragmentAlbumPhotoIdListing"
+        android:name="com.stalmate.user.view.photoalbum.FragmentAlbumPhotoIdListing"
+        android:label="FragmentAlbumPhotoIdListing" >
+        <action
+            android:id="@+id/action_fragmentAlbumPhotoIdListing_to_fragmentAlbumPhoto"
+            app:destination="@id/fragmentAlbumPhoto" />
+        <action
+            android:id="@+id/action_fragmentAlbumPhotoIdListing_to_fragmentCreateAlbum"
+            app:destination="@id/fragmentCreateAlbum" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentCreateAlbum"
+        android:name="com.stalmate.user.view.photoalbum.FragmentCreateAlbum"
+        android:label="FragmentCreateAlbum" >
+        <action
+            android:id="@+id/action_fragmentCreateAlbum_to_fragmentAlbumPhotoIdListing"
+            app:destination="@id/fragmentAlbumPhotoIdListing" />
+    </fragment>
 
 </navigation>

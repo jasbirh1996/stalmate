@@ -16,7 +16,7 @@ class ProfessionListAdapter(
     val viewModel: AppViewModel,
     val context: Context,
     var callback: Callbackk
-) : RecyclerView.Adapter<ProfessionListAdapter.AlbumViewHolder>() {
+    ) : RecyclerView.Adapter<ProfessionListAdapter.AlbumViewHolder>() {
 
     var list = ArrayList<Profession>()
 
@@ -27,7 +27,6 @@ class ProfessionListAdapter(
         var view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_profession_profile, parent, false)
         return AlbumViewHolder(DataBindingUtil.bind<ItemProfessionProfileBinding>(view)!!)
-
     }
 
     override fun onBindViewHolder(holder: AlbumViewHolder, position: Int) {
@@ -47,6 +46,7 @@ class ProfessionListAdapter(
 
     public interface Callbackk {
         fun onClickItemProfessionEdit(position: Profession, index: Int)
+        fun deleteitem()
     }
 
     inner class AlbumViewHolder(var binding: ItemProfessionProfileBinding) :
@@ -58,10 +58,14 @@ class ProfessionListAdapter(
             binding.tvComapny.text = profession.company_name
             binding.tvgesignation.text = profession.designation
             binding.tvFrom.text = profession.from
-            binding.tvTo.text = profession.to
+
+            if (profession.currently_working_here=="Yes"){
+                binding.tvTo.text = "current working here"
+            }else {
+                binding.tvTo.text = profession.to
+            }
 
             binding.ivDelete.setOnClickListener {
-
                 deleteProfessoin(
                     profession._id,
                     bindingAdapterPosition,
@@ -77,13 +81,13 @@ class ProfessionListAdapter(
                     bindingAdapterPosition
                 )
             }
-
         }
     }
 
+
+
     fun deleteProfessoin(id: String, position: Int, lifecycleObserver: LifecycleOwner) {
         val hashMap = HashMap<String, String>()
-
         hashMap["id"] = id
         hashMap["is_delete"] = "1"
 
@@ -93,8 +97,11 @@ class ProfessionListAdapter(
                 if (it.status) {
                     list.removeAt(position)
                     notifyItemRemoved(position)
+                    callback.deleteitem()
                 }
             }
         }
     }
+
+
 }

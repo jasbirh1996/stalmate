@@ -174,7 +174,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="-5dp"
                     android:layout_marginTop="16dp"
-
                     android:buttonTint="@color/grey1"
                     android:text="@string/currently_working_here"
                     android:textColor="@color/grey1"

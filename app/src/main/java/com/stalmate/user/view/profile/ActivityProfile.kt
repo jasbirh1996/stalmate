@@ -30,7 +30,7 @@ import com.stalmate.user.utilities.ValidationHelper
 import com.stalmate.user.view.adapter.ProfileAboutAdapter
 
 import com.stalmate.user.view.adapter.ProfileFriendAdapter
-import com.stalmate.user.view.photoalbum.ActivityPhotoGallery
+import com.stalmate.user.view.photoalbum.AlbumAdapter
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -50,7 +50,7 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
     lateinit var userData: User
     var albumTabType = ""
     private lateinit var albumImageAdapter: ProfileAlbumImageAdapter
-    private lateinit var AlbumAdapter: ProfileAlbumImageAdapter
+    private lateinit var albumAdapter: SelfProfileAlbumAdapter
 
 
     override fun onClick(viewId: Int, view: View?) {
@@ -104,6 +104,13 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
             finish()
         }
 
+
+        binding.layout.tvAlbumPhotoSeeMore.setOnClickListener {
+            startActivity(IntentHelper.getPhotoGalleryAlbumScreen(this)!!.putExtra("viewType", "viewListing")
+                    .putExtra("type", "album_img")
+            )
+        }
+
         binding.layout.photoTab.addOnTabSelectedListener(object :TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 val position = tab!!.position
@@ -121,10 +128,7 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
             override fun onTabReselected(tab: TabLayout.Tab?) {
 
             }
-
         })
-
-
         setupData()
     }
 
@@ -271,7 +275,7 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
         networkViewModel.profileLiveData.observe(this, Observer {
             it.let {
                 userData = it!!.results
-                setUpAboutUI("Photo")
+                setUpAboutUI("Photos")
             }
         })
     }
@@ -295,10 +299,15 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
         ImageLoaderHelperGlide.setGlide(this, binding.ivUserThumb, userData.profile_img1,R.drawable.user_placeholder)
         var aboutArrayList = ArrayList<AboutProfileLine>()
 
-        if (tabType== "Photo") {
-            albumImageAdapter = ProfileAlbumImageAdapter(networkViewModel, this, "Photo")
+        if (tabType== "Photos") {
+            albumImageAdapter = ProfileAlbumImageAdapter(networkViewModel, this, "albums_img")
             binding.layout.rvPhotoAlbumData.adapter = albumImageAdapter
-            albumImageAdapter.submitList(userData.albums_img)
+            albumImageAdapter.submitList(userData.photos)
+        }else if (tabType== "Albums"){
+            albumAdapter = SelfProfileAlbumAdapter(networkViewModel, this, "albums_img")
+            binding.layout.rvPhotoAlbumData.adapter =albumAdapter
+            albumAdapter.submitList(userData.albums)
+
         }
 
             if (userData.profile_data[0].profession.isNotEmpty()) {
