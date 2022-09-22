@@ -48,6 +48,7 @@ class FragmentFriendCategory(var type: String) : BaseFragment(), FriendAdapter.C
         super.onViewCreated(view, savedInstanceState)
         var list = ArrayList<Fragment>()
         if (type.equals(Constants.TYPE_FRIEND_REQUEST)) {
+
             list.add(FragmentFriendList(Constants.TYPE_FRIEND_REQUEST, "",""))
         } else if (type.equals(Constants.TYPE_FRIEND_SUGGESTIONS)) {
             list.add(FragmentFriendList(Constants.TYPE_FRIEND_SUGGESTIONS, "",""))
