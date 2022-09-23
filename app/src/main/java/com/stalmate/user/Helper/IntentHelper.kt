@@ -71,7 +71,7 @@ public class IntentHelper {
                 .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
         }
         fun getStoryActivity(context: Context?): Intent? {
-            return Intent(context, StoryActivity::class.java)
+            return Intent(context, StoryA::class.java)
                 .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
         }
 
