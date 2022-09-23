@@ -48,22 +48,7 @@ class FragmentSync : Fragment() {
             }else{
                 removeAccount()
             }
-
-
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
 
 
@@ -78,12 +63,8 @@ class FragmentSync : Fragment() {
 
             var acc=  Account(Constants.ACCOUNT_NAME, Constants.ACCOUNT_TYPE)
             accountManager.removeAccountExplicitly(acc)
-
         }
-
     }
-
-
 
     fun isAccountAdded():Boolean{
 
@@ -117,18 +98,12 @@ class FragmentSync : Fragment() {
 
     fun createSyncAccount(context: Context): Account? {
 
-
-
         // Create the account type and default account
         val newAccount = Account(Constants.ACCOUNT_NAME, Constants.ACCOUNT_TYPE)
         // Get an instance of the Android account manager
         val accountManager = context.getSystemService(
             ACCOUNT_SERVICE
         ) as AccountManager
-
-
-
-
         /*
      * Add the account and account type, no password or user data
      * If successful, return the Account object, otherwise report an error.

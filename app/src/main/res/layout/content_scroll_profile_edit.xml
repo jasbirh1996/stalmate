@@ -44,6 +44,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/first_name"
                     android:maxLines="1"
+                    android:textColor="@color/black"
                     android:paddingVertical="12dp"
                     app:layout_constraintEnd_toStartOf="@+id/appCompatImageView14"
                     app:layout_constraintStart_toStartOf="parent"
@@ -78,6 +79,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/last_name"
                     android:maxLines="1"
+                    android:textColor="@color/black"
                     android:paddingVertical="12dp"
                     app:layout_constraintEnd_toStartOf="@+id/appCompatImageView13"
                     app:layout_constraintStart_toStartOf="parent"
@@ -108,6 +110,7 @@
             android:hint="@string/enter_bio"
             android:maxLines="1"
             android:paddingVertical="12dp"
+            android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="@+id/name"
             app:layout_constraintStart_toStartOf="@+id/name"
             app:layout_constraintTop_toBottomOf="@+id/name" />
@@ -178,6 +181,7 @@
                     android:background="@null"
                     android:entries="@array/month"
                     android:padding="0dp"
+                    android:textColor="@color/app_color"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -320,6 +324,7 @@
             android:drawableStart="@drawable/ic_login_mail_inactive"
             android:drawablePadding="8dp"
             android:hint="@string/email"
+            android:textColor="@color/black"
             android:maxLines="1"
             android:paddingVertical="10dp"
             android:textSize="14sp"
@@ -346,6 +351,7 @@
                 android:hint="@string/mobile_number"
                 android:maxLines="1"
                 android:maxLength="10"
+                android:textColor="@color/black"
                 android:inputType="number"
                 android:background="@null"
                 android:textColorHint="@color/black"
@@ -452,6 +458,7 @@
             android:drawablePadding="7dp"
             android:entries="@array/marrage"
             android:paddingVertical="12dp"
+            android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/appCompatImageView19"
             app:layout_constraintTop_toBottomOf="@+id/etNumber" />
@@ -483,6 +490,7 @@
                 android:drawablePadding="8dp"
                 android:hint="@string/home_town"
                 android:maxLines="1"
+                android:textColor="@color/black"
                 android:paddingVertical="12dp"
                 android:textSize="14sp" />
 
@@ -507,6 +515,7 @@
                 android:drawablePadding="8dp"
                 android:hint="Current City"
                 android:maxLines="1"
+                android:textColor="@color/black"
                 android:paddingVertical="12dp"
                 android:textSize="14sp" />
 

@@ -344,19 +344,15 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
         } else if (!binding.rdmale.isChecked && !binding.rdFamel.isChecked && !binding.rdOthers.isChecked) {
             makeToast(getString(R.string.select_gendar_error))
             return false
-        } else /*if (ValidationHelper.isNull(binding.etschoolcollege.text.toString())) {
-            makeToast(getString(R.string.pleaseenterschoolcollegename))
-            return false
-        } else*/ if (ValidationHelper.isNull(binding.etPassword.text.toString())) {
+        } else  if (ValidationHelper.isNull(binding.etPassword.text.toString())) {
             makeToast(getString(R.string.password_error_toast))
             return false
-        } else  if (!isValidPassword(binding.etPassword.text.toString().trim())) {
-                makeToast("Password Must Include Atleast: 1 uppercase,\n1 Lowercase,\n1 Number & 1 Spaecial Character")
+        } else if (!isValidPassword(binding.etPassword.text.toString().trim())) {
+                makeToast("Password Must Include Atleast"+"\n"+"1 uppercase Lowercase A-Z"+"\n"+"Number 0-1 & 1 Spaecial Character #@&/")
                 return false
-            } else if (!binding.tmcheckbox.isChecked) {
+        } else if (!binding.tmcheckbox.isChecked) {
                 makeToast(getString(R.string.accept_tnc))
                 return false
-
         }
         return true
     }
