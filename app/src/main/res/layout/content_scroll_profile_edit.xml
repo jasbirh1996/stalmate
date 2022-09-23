@@ -44,7 +44,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/first_name"
                     android:maxLines="1"
-                    android:paddingVertical="15dp"
+                    android:paddingVertical="12dp"
                     app:layout_constraintEnd_toStartOf="@+id/appCompatImageView14"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -78,7 +78,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/last_name"
                     android:maxLines="1"
-                    android:paddingVertical="15dp"
+                    android:paddingVertical="12dp"
                     app:layout_constraintEnd_toStartOf="@+id/appCompatImageView13"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -107,7 +107,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/enter_bio"
             android:maxLines="1"
-            android:paddingVertical="15dp"
+            android:paddingVertical="12dp"
             app:layout_constraintEnd_toEndOf="@+id/name"
             app:layout_constraintStart_toStartOf="@+id/name"
             app:layout_constraintTop_toBottomOf="@+id/name" />
@@ -175,7 +175,6 @@
                     android:id="@+id/spMonth"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-
                     android:background="@null"
                     android:entries="@array/month"
                     android:padding="0dp"
@@ -205,7 +204,6 @@
                     android:id="@+id/spYear"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-
                     android:background="@null"
                     android:entries="@array/year"
                     android:padding="0dp"
@@ -322,9 +320,8 @@
             android:drawableStart="@drawable/ic_login_mail_inactive"
             android:drawablePadding="8dp"
             android:hint="@string/email"
-            android:maxLength="10"
             android:maxLines="1"
-            android:paddingVertical="15dp"
+            android:paddingVertical="10dp"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="@+id/radio_group"
             app:layout_constraintStart_toStartOf="@+id/radio_group"
@@ -352,7 +349,7 @@
                 android:inputType="number"
                 android:background="@null"
                 android:textColorHint="@color/black"
-                android:paddingVertical="15dp"
+                android:paddingVertical="12dp"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="@+id/radio_group"
                 app:layout_constraintStart_toStartOf="@+id/radio_group"
@@ -454,7 +451,7 @@
             android:background="@drawable/small_spinner_border"
             android:drawablePadding="7dp"
             android:entries="@array/marrage"
-            android:paddingVertical="10dp"
+            android:paddingVertical="12dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/appCompatImageView19"
             app:layout_constraintTop_toBottomOf="@+id/etNumber" />
@@ -486,7 +483,7 @@
                 android:drawablePadding="8dp"
                 android:hint="@string/home_town"
                 android:maxLines="1"
-                android:paddingVertical="15dp"
+                android:paddingVertical="12dp"
                 android:textSize="14sp" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -510,7 +507,7 @@
                 android:drawablePadding="8dp"
                 android:hint="Current City"
                 android:maxLines="1"
-                android:paddingVertical="15dp"
+                android:paddingVertical="12dp"
                 android:textSize="14sp" />
 
         </com.google.android.material.textfield.TextInputLayout>

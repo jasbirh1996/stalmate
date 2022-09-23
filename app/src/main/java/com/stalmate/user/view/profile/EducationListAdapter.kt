@@ -55,8 +55,8 @@ class EducationListAdapter(val viewModel: AppViewModel, val context: Context, va
 
 
             binding.tveducation.text =response.sehool
-            binding.tvcource.text = response.branch
-            binding.tvcourcetype.text = response.course
+            binding.tvcource.text = response.course
+            binding.tvcourcetype.text =response.branch
 
             binding.ivDelete.setOnClickListener {
                 onClickItemDelete(response._id, bindingAdapterPosition, (binding.root.context as? LifecycleOwner)!!)

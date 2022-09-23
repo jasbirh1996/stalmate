@@ -12,6 +12,8 @@ import com.stalmate.user.view.profile.ActivityFollowersFollowingScreen
 import com.stalmate.user.view.profile.ActivityOtherUserProfile
 import com.stalmate.user.view.profile.ActivityProfile
 import com.stalmate.user.view.profile.ActivityProfileEdit
+import  com.c2m.storyviewer.screen.StoryActivity
+import com.stalmate.user.modules.reels.activity.ActivityVideoRecorder
 
 public class IntentHelper {
 
@@ -71,7 +73,7 @@ public class IntentHelper {
                 .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
         }
         fun getStoryActivity(context: Context?): Intent? {
-            return Intent(context, StoryA::class.java)
+            return Intent(context, StoryActivity::class.java)
                 .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
         }
 
