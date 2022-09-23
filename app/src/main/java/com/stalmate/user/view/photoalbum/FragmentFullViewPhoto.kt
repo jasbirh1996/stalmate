@@ -14,9 +14,10 @@ import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentFullViewAlbumBinding
 import com.stalmate.user.view.photoalbum.imageshowindex.AdapterPhotoIndex
 
-class FragmentFullViewAlbum : BaseFragment() {
+class FragmentFullViewPhoto : BaseFragment() {
     var currentIndex = 0
-    var type = ""
+    var imageId = ""
+    var albumId = ""
     var isFreshApi = true
 
     private lateinit var indexPhotoAdapter: AdapterPhotoIndex
@@ -25,11 +26,11 @@ class FragmentFullViewAlbum : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (requireArguments().getString("index") != null) {
-            currentIndex = requireArguments().getString("index").toString().toInt()
+        if (requireArguments().getString("albumId") != null) {
+            albumId = requireArguments().getString("albumId").toString()
         }
-        if (requireArguments().getString("type") != null) {
-            type = requireArguments().getString("type").toString()
+        if (requireArguments().getString("imageId") != null) {
+            imageId = requireArguments().getString("imageId").toString()
         }
         indexPhotoAdapter = AdapterPhotoIndex(requireContext())
 
@@ -77,44 +78,28 @@ class FragmentFullViewAlbum : BaseFragment() {
     }
 
     private fun hitphotoListApi() {
-        currentIndex++
-        if (type=="albums_img"){
 
-            val hashMap = HashMap<String, String>()
-            hashMap["album_id"] = ""
-            networkViewModel.photoLiveData(hashMap)
-            networkViewModel.photoLiveData.observe(requireActivity()) {
-                it.let {
+        val hashMap = HashMap<String, String>()
+        hashMap["album_id"] = albumId
 
-                    if (it!!.results.isNotEmpty()) {
-                        if (isFreshApi) {
-                            indexPhotoAdapter.setList(it.results)
-                        } else {
-                            indexPhotoAdapter.addToList(it.results)
-                        }
-                    }
-                }
-            }
-
-        }else {
-
-            val hashMap = HashMap<String, String>()
-            hashMap["img_type"] = type
+        hashMap["limit"]="1"
+        if (!isFreshApi) {
+            currentIndex++
             hashMap["page"] = currentIndex.toString()
-            hashMap["limit"] = "1"
-
-            networkViewModel.photoIndexLiveData(hashMap)
-            networkViewModel.photoIndexLiveData.observe(viewLifecycleOwner) {
-                it.let {
+        }else{
+            hashMap["img_id"] = imageId
+        }
 
 
-                    if (it!!.results.isNotEmpty()) {
-
-                        if (isFreshApi) {
-                            indexPhotoAdapter.setList(it!!.results)
-                        } else {
-                            indexPhotoAdapter.addToList(it!!.results)
-                        }
+        networkViewModel.getAlbumPhotos(hashMap)
+        networkViewModel.photoLiveData.observe(requireActivity()) {
+            it.let {
+                if (it!!.results.isNotEmpty()) {
+                    if (isFreshApi) {
+                        currentIndex=it.position
+                        indexPhotoAdapter.setList(it.results)
+                    } else {
+                        indexPhotoAdapter.addToList(it.results)
                     }
                 }
             }

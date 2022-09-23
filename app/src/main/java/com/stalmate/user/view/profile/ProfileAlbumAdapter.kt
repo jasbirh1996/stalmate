@@ -1,6 +1,7 @@
 package com.stalmate.user.view.profile
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat.startActivity
@@ -24,12 +25,11 @@ class ProfileAlbumAdapter(val viewModel: AppViewModel, val context: Context,var 
 
 
     inner class AlbumViewHolder(var binding : ItemProfileCoverBinding): RecyclerView.ViewHolder(binding.root) {
-
         fun bind(response : Photo){
-            ImageLoaderHelperGlide.setGlideCorner(context,binding.ivImage,response.img,R.drawable.user_placeholder)
-
+            ImageLoaderHelperGlide.setGlideCorner(context,binding.ivImage,response.files,R.drawable.user_placeholder)
             binding.ivImage.setOnClickListener {
-                context.startActivity(IntentHelper.getPhotoGalleryAlbumScreen(context)!!.putExtra("type", type).putExtra("index",bindingAdapterPosition.toString()).putExtra("viewType","viewFullScreen"))
+                Log.d("alksjdasd",type)
+                context.startActivity(IntentHelper.getPhotoGalleryAlbumScreen(context)!!.putExtra("albumId", type).putExtra("imageId",response.id).putExtra("viewType","viewFullScreen"))
             }
         }
     }

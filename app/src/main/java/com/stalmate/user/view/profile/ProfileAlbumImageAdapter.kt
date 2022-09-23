@@ -25,7 +25,8 @@ class ProfileAlbumImageAdapter(val viewModel: AppViewModel, val context: Context
             ImageLoaderHelperGlide.setGlideCorner(context,binding.ivImage,response.files,R.drawable.user_placeholder)
 
             binding.ivImage.setOnClickListener {
-                context.startActivity(IntentHelper.getPhotoGalleryAlbumScreen(context)!!.putExtra("type", type).putExtra("index",bindingAdapterPosition.toString()).putExtra("viewType","viewFullScreen"))
+                context.startActivity(IntentHelper.getPhotoGalleryAlbumScreen(context)!!.putExtra("albumId", response.album_id).putExtra("imageId", response._id).putExtra("viewType","viewFullScreen"))
+
             }
         }
     }

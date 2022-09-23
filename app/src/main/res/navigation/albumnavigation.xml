@@ -3,23 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/albumnavigation"
-    app:startDestination="@id/fragmentAlbumListing">
+    app:startDestination="@id/fragmentAlbumPhoto">
 
-    <fragment
-        android:id="@+id/fragmentAlbumListing"
-        android:name="com.stalmate.user.view.photoalbum.FragmentAlbumListing"
-        android:label="fragment_album_listing"
-        tools:layout="@layout/fragment_album_listing" >
-        <action
-            android:id="@+id/action_fragmentAlbumListing_to_fragmentAlbumPhoto"
-            app:destination="@id/fragmentAlbumPhoto" />
-        <action
-            android:id="@+id/action_fragmentAlbumListing_to_fragmentAlbumFullView"
-            app:destination="@id/fragmentAlbumFullView" />
-    </fragment>
+
     <fragment
         android:id="@+id/fragmentAlbumPhoto"
         android:name="com.stalmate.user.view.photoalbum.FragmentAlbumPhotoList"
+        tools:layout="@layout/fragment_album_photo_list"
         android:label="FragmentAlbumPhoto">
         <action
             android:id="@+id/action_fragmentAlbumListing_to_fragmentAlbumFullView"
@@ -31,10 +21,12 @@
 
     <fragment
         android:id="@+id/fragmentAlbumFullView"
-        android:name="com.stalmate.user.view.photoalbum.FragmentFullViewAlbum"
+        android:name="com.stalmate.user.view.photoalbum.FragmentFullViewPhoto"
+        tools:layout="@layout/fragment_full_view_album"
         android:label="FragmentAlbumPhotoFullView" />
     <fragment
         android:id="@+id/fragmentAlbumPhotoIdListing"
+        tools:layout="@layout/fragment_album_photo_id_listing"
         android:name="com.stalmate.user.view.photoalbum.FragmentAlbumPhotoIdListing"
         android:label="FragmentAlbumPhotoIdListing" >
         <action
@@ -43,14 +35,31 @@
         <action
             android:id="@+id/action_fragmentAlbumPhotoIdListing_to_fragmentCreateAlbum"
             app:destination="@id/fragmentCreateAlbum" />
+        <action
+            android:id="@+id/action_fragmentAlbumPhotoIdListing_to_fragmentIMageFullView"
+            app:destination="@id/fragmentAlbumFullView" />
     </fragment>
     <fragment
         android:id="@+id/fragmentCreateAlbum"
+        tools:layout="@layout/fragment_create_album"
         android:name="com.stalmate.user.view.photoalbum.FragmentCreateAlbum"
         android:label="FragmentCreateAlbum" >
         <action
             android:id="@+id/action_fragmentCreateAlbum_to_fragmentAlbumPhotoIdListing"
             app:destination="@id/fragmentAlbumPhotoIdListing" />
     </fragment>
+
+    <fragment
+        android:id="@+id/fragmentAlbumPhotoListInGrid"
+        tools:layout="@layout/fragment_album_photo_list_in_grid"
+        android:name="com.stalmate.user.view.photoalbum.FragmentAlbumPhotoListInGrid"
+        android:label="FragmentAlbumPhotoListInGrid" >
+        <action
+            android:id="@+id/action_fragmentAlbumPhotoListInGrid_to_fragmentAlbumFullView"
+            app:destination="@id/fragmentAlbumFullView" />
+    </fragment>
+
+
+
 
 </navigation>
