@@ -1,6 +1,7 @@
 package com.stalmate.user.view.dashboard.Friend
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -126,11 +127,37 @@ class FragmentFriend : BaseFragment(), FriendAdapter.Callbackk {
           if (position == 0) tab.text = "Friend Requests" else if (position == 1) {
                 tab.text = "Suggestions"
               binding.btnCreateCategory.visibility = View.GONE
+=======
+        binding.btnBack.setOnClickListener {
+            startActivity(IntentHelper.getDashboardScreen(context))
+        }
+
+        binding.btnCreateCategory.setOnClickListener {
+            startActivity(IntentHelper.getCategoryCreateScreen(context))
+        }
+   
+        var list=ArrayList<Fragment>()
+        list.add(FragmentFriendCategory(Constants.TYPE_FRIEND_REQUEST))
+        list.add(FragmentFriendCategory(Constants.TYPE_FRIEND_SUGGESTIONS))
+        list.add(FragmentFriendCategory(Constants.TYPE_MY_FRIENDS))
+        var pagerAdapter=FragmentViewPagerAdapter(requireActivity(),requireContext())
+        pagerAdapter.addFragments(list)
+        binding.viewPager.adapter=pagerAdapter
+
+
+
+        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
+          if (position == 0) {
+              tab.text = "Friend Requests"
+          } else if (position == 1) {
+              tab.text = "Suggestions"
+>>>>>>> 12675d7f49cefe6bd2aac6eed2144b00a7811aef
             }else if (position == 2) {
               tab.text = "My Friends"
-              binding.btnCreateCategory.visibility = View.GONE
           }
+<<<<<<< HEAD
         }.attach()*/
+
     }
 
     override fun onClickOnUpdateFriendRequest(friend: User, status: String) {

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.*
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
@@ -241,8 +242,6 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
         fun getRequestBody(str: String?): RequestBody =
             RequestBody.create("text/plain".toMediaTypeOrNull(), str.toString())
 
-
-
         networkViewModel.etsProfileApi(
             getRequestBody(binding.layout.etName.text.toString()),
             getRequestBody(binding.layout.etLastName.text.toString()),
@@ -263,6 +262,7 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
 //                makeToast(it!!.message)
                 var hashMap = HashMap<String, String>()
                 networkViewModel.getProfileData(hashMap)
+                startActivity(IntentHelper.getProfileScreen(this))
             }
         })
     }
@@ -533,15 +533,22 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
         val datee=PriceFormatter.getDateObject(date)
         calender.time=datee
         selectedYear= calender.get(Calendar.YEAR).toString()
-        selectedMonth= PriceFormatter.getMonth(date)
-        selectedDay = calender.get(Calendar.DAY_OF_MONTH).toString()
-        val selectedYearIndex = getResources().getStringArray(R.array.year).indexOf(selectedYear.toString())
-        val selectedMonthIndex = getResources().getStringArray(R.array.month).indexOf(selectedMonth.toString())
-        val selectedDayIndex = getResources().getStringArray(R.array.date).indexOf(selectedDay.toString())
+        selectedMonth = PriceFormatter.getMonth(date)
+        selectedDay = calender.get(Calendar.DATE).toString()
+
+        Log.d("jkabjkcbajb",selectedYear)
+        Log.d("jkabjkcbajb",selectedMonth)
+        Log.d("jkabjkcbajb",selectedDay)
+
+
+        val selectedYearIndex = getResources().getStringArray(R.array.year).indexOf(selectedYear)
+        val selectedMonthIndex = getResources().getStringArray(R.array.month).indexOf(selectedMonth)
+        Log.d("asdajhksd",selectedMonthIndex.toString())
+        val selectedDayIndex = getResources().getStringArray(R.array.date).indexOf(selectedDay)
+
         binding.layout.spYear.setSelection(selectedYearIndex)
         binding.layout.spMonth.setSelection(selectedMonthIndex)
         binding.layout.spDate.setSelection(selectedDayIndex)
-
 
         if (userData.results.gender  == "Male") {
             binding.layout.rdmale.isChecked=true
@@ -598,12 +605,6 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
                     )
                 }
 
-
-                // Drop down layout style - list view with radio button
-                dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-                // attaching data adapter to spinner
-                binding.layout.spMonth.setAdapter(dataAdapter)
 
             }
 
