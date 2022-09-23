@@ -29,7 +29,6 @@ class FragmentPeopleSearch : BaseFragment(), SearchedUserAdapter.Callbackk {
     var isLoading = false
     override fun onCreate(savedInstanceState: Bundle?) {
 
-
         if (requireArguments().getString("dataSearch") != null) {
             searchData = requireArguments().getString("dataSearch").toString()
         }

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/userlistnavigation"
+    app:startDestination="@id/idFragmentCategory">
+
+
+    <fragment
+        android:id="@+id/idFragmentFriend"
+        android:name="com.stalmate.user.view.dashboard.Friend.FragmentFriend"
+        android:label="FragmentFriend"
+        tools:layout="@layout/fragment_friend" >
+        <action
+            android:id="@+id/action_fragmentFragmentToFragmentFriendCategory"
+            app:destination="@id/idFragmentCategory" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/idFragmentCategory"
+        android:name="com.stalmate.user.view.dashboard.Friend.FragmentFriendCategory"
+        android:label="fragment_category"
+        tools:layout="@layout/fragment_friend_category" >
+
+    </fragment>
+</navigation>
