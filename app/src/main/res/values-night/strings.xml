@@ -55,7 +55,7 @@
     <string name="last_name_toast" translatable="false">Please Enter Last Name</string>
     <string name="email_error_toast" translatable="false">Please Enter Your Email Id</string>
     <string name="select_gendar_error" translatable="false">Please Select Gender</string>
-    <string name="password_error_toast" translatable="false">Please Enter Valid Password</string>
+    <string name="password_error_toast" translatable="false">Please Enter Password</string>
     <string name="accept_tnc" translatable="false">Please Accept TnC</string>
     <string name="process" translatable="false">Process</string>
     <string name="choose_language" translatable="false">Choose Your Language</string>

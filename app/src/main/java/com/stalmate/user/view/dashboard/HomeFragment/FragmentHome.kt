@@ -90,7 +90,6 @@ class FragmentHome(var callback:Callback) : BaseFragment(), AdapterFeed.Callback
 
         getFriendSuggestionListing()
 
-
         binding.postContant.userImage.setOnClickListener {
             startActivity(IntentHelper.getProfileScreen(requireContext()))
         }

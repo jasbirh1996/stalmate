@@ -18,11 +18,8 @@ class FragmentLanguage : BaseFragment(), AdapterLanguage.Callbackk {
     private lateinit var binding : FragmentLanguageBinding
     lateinit var languageAdapter: AdapterLanguage
 
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
     }
 
     override fun onCreateView(

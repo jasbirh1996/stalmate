@@ -219,6 +219,7 @@ class ActivityDashboard : AppCompatActivity(), FragmentHome.Callback {
 
     override fun onCLickOnMenuButton() {
         toggleDrawer()
+
     }
 
     private fun toggleDrawer() {

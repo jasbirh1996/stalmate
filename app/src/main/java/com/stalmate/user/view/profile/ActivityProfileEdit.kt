@@ -262,7 +262,7 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
 //                makeToast(it!!.message)
                 var hashMap = HashMap<String, String>()
                 networkViewModel.getProfileData(hashMap)
-                startActivity(IntentHelper.getProfileScreen(this))
+                onBackPressed()
             }
         })
     }
@@ -599,8 +599,6 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
                         resources.getStringArray(R.array.monthOfTwentyEight)
                     )
                 }
-
-
             }
 
             override fun onNothingSelected(p0: AdapterView<*>?) {
@@ -658,6 +656,10 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         })
 
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
     }
 
 }
