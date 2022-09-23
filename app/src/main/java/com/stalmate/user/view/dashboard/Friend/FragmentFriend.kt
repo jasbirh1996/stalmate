@@ -62,6 +62,10 @@ class FragmentFriend : BaseFragment(), FriendAdapter.Callbackk {
             }else if (position == 2) {
               tab.text = "My Friends"
           }
+
+            if(tab.text == "Friend Requests"){
+                binding.btnCreateCategory.visibility = View.VISIBLE
+            }
         }.attach()
     }
 

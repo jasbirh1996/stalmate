@@ -2,8 +2,6 @@ package com.stalmate.user.Helper
 
 import android.content.Context
 import android.content.Intent
-import com.c2m.storyviewer.screen.StoryActivity
-import com.stalmate.user.modules.reels.activity.ActivityVideoRecorder
 import com.stalmate.user.view.authentication.FragmentOTPEnter
 import com.stalmate.user.view.dashboard.ActivityDashboard
 import com.stalmate.user.view.dashboard.Friend.ActivityCategoryCreate
@@ -67,7 +65,6 @@ public class IntentHelper {
             return Intent(context, ActivityPhotoGallery::class.java)
                 .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
         }
-
 
         fun getActivityWelcomeScreen(context: Context?): Intent? {
             return Intent(context, ActivityWelcome::class.java)
