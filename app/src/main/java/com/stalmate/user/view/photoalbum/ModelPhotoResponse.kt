@@ -6,6 +6,7 @@ import com.stalmate.user.model.ResultResponse
 data class ModelPhotoResponse(
     val message: String,
     val results: List<Photo>,
-    val status: Boolean
+    val status: Boolean,
+    val position: Int
 )
 

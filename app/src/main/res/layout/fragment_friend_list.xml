@@ -36,7 +36,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/ivFilterIcon" />
+                        app:layout_constraintTop_toBottomOf="@+id/ivSortIcon" />
 
 
                     <com.airbnb.lottie.LottieAnimationView
@@ -56,26 +56,95 @@
 
 
                     <ImageView
-                        android:id="@+id/ivFilterIcon"
+                        android:id="@+id/ivSortIcon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:layout_marginEnd="20dp"
                         android:visibility="gone"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/layoutSearchBox"
                         app:srcCompat="@drawable/ic_friends_friend_requests_filter" />
 
-                    <TextView
-                        android:id="@+id/tvFilter"
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/layoutSearchBox"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="16dp"
+                        android:background="@drawable/search_background"
+                        android:visibility="gone"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <EditText
+
+                            android:id="@+id/etSearch"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginEnd="4dp"
+                            android:background="@null"
+                            android:fontFamily="@font/poppins"
+                            android:hint="@string/search"
+                            android:textSize="12sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@+id/appCompatImageView6"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/appCompatImageView6"
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:layout_marginEnd="16dp"
+                            android:src="@drawable/search"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/layoutFilter"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="20dp"
-                        android:text="Filter"
+                        android:layout_marginEnd="10dp"
                         android:visibility="gone"
-                        app:layout_constraintBottom_toBottomOf="@+id/ivFilterIcon"
-                        app:layout_constraintEnd_toStartOf="@+id/ivFilterIcon"
-                        app:layout_constraintTop_toTopOf="@+id/ivFilterIcon" />
+                        app:layout_constraintBottom_toBottomOf="@+id/ivSortIcon"
+                        app:layout_constraintEnd_toStartOf="@+id/ivSortIcon"
+                        app:layout_constraintTop_toTopOf="@+id/ivSortIcon">
+
+                        <TextView
+                            android:id="@+id/tvFilter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/poppins"
+                            android:text="Filter"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="12sp"
+                            android:visibility="visible"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+
+                        <ImageView
+                            android:id="@+id/dropdownIcon"
+                            android:layout_width="6dp"
+                            android:layout_height="6dp"
+                            android:layout_marginStart="4dp"
+                            android:src="@drawable/ic_profile_dropdown"
+                            app:layout_constraintBottom_toBottomOf="@+id/tvFilter"
+                            app:layout_constraintStart_toEndOf="@+id/tvFilter"
+                            app:layout_constraintTop_toTopOf="@+id/tvFilter"
+                            app:tint="@color/colorPrimary" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
                 </androidx.constraintlayout.widget.ConstraintLayout>

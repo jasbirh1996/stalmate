@@ -106,9 +106,15 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
 
 
         binding.layout.tvAlbumPhotoSeeMore.setOnClickListener {
-            startActivity(IntentHelper.getPhotoGalleryAlbumScreen(this)!!.putExtra("viewType", "viewListing")
-                    .putExtra("type", "album_img")
-            )
+            if (binding.layout.photoTab.selectedTabPosition ==0){
+                startActivity(IntentHelper.getPhotoGalleryAlbumScreen(this)!!.putExtra("viewType", "viewNormal").putExtra("type", "photos"))
+
+            }else{
+                startActivity(IntentHelper.getPhotoGalleryAlbumScreen(this)!!.putExtra("viewType", "viewNormal").putExtra("type", "albums"))
+
+            }
+
+
         }
 
         binding.layout.photoTab.addOnTabSelectedListener(object :TabLayout.OnTabSelectedListener {
@@ -300,11 +306,11 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
         var aboutArrayList = ArrayList<AboutProfileLine>()
 
         if (tabType== "Photos") {
-            albumImageAdapter = ProfileAlbumImageAdapter(networkViewModel, this, "albums_img")
+            albumImageAdapter = ProfileAlbumImageAdapter(networkViewModel, this, "")
             binding.layout.rvPhotoAlbumData.adapter = albumImageAdapter
             albumImageAdapter.submitList(userData.photos)
         }else if (tabType== "Albums"){
-            albumAdapter = SelfProfileAlbumAdapter(networkViewModel, this, "albums_img")
+            albumAdapter = SelfProfileAlbumAdapter(networkViewModel, this, "")
             binding.layout.rvPhotoAlbumData.adapter =albumAdapter
             albumAdapter.submitList(userData.albums)
 

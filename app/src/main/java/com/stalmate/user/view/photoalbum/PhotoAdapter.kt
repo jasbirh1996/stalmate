@@ -57,7 +57,7 @@ class PhotoAdapter(val viewModel: AppViewModel, val context: Context,var callbac
                 .into(binding.image)
 
             binding.image.setOnClickListener {
-                context.startActivity(IntentHelper.getPhotoGalleryAlbumScreen(context)!!.putExtra("type", "album_image").putExtra("index",bindingAdapterPosition.toString()).putExtra("viewType","viewFullScreen"))
+                callback.onClickOnPhoto(feed)
             }
 
 
@@ -65,7 +65,7 @@ class PhotoAdapter(val viewModel: AppViewModel, val context: Context,var callbac
     }
 
     public interface Callback{
-        fun onClickOnPhoto(photo: Photo, bindingAdapterPosition: Int)
+        fun onClickOnPhoto(photo: Photo)
     }
 
 }

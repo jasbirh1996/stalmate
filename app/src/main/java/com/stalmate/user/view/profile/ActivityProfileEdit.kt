@@ -215,16 +215,17 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
 
         binding.buttonSeemoreProfile.setOnClickListener {
             startActivity(
-                IntentHelper.getPhotoGalleryAlbumScreen(this)!!.putExtra("viewType", "viewListing")
-                    .putExtra("type", "profile_img")
+                IntentHelper.getPhotoGalleryAlbumScreen(this)!!.putExtra("viewType", "viewPhotoListing")
+                    .putExtra("albumId", "profile_img")
             )
 
         }
 
+
         binding.buttonSeeMoreCover.setOnClickListener {
             startActivity(
-                IntentHelper.getPhotoGalleryAlbumScreen(this)!!.putExtra("viewType", "viewListing")
-                    .putExtra("type", "cover_img")
+                IntentHelper.getPhotoGalleryAlbumScreen(this)!!.putExtra("viewType", "viewPhotoListing")
+                    .putExtra("albumId", "cover_img")
             )
 
         }
@@ -239,8 +240,7 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
 
     private fun updateProfileApiHit() {
 
-        fun getRequestBody(str: String?): RequestBody =
-            RequestBody.create("text/plain".toMediaTypeOrNull(), str.toString())
+        fun getRequestBody(str: String?): RequestBody = RequestBody.create("text/plain".toMediaTypeOrNull(), str.toString())
 
         networkViewModel.etsProfileApi(
             getRequestBody(binding.layout.etName.text.toString()),
@@ -382,8 +382,8 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
 
     fun setUpAboutUI() {
 
-        hitphotoListApi("profile_img")
-        hitphotoListApi("cover_img")
+        getAlbumPhotosById("profile_img")
+        getAlbumPhotosById("cover_img")
         fetchDOB(userData.results.dob)
         binding.layout.etName.setText(userData.results.first_name)
         binding.layout.etLastName.setText(userData.results.last_name)
@@ -478,22 +478,17 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
     }
 
 
-    private fun hitphotoListApi(type: String) {
-
-
+    private fun getAlbumPhotosById(id: String) {
         val hashMap = HashMap<String, String>()
-        hashMap["img_type"] = type
-        hashMap["page"] = "1"
-        hashMap["limit"] = "5"
-
-        networkViewModel.photoIndexLiveData(hashMap)
-        networkViewModel.photoIndexLiveData.observe(this) {
+        hashMap["album_id"] = id
+        hashMap["limit"]="5"
+        networkViewModel.getAlbumPhotos(hashMap)
+        networkViewModel.photoLiveData.observe(this) {
             it.let {
 
                 if (it!!.results.isNotEmpty()) {
-                    if (type == "cover_img") {
-                        coverPictureAdapter = ProfileAlbumAdapter(networkViewModel, this, type)
-
+                    if (id == "cover_img") {
+                        coverPictureAdapter = ProfileAlbumAdapter(networkViewModel, this, id)
                         binding.rvCoverPicture.layoutManager = GridLayoutManager(this, 5)
                         if (userData.results.cover_img.isNotEmpty()) {
                             binding.rvCoverPicture.adapter = coverPictureAdapter
@@ -502,9 +497,9 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
                         } else {
                             binding.layoutCoverImages.visibility = View.GONE
                         }
-                    } else if (type == "profile_img") {
+                    } else if (id == "profile_img") {
 
-                        profilePictureAdapter = ProfileAlbumAdapter(networkViewModel, this, type)
+                        profilePictureAdapter = ProfileAlbumAdapter(networkViewModel, this, id)
                         binding.rvProfilePicture.layoutManager = GridLayoutManager(this, 5)
                         if (userData.results.profile_img.isNotEmpty()) {
                             binding.rvProfilePicture.adapter = profilePictureAdapter

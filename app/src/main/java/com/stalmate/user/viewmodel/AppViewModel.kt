@@ -93,7 +93,7 @@ open class AppViewModel : ViewModel() {
     }
 
     var photoLiveData: LiveData<ModelPhotoResponse?> = MutableLiveData<ModelPhotoResponse?>()
-    fun photoLiveData(map: HashMap<String, String>) {
+    fun getAlbumPhotos(map: HashMap<String, String>) {
         val temp = MutableLiveData<ModelPhotoResponse?>()
         photoLiveData = temp
         getResult(temp, apiInterface.getPhotoList(map))
@@ -311,11 +311,31 @@ open class AppViewModel : ViewModel() {
 
 
     var UplodedAlbumImageLiveData: LiveData<CommonModelResponse?> = MutableLiveData<CommonModelResponse?>()
-    fun uploadAlbumImageApi(@Part album_image: MultipartBody.Part? = null, ) {
+    fun uploadAlbumImageApi(@Part album_image: MultipartBody.Part? = null,        @Part("album_id") albumId: RequestBody, ) {
         val temp = MutableLiveData<CommonModelResponse?>()
         UplodedAlbumImageLiveData = temp
-        getResult(temp, apiInterface.uploadAlbumImage(album_image!!))
+        getResult(temp, apiInterface.addAlbumImage(album_image!!,albumId))
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     var blockData: LiveData<CommonModelResponse?> = MutableLiveData<CommonModelResponse?>()
     fun block(map: HashMap<String, String>) {

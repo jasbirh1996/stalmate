@@ -160,9 +160,17 @@ interface ApiInterface {
     @POST(Constants.UPDATE_PROFILE_API_FILE)
     fun updateUserProfileImage(@Part cover_img: MultipartBody.Part): Call<CommonModelResponse>
 
+
+
+
+
+
+
     @Multipart
     @POST(Constants.UPLOADE_ALBUM_IMAGE_API_FILE)
-    fun uploadAlbumImage(@Part cover_img: MultipartBody.Part): Call<CommonModelResponse>
+    fun addAlbumImage(@Part cover_img: MultipartBody.Part,
+                               @Part("album_id") firstName: RequestBody,): Call<CommonModelResponse>
+
 
     @GET(Constants.URL_PHOTO_ALBUM)
     fun getAlbumList(): Call<ModelAlbumsResponse>

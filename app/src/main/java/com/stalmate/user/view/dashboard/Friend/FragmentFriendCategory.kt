@@ -20,12 +20,16 @@ import com.stalmate.user.utilities.Constants
 
 import com.stalmate.user.view.adapter.FriendAdapter
 import com.stalmate.user.view.adapter.ProfileFriendAdapter
-
-class FragmentFriendCategory(var type: String) : BaseFragment(), FriendAdapter.Callbackk {
+const val CATEGORY_TYPE="categoryType"
+class FragmentFriendCategory : BaseFragment(), FriendAdapter.Callbackk {
     lateinit var binding: FragmentFriendCategoryBinding
-
+    var type=""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+      arguments?.let {
+            type = it.getString(CATEGORY_TYPE)!!
+        }
     }
 
     override fun onCreateView(
@@ -97,6 +101,19 @@ class FragmentFriendCategory(var type: String) : BaseFragment(), FriendAdapter.C
     }
 
     override fun onClickOnProfile(friend: User) {
-        TODO("Not yet implemented")
+
+          }
+
+
+
+    companion object {
+        @JvmStatic
+        fun newInstance(categoryType: String) =
+            BlankFragment().apply {
+                arguments = Bundle().apply {
+                    putString(CATEGORY_TYPE, categoryType)
+                }
+            }
     }
+    
 }

@@ -7,6 +7,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.navigation.NavController
+import androidx.navigation.NavDirections
+import androidx.navigation.NavOptions
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.FragmentNavigator
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
+import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
@@ -19,8 +27,9 @@ import com.stalmate.user.utilities.Constants
 import com.stalmate.user.view.adapter.FriendAdapter
 
 class FragmentFriend : BaseFragment(), FriendAdapter.Callbackk {
-    lateinit var binding:FragmentFriendBinding
-
+    lateinit var binding: FragmentFriendBinding
+    lateinit var navHostFragment: NavHostFragment
+    private lateinit var navController: NavController
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -30,12 +39,95 @@ class FragmentFriend : BaseFragment(), FriendAdapter.Callbackk {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding=DataBindingUtil.bind<FragmentFriendBinding>(inflater.inflate(R.layout.fragment_friend, container, false))!!
+        binding = DataBindingUtil.bind<FragmentFriendBinding>(
+            inflater.inflate(
+                R.layout.fragment_friend,
+                container,
+                false
+            )
+        )!!
         return binding.root
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
+        binding.tabLayout.addTab(  binding.tabLayout.newTab().setText("Friend Requests"));
+        binding.tabLayout.addTab(  binding.tabLayout.newTab().setText("Suggestions"));
+        binding.tabLayout.addTab(  binding.tabLayout.newTab().setText("My Friends"));
+
+        navHostFragment = childFragmentManager.findFragmentById(R.id.nav_host_container) as NavHostFragment
+        navController = navHostFragment.navController
+        binding.btnCreateCategory.setOnClickListener {
+            startActivity(IntentHelper.getCategoryCreateScreen(context))
+        }
+        var bundlex = Bundle()
+        bundlex.putString("categoryType", Constants.TYPE_FRIEND_REQUEST)
+       navController.navigate(R.id.idFragmentCategory,bundlex)
+        binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                var bundle = Bundle()
+
+                when (tab!!.position) {
+
+
+                    0 -> {
+                        bundle.putString("categoryType", Constants.TYPE_FRIEND_REQUEST)
+                        navController.navigate(
+                            R.id.idFragmentCategory, bundle, NavOptions.Builder()
+                                // .setPopUpTo(R.id.loginFragment, true)
+                                .build()
+                        )
+                    }
+                    1 -> {
+                        bundle.putString("categoryType", Constants.TYPE_FRIEND_SUGGESTIONS)
+                        navController.navigate(
+                            R.id.idFragmentCategory, bundle, NavOptions.Builder()
+                                // .setPopUpTo(R.id.loginFragment, true)
+                                .build()
+                        )
+                    }
+                    2 -> {
+                        bundle.putString("categoryType", Constants.TYPE_MY_FRIENDS)
+                        navController.navigate(
+                            R.id.idFragmentCategory, bundle, NavOptions.Builder()
+                                // .setPopUpTo(R.id.loginFragment, true)
+                                .build()
+                        )
+                    }
+
+
+                }
+
+
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+
+            }
+
+        })
+
+
+
+        /*  var list=ArrayList<Fragment>()
+          list.add(FragmentFriendCategory(Constants.TYPE_FRIEND_REQUEST))
+          list.add(FragmentFriendCategory(Constants.TYPE_FRIEND_SUGGESTIONS))
+          list.add(FragmentFriendCategory(Constants.TYPE_MY_FRIENDS))
+          var pagerAdapter=FragmentViewPagerAdapter(requireActivity(),requireContext())
+          pagerAdapter.addFragments(list)
+          binding.viewPager.adapter=pagerAdapter*/
+
+/*        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
+          if (position == 0) tab.text = "Friend Requests" else if (position == 1) {
+                tab.text = "Suggestions"
+              binding.btnCreateCategory.visibility = View.GONE
+=======
         binding.btnBack.setOnClickListener {
             startActivity(IntentHelper.getDashboardScreen(context))
         }
@@ -59,14 +151,13 @@ class FragmentFriend : BaseFragment(), FriendAdapter.Callbackk {
               tab.text = "Friend Requests"
           } else if (position == 1) {
               tab.text = "Suggestions"
+>>>>>>> 12675d7f49cefe6bd2aac6eed2144b00a7811aef
             }else if (position == 2) {
               tab.text = "My Friends"
           }
+<<<<<<< HEAD
+        }.attach()*/
 
-            if(tab.text == "Friend Requests"){
-                binding.btnCreateCategory.visibility = View.VISIBLE
-            }
-        }.attach()
     }
 
     override fun onClickOnUpdateFriendRequest(friend: User, status: String) {
@@ -76,4 +167,14 @@ class FragmentFriend : BaseFragment(), FriendAdapter.Callbackk {
     override fun onClickOnProfile(friend: User) {
 
     }
+
+/*    fun Fragment.navigate(directions: NavDirections) {
+        val currentDestination = (navController.currentDestination as? FragmentNavigator.Destination)?.className
+            ?: (navController.currentDestination as? DialogFragmentNavigator.Destination)?.className
+        if (currentDestination == this.javaClass.name) {
+            navController.navigate(directions)
+        }
+    }*/
+
+
 }

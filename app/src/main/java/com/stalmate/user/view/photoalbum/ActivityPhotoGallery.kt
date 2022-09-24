@@ -1,21 +1,13 @@
 package com.stalmate.user.view.photoalbum
 
-import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.TextView
 import androidx.databinding.DataBindingUtil
-import androidx.navigation.NavController
-import androidx.navigation.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.navigation.*
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.databinding.ActivityPhotoGalleryBinding
-import com.stalmate.user.databinding.CreateAlbumLayoutBinding
 
 
 class ActivityPhotoGallery : BaseActivity() {
@@ -30,28 +22,71 @@ class ActivityPhotoGallery : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-       binding = DataBindingUtil.setContentView(this , R.layout.activity_photo_gallery)
+        binding = DataBindingUtil.setContentView(this , R.layout.activity_photo_gallery)
+
 
         setUpNavigation()
+
+
+
     }
 
     fun setUpNavigation() {
+
         navController=findNavController(R.id.nav_host_fragment)
+        val inflater = navController.navInflater
+        val graph = inflater.inflate(R.navigation.albumnavigation)
         if (intent.getStringExtra("viewType")!=null && intent.getStringExtra("viewType")=="viewNormal"){
+            graph.setStartDestination(R.id.fragmentAlbumPhoto)
+ /*           val arguments=NavArgument.Builder().setDefaultValue("Hello").build()
+            graph.addArgument("",arguments)*/
+            if (intent.getStringExtra("albumId")!=null){
+                graph.addArgument("albumId",NavArgument.Builder().setDefaultValue(intent.getStringExtra("albumId")!!.toString()).build())
+            }else{
+                graph.addArgument("albumId",NavArgument.Builder().setDefaultValue("").build())
+
+            }
+
+
+            if (intent.getStringExtra("type")!=null){
+                graph.addArgument("type",NavArgument.Builder().setDefaultValue(intent.getStringExtra("type")!!.toString()).build())
+            }
+
+            navController.graph=graph
+           // navController.navigate(R.id.fragmentAlbumPhoto)
         }
 
         if (intent.getStringExtra("viewType")!=null && intent.getStringExtra("viewType")=="viewFullScreen"){
-            val bundle = Bundle()
-            bundle.putString("index", intent.getStringExtra("index")!!.toString())
-            bundle.putString("type", intent.getStringExtra("type")!!.toString())
-            navController.navigate(R.id.action_fragmentAlbumListing_to_fragmentAlbumFullView, bundle)
+            graph.setStartDestination(R.id.fragmentAlbumFullView)
+
+            graph.addArgument("albumId",NavArgument.Builder().setDefaultValue(intent.getStringExtra("albumId")!!.toString()).build())
+
+            if (intent.getStringExtra("imageId")!=null){
+                graph.addArgument("imageId",NavArgument.Builder().setDefaultValue(intent.getStringExtra("imageId")!!.toString()).build())
+            }else{
+                graph.addArgument("imageId",NavArgument.Builder().setDefaultValue("").build())
+
+            }
+
+
+
+
+            navController.graph=graph
+
         }
 
-        if (intent.getStringExtra("viewType")!=null && intent.getStringExtra("viewType")=="viewListing"){
-            val bundle = Bundle()
-            bundle.putString("type", intent.getStringExtra("type")!!.toString())
-            navController.navigate(R.id.action_fragmentAlbumListing_to_fragmentAlbumPhoto, bundle)
+        if (intent.getStringExtra("viewType")!=null && intent.getStringExtra("viewType")=="viewPhotoListing"){
+            graph.setStartDestination(R.id.fragmentAlbumPhotoListInGrid)
+            Log.d("askldjasd","aosjdasd")
+            graph.addArgument("albumId",NavArgument.Builder().setDefaultValue(intent.getStringExtra("albumId")!!.toString()).build())
+            graph.addArgument("imageId",NavArgument.Builder().setDefaultValue("").build())
+            navController.graph=graph
         }
 
     }
+
+
+ /*   override fun onBackPressed() {
+        Navigation.findNavController(binding.root).popBackStack()
+    }*/
 }

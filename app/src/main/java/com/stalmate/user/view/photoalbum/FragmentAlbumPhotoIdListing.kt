@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
 import com.canhub.cropper.CropImageContract
@@ -32,8 +33,8 @@ class FragmentAlbumPhotoIdListing : BaseFragment(),  PhotoAdapter.Callback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (requireArguments().getString("id") != null) {
-            id = requireArguments().getString("id").toString()
+        if (requireArguments().getString("albumId") != null) {
+            id = requireArguments().getString("albumId").toString()
         }
 
     }
@@ -56,14 +57,17 @@ class FragmentAlbumPhotoIdListing : BaseFragment(),  PhotoAdapter.Callback {
             startCrop()
         }
 
+        binding.toolbar.back.setOnClickListener {
+            findNavController().popBackStack()
+        }
+
         return binding.root
     }
 
     private fun getAlbumImagelist() {
-
         val hashMap = HashMap<String, String>()
-        hashMap["album_id"] = ""
-        networkViewModel.photoLiveData(hashMap)
+        hashMap["album_id"] = id
+        networkViewModel.getAlbumPhotos(hashMap)
         networkViewModel.photoLiveData.observe(requireActivity()) {
             it.let {
                 binding.rvPhoto.layoutManager= GridLayoutManager(context, 4)
@@ -82,9 +86,7 @@ class FragmentAlbumPhotoIdListing : BaseFragment(),  PhotoAdapter.Callback {
         )
     }
 
-    override fun onClickOnPhoto(photo: Photo, bindingAdapterPosition: Int) {
 
-    }
 
     /*Cover Image Picker */
     private val cropImage = registerForActivityResult(CropImageContract()) { result ->
@@ -103,26 +105,32 @@ class FragmentAlbumPhotoIdListing : BaseFragment(),  PhotoAdapter.Callback {
     }
 
     private fun updateProfileImageApiHit() {
-
+        fun getRequestBody(str: String?): RequestBody = RequestBody.create("text/plain".toMediaTypeOrNull(), str.toString())
         val thumbnailBody: RequestBody = RequestBody.create("image/*".toMediaTypeOrNull(), imageFile!!)
 
-        val profile_image1: MultipartBody.Part = MultipartBody.Part.Companion.createFormData("files",
+        val profile_image1: MultipartBody.Part = MultipartBody.Part.Companion.createFormData("files[]",
             imageFile!!.name,
             thumbnailBody
         ) //image[] for multiple image
-        val hashMap = HashMap<String, String>()
-        hashMap["album_id"] = id
-        hashMap["files[]"] = profile_image1.toString()
 
-        networkViewModel.uploadAlbumImageApi(profile_image1)
+        networkViewModel.uploadAlbumImageApi(profile_image1,getRequestBody(id))
         networkViewModel.UplodedAlbumImageLiveData.observe(this, Observer {
             it.let {
-                makeToast(it!!.message)
-                var hashMap = java.util.HashMap<String, String>()
-                networkViewModel.getProfileData(hashMap)
+           /*     makeToast(it!!.message)*/
+            if (it!!.status!!){
+           /*     var hashMap = java.util.HashMap<String, String>()
+                networkViewModel.getProfileData(hashMap)*/
                 getAlbumImagelist()
             }
+            }
         })
+    }
+
+    override fun onClickOnPhoto(photo: Photo) {
+       val bundle = Bundle()
+        bundle.putString("imageId", photo.id)
+        bundle.putString("albumId", id)
+        findNavController().navigate(R.id.action_fragmentAlbumPhotoIdListing_to_fragmentIMageFullView,bundle)
     }
 
 }

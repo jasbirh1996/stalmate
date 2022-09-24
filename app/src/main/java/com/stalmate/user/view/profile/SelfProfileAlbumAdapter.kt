@@ -30,9 +30,9 @@ class SelfProfileAlbumAdapter(val viewModel: AppViewModel, val context: Context,
             ImageLoaderHelperGlide.setGlideCorner(context,binding.ivImage,response.img,R.drawable.user_placeholder)
 
             binding.ivImage.setOnClickListener {
-//                context.startActivity(IntentHelper.getPhotoGalleryAlbumScreen(context)!!.putExtra("type", type).putExtra("index",bindingAdapterPosition.toString()).putExtra("viewType","viewFullScreen"))
-                context.startActivity(IntentHelper.getPhotoGalleryAlbumScreen(context)!!.putExtra("viewType", "viewListing")
-                    .putExtra("type", "album_img")
+
+          context.startActivity(IntentHelper.getPhotoGalleryAlbumScreen(context)!!.putExtra("viewType", "viewPhotoListing")
+                    .putExtra("albumId", response.id)
                 )
             }
         }
@@ -52,7 +52,6 @@ class SelfProfileAlbumAdapter(val viewModel: AppViewModel, val context: Context,
     override fun onBindViewHolder(holder: AlbumViewHolder, position: Int) {
         holder.bind(list.get(position))
     }
-
     override fun getItemCount(): Int {
         return list.size
     }
