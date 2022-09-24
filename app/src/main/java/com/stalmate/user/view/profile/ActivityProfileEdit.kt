@@ -263,13 +263,13 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
                 var hashMap = HashMap<String, String>()
                 networkViewModel.getProfileData(hashMap)
                 onBackPressed()
+
             }
         })
     }
 
 
     private fun updateProfileImageApiHit() {
-
 
         val thumbnailBody: RequestBody = RequestBody.create("image/*".toMediaTypeOrNull(), imageFile!!)
 
