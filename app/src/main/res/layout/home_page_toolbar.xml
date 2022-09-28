@@ -98,7 +98,6 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 android:layout_marginTop="10dp"
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -109,10 +108,8 @@
                     android:id="@+id/linearLayout4"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-
                     android:orientation="horizontal"
                     app:layout_constraintEnd_toStartOf="@+id/linearLayout3"
-                    app:layout_constraintHorizontal_bias="0.36"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
@@ -121,9 +118,8 @@
                         android:id="@+id/cardView3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="4dp"
                         android:background="@color/white"
-                        app:cardCornerRadius="30dp"
+                        app:cardCornerRadius="20dp"
                         app:cardUseCompatPadding="true"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent">
@@ -131,9 +127,9 @@
 
                         <androidx.appcompat.widget.AppCompatImageView
                             android:id="@+id/appCompatImageView2"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:padding="10dp"
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:padding="8dp"
                             android:src="@drawable/ic_header_feed_icon"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
@@ -161,11 +157,9 @@
                     android:id="@+id/linearLayout3"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
                     android:orientation="horizontal"
                     app:layout_constraintBottom_toBottomOf="@+id/linearLayout4"
                     app:layout_constraintEnd_toStartOf="@+id/linearLayout2"
-                    app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toEndOf="@+id/linearLayout4"
                     app:layout_constraintTop_toTopOf="@+id/linearLayout4">
 
@@ -175,7 +169,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@color/white"
-                        app:cardCornerRadius="30dp"
+                        app:cardCornerRadius="20dp"
                         app:cardUseCompatPadding="true"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent">
@@ -183,9 +177,9 @@
 
                         <androidx.appcompat.widget.AppCompatImageView
                             android:id="@+id/appCompatImageView3"
-                            android:layout_width="37dp"
-                            android:layout_height="38dp"
-                            android:padding="10dp"
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:padding="8dp"
                             android:src="@drawable/ic_header_icompus_icon"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
@@ -201,8 +195,6 @@
                         android:text="@string/campus"
                         android:textSize="12sp"
                         app:layout_constraintBottom_toBottomOf="@+id/cardView2"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toEndOf="@+id/cardView2"
                         app:layout_constraintTop_toTopOf="@+id/cardView2" />
 
@@ -212,8 +204,6 @@
                     android:id="@+id/linearLayout2"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="4dp"
-
                     android:orientation="horizontal"
                     app:layout_constraintBottom_toBottomOf="@+id/linearLayout3"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -227,16 +217,16 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@color/white"
-                        app:cardCornerRadius="30dp"
+                        app:cardCornerRadius="20dp"
                         app:cardUseCompatPadding="true"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent">
 
                         <androidx.appcompat.widget.AppCompatImageView
                             android:id="@+id/appCompatImageView4"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:padding="10dp"
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:padding="8dp"
                             android:src="@drawable/ic_header_notification_icon"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
@@ -247,13 +237,11 @@
                     <androidx.appcompat.widget.AppCompatTextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginEnd="10dp"
                         android:text="@string/notification"
                         android:textSize="12sp"
+                        android:maxLines="1"
                         app:layout_constraintBottom_toBottomOf="@+id/cardView"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toEndOf="@+id/cardView"
                         app:layout_constraintTop_toTopOf="@+id/cardView" />
 

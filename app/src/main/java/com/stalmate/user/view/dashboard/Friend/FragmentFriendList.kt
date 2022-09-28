@@ -271,29 +271,18 @@ class FragmentFriendList(var type: String, var subtype: String,var userId:String
         popup.show()
     }
 
-
-
-
-
     fun setupUI(){
         if (type.equals(Constants.TYPE_FRIEND_REQUEST)) {
         binding.tvData.text="No Friends Requests to show"
-
         } else if (type.equals(Constants.TYPE_FRIEND_SUGGESTIONS)) {
             binding.tvData.text="No Friends Suggestions to show"
         } else if (type.equals(Constants.TYPE_FRIEND_SUGGESTIONS_FOLLOWERS)) {
-
             binding.tvData.text="No Friends Suggestions to show"
-
         } else if (type.equals(Constants.TYPE_MY_FRIENDS) && subtype.equals(Constants.TYPE_FRIEND_FOLLOWING)) {
             binding.tvData.text="No Friends to show"
-
         } else if (type.equals(Constants.TYPE_MY_FRIENDS) && subtype.equals(Constants.TYPE_FRIEND_FOLLOWER)) {
             binding.tvData.text="No Friends to show"
-
-
         } else if (type.equals(Constants.TYPE_ALL_FOLLOWERS_FOLLOWING) && subtype.equals(Constants.TYPE_USER_TYPE_FOLLOWERS)) {
-            
             binding.tvData.text="No Followers to show"
         } else if (type.equals(Constants.TYPE_ALL_FOLLOWERS_FOLLOWING) && subtype.equals(Constants.TYPE_USER_TYPE_FOLLOWINGS)) {
             binding.tvData.text="No Followings to show"
@@ -306,13 +295,10 @@ class FragmentFriendList(var type: String, var subtype: String,var userId:String
       
       if (friendAdapter.list.isEmpty()){
             binding.layoutNoData.visibility=View.VISIBLE
-          binding.ivSortIcon.visibility=View.GONE
-          binding.layoutFilter.visibility=View.GONE
+            binding.ivSortIcon.visibility=View.GONE
+            binding.layoutFilter.visibility=View.GONE
       }else{
           binding.layoutNoData.visibility=View.GONE
-
-
-
 
           if (type.equals(Constants.TYPE_FRIEND_REQUEST)) {
 

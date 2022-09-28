@@ -1,6 +1,7 @@
 package com.stalmate.user.view.dashboard.HomeFragment
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -22,6 +23,7 @@ import com.stalmate.user.utilities.Constants
 import com.stalmate.user.view.adapter.SuggestedFriendAdapter
 import com.stalmate.user.view.adapter.UserHomeStoryAdapter
 import com.stalmate.user.view.dialogs.DialogFragmentLoader
+import com.stalmate.user.view.profile.ActivitySideDawer
 
 
 class FragmentHome(var callback:Callback) : BaseFragment(), AdapterFeed.Callbackk, UserHomeStoryAdapter.Callbackk,
@@ -80,7 +82,6 @@ class FragmentHome(var callback:Callback) : BaseFragment(), AdapterFeed.Callback
         })
 
         networkViewModel.feedLiveData.observe(viewLifecycleOwner, Observer {
-            Log.d("asdasdasd","oaspiasddsad")
             it.let {
                 binding.shimmerViewContainer.stopShimmer()
                 binding.storyView.visibility=View.VISIBLE
@@ -104,6 +105,8 @@ class FragmentHome(var callback:Callback) : BaseFragment(), AdapterFeed.Callback
         }
 
         binding.toolbar.ivButtonMenu.setOnClickListener {
+//            startActivity(Intent(requireContext(), ActivitySideDawer::class.java))
+
             callback.onCLickOnMenuButton()
         }
 

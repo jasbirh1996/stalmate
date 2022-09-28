@@ -10,6 +10,7 @@ import com.stalmate.user.R
 import com.stalmate.user.databinding.ItemProfessionProfileBinding
 import com.stalmate.user.model.*
 import com.stalmate.user.viewmodel.AppViewModel
+import java.util.Collections.list
 import kotlin.collections.ArrayList
 
 class ProfessionListAdapter(
@@ -43,6 +44,13 @@ class ProfessionListAdapter(
         notifyDataSetChanged()
     }
 
+    fun addToList(feedList:Profession) {
+        val size = list.size
+        list.add(feedList)
+        val sizeNew = list.size
+        notifyDataSetChanged()
+    }
+
 
     public interface Callbackk {
         fun onClickItemProfessionEdit(position: Profession, index: Int)
@@ -55,8 +63,8 @@ class ProfessionListAdapter(
         fun bind(profession: Profession) {
 
 
-            binding.tvComapny.text = profession.company_name
-            binding.tvgesignation.text = profession.designation
+            binding.tvComapny.text = profession.designation
+            binding.tvgesignation.text = profession.company_name
             binding.tvFrom.text = profession.from
 
             if (profession.currently_working_here=="Yes"){
@@ -71,8 +79,6 @@ class ProfessionListAdapter(
                     bindingAdapterPosition,
                     (binding.root.context as? LifecycleOwner)!!
                 )
-
-
             }
 
             binding.ivedit.setOnClickListener {
@@ -97,7 +103,7 @@ class ProfessionListAdapter(
                 if (it.status) {
                     list.removeAt(position)
                     notifyItemRemoved(position)
-                    callback.deleteitem()
+
                 }
             }
         }

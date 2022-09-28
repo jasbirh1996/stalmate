@@ -27,6 +27,10 @@ class DrawerClass : BaseActivity() , DrawerAdapter.Callbackk {
         setContentView(R.layout.side_drawer_layout);
         drawerAdapter = DrawerAdapter(networkViewModel, this,this)
 
+        binding.btnBack.setOnClickListener {
+            onBackPressed()
+        }
+
         data.add(ModelDrawer(R.drawable.ic_menu_posts, "Posts"))
         data.add(ModelDrawer(R.drawable.ic_menu_pages, "Pages"))
         data.add(ModelDrawer(R.drawable.ic_menu_mystories, "My stories"))
@@ -50,6 +54,12 @@ class DrawerClass : BaseActivity() , DrawerAdapter.Callbackk {
     override fun onClickDrawerItem(postId: String) {
 
     }
+
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+    }
+
 
 
 }

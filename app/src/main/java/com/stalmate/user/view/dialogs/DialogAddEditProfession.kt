@@ -7,28 +7,21 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Window
 import android.view.WindowManager
+import android.widget.CompoundButton
 import android.widget.LinearLayout
+import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.findViewTreeLifecycleOwner
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.stalmate.user.R
 import com.stalmate.user.databinding.DialougeAddProfessionBinding
-import com.stalmate.user.model.EducationProfession
 import com.stalmate.user.model.Profession
 import com.stalmate.user.viewmodel.AppViewModel
-
-
-import retrofit2.Call
-import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.HashMap
 
 
 class DialogAddEditProfession(
@@ -117,6 +110,10 @@ class DialogAddEditProfession(
             }
         }
 
+        binding.radioButtonCurrentWork.setOnCheckedChangeListener { p0, p1 ->
+            binding.tvCdTo.isClickable = false
+        }
+
         binding.ivClose.setOnClickListener {
             dismiss()
         }
@@ -126,6 +123,7 @@ class DialogAddEditProfession(
 
           if (profession.currently_working_here=="Yes"){
               binding.radioButtonCurrentWork.isChecked=true
+              binding.tvCdTo.isClickable = false
           }
 
             binding.tvCdTo.setText(profession.to)
@@ -199,15 +197,17 @@ class DialogAddEditProfession(
             return false
         }else if (!binding.radioButtonCurrentWork.isChecked){
 
-            binding.tvCdTo.isClickable = false
             if (binding.tvCdTo.text.isEmpty()){
-
                 makeToast("Please Enter Work Status")
                 return false
             }
         }
+
+
         return true
     }
+
+
 
 
     fun makeToast(message:String){

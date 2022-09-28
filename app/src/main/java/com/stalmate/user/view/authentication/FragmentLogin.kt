@@ -88,7 +88,7 @@ class FragmentLogin : BaseFragment() {
         binding.createAccount.setOnClickListener {
             findNavController().apply {
                 navigate(R.id.fragmentSignUp)
-                backQueue.clear()
+                /*backQueue.clear()*/
             }
         }
 
