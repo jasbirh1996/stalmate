@@ -26,6 +26,7 @@ import com.stalmate.user.model.AboutProfileLine
 import com.stalmate.user.model.User
 import com.stalmate.user.utilities.Constants
 import com.stalmate.user.utilities.ImageLoaderHelperGlide
+import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.utilities.ValidationHelper
 import com.stalmate.user.view.adapter.ProfileAboutAdapter
 
@@ -282,6 +283,8 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
             it.let {
                 userData = it!!.results
                 setUpAboutUI("Photos")
+                PrefManager.getInstance(this)!!.userProfileDetail = it
+
             }
         })
     }
@@ -338,14 +341,14 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
                 )
             }
 
-            aboutArrayList.add(
+           /* aboutArrayList.add(
                 AboutProfileLine(
                     R.drawable.ic_profile_location,
                     "Lives at",
                     userData.profile_data[0].home_town,
                     "at"
                 )
-            )
+            )*/
             aboutArrayList.add(
                 AboutProfileLine(
                     R.drawable.ic_profile_location,

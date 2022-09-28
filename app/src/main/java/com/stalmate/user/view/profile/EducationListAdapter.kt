@@ -11,10 +11,7 @@ import com.bumptech.glide.Glide
 import com.stalmate.user.R
 import com.stalmate.user.databinding.ItemEducationprofileBinding
 import com.stalmate.user.databinding.ItemGalleryBinding
-import com.stalmate.user.model.Education
-import com.stalmate.user.model.Result
-import com.stalmate.user.model.ResultResponse
-import com.stalmate.user.model.User
+import com.stalmate.user.model.*
 import com.stalmate.user.view.language.AdapterLanguage
 import com.stalmate.user.viewmodel.AppViewModel
 import java.util.*
@@ -40,6 +37,14 @@ class EducationListAdapter(val viewModel: AppViewModel, val context: Context, va
     fun submitList(albumList: List<Education>) {
         list.clear()
         list.addAll(albumList)
+        notifyDataSetChanged()
+    }
+
+    fun addToList(feedList: Education) {
+        val size = list.size
+        list.add(feedList)
+        val sizeNew = list.size
+       /* notifyItemRangeChanged(size, sizeNew)*/
         notifyDataSetChanged()
     }
 

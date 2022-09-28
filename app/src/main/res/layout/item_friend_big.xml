@@ -153,7 +153,7 @@
               android:layout_width="0dp"
               android:layout_height="wrap_content"
               android:visibility="gone"
-              app:layout_constraintEnd_toEndOf="@+id/tvUserName"
+              app:layout_constraintEnd_toEndOf="parent"
               app:layout_constraintStart_toStartOf="@+id/tvUserName"
               app:layout_constraintTop_toBottomOf="@+id/tvLineTwo">
 
@@ -177,14 +177,14 @@
                   style="@style/customButtonStyle"
                   android:layout_width="0dp"
                   android:layout_height="wrap_content"
-                  android:layout_marginStart="10dp"
+                  android:layout_marginStart="5dp"
+                  android:maxLines="1"
                   android:minHeight="0dp"
                   android:text="Friends"
                   android:textSize="10sp"
                   android:visibility="visible"
                   app:backgroundTint="@null"
                   app:layout_constraintBottom_toBottomOf="@+id/buttonFollow"
-                  app:layout_constraintEnd_toEndOf="parent"
                   app:layout_constraintStart_toEndOf="@+id/buttonFollow"
                   app:layout_constraintTop_toTopOf="@+id/buttonFollow" />
           </androidx.constraintlayout.widget.ConstraintLayout>

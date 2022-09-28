@@ -68,6 +68,9 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
         // attaching data adapter to spinner
         binding.spMonth.setAdapter(dataAdapter);
 
+
+
+
 //        binding.spDate.setBackgroundColor()
 
 
@@ -348,7 +351,7 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
             makeToast(getString(R.string.password_error_toast))
             return false
         } else if (!isValidPassword(binding.etPassword.text.toString().trim())) {
-                makeToast("Password Must Include Atleast"+"\n"+"1 uppercase Lowercase A-Z"+"\n"+"Number 0-1 & 1 Spaecial Character #@&/")
+                makeToast("Password Must Include Atleast 1-uppercase Lowercase A-Z, a-z Number 0-1 , 1-Spaecial Character #@&/")
                 return false
         } else if (!binding.tmcheckbox.isChecked) {
                 makeToast(getString(R.string.accept_tnc))
@@ -452,7 +455,7 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
         binding.toolbar.menuChat.setImageDrawable(getResources().getDrawable(R.drawable.ic_signup_top_logo));
 
         binding.toolbar.back.setOnClickListener {
-            activity?.onBackPressed()
+            findNavController().popBackStack()
         }
     }
 

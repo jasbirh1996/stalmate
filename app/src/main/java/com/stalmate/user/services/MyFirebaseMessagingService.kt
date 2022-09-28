@@ -76,11 +76,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
            //  intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP || Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
 
-
-
-
-
-
             intent.putExtra("notificationType", remoteMessage.data["notificationType"])
             //   intent.setFlags( Intent.FLAG_ACTIVITY_SINGLE_TOP);
             val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_MUTABLE)
@@ -135,8 +130,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             val intent = Intent(this, ActivityDashboard::class.java)
             intent.putExtra("notificationType", remoteMessage.data["notificationType"])
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-            val pendingIntent =
-                PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+            val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
             val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
             val mBuilder = NotificationCompat.Builder(this)
             mBuilder.setSmallIcon(R.mipmap.ic_launcher)
@@ -167,11 +161,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     fun setupNotificationDataOnNotificationLayout(remoteMessage: RemoteMessage) : Intent{
 
         var intent=Intent()
-
-
-
-
-
         return  intent
     }
 }

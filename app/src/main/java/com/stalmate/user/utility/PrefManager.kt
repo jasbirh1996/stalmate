@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.slatmate.user.model.ModelRegisterResponse
 import com.stalmate.user.model.ModelLoginResponse
+import com.stalmate.user.model.ModelUser
 
 
 class PrefManager(private val context: Context) {
@@ -44,6 +45,21 @@ class PrefManager(private val context: Context) {
             val gson = Gson()
             val json: String = gson.toJson(user)
             editor.putString(KEY_USER_DETAILS, json)
+            editor.commit()
+        }
+
+
+
+    var userProfileDetail: ModelUser
+        get() {
+            val gson = Gson()
+            val json = preferences.getString(KEY_USER_DETAILS_profile, "")
+            return gson.fromJson(json, ModelUser::class.java)
+        }
+        set(user) {
+            val gson = Gson()
+            val json: String = gson.toJson(user)
+            editor.putString(KEY_USER_DETAILS_profile, json)
             editor.commit()
         }
 
@@ -121,6 +137,7 @@ class PrefManager(private val context: Context) {
         private const val KEY_IS_LOGGED_IN = "is_Login"
         private const val KEY_IS_OLD_USER = "is_First_Time"
         private const val KEY_USER_DETAILS = "user"
+        private const val KEY_USER_DETAILS_profile = "userProfile"
         fun getInstance(context: Context): PrefManager? {
             if (instance == null) {
                 instance = PrefManager(context)

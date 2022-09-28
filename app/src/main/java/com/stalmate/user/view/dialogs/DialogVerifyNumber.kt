@@ -25,12 +25,13 @@ import java.util.*
 class DialogVerifyNumber(
     private val context: Context,
     var viewModel: AppViewModel,
-    var number : String
+    var number : String,
+    var callback : Callbackk
    ) {
     private var dialog: Dialog? = null
     private lateinit var binding: DialogueNumberVerifyBinding
     var isDialogShowing = false
-        private set
+
 
     fun show() {
         dialog = Dialog(context)
@@ -55,7 +56,6 @@ class DialogVerifyNumber(
             dialog!!.window!!.setDimAmount(0.5f)
             //dialog.getWindow().setLayout(ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT);
         }
-
 
         binding.tventeredNumber.text = "Enter OTP Code sent to"+" "+"+"+number
 
@@ -97,9 +97,15 @@ class DialogVerifyNumber(
                 if (it.status == true){
                     makeToast(it.message.toString())
                     dismiss()
+                    callback.onSuccessFullyAddNumber()
                 }
             }
         }
+    }
+
+    public interface Callbackk {
+        fun onSuccessFullyAddNumber()
+
     }
 
     fun dismiss() {

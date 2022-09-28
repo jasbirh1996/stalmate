@@ -3,8 +3,7 @@ package com.stalmate.user.view.dashboard
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.Gravity
-import android.view.View
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
@@ -23,8 +22,7 @@ import com.stalmate.user.view.dashboard.HomeFragment.FragmentMenu
 import com.stalmate.user.view.dashboard.VideoReels.FragmentReels
 import com.stalmate.user.view.dashboard.funtime.FragmentFunTime
 
-
-class ActivityDashboard : AppCompatActivity(), FragmentHome.Callback {
+class ActivityDashboard : AppCompatActivity(), FragmentHome.Callback , FragmentFriend.Callbackk, FragmentMenu.Callback{
 
     private lateinit var binding: ActivityDashboardBinding
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,7 +32,8 @@ class ActivityDashboard : AppCompatActivity(), FragmentHome.Callback {
         setContentView(binding.root)
         setupBottomBar()
         onNewIntent(intent)
-        loadDrawerFragment(FragmentMenu())
+
+        /*loadDrawerFragment(FragmentMenu())*/
         //  setBottomNavigationInNormalWay(savedInstanceState)
     }
 
@@ -46,10 +45,8 @@ class ActivityDashboard : AppCompatActivity(), FragmentHome.Callback {
         private const val ID_ACCOUNT = 4
     }
 
-
-
-
     override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
         if (intent!!.getStringExtra("notificationType") != null) {
             startActivity(
                 IntentHelper.getOtherUserProfileScreen(this)!!
@@ -62,15 +59,13 @@ class ActivityDashboard : AppCompatActivity(), FragmentHome.Callback {
 
     fun setupBottomBar() {
         binding.bottomNavigationView.selectedItemId = R.id.home
-        fm.beginTransaction().add(binding.fragmentContainerView.id, fragment5, "5").hide(fragment5)
-            .commit()
-        fm.beginTransaction().add(binding.fragmentContainerView.id, fragment4, "4").hide(fragment4)
-            .commit()
-        fm.beginTransaction().add(binding.fragmentContainerView.id, fragment3, "3").hide(fragment3)
-            .commit()
-        fm.beginTransaction().add(binding.fragmentContainerView.id, fragment2, "2").hide(fragment2)
-            .commit()
+
+        fm.beginTransaction().add(binding.fragmentContainerView.id, fragment5, "5").hide(fragment5).commit()
+        fm.beginTransaction().add(binding.fragmentContainerView.id, fragment4, "4").hide(fragment4).commit()
+        fm.beginTransaction().add(binding.fragmentContainerView.id, fragment3, "3").hide(fragment3).commit()
+        fm.beginTransaction().add(binding.fragmentContainerView.id, fragment2, "2").hide(fragment2).commit()
         fm.beginTransaction().add(binding.fragmentContainerView.id, fragment1, "1").commit()
+
         binding.bottomNavigationView.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.home -> {
@@ -95,24 +90,22 @@ class ActivityDashboard : AppCompatActivity(), FragmentHome.Callback {
                     fm.beginTransaction().hide(active).show(fragment5).commit()
                     active = fragment5
                 }
-
                 else -> {
 
                 }
             }
             true
         }
-
     }
-
 
     val fragment1: Fragment = FragmentHome(this)
     val fragment2: Fragment = FragmentFunTime()
     val fragment3: Fragment = FragmentChatNCallBase()
     val fragment4: Fragment = FragmentReels()
-    val fragment5: Fragment = FragmentFriend()
+    val fragment5: Fragment = FragmentFriend(this)
     val fm: FragmentManager = supportFragmentManager
     var active = fragment1
+
     private fun setBottomNavigationInNormalWay(savedInstanceState: Bundle?) {
 
         //tvSelected.typeface = Typeface.createFromAsset(assets, "fonts/SourceSansPro-Regular.ttf")
@@ -223,11 +216,11 @@ class ActivityDashboard : AppCompatActivity(), FragmentHome.Callback {
     }
 
     private fun toggleDrawer() {
-
         val drawerLayout: DrawerLayout = findViewById(R.id.drawerLayout)
         if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
             drawerLayout.closeDrawer(GravityCompat.END)
         } else {
+            loadDrawerFragment(FragmentMenu(this))
             drawerLayout.openDrawer(GravityCompat.END)
         }
     }
@@ -241,10 +234,6 @@ class ActivityDashboard : AppCompatActivity(), FragmentHome.Callback {
         }
 
     }
-
-
-
-
 
     private fun loadDrawerFragment(fragment: Fragment) {
 
@@ -261,6 +250,14 @@ class ActivityDashboard : AppCompatActivity(), FragmentHome.Callback {
 
             ft.commit()
         }
+    }
+
+    override fun onClickBack() {
+        setupBottomBar()
+    }
+
+    override fun onCLickBackButton() {
+        toggleDrawer()
     }
 
 }

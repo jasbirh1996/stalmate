@@ -475,7 +475,7 @@
 
 
     <string name="welcome_to_satalment">Welcome to <font fgcolor="#0F52BA">Stalmate</font></string>
-    <string name="enter_your_email_id">Email Your Email id*</string>
+    <string name="enter_your_email_id">Enter Your Email id*</string>
     <string name="enter_your_password">Enter Your Password</string>
     <string name="creates_password">Create Password</string>
     <string name="forget_password">Forgot Password?</string>
@@ -557,7 +557,7 @@
     <string name="your_account_has_been_successfully_created">Your account has been successfully created</string>
     <string name="sync_contacts">Sync Contacts</string>
     <string name="enter_bio">Enter Bio</string>
-    <string name="profession">Profession</string>
+    <string name="profession">Add Profession</string>
     <string name="mobile_number">Mobile Number</string>
     <string name="add_more">+Add</string>
     <string name="marital_status">Marital Status</string>
@@ -613,7 +613,7 @@
     <string name="electronics_amp_communication_engineering"><![CDATA[Electronics & Communication Engineering]]></string>
     <string name="save">Save</string>
     <string name="add_education">Add Education</string>
-    <string name="education">Education</string>
+    <string name="education">Add Education</string>
     <string name="company_name">Company Name</string>
     <string name="designation">Designation</string>
     <string name="from">From</string>
@@ -641,6 +641,7 @@
     <string name="otp_verification">OTP Verification</string>
     <string name="verify_amp_procced"><![CDATA[Verify & Procced]]></string>
     <string name="please_enter_mobile_number">Please enter Moblie number</string>
+    <string name="please_enter_mobile_number_more_then">Please enter more then 10 digit Moblie number</string>
     <string name="create_album">Create Album</string>
     <string name="create">CREATE</string>
     <string name="add_photo_videos">Add Photo/Videos</string>

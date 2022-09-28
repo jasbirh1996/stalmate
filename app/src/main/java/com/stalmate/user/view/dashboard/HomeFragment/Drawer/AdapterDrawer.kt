@@ -2,6 +2,7 @@ package com.stalmate.user.view.dashboard.HomeFragment.Drawer
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
@@ -10,6 +11,7 @@ import com.bumptech.glide.Glide
 import com.stalmate.user.R
 import com.stalmate.user.databinding.ItemDrawerLayoutBinding
 import com.stalmate.user.model.Result
+import com.stalmate.user.view.authentication.ActivityAuthentication
 import com.stalmate.user.viewmodel.AppViewModel
 
 class DrawerAdapter(val viewModel: AppViewModel,
@@ -28,6 +30,19 @@ class DrawerAdapter(val viewModel: AppViewModel,
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         holder.bind(list.get(position))
+
+        when(position){
+
+
+            10 ->{
+                    context.startActivity(Intent(context, ActivityAuthentication::class.java))
+
+            }
+
+        }
+
+
+
     }
 
 

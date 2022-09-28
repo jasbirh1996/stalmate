@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.*
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
@@ -20,9 +19,7 @@ import com.stalmate.user.R
 import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.commonadapters.AdapterFeed
 import com.stalmate.user.databinding.ActivityProfileEditBinding
-import com.stalmate.user.databinding.DialogueNumberVerifyBinding
 import com.stalmate.user.model.*
-import com.stalmate.user.utilities.Constants
 import com.stalmate.user.utilities.ImageLoaderHelperGlide
 import com.stalmate.user.utilities.PriceFormatter
 import com.stalmate.user.utilities.ValidationHelper
@@ -38,17 +35,14 @@ import java.util.*
 
 class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
     ProfessionListAdapter.Callbackk,
-    AdapterFeed.Callbackk {
+    AdapterFeed.Callbackk , DialogVerifyNumber.Callbackk{
 
     private lateinit var binding: ActivityProfileEditBinding
     var WRITE_REQUEST_CODE = 100
     private var GANDER: String = ""
-
     var merriage: String = ""
-    var permissions =
-        arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
+    var permissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
     lateinit var userData: ModelUser
-    var marriageStatus = arrayOf("Single", "Marriage")
     var imageFile: File? = null
     var isCoverImage = false
     var isNumberVerify : Boolean = false
@@ -57,15 +51,10 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
     private lateinit var profilePictureAdapter: ProfileAlbumAdapter
     private lateinit var coverPictureAdapter: ProfileAlbumAdapter
     private lateinit var blockedUserAdapter: BlockedUserAdapter
-
-    private lateinit var marriageAdapter: CustumSpinAdapter
-    val marriageList: ArrayList<ModelCustumSpinner> = ArrayList<ModelCustumSpinner>()
     private  var selectedMarriageStatus=""
-
     lateinit var feedAdapter: AdapterFeed
+
     override fun onClick(viewId: Int, view: View?) {
-
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,8 +62,6 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
         binding = DataBindingUtil.setContentView(this, R.layout.activity_profile_edit)
         setupSpinnerListener()
         getUserProfileData()
-
-
 
         feedAdapter = AdapterFeed(networkViewModel, this, this)
         binding.rvFeeds.setNestedScrollingEnabled(false);
@@ -116,10 +103,13 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
                 binding.layout.rdOthers.setChecked(true)
             }
         }
-
-
         clickLister()
     }
+
+    /*override fun onResume() {
+        super.onResume()
+        getUserProfileData()
+    }*/
 
     private fun clickLister() {
 
@@ -142,13 +132,11 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
             } else if (isNumberVerify) {
                 updateProfileApiHit()
             } else {
-                makeToast("Please verfiy the mobile number")
+                makeToast("Please verify the mobile number")
             }
-
         }
 
         binding.layout.tvAddMore.setOnClickListener {
-
 
             var dialogAddEditEducation = DialogAddEditEducation(
                 this,
@@ -158,12 +146,12 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
                 object : DialogAddEditEducation.Callbackk {
                     override fun onSuccessfullyEditedEducation(education: Education) {
                         userData.results.profile_data[0].education.add(education)
-                        networkViewModel.profileLiveData.postValue(userData)
+                        educationAdapter.addToList(education)
+//                        networkViewModel.profileLiveData.postValue(userData)
+
                     }
                 })
             dialogAddEditEducation.show()
-
-
         }
 
         binding.layout.tvaddMoreProfession.setOnClickListener {
@@ -176,7 +164,8 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
                 object : DialogAddEditProfession.Callbackk {
                     override fun onSuccessfullyEditedProfession(profession: Profession) {
                         userData.results.profile_data[0].profession.add(profession)
-                        networkViewModel.profileLiveData.postValue(userData)
+//                        networkViewModel.profileLiveData.postValue(userData)
+                        professionListAdapter.addToList(profession)
 
                     }
                 })
@@ -188,6 +177,8 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
 
            if (binding.layout.etNumber.text.toString().isNotEmpty()) {
 
+               if (binding.layout.etNumber.text!!.length >= 10){
+
                val hashMap = HashMap<String, String>()
                hashMap["number"] = binding.layout.etNumber.text.toString()
                networkViewModel.numberVerify(hashMap)
@@ -195,13 +186,22 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
 
                    it.let {
                        if (it!!.status == true) {
-                           var dialoguenumberVerify = DialogVerifyNumber(this, networkViewModel, binding.layout.etNumber.text.toString())
+                           var dialoguenumberVerify = DialogVerifyNumber(
+                               this,
+                               networkViewModel,
+                               binding.layout.etNumber.text.toString(),
+                               this
+                           )
                            dialoguenumberVerify.show()
 
-                       }else{
+
+                       } else {
                            makeToast(it.message)
                        }
                    }
+               }
+           }else{
+                   makeToast(getString(R.string.please_enter_mobile_number_more_then))
                }
            }else{
                makeToast(getString(R.string.please_enter_mobile_number))
@@ -263,13 +263,13 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
                 var hashMap = HashMap<String, String>()
                 networkViewModel.getProfileData(hashMap)
                 onBackPressed()
+
             }
         })
     }
 
 
     private fun updateProfileImageApiHit() {
-
 
         val thumbnailBody: RequestBody = RequestBody.create("image/*".toMediaTypeOrNull(), imageFile!!)
 
@@ -346,7 +346,9 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
                 if (it.results.profile_data[0].profession.isNotEmpty()) {
                     binding.layout.rvProfession.visibility = View.VISIBLE
                 }
-
+                /*if (it.results.number.isNotEmpty()){
+                    isNumberVerify = true
+                }*/
 
             }
         })
@@ -390,9 +392,6 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
         binding.layout.bio.setText(userData.results.about)
         binding.layout.filledTextEmail.setText(userData.results.email)
 
-        if (userData.results.number.isNotEmpty()){
-            isNumberVerify =true
-        }
         binding.layout.etNumber.setText(userData.results.number)
         binding.layout.etHowTown.setText(userData.results.profile_data[0].home_town)
         binding.layout.etCurrentCity.setText(userData.results.city)
@@ -411,7 +410,6 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
         )
 
         binding.etWebsite.setText(userData.results.company)
-
         educationAdapter = EducationListAdapter(networkViewModel, this, this)
         binding.layout.rvEducation.adapter = educationAdapter
         binding.layout.rvEducation.layoutManager = LinearLayoutManager(this)
@@ -422,12 +420,10 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
 
         professionListAdapter.submitList(userData.results.profile_data.get(0).profession)
 
-
         binding.rvFeeds.layoutManager = LinearLayoutManager(this)
 
         networkViewModel.getFeedList("", HashMap())
         networkViewModel.feedLiveData.observe(this, Observer {
-            Log.d("asdasdasd", "oaspiasddsad")
             it.let {
                 feedAdapter.submitList(it!!.results)
             }
@@ -470,7 +466,7 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
     }
 
     override fun deleteitem() {
-        getUserProfileData()
+
     }
 
     override fun onClickOnViewComments(postId: Int) {
@@ -660,6 +656,10 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
 
     override fun onBackPressed() {
         super.onBackPressed()
+    }
+
+    override fun onSuccessFullyAddNumber() {
+        isNumberVerify = true
     }
 
 }
