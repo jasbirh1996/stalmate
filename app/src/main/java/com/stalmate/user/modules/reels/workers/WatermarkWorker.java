@@ -4,11 +4,15 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.media.ThumbnailUtils;
-import android.net.Uri;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.Size;
+import android.view.Display;
+import android.view.WindowManager;
+import android.view.WindowMetrics;
 
 import androidx.annotation.NonNull;
 import androidx.concurrent.futures.CallbackToFutureAdapter;
@@ -19,9 +23,9 @@ import com.daasuu.mp4compose.composer.Mp4Composer;
 import com.daasuu.mp4compose.filter.GlWatermarkFilter;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.stalmate.user.R;
+import com.stalmate.user.modules.reels.utils.VideoUtil;
 
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.IOException;
 
 
 public class WatermarkWorker extends ListenableWorker {
@@ -50,26 +54,33 @@ public class WatermarkWorker extends ListenableWorker {
 
     @SuppressWarnings("ConstantConditions")
     private void doActualWork(CallbackToFutureAdapter.Completer<Result> completer) {
+        Log.d("alsdkasd10","poaskdasd");
         String input = getInputData().getString(KEY_INPUT);
-        String icon = getInputData().getString(ICON);
+        String iconPath = getInputData().getString(ICON);
         //int height = getInputData().getInt(ICON,0);
-       // int width = getInputData().getInt(ICON,0);
-     //   Size size = VideoUtil.getDimensions(input);
-
-        Drawable yourDrawable;
+        // int width = getInputData().getInt(ICON,0);
+        Size size = null;
         try {
-            InputStream inputStream = getApplicationContext().getContentResolver().openInputStream(Uri.parse(icon));
-            yourDrawable = Drawable.createFromStream(inputStream, Uri.parse(icon).toString() );
-        } catch (FileNotFoundException e) {
-            yourDrawable = getApplicationContext().getDrawable(R.drawable.placeholder_filter);
+            size = VideoUtil.getDimensions(input);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
-        Bitmap watermark = BitmapFactory.decodeFile(icon);
- /*       Bitmap watermark =
+/*        Bitmap watermark =
                 BitmapFactory.decodeResource(
-                       // getApplicationContext().getResources(), R.drawable.ic_user_icon);
-                        getApplicationContext().getResources(),yourDrawable);*/
-        Bitmap scaled = ThumbnailUtils.extractThumbnail(watermark, 500, 500);
+                        // getApplicationContext().getResources(), R.drawable.ic_user_icon);
+                        getApplicationContext().getResources(),iconDrawable);*/
+
+
+        Bitmap watermark = BitmapFactory.decodeFile(iconPath);
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        WindowManager wm = (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        display.getRealMetrics(displayMetrics);
+
+
+
+        Bitmap scaled = ThumbnailUtils.extractThumbnail(watermark, (int) (size.getWidth()), (int) (size.getHeight()));
         watermark.recycle();
         watermark = scaled;
        /* int optimal = (int) (size.getWidth()  * .2);
@@ -79,42 +90,55 @@ public class WatermarkWorker extends ListenableWorker {
             watermark.recycle();
             watermark = scaled;
         }*/
-        Log.v(TAG, "Watermark bitmap size is " + watermark.getWidth() + 'x' + watermark.getHeight() + '.');
+        Log.d(TAG, "Watermark bitmap size is " + watermark.getWidth() + 'x' + watermark.getHeight() + '.');
         String output = getInputData().getString(KEY_OUTPUT);
         Mp4Composer composer = new Mp4Composer(input, output);
       //  composer.videoBitrate((int) (.07 * 30 * size.getWidth() * size.getHeight()));
-      //  composer.filter(new GlWatermarkFilter(watermark, GlWatermarkFilter.Position.RIGHT_TOP));
+        //  composer.filter(new GlWatermarkFilter(watermark, GlWatermarkFilter.Position.RIGHT_TOP));
 
 
 
-         GlWatermarkFilter.Position position =  GlWatermarkFilter.Position.valueOf("x=w-tw-10:y=h-th-10");
-         composer.filter(new GlWatermarkFilter(watermark, position));
+        GlWatermarkFilter.Position position =  GlWatermarkFilter.Position.LEFT_TOP;
+        composer.filter(new GlWatermarkFilter(watermark, position));
 
         composer.listener(new Mp4Composer.Listener() {
             @Override
             public void onProgress(double progress) {
+                Log.d("alsdkasd10","poashjghkdasd");
+            }
 
+            @Override
+            public void onCurrentWrittenVideoTime(long timeUs) {
+                Log.d("alsdkasd10","poasqwekdasd");
             }
 
 
             @Override
             public void onCompleted() {
+                Log.d("alsdkasd10","poaskdawersd");
                 Log.d(TAG, "MP4 composition has finished.");
                 completer.set(Result.success());
             }
 
             @Override
             public void onCanceled() {
+                Log.d("alsdkasd10","poasertkdasd");
                 Log.d(TAG, "MP4 composition was cancelled.");
                 completer.setCancelled();
             }
 
             @Override
             public void onFailed(Exception e) {
+                Log.d("alsdkasd10","poasertkdasd");
                 Log.d(TAG, "MP4 composition failed with error.", e);
                 completer.setException(e);
             }
         });
         composer.start();
     }
+
+
+
+
 }
+
