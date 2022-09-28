@@ -124,6 +124,11 @@ public class VideoFilterWorker extends ListenableWorker {
             public void onProgress(double progress) { }
 
             @Override
+            public void onCurrentWrittenVideoTime(long timeUs) {
+
+            }
+
+            @Override
             public void onCompleted() {
                 Log.d(TAG, "MP4 composition has finished.");
                 completer.set(Result.success());

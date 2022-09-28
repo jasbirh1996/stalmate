@@ -119,7 +119,7 @@ dependencies {
     implementation 'androidx.work:work-runtime:2.7.1'
     implementation 'com.googlecode.mp4parser:isoparser:1.1.22'
     implementation 'info.hoang8f:android-segmented:1.0.6'
-    implementation 'com.github.MasayukiSuda:Mp4Composer-android:v0.4.0'  //slow video
+    implementation 'com.github.MasayukiSuda:Mp4Composer-android:v0.4.1'  //slow video
     implementation 'androidx.concurrent:concurrent-futures:1.1.0'
 
     implementation 'com.google.android.exoplayer:exoplayer:2.18.1'

@@ -74,7 +74,9 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
     private var DRAW_CANVASW = 0
     private var DRAW_CANVASH = 0
     private val onCompletionListener: OnCompletionListener =
-        OnCompletionListener { mediaPlayer -> mediaPlayer.start() }
+        OnCompletionListener { mediaPlayer ->{
+          //  mediaPlayer.start()
+        } }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -356,9 +358,10 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
 
         try {
 
-            addWaterMarkProcess()
+        //    addWaterMarkProcess()
             addToWatermark()
         } catch (e: Exception) {
+            Log.d("lkajsdlasd",e!!.toString())
             e.printStackTrace()
         }
     }
@@ -483,7 +486,7 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
 
 
     fun addToWatermark(){
-
+        Log.d("lkajsdlasd","oaspdoa")
 
         val wm = WorkManager.getInstance(this)
         val output = File(cacheDir, UUID.randomUUID().toString())
@@ -501,13 +504,15 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
                 val ended = (info.state == WorkInfo.State.CANCELLED
                         || info.state == WorkInfo.State.FAILED)
                 if (info.state == WorkInfo.State.SUCCEEDED) {
-
+                    Log.d("lkajsdlasd","oaspdofdgha")
                     saveVideoToInternalStorage(output.path)
 
                 } else if (ended) {
-
+                    Log.d("lkajsdlasd","oaspdfghdoa")
                 }
+                Log.d("lkajsdlasd","oaspfghdoa")
             }
+        Log.d("lkajsdlasd","oaspdodfgha")
 
     }
 
