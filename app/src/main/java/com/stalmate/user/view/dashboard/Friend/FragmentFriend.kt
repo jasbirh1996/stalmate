@@ -1,5 +1,6 @@
 package com.stalmate.user.view.dashboard.Friend
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -31,6 +32,7 @@ class FragmentFriend(var callback: Callbackk) : BaseFragment(), FriendAdapter.Ca
     lateinit var binding: FragmentFriendBinding
     lateinit var navHostFragment: NavHostFragment
     private lateinit var navController: NavController
+//    var activityDashboard : ActivityDashboard
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

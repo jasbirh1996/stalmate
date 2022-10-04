@@ -31,7 +31,6 @@ import com.stalmate.user.utilities.ValidationHelper
 import com.stalmate.user.view.adapter.ProfileAboutAdapter
 
 import com.stalmate.user.view.adapter.ProfileFriendAdapter
-import com.stalmate.user.view.photoalbum.AlbumAdapter
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody

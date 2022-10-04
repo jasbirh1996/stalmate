@@ -57,6 +57,7 @@ class ActivityWelcome : BaseActivity(), FragmentInformationSuggestions.Callbackk
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_welcome)
+        toolbar(true, "Welcome")
 /*
         var viewpagerAdapter = ViewPagerAdapter(supportFragmentManager)
         viewpagerAdapter.add(FragmentWelcomePage(), "title")
@@ -263,7 +264,6 @@ class ActivityWelcome : BaseActivity(), FragmentInformationSuggestions.Callbackk
                 }
             }
         }
-
     }
 
 
@@ -274,12 +274,10 @@ class ActivityWelcome : BaseActivity(), FragmentInformationSuggestions.Callbackk
             binding.toolbar.tvheadCenterHeadBold.visibility = View.VISIBLE
             binding.toolbar.tvheadCenterHeadBold.text = text
         } else {
-            binding.toolbar.tvhead.visibility = View.VISIBLE
-            binding.toolbar.tvheadCenterHeadBold.visibility = View.GONE
+            binding.toolbar.tvhead.visibility = View.GONE
+            binding.toolbar.tvheadCenterHeadBold.visibility = View.VISIBLE
             binding.toolbar.tvhead.text = text
         }
-
-
     }
 
     override fun onDestroy() {

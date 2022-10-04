@@ -177,7 +177,7 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
 
            if (binding.layout.etNumber.text.toString().isNotEmpty()) {
 
-               if (binding.layout.etNumber.text!!.length >= 10){
+               if (binding.layout.etNumber.text!!.length >= 8){
 
                val hashMap = HashMap<String, String>()
                hashMap["number"] = binding.layout.etNumber.text.toString()
@@ -661,5 +661,7 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
     override fun onSuccessFullyAddNumber() {
         isNumberVerify = true
     }
+
+
 
 }

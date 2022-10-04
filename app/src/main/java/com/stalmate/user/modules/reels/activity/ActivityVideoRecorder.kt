@@ -11,6 +11,8 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.provider.DocumentsContract
+import android.provider.MediaStore
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
@@ -62,6 +64,8 @@ class ActivityVideoRecorder : BaseActivity() {
     private var mModel: RecorderActivityViewModel? = null
     private val mHandler = Handler()
     private var mMediaPlayer: MediaPlayer? = null
+    val PICK_FILE = 99
+
     private val mStopper = Runnable { stopRecording() }
     lateinit var binding: ActivityVideoRecorderBinding
     override fun onClick(viewId: Int, view: View?) {
@@ -94,8 +98,7 @@ class ActivityVideoRecorder : BaseActivity() {
 
         binding.buttonDone.setOnClickListener { view: View? ->
             if (binding.cameraView.isTakingVideo()) {
-                Toast.makeText(this, R.string.recorder_error_in_progress, Toast.LENGTH_SHORT)
-                    .show()
+                Toast.makeText(this, R.string.recorder_error_in_progress, Toast.LENGTH_SHORT).show()
             } else if (mModel!!.segments.isEmpty()) {
                 Toast.makeText(this, R.string.recorder_error_no_clips, Toast.LENGTH_SHORT)
                     .show()
@@ -108,17 +111,17 @@ class ActivityVideoRecorder : BaseActivity() {
                 Toast.makeText(this, R.string.recorder_error_in_progress, Toast.LENGTH_SHORT)
                     .show()
             }else{
-                val intent = Intent(
+                /*val intent = Intent(
                     this@ActivityVideoRecorder,
                     ActivitySongPicker::class.java
                 )
-                startActivityForResult(intent, SharedConstants.REQUEST_CODE_PICK_SONG)
+                startActivityForResult(intent, SharedConstants.REQUEST_CODE_PICK_SONG)*/
+                val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+                intent.addCategory(Intent.CATEGORY_OPENABLE)
+                intent.type = "audio/*"
+                startActivityForResult(intent, PICK_FILE)
             }
         }
-
-
-
-
 
         binding.buttonCameraChanger.setOnClickListener { view: View? ->
             if (binding.cameraView.isTakingVideo()) {
@@ -211,7 +214,6 @@ class ActivityVideoRecorder : BaseActivity() {
 
     fun setUpCameraView() {
 
-
         binding.cameraView.mapGesture(Gesture.PINCH, GestureAction.ZOOM);
         binding.cameraView.mapGesture(Gesture.TAP, GestureAction.AUTO_FOCUS);
         binding.cameraView.mapGesture(Gesture.LONG_TAP, GestureAction.TAKE_PICTURE);
@@ -293,8 +295,7 @@ class ActivityVideoRecorder : BaseActivity() {
                 ) {
                     bitmap = resource
                   //  binding.buttonColorFilterIcon.setImageBitmap(resource)
-                    val adapter =
-                        FilterAdapter(this@ActivityVideoRecorder, bitmap, binding.cameraView, true)
+                    val adapter = FilterAdapter(this@ActivityVideoRecorder, bitmap, binding.cameraView, true)
                     adapter.setListener { filter: VideoFilter? ->
                         this@ActivityVideoRecorder.applyPreviewFilter(
                             filter!!
@@ -363,7 +364,6 @@ class ActivityVideoRecorder : BaseActivity() {
             binding.cameraView.takeVideoSnapshot(
                 mModel!!.video!!, ((SharedConstants.MAX_DURATION - recorded).toInt())
             )
-
         }
     }
 
@@ -380,6 +380,7 @@ class ActivityVideoRecorder : BaseActivity() {
             videos.add(segment.file!!.absolutePath)
         }
         val merged1 = File(cacheDir, UUID.randomUUID().toString())
+
         val data1: Data = Data.Builder()
             .putStringArray(MergeVideosWorker.KEY_VIDEOS, videos.toTypedArray())
             .putString(MergeVideosWorker.KEY_OUTPUT, merged1.absolutePath)
@@ -393,6 +394,7 @@ class ActivityVideoRecorder : BaseActivity() {
         if (mModel!!.audio != null) {
 
             val merged2 = File(cacheDir, UUID.randomUUID().toString())
+
             val data2: Data = Data.Builder()
                 .putString(MergeAudioVideoWorker.KEY_AUDIO, mModel!!.audio!!.path)
                 .putString(MergeAudioVideoWorker.KEY_VIDEO, merged1.absolutePath)
@@ -412,7 +414,7 @@ class ActivityVideoRecorder : BaseActivity() {
                         closeFinally(merged2)
                     } else if (ended) {
                     }
-                }
+                 }
         } else {
             wm.enqueue(request1)
             wm.getWorkInfoByIdLiveData(request1.getId())
@@ -420,7 +422,6 @@ class ActivityVideoRecorder : BaseActivity() {
                     val ended = (info.getState() === WorkInfo.State.CANCELLED
                             || info.getState() === WorkInfo.State.FAILED)
                     if (info.getState() === WorkInfo.State.SUCCEEDED) {
-
                         closeFinally(merged1)
                     } else if (ended) {
 
@@ -461,9 +462,6 @@ class ActivityVideoRecorder : BaseActivity() {
             .observe(this) { info: WorkInfo ->
 
                 val ended = (info.state == WorkInfo.State.CANCELLED || info.state == WorkInfo.State.FAILED)
-
-
-
 
                 if (info.state == WorkInfo.State.SUCCEEDED) {
 
@@ -509,13 +507,61 @@ class ActivityVideoRecorder : BaseActivity() {
     }
 
 
-    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        var filePath: String? = ""
+        if (requestCode == PICK_FILE && resultCode == RESULT_OK) {
+
+            if (android.R.attr.data != null) {
+                val uri: Uri? = data!!.getData()
+                /* uri?.let { getContentResolver().openInputStream(it).toString() }
+                     ?.let { Log.d("cbjkabcjk", it) }*/
+
+                val wholeID = DocumentsContract.getDocumentId(uri)
+
+                // Split at colon, use second item in the array
+                val id = wholeID.split(":").toTypedArray()[1]
+
+                val column = arrayOf(MediaStore.MediaColumns.DATA)
+
+                // where id is equal to
+                val sel = MediaStore.Audio.Media._ID + "=?"
+
+                val cursor = contentResolver.query(
+                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                    column, sel, arrayOf(id), null
+                )
+
+                val columnIndex = cursor!!.getColumnIndex(column[0])
+
+                if (cursor.moveToFirst()) {
+                    filePath = cursor.getString(columnIndex)
+                }
+                cursor.close()
+                /*setImageFromIntent(filePath)*/
+                Log.d("jcbjscb", "Chosen path = $filePath")
+
+                mModel!!.audio = data.getData()
+                mMediaPlayer = MediaPlayer.create(this, data.getData())
+
+                var mp=MediaPlayer()
+                    mp.setDataSource(this,Uri.parse(filePath))
+                    mp.prepare()
+                    mp.start()
+            }
+        }
+    }
+
+
+
+    /*@Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         Log.v(
             TAG,
             "Received request: $requestCode, result: $resultCode."
         )
- /*       if (requestCode == VideoPicker.VIDEO_PICKER_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
+ *//*       if (requestCode == VideoPicker.VIDEO_PICKER_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
             val selection: List<String>? =
                 data.getStringArrayListExtra(VideoPicker.EXTRA_VIDEO_PATH)
             if (selection != null && !selection.isEmpty()) {
@@ -529,7 +575,8 @@ class ActivityVideoRecorder : BaseActivity() {
                 startActivity(intent)
                 finish()
             }
-        } else */if (requestCode == SharedConstants.REQUEST_CODE_PICK_SONG && resultCode == RESULT_OK && data != null) {
+        } else *//*
+        if (requestCode == SharedConstants.REQUEST_CODE_PICK_SONG && resultCode == RESULT_OK && data != null) {
             val id = data.getIntExtra(EXTRA_SONG_ID, 0)
             val name = data.getStringExtra(EXTRA_SONG_NAME)
             val audio = data.getParcelableExtra<Uri>(EXTRA_SONG_FILE)
@@ -538,8 +585,8 @@ class ActivityVideoRecorder : BaseActivity() {
                     TAG,
                     "User chose audio file: $audio"
                 )
-             /*   val sound = findViewById<TextView>(R.id.sound)
-                sound.text = name*/
+             *//*   val sound = findViewById<TextView>(R.id.sound)
+                sound.text = name*//*
                 mModel!!.audio = audio
                 mModel!!.song = id
                 mMediaPlayer = MediaPlayer.create(this, audio)
@@ -550,6 +597,9 @@ class ActivityVideoRecorder : BaseActivity() {
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
+    */
+
+
 
 
 

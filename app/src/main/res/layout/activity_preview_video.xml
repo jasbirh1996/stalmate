@@ -114,6 +114,17 @@
         app:layout_constraintTop_toBottomOf="@+id/imgSticker" />
 
     <ImageView
+        android:id="@+id/ivMusic"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@color/black_trasp"
+        android:padding="8dp"
+        android:src="@drawable/ic_post_music"
+        app:layout_constraintStart_toStartOf="@id/ivEmoji"
+        app:layout_constraintTop_toBottomOf="@+id/ivEmoji" />
+
+    <ImageView
         android:id="@+id/imgDelete"
         android:layout_width="50dp"
         android:layout_height="wrap_content"

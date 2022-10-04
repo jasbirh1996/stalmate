@@ -1,17 +1,16 @@
 package com.stalmate.user.view.authentication
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
-import android.view.View.OnTouchListener
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.FragmentManager
 import androidx.navigation.fragment.findNavController
 import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
@@ -23,7 +22,6 @@ import com.stalmate.user.utilities.CustumEditText
 import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.utilities.ValidationHelper
 import com.stalmate.user.utilities.ValidationHelper.isValidEmail
-import com.stalmate.user.view.dashboard.ActivityDashboard
 
 
 class FragmentLogin : BaseFragment() {
@@ -47,16 +45,20 @@ class FragmentLogin : BaseFragment() {
         return binding.root
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
 
         /*click on page */
         binding.forgetPassword.setOnClickListener {
             findNavController().navigate(R.id.fragmentForgetPassword)
-
         }
+
+        requireActivity().onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+               requireActivity().finish()
+            }
+        })
 
         binding.btnLogin.setOnClickListener {
             if (isValid()) {
@@ -73,7 +75,6 @@ class FragmentLogin : BaseFragment() {
                 } else {
                     binding.appCompatImageView12.visibility = View.GONE
                 }
-
             }
 
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
@@ -88,13 +89,14 @@ class FragmentLogin : BaseFragment() {
         binding.createAccount.setOnClickListener {
             findNavController().apply {
                 navigate(R.id.fragmentSignUp)
-                /*backQueue.clear()*/
+                backQueue.clear()
             }
         }
 
         CustumEditText.setup(binding.filledTextEmail,binding.etEmail)
         CustumEditText.setup(binding.filledTextPassword,binding.etPassword)
     }
+
 
     private fun hitLoginApi() {
         Constants.TYPE_ALL_FOLLOWERS_FOLLOWING
@@ -148,6 +150,8 @@ class FragmentLogin : BaseFragment() {
         }
         return true
     }
+
+
 
 
 }

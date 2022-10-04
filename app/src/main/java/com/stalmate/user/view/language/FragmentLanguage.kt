@@ -52,9 +52,7 @@ class FragmentLanguage : BaseFragment(), AdapterLanguage.Callbackk {
 
         binding.btnNext.setOnClickListener {
             findNavController().navigate(R.id.fragmentLogin)
-
         }
-
     }
 
     private fun toolbarSetUp() {

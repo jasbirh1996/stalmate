@@ -14,9 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
-import com.airbnb.lottie.utils.Utils
 import com.google.android.material.snackbar.Snackbar
-import com.simform.videooperations.Common
 import com.stalmate.user.base.callbacks.BaseCallBacks
 import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.utilities.untilitys

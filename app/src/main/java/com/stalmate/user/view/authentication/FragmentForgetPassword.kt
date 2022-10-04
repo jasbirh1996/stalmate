@@ -44,6 +44,7 @@ class FragmentForgetPassword : BaseFragment() {
 
         binding.loginPage.setOnClickListener {
             findNavController().popBackStack()
+
         }
 
         binding.btnProcessOtp.setOnClickListener {
@@ -98,6 +99,7 @@ class FragmentForgetPassword : BaseFragment() {
                     bundle.putString("layout", "ForgetPassword")
                     findNavController().navigate(R.id.fragmentOTPEnter,bundle)
 
+
                     makeToast(message)
                 }else{
                     makeToast(message)
@@ -128,9 +130,6 @@ class FragmentForgetPassword : BaseFragment() {
                 makeToast(getString(R.string.please_enter_valid_email))
                 return false;
             }
-
         return true
     }
-
-
 }

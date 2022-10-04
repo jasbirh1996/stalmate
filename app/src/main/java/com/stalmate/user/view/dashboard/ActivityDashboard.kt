@@ -25,6 +25,7 @@ import com.stalmate.user.view.dashboard.funtime.FragmentFunTime
 class ActivityDashboard : AppCompatActivity(), FragmentHome.Callback , FragmentFriend.Callbackk, FragmentMenu.Callback{
 
     private lateinit var binding: ActivityDashboardBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -106,109 +107,109 @@ class ActivityDashboard : AppCompatActivity(), FragmentHome.Callback , FragmentF
     val fm: FragmentManager = supportFragmentManager
     var active = fragment1
 
-    private fun setBottomNavigationInNormalWay(savedInstanceState: Bundle?) {
-
-        //tvSelected.typeface = Typeface.createFromAsset(assets, "fonts/SourceSansPro-Regular.ttf")
-
-        val activeIndex = savedInstanceState?.getInt("activeIndex") ?: 2
-
-        binding.bottomNavigation.apply {
-
-            // If you don't pass activeIndex then by pass 0 here or call setSelectedIndex function only
-            // setSelectedIndex()        // It will take 0 by default
-            setSelectedIndex(activeIndex)
-
-            add(
-                Model(
-                    icon = R.drawable.ic_botm_menu_funtime,
-                    id = ID_HOME,
-                    text = R.string.chat,
-                )
-            )
-            add(
-                Model(
-                    icon = R.drawable.ic_botm_menu_chat_inactive,
-                    id = ID_EXPLORE,
-                    text = R.string.chat,
-                    count = 0
-                )
-            )
-            add(
-                Model(
-                    R.drawable.ic_botm_menu_home_inactive,
-                    id = ID_MESSAGE,
-                    text = R.string.chat,
-                    count = 0
-                )
-            )
-            add(
-                Model(
-                    R.drawable.ic_botm_menu_video_inactive,
-                    id = ID_NOTIFICATION,
-                    text = R.string.chat,
-                    count = 0
-                )
-            )
-            add(
-                Model(
-                    R.drawable.ic_botm_menu_friends_inactive,
-                    id = ID_ACCOUNT,
-                    text = R.string.chat,
-                    count = 0
-                )
-            )
-
-            // If you want to change count
-            //  setCount(ID_NOTIFICATION, R.string.count_update)
-
-            setOnShowListener {
-                val name = when (it.id) {
-                    ID_HOME -> "Home"
-                    ID_EXPLORE -> "Explore"
-                    ID_MESSAGE -> "Message"
-                    ID_NOTIFICATION -> "Notification"
-                    ID_ACCOUNT -> "Account"
-                    else -> ""
-                }
-
-                /*      val bgColor = when (it.id) {
-                          ID_HOME -> ContextCompat.getColor(this@ActivityDashboard, R.color.color_home_bg)
-                          ID_EXPLORE -> ContextCompat.getColor(
-                              this@ActivityDashboard,
-                              R.color.color_favorite_bg
-                          )
-                          ID_MESSAGE -> ContextCompat.getColor(this@ActivityDashboard, R.color.color_chat_bg)
-                          ID_NOTIFICATION -> ContextCompat.getColor(
-                              this@ActivityDashboard,
-                              R.color.color_notification_bg
-                          )
-                          ID_ACCOUNT -> ContextCompat.getColor(
-                              this@ActivityDashboard,
-                              R.color.color_profile_bg
-                          )
-                          else -> ContextCompat.getColor(this@ActivityDashboard, R.color.colorPrimary)
-                      }*/
-
-                //  binding.lnrLayout.setBackgroundColor(bgColor)
-            }
-
-            setOnClickMenuListener {
-                val name = when (it.id) {
-                    ID_HOME -> "HOME"
-                    ID_EXPLORE -> "EXPLORE"
-                    ID_MESSAGE -> "MESSAGE"
-                    ID_NOTIFICATION -> "NOTIFICATION"
-                    ID_ACCOUNT -> "ACCOUNT"
-                    else -> ""
-                }
-            }
-
-            setOnReselectListener {
-                Toast.makeText(context, "item ${it.id} is reselected.", Toast.LENGTH_LONG).show()
-            }
-
-        }
-    }
+//    private fun setBottomNavigationInNormalWay(savedInstanceState: Bundle?) {
+//
+//        //tvSelected.typeface = Typeface.createFromAsset(assets, "fonts/SourceSansPro-Regular.ttf")
+//
+//        val activeIndex = savedInstanceState?.getInt("activeIndex") ?: 2
+//
+//        binding.bottomNavigation.apply {
+//
+//            // If you don't pass activeIndex then by pass 0 here or call setSelectedIndex function only
+//            // setSelectedIndex()        // It will take 0 by default
+//            setSelectedIndex(activeIndex)
+//
+//            add(
+//                Model(
+//                    icon = R.drawable.ic_botm_menu_funtime,
+//                    id = ID_HOME,
+//                    text = R.string.chat,
+//                )
+//            )
+//            add(
+//                Model(
+//                    icon = R.drawable.ic_botm_menu_chat_inactive,
+//                    id = ID_EXPLORE,
+//                    text = R.string.chat,
+//                    count = 0
+//                )
+//            )
+//            add(
+//                Model(
+//                    R.drawable.ic_botm_menu_home_inactive,
+//                    id = ID_MESSAGE,
+//                    text = R.string.chat,
+//                    count = 0
+//                )
+//            )
+//            add(
+//                Model(
+//                    R.drawable.ic_botm_menu_video_inactive,
+//                    id = ID_NOTIFICATION,
+//                    text = R.string.chat,
+//                    count = 0
+//                )
+//            )
+//            add(
+//                Model(
+//                    R.drawable.ic_botm_menu_friends_inactive,
+//                    id = ID_ACCOUNT,
+//                    text = R.string.chat,
+//                    count = 0
+//                )
+//            )
+//
+//            // If you want to change count
+//            //  setCount(ID_NOTIFICATION, R.string.count_update)
+//
+//            setOnShowListener {
+//                val name = when (it.id) {
+//                    ID_HOME -> "Home"
+//                    ID_EXPLORE -> "Explore"
+//                    ID_MESSAGE -> "Message"
+//                    ID_NOTIFICATION -> "Notification"
+//                    ID_ACCOUNT -> "Account"
+//                    else -> ""
+//                }
+//
+//                /*      val bgColor = when (it.id) {
+//                          ID_HOME -> ContextCompat.getColor(this@ActivityDashboard, R.color.color_home_bg)
+//                          ID_EXPLORE -> ContextCompat.getColor(
+//                              this@ActivityDashboard,
+//                              R.color.color_favorite_bg
+//                          )
+//                          ID_MESSAGE -> ContextCompat.getColor(this@ActivityDashboard, R.color.color_chat_bg)
+//                          ID_NOTIFICATION -> ContextCompat.getColor(
+//                              this@ActivityDashboard,
+//                              R.color.color_notification_bg
+//                          )
+//                          ID_ACCOUNT -> ContextCompat.getColor(
+//                              this@ActivityDashboard,
+//                              R.color.color_profile_bg
+//                          )
+//                          else -> ContextCompat.getColor(this@ActivityDashboard, R.color.colorPrimary)
+//                      }*/
+//
+//                //  binding.lnrLayout.setBackgroundColor(bgColor)
+//            }
+//
+//            setOnClickMenuListener {
+//                val name = when (it.id) {
+//                    ID_HOME -> "HOME"
+//                    ID_EXPLORE -> "EXPLORE"
+//                    ID_MESSAGE -> "MESSAGE"
+//                    ID_NOTIFICATION -> "NOTIFICATION"
+//                    ID_ACCOUNT -> "ACCOUNT"
+//                    else -> ""
+//                }
+//            }
+//
+//            setOnReselectListener {
+//                Toast.makeText(context, "item ${it.id} is reselected.", Toast.LENGTH_LONG).show()
+//            }
+//
+//        }
+//    }
 
     override fun onCLickOnMenuButton() {
         toggleDrawer()
@@ -240,20 +241,20 @@ class ActivityDashboard : AppCompatActivity(), FragmentHome.Callback , FragmentF
         val backStateName = fragment.javaClass.name
         val fragmentTag = backStateName
         val manager: FragmentManager = supportFragmentManager
-        val fragmentPopped = manager.popBackStackImmediate(backStateName, 0)
+        val fragmentPopped = manager.popBackStackImmediate(backStateName, 1)
         if (!fragmentPopped && manager.findFragmentByTag(fragmentTag) == null) { //fragment not in back stack, create it.
             val ft = manager.beginTransaction()
             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-            ft.replace(binding.frameDrawer.id, fragment, fragmentTag)
-
-           // ft.addToBackStack(backStateName)
-
+            ft.add(binding.frameDrawer.id, fragment, fragmentTag)
             ft.commit()
         }
     }
 
     override fun onClickBack() {
-        setupBottomBar()
+        val fragment1: Fragment = FragmentHome(this)
+        active = fragment1
+        binding.bottomNavigationView.selectedItemId = R.id.home
+        fm.beginTransaction().add(binding.fragmentContainerView.id, fragment1, "1").commit()
     }
 
     override fun onCLickBackButton() {

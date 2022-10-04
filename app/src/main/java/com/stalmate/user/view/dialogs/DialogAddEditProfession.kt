@@ -6,14 +6,15 @@ import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Window
 import android.view.WindowManager
-import android.widget.CompoundButton
 import android.widget.LinearLayout
-import android.widget.RadioGroup
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleOwner
 import com.stalmate.user.R
@@ -21,7 +22,9 @@ import com.stalmate.user.databinding.DialougeAddProfessionBinding
 import com.stalmate.user.model.Profession
 import com.stalmate.user.viewmodel.AppViewModel
 import java.text.SimpleDateFormat
+import java.time.format.DateTimeFormatter
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 
 class DialogAddEditProfession(
@@ -33,9 +36,18 @@ class DialogAddEditProfession(
 ) {
     private var dialog: Dialog? = null
     private lateinit var binding: DialougeAddProfessionBinding
+    var startCal = Calendar.getInstance()
+    var endCal = Calendar.getInstance()
+    var startYear = ""
+    var endYear = ""
+    var startMonth = ""
+    var endMonth = ""
+
+
     var isDialogShowing = false
         private set
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun show() {
         dialog = Dialog(context)
         dialog!!.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -46,7 +58,7 @@ class DialogAddEditProfession(
         dialog!!.show()
         isDialogShowing = true
 
-
+        val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("M/d/yyyy")
 
         dialog!!.setCancelable(false)
         if (dialog!!.window != null) {
@@ -59,54 +71,72 @@ class DialogAddEditProfession(
             dialog!!.window!!.setDimAmount(0.5f)
             //dialog.getWindow().setLayout(ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT);
         }
-        var cal = Calendar.getInstance()
+
         // Display Selected date in textbox
-        val dateSetListener =
-            DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-                cal.set(Calendar.YEAR, year)
-                cal.set(Calendar.MONTH, monthOfYear)
-                cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+        val dateSetListener = DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+            startCal.set(Calendar.YEAR, year)
+            startCal.set(Calendar.MONTH, monthOfYear)
+            startCal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
 
                 val myFormat = "dd-MM-yyyy" // mention the format you need
                 val sdf = SimpleDateFormat(myFormat, Locale.US)
-                binding.tvCdFrom.text = sdf.format(cal.time)
 
+                   startYear = year.toString()
+                   startMonth = monthOfYear.toString()
+
+                binding.tvCdFrom.text = sdf.format(startCal.time)
+            /*val start: LocalDate = LocalDate.parse(binding.tvCdFrom.text, formatter)
+            startDate = start.toString()*/
             }
 
         binding.tvCdFrom.setOnClickListener {
             DatePickerDialog(
                 context, dateSetListener,
-                cal.get(Calendar.YEAR),
-                cal.get(Calendar.MONTH),
-                cal.get(Calendar.DAY_OF_MONTH)
+                startCal.get(Calendar.YEAR),
+                startCal.get(Calendar.MONTH),
+                startCal.get(Calendar.DAY_OF_MONTH)
             ).show()
         }
 
         // Display Selected End date in textbox
-        val dateEndSetListener =
-            DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-                cal.set(Calendar.YEAR, year)
-                cal.set(Calendar.MONTH, monthOfYear)
-                cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+        val dateEndSetListener = DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+            endCal.set(Calendar.YEAR, year)
+            endCal.set(Calendar.MONTH, monthOfYear)
+            endCal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
 
                 val myFormat = "dd-MM-yyyy" // mention the format you need
                 val sdf = SimpleDateFormat(myFormat, Locale.US)
-                binding.tvCdTo.text = sdf.format(cal.time)
 
+            endYear = year.toString()
+            endMonth = monthOfYear.toString()
+                binding.tvCdTo.text = sdf.format(endCal.time)
+                /*val end: LocalDate = LocalDate.parse(binding.tvCdTo.text, formatter)
+                endDate = end.toString()*/
             }
 
         binding.tvCdTo.setOnClickListener {
             DatePickerDialog(
                 context, dateEndSetListener,
-                cal.get(Calendar.YEAR),
-                cal.get(Calendar.MONTH),
-                cal.get(Calendar.DAY_OF_MONTH)
+                endCal.get(Calendar.YEAR),
+                endCal.get(Calendar.MONTH),
+                endCal.get(Calendar.DAY_OF_MONTH)
             ).show()
         }
 
         binding.btnSave.setOnClickListener {
             if (isValid()){
-                hitAddEditApi()
+
+                if (startYear < endYear){
+                    hitAddEditApi()
+                }else if(startYear == endYear){
+                    if (startMonth < endMonth){
+                        hitAddEditApi()
+                    }else {
+                        makeToast("Start working date should be grater")
+                    }
+                }
+
+
             }
         }
 
@@ -210,8 +240,13 @@ class DialogAddEditProfession(
 
 
 
+
+
+
     fun makeToast(message:String){
         Toast.makeText(context,message,Toast.LENGTH_SHORT).show()
     }
+
+
 
 }
