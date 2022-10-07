@@ -149,7 +149,7 @@ class FragmentPasswordReset : BaseFragment() {
 
                     builder.setView(view)
                     builder.setCanceledOnTouchOutside(false)
-                   bindingdialog = DataBindingUtil.bind(view)!!
+                    bindingdialog = DataBindingUtil.bind(view)!!
 
 
                     bindingdialog.btnLogin.setOnClickListener {
@@ -157,8 +157,6 @@ class FragmentPasswordReset : BaseFragment() {
                         builder.dismiss()
                     }
                     builder.show()
-
-
                     makeToast(message)
                 } else {
                     makeToast(message)

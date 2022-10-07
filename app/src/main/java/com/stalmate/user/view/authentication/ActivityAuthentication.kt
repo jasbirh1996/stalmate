@@ -1,8 +1,10 @@
 package com.stalmate.user.view.authentication
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import com.stalmate.user.R
@@ -18,17 +20,21 @@ class ActivityAuthentication : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding= DataBindingUtil.setContentView(this, R.layout.activity_authentication)!!
         setUpNavigation()
+
+        val fragmentManager: FragmentManager = supportFragmentManager
+        val currentFragment: Fragment? = fragmentManager.findFragmentById(R.id.nav_host_fragment)
+
+
+
     }
 
 
     fun setUpNavigation() {
         navController=findNavController(R.id.nav_host_fragment)
 
-        /*val navigationController = navController
-        if (navigationController.currentDestination?.id == R.id.fragmentLogin) {
-            navigationController.popBackStack()
-        } else {
-            super.onBackPressed()
-        }*/
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
     }
 }

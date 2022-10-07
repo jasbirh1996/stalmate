@@ -30,6 +30,12 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ActivityfuntimeRandom"
+            android:exported="false" />
+        <activity
+            android:name=".modules.reels.activity.ActivitySongPicker"
+            android:exported="false" />
+        <activity
             android:name=".ActivitySideDawer"
             android:exported="false" />
         <activity android:name="com.c2m.storyviewer.screen.StoryActivity" />
@@ -88,7 +94,6 @@
             android:name=".view.authentication.ActivityAuthentication"
             android:exported="false"
             android:launchMode="singleTop" />
-
         <activity
             android:name=".view.profile.ActivitySideDawer"
             android:exported="false"

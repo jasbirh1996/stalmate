@@ -4,6 +4,8 @@
 
     <color name="black_text_splash">#141414</color>
     <color name="white">#FFFFFF</color>
+    <color name="white_40">#66FFFFFF</color>
+
 
     <color name="blue_line">#0F52BA</color>
     <color name="app_color">#0F52BA</color>
@@ -39,7 +41,7 @@
     <color name="custom_button_grey">#878787</color>
 
 
-    <color name="blur_color">#EFF2F6</color>
+    <color name="blur_color">#37EFF2F6</color>
     <color name="home_post_btn_background_color">#F8F8F8</color>
     <color name="transparent">#003C0505</color>
     <color name="text_succes_color">#1EC751</color>

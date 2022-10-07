@@ -4,6 +4,8 @@ package com.stalmate.user.view.authentication
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
@@ -35,8 +37,7 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
     var PASSWORDPATTERN = "\"^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$\""
     private var GANDER: String = ""
     var currentYear=""
-    var year=""
-
+    val SPLASH_DURATION: Long = 1000
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -311,28 +312,25 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
         binding.btnCrateAccount.setOnClickListener {
             if (isValid()) {
 
-                if (currentYear < year) {
+                Log.d("ajncjnan", currentYear)
+                Log.d("ajncjnan", selectedYear)
+
+                if (currentYear < selectedYear) {
                     makeToast("Your age should be 13 years or more")
                 }else {
                     createAccountApiCall()
                 }
             }
-//            findNavController().navigate(R.id.fragmentOTPEnter)
         }
-
-
-
 
         CustumEditText.setup(binding.filledTextEmail,binding.etEmail)
         CustumEditText.setup(binding.filledTextPassword,binding.etPassword)
-
     }
-
 
     fun isValid(): Boolean {
 
+        lateinit var successdialogBuilder:AlertDialog
         if (ValidationHelper.isNull(binding.etName.text.toString())) {
-
             makeToast(getString(R.string.first_name_toast))
             return false
         } else if (ValidationHelper.isNull(binding.etLastName.text.toString())) {
@@ -351,8 +349,16 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
             makeToast(getString(R.string.password_error_toast))
             return false
         } else if (!isValidPassword(binding.etPassword.text.toString().trim())) {
-                makeToast("Password Must Include Atleast 1-uppercase Lowercase A-Z, a-z Number 0-1 , 1-Spaecial Character #@&/")
-                return false
+            Handler(Looper.getMainLooper()).postDelayed({
+                successdialogBuilder = AlertDialog.Builder(requireContext(), R.style.CustomAlertDialog).create()
+                val view = layoutInflater.inflate(R.layout.password_validation_error_popup, null)
+
+                successdialogBuilder.setView(view)
+                successdialogBuilder.setCanceledOnTouchOutside(true)
+                successdialogBuilder.show()
+            }, SPLASH_DURATION)
+
+            return false
         } else if (!binding.tmcheckbox.isChecked) {
                 makeToast(getString(R.string.accept_tnc))
                 return false
@@ -523,7 +529,7 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
                     dataAdapter= ArrayAdapter(
                         requireContext(),
                         android.R.layout.simple_spinner_item,
-                        resources.getStringArray(R.array.month)
+                        resources.getStringArray(R.array.monthOfThirty)
                     )
                 }
 

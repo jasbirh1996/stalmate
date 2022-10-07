@@ -27,8 +27,7 @@ class ActivitySplash : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         setContentView(R.layout.activity_splash)
         context = this
         prefManager = PrefManager(context)
@@ -41,9 +40,6 @@ class ActivitySplash : BaseActivity() {
                 finish()
             }
             finish()
-
-
-
         }, SPLASH_DURATION)
     }
 }

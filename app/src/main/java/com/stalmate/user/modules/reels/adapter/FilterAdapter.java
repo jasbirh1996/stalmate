@@ -67,7 +67,6 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterView
                 .inflate(R.layout.item_filter, parent, false);
         FilterViewHolder holder = new FilterViewHolder(view);
         holder.setIsRecyclable(false);
-
         RequestOptions requestOptions = new RequestOptions();
         requestOptions = requestOptions.transforms(new CenterCrop(), new RoundedCorners(24));
         holder.image.setImage(mThumbnail);

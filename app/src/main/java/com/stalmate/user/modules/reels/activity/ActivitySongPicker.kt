@@ -12,11 +12,13 @@ import com.stalmate.user.modules.reels.model.Song
 import com.stalmate.user.modules.reels.workers.FileDownloadWorker
 
 import java.io.File
+
+
 var EXTRA_SONG_FILE = "song_file"
 var EXTRA_SONG_ID = "song_id"
 var EXTRA_SONG_NAME = "song_name"
-class ActivitySongPicker : AppCompatActivity() {
 
+class ActivitySongPicker : AppCompatActivity() {
 
     private val TAG = "SongPickerActivity"
     private lateinit var appBarConfiguration: AppBarConfiguration
@@ -28,8 +30,8 @@ class ActivitySongPicker : AppCompatActivity() {
         binding = ActivitySongPickerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-    }
 
+    }
 
     fun downloadSelectedSong(song: Song) {
         val songs = File(filesDir, "songs")

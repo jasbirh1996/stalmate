@@ -2,15 +2,20 @@ package com.stalmate.user.view.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.stalmate.user.R
 import com.stalmate.user.databinding.ItemLanguageLayoutBinding
 import com.stalmate.user.model.Category
 import com.stalmate.user.viewmodel.AppViewModel
+import java.util.*
+
 
 class AdapterCategory(
     val viewModel: AppViewModel,
@@ -43,6 +48,7 @@ class AdapterCategory(
 
         holder.bind(list.get(position))
 
+
     }
 
     override fun getItemCount(): Int {
@@ -59,27 +65,35 @@ class AdapterCategory(
         @SuppressLint("ResourceAsColor", "ResourceType")
         fun bind(categoryResponse: Category) {
 
+            val rnd = Random()
+            val color: Int = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256))
+
+
             if (list.get(position).isSelected){
                 //list.get(position).isSelected = true
-                binding.item.setBackground(
+               /* binding.item.setBackground(
                     ContextCompat.getDrawable(
                         context,
-                        R.drawable.language_select_background_blue
+                        R.drawable.welcome_interest_select_background_random
                     )
-                )
+                )*/
 
+                binding.item.setBackgroundColor(color)
                 binding.item.setTextColor(ContextCompat.getColor(context, R.color.white))
+
             } else {
                 binding.item.setBackground(
                     ContextCompat.getDrawable(
                         context,
-                        R.drawable.language_select_background
+                        R.drawable.welcome_interest_select_background
                     )
                 )
+
                 binding.item.setTextColor(ContextCompat.getColor(context, R.color.black))
                // list.get(position).isSelected = false
             }
             binding.item.text = categoryResponse.name
+
 
             binding.itemLayout.setOnClickListener {
 
@@ -87,8 +101,6 @@ class AdapterCategory(
                     list.get(position).isSelected=false
                 }else{
                     list.get(position).isSelected=true
-
-
                 }
 
                 if (checkedPosition != getAdapterPosition()) {

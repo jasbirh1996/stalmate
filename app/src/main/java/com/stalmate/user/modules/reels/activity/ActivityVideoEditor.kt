@@ -2,6 +2,7 @@ package com.stalmate.user.modules.reels.activity
 
 import android.annotation.SuppressLint
 import android.app.ProgressDialog
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.SurfaceTexture
 import android.media.AudioManager
@@ -11,6 +12,8 @@ import android.media.MediaPlayer.OnCompletionListener
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
+import android.provider.DocumentsContract
+import android.provider.MediaStore
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.*
@@ -60,6 +63,8 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
     private var imagePath = ""
     private var exeCmd: ArrayList<String>? = null
     lateinit var fFmpeg: FFmpeg
+    val PICK_FILE = 99
+    var id = 0
     private lateinit var newCommand: Array<String?>
     private var progressDialog: ProgressDialog? = null
     override fun onClick(viewId: Int, view: View?) {
@@ -142,6 +147,7 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
         binding.imgUndo.setOnClickListener(this)
         binding.imgSticker.setOnClickListener(this)
         binding.ivEmoji.setOnClickListener(this)
+        binding.ivMusic.setOnClickListener(this)
         binding.videoSurface.setSurfaceTextureListener(object : SurfaceTextureListener {
             override fun onSurfaceTextureAvailable(
                 surfaceTexture: SurfaceTexture,
@@ -253,6 +259,7 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
             R.id.imgClose -> onBackPressed()
             R.id.imgDone -> saveImage()
             R.id.imgDraw -> setDrawingMode()
+
             R.id.imgText -> {    val textEditorDialogFragment = TextEditorDialogFragment.show(this)
                 textEditorDialogFragment.setOnTextEditorListener(object : TextEditorDialogFragment.TextEditorListener {
                     override fun onDone(inputText: String?, colorCode: Int) {
@@ -263,10 +270,13 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
                     }
                 })
             }
+
+
             R.id.imgUndo -> {
                 Log.d("canvas>>", mPhotoEditor.undo().toString() + "")
                 mPhotoEditor.clearAllViews()
             }
+
             R.id.imgSticker -> mStickerBSFragment.show(
                 supportFragmentManager,
                 mStickerBSFragment.tag
@@ -276,8 +286,17 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
                 supportFragmentManager,
                 mEmojiBSFragment!!.tag
             )
+
+            R.id.ivMusic -> {
+                val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+                intent.addCategory(Intent.CATEGORY_OPENABLE)
+                intent.type = "audio/*"
+                startActivityForResult(intent, PICK_FILE)
+            }
+
         }
     }
+
 
     private fun setCanvasAspectRatio() {
         originalDisplayHeight = displayHeight

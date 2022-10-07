@@ -3,14 +3,17 @@ package com.stalmate.user.view.dashboard.HomeFragment.Drawer
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.stalmate.user.R
 import com.stalmate.user.databinding.ItemDrawerLayoutBinding
-import com.stalmate.user.model.Result
+import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.view.authentication.ActivityAuthentication
 import com.stalmate.user.viewmodel.AppViewModel
 
@@ -30,19 +33,6 @@ class DrawerAdapter(val viewModel: AppViewModel,
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         holder.bind(list.get(position))
-
-        when(position){
-
-
-            10 ->{
-                    context.startActivity(Intent(context, ActivityAuthentication::class.java))
-
-            }
-
-        }
-
-
-
     }
 
 
@@ -65,11 +55,21 @@ class DrawerAdapter(val viewModel: AppViewModel,
             Glide.with(context).load(drawerResponse.image).into(binding.cardImage)
             binding.tvcardText.text = drawerResponse.text
 
+            binding.card.setOnClickListener {
+
+                Log.d("jjjjjjjjj", bindingAdapterPosition.toString())
+                when(bindingAdapterPosition){
+                        13 ->{
+                            PrefManager.getInstance(context)!!.keyIsLoggedIn = false
+                        context.startActivity(Intent(context, ActivityAuthentication::class.java))
+                    }
+
+                }
+            }
         }
     }
 
-
-    public interface Callbackk {
+    interface Callbackk {
         fun onClickDrawerItem(postId: String)
     }
 }

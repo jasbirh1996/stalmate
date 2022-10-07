@@ -12,7 +12,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import com.stalmate.user.R
@@ -155,7 +154,6 @@ class FragmentOTPEnter : BaseFragment() {
                 if (it.status == true){
                     binding.progressBar.visibility = View.GONE
                     val bundle = Bundle()
-
                     bundle.putString("email",email)
                     bundle.putString("otp","1234")
                     findNavController().navigate(R.id.fragmentPasswordReset,bundle)
@@ -206,8 +204,6 @@ class FragmentOTPEnter : BaseFragment() {
                     successdialogBuilder.setView(view)
                     successdialogBuilder.setCanceledOnTouchOutside(false)
                     successdialogBuilder.show()
-
-
 
                     createAccountApiCall()
 

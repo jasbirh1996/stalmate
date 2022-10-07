@@ -641,7 +641,7 @@
     <string name="otp_verification">OTP Verification</string>
     <string name="verify_amp_procced"><![CDATA[Verify & Procced]]></string>
     <string name="please_enter_mobile_number">Please enter Moblie number</string>
-    <string name="please_enter_mobile_number_more_then">Please enter more then 10 digit Moblie number</string>
+    <string name="please_enter_mobile_number_more_then">Please enter more then 8 digit Moblie number</string>
     <string name="create_album">Create Album</string>
     <string name="create">CREATE</string>
     <string name="add_photo_videos">Add Photo/Videos</string>
@@ -701,7 +701,16 @@
 
     <string-array name="monthOfthreeOne">
         <item>January</item>
-        <item>February</item>
+        <item>March</item>
+        <item>May</item>
+        <item>July</item>
+        <item>August</item>
+        <item>October</item>
+        <item>December</item>
+    </string-array>
+
+    <string-array name="monthOfThirty">
+        <item>January</item>
         <item>March</item>
         <item>April</item>
         <item>May</item>
@@ -711,16 +720,6 @@
         <item>September</item>
         <item>October</item>
         <item>November</item>
-        <item>December</item>
-    </string-array>
-
-    <string-array name="monthOfThirty">
-        <item>January</item>
-        <item>March</item>
-        <item>May</item>
-        <item>July</item>
-        <item>August</item>
-        <item>October</item>
         <item>December</item>
     </string-array>
     <string-array name="monthOfTwentyEight">

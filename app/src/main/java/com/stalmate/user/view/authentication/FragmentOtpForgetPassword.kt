@@ -13,7 +13,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
-import com.stalmate.user.databinding.FragmentOTPEnterBinding
 import com.stalmate.user.databinding.FragmentOtpForgetPasswordBinding
 import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.view.dashboard.ActivityDashboard
