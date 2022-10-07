@@ -61,6 +61,7 @@ class ActivityVideoRecorder : BaseActivity() {
 
     private var mModel: RecorderActivityViewModel? = null
     private val mHandler = Handler()
+    private var isImage=false
     private var mMediaPlayer: MediaPlayer? = null
     private val mStopper = Runnable { stopRecording() }
     lateinit var binding: ActivityVideoRecorderBinding
@@ -72,36 +73,61 @@ class ActivityVideoRecorder : BaseActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityVideoRecorderBinding.inflate(layoutInflater)
         mModel = ViewModelProvider(this)[RecorderActivityViewModel::class.java]
-
         setContentView(binding.root)
+        if (intent.getStringExtra("type")!=null){
+            isImage=true
+        }
         binding.cameraView.open()
         setUpCameraView()
 
 
+
         binding.buttonRecord.setOnClickListener {
-            if (binding.cameraView.isTakingVideo){
-                stopRecording()
-                binding.recordAnimationView.visibility=View.GONE
-                binding.stopIConView.visibility=View.VISIBLE
-            }else{
-                startRecording()
-                binding.recordAnimationView.visibility=View.VISIBLE
-                binding.stopIConView.visibility=View.GONE
-            }
+                if (isImage){
+                    if (binding.cameraView.isTakingPicture){
+                        binding.cameraView.takePicture()
+                    }else{
+                        startRecording()
+                        binding.recordAnimationView.visibility=View.VISIBLE
+                        binding.stopIConView.visibility=View.GONE
+                    }
+                }else{
+                    if (binding.cameraView.isTakingVideo){
+                        stopRecording()
+                        binding.recordAnimationView.visibility=View.GONE
+                        binding.stopIConView.visibility=View.VISIBLE
+                    }else{
+                        startRecording()
+                        binding.recordAnimationView.visibility=View.VISIBLE
+                        binding.stopIConView.visibility=View.GONE
+                    }
+                }
         }
 
 
 
         binding.buttonDone.setOnClickListener { view: View? ->
-            if (binding.cameraView.isTakingVideo()) {
-                Toast.makeText(this, R.string.recorder_error_in_progress, Toast.LENGTH_SHORT)
-                    .show()
-            } else if (mModel!!.segments.isEmpty()) {
-                Toast.makeText(this, R.string.recorder_error_no_clips, Toast.LENGTH_SHORT)
-                    .show()
-            } else {
-                commitRecordings()
-            }
+           if (isImage){
+               if (binding.cameraView.isTakingVideo()) {
+                   Toast.makeText(this, R.string.recorder_error_in_progress, Toast.LENGTH_SHORT)
+                       .show()
+               } else if (mModel!!.segments.isEmpty()) {
+                   Toast.makeText(this, R.string.recorder_error_no_clips, Toast.LENGTH_SHORT)
+                       .show()
+               } else {
+                   commitImage()
+               }
+           }else{
+               if (binding.cameraView.isTakingVideo()) {
+                   Toast.makeText(this, R.string.recorder_error_in_progress, Toast.LENGTH_SHORT)
+                       .show()
+               } else if (mModel!!.segments.isEmpty()) {
+                   Toast.makeText(this, R.string.recorder_error_no_clips, Toast.LENGTH_SHORT)
+                       .show()
+               } else {
+                   commitRecordings()
+               }
+           }
         }
         binding.buttonMusic.setOnClickListener { view: View? ->
             if (binding.cameraView.isTakingVideo()) {
@@ -159,7 +185,6 @@ class ActivityVideoRecorder : BaseActivity() {
                     .show()
             } else {
                 binding.cameraView.setFlash(if (binding.cameraView.getFlash() === Flash.OFF) Flash.TORCH else Flash.OFF)
-
             }
         }
 
@@ -221,6 +246,13 @@ class ActivityVideoRecorder : BaseActivity() {
             override fun onPictureTaken(result: PictureResult) {
                 super.onPictureTaken(result)
                 result.toBitmap { bitmap: Bitmap? ->
+                    mModel!!.video = File(cacheDir, UUID.randomUUID().toString())
+
+                    binding.cameraView.takeVideoSnapshot(
+                        mModel!!.video!!, ((SharedConstants.MAX_DURATION - recorded).toInt())
+                    )
+                    onVideoRecordingEnd()
+
 
                 }
             }
@@ -279,6 +311,11 @@ class ActivityVideoRecorder : BaseActivity() {
                 binding.segmentedProgressbar.start()
             }
         })
+
+
+
+
+
 
     }
 
@@ -371,6 +408,63 @@ class ActivityVideoRecorder : BaseActivity() {
         binding.cameraView.stopVideo()
         mHandler.removeCallbacks(mStopper)
     }
+
+    private fun commitImage(){
+
+        val videos: MutableList<String> = ArrayList()
+        for (segment in mModel!!.segments) {
+            videos.add(segment.file!!.absolutePath)
+        }
+        val merged1 = File(cacheDir, UUID.randomUUID().toString())
+        val data1: Data = Data.Builder()
+            .putStringArray(MergeVideosWorker.KEY_VIDEOS, videos.toTypedArray())
+            .putString(MergeVideosWorker.KEY_OUTPUT, merged1.absolutePath)
+            .build()
+
+        val request1: OneTimeWorkRequest = OneTimeWorkRequest.Builder(MergeVideosWorker::class.java)
+            .setInputData(data1)
+            .build()
+
+        val wm: WorkManager = WorkManager.getInstance(this)
+        if (mModel!!.audio != null) {
+
+            val merged2 = File(cacheDir, UUID.randomUUID().toString())
+            val data2: Data = Data.Builder()
+                .putString(MergeAudioVideoWorker.KEY_AUDIO, mModel!!.audio!!.path)
+                .putString(MergeAudioVideoWorker.KEY_VIDEO, merged1.absolutePath)
+                .putString(MergeAudioVideoWorker.KEY_OUTPUT, merged2.absolutePath)
+                .build()
+
+            val request2: OneTimeWorkRequest = OneTimeWorkRequest.Builder(MergeAudioVideoWorker::class.java)
+                .setInputData(data2)
+                .build()
+
+            wm.beginWith(request1).then(request2).enqueue()
+            wm.getWorkInfoByIdLiveData(request2.getId())
+                .observe(this) { info ->
+                    val ended = (info.getState() === WorkInfo.State.CANCELLED
+                            || info.getState() === WorkInfo.State.FAILED)
+                    if (info.getState() === WorkInfo.State.SUCCEEDED) {
+                        closeFinally(merged2)
+                    } else if (ended) {
+                    }
+                }
+        } else {
+            wm.enqueue(request1)
+            wm.getWorkInfoByIdLiveData(request1.getId())
+                .observe(this) { info ->
+                    val ended = (info.getState() === WorkInfo.State.CANCELLED
+                            || info.getState() === WorkInfo.State.FAILED)
+                    if (info.getState() === WorkInfo.State.SUCCEEDED) {
+
+                        closeFinally(merged1)
+                    } else if (ended) {
+
+                    }
+                }
+        }
+    }
+
 
     private fun commitRecordings() {
         showLoader()

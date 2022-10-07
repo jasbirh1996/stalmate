@@ -91,7 +91,7 @@ class FragmentMenu(var callback : Callback) : BaseFragment(),  DrawerAdapter.Cal
         data.add(ModelDrawer(R.drawable.ic_menu_saved, "Saved favourite"))
         data.add(ModelDrawer(R.drawable.ic_menu_logout, "Logout"))
 
-        binding.tvUserName.text = PrefManager.getInstance(App.getInstance())!!.userProfileDetail.results.first_name + " " +  PrefManager.getInstance(App.getInstance())!!.userProfileDetail.results.last_name
+        binding.tvUserName.text = PrefManager.getInstance(App.getInstance())!!.userDetail.results[0].first_name + " " +  PrefManager.getInstance(App.getInstance())!!.userDetail.results[0].last_name
 
         drawerAdapter = DrawerAdapter(networkViewModel, requireContext(),this )
         binding.rvMenu.adapter = drawerAdapter
