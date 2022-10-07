@@ -94,14 +94,11 @@ class ActivityVideoRecorder : BaseActivity() {
             }
         }
 
-
-
         binding.buttonDone.setOnClickListener { view: View? ->
             if (binding.cameraView.isTakingVideo()) {
                 Toast.makeText(this, R.string.recorder_error_in_progress, Toast.LENGTH_SHORT).show()
             } else if (mModel!!.segments.isEmpty()) {
-                Toast.makeText(this, R.string.recorder_error_no_clips, Toast.LENGTH_SHORT)
-                    .show()
+                Toast.makeText(this, R.string.recorder_error_no_clips, Toast.LENGTH_SHORT).show()
             } else {
                 commitRecordings()
             }
@@ -195,8 +192,6 @@ class ActivityVideoRecorder : BaseActivity() {
             }
             mModel!!.speed = speed
         })
-
-
     }
 
     override fun onDestroy() {
@@ -210,7 +205,6 @@ class ActivityVideoRecorder : BaseActivity() {
             mMediaPlayer = null
         }
     }
-
 
     fun setUpCameraView() {
 
@@ -227,7 +221,6 @@ class ActivityVideoRecorder : BaseActivity() {
                 }
             }
 
-
             override fun onZoomChanged(
                 newValue: Float,
                 bounds: FloatArray,
@@ -238,12 +231,9 @@ class ActivityVideoRecorder : BaseActivity() {
                 // fingers: if caused by touch gestures, these is the fingers position
             }
 
-
-
             override fun onCameraOpened(options: CameraOptions) {
                 super.onCameraOpened(options)
                 setUpFilterAdapter()
-
             }
 
             override fun onVideoRecordingEnd() {
@@ -281,7 +271,6 @@ class ActivityVideoRecorder : BaseActivity() {
                 binding.segmentedProgressbar.start()
             }
         })
-
     }
 
     fun setUpFilterAdapter() {
@@ -369,7 +358,7 @@ class ActivityVideoRecorder : BaseActivity() {
 
     private fun stopRecording() {
         binding.cameraView.stopVideo()
-        mHandler.removeCallbacks(mStopper)
+//        mHandler.removeCallbacks(mStopper)
     }
 
     private fun commitRecordings() {
@@ -379,6 +368,7 @@ class ActivityVideoRecorder : BaseActivity() {
         for (segment in mModel!!.segments) {
             videos.add(segment.file!!.absolutePath)
         }
+
         val merged1 = File(cacheDir, UUID.randomUUID().toString())
 
         val data1: Data = Data.Builder()
@@ -386,11 +376,13 @@ class ActivityVideoRecorder : BaseActivity() {
             .putString(MergeVideosWorker.KEY_OUTPUT, merged1.absolutePath)
             .build()
 
+
         val request1: OneTimeWorkRequest = OneTimeWorkRequest.Builder(MergeVideosWorker::class.java)
             .setInputData(data1)
             .build()
 
         val wm: WorkManager = WorkManager.getInstance(this)
+
         if (mModel!!.audio != null) {
 
             val merged2 = File(cacheDir, UUID.randomUUID().toString())
@@ -405,12 +397,14 @@ class ActivityVideoRecorder : BaseActivity() {
                 .setInputData(data2)
                 .build()
 
+            Log.d("jjjkkjkjkj", data2.toString())
+
             wm.beginWith(request1).then(request2).enqueue()
             wm.getWorkInfoByIdLiveData(request2.getId())
                 .observe(this) { info ->
-                    val ended = (info.getState() === WorkInfo.State.CANCELLED
-                            || info.getState() === WorkInfo.State.FAILED)
-                    if (info.getState() === WorkInfo.State.SUCCEEDED) {
+                    val ended = (info.state === WorkInfo.State.CANCELLED
+                            || info.state === WorkInfo.State.FAILED)
+                    if (info.state === WorkInfo.State.SUCCEEDED) {
                         closeFinally(merged2)
                     } else if (ended) {
                     }
@@ -419,9 +413,9 @@ class ActivityVideoRecorder : BaseActivity() {
             wm.enqueue(request1)
             wm.getWorkInfoByIdLiveData(request1.getId())
                 .observe(this) { info ->
-                    val ended = (info.getState() === WorkInfo.State.CANCELLED
-                            || info.getState() === WorkInfo.State.FAILED)
-                    if (info.getState() === WorkInfo.State.SUCCEEDED) {
+                    val ended = (info.state === WorkInfo.State.CANCELLED
+                            || info.state === WorkInfo.State.FAILED)
+                    if (info.state === WorkInfo.State.SUCCEEDED) {
                         closeFinally(merged1)
                     } else if (ended) {
 
@@ -453,6 +447,7 @@ class ActivityVideoRecorder : BaseActivity() {
             .putString(VideoSpeedWorker.KEY_OUTPUT, output.absolutePath)
             .putFloat(VideoSpeedWorker.KEY_SPEED, speed)
             .build()
+
         val request = OneTimeWorkRequest.Builder(VideoSpeedWorker::class.java)
             .setInputData(data)
             .build()
@@ -479,12 +474,14 @@ class ActivityVideoRecorder : BaseActivity() {
             }
     }
     private fun closeFinally(video: File) {
-      dismissLoader()
+
+        dismissLoader()
         val intent = Intent(this, ActivityFilter::class.java)
-       intent.putExtra(ActivityFilter.EXTRA_SONG, mModel!!.song)
+        intent.putExtra(ActivityFilter.EXTRA_SONG, mModel!!.song)
         intent.putExtra(ActivityFilter.EXTRA_VIDEO, video.absolutePath)
         startActivity(intent)
         finish()
+
     }
     class RecorderActivityViewModel : ViewModel() {
         var audio: Uri? = null
@@ -542,7 +539,7 @@ class ActivityVideoRecorder : BaseActivity() {
                 /*setImageFromIntent(filePath)*/
                 Log.d("jcbjscb", "Chosen path = $filePath")
 
-                mModel!!.audio = data.getData()
+                mModel!!.audio = uri
                 mMediaPlayer = MediaPlayer.create(this, data.getData())
 
                 var mp=MediaPlayer()

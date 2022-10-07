@@ -41,6 +41,11 @@ public class MergeAudioVideoWorker extends Worker {
         String clip = getInputData().getString(KEY_VIDEO);
         String output = getInputData().getString(KEY_OUTPUT);
         FileOutputStream os = null;
+
+        Log.d("jkjkjhjkjjj", audio);
+        Log.d("jkjkjhjkjjj", clip);
+        Log.d("jkjkjhjkjjj", output);
+
         try {
             //noinspection ConstantConditions
             Movie temp = MovieCreator.build(clip);
@@ -64,7 +69,6 @@ public class MergeAudioVideoWorker extends Worker {
                         break;
                     }
                 }
-
                 //noinspection ConstantConditions
                 merged.addTrack(crop(clip, a));
             } else {

@@ -15,13 +15,14 @@ import com.stalmate.user.databinding.ItemFriendBigBinding
 import com.stalmate.user.databinding.ItemFunTimeBinding
 import com.stalmate.user.databinding.ItemLanguageLayoutBinding
 import com.stalmate.user.model.Result
+import com.stalmate.user.model.User
 import com.stalmate.user.view.adapter.FriendAdapter
 import com.stalmate.user.viewmodel.AppViewModel
 import eightbitlab.com.blurview.RenderScriptBlur
 
 class AdapterFunTime(val viewModel: AppViewModel,
                      val context: Context,
-                    /* var callback: FriendAdapter.Callbackk*/) : RecyclerView.Adapter<AdapterFunTime.ViewHolder>() {
+                     ) : RecyclerView.Adapter<AdapterFunTime.ViewHolder>() {
 
     var list = ArrayList<ResultFuntime>()
 
@@ -39,17 +40,18 @@ class AdapterFunTime(val viewModel: AppViewModel,
                 .setFrameClearDrawable(windowBackground)
                 .setBlurRadius(radius)
 
+
+
             binding.tvUserName.text = funtimeResponse.first_name+ " " + funtimeResponse.last_name
 
             if (funtimeResponse.file_type=="Video"){
 
             }else {
                 Glide.with(context).load(funtimeResponse.file).into(binding.shapeableImageView)
-
             }
         }
-
     }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         var view = LayoutInflater.from(parent.context).inflate(R.layout.item_fun_time, parent, false)
@@ -63,6 +65,13 @@ class AdapterFunTime(val viewModel: AppViewModel,
 
     override fun getItemCount(): Int {
         return list.size
+    }
+
+
+    fun submitList(funtimeList: List<ResultFuntime>) {
+        list.clear()
+        list.addAll(funtimeList)
+        notifyDataSetChanged()
     }
 
 

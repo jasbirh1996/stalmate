@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".reels.activity.ActivityVideoRecorder">
+    tools:context=".modules.reels.activity.ActivityVideoRecorder">
 
 
     <com.otaliastudios.cameraview.CameraView
@@ -17,7 +17,7 @@
         app:cameraFacing="front"
         app:cameraPreviewFrameRate="60"
         app:cameraPreviewFrameRateExact="true"
-        app:cameraMode="video"
+        app:cameraMode="picture"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
