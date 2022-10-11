@@ -14,10 +14,10 @@ import com.stalmate.user.modules.reels.workers.FileDownloadWorker
 import java.io.File
 
 
-var EXTRA_SONG_FILE = "song_file"
-var EXTRA_SONG_ID = "song_id"
-var EXTRA_SONG_NAME = "song_name"
 
+const val EXTRA_SONG_FILE = "song_file"
+const val EXTRA_SONG_ID = "song_id"
+const val  EXTRA_SONG_NAME = "song_name"
 class ActivitySongPicker : AppCompatActivity() {
 
     private val TAG = "SongPickerActivity"

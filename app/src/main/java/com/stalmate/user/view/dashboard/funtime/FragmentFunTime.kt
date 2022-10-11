@@ -47,7 +47,8 @@ class FragmentFunTime() : BaseFragment() {
        /* callback.onClickHideBottom()*/
 
         binding.ivAddButton.setOnClickListener {
-            startActivity(IntentHelper.getCreateReelsScreen(requireActivity()))
+       //     startActivity(IntentHelper.getCreateReelsScreen(requireActivity())!!.putExtra("type","image"))
+            startActivity(IntentHelper.getCreateReelsScreen(requireActivity())!!)
 
 //            startActivity(Intent(context, ActivityfuntimeRandom::class.java))
         }

@@ -4,6 +4,7 @@ package com.stalmate.user.modules.reels.activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -27,17 +28,19 @@ class ActivityFilter : AppCompatActivity() {
     private lateinit var binding: ActivityFilterBinding
     private var mModel: ActivityFilterViewModel? = null
     private var mPlayer: ExoPlayer? = null
-    private var mSong = 0
+    private var mSong : String? = null
     private var mVideo: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding= ActivityFilterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        mModel = ViewModelProvider(this)[ActivityFilterViewModel::class.java]
-        mSong = intent.getIntExtra(EXTRA_SONG, 0)
-        mVideo = intent.getStringExtra(EXTRA_VIDEO)
 
+
+        mModel = ViewModelProvider(this)[ActivityFilterViewModel::class.java]
+        mVideo = intent.getStringExtra(EXTRA_VIDEO)
+        mSong = intent.getStringExtra(EXTRA_SONG)
+        Log.d("asdasd",mVideo.toString())
         mPlayer = ExoPlayer.Builder(this).build()
         mPlayer!!.setRepeatMode(ExoPlayer.REPEAT_MODE_ALL)
         val factory = DefaultDataSourceFactory(this, getString(R.string.app_name))
@@ -56,10 +59,12 @@ class ActivityFilter : AppCompatActivity() {
 
 
     binding.button.setOnClickListener {
+        mPlayer!!.pause()
         val intent = Intent(this, ActivityVideoEditor::class.java)
         intent.putExtra(EXTRA_VIDEO, mVideo)
+        intent.putExtra(EXTRA_SONG, mSong)
         startActivity(intent)
-       // finish()
+        finish()
     }
 
 

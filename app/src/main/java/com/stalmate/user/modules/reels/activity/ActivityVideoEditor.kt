@@ -12,16 +12,19 @@ import android.media.MediaPlayer.OnCompletionListener
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
-import android.provider.DocumentsContract
-import android.provider.MediaStore
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.*
 import android.view.TextureView.SurfaceTextureListener
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.NonNull
 import androidx.core.content.ContextCompat
 import androidx.work.Data
+import androidx.work.OneTimeWorkRequest
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
 import com.bumptech.glide.Glide
 import com.github.hiteshsondhi88.libffmpeg.FFmpeg
 import com.github.hiteshsondhi88.libffmpeg.FFmpegExecuteResponseHandler
@@ -36,18 +39,11 @@ import com.stalmate.user.modules.reels.photo_editing.EmojiBSFragment
 import com.stalmate.user.modules.reels.photo_editing.PropertiesBSFragment
 import com.stalmate.user.modules.reels.photo_editing.StickerBSFragment
 import com.stalmate.user.modules.reels.photo_editing.TextEditorDialogFragment
+import com.stalmate.user.modules.reels.workers.WatermarkWorker
 import ja.burhanrashid52.photoeditor.*
 import ja.burhanrashid52.photoeditor.Utils.getScaledDimension
 import java.io.*
-import androidx.work.WorkInfo
-
-import com.stalmate.user.modules.reels.workers.WatermarkWorker
-
-import androidx.work.OneTimeWorkRequest
-
-import androidx.work.WorkManager
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
@@ -97,10 +93,11 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
 //        Glide.with(this).load(getIntent().getStringExtra("DATA")).into(binding.ivImage.getSource());
        Glide.with(this).load(R.drawable.trans).centerCrop().into(binding.ivImage.source)
         videoPath = intent.getStringExtra(EXTRA_VIDEO).toString()
+        Log.d("asdasd",videoPath.toString())
+        Log.d("asdasd","videoPath.toString()")
         val retriever = MediaMetadataRetriever()
         retriever.setDataSource(videoPath)
-        val metaRotation =
-            retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION)
+        val metaRotation = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION)
         val rotation = metaRotation?.toInt() ?: 0
         if (rotation == 90 || rotation == 270) {
             DRAW_CANVASH =
@@ -122,7 +119,6 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
             ">>",
             "width>> " + newCanvasWidth + "height>> " + newCanvasHeight + " rotation >> " + rotation
         )
-
     }
 
     private fun initViews() {
@@ -138,6 +134,7 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
             .setDeleteView(binding.imgDelete) //.setDefaultTextTypeface(mTextRobotoTf)
            // .setDefaultEmojiTypeface(mEmojiTypeFace)
             .build() // build photo editor sdk
+        Log.d("asdasd","opaskd")
         mPhotoEditor.setOnPhotoEditorListener(this)
         mEmojiBSFragment?.setEmojiListener(this)
         binding.imgClose.setOnClickListener(this)
@@ -148,6 +145,7 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
         binding.imgSticker.setOnClickListener(this)
         binding.ivEmoji.setOnClickListener(this)
         binding.ivMusic.setOnClickListener(this)
+        Log.d("VideoPath>>", "videhjkoPath")
         binding.videoSurface.setSurfaceTextureListener(object : SurfaceTextureListener {
             override fun onSurfaceTextureAvailable(
                 surfaceTexture: SurfaceTexture,
@@ -157,8 +155,18 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
 //                activityHomeBinding.videoSurface.getLayoutParams().height=640;
 //                activityHomeBinding.videoSurface.getLayoutParams().width=720;
                 val surface = Surface(surfaceTexture)
+                mediaPlayer = MediaPlayer()
+                //                    mediaPlayer.setDataSource("http://daily3gp.com/vids/747.3gp");
+                Log.d("VideoPath>>", "videoPath")
+                Log.d("VideoPath>>", videoPath)
+                mediaPlayer!!.setDataSource(videoPath)
+                mediaPlayer!!.setSurface(surface)
+                mediaPlayer!!.prepare()
+                mediaPlayer!!.setOnCompletionListener(onCompletionListener)
+                mediaPlayer!!.setAudioStreamType(AudioManager.STREAM_MUSIC)
+                mediaPlayer!!.start()
                 try {
-                    mediaPlayer = MediaPlayer()
+  /*                  mediaPlayer = MediaPlayer()
                     //                    mediaPlayer.setDataSource("http://daily3gp.com/vids/747.3gp");
                     Log.d("VideoPath>>", videoPath)
                     mediaPlayer!!.setDataSource(videoPath)
@@ -166,7 +174,7 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
                     mediaPlayer!!.prepare()
                     mediaPlayer!!.setOnCompletionListener(onCompletionListener)
                     mediaPlayer!!.setAudioStreamType(AudioManager.STREAM_MUSIC)
-                    mediaPlayer!!.start()
+                    mediaPlayer!!.start()*/
                 } catch (e: IllegalArgumentException) {
                     // TODO Auto-generated catch block
                     e.printStackTrace()
@@ -291,7 +299,7 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
                 val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
                 intent.addCategory(Intent.CATEGORY_OPENABLE)
                 intent.type = "audio/*"
-                startActivityForResult(intent, PICK_FILE)
+                resultCallbackOfSelectedMusicTrack.launch(intent);
             }
 
         }
@@ -570,6 +578,19 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
             e.printStackTrace()
         }
     }
+    var resultCallbackOfSelectedMusicTrack: ActivityResultLauncher<Intent> = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result!!.resultCode == RESULT_OK) {
+            val data: Intent = result.getData()!!
+            val id = data.getIntExtra(EXTRA_SONG_ID, 0)
+            val name = data.getStringExtra(EXTRA_SONG_NAME)
+            val audio = data.getParcelableExtra<Uri>(EXTRA_SONG_FILE)
 
+            mediaPlayer = MediaPlayer.create(this@ActivityVideoEditor, audio)
+            mediaPlayer!!.setOnCompletionListener { mp -> mediaPlayer = null }
+
+        }
+    }
 
 }

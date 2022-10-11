@@ -72,7 +72,13 @@ public class MergeAudioVideoWorker extends Worker {
                 //noinspection ConstantConditions
                 merged.addTrack(crop(clip, a));
             } else {
-                merged.addTrack(crop(clip, new AACTrackImpl(new FileDataSourceImpl(audio))));
+      /*         Movie audioo = MovieCreator.build(audio); // here
+                Track audioTrack = audioo.getTracks().get(0);
+                merged.addTrack(audioTrack);*/
+
+
+            merged.addTrack(crop(clip, new AACTrackImpl(new FileDataSourceImpl(audio))));
+             //   merged.addTrack(crop(clip, audioTrack));
             }
 
             Container mp4 = new DefaultMp4Builder().build(merged);
