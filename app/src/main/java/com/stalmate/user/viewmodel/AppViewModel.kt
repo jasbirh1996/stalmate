@@ -12,7 +12,9 @@ import com.stalmate.user.model.*
 import com.stalmate.user.networking.ApiInterface
 import com.stalmate.user.view.dashboard.Friend.categorymodel.AddCategoryModel
 import com.stalmate.user.view.dashboard.Friend.categorymodel.ModelCategoryResponse
+import com.stalmate.user.view.dashboard.funtime.ModelFuntimeLikeResponse
 import com.stalmate.user.view.dashboard.funtime.ModelFuntimeResponse
+import com.stalmate.user.view.dashboard.funtime.ModelMusicListResponse
 import com.stalmate.user.view.photoalbum.ModelAlbumCreateResponse
 import com.stalmate.user.view.photoalbum.ModelPhotoResponse
 import com.stalmate.user.view.photoalbum.imageshowindex.ModelPhotoIndexDataResponse
@@ -67,6 +69,20 @@ open class AppViewModel : ViewModel() {
         val temp = MutableLiveData<ModelFuntimeResponse?>()
         funtimeLiveData = temp
         getResult(temp, apiInterface.getFuntimeList(map))
+    }
+
+    var funtimeLiveLikeUnlikeData: LiveData<ModelFuntimeLikeResponse?> = MutableLiveData<ModelFuntimeLikeResponse?>()
+    fun funtimeLiveLikeUnlikeData(map: HashMap<String, String>) {
+        val temp = MutableLiveData<ModelFuntimeLikeResponse?>()
+        funtimeLiveLikeUnlikeData = temp
+        getResult(temp, apiInterface.getFuntimeLikeUnlike(map))
+    }
+
+    var funtimeMusicLiveData: LiveData<ModelMusicListResponse?> = MutableLiveData<ModelMusicListResponse?>()
+    fun funtimeMusicLiveData() {
+        val temp = MutableLiveData<ModelMusicListResponse?>()
+        funtimeMusicLiveData = temp
+        getResult(temp, apiInterface.getFuntimeMusicList())
     }
 
 

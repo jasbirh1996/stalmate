@@ -108,15 +108,16 @@ class ActivityVideoRecorder : BaseActivity() {
                 Toast.makeText(this, R.string.recorder_error_in_progress, Toast.LENGTH_SHORT)
                     .show()
             }else{
-                /*val intent = Intent(
+                val intent = Intent(
                     this@ActivityVideoRecorder,
                     ActivitySongPicker::class.java
                 )
-                startActivityForResult(intent, SharedConstants.REQUEST_CODE_PICK_SONG)*/
-                val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
-                intent.addCategory(Intent.CATEGORY_OPENABLE)
-                intent.type = "audio/*"
-                startActivityForResult(intent, PICK_FILE)
+                startActivityForResult(intent, SharedConstants.REQUEST_CODE_PICK_SONG)
+
+
+
+
+
             }
         }
 

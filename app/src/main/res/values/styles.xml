@@ -66,4 +66,8 @@
         <item name="textAllCaps">false</item>
     </style>
 
+    <style name="roundedImageView" parent="">
+       <item name="cornerRadius">30dp</item>
+    </style>
+
 </resources>

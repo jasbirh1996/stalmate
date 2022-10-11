@@ -69,9 +69,7 @@ class FragmentSync : Fragment() {
     fun isAccountAdded():Boolean{
 
         // Get an instance of the Android account manager
-        val accountManager = requireActivity().getSystemService(
-            ACCOUNT_SERVICE
-        ) as AccountManager
+        val accountManager = requireActivity().getSystemService(ACCOUNT_SERVICE) as AccountManager
 
         for (i in 0 until accountManager.accounts.size){
             if (accountManager.accounts[i].type==Constants.ACCOUNT_TYPE){
@@ -85,18 +83,17 @@ class FragmentSync : Fragment() {
 
     private fun retreiveGoogleContacts() {
 
-        mAccount= createSyncAccount(requireActivity())!!
+        mAccount= createSyncAccount(requireActivity())
 
-            var bundle=Bundle()
+        var bundle=Bundle()
         bundle.putBoolean("force",true)
         bundle.putBoolean("expedited",true)
 
-
         Log.d("asldkjalsda","sync")
-      ContentResolver.requestSync(mAccount, "com.stalmate.user", bundle)
+        ContentResolver.requestSync(mAccount, "com.stalmate.user", bundle)
     }
 
-    fun createSyncAccount(context: Context): Account? {
+    fun createSyncAccount(context: Context): Account {
 
         // Create the account type and default account
         val newAccount = Account(Constants.ACCOUNT_NAME, Constants.ACCOUNT_TYPE)

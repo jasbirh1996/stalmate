@@ -4,12 +4,16 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.ui.AppBarConfiguration
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.work.*
+import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.databinding.ActivitySongPickerBinding
 import com.stalmate.user.modules.reels.model.Song
 import com.stalmate.user.modules.reels.workers.FileDownloadWorker
+import com.stalmate.user.view.dashboard.funtime.AdapterFunTime
+import com.stalmate.user.view.dashboard.funtime.AdapterFunTimeMusic
 
 import java.io.File
 
@@ -18,11 +22,16 @@ var EXTRA_SONG_FILE = "song_file"
 var EXTRA_SONG_ID = "song_id"
 var EXTRA_SONG_NAME = "song_name"
 
-class ActivitySongPicker : AppCompatActivity() {
+class ActivitySongPicker : BaseActivity() {
 
     private val TAG = "SongPickerActivity"
-    private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivitySongPickerBinding
+
+    lateinit var adapterFunTimeMusic : AdapterFunTimeMusic
+
+    override fun onClick(viewId: Int, view: View?) {
+
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +39,30 @@ class ActivitySongPicker : AppCompatActivity() {
         binding = ActivitySongPickerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
+        adapterFunTimeMusic = AdapterFunTimeMusic(networkViewModel, this)
+        binding.rvMusic.adapter = adapterFunTimeMusic
+
+        toolbarSetUp()
+
+        /*music list Api hit */
+         getMusicListApi()
+
+    }
+
+    private fun getMusicListApi() {
+
+        networkViewModel.funtimeMusicLiveData()
+        networkViewModel.funtimeMusicLiveData.observe(this) {
+
+            it.let {
+                adapterFunTimeMusic.submitList(it!!.results)
+                Log.d("=============", it!!.results.size.toString())
+            }
+        }
+    }
+
+    private fun toolbarSetUp() {
 
     }
 

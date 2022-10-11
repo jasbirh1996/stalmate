@@ -12,6 +12,8 @@ object Constants {
     const val URL_BLOCKED_LIST="auth_service/friend_api/get_block_user_list"
     const val URL_CATEGORY_LIST="auth_service/friend_api/friend_category_list"
     const val URLFUNTIME_LIST="auth_service/funtime_api/get_funtime_list"
+    const val URL_FUNTIME_MUSIC_LIST="auth_service/funtime_api/get_sound_api"
+    const val URL_FUNTIME_LIKE_UNLIKE="auth_service/funtime_api/like_unlike_funtime"
 
 
 

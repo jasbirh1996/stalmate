@@ -645,6 +645,7 @@
     <string name="create_album">Create Album</string>
     <string name="create">CREATE</string>
     <string name="add_photo_videos">Add Photo/Videos</string>
+    <string name="search_music">Search Music</string>
     <string-array name="marrage">
         <item><font fgcolor="#B7B7B7">Marital Status</font></item>
         <item><font fgcolor="#B7B7B7">Single</font></item>

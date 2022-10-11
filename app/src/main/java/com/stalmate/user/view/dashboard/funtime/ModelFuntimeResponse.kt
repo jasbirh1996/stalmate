@@ -2,7 +2,7 @@ package com.stalmate.user.view.dashboard.funtime
 
 data class ModelFuntimeResponse(
     val message: String,
-    val results: List<ResultFuntime>,
+    val results: ArrayList<ResultFuntime>,
     val status: Boolean
 )
 
@@ -10,7 +10,7 @@ data class ResultFuntime(
     val Created_date: String,
     val artist_name: String,
     val comment_count: Int,
-    val `file`: String,
+    val file: String,
     val file_type: String,
     val first_name: String,
     val hastag: String,

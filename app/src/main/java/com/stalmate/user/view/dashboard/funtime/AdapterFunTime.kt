@@ -46,6 +46,8 @@ class AdapterFunTime(val viewModel: AppViewModel,
 
             if (funtimeResponse.file_type=="Video"){
 
+                binding.pvExoplayer.visibility = View.VISIBLE
+
             }else {
                 Glide.with(context).load(funtimeResponse.file).into(binding.shapeableImageView)
             }

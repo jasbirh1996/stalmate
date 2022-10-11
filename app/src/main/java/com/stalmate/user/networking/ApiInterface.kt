@@ -7,7 +7,9 @@ import com.stalmate.user.utilities.Constants
 import com.slatmate.user.model.*
 import com.stalmate.user.view.dashboard.Friend.categorymodel.AddCategoryModel
 import com.stalmate.user.view.dashboard.Friend.categorymodel.ModelCategoryResponse
+import com.stalmate.user.view.dashboard.funtime.ModelFuntimeLikeResponse
 import com.stalmate.user.view.dashboard.funtime.ModelFuntimeResponse
+import com.stalmate.user.view.dashboard.funtime.ModelMusicListResponse
 import com.stalmate.user.view.photoalbum.ModelAlbumCreateResponse
 import com.stalmate.user.view.photoalbum.ModelPhotoResponse
 import com.stalmate.user.view.photoalbum.imageshowindex.ModelPhotoIndexDataResponse
@@ -41,6 +43,12 @@ interface ApiInterface {
 
     @POST(Constants.URLFUNTIME_LIST)
     fun getFuntimeList(@Body map: HashMap<String, String>): Call<ModelFuntimeResponse>
+
+    @PATCH(Constants.URL_FUNTIME_LIKE_UNLIKE)
+    fun getFuntimeLikeUnlike(@Body map: HashMap<String, String>): Call<ModelFuntimeLikeResponse>
+
+    @POST(Constants.URL_FUNTIME_MUSIC_LIST)
+    fun getFuntimeMusicList(): Call<ModelMusicListResponse>
 
     @GET(Constants.URL_CATEGORY_LIST)
     fun getCategoryList(): Call<ModelCategoryResponse>

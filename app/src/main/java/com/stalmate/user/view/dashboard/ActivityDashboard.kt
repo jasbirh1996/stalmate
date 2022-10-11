@@ -73,25 +73,30 @@ class ActivityDashboard : AppCompatActivity(), FragmentHome.Callback , FragmentF
                 R.id.home -> {
                     fm.beginTransaction().hide(active).show(fragment1).commit()
                     active = fragment1
+                    binding.bottomNavigation.visibility = View.VISIBLE
                 }
                 R.id.funTime -> {
 
                     fm.beginTransaction().hide(active).show(fragment2).commit()
                     active = fragment2
                     binding.bottomNavigation.visibility = View.GONE
+
                 }
                 R.id.chat -> {
 
                     fm.beginTransaction().hide(active).show(fragment3).commit()
                     active = fragment3
+                    binding.bottomNavigation.visibility = View.VISIBLE
                 }
                 R.id.video -> {
                     fm.beginTransaction().hide(active).show(fragment4).commit()
                     active = fragment4
+                    binding.bottomNavigation.visibility = View.VISIBLE
                 }
                 R.id.friend -> {
                     fm.beginTransaction().hide(active).show(fragment5).commit()
                     active = fragment5
+                    binding.bottomNavigation.visibility = View.VISIBLE
                 }
                 else -> {
 

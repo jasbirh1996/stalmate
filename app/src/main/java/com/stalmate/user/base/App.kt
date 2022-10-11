@@ -20,7 +20,6 @@ class App :Application(){
     private val cacheSize: Long = 90 * 1024 * 1024
     private lateinit var cacheEvictor: LeastRecentlyUsedCacheEvictor
     private lateinit var exoplayerDatabaseProvider: ExoDatabaseProvider
-
     companion object {
         lateinit var cache: SimpleCache
         private var appContext: Context? = null

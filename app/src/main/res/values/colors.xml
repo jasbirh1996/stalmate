@@ -39,6 +39,7 @@
     <color name="grey_darks">#3D3D3D</color>
     <color name="grey_website">#FCFCFC</color>
     <color name="custom_button_grey">#878787</color>
+    <color name="custom_button_color_grey_audio_saved">#BCBCBC</color>
 
 
     <color name="blur_color">#37EFF2F6</color>

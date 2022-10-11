@@ -152,4 +152,5 @@ dependencies {
     implementation 'com.google.android.exoplayer:exoplayer-core:2.18.1'
     implementation 'com.google.android.exoplayer:exoplayer-dash:2.18.1'
     implementation 'com.google.android.exoplayer:exoplayer-ui:2.18.1'
+    implementation 'com.github.castorflex.verticalviewpager:library:19.0.1'
 }
