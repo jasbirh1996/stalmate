@@ -42,7 +42,6 @@ class FragmentSync : Fragment() {
         binding.toggleSyncGoogle.isChecked = isAccountAdded()
 
         binding.toggleSyncGoogle.setOnCheckedChangeListener { compoundButton, active ->
-
             if (active) {
                 retreiveGoogleContacts()
             }else{
@@ -58,9 +57,7 @@ class FragmentSync : Fragment() {
             ACCOUNT_SERVICE
         ) as AccountManager
 
-
         if (isAccountAdded()){
-
             var acc=  Account(Constants.ACCOUNT_NAME, Constants.ACCOUNT_TYPE)
             accountManager.removeAccountExplicitly(acc)
         }
@@ -74,17 +71,14 @@ class FragmentSync : Fragment() {
         for (i in 0 until accountManager.accounts.size){
             if (accountManager.accounts[i].type==Constants.ACCOUNT_TYPE){
                 return true
-
             }
         }
         return false
     }
 
-
     private fun retreiveGoogleContacts() {
 
         mAccount= createSyncAccount(requireActivity())
-
         var bundle=Bundle()
         bundle.putBoolean("force",true)
         bundle.putBoolean("expedited",true)
@@ -98,14 +92,13 @@ class FragmentSync : Fragment() {
         // Create the account type and default account
         val newAccount = Account(Constants.ACCOUNT_NAME, Constants.ACCOUNT_TYPE)
         // Get an instance of the Android account manager
-        val accountManager = context.getSystemService(
-            ACCOUNT_SERVICE
-        ) as AccountManager
+        val accountManager = context.getSystemService(ACCOUNT_SERVICE) as AccountManager
         /*
      * Add the account and account type, no password or user data
      * If successful, return the Account object, otherwise report an error.
-     */return if (accountManager.addAccountExplicitly(newAccount, null, null)) {
-            /*
+     */
+        return if (accountManager.addAccountExplicitly(newAccount, null, null)) {
+         /*
           * If you don't set android:syncable="true" in
           * in your <provider> element in the manifest,
           * then call context.setIsSyncable(account, AUTHORITY, 1)

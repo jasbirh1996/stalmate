@@ -195,7 +195,6 @@ class FragmentReelPlay(var videoLists : ResultFuntime) : BaseFragment(), Player.
         }
     }
 
-
     override fun onDestroy() {
         releasePriviousPlayer()
         super.onDestroy()

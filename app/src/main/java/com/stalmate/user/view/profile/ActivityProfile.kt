@@ -3,11 +3,12 @@ package com.stalmate.user.view.profile
 import android.Manifest
 import android.accounts.Account
 import android.accounts.AccountManager
+import android.annotation.SuppressLint
 import android.app.ActivityOptions
-import android.content.ContentResolver
-import android.content.Context
-import android.content.Intent
+import android.content.*
+import android.database.Cursor
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.util.Log
 import android.view.View
 import androidx.databinding.DataBindingUtil
@@ -25,27 +26,28 @@ import com.stalmate.user.R
 import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.commonadapters.AdapterFeed
 import com.stalmate.user.databinding.ActivityProfileBinding
-
 import com.stalmate.user.model.AboutProfileLine
 import com.stalmate.user.model.User
+import com.stalmate.user.modules.contactSync.SyncService
 import com.stalmate.user.utilities.Constants
 import com.stalmate.user.utilities.ImageLoaderHelperGlide
 import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.utilities.ValidationHelper
 import com.stalmate.user.view.adapter.ProfileAboutAdapter
-
 import com.stalmate.user.view.adapter.ProfileFriendAdapter
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
 
+
 class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdapter.Callbackk,
     ProfileAboutAdapter.Callbackk {
+    lateinit var syncBroadcastreceiver: SyncBroadcasReceiver
     lateinit var binding: ActivityProfileBinding
     lateinit var feedAdapter: AdapterFeed
     lateinit var friendAdapter: ProfileFriendAdapter
-    var permissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
+    var permissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.READ_CONTACTS)
     var WRITE_REQUEST_CODE = 100
     val PICK_IMAGE_PROFILE = 1
     val PICK_IMAGE_COVER = 1
@@ -65,8 +67,20 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_profile)
 
+        val filter = IntentFilter()
+        filter.addAction(Constants.ACTION_SYNC_COMPLETED)
+        syncBroadcastreceiver = SyncBroadcasReceiver()
+        registerReceiver(syncBroadcastreceiver, filter)
+
+        var permissionArray = arrayOf(Manifest.permission.READ_CONTACTS)
+        if (isPermissionGranted(permissionArray)) {
+            Log.d("alskjdasd", ";aosjldsad")
+            startService(Intent(this, SyncService::class.java)
+            )
+        }
 
         binding.appCompatTextView17.setOnClickListener {
+
             retreiveGoogleContacts()
         }
 
@@ -83,13 +97,15 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
                 feedAdapter.submitList(it!!.results)
             }
         })
+
+
         val radius = resources.getDimension(R.dimen.dp_10)
-        binding.ivBackground.setShapeAppearanceModel(binding.ivBackground.getShapeAppearanceModel()
+
+        binding.ivBackground.shapeAppearanceModel = binding.ivBackground.shapeAppearanceModel
             .toBuilder()
             .setBottomLeftCorner(CornerFamily.ROUNDED,radius)
             .setBottomRightCorner(CornerFamily.ROUNDED,radius)
-            .build());
-
+            .build()
         getUserProfileData()
 
         friendAdapter = ProfileFriendAdapter(networkViewModel, this, this)
@@ -118,13 +134,9 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
         binding.layout.tvAlbumPhotoSeeMore.setOnClickListener {
             if (binding.layout.photoTab.selectedTabPosition ==0){
                 startActivity(IntentHelper.getPhotoGalleryAlbumScreen(this)!!.putExtra("viewType", "viewNormal").putExtra("type", "photos"))
-
             }else{
                 startActivity(IntentHelper.getPhotoGalleryAlbumScreen(this)!!.putExtra("viewType", "viewNormal").putExtra("type", "albums"))
-
             }
-
-
         }
 
         binding.layout.photoTab.addOnTabSelectedListener(object :TabLayout.OnTabSelectedListener {
@@ -148,26 +160,65 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
         setupData()
     }
 
+    inner class SyncBroadcasReceiver : BroadcastReceiver() {
+        override fun onReceive(p0: Context?, p1: Intent?) {
+            if (p1!!.action == Constants.ACTION_SYNC_COMPLETED) {
+                Log.d("==========wew", "wwwwwwwwwwww=====121=====wwwwwwwwwwwwww")
+                makeToast("Synced")
+                if (p1.extras!!.getString("contacts") != null) {
+                    Log.d("==========wew", "wwwwwwwwwwwwwwwwwwwwwww11www")
+                    startActivity(IntentHelper.getSearchScreen(applicationContext)!!.putExtra("contacts", p1.extras!!.getString("contacts").toString()))
+                }
+            }
+        }
+    }
+
     override fun onResume() {
         super.onResume()
         getUserProfileData()
     }
 
+    fun removeAccount(){
+        // Get an instance of the Android account manager
+        val accountManager = this.getSystemService(
+            ACCOUNT_SERVICE
+        ) as AccountManager
+
+
+        if (isAccountAdded()){
+
+            var acc=  Account(Constants.ACCOUNT_NAME, Constants.ACCOUNT_TYPE)
+            accountManager.removeAccountExplicitly(acc)
+        }
+    }
+
+    fun isAccountAdded():Boolean{
+
+        // Get an instance of the Android account manager
+        val accountManager = this.getSystemService(ACCOUNT_SERVICE) as AccountManager
+
+        for (i in 0 until accountManager.accounts.size){
+            if (accountManager.accounts[i].type==Constants.ACCOUNT_TYPE){
+                return true
+
+            }
+        }
+        return false
+    }
+
 
     private fun retreiveGoogleContacts() {
 
-        mAccount= createSyncAccount(this)
-
+        mAccount= createSyncAccount(applicationContext)
         var bundle=Bundle()
         bundle.putBoolean("force",true)
         bundle.putBoolean("expedited",true)
         Log.d("asldkjalsda","sync")
         ContentResolver.requestSync(mAccount, "com.stalmate.user", bundle)
+
     }
 
-
     fun setupData() {
-
         binding.layout.layoutFollowers.setOnClickListener {
             startActivity(
                 IntentHelper.getFollowersFollowingScreen(this)!!.putExtra("id", userData.id)
@@ -182,7 +233,6 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
         }
 
         binding.idCoverPhoto.setOnClickListener {
-
             isCoverImage = true
             startCrop()
         }
@@ -194,13 +244,9 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
 
         binding.layout.btnphoto.setOnClickListener {
             startActivity(IntentHelper.getPhotoGalleryAlbumScreen(this)!!.putExtra("viewType","viewNormal"))
-
         }
 
-
-
         binding.layout.buttonEditProfile.setOnClickListener {
-
 
             // create an options object that defines the transition
             val options = ActivityOptions.makeSceneTransitionAnimation(
@@ -208,13 +254,10 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
                 binding.layoutChangeBackgroundImage,
                 "image"
             )
-
-
             // start the activity with transition
             startActivity(IntentHelper.getProfileEditScreen(this), options.toBundle())
         }
     }
-
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -266,9 +309,7 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
         )
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-    }
+
 
     override fun onClickOnProfile(user: User) {
         startActivity(IntentHelper.getOtherUserProfileScreen(this)!!.putExtra("id", user.id))
@@ -294,18 +335,16 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
                 networkViewModel.getProfileData(hashMap)
             }
         })
-
     }
 
     fun getUserProfileData() {
-        var hashMap = HashMap<String, String>()
+        val hashMap = HashMap<String, String>()
         networkViewModel.getProfileData(hashMap)
         networkViewModel.profileLiveData.observe(this, Observer {
             it.let {
                 userData = it!!.results
                 setUpAboutUI("Photos")
                 PrefManager.getInstance(this)!!.userProfileDetail = it
-
             }
         })
     }
@@ -362,14 +401,6 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
                 )
             }
 
-           /* aboutArrayList.add(
-                AboutProfileLine(
-                    R.drawable.ic_profile_location,
-                    "Lives at",
-                    userData.profile_data[0].home_town,
-                    "at"
-                )
-            )*/
             aboutArrayList.add(
                 AboutProfileLine(
                     R.drawable.ic_profile_location,
@@ -397,23 +428,21 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
                 binding.layout.tvWebsite.text = userData.company
                 binding.layout.layoutWebsite.visibility = View.VISIBLE
             }
-
         }
 
 
     fun createSyncAccount(context: Context): Account {
 
-        // Create the account type and default account
+         // Create the account type and default account
         val newAccount = Account(Constants.ACCOUNT_NAME, Constants.ACCOUNT_TYPE)
-        // Get an instance of the Android account manager
-        val accountManager = context.getSystemService(
-            ACCOUNT_SERVICE
-        ) as AccountManager
-        /*
-     * Add the account and account type, no password or user data
-     * If successful, return the Account object, otherwise report an error.
-     */return if (accountManager.addAccountExplicitly(newAccount, null, null)) {
-            /*
+         // Get an instance of the Android account manager
+        val accountManager = context.getSystemService(ACCOUNT_SERVICE) as AccountManager
+         /*
+         * Add the account and account type, no password or user data
+         * If successful, return the Account object, otherwise report an error.
+         */
+        return if (accountManager.addAccountExplicitly(newAccount, null, null)) {
+          /*
           * If you don't set android:syncable="true" in
           * in your <provider> element in the manifest,
           * then call context.setIsSyncable(account, AUTHORITY, 1)
@@ -426,11 +455,14 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
         } else {
             Log.d("asdasd","ppp")
             /*
-          * The account exists or some other error occurred. Log this, report it,
-          * or handle it internally.
-          */
+             * The account exists or some other error occurred. Log this, report it,
+             * or handle it internally.
+            */
             Account(Constants.ACCOUNT_NAME, Constants.ACCOUNT_TYPE)
         }
     }
-
+    override fun onDestroy() {
+        unregisterReceiver(syncBroadcastreceiver)
+        super.onDestroy()
+    }
 }

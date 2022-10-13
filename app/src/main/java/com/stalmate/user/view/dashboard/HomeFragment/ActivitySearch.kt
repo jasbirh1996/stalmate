@@ -31,8 +31,7 @@ class ActivitySearch : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_search)
-        navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.nav_host_container) as NavHostFragment
+        navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_container) as NavHostFragment
         navController = navHostFragment.navController
 
         binding.ivBack.setOnClickListener {
@@ -65,8 +64,7 @@ class ActivitySearch : BaseActivity() {
             }
         })
         binding.etSearch.requestFocus()
-        val imm: InputMethodManager =
-            getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val imm: InputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.showSoftInput( binding.etSearch, InputMethodManager.SHOW_IMPLICIT)
     }
 
