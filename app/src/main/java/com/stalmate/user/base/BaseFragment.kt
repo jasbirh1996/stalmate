@@ -1,13 +1,16 @@
 package com.stalmate.user.base
 
 import android.R
+import android.app.Activity
 import android.content.Context
 import android.util.Log
 import android.view.Gravity
 import android.view.View
+import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.FrameLayout
 import android.widget.Toast
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
@@ -83,17 +86,7 @@ open class BaseFragment : Fragment(), BaseCallBacks {
         context.createConfigurationContext(config)
         context.resources.updateConfiguration(config, context.resources.displayMetrics)
     }
-     fun hideKeyboard(view:View){
-        // since our app extends AppCompatActivity, it has access to context
-        val imm=requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        // we have to tell hide the keyboard from what. inorder to do is we have to pass window token
-        // all of our views,like message, name, button have access to same window token. since u have button
-        imm.hideSoftInputFromWindow(view.windowToken, 0)
 
-        // if you are using binding object
-        // imm.hideSoftInputFromWindow(binding.button.windowToken,0)
-
-    }
 
 
 }

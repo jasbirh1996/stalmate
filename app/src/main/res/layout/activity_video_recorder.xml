@@ -53,7 +53,7 @@
             android:layout_height="50dp"
             android:layout_marginTop="10dp"
             android:padding="10dp"
-            android:src="@drawable/stars"
+            android:src="@drawable/ic_live_filter"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/buttonMusic" />
 
@@ -64,7 +64,7 @@
             android:layout_height="50dp"
             android:layout_marginTop="20dp"
             android:padding="10dp"
-            android:src="@drawable/musical_notes"
+            android:src="@drawable/ic_post_music"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/segmented_progressbar" />
 
@@ -84,7 +84,7 @@
             android:layout_height="50dp"
             android:layout_marginTop="10dp"
             android:padding="10dp"
-            android:src="@drawable/electricity"
+            android:src="@drawable/ic_live_flash"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/buttonSpeed" />
 
@@ -93,7 +93,7 @@
             android:layout_width="50dp"
             android:padding="10dp"
             android:layout_height="50dp"
-            android:src="@drawable/refresh_buttons"
+            android:src="@drawable/ic_live_rotate_camera"
             app:layout_constraintBottom_toBottomOf="@+id/buttonRecord"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/buttonRecord" />

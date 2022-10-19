@@ -11,6 +11,7 @@ import com.bumptech.glide.Glide
 
 
 import com.stalmate.user.R
+import com.stalmate.user.base.App
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentMenuBinding
 import com.stalmate.user.model.User
@@ -62,6 +63,11 @@ class FragmentMenu(var callback : Callback) : BaseFragment(),  DrawerAdapter.Cal
         data.add(ModelDrawer(R.drawable.ic_menu_quite_mode, "Quite mode"))
         data.add(ModelDrawer(R.drawable.ic_menu_saved, "Saved favourite"))
         data.add(ModelDrawer(R.drawable.ic_menu_logout, "Logout"))
+
+
+        binding.tvUserName.text = PrefManager.getInstance(App.getInstance())!!.userDetail.results[0].first_name + " " +  PrefManager.getInstance(App.getInstance())!!.userDetail.results[0].last_name
+
+        drawerAdapter = DrawerAdapter(networkViewModel, requireContext(),this )
 
         binding.rvMenu.adapter = drawerAdapter
         drawerAdapter.submitList(data)

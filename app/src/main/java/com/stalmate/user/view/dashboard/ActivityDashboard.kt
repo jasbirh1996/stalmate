@@ -99,7 +99,6 @@ class ActivityDashboard : AppCompatActivity(), FragmentHome.Callback , FragmentF
                     binding.bottomNavigation.visibility = View.VISIBLE
                 }
                 else -> {
-
                 }
             }
             true

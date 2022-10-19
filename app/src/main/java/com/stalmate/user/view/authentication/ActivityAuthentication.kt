@@ -24,8 +24,6 @@ class ActivityAuthentication : AppCompatActivity() {
         val fragmentManager: FragmentManager = supportFragmentManager
         val currentFragment: Fragment? = fragmentManager.findFragmentById(R.id.nav_host_fragment)
 
-
-
     }
 
 

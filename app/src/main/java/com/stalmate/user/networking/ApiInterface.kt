@@ -173,11 +173,6 @@ interface ApiInterface {
     fun updateUserProfileImage(@Part cover_img: MultipartBody.Part): Call<CommonModelResponse>
 
 
-
-
-
-
-
     @Multipart
     @POST(Constants.UPLOADE_ALBUM_IMAGE_API_FILE)
     fun addAlbumImage(@Part cover_img: MultipartBody.Part,

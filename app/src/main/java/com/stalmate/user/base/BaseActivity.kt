@@ -60,6 +60,8 @@ abstract class BaseActivity : AppCompatActivity(), View.OnClickListener,
         }*/
     }
 
+
+
     fun makeToast(message: String?) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
