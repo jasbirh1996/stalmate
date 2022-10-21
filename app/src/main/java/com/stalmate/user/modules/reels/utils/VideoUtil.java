@@ -18,7 +18,7 @@ final public class VideoUtil {
     private static final String TAG = "ClipUtil";
 
     @NotNull
-    public static Size getDimensions(String path) throws IOException {
+    public static Size getDimensions(String path) {
         int width = 0, height = 0;
         MediaMetadataRetriever mmr = null;
         try {

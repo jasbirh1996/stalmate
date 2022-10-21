@@ -1,8 +1,6 @@
 package com.stalmate.user.modules.reels.activity
-
-import android.content.Context
+import com.stalmate.user.R
 import android.content.Intent
-import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.PointF
 import android.graphics.drawable.Drawable
@@ -12,9 +10,9 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.provider.DocumentsContract
 import android.provider.MediaStore
-import android.provider.OpenableColumns
 import android.util.Log
 import android.util.Size
 import android.view.View
@@ -23,6 +21,7 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.Nullable
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.work.Data
@@ -34,6 +33,7 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.daasuu.imagetovideo.EncodeListener
 import com.daasuu.imagetovideo.ImageToVideoConverter
+import com.google.android.material.tabs.TabLayout
 import com.otaliastudios.cameraview.CameraListener
 import com.otaliastudios.cameraview.CameraOptions
 import com.otaliastudios.cameraview.FileCallback
@@ -46,8 +46,8 @@ import com.otaliastudios.cameraview.filters.GammaFilter
 import com.otaliastudios.cameraview.filters.SharpnessFilter
 import com.otaliastudios.cameraview.gesture.Gesture
 import com.otaliastudios.cameraview.gesture.GestureAction
-import com.simform.videooperations.*
-import com.stalmate.user.R
+import com.simform.videooperations.Common
+import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.databinding.ActivityVideoRecorderBinding
 import com.stalmate.user.modules.reels.adapter.FilterAdapter
@@ -59,23 +59,22 @@ import com.stalmate.user.modules.reels.workers.MergeVideosWorker
 import com.stalmate.user.modules.reels.workers.VideoSpeedWorker
 import com.user.vaibhavmodules.reels.utils.SharedConstants
 import java.io.File
-import java.io.IOException
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.collections.ArrayList
 
 
 class ActivityVideoRecorder : BaseActivity() {
 
-    lateinit var ffmpegQueryExtension: FFmpegQueryExtension
     val EXTRA_AUDIO = "audio"
     private val TAG = "RecorderActivity"
-
+    private var imageVideoDuration = 15
     private var mModel: RecorderActivityViewModel? = null
     private val mHandler = Handler()
     private var isImage = false
     private var mMediaPlayer: MediaPlayer? = null
     val PICK_FILE = 99
-
+    var isDurationTabbarShowing=false
     private val mStopper = Runnable { stopRecording() }
     lateinit var binding: ActivityVideoRecorderBinding
     override fun onClick(viewId: Int, view: View?) {
@@ -85,148 +84,28 @@ class ActivityVideoRecorder : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityVideoRecorderBinding.inflate(layoutInflater)
-        ffmpegQueryExtension = FFmpegQueryExtension()
         mModel = ViewModelProvider(this)[RecorderActivityViewModel::class.java]
         setContentView(binding.root)
         if (intent.getStringExtra("type") != null) {
             isImage = true
         }
+
+        isPermissionGranted(     arrayOf(
+            android.Manifest.permission.READ_EXTERNAL_STORAGE,
+            android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        ))
+
         setUpCameraView()
 
-
-
-        binding.buttonRecord.setOnClickListener {
-            if (isImage) {
-                if (!binding.cameraView.isTakingPicture) {
-                    binding.cameraView.takePictureSnapshot()
-                }
-            } else {
-                if (binding.cameraView.isTakingVideo) {
-                    stopRecording()
-                    binding.recordAnimationView.visibility = View.GONE
-                    binding.stopIConView.visibility = View.VISIBLE
-                } else {
-                    startRecording()
-                    binding.recordAnimationView.visibility = View.VISIBLE
-                    binding.stopIConView.visibility = View.GONE
-                }
-            }
-        }
-
-        binding.buttonDone.setOnClickListener { view: View? ->
-
-            if (isImage) {
-                Log.d("alksjdasd", "apskda")
-                commitImage()
-            } else {
-                if (binding.cameraView.isTakingVideo()) {
-                    Toast.makeText(this, R.string.recorder_error_in_progress, Toast.LENGTH_SHORT)
-                        .show()
-                } else if (mModel!!.segments.isEmpty()) {
-                    Toast.makeText(this, R.string.recorder_error_no_clips, Toast.LENGTH_SHORT)
-                        .show()
-                } else {
-                    commitRecordings()
-                }
-            }
-
-            if (binding.cameraView.isTakingVideo()) {
-                Toast.makeText(this, R.string.recorder_error_in_progress, Toast.LENGTH_SHORT).show()
-            } else if (mModel!!.segments.isEmpty()) {
-                Toast.makeText(this, R.string.recorder_error_no_clips, Toast.LENGTH_SHORT).show()
-            } else {
-                commitRecordings()
-            }
-        }
-        binding.buttonMusic.setOnClickListener { view: View? ->
-            if (binding.cameraView.isTakingVideo()) {
-                Toast.makeText(this, R.string.recorder_error_in_progress, Toast.LENGTH_SHORT)
-                    .show()
-            } else {
-                /*val intent = Intent(
-                    this@ActivityVideoRecorder,
-                    ActivitySongPicker::class.java
-                )
-                startActivityForResult(intent, SharedConstants.REQUEST_CODE_PICK_SONG)*/
-                val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
-                intent.addCategory(Intent.CATEGORY_OPENABLE)
-                intent.type = "audio/*"
-                startActivityForResult(intent, PICK_FILE)
-            }
-        }
-
-        binding.buttonCameraChanger.setOnClickListener { view: View? ->
-            if (binding.cameraView.isTakingVideo()) {
-                Toast.makeText(this, R.string.recorder_error_in_progress, Toast.LENGTH_SHORT)
-                    .show()
-            } else {
-                binding.cameraView.toggleFacing()
-            }
-        }
-
-        binding.buttonSpeed.setOnClickListener { view: View? ->
-            if (binding.cameraView.isTakingVideo) {
-                Toast.makeText(this, R.string.recorder_error_in_progress, Toast.LENGTH_SHORT)
-                    .show()
-            } else {
-                binding.speeds.setVisibility(
-                    if (binding.speeds.getVisibility() == View.VISIBLE) View.GONE else View.VISIBLE
-                )
-            }
-        }
-
-
-        binding.buttonColorFilterIcon.setOnClickListener { view: View? ->
-            if (binding.cameraView.isTakingVideo) {
-                Toast.makeText(this, R.string.recorder_error_in_progress, Toast.LENGTH_SHORT)
-                    .show()
-            } else {
-                binding.rvFilters.setVisibility(
-                    if (binding.rvFilters.getVisibility() == View.VISIBLE) View.GONE else View.VISIBLE
-                )
-            }
-        }
-
-
-        binding.buttonFlash.setOnClickListener { view: View? ->
-            if (binding.cameraView.isTakingVideo) {
-                Toast.makeText(this, R.string.recorder_error_in_progress, Toast.LENGTH_SHORT)
-                    .show()
-            } else {
-                binding.cameraView.setFlash(if (binding.cameraView.getFlash() === Flash.OFF) Flash.TORCH else Flash.OFF)
-            }
-        }
-
-
-
-        binding.speeds.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { group: RadioGroup?, checked: Int ->
-            var speed = 1f
-            if (checked != R.id.speed05x) {
-                binding.speed05x.setChecked(false)
-            } else {
-                speed = .5f
-            }
-            if (checked != R.id.speed075x) {
-                binding.speed075x.setChecked(false)
-            } else {
-                speed = .75f
-            }
-            if (checked != R.id.speed1x) {
-                binding.speed1x.setChecked(false)
-            }
-            if (checked != R.id.speed15x) {
-                binding.speed15x.setChecked(false)
-            } else {
-                speed = 1.5f
-            }
-            if (checked != R.id.speed2x) {
-                binding.speed2x.setChecked(false)
-            } else {
-                speed = 2f
-            }
-            mModel!!.speed = speed
-        })
+        setUPViews()
     }
+/*
+    fun setupView(){
+        if (isImage){
+            binding.stopIConView.drawable=ContextCompat.getDrawable(this,R.drawable.image)
+        }
+    }*/
+
 
     override fun onDestroy() {
         super.onDestroy()
@@ -241,18 +120,19 @@ class ActivityVideoRecorder : BaseActivity() {
     }
 
     fun setUpCameraView() {
+
         binding.cameraView.setLifecycleOwner(this);
         if (isImage) {
+            binding.buttonSpeed.visibility=View.GONE
+            binding.buttonDone.visibility=View.GONE
             binding.cameraView.setMode(Mode.PICTURE);
         } else {
+            binding.buttonDone.visibility=View.VISIBLE
             binding.cameraView.setMode(Mode.VIDEO);
         }
-
         binding.cameraView.mapGesture(Gesture.PINCH, GestureAction.ZOOM);
         binding.cameraView.mapGesture(Gesture.TAP, GestureAction.AUTO_FOCUS);
         binding.cameraView.mapGesture(Gesture.LONG_TAP, GestureAction.TAKE_PICTURE);
-        // Long tap to shoot!
-
         binding.cameraView.addCameraListener(object : CameraListener() {
             override fun onPictureTaken(result: PictureResult) {
 
@@ -260,7 +140,14 @@ class ActivityVideoRecorder : BaseActivity() {
                 result.toFile(File(cacheDir, UUID.randomUUID().toString()), FileCallback {
 
                     runOnUiThread {
-                        createVideo(it!!.absolutePath)
+
+                        binding.selectedPhoto.visibility=View.VISIBLE
+                        result.toBitmap {
+                            Glide.with(this@ActivityVideoRecorder).load(it!!).into(binding.selectedPhoto)
+                        }
+
+
+                        createVideo(it!!.absolutePath, result.size)
                     }
 
                 })
@@ -319,6 +206,20 @@ class ActivityVideoRecorder : BaseActivity() {
             }
         })
 
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (mMediaPlayer != null) {
+            if (mMediaPlayer!!.isPlaying()) {
+                mMediaPlayer!!.stop()
+            }
+            mMediaPlayer!!.release()
+            mMediaPlayer = null
+        }
+
+
     }
 
 
@@ -368,7 +269,6 @@ class ActivityVideoRecorder : BaseActivity() {
                     binding.rvFilters.setNestedScrollingEnabled(false)
                     binding.rvFilters.setHasFixedSize(true)
                     binding.rvFilters.adapter = adapter
-                    binding.rvFilters.visibility = View.VISIBLE
                 }
 
                 override fun onLoadCleared(@Nullable placeholder: Drawable?) {}
@@ -376,6 +276,10 @@ class ActivityVideoRecorder : BaseActivity() {
     }
 
     private fun applyPreviewFilter(filter: VideoFilter) {
+
+        binding.rvFilters.visibility=View.GONE
+
+
         when (filter) {
             VideoFilter.BRIGHTNESS -> {
                 val glf = Filters.BRIGHTNESS.newInstance() as BrightnessFilter
@@ -438,7 +342,7 @@ class ActivityVideoRecorder : BaseActivity() {
     }
 
     private fun commitImage() {
-
+        showLoader()
         val videos: MutableList<String> = ArrayList()
         for (segment in mModel!!.segments) {
             videos.add(segment.file!!.absolutePath)
@@ -455,33 +359,31 @@ class ActivityVideoRecorder : BaseActivity() {
 
         val wm: WorkManager = WorkManager.getInstance(this)
         if (mModel!!.audio != null) {
-
-
-
+            Log.d("path====>>>", mModel!!.audio!!.path!!)
             val merged2 = File(cacheDir, UUID.randomUUID().toString())
-
-
-
-
-            val data2: Data = Data.Builder()
-                .putString(MergeAudioVideoWorker.KEY_AUDIO,mModel!!.audio)
-                .putString(MergeAudioVideoWorker.KEY_VIDEO, merged1.absolutePath)
-                .putString(MergeAudioVideoWorker.KEY_OUTPUT, merged2.absolutePath)
-                .build()
-
-            val request2: OneTimeWorkRequest =
-                OneTimeWorkRequest.Builder(MergeAudioVideoWorker::class.java)
-                    .setInputData(data2)
+            val audioFile: File = File(mModel!!.audio!!.path!!)
+            val data2 =
+                Data.Builder() // .putString(MergeAudioVideoWorker.KEY_AUDIO,mModel.audio.getPath())
+                    .putString(MergeAudioVideoWorker.KEY_AUDIO, audioFile.absolutePath)
+                    .putString(MergeAudioVideoWorker.KEY_VIDEO, merged1.absolutePath)
+                    .putString(MergeAudioVideoWorker.KEY_OUTPUT, merged2.absolutePath)
                     .build()
-
+            Log.d("===>>", audioFile.absolutePath)
+            Log.d("===>>", merged1.absolutePath)
+            val request2 =
+                OneTimeWorkRequest.Builder(MergeAudioVideoWorker::class.java).setInputData(data2)
+                    .build()
             wm.beginWith(request1).then(request2).enqueue()
-            wm.getWorkInfoByIdLiveData(request2.getId())
-                .observe(this) { info ->
-                    val ended = (info.getState() === WorkInfo.State.CANCELLED
-                            || info.getState() === WorkInfo.State.FAILED)
-                    if (info.getState() === WorkInfo.State.SUCCEEDED) {
+            wm.getWorkInfoByIdLiveData(request2.id)
+                .observe(this) { info: WorkInfo ->
+                    Log.d("states====>", info.state.toString())
+                    val ended = (info.state == WorkInfo.State.CANCELLED
+                            || info.state == WorkInfo.State.FAILED)
+                    if (info.state == WorkInfo.State.SUCCEEDED) {
+                        dismissLoader()
                         closeFinally(merged2)
                     } else if (ended) {
+                        dismissLoader()
                     }
                 }
         } else {
@@ -491,7 +393,7 @@ class ActivityVideoRecorder : BaseActivity() {
                     val ended = (info.getState() === WorkInfo.State.CANCELLED
                             || info.getState() === WorkInfo.State.FAILED)
                     if (info.getState() === WorkInfo.State.SUCCEEDED) {
-
+                        dismissLoader()
                         closeFinally(merged1)
                     } else if (ended) {
 
@@ -501,64 +403,60 @@ class ActivityVideoRecorder : BaseActivity() {
     }
 
     private fun commitRecordings() {
-        showLoader()
-
+            showLoader()
         val videos: MutableList<String> = ArrayList()
         for (segment in mModel!!.segments) {
             videos.add(segment.file!!.absolutePath)
         }
-
+        // File merged1 = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
         val merged1 = File(cacheDir, UUID.randomUUID().toString())
-
-        val data1: Data = Data.Builder()
+        val data1 = Data.Builder()
             .putStringArray(MergeVideosWorker.KEY_VIDEOS, videos.toTypedArray())
             .putString(MergeVideosWorker.KEY_OUTPUT, merged1.absolutePath)
             .build()
-
-
-        val request1: OneTimeWorkRequest = OneTimeWorkRequest.Builder(MergeVideosWorker::class.java)
+        val request1 = OneTimeWorkRequest.Builder(MergeVideosWorker::class.java)
             .setInputData(data1)
             .build()
-
-        val wm: WorkManager = WorkManager.getInstance(this)
-
+        val wm = WorkManager.getInstance(this)
         if (mModel!!.audio != null) {
-
+            Log.d("path====>>>", mModel!!.audio!!.path!!)
             val merged2 = File(cacheDir, UUID.randomUUID().toString())
-
-            val data2: Data = Data.Builder()
-                .putString(MergeAudioVideoWorker.KEY_AUDIO, mModel!!.audio!!)
-                .putString(MergeAudioVideoWorker.KEY_VIDEO, merged1.absolutePath)
-                .putString(MergeAudioVideoWorker.KEY_OUTPUT, merged2.absolutePath)
-                .build()
-
-            val request2: OneTimeWorkRequest =
-                OneTimeWorkRequest.Builder(MergeAudioVideoWorker::class.java)
-                    .setInputData(data2)
+            val audioFile: File = File(mModel!!.audio!!.path!!)
+            val data2 =
+                Data.Builder() // .putString(MergeAudioVideoWorker.KEY_AUDIO,mModel.audio.getPath())
+                    .putString(MergeAudioVideoWorker.KEY_AUDIO, audioFile.absolutePath)
+                    .putString(MergeAudioVideoWorker.KEY_VIDEO, merged1.absolutePath)
+                    .putString(MergeAudioVideoWorker.KEY_OUTPUT, merged2.absolutePath)
                     .build()
-
-            Log.d("jjjkkjkjkj", data2.toString())
-
+            Log.d("===>>", audioFile.absolutePath)
+            Log.d("===>>", merged1.absolutePath)
+            val request2 =
+                OneTimeWorkRequest.Builder(MergeAudioVideoWorker::class.java).setInputData(data2)
+                    .build()
             wm.beginWith(request1).then(request2).enqueue()
-            wm.getWorkInfoByIdLiveData(request2.getId())
-                .observe(this) { info ->
-                    val ended = (info.state === WorkInfo.State.CANCELLED
-                            || info.state === WorkInfo.State.FAILED)
-                    if (info.state === WorkInfo.State.SUCCEEDED) {
+            wm.getWorkInfoByIdLiveData(request2.id)
+                .observe(this) { info: WorkInfo ->
+                    Log.d("states====>", info.state.toString())
+                    val ended = (info.state == WorkInfo.State.CANCELLED
+                            || info.state == WorkInfo.State.FAILED)
+                    if (info.state == WorkInfo.State.SUCCEEDED) {
+                        dismissLoader()
                         closeFinally(merged2)
                     } else if (ended) {
+                      dismissLoader()
                     }
                 }
         } else {
             wm.enqueue(request1)
-            wm.getWorkInfoByIdLiveData(request1.getId())
-                .observe(this) { info ->
-                    val ended = (info.state === WorkInfo.State.CANCELLED
-                            || info.state === WorkInfo.State.FAILED)
-                    if (info.state === WorkInfo.State.SUCCEEDED) {
+            wm.getWorkInfoByIdLiveData(request1.id)
+                .observe(this) { info: WorkInfo ->
+                    val ended = (info.state == WorkInfo.State.CANCELLED
+                            || info.state == WorkInfo.State.FAILED)
+                    if (info.state == WorkInfo.State.SUCCEEDED) {
+                       dismissLoader()
                         closeFinally(merged1)
                     } else if (ended) {
-
+                      dismissLoader()
                     }
                 }
         }
@@ -604,6 +502,7 @@ class ActivityVideoRecorder : BaseActivity() {
                     segment.file = output
                     segment.duration = duration
                     mModel!!.segments.add(segment)
+                    Log.d("akljsdas", "ioajsd")
                     file.delete()
                     dismissLoader()
 
@@ -618,7 +517,8 @@ class ActivityVideoRecorder : BaseActivity() {
 
     private fun closeFinally(video: File) {
 
-        dismissLoader()
+        binding.cameraView.close()
+        binding.cameraView.destroy()
         val intent = Intent(this, ActivityVideoEditor::class.java)
         intent.putExtra(ActivityFilter.EXTRA_SONG, mModel!!.song)
         intent.putExtra(ActivityFilter.EXTRA_VIDEO, video.absolutePath)
@@ -628,7 +528,7 @@ class ActivityVideoRecorder : BaseActivity() {
     }
 
     class RecorderActivityViewModel : ViewModel() {
-        var audio: String? = null
+        var audio: Uri? = null
         var segments: ArrayList<RecordSegment> = ArrayList()
         var song = 0
         var speed = 1f
@@ -648,10 +548,10 @@ class ActivityVideoRecorder : BaseActivity() {
     }
 
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+ /*   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-            var filePath: String? = ""
+        var filePath: String? = ""
         if (requestCode == PICK_FILE && resultCode == RESULT_OK) {
 
             val uri: Uri? = data!!.getData()
@@ -679,42 +579,47 @@ class ActivityVideoRecorder : BaseActivity() {
 
             Log.d("jcbjscb", "Chosen path = $filePath")
 
-            mModel!!.audio = filePath
-          //  mMediaPlayer = MediaPlayer.create(this, data.getData())
+          //  mModel!!.audio = filePath
+            //  mMediaPlayer = MediaPlayer.create(this, data.getData())
 
-            /*         var mp=MediaPlayer()
+            *//*         var mp=MediaPlayer()
                                     mp.setDataSource(this,Uri.parse(filePath))
                                     mp.prepare()
-                                    mp.start()*/
+                                    mp.start()*//*
         }
-    }
+    }*/
 
-    var resultCallbackOfSelectedMusicTrack: ActivityResultLauncher<Intent> = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        if (result!!.resultCode == RESULT_OK) {
-            val data: Intent = result.getData()!!
-            val id = data.getIntExtra(EXTRA_SONG_ID, 0)
-            val name = data.getStringExtra(EXTRA_SONG_NAME)
-            val audio = data.getParcelableExtra<Uri>(EXTRA_SONG_FILE)
+    var resultCallbackOfSelectedMusicTrack: ActivityResultLauncher<Intent> =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            if (result!!.resultCode == RESULT_OK) {
+                val data: Intent = result.getData()!!
+                val id = data.getIntExtra(EXTRA_SONG_ID, 0)
+                val name = data.getStringExtra(EXTRA_SONG_NAME)
+                val audio = data.getParcelableExtra<Uri>(EXTRA_SONG_FILE)
 
-
+                Log.d("klajsdasd",audio!!.path.toString())
+                binding.tvMusicName.text=name
+                binding.layoutSelectedMusic.visibility=View.VISIBLE
+                mModel!!.audio = audio
+            }
         }
-    }
 
-    lateinit var imageToVideo:ImageToVideoConverter
-    private fun createVideo(imagePath: String) {
+    lateinit var imageToVideo: ImageToVideoConverter
+    private fun createVideo(imagePath: String, size: com.otaliastudios.cameraview.size.Size) {
         //int height = getInputData().getInt(ICON,0);
         // int width = getInputData().getInt(ICON,0);
 
-
+        showLoader()
         val outputPath = Common.getFilePath(this, Common.VIDEO)
-
+        Log.d("asdasdasd",size.height.toString())
+        Log.d("asdasdasd",size.width.toString())
         imageToVideo = ImageToVideoConverter(
             outputPath = outputPath,
             inputImagePath = imagePath,
-            size = Size(1080, 1920),
-            duration = TimeUnit.SECONDS.toMicros(4),
+            size = Size(528,1072),
+            duration = TimeUnit.SECONDS.toMicros(imageVideoDuration.toLong()),
             listener = object : EncodeListener {
                 override fun onProgress(progress: Float) {
                     Log.d("progress", "progress = $progress")
@@ -731,11 +636,16 @@ class ActivityVideoRecorder : BaseActivity() {
                         val segment = RecordSegment()
                         segment.file = mModel!!.video
                         val duration: Long =
-                            VideoUtil.getDuration(this@ActivityVideoRecorder, Uri.fromFile(mModel!!.video))
+                            VideoUtil.getDuration(
+                                this@ActivityVideoRecorder,
+                                Uri.fromFile(mModel!!.video)
+                            )
                         segment.duration = duration
                         Log.d("as;ldasd", duration.toString())
                         mModel!!.segments.add(segment)
+                        dismissLoader()
                         commitImage()
+
                     }
                 }
 
@@ -747,60 +657,290 @@ class ActivityVideoRecorder : BaseActivity() {
         imageToVideo?.start()
 
 
+        /*
 
 
+           val outputPath = Common.getFilePath(this, Common.VIDEO)
+           val size: ISize = SizeOfImage(imagePath)
+           val query = ffmpegQueryExtension.imageToVideo(
+               imagePath,
+               outputPath,
+               10,
+               size.width(),
+               size.height()
+           )
 
+           CallBackOfQuery().callQuery(query, object : FFmpegCallBack {
+               override fun process(logMessage: LogMessage) {
 
+               }
 
+               override fun success() {
+                   Log.d("as;ldasd", outputPath)
+                   mModel!!.video = File(outputPath)
 
+                   val segment = RecordSegment()
+                   segment.file = mModel!!.video
+                   val duration: Long =
+                       VideoUtil.getDuration(this@ActivityVideoRecorder, Uri.fromFile(mModel!!.video))
+                   segment.duration = duration
+                   Log.d("as;ldasd", duration.toString())
+                   mModel!!.segments.add(segment)
+                   commitImage()
 
+               }
 
+               override fun cancel() {
 
+               }
 
+               override fun failed() {
 
-     /*
+               }
 
-
-        val outputPath = Common.getFilePath(this, Common.VIDEO)
-        val size: ISize = SizeOfImage(imagePath)
-        val query = ffmpegQueryExtension.imageToVideo(
-            imagePath,
-            outputPath,
-            10,
-            size.width(),
-            size.height()
-        )
-
-        CallBackOfQuery().callQuery(query, object : FFmpegCallBack {
-            override fun process(logMessage: LogMessage) {
-
-            }
-
-            override fun success() {
-                Log.d("as;ldasd", outputPath)
-                mModel!!.video = File(outputPath)
-
-                val segment = RecordSegment()
-                segment.file = mModel!!.video
-                val duration: Long =
-                    VideoUtil.getDuration(this@ActivityVideoRecorder, Uri.fromFile(mModel!!.video))
-                segment.duration = duration
-                Log.d("as;ldasd", duration.toString())
-                mModel!!.segments.add(segment)
-                commitImage()
-
-            }
-
-            override fun cancel() {
-
-            }
-
-            override fun failed() {
-
-            }
-
-        })*/
+           })*/
     }
+
+
+    fun setupRecordDurationRecclerview() {
+        binding.tabbarduration.animate().translationX(-1000f).setDuration(0).start()
+        binding.tabbarduration.addTab( binding.tabbarduration.newTab().setText("15 Sec"))
+        binding.tabbarduration.addTab(binding.tabbarduration.newTab().setText("30 Sec"))
+        binding.tabbarduration.addTab(binding.tabbarduration.newTab().setText("60 Sec"))
+
+        binding.tabbarduration.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                when (tab!!.position) {
+                    0 -> {
+                        imageVideoDuration = 15
+                        binding.ivTimer.setImageDrawable(ContextCompat.getDrawable(this@ActivityVideoRecorder,R.drawable.ic_crtpost_timer_one_active))
+                        hideDurationBar(show = false)
+                    }
+                    1 -> {
+                        imageVideoDuration = 30
+                        binding.ivTimer.setImageDrawable(ContextCompat.getDrawable(this@ActivityVideoRecorder,R.drawable.ic_crtpost_timer_two_active))
+                        hideDurationBar(show = false)
+                    }
+                    2 -> {
+                        imageVideoDuration = 60
+                        binding.ivTimer.setImageDrawable(ContextCompat.getDrawable(this@ActivityVideoRecorder,R.drawable.ic_crtpost_timer_three_active))
+                        hideDurationBar(show = false)
+                    }
+                }
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+                hideDurationBar(show = false)
+            }
+        })
+    }
+
+    fun hideDurationBar(show:Boolean){
+
+        if (show){
+            binding.tabbarduration.animate().translationX(0f).setDuration(500).start()
+        }else{
+            Handler(Looper.myLooper()!!).postDelayed(Runnable {
+                binding.tabbarduration.animate().translationX(-1000f).setDuration(500).start()
+            },500)
+        }
+
+
+    }
+
+
+    fun setUPViews(){
+        binding.buttonRecord.setOnClickListener {
+            if (isImage) {
+                if (!binding.cameraView.isTakingPicture) {
+                    binding.cameraView.takePictureSnapshot()
+                }
+            } else {
+                if (binding.cameraView.isTakingVideo) {
+                    stopRecording()
+                    binding.recordAnimationView.visibility = View.GONE
+                    binding.stopIConView.visibility = View.VISIBLE
+                } else {
+                    startRecording()
+                    binding.recordAnimationView.visibility = View.VISIBLE
+                    binding.stopIConView.visibility = View.GONE
+                }
+            }
+        }
+
+        if (isImage){
+
+        }
+
+
+        binding.buttonDone.setOnClickListener { view: View? ->
+
+            if (isImage) {
+
+                if (mModel!!.segments.isEmpty()){
+                   // Toast.makeText(this, R.string.recorder_error_in_progress, Toast.LENGTH_SHORT).show()
+                }else{
+                    commitImage()
+                }
+            } else {
+                if (binding.cameraView.isTakingVideo()) {
+                    Toast.makeText(this, R.string.recorder_error_in_progress, Toast.LENGTH_SHORT)
+                        .show()
+                } else if (mModel!!.segments.isEmpty()) {
+                    Toast.makeText(this, R.string.recorder_error_no_clips, Toast.LENGTH_SHORT)
+                        .show()
+                } else {
+                    commitRecordings()
+                }
+            }
+
+         /*   if (binding.cameraView.isTakingVideo()) {
+                Toast.makeText(this, R.string.recorder_error_in_progress, Toast.LENGTH_SHORT).show()
+            } else if (mModel!!.segments.isEmpty()) {
+                Toast.makeText(this, R.string.recorder_error_no_clips, Toast.LENGTH_SHORT).show()
+            } else {
+                commitRecordings()
+            }*/
+        }
+        binding.buttonMusic.setOnClickListener { view: View? ->
+
+
+            if (isImage){
+                if (binding.cameraView.isTakingPicture()) {
+                    Toast.makeText(this, R.string.recorder_error_in_progress, Toast.LENGTH_SHORT)
+                        .show()
+                } else {
+                    /*val intent = Intent(
+                        this@ActivityVideoRecorder,
+                        ActivitySongPicker::class.java
+                    )
+                    startActivityForResult(intent, SharedConstants.REQUEST_CODE_PICK_SONG)*/
+                   resultCallbackOfSelectedMusicTrack.launch(IntentHelper.getSongPickerActivity(this))
+                }
+
+            }else{
+                if (binding.cameraView.isTakingVideo()) {
+                    Toast.makeText(this, R.string.recorder_error_in_progress, Toast.LENGTH_SHORT)
+                        .show()
+                } else {
+                    /*val intent = Intent(
+                        this@ActivityVideoRecorder,
+                        ActivitySongPicker::class.java
+                    )
+                    startActivityForResult(intent, SharedConstants.REQUEST_CODE_PICK_SONG)*/
+       /*             val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+                    intent.addCategory(Intent.CATEGORY_OPENABLE)
+                    intent.type = "audio/*"
+                    startActivityForResult(intent, PICK_FILE)*/
+
+        */
+                    resultCallbackOfSelectedMusicTrack.launch(IntentHelper.getSongPickerActivity(this))
+                }
+            }
+
+
+        }
+        binding.buttonCameraChanger.setOnClickListener { view: View? ->
+            if (binding.cameraView.isTakingVideo()) {
+                Toast.makeText(this, R.string.recorder_error_in_progress, Toast.LENGTH_SHORT)
+                    .show()
+            } else {
+                binding.cameraView.toggleFacing()
+            }
+        }
+
+
+
+
+        binding.buttonSpeed.setOnClickListener { view: View? ->
+            if (binding.cameraView.isTakingVideo) {
+                Toast.makeText(this, R.string.recorder_error_in_progress, Toast.LENGTH_SHORT)
+                    .show()
+            } else {
+                binding.speeds.setVisibility(if (binding.speeds.getVisibility() == View.VISIBLE) View.GONE else View.VISIBLE)
+
+                if (binding.speeds.getVisibility() == View.VISIBLE){
+                    binding.ivSpeed.setImageDrawable(ContextCompat.getDrawable(this@ActivityVideoRecorder,R.drawable.ic_crtpost_speed_active))
+                }else{
+                    binding.ivSpeed.setImageDrawable(ContextCompat.getDrawable(this@ActivityVideoRecorder,R.drawable.ic_crtpost_speed))
+
+                }
+            }
+        }
+        binding.buttonColorFilterIcon.setOnClickListener { view: View? ->
+            if (binding.cameraView.isTakingVideo) {
+                Toast.makeText(this, R.string.recorder_error_in_progress, Toast.LENGTH_SHORT)
+                    .show()
+            } else {
+                binding.rvFilters.setVisibility(
+                    if (binding.rvFilters.getVisibility() == View.VISIBLE) View.GONE else View.VISIBLE
+                )
+
+                if (binding.rvFilters.getVisibility() == View.VISIBLE){
+                    binding.ivFilter.setImageDrawable(ContextCompat.getDrawable(this@ActivityVideoRecorder,R.drawable.ic_crtpost_magic_stick_active))
+
+                }else{
+                    binding.ivFilter.setImageDrawable(ContextCompat.getDrawable(this@ActivityVideoRecorder,R.drawable.ic_crtpost_magic_stick))
+
+                }
+            }
+        }
+        binding.buttonFlash.setOnClickListener { view: View? ->
+            if (binding.cameraView.isTakingVideo) {
+                Toast.makeText(this, R.string.recorder_error_in_progress, Toast.LENGTH_SHORT)
+                    .show()
+            } else {
+                binding.cameraView.setFlash(if (binding.cameraView.getFlash() === Flash.OFF) Flash.TORCH else Flash.OFF)
+            }
+        }
+        binding.speeds.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { group: RadioGroup?, checked: Int ->
+            var speed = 1f
+            if (checked != R.id.speed05x) {
+                binding.speed05x.setChecked(false)
+            } else {
+                speed = .5f
+            }
+            if (checked != R.id.speed075x) {
+                binding.speed075x.setChecked(false)
+            } else {
+                speed = .75f
+            }
+            if (checked != R.id.speed1x) {
+                binding.speed1x.setChecked(false)
+            }
+            if (checked != R.id.speed15x) {
+                binding.speed15x.setChecked(false)
+            } else {
+                speed = 1.5f
+            }
+            if (checked != R.id.speed2x) {
+                binding.speed2x.setChecked(false)
+            } else {
+                speed = 2f
+            }
+            mModel!!.speed = speed
+        })
+        binding.buttonDurationTimer.setOnClickListener {
+
+
+            if (isDurationTabbarShowing){
+                isDurationTabbarShowing=false
+                hideDurationBar(show = false)
+            }else{
+                isDurationTabbarShowing=true
+                hideDurationBar(show = true)
+            }
+
+        }
+        setupRecordDurationRecclerview()
+    }
+
+
+    fun setUpActiveButton(){}
 
 
 }

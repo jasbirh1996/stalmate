@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/funtime_song_picker_navigation"
+    app:startDestination="@id/fragmentsongPickerInGroup">
+
+    <fragment
+        android:id="@+id/fragmentsongPickerInGroup"
+        android:name="com.stalmate.user.view.dashboard.funtime.FragmentSongPickerInGroup"
+        android:label="fragmentFuntime"
+        tools:layout="@layout/fragment_song_picker_in_group" >
+        <action
+            android:id="@+id/action_FragmentSongPickerInGroup_to_FragmentSongPickerSearch"
+            app:destination="@id/FragmentSongPickerSearch"
+            app:launchSingleTop="true"
+            app:popUpToInclusive="true"
+            />
+    </fragment>
+
+    <fragment
+        android:id="@+id/FragmentSongPickerSearch"
+        android:name="com.stalmate.user.view.dashboard.funtime.FragmentSongPickerSearch"
+        android:label="fragmentSearch Song"
+        tools:layout="@layout/fragment_song_picker_search" >
+    </fragment>
+
+
+
+</navigation>

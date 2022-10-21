@@ -1,5 +1,4 @@
 package com.stalmate.user.modules.reels.workers;
-
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
@@ -22,6 +21,8 @@ import com.googlecode.mp4parser.authoring.tracks.CroppedTrack;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
 public class MergeAudioVideoWorker extends Worker {
 
@@ -38,14 +39,10 @@ public class MergeAudioVideoWorker extends Worker {
     @Override
     public Result doWork() {
         String audio = getInputData().getString(KEY_AUDIO);
+        Log.d("aklsjdlasd",audio);
         String clip = getInputData().getString(KEY_VIDEO);
         String output = getInputData().getString(KEY_OUTPUT);
         FileOutputStream os = null;
-
-        Log.d("jkjkjhjkjjj", audio);
-        Log.d("jkjkjhjkjjj", clip);
-        Log.d("jkjkjhjkjjj", output);
-
         try {
             //noinspection ConstantConditions
             Movie temp = MovieCreator.build(clip);
@@ -69,17 +66,14 @@ public class MergeAudioVideoWorker extends Worker {
                         break;
                     }
                 }
+
                 //noinspection ConstantConditions
                 merged.addTrack(crop(clip, a));
             } else {
-      /*         Movie audioo = MovieCreator.build(audio); // here
-                Track audioTrack = audioo.getTracks().get(0);
-                merged.addTrack(audioTrack);*/
-
-
-            merged.addTrack(crop(clip, new AACTrackImpl(new FileDataSourceImpl(audio))));
-             //   merged.addTrack(crop(clip, audioTrack));
+                merged.addTrack(crop(clip, new AACTrackImpl(new FileDataSourceImpl(audio))));
             }
+
+
 
             Container mp4 = new DefaultMp4Builder().build(merged);
             //noinspection ConstantConditions
@@ -96,7 +90,6 @@ public class MergeAudioVideoWorker extends Worker {
                 }
             }
         }
-
         return Result.failure();
     }
 

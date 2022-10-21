@@ -36,7 +36,6 @@ class StoryActivity : AppCompatActivity(),
     private var videoCachingJob: Job? = null
     private lateinit var mHttpDataSourceFactory: HttpDataSource.Factory
     private lateinit var mCacheDataSource: CacheDataSource
-    private val cache: SimpleCache = App.cache
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -123,7 +122,7 @@ class StoryActivity : AppCompatActivity(),
 
 
                 mCacheDataSource = CacheDataSource.Factory()
-                    .setCache(cache)
+                   // .setCache()
                     .setUpstreamDataSourceFactory(mHttpDataSourceFactory)
                     .createDataSource()
                 val listener =

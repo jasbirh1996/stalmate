@@ -7,6 +7,7 @@ import android.view.View
 import androidx.viewpager.widget.ViewPager
 import com.stalmate.user.R
 import com.stalmate.user.databinding.ActivityOnBoardingScreenBinding
+import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.view.authentication.ActivityAuthentication
 
 class ActivityOnBoardingScreen : AppCompatActivity(), View.OnClickListener {
@@ -71,6 +72,7 @@ class ActivityOnBoardingScreen : AppCompatActivity(), View.OnClickListener {
                   currentPageIndex++
                   binding.viewpager.setCurrentItem(currentPageIndex,true)
               } else {
+                  PrefManager.getInstance(this)!!.setKeyIsOldUser(true)
                   startActivity(Intent(applicationContext, ActivityAuthentication::class.java))
                   finish()
               }
@@ -78,6 +80,7 @@ class ActivityOnBoardingScreen : AppCompatActivity(), View.OnClickListener {
           }
 
             R.id.skip->{
+                PrefManager.getInstance(this)!!.setKeyIsOldUser(true)
                 startActivity(Intent(applicationContext, ActivityAuthentication::class.java))
                 finish()
             }

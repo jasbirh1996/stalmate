@@ -36,8 +36,8 @@ import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.view.dashboard.ActivityDashboard
 
 
-class ActivityWelcome : BaseActivity(), FragmentInformationSuggestions.Callbackk,
-    AdapterCategory.Callbackk {
+class ActivityWelcome : BaseActivity(),
+    AdapterCategory.Callbackk, FragmentSync.Callback, FragmentInformationSuggestions.Callback {
     lateinit var binding: ActivityWelcomeBinding
     lateinit var syncBroadcastreceiver: SyncBroadcasReceiver
     var count = 0
@@ -79,7 +79,7 @@ class ActivityWelcome : BaseActivity(), FragmentInformationSuggestions.Callbackk
         viewpagerAdapter.add(FragmentWelcomePage(), "title")
         viewpagerAdapter.add(FragmentInterestSuggestionList(), "title")
         viewpagerAdapter.add(FragmentInformationSuggestions(this),"title")
-        viewpagerAdapter.add(FragmentSync(), "title")
+        viewpagerAdapter.add(FragmentSync(this), "title")
        /* viewpagerAdapter.add(FragmentGroupSuggestionList(), "title")
         viewpagerAdapter.add(FragmentPageSugggestionsList(), "title")
         viewpagerAdapter.add(FragmentEventSuggestionsList(), "title")*/
@@ -203,18 +203,23 @@ class ActivityWelcome : BaseActivity(), FragmentInformationSuggestions.Callbackk
                     when (position) {
                         0 -> {
                             toolbar(true, "Welcome")
+                            setUpNextButton(false)
                         }
                         1 -> {
                             toolbar(true, "Welcome")
+                            setUpNextButton(false)
                         }
                         2 -> {
                             toolbar(false, "Group")
+                            setUpNextButton(true)
                         }
                         3 -> {
                             toolbar(false, "Pages")
+                            setUpNextButton(true)
                         }
                         4 -> {
                             toolbar(false, "Events")
+                            setUpNextButton(true)
 
                         }
 
@@ -254,7 +259,10 @@ class ActivityWelcome : BaseActivity(), FragmentInformationSuggestions.Callbackk
 
     inner class SyncBroadcasReceiver : BroadcastReceiver() {
         override fun onReceive(p0: Context?, p1: Intent?) {
+
+            Log.d("aklsjdlajsdasd",p1!!.action.toString())
             if (p1!!.action == Constants.ACTION_SYNC_COMPLETED) {
+                dismissLoader()
                 makeToast("Synced")
                 if (p1.extras!!.getString("contacts") != null) {
                     startActivity(
@@ -283,7 +291,6 @@ class ActivityWelcome : BaseActivity(), FragmentInformationSuggestions.Callbackk
     override fun onDestroy() {
         unregisterReceiver(syncBroadcastreceiver)
         super.onDestroy()
-
     }
 
 
@@ -331,18 +338,34 @@ class ActivityWelcome : BaseActivity(), FragmentInformationSuggestions.Callbackk
         state: String,
         city: String
     ) {
-
         graduationText = graducation
         majorTextText = major
         countryText = country
         cityText = city
         graduationTextId = graducationId
         majorTextTextId = majorId
+    }
 
+    override fun onClickOnNextButtonOnSuggestionPage() {
+        binding.btnNext.performClick()
     }
 
     override fun onClickIntrastedItem(data: ArrayList<Category>) {
         datasss = data
+    }
+
+    fun setUpNextButton(isRoundButtonToHide:Boolean){
+        if (isRoundButtonToHide){
+            binding.btnNext.animate().translationY(200f).setDuration(100).start()
+        }else{
+            binding.btnNext.animate().translationY(0f).setDuration(100).start()
+        }
+
+
+    }
+
+    override fun onClickOnNextButtonOnSyncPage() {
+        binding.btnNext.performClick()
     }
 
 }

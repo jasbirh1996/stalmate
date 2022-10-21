@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout  xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/transparent"
-    >
+    android:background="@android:color/transparent">
 
     <!--<ImageView
         android:id="@+id/ivImage"
@@ -36,21 +35,20 @@
 
     <ja.burhanrashid52.photoeditor.PhotoEditorView
         android:id="@+id/ivImage"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <ImageView
         android:id="@+id/imgClose"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="25dp"
-        android:background="@color/black_trasp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
         android:padding="8dp"
         android:src="@drawable/ic_close"
         app:layout_constraintStart_toStartOf="parent"
@@ -62,9 +60,10 @@
         android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
-        android:background="@color/black_trasp"
+        
         android:padding="8dp"
         android:src="@drawable/ic_undo"
+        android:visibility="gone"
         app:layout_constraintEnd_toStartOf="@id/imgText"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -73,10 +72,11 @@
         android:id="@+id/imgText"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
-        android:layout_margin="25dp"
-        android:background="@color/black_trasp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        
         android:padding="8dp"
-        android:src="@drawable/ic_text"
+        android:src="@drawable/ic_crtpost_top_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -84,21 +84,23 @@
         android:id="@+id/imgDraw"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:background="@color/black_trasp"
+        android:layout_marginEnd="10dp"
+        
         android:padding="8dp"
-        android:src="@drawable/ic_brush"
-        app:layout_constraintStart_toStartOf="@id/imgText"
-        app:layout_constraintTop_toBottomOf="@id/imgText" />
+        android:src="@drawable/ic_crtpost_top_sketch"
+        app:layout_constraintBottom_toBottomOf="@+id/ivEmoji"
+        app:layout_constraintEnd_toStartOf="@+id/ivEmoji"
+        app:layout_constraintTop_toTopOf="@+id/ivEmoji" />
 
     <ImageView
         android:id="@+id/imgSticker"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:background="@color/black_trasp"
+        
         android:padding="8dp"
         android:src="@drawable/ic_sticker"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="@id/imgDraw"
         app:layout_constraintTop_toBottomOf="@id/imgDraw" />
 
@@ -106,30 +108,33 @@
         android:id="@+id/ivEmoji"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:background="@color/black_trasp"
+        android:layout_marginEnd="10dp"
+        
         android:padding="8dp"
-        android:src="@drawable/ic_sticker"
-        app:layout_constraintStart_toStartOf="@id/imgDraw"
-        app:layout_constraintTop_toBottomOf="@+id/imgSticker" />
+        android:src="@drawable/ic_crtpost_top_emoji"
+        app:layout_constraintBottom_toBottomOf="@+id/imgText"
+        app:layout_constraintEnd_toStartOf="@+id/imgText"
+        app:layout_constraintTop_toTopOf="@+id/imgText" />
 
     <ImageView
         android:id="@+id/ivMusic"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:background="@color/black_trasp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        
         android:padding="8dp"
-        android:src="@drawable/ic_post_music"
-        app:layout_constraintStart_toStartOf="@id/ivEmoji"
-        app:layout_constraintTop_toBottomOf="@+id/ivEmoji" />
+        android:src="@drawable/ic_crtpost_top_music"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/imgDelete"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:background="@color/black_trasp"
+        
         android:padding="8dp"
         android:src="@drawable/ic_close"
         android:visibility="gone"
@@ -137,14 +142,22 @@
         app:layout_constraintTop_toBottomOf="@id/imgSticker" />
 
 
-    <ImageView
+    <Button
+
         android:id="@+id/imgDone"
-        android:layout_width="50dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="30dp"
-        android:background="@color/black_trasp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/large_white_round_corner"
+        android:fontFamily="@font/poppins"
         android:padding="8dp"
-        android:src="@drawable/ic_save"
+        android:paddingStart="@dimen/_10sdp"
+        android:paddingTop="@dimen/_4sdp"
+        android:paddingEnd="@dimen/_10sdp"
+        android:paddingBottom="6dp"
+        android:text="@string/next"
+        android:textColor="@color/colorTextDarkGray"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

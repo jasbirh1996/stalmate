@@ -12,6 +12,8 @@ object Constants {
     const val URL_BLOCKED_LIST="auth_service/friend_api/get_block_user_list"
     const val URL_CATEGORY_LIST="auth_service/friend_api/friend_category_list"
     const val URLFUNTIME_LIST="auth_service/funtime_api/get_funtime_list"
+    const val URL_FUNTIME_MUSIC_LIST="auth_service/funtime_api/get_sound_api"
+    const val URL_FUNTIME_LIKE_UNLIKE="auth_service/funtime_api/like_unlike_funtime"
 
 
 
@@ -41,6 +43,9 @@ object Constants {
     const val BLOCK_API="/auth_service/friend_api/block_user"
     const val URL_GLOBAL_SEARCH="auth_service/friend_api/search_list"
     const val START_DATE = "01"
+    const val ADD_REEL="auth_service/funtime_api/add_funtime"
+
+
 
 
     const val TYPE_FRIEND_REQUEST = "request"

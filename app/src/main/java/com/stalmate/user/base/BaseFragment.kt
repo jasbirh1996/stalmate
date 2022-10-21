@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import com.stalmate.user.base.callbacks.BaseCallBacks
+import com.stalmate.user.view.dashboard.funtime.FragmentFuntimeTag
 import com.stalmate.user.viewmodel.AppViewModel
 import java.util.*
 
@@ -22,6 +23,9 @@ open class BaseFragment : Fragment(), BaseCallBacks {
     val networkViewModel: AppViewModel by lazy {
         ViewModelProvider(this)[AppViewModel::class.java]
 
+    }
+    val taggedPeopleViewModel: FragmentFuntimeTag.TagPeopleViewModel by lazy {
+        ViewModelProvider(this)[FragmentFuntimeTag.TagPeopleViewModel::class.java]
     }
 
     override fun onAttach(context: Context) {

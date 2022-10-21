@@ -1,28 +1,34 @@
 package com.stalmate.user.view.dashboard.funtime
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewOutlineProvider
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import androidx.viewpager.widget.ViewPager.OnPageChangeListener
+import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.Player
 import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentFunTimeBinding
-import com.stalmate.user.view.language.AdapterLanguage
-import eightbitlab.com.blurview.RenderScriptBlur
+import com.stalmate.user.modules.reels.player.Constants
+import com.stalmate.user.modules.reels.player.ReelListFragment
+import com.stalmate.user.modules.reels.player.VideoPreLoadingService
+import fr.castorflex.android.verticalviewpager.VerticalViewPager
 
-
-class FragmentFunTime() : BaseFragment() {
-
+class FragmentFunTime() : BaseFragment(), Player.Listener, FragmentCallBack {
+    var handler: Handler? = null
+        var isPlusButtonActive=false
     lateinit var binding: FragmentFunTimeBinding
-
-    lateinit var adapterFunTime: AdapterFunTime
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -34,41 +40,91 @@ class FragmentFunTime() : BaseFragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.bind<FragmentFunTimeBinding>(inflater.inflate(R.layout.fragment_fun_time, container, false))!!
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        adapterFunTime = AdapterFunTime(networkViewModel, requireContext())
-        binding.rvRecyclerView.adapter = adapterFunTime
-
-       /* callback.onClickHideBottom()*/
-
-        binding.ivAddButton.setOnClickListener {
-       //     startActivity(IntentHelper.getCreateReelsScreen(requireActivity())!!.putExtra("type","image"))
-            startActivity(IntentHelper.getCreateReelsScreen(requireActivity())!!)
-
-//            startActivity(Intent(context, ActivityfuntimeRandom::class.java))
+        binding.ivBack.setOnClickListener {
+           
         }
 
-        var hashmap = HashMap<String, String>()
-        hashmap.put("page", "1")
-        networkViewModel.funtimeLiveData(hashmap)
-        networkViewModel.funtimeLiveData.observe(viewLifecycleOwner) {
+        binding.ivAddButton.setOnClickListener {
 
-            it.let {
-                adapterFunTime.submitList(it!!.results)
-                Log.d("=============", it!!.results.size.toString())
 
+            binding.ivAddButton.animate().rotation(360.0f).setDuration(500).start();
+
+            toggleButton()
+
+        }
+
+        loadFragment(ReelListFragment())
+
+
+        binding.tvImage.setOnClickListener {
+            if (isPlusButtonActive){
+                toggleButton()
+
+                startActivity(IntentHelper.getCreateReelsScreen(requireActivity())!!.putExtra("type","image"))
 
             }
         }
+        binding.tvVideo.setOnClickListener {
+            if (isPlusButtonActive){
+                toggleButton()
+                startActivity(IntentHelper.getCreateReelsScreen(requireActivity())!!)
+            }
+
+        }
     }
 
-    public interface Callbackk {
-        fun onClickHideBottom()
+
+    fun toggleButton(){
+        if (isPlusButtonActive){
+            isPlusButtonActive=false
+            binding.layoutImagenVideo.animate().alpha(0f).setDuration(500).start()
+        }else{
+            isPlusButtonActive=true
+            binding.layoutImagenVideo.animate().alpha(1f).setDuration(500).start()
+        }
     }
+
+
+
+  
+    private fun loadFragment(fragment: Fragment) {
+
+        val backStateName = fragment.javaClass.name
+        val fragmentTag = backStateName
+        val manager: FragmentManager = childFragmentManager
+        val fragmentPopped = manager.popBackStackImmediate(backStateName, 1)
+        if (!fragmentPopped && manager.findFragmentByTag(fragmentTag) == null) { //fragment not in back stack, create it.
+            val ft = manager.beginTransaction()
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+            ft.add(binding.frame.id, fragment, fragmentTag)
+            ft.commit()
+        }
+    }
+
+    override fun onResponce(bundle: Bundle?) {
+        
+    }
+
+
+
+
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

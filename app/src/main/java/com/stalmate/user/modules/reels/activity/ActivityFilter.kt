@@ -36,7 +36,6 @@ class ActivityFilter : AppCompatActivity() {
         setContentView(binding.root)
 
 
-
         mModel = ViewModelProvider(this)[ActivityFilterViewModel::class.java]
         mVideo = intent.getStringExtra(EXTRA_VIDEO)
         mSong = intent.getStringExtra(EXTRA_SONG)

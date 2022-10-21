@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/funtimepostnavigation"
+    app:startDestination="@id/fragmentFuntimePost">
+
+    <fragment
+        android:id="@+id/fragmentFuntimePost"
+        android:name="com.stalmate.user.view.dashboard.funtime.FragmentFuntimePost"
+        android:label="fragmentFuntime"
+        tools:layout="@layout/fragment_funtime_post" >
+        <action
+            android:id="@+id/action_fragmentFuntimePost_to_fragmentFuntimeTag"
+            app:destination="@id/fragmentFuntimeTag"
+            />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragmentFuntimeTag"
+        android:name="com.stalmate.user.view.dashboard.funtime.FragmentFuntimeTag"
+        android:label="fragmentTag"
+        tools:layout="@layout/fragment_funtime_tag" >
+        <action
+            android:id="@+id/action_fragmentFuntimeTag_to_fragmentSingleUserSelector"
+            app:destination="@id/fragmentSingleUserSelector"
+            />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragmentSingleUserSelector"
+        android:name="com.stalmate.user.view.dashboard.funtime.FragmentSingleUserSelector"
+        android:label="fragmentSingleSelector"
+        tools:layout="@layout/fragment_single_user_selector" >
+
+    </fragment>
+
+
+</navigation>

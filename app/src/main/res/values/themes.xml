@@ -45,5 +45,10 @@
         <item name="color">@color/white</item>
     </style>
 
+    <style name="roundedimageViewRectangel" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">5dp</item>
+        <item name="color">@color/white</item>
+    </style>
 
 </resources>

@@ -17,7 +17,7 @@ import com.stalmate.user.utilities.ValidationHelper
 import com.stalmate.user.view.singlesearch.ActivitySingleSearch
 import com.stalmate.user.view.singlesearch.FragmentSingleSearch
 
-class FragmentInformationSuggestions(var callback: Callbackk) : BaseFragment() {
+class FragmentInformationSuggestions(var callback: Callback) : BaseFragment() {
 
     private lateinit var binding : FragmentInformationSuggestionsBinding
 
@@ -95,11 +95,13 @@ class FragmentInformationSuggestions(var callback: Callbackk) : BaseFragment() {
             binding.filledTextCountry.setText(country)
             binding.filledTextCity.setText(city)
         }
+
+        binding.btnNext.setOnClickListener {
+            callback.onClickOnNextButtonOnSuggestionPage()
+        }
     }
 
-    interface Callbackk {
-        fun onCallBackData(graducation : String, graducationId: String , major : String, majorId : String, country : String , state : String, city : String )
-    }
+
 
     fun isValid() : Boolean{
 
@@ -133,6 +135,9 @@ class FragmentInformationSuggestions(var callback: Callbackk) : BaseFragment() {
 
 
 
-
+    public interface Callback{
+        fun onCallBackData(graducation : String, graducationId: String , major : String, majorId : String, country : String , state : String, city : String )
+        fun onClickOnNextButtonOnSuggestionPage()
+    }
 
 }

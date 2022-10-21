@@ -12,19 +12,16 @@ import android.media.MediaPlayer.OnCompletionListener
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
+import android.provider.DocumentsContract
+import android.provider.MediaStore
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.*
 import android.view.TextureView.SurfaceTextureListener
 import android.widget.Toast
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.NonNull
 import androidx.core.content.ContextCompat
 import androidx.work.Data
-import androidx.work.OneTimeWorkRequest
-import androidx.work.WorkInfo
-import androidx.work.WorkManager
 import com.bumptech.glide.Glide
 import com.github.hiteshsondhi88.libffmpeg.FFmpeg
 import com.github.hiteshsondhi88.libffmpeg.FFmpegExecuteResponseHandler
@@ -39,11 +36,22 @@ import com.stalmate.user.modules.reels.photo_editing.EmojiBSFragment
 import com.stalmate.user.modules.reels.photo_editing.PropertiesBSFragment
 import com.stalmate.user.modules.reels.photo_editing.StickerBSFragment
 import com.stalmate.user.modules.reels.photo_editing.TextEditorDialogFragment
-import com.stalmate.user.modules.reels.workers.WatermarkWorker
 import ja.burhanrashid52.photoeditor.*
 import ja.burhanrashid52.photoeditor.Utils.getScaledDimension
 import java.io.*
+import androidx.work.WorkInfo
+
+import com.stalmate.user.modules.reels.workers.WatermarkWorker
+
+import androidx.work.OneTimeWorkRequest
+
+import androidx.work.WorkManager
+import com.stalmate.user.Helper.IntentHelper
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
@@ -76,7 +84,7 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
     private var DRAW_CANVASH = 0
     private val onCompletionListener: OnCompletionListener =
         OnCompletionListener { mediaPlayer ->{
-          //  mediaPlayer.start()
+            //  mediaPlayer.start()
         } }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -91,13 +99,12 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
         initViews()
         //        Drawable transparentDrawable = new ColorDrawable(Color.TRANSPARENT);
 //        Glide.with(this).load(getIntent().getStringExtra("DATA")).into(binding.ivImage.getSource());
-       Glide.with(this).load(R.drawable.trans).centerCrop().into(binding.ivImage.source)
+        Glide.with(this).load(R.drawable.trans).centerCrop().into(binding.ivImage.source)
         videoPath = intent.getStringExtra(EXTRA_VIDEO).toString()
-        Log.d("asdasd",videoPath.toString())
-        Log.d("asdasd","videoPath.toString()")
         val retriever = MediaMetadataRetriever()
         retriever.setDataSource(videoPath)
-        val metaRotation = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION)
+        val metaRotation =
+            retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION)
         val rotation = metaRotation?.toInt() ?: 0
         if (rotation == 90 || rotation == 270) {
             DRAW_CANVASH =
@@ -119,10 +126,11 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
             ">>",
             "width>> " + newCanvasWidth + "height>> " + newCanvasHeight + " rotation >> " + rotation
         )
+
     }
 
     private fun initViews() {
-       fFmpeg = FFmpeg.getInstance(this)
+        fFmpeg = FFmpeg.getInstance(this)
         progressDialog = ProgressDialog(this)
         mStickerBSFragment = StickerBSFragment()
         mStickerBSFragment.setStickerListener(this)
@@ -132,9 +140,8 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
         mPhotoEditor = PhotoEditor.Builder(this, binding.ivImage)
             .setPinchTextScalable(true) // set flag to make text scalable when pinch
             .setDeleteView(binding.imgDelete) //.setDefaultTextTypeface(mTextRobotoTf)
-           // .setDefaultEmojiTypeface(mEmojiTypeFace)
+            // .setDefaultEmojiTypeface(mEmojiTypeFace)
             .build() // build photo editor sdk
-        Log.d("asdasd","opaskd")
         mPhotoEditor.setOnPhotoEditorListener(this)
         mEmojiBSFragment?.setEmojiListener(this)
         binding.imgClose.setOnClickListener(this)
@@ -145,7 +152,6 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
         binding.imgSticker.setOnClickListener(this)
         binding.ivEmoji.setOnClickListener(this)
         binding.ivMusic.setOnClickListener(this)
-        Log.d("VideoPath>>", "videhjkoPath")
         binding.videoSurface.setSurfaceTextureListener(object : SurfaceTextureListener {
             override fun onSurfaceTextureAvailable(
                 surfaceTexture: SurfaceTexture,
@@ -155,18 +161,8 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
 //                activityHomeBinding.videoSurface.getLayoutParams().height=640;
 //                activityHomeBinding.videoSurface.getLayoutParams().width=720;
                 val surface = Surface(surfaceTexture)
-                mediaPlayer = MediaPlayer()
-                //                    mediaPlayer.setDataSource("http://daily3gp.com/vids/747.3gp");
-                Log.d("VideoPath>>", "videoPath")
-                Log.d("VideoPath>>", videoPath)
-                mediaPlayer!!.setDataSource(videoPath)
-                mediaPlayer!!.setSurface(surface)
-                mediaPlayer!!.prepare()
-                mediaPlayer!!.setOnCompletionListener(onCompletionListener)
-                mediaPlayer!!.setAudioStreamType(AudioManager.STREAM_MUSIC)
-                mediaPlayer!!.start()
                 try {
-  /*                  mediaPlayer = MediaPlayer()
+                    mediaPlayer = MediaPlayer()
                     //                    mediaPlayer.setDataSource("http://daily3gp.com/vids/747.3gp");
                     Log.d("VideoPath>>", videoPath)
                     mediaPlayer!!.setDataSource(videoPath)
@@ -174,7 +170,7 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
                     mediaPlayer!!.prepare()
                     mediaPlayer!!.setOnCompletionListener(onCompletionListener)
                     mediaPlayer!!.setAudioStreamType(AudioManager.STREAM_MUSIC)
-                    mediaPlayer!!.start()*/
+                    mediaPlayer!!.start()
                 } catch (e: IllegalArgumentException) {
                     // TODO Auto-generated catch block
                     e.printStackTrace()
@@ -204,7 +200,7 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
             override fun onSurfaceTextureUpdated(surfaceTexture: SurfaceTexture) {}
         })
         exeCmd = ArrayList()
-    try {
+        try {
             fFmpeg.loadBinary(object : FFmpegLoadBinaryResponseHandler {
                 override
                 fun onFailure() {
@@ -228,38 +224,38 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
         }
     }
 
-   fun executeCommand(command: Array<String?>?, absolutePath: String?) {
-       Log.e("asgjhdasd","alisjdlad")
-       fFmpeg.execute(command, object : FFmpegExecuteResponseHandler {
-           override
-           fun onSuccess(s: String) {
-               Log.d("CommandExecute", "onSuccess  $s")
-               Toast.makeText(getApplicationContext(), "Sucess", Toast.LENGTH_SHORT).show()
-               /*      val i = Intent(this@ActivityVideoEditor, ActivityVideoEditor::class.java)
-                     i.putExtra("DATA", absolutePath)
-                     startActivity(i)*/
-           }
-           override
-           fun onProgress(s: String) {
-               progressDialog!!.setMessage(s)
-               Log.d("CommandExecute", "onProgress  $s")
-           }
-           override
-           fun onFailure(s: String) {
-               Log.d("CommandExecute", "onFailure  $s")
-               progressDialog!!.hide()
-           }
-           override
-           fun onStart() {
-               progressDialog!!.setTitle("Preccesing")
-               progressDialog!!.setMessage("Starting")
-               progressDialog!!.show()
-           }
-           override
-           fun onFinish() {
-               progressDialog!!.hide()
-           }
-       })
+    fun executeCommand(command: Array<String?>?, absolutePath: String?) {
+        Log.e("asgjhdasd","alisjdlad")
+        fFmpeg.execute(command, object : FFmpegExecuteResponseHandler {
+            override
+            fun onSuccess(s: String) {
+                Log.d("CommandExecute", "onSuccess  $s")
+                Toast.makeText(getApplicationContext(), "Sucess", Toast.LENGTH_SHORT).show()
+                /*      val i = Intent(this@ActivityVideoEditor, ActivityVideoEditor::class.java)
+                      i.putExtra("DATA", absolutePath)
+                      startActivity(i)*/
+            }
+            override
+            fun onProgress(s: String) {
+                progressDialog!!.setMessage(s)
+                Log.d("CommandExecute", "onProgress  $s")
+            }
+            override
+            fun onFailure(s: String) {
+                Log.d("CommandExecute", "onFailure  $s")
+                progressDialog!!.hide()
+            }
+            override
+            fun onStart() {
+                progressDialog!!.setTitle("Preccesing")
+                progressDialog!!.setMessage("Starting")
+                progressDialog!!.show()
+            }
+            override
+            fun onFinish() {
+                progressDialog!!.hide()
+            }
+        })
     }
 
     override fun onClick(v: View) {
@@ -271,10 +267,10 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
             R.id.imgText -> {    val textEditorDialogFragment = TextEditorDialogFragment.show(this)
                 textEditorDialogFragment.setOnTextEditorListener(object : TextEditorDialogFragment.TextEditorListener {
                     override fun onDone(inputText: String?, colorCode: Int) {
-                       val styleBuilder = TextStyleBuilder()
+                        val styleBuilder = TextStyleBuilder()
                         styleBuilder.withTextColor(colorCode)
                         mPhotoEditor.addText(inputText, styleBuilder)
-                  /*    binding.txtCurrentTool.setText(R.string.label_text)*/
+                        /*    binding.txtCurrentTool.setText(R.string.label_text)*/
                     }
                 })
             }
@@ -299,7 +295,7 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
                 val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
                 intent.addCategory(Intent.CATEGORY_OPENABLE)
                 intent.type = "audio/*"
-                resultCallbackOfSelectedMusicTrack.launch(intent);
+                startActivityForResult(intent, PICK_FILE)
             }
 
         }
@@ -323,10 +319,10 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
     private fun setDrawingMode() {
         if (mPhotoEditor.brushDrawableMode == true) {
             mPhotoEditor.setBrushDrawingMode(false)
-            binding.imgDraw.setBackgroundColor(ContextCompat.getColor(this, R.color.black_trasp))
+            binding.imgDraw.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_crtpost_top_sketch_active))
         } else {
             mPhotoEditor.setBrushDrawingMode(true)
-            binding.imgDraw.setBackgroundColor(ContextCompat.getColor(this, R.color.progress_primary))
+            binding.imgDraw.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_crtpost_top_sketch))
             propertiesBSFragment.show(getSupportFragmentManager(), propertiesBSFragment.getTag())
         }
     }
@@ -350,18 +346,18 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
             mPhotoEditor.saveAsFile(file.absolutePath, saveSettings, object : PhotoEditor.OnSaveListener {
                 override
                 fun onSuccess(@NonNull imagePath: String) {
-                    dismissLoader()
+                  //  dismissLoader()
                     this@ActivityVideoEditor.imagePath = imagePath
                     Log.d("imagePath>>", imagePath)
                     Log.d("imagePath2>>", Uri.fromFile(File(imagePath)).toString())
                     binding.ivImage.source.setImageURI(Uri.fromFile(File(imagePath)))
-                    Toast.makeText(
+            /*        Toast.makeText(
                         this@ActivityVideoEditor,
                         "Saved successfully...",
                         Toast.LENGTH_SHORT
-                    ).show()
-                  applayWaterMark()
-                  //  saveVideoToInternalStorage()
+                    ).show()*/
+                    applayWaterMark()
+                    //  saveVideoToInternalStorage()
                 }
 
                 override fun onFailure(exception: Exception) {
@@ -384,20 +380,20 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
     private fun applayWaterMark() {
 
         try {
-
-        //    addWaterMarkProcess()
+            //    addWaterMarkProcess()
             addToWatermark()
         } catch (e: Exception) {
             Log.d("lkajsdlasd",e!!.toString())
             e.printStackTrace()
         }
     }
-        override
+    override
     fun onStickerClick(bitmap: Bitmap?) {
         mPhotoEditor.setBrushDrawingMode(false)
         binding.imgDraw.setBackgroundColor(ContextCompat.getColor(this, R.color.black_trasp))
+
         mPhotoEditor.addImage(bitmap)
-            binding.txtCurrentTool.setText(R.string.label_sticker)
+        binding.txtCurrentTool.setText(R.string.label_sticker)
     }
 
 
@@ -445,7 +441,7 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
                     mPhotoEditor.editText(rootView, inputText, styleBuilder)
                 }
 
-          /*      binding.txtCurrentTool.setText(R.string.label_text)*/
+                /*      binding.txtCurrentTool.setText(R.string.label_text)*/
             }
         })
     }
@@ -474,9 +470,9 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
 
 
 
- override fun onEmojiClick(emojiUnicode: String?) {
+    override fun onEmojiClick(emojiUnicode: String?) {
         mPhotoEditor.addEmoji(emojiUnicode)
-       // binding.txtCurrentTool.setText(R.string.label_emoji)
+        // binding.txtCurrentTool.setText(R.string.label_emoji)
     }
 
 
@@ -528,10 +524,14 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
         wm.enqueue(request)
         wm.getWorkInfoByIdLiveData(request.id)
             .observe(this) { info: WorkInfo ->
+
+
+
                 val ended = (info.state == WorkInfo.State.CANCELLED
                         || info.state == WorkInfo.State.FAILED)
                 if (info.state == WorkInfo.State.SUCCEEDED) {
                     Log.d("lkajsdlasd","oaspdofdgha")
+                    dismissLoader()
                     saveVideoToInternalStorage(output.path)
 
                 } else if (ended) {
@@ -565,8 +565,15 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
                 outputStream.flush()
                 inputStream.close()
                 outputStream.close()
-                Toast.makeText(applicationContext, "Video has just saved!!", Toast.LENGTH_LONG)
+
+
+
+         /*       Toast.makeText(applicationContext, "Video has just saved!!", Toast.LENGTH_LONG)
                     .show()
+                */
+                startActivity(IntentHelper.getCreateFuntimePostScreen(this)!!.putExtra(EXTRA_VIDEO,newfile.absolutePath))
+
+
             } else {
                 Toast.makeText(
                     applicationContext,
@@ -578,19 +585,10 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
             e.printStackTrace()
         }
     }
-    var resultCallbackOfSelectedMusicTrack: ActivityResultLauncher<Intent> = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        if (result!!.resultCode == RESULT_OK) {
-            val data: Intent = result.getData()!!
-            val id = data.getIntExtra(EXTRA_SONG_ID, 0)
-            val name = data.getStringExtra(EXTRA_SONG_NAME)
-            val audio = data.getParcelableExtra<Uri>(EXTRA_SONG_FILE)
 
-            mediaPlayer = MediaPlayer.create(this@ActivityVideoEditor, audio)
-            mediaPlayer!!.setOnCompletionListener { mp -> mediaPlayer = null }
 
-        }
-    }
+
+
+
 
 }

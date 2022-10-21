@@ -13,7 +13,9 @@ import com.stalmate.user.view.profile.ActivityOtherUserProfile
 import com.stalmate.user.view.profile.ActivityProfile
 import com.stalmate.user.view.profile.ActivityProfileEdit
 import  com.c2m.storyviewer.screen.StoryActivity
+import com.stalmate.user.modules.reels.activity.ActivitySongPicker
 import com.stalmate.user.modules.reels.activity.ActivityVideoRecorder
+import com.stalmate.user.view.dashboard.funtime.ActivityFuntimePost
 
 public class IntentHelper {
 
@@ -76,6 +78,15 @@ public class IntentHelper {
             return Intent(context, StoryActivity::class.java)
                 .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
         }
+        fun getCreateFuntimePostScreen(context: Context?): Intent? {
+            return Intent(context, ActivityFuntimePost::class.java)
+                .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        }
+        fun getSongPickerActivity(context: Context?): Intent? {
+            return Intent(context, ActivitySongPicker::class.java)
+                .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        }
+
 
     }
 

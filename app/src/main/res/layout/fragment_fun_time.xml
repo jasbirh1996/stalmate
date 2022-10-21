@@ -12,6 +12,7 @@
           android:id="@+id/constraintLayout7"
           android:layout_width="match_parent"
           android:layout_height="60dp"
+          android:visibility="visible"
           app:layout_constraintStart_toStartOf="parent"
           app:layout_constraintTop_toTopOf="parent">
 
@@ -49,32 +50,80 @@
              app:layout_constraintTop_toTopOf="parent" />
 
 
+         <androidx.constraintlayout.widget.ConstraintLayout
+             android:id="@+id/layoutImagenVideo"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_marginEnd="10dp"
+             android:alpha="0"
+             app:layout_constraintBottom_toBottomOf="@+id/ivAddButton"
+             app:layout_constraintEnd_toStartOf="@+id/ivAddButton"
+             app:layout_constraintTop_toTopOf="@+id/ivAddButton">
+
+            <TextView
+                android:id="@+id/tvImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins"
+                android:text="Image"
+                android:textSize="@dimen/_12sdp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvVideo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:fontFamily="@font/poppins"
+                android:text="Video"
+                android:textSize="@dimen/_12sdp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/tvImage"
+                app:layout_constraintTop_toTopOf="parent" />
+
+         </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
       </androidx.constraintlayout.widget.ConstraintLayout>
 
-      <androidx.viewpager2.widget.ViewPager2
-          android:id="@+id/rvRecyclerView"
+      <FrameLayout
+          android:id="@+id/frame"
           android:layout_width="match_parent"
           android:layout_height="0dp"
           android:layout_marginTop="5dp"
-          tools:listitem="@layout/item_fun_time"
           android:visibility="visible"
-          android:orientation="vertical"
-          app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+          android:background="@color/white"
           app:layout_constraintBottom_toBottomOf="parent"
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintStart_toStartOf="parent"
           app:layout_constraintTop_toBottomOf="@+id/constraintLayout7" />
 
-     <!-- <include
-          android:id="@+id/layout"
-          layout="@layout/item_fun_time"
-          android:layout_width="0dp"
+
+      <com.facebook.shimmer.ShimmerFrameLayout
+          android:id="@+id/shimmerLayout"
+          android:layout_width="match_parent"
           android:layout_height="0dp"
-          android:visibility="visible"
+          android:layout_marginTop="8dp"
+          android:visibility="gone"
           app:layout_constraintBottom_toBottomOf="parent"
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@+id/constraintLayout7" />-->
+          app:layout_constraintTop_toBottomOf="@+id/constraintLayout7">
+
+         <include
+             layout="@layout/video_simmer_layout"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent" />
+
+      </com.facebook.shimmer.ShimmerFrameLayout>
+
+
+
+
+
+
 
    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

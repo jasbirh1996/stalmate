@@ -15,11 +15,12 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.stalmate.user.R
+import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentSyncBinding
 import com.stalmate.user.utilities.Constants
 
 
-class FragmentSync : Fragment() {
+class FragmentSync(var callback: Callback) : BaseFragment() {
     private lateinit var mAccount: Account
     lateinit var binding: FragmentSyncBinding
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,6 +50,10 @@ class FragmentSync : Fragment() {
                 removeAccount()
             }
         }
+
+        binding.btnNext.setOnClickListener {
+            callback.onClickOnNextButtonOnSyncPage()
+        }
     }
 
 
@@ -69,9 +74,7 @@ class FragmentSync : Fragment() {
     fun isAccountAdded():Boolean{
 
         // Get an instance of the Android account manager
-        val accountManager = requireActivity().getSystemService(
-            ACCOUNT_SERVICE
-        ) as AccountManager
+        val accountManager = requireActivity().getSystemService(ACCOUNT_SERVICE) as AccountManager
 
         for (i in 0 until accountManager.accounts.size){
             if (accountManager.accounts[i].type==Constants.ACCOUNT_TYPE){
@@ -85,19 +88,18 @@ class FragmentSync : Fragment() {
 
     private fun retreiveGoogleContacts() {
 
-        mAccount= createSyncAccount(requireActivity())!!
+        mAccount= createSyncAccount(requireActivity())
 
-            var bundle=Bundle()
+        var bundle=Bundle()
         bundle.putBoolean("force",true)
         bundle.putBoolean("expedited",true)
 
-
         Log.d("asldkjalsda","sync")
-      ContentResolver.requestSync(mAccount, "com.stalmate.user", bundle)
+        ContentResolver.requestSync(mAccount, "com.stalmate.user", bundle)
     }
 
-    fun createSyncAccount(context: Context): Account? {
-
+    fun createSyncAccount(context: Context): Account {
+        showLoader()
         // Create the account type and default account
         val newAccount = Account(Constants.ACCOUNT_NAME, Constants.ACCOUNT_TYPE)
         // Get an instance of the Android account manager
@@ -126,5 +128,9 @@ class FragmentSync : Fragment() {
           */
             Account(Constants.ACCOUNT_NAME, Constants.ACCOUNT_TYPE)
         }
+    }
+
+    public interface Callback{
+        fun onClickOnNextButtonOnSyncPage()
     }
 }

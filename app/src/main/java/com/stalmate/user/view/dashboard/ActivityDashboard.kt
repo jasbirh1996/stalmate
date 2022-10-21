@@ -1,21 +1,27 @@
 package com.stalmate.user.view.dashboard
 
 
+
+
+import android.animation.ValueAnimator
 import android.content.Intent
 import android.os.Bundle
-import android.view.MenuItem
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
-import com.simform.custombottomnavigation.Model
 import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.databinding.ActivityDashboardBinding
+import com.stalmate.user.modules.reels.player.Constants
+import com.stalmate.user.modules.reels.player.VideoPreLoadingService
 import com.stalmate.user.view.dashboard.Chat.FragmentChatNCallBase
 import com.stalmate.user.view.dashboard.Friend.FragmentFriend
 import com.stalmate.user.view.dashboard.HomeFragment.FragmentHome
@@ -23,8 +29,10 @@ import com.stalmate.user.view.dashboard.HomeFragment.FragmentMenu
 import com.stalmate.user.view.dashboard.VideoReels.FragmentReels
 import com.stalmate.user.view.dashboard.funtime.FragmentFunTime
 
-class ActivityDashboard : AppCompatActivity(), FragmentHome.Callback , FragmentFriend.Callbackk, FragmentMenu.Callback/*, FragmentFunTime.Callbackk*/{
 
+class ActivityDashboard : AppCompatActivity(), FragmentHome.Callback , FragmentFriend.Callbackk, FragmentMenu.Callback/*, FragmentFunTime.Callbackk*/{
+    private val TIME_INTERVAL = 2000
+    var back_pressed: Long = 0
     private lateinit var binding: ActivityDashboardBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,27 +79,36 @@ class ActivityDashboard : AppCompatActivity(), FragmentHome.Callback , FragmentF
         binding.bottomNavigationView.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.home -> {
+                    mute(true)
                     fm.beginTransaction().hide(active).show(fragment1).commit()
                     active = fragment1
+
+
                 }
                 R.id.funTime -> {
-
+                    mute(false)
                     fm.beginTransaction().hide(active).show(fragment2).commit()
                     active = fragment2
-                    binding.bottomNavigation.visibility = View.GONE
+
+
                 }
                 R.id.chat -> {
-
+                    mute(true)
                     fm.beginTransaction().hide(active).show(fragment3).commit()
                     active = fragment3
+
                 }
                 R.id.video -> {
+                    mute(true)
                     fm.beginTransaction().hide(active).show(fragment4).commit()
                     active = fragment4
+
                 }
                 R.id.friend -> {
+                    mute(true)
                     fm.beginTransaction().hide(active).show(fragment5).commit()
                     active = fragment5
+
                 }
                 else -> {
 
@@ -100,6 +117,20 @@ class ActivityDashboard : AppCompatActivity(), FragmentHome.Callback , FragmentF
             true
         }
     }
+
+
+
+fun mute(toMute:Boolean){
+   if (toMute){
+       if (active is FragmentFunTime){
+           Log.d("askldjalsd","alksdjasd")
+           (active as FragmentFunTime).onPause()
+       }else{
+           
+       }
+   }
+}
+
 
     val fragment1: Fragment = FragmentHome(this)
     val fragment2: Fragment = FragmentFunTime()
@@ -129,7 +160,27 @@ class ActivityDashboard : AppCompatActivity(), FragmentHome.Callback , FragmentF
         if (binding.drawerLayout.isDrawerOpen(GravityCompat.END)) {
             toggleDrawer()
         } else {
-           super.onBackPressed()
+            if (active is FragmentFunTime){
+             onClickBack()
+            }else if (active is FragmentHome){
+           /*     if (back_pressed + TIME_INTERVAL > System.currentTimeMillis()) {
+                    onClickBack()
+                } else {
+                    Toast.makeText(
+                        getBaseContext(),
+                        "Press once again to exit!", Toast.LENGTH_SHORT
+                    )
+                        .show();
+                }
+                back_pressed = System.currentTimeMillis();
+*/
+
+                finish()
+
+            }
+            else{
+                super.onBackPressed()
+            }
         }
 
     }
@@ -149,18 +200,21 @@ class ActivityDashboard : AppCompatActivity(), FragmentHome.Callback , FragmentF
     }
 
     override fun onClickBack() {
-        val fragment1: Fragment = FragmentHome(this)
-        active = fragment1
         binding.bottomNavigationView.selectedItemId = R.id.home
-        fm.beginTransaction().add(binding.fragmentContainerView.id, fragment1, "1").commit()
     }
 
     override fun onCLickBackButton() {
         toggleDrawer()
     }
 
-   /* override fun onClickHideBottom() {
-        binding.bottomNavigationView.visibility = View.GONE
+/*    override fun onClickonFuntimeBackButton() {
+       onClickBack()
     }*/
+    /**
+     * This method will start service to preCache videos from remoteUrl in to Cache Directory
+     * So the Player will not reload videos from server if they are already loaded in cache
+     */
+
+
 
 }

@@ -645,6 +645,15 @@
     <string name="create_album">Create Album</string>
     <string name="create">CREATE</string>
     <string name="add_photo_videos">Add Photo/Videos</string>
+    <string name="search_music">Search Music</string>
+    <string name="skip">Skip</string>
+    <string name="comment">Comment</string>
+    <string name="ic_live_filter">Live</string>
+    <string name="tap_to_tag_more_people">Tap to tag more Poeple</string>
+    <string name="tag_people">Tag People</string>
+    <string name="add_location">Add Location</string>
+    <string name="everyone_can_reply">Everyone can Reply</string>
+    <string name="post">Post</string>
     <string-array name="marrage">
         <item><font fgcolor="#B7B7B7">Marital Status</font></item>
         <item><font fgcolor="#B7B7B7">Single</font></item>

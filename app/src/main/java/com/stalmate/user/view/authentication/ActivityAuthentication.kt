@@ -23,9 +23,14 @@ class ActivityAuthentication : AppCompatActivity() {
 
         val fragmentManager: FragmentManager = supportFragmentManager
         val currentFragment: Fragment? = fragmentManager.findFragmentById(R.id.nav_host_fragment)
-
-
-
+        val inflater = navController.navInflater
+        val graph = inflater.inflate(R.navigation.loginsignupnavigation)
+        if (intent.getStringExtra("screen")!=null && intent.getStringExtra("screen")=="login"){
+            graph.setStartDestination(R.id.fragmentLogin)
+        }else{
+            graph.setStartDestination(R.id.fragmentLanguage)
+        }
+        navController.graph=graph
     }
 
 

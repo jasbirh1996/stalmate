@@ -56,11 +56,7 @@ public class VideoFilterWorker extends ListenableWorker {
         String output = getInputData().getString(KEY_OUTPUT);
         Mp4Composer composer = new Mp4Composer(input, output);
         Size size = null;
-        try {
-            size = VideoUtil.getDimensions(input);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        size = VideoUtil.getDimensions(input);
         composer.videoBitrate((int) (.07 * 30 * size.getWidth() * size.getHeight()));
         VideoFilter filter = VideoFilter.valueOf(getInputData().getString(KEY_FILTER));
         switch (filter) {
