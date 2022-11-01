@@ -25,8 +25,7 @@ class ProfessionListAdapter(
         parent: ViewGroup,
         viewType: Int
     ): ProfessionListAdapter.AlbumViewHolder {
-        var view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_profession_profile, parent, false)
+        var view = LayoutInflater.from(parent.context).inflate(R.layout.item_profession_profile, parent, false)
         return AlbumViewHolder(DataBindingUtil.bind<ItemProfessionProfileBinding>(view)!!)
     }
 
@@ -41,20 +40,18 @@ class ProfessionListAdapter(
     fun submitList(albumList: List<Profession>) {
         list.clear()
         list.addAll(albumList)
-        notifyDataSetChanged()
     }
 
     fun addToList(feedList:Profession) {
         val size = list.size
         list.add(feedList)
         val sizeNew = list.size
-        notifyDataSetChanged()
+        notifyItemRangeChanged(size, sizeNew)
     }
 
 
     public interface Callbackk {
         fun onClickItemProfessionEdit(position: Profession, index: Int)
-        fun deleteitem()
     }
 
     inner class AlbumViewHolder(var binding: ItemProfessionProfileBinding) :
@@ -63,8 +60,8 @@ class ProfessionListAdapter(
         fun bind(profession: Profession) {
 
 
-            binding.tvComapny.text = profession.designation
-            binding.tvgesignation.text = profession.company_name
+            binding.tvComapny.text = profession.company_name
+            binding.tvgesignation.text = profession.designation
             binding.tvFrom.text = profession.from
 
             if (profession.currently_working_here=="Yes"){
@@ -82,15 +79,10 @@ class ProfessionListAdapter(
             }
 
             binding.ivedit.setOnClickListener {
-                callback.onClickItemProfessionEdit(
-                    list[bindingAdapterPosition],
-                    bindingAdapterPosition
-                )
+                callback.onClickItemProfessionEdit(list[bindingAdapterPosition], bindingAdapterPosition)
             }
         }
     }
-
-
 
     fun deleteProfessoin(id: String, position: Int, lifecycleObserver: LifecycleOwner) {
         val hashMap = HashMap<String, String>()
@@ -108,6 +100,4 @@ class ProfessionListAdapter(
             }
         }
     }
-
-
 }

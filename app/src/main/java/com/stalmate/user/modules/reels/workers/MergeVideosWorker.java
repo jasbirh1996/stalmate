@@ -15,6 +15,8 @@ import com.googlecode.mp4parser.authoring.builder.DefaultMp4Builder;
 import com.googlecode.mp4parser.authoring.container.mp4.MovieCreator;
 import com.googlecode.mp4parser.authoring.tracks.AppendTrack;
 
+
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
@@ -33,6 +35,7 @@ public class MergeVideosWorker extends Worker {
     @NonNull
     @Override
     public Result doWork() {
+
         String[] paths = getInputData().getStringArray(KEY_VIDEOS);
         String output = getInputData().getString(KEY_OUTPUT);
         List<Track> audios = new ArrayList<>();

@@ -46,10 +46,6 @@ class FragmentReels : Fragment() {
         tabLayout!!.tabGravity = TabLayout.GRAVITY_FILL
 
         /*TAb ViewPager Adapter*/
-
-
-
-
         viewPager!!.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabLayout))
 
 

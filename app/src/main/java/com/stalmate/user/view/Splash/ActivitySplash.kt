@@ -15,10 +15,11 @@ import com.stalmate.user.R
 import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.view.OnBoarding.ActivityOnBoardingScreen
+import com.stalmate.user.view.authentication.ActivityAuthentication
 import com.stalmate.user.view.dashboard.ActivityDashboard
 
 class ActivitySplash : BaseActivity() {
-    val SPLASH_DURATION: Long = 2000
+    val SPLASH_DURATION: Long = 1000
    private lateinit var prefManager: PrefManager
     private  lateinit var context: ActivitySplash
     override fun onClick(viewId: Int, view: View?) {
@@ -36,10 +37,18 @@ class ActivitySplash : BaseActivity() {
                 startActivity(Intent(applicationContext, ActivityDashboard::class.java))
                 finish()
             } else {
-                startActivity(Intent(applicationContext, ActivityOnBoardingScreen::class.java))
+
+                if (prefManager.keyIsOldusere){
+                  startActivity(Intent(context, ActivityAuthentication::class.java).putExtra("screen","login").addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK))
+                }else{
+                    startActivity(Intent(applicationContext, ActivityOnBoardingScreen::class.java))
+                }
+
                 finish()
             }
             finish()
         }, SPLASH_DURATION)
     }
+
+
 }

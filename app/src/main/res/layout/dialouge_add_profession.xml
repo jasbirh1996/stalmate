@@ -182,8 +182,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/workPeriod" />
 
-
-
                 <TextView
                     android:id="@+id/btnSave"
                     style="@style/customButtonStyle"

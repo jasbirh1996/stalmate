@@ -33,7 +33,6 @@ import com.google.android.exoplayer2.upstream.cache.SimpleCache
 import com.google.android.exoplayer2.util.Util
 import com.stalmate.user.R
 import com.stalmate.user.base.App
-import com.stalmate.user.base.App.Companion.cache
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -70,7 +69,7 @@ class StoryDisplayFragment : Fragment(),
     private lateinit var mHttpDataSourceFactory: HttpDataSource.Factory
     private lateinit var mDefaultDataSourceFactory: DefaultDataSourceFactory
     private lateinit var mCacheDataSource: CacheDataSource
-    private val cache: SimpleCache = App.cache
+    private val cache: SimpleCache = App.getInstance().simpleAppCache!!
 
 
     lateinit var storiesProgressView: StoriesProgressView
@@ -291,7 +290,7 @@ class StoryDisplayFragment : Fragment(),
     }
 
     private fun setUpUi() {
-        val touchListener = object : OnSwipeTouchListener(activity!!) {
+        val touchListener = object : OnSwipeTouchListener(requireActivity()) {
             override fun onSwipeTop() {
                 Toast.makeText(activity, "onSwipeTop", Toast.LENGTH_LONG).show()
             }

@@ -18,7 +18,7 @@ final public class VideoUtil {
     private static final String TAG = "ClipUtil";
 
     @NotNull
-    public static Size getDimensions(String path) throws IOException {
+    public static Size getDimensions(String path) {
         int width = 0, height = 0;
         MediaMetadataRetriever mmr = null;
         try {
@@ -34,7 +34,11 @@ final public class VideoUtil {
             Log.e(TAG, "Unable to extract thumbnail from " + path, e);
         } finally {
             if (mmr != null) {
-                mmr.release();
+                try {
+                    mmr.release();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
 

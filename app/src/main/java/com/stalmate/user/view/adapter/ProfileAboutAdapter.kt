@@ -40,8 +40,6 @@ class ProfileAboutAdapter(
     override fun onBindViewHolder(holder: ProfileAboutAdapter.FeedViewHolder, position: Int) {
         holder.bind(list.get(position))
 
-
-
     }
 
     override fun getItemCount(): Int {

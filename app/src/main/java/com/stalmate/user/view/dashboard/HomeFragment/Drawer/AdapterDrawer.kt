@@ -1,6 +1,7 @@
 package com.stalmate.user.view.dashboard.HomeFragment.Drawer
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.util.Log
@@ -31,7 +32,6 @@ class DrawerAdapter(val viewModel: AppViewModel,
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-
         holder.bind(list.get(position))
     }
 
@@ -61,7 +61,9 @@ class DrawerAdapter(val viewModel: AppViewModel,
                 when(bindingAdapterPosition){
                         13 ->{
                             PrefManager.getInstance(context)!!.keyIsLoggedIn = false
-                        context.startActivity(Intent(context, ActivityAuthentication::class.java))
+
+                        context.startActivity(Intent(context, ActivityAuthentication::class.java).putExtra("screen","login").addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK))
+                            (context as Activity).finishAffinity()
                     }
 
                 }

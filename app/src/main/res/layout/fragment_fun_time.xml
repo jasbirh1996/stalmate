@@ -50,18 +50,51 @@
              app:layout_constraintTop_toTopOf="parent" />
 
 
+         <androidx.constraintlayout.widget.ConstraintLayout
+             android:id="@+id/layoutImagenVideo"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_marginEnd="10dp"
+             android:alpha="0"
+             app:layout_constraintBottom_toBottomOf="@+id/ivAddButton"
+             app:layout_constraintEnd_toStartOf="@+id/ivAddButton"
+             app:layout_constraintTop_toTopOf="@+id/ivAddButton">
+
+            <TextView
+                android:id="@+id/tvImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins"
+                android:text="Image"
+                android:textSize="@dimen/_12sdp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvVideo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:fontFamily="@font/poppins"
+                android:text="Video"
+                android:textSize="@dimen/_12sdp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/tvImage"
+                app:layout_constraintTop_toTopOf="parent" />
+
+         </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
       </androidx.constraintlayout.widget.ConstraintLayout>
 
-      <fr.castorflex.android.verticalviewpager.VerticalViewPager
-          android:id="@+id/rvRecyclerView"
+      <FrameLayout
+          android:id="@+id/frame"
           android:layout_width="match_parent"
           android:layout_height="0dp"
           android:layout_marginTop="5dp"
-          tools:listitem="@layout/item_fun_time"
-          android:visibility="gone"
-          android:orientation="vertical"
+          android:visibility="visible"
           android:background="@color/white"
-          app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
           app:layout_constraintBottom_toBottomOf="parent"
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintStart_toStartOf="parent"
@@ -73,6 +106,7 @@
           android:layout_width="match_parent"
           android:layout_height="0dp"
           android:layout_marginTop="8dp"
+          android:visibility="gone"
           app:layout_constraintBottom_toBottomOf="parent"
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintStart_toStartOf="parent"

@@ -48,7 +48,7 @@ interface ApiInterface {
     fun getFuntimeLikeUnlike(@Body map: HashMap<String, String>): Call<ModelFuntimeLikeResponse>
 
     @POST(Constants.URL_FUNTIME_MUSIC_LIST)
-    fun getFuntimeMusicList(): Call<ModelMusicListResponse>
+    fun getFuntimeMusicList(@Body map: HashMap<String, String>): Call<ModelMusicListResponse>
 
     @GET(Constants.URL_CATEGORY_LIST)
     fun getCategoryList(): Call<ModelCategoryResponse>
@@ -77,8 +77,6 @@ interface ApiInterface {
 
     @POST(Constants.URL_BLOCKED_LIST)
     fun getBlockedList(@Body map: HashMap<String, String>): Call<ModelBlockedUser>
-
-
 
 
     @POST(Constants.URL_LOGIN)
@@ -118,12 +116,8 @@ interface ApiInterface {
     fun removeUserFromSuggestions(@Body map: HashMap<String, String>): Call<CommonModelResponse>
 
 
-
-
-
     @POST(Constants.url_send_follower_request)
     fun requestBeFollower(@Body map: HashMap<String, String>): Call<ModelSuccess>
-
 
 
     @GET(Constants.GET_PROFILE_API)
@@ -134,22 +128,23 @@ interface ApiInterface {
 
 
     @GET(Constants.GET_OTHER_USER_PROFILE_API)
-    fun getOtherUserProfileDetails(@Query("id_user") id_user :String): Call<ModelUser>
+    fun getOtherUserProfileDetails(@Query("id_user") id_user: String): Call<ModelUser>
 
     @GET(Constants.URL_OTP_REGISTRATION)
-    fun setOtpVerifyRegistration(@Query("email") email :String, @Query("otp") otp :String): Call<CommonModelResponse>
+    fun setOtpVerifyRegistration(
+        @Query("email") email: String,
+        @Query("otp") otp: String
+    ): Call<CommonModelResponse>
 
     @GET(Constants.URL_SEARCH_UNIVERCITY)
-    fun setSearch(@Query("search") search :String): Call<ModelSearch>
+    fun setSearch(@Query("search") search: String): Call<ModelSearch>
 
     @GET(Constants.URL_SEARCH_BRACNCHLIST)
-    fun setSearchBranch(@Query("search") search :String): Call<ModelSearch>
+    fun setSearchBranch(@Query("search") search: String): Call<ModelSearch>
 
 
     @POST(Constants.URL_GLOBAL_SEARCH)
     fun getGlobalSearch(@Body map: HashMap<String, String>): Call<ModelGlobalSearch>
-
-
 
 
     @Multipart
@@ -158,7 +153,7 @@ interface ApiInterface {
         @Part("first_name") firstName: RequestBody,
         @Part("last_name") lastName: RequestBody,
         @Part("about") about: RequestBody,
-       /* @Part("number") number: RequestBody,*/
+        /* @Part("number") number: RequestBody,*/
         @Part("dob") dob: RequestBody,
         @Part("marital_status") maritalStatus: RequestBody,
         @Part("url") url: RequestBody,
@@ -175,12 +170,29 @@ interface ApiInterface {
 
     @Multipart
     @POST(Constants.UPLOADE_ALBUM_IMAGE_API_FILE)
-    fun addAlbumImage(@Part cover_img: MultipartBody.Part,
-                               @Part("album_id") firstName: RequestBody,): Call<CommonModelResponse>
+    fun addAlbumImage(
+        @Part cover_img: MultipartBody.Part,
+        @Part("album_id") firstName: RequestBody,
+    ): Call<CommonModelResponse>
 
 
     @GET(Constants.URL_PHOTO_ALBUM)
     fun getAlbumList(): Call<ModelAlbumsResponse>
+
+
+    @Multipart
+    @POST(Constants.ADD_REEL)
+    fun postReel(
+        @Part cover_img: MultipartBody.Part,
+        @Part("file_type") file_type: RequestBody,
+        @Part("text") text: RequestBody,
+        @Part("tag_id") tag_id: RequestBody,
+        @Part("location") location: RequestBody,
+        @Part("privacy") privacy: RequestBody,
+        @Part("privacy_data") privacy_data: RequestBody,
+        @Part("deviceId") deviceId: RequestBody,
+        @Part("deviceToken") deviceToken: RequestBody,
+    ): Call<CommonModelResponse>
 
 
 /*

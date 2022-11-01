@@ -144,11 +144,12 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterView
 
             String name = filter.name().toLowerCase(Locale.US);
             holder.name.setText(name.substring(0, 1).toUpperCase() + name.substring(1));
-            holder.itemView.setOnClickListener(view -> {
+
+       /*     holder.itemView.setOnClickListener(view -> {
                 if (mListener != null) {
                     mListener.onSelectFilter(filter);
                 }
-            });
+            });*/
         }
     }
 

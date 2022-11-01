@@ -79,10 +79,10 @@ open class AppViewModel : ViewModel() {
     }
 
     var funtimeMusicLiveData: LiveData<ModelMusicListResponse?> = MutableLiveData<ModelMusicListResponse?>()
-    fun funtimeMusicLiveData() {
+    fun funtimeMusicLiveData(map: HashMap<String, String>) {
         val temp = MutableLiveData<ModelMusicListResponse?>()
         funtimeMusicLiveData = temp
-        getResult(temp, apiInterface.getFuntimeMusicList())
+        getResult(temp, apiInterface.getFuntimeMusicList(map))
     }
 
 
@@ -381,6 +381,22 @@ open class AppViewModel : ViewModel() {
     }
 
 
+
+    var postReelLiveData: LiveData<CommonModelResponse?> = MutableLiveData<CommonModelResponse?>()
+    fun postReel(@Part album_image: MultipartBody.Part? = null,
+                 @Part("file_type") file_type: RequestBody,
+                 @Part("text") text: RequestBody,
+                 @Part("tag_id") tag_id: RequestBody,
+                 @Part("location") location: RequestBody,
+                 @Part("privacy") privacy: RequestBody,
+                 @Part("privacy_data") privacy_data: RequestBody,
+                 @Part("deviceId") deviceId: RequestBody,
+                 @Part("deviceToken") deviceToken: RequestBody,
+                 ) {
+        val temp = MutableLiveData<CommonModelResponse?>()
+        postReelLiveData = temp
+        getResult(temp, apiInterface.postReel(album_image!!,file_type, text, tag_id, location, privacy, privacy_data, deviceId, deviceToken))
+    }
 
 }
 

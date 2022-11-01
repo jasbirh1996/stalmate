@@ -10,10 +10,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.stalmate.user.R
 import com.stalmate.user.databinding.ItemMusicLayoutBinding
+import com.stalmate.user.model.User
 import com.stalmate.user.viewmodel.AppViewModel
 
 class AdapterFunTimeMusic(val viewModel: AppViewModel,
-                          val context: Context,
+                          val context: Context,var isBig:Boolean,var callback: Callback
                          ) : RecyclerView.Adapter<AdapterFunTimeMusic.ViewHolder>() {
 
     var list = ArrayList<ResultMusic>()
@@ -28,6 +29,13 @@ class AdapterFunTimeMusic(val viewModel: AppViewModel,
 
             binding.tvMusicName.text = funtimeMusicResponse.sound_name
             binding.tvMusicDescription.text = funtimeMusicResponse.artist_name
+
+
+
+            binding.root.setOnClickListener {
+                    callback.onSongSelected(funtimeMusicResponse)
+            }
+
 
 
         }
@@ -49,12 +57,21 @@ class AdapterFunTimeMusic(val viewModel: AppViewModel,
     }
 
 
-    fun submitList(funtimeMusicList: List<ResultMusic>) {
+
+    fun addToList(users: List<ResultMusic>) {
+        val size = list.size
+        list.addAll(users)
+        val sizeNew = list.size
+        notifyItemRangeChanged(size, sizeNew)
+    }
+    fun submitList(users: List<ResultMusic>) {
         list.clear()
-        list.addAll(funtimeMusicList)
+        list.addAll(users)
         notifyDataSetChanged()
     }
 
-
+    public interface Callback{
+        fun onSongSelected(song:ResultMusic)
+    }
 
 }

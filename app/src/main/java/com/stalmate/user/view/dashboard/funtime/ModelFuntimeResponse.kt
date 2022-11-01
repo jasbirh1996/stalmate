@@ -1,11 +1,14 @@
 package com.stalmate.user.view.dashboard.funtime
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
 data class ModelFuntimeResponse(
     val message: String,
     val results: ArrayList<ResultFuntime>,
     val status: Boolean
 )
-
+@Parcelize
 data class ResultFuntime(
     val Created_date: String,
     val artist_name: String,
@@ -25,4 +28,4 @@ data class ResultFuntime(
     val tag_id: String,
     val text: String,
     val url: String
-)
+):Parcelable

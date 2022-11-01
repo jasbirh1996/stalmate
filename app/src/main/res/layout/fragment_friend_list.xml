@@ -34,6 +34,7 @@
                         android:id="@+id/rvFriends"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/ivSortIcon" />
 
@@ -50,9 +51,7 @@
                         app:lottie_loop="true"
                         app:lottie_rawRes="@raw/pink_loading" />
 
-
                     <!--Shimmer Effect-->
-
 
                     <ImageView
                         android:id="@+id/ivSortIcon"
@@ -112,7 +111,7 @@
                         android:id="@+id/layoutFilter"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="10dp"
+                        android:layout_marginEnd="20dp"
                         android:visibility="gone"
                         app:layout_constraintBottom_toBottomOf="@+id/ivSortIcon"
                         app:layout_constraintEnd_toStartOf="@+id/ivSortIcon"

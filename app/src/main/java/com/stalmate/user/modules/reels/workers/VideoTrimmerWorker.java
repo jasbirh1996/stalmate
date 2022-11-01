@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 
+
 public class VideoTrimmerWorker extends Worker {
 
     private static final int DEFAULT_BUFFER_SIZE = 1024 * 1024;

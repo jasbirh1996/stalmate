@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 public class Song {
-    public int id;
+    public String id;
     public String title;
     @Nullable
     public String artist;

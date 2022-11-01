@@ -28,7 +28,6 @@ class ActivityPhotoGallery : BaseActivity() {
         setUpNavigation()
 
 
-
     }
 
     fun setUpNavigation() {

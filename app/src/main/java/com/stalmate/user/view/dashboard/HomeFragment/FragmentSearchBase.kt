@@ -74,12 +74,10 @@ class FragmentSearchBase : BaseFragment(), FragmentGlobalSearch.Callback {
                     )
                     Handler(Looper.myLooper()!!).post {
                         if (childFragmentManager.findFragmentById(binding.frame.id) is FragmentGlobalSearch) {
-                            var fragment =
-                                childFragmentManager.findFragmentByTag(backStateName) as FragmentGlobalSearch
+                            var fragment = childFragmentManager.findFragmentByTag(backStateName) as FragmentGlobalSearch
                             fragment.hitApi(true, searchData)
                         } else if (childFragmentManager.findFragmentById(binding.frame.id) is FragmentPeopleSearch) {
-                            var fragment =
-                                childFragmentManager.findFragmentByTag(backStateName) as FragmentPeopleSearch
+                            var fragment = childFragmentManager.findFragmentByTag(backStateName) as FragmentPeopleSearch
                             fragment.hitApi(true, searchData)
                         }
                     }

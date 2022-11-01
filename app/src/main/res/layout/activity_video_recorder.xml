@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@color/black"
     android:layout_height="match_parent"
     tools:context=".modules.reels.activity.ActivityVideoRecorder">
 
@@ -13,27 +14,61 @@
         android:layout_height="match_parent"
         app:cameraAudio="on"
         app:cameraAudioCodec="aac"
-        app:cameraEngine="camera1"
+        app:cameraEngine="camera2"
         app:cameraFacing="front"
-        app:cameraPreviewFrameRate="60"
-        app:cameraPreviewFrameRateExact="true"
-        app:cameraMode="picture"
+        app:cameraPreviewFrameRate="30"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+<!--
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width=""
+        android:layout_height="">
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>-->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layoutCameraControllers"
         android:layout_width="match_parent"
-        android:padding="20dp"
         android:layout_height="match_parent">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layoutSelectedMusic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="80dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="80dp"
+            android:alpha=".7"
+            android:background="@drawable/selected_music_background"
+            android:padding="@dimen/_10sdp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/segmented_progressbar">
+
+            <TextView
+                android:id="@+id/tvMusicName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Song Name"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <pt.tornelas.segmentedprogressbar.SegmentedProgressBar
             android:id="@+id/segmented_progressbar"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="5dp"
             android:layout_margin="8dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -47,52 +82,171 @@
             app:timePerSegment="2000"
             app:totalSegments="10" />
 
-        <ImageView
-            android:id="@+id/buttonColorFilterIcon"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="10dp"
-            android:padding="10dp"
-            android:src="@drawable/ic_live_filter"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/buttonMusic" />
 
-
-        <ImageView
-            android:id="@+id/buttonMusic"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:padding="10dp"
-            android:src="@drawable/ic_post_music"
+            android:layout_marginEnd="20dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/segmented_progressbar" />
+            app:layout_constraintTop_toBottomOf="@+id/segmented_progressbar">
 
-        <ImageView
-            android:id="@+id/buttonSpeed"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="10dp"
-            android:padding="10dp"
-            android:src="@drawable/speedometer"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/buttonColorFilterIcon" />
 
-        <ImageView
-            android:id="@+id/buttonFlash"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="10dp"
-            android:padding="10dp"
-            android:src="@drawable/ic_live_flash"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/buttonSpeed" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/buttonColorFilterIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/buttonDurationTimer">
+
+
+                <ImageView
+                    android:id="@+id/ivFilter"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_crtpost_magic_stick"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tvFilter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins"
+                    android:text="Filter"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_12sdp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/ivFilter" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/buttonDurationTimer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/buttonSpeed">
+
+                <ImageView
+
+                    android:id="@+id/ivTimer"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_crtpost_timer_one"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tvTimer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins"
+                    android:text="Timer"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_12sdp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/ivTimer" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/buttonMusic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+
+                    android:id="@+id/ivMusic"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_crtpost_top_music"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+                <TextView
+                    android:id="@+id/tvMusic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins"
+                    android:text="Music"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_12sdp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/ivMusic" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/buttonSpeed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/buttonMusic">
+
+                <ImageView
+
+                    android:id="@+id/ivSpeed"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_crtpost_speed"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+                <TextView
+                    android:id="@+id/tvSped"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins"
+                    android:text="Speed"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_12sdp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/ivSpeed" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <ImageView
+                android:id="@+id/buttonFlash"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:padding="10dp"
+                android:src="@drawable/ic_live_flash"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/buttonColorFilterIcon" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         <ImageView
             android:id="@+id/buttonCameraChanger"
             android:layout_width="50dp"
-            android:padding="10dp"
             android:layout_height="50dp"
+            android:layout_marginEnd="20dp"
+            android:padding="10dp"
             android:src="@drawable/ic_live_rotate_camera"
             app:layout_constraintBottom_toBottomOf="@+id/buttonRecord"
             app:layout_constraintEnd_toEndOf="parent"
@@ -103,6 +257,7 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
             android:src="@drawable/color_filter_icon"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -140,7 +295,7 @@
             android:id="@+id/buttonDone"
             android:layout_width="60dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
+            android:layout_marginEnd="20dp"
             android:layout_marginBottom="20dp"
             android:background="@drawable/small_done_button"
             android:elevation="10dp"
@@ -148,10 +303,60 @@
             android:padding="10dp"
             android:src="@drawable/color_filter_icon"
             android:text="Next"
-            android:textSize="12sp"
             android:textColor="@color/black"
+            android:textSize="12sp"
+            android:visibility="visible"
             app:layout_constraintBottom_toTopOf="@+id/speeds"
-            app:layout_constraintEnd_toEndOf="@+id/buttonColorFilterIcon" />
+            app:layout_constraintEnd_toEndOf="parent" />
+
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabbarduration"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+
+            android:layout_marginStart="20dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/round_very_small_corner_very_light_primary"
+            android:padding="6dp"
+
+            app:layout_constraintBottom_toTopOf="@+id/tabbarspeed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:tabBackground="@drawable/round_very_small_corner_very_light_primary"
+            app:tabIndicator="@drawable/round_very_small_corner_white"
+            app:tabIndicatorColor="@color/white"
+            app:tabIndicatorGravity="stretch"
+            app:tabMaxWidth="0dp"
+            app:tabMode="fixed"
+            app:tabRippleColor="@color/white"
+            app:tabSelectedTextColor="@color/colorPrimary"
+            app:tabTextAppearance="@style/MineCustomTabText"
+            app:tabTextColor="@color/app_color"
+            app:tabUnboundedRipple="true" />
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabbarspeed"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+
+            android:layout_marginStart="20dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/round_very_small_corner_very_light_primary"
+
+            android:padding="6dp"
+            app:layout_constraintBottom_toTopOf="@+id/rvFilters"
+            app:layout_constraintStart_toStartOf="parent"
+            app:tabBackground="@drawable/round_very_small_corner_very_light_primary"
+            app:tabIndicator="@drawable/round_very_small_corner_white"
+            app:tabIndicatorColor="@color/white"
+            app:tabIndicatorGravity="stretch"
+            app:tabMaxWidth="0dp"
+            app:tabMode="fixed"
+            app:tabRippleColor="@color/white"
+            app:tabSelectedTextColor="@color/colorPrimary"
+            app:tabTextAppearance="@style/MineCustomTabText"
+            app:tabTextColor="@color/app_color"
+            app:tabUnboundedRipple="true" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvFilters"
@@ -166,7 +371,7 @@
             app:layout_constraintBottom_toTopOf="@+id/buttonRecord"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            tools:visibility="visible" />
+            tools:visibility="gone" />
 
 
         <info.hoang8f.android.segmented.SegmentedGroup
@@ -174,11 +379,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
-            android:layout_marginBottom="20dp"
 
+            android:layout_marginBottom="10dp"
             android:orientation="horizontal"
             android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@+id/rvFilters"
+            app:layout_constraintBottom_toTopOf="@+id/tabbarduration"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:sc_border_width="2dp"
@@ -230,7 +435,14 @@
         </info.hoang8f.android.segmented.SegmentedGroup>
 
 
-
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:visibility="gone"
+        android:id="@+id/selectedPhoto"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

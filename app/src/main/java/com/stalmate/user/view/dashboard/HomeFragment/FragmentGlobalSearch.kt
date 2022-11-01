@@ -35,7 +35,6 @@ class FragmentGlobalSearch : BaseFragment(),
         fun onClickOnSeeMore(searData:String,type:String)
     }
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

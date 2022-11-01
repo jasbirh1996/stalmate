@@ -5,10 +5,12 @@ import android.accounts.Account
 import android.accounts.AccountManager
 import android.content.ContentResolver
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.*
+import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
@@ -38,8 +40,7 @@ import okhttp3.RequestBody
 import java.io.File
 import java.util.*
 
-class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
-    ProfessionListAdapter.Callbackk,
+class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, ProfessionListAdapter.Callbackk,
     AdapterFeed.Callbackk , DialogVerifyNumber.Callbackk{
 
     private lateinit var binding: ActivityProfileEditBinding
@@ -59,10 +60,12 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
     private lateinit var blockedUserAdapter: BlockedUserAdapter
     private  var selectedMarriageStatus=""
     lateinit var feedAdapter: AdapterFeed
+    var verifyPhoneNumber = ""
 
     override fun onClick(viewId: Int, view: View?) {
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_profile_edit)
@@ -122,6 +125,7 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
         getUserProfileData()
     }*/
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun clickLister() {
 
         binding.idCoverPhoto.setOnClickListener {
@@ -137,10 +141,9 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
 
 
         binding.btnCrateAccount.setOnClickListener {
-
             if (ValidationHelper.isNull(selectedMarriageStatus)) {
                 makeToast("Please select marriage Status")
-            } else if (isNumberVerify) {
+            } else if (verifyPhoneNumber.isNotEmpty()) {
                 updateProfileApiHit()
             } else {
                 makeToast("Please verify the mobile number")
@@ -148,7 +151,6 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
         }
 
         binding.layout.tvAddMore.setOnClickListener {
-
             var dialogAddEditEducation = DialogAddEditEducation(
                 this,
                 Education("", "", 0, "", "", "", "", "", "", ""),
@@ -158,8 +160,7 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
                     override fun onSuccessfullyEditedEducation(education: Education) {
                         userData.results.profile_data[0].education.add(education)
                         educationAdapter.addToList(education)
-//                        networkViewModel.profileLiveData.postValue(userData)
-
+                        networkViewModel.profileLiveData.postValue(userData)
                     }
                 })
             dialogAddEditEducation.show()
@@ -175,9 +176,8 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
                 object : DialogAddEditProfession.Callbackk {
                     override fun onSuccessfullyEditedProfession(profession: Profession) {
                         userData.results.profile_data[0].profession.add(profession)
-//                        networkViewModel.profileLiveData.postValue(userData)
+                        networkViewModel.profileLiveData.postValue(userData)
                         professionListAdapter.addToList(profession)
-
                     }
                 })
             dialogAddEditProfession.show()
@@ -204,8 +204,6 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
                                this
                            )
                            dialoguenumberVerify.show()
-
-
                        } else {
                            makeToast(it.message)
                        }
@@ -274,6 +272,7 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
                 var hashMap = HashMap<String, String>()
                 networkViewModel.getProfileData(hashMap)
                 onBackPressed()
+                makeToast(it!!.message)
 
             }
         })
@@ -402,8 +401,9 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
         binding.layout.etLastName.setText(userData.results.last_name)
         binding.layout.bio.setText(userData.results.about)
         binding.layout.filledTextEmail.setText(userData.results.email)
-
+        verifyPhoneNumber = userData.results.number
         binding.layout.etNumber.setText(userData.results.number)
+
         binding.layout.etHowTown.setText(userData.results.profile_data[0].home_town)
         binding.layout.etCurrentCity.setText(userData.results.city)
 
@@ -422,15 +422,19 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
 
         binding.etWebsite.setText(userData.results.company)
         educationAdapter = EducationListAdapter(networkViewModel, this, this)
+
         binding.layout.rvEducation.adapter = educationAdapter
         binding.layout.rvEducation.layoutManager = LinearLayoutManager(this)
-        educationAdapter.submitList(userData.results.profile_data.get(0).education)
+        educationAdapter.submitList(userData.results.profile_data[0].education)
+
+        educationAdapter.notifyDataSetChanged()
         professionListAdapter = ProfessionListAdapter(networkViewModel, this, this)
         binding.layout.rvProfession.adapter = professionListAdapter
         binding.layout.rvProfession.layoutManager = LinearLayoutManager(this)
 
-        professionListAdapter.submitList(userData.results.profile_data.get(0).profession)
+        professionListAdapter.submitList(userData.results.profile_data[0].profession)
 
+        professionListAdapter.notifyDataSetChanged()
         binding.rvFeeds.layoutManager = LinearLayoutManager(this)
 
         networkViewModel.getFeedList("", HashMap())
@@ -451,8 +455,6 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
             networkViewModel,
             true,
             object : DialogAddEditEducation.Callbackk {
-
-
                 override fun onSuccessfullyEditedEducation(education: Education) {
                     userData.results.profile_data[0].education[0] = education
                     networkViewModel.profileLiveData.postValue(userData)
@@ -476,9 +478,6 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
         dialogAddEditProfession.show()
     }
 
-    override fun deleteitem() {
-
-    }
 
     override fun onClickOnViewComments(postId: Int) {
 
@@ -670,7 +669,7 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
     }
 
     override fun onSuccessFullyAddNumber() {
-        isNumberVerify = true
+        getUserProfileData()
     }
 
 

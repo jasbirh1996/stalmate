@@ -60,14 +60,16 @@ class DialogVerifyNumber(
         binding.tventeredNumber.text = "Enter OTP Code sent to"+" "+"+"+number
 
 
+        binding.btnCloseDialogue.setOnClickListener {
+            dismiss()
+
+        }
+
         binding.btnprocess.setOnClickListener {
             if (isValid()){
                 hitNumberVerifyApi()
             }
         }
-
-
-
     }
 
     fun isValid():Boolean{

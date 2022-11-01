@@ -15,11 +15,12 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.stalmate.user.R
+import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentSyncBinding
 import com.stalmate.user.utilities.Constants
 
 
-class FragmentSync : Fragment() {
+class FragmentSync(var callback: Callback) : BaseFragment() {
     private lateinit var mAccount: Account
     lateinit var binding: FragmentSyncBinding
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,6 +48,10 @@ class FragmentSync : Fragment() {
             }else{
                 removeAccount()
             }
+        }
+
+        binding.btnNext.setOnClickListener {
+            callback.onClickOnNextButtonOnSyncPage()
         }
     }
 
@@ -88,7 +93,7 @@ class FragmentSync : Fragment() {
     }
 
     fun createSyncAccount(context: Context): Account {
-
+        showLoader()
         // Create the account type and default account
         val newAccount = Account(Constants.ACCOUNT_NAME, Constants.ACCOUNT_TYPE)
         // Get an instance of the Android account manager
@@ -116,5 +121,9 @@ class FragmentSync : Fragment() {
           */
             Account(Constants.ACCOUNT_NAME, Constants.ACCOUNT_TYPE)
         }
+    }
+
+    public interface Callback{
+        fun onClickOnNextButtonOnSyncPage()
     }
 }

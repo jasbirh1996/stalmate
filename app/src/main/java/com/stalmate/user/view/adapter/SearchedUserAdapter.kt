@@ -178,7 +178,7 @@ class SearchedUserAdapter(
             friend.img,
             R.drawable.user_placeholder
         )
-        binding.tvUserName.text = friend.first_name
+        binding.tvUserName.text = friend.first_name+ " " +friend.last_name
 
         if (friend.profile_data[0].profession.isNotEmpty()){
             binding.tvLineOne.text = friend.profile_data[0].profession[0].designation

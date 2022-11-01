@@ -43,6 +43,9 @@ object Constants {
     const val BLOCK_API="/auth_service/friend_api/block_user"
     const val URL_GLOBAL_SEARCH="auth_service/friend_api/search_list"
     const val START_DATE = "01"
+    const val ADD_REEL="auth_service/funtime_api/add_funtime"
+
+
 
 
     const val TYPE_FRIEND_REQUEST = "request"

@@ -37,7 +37,7 @@ public class FFmpegQueryExtension {
      */
     fun imageToVideo(input: String, output: String, second: Int, width: Int?, height: Int?): Array<String> {
         val fadeEndDuration = second - 0.5
-        Common.getFrameRate(input)
+       // Common.getFrameRate(input)
         val fade = "fps=$FRAME_RATE,fade=type=in:duration=1,fade=type=out:duration=0.5:start_time=$fadeEndDuration"
         val inputs: ArrayList<String> = ArrayList()
         inputs.apply {
@@ -45,14 +45,10 @@ public class FFmpegQueryExtension {
             add("1")
             add("-i")
             add(input)
-            add("-s")
-            add("${width}x${height}")
-            add("-vf")
-            add("format=yuv420p,$fade")
+
             add("-t")
             add("$second")
-            add("-preset")
-            add("ultrafast")
+
             add(output)
         }
         return inputs.toArray(arrayOfNulls<String>(inputs.size))

@@ -30,6 +30,7 @@
         android:layout_marginTop="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lets"
+        app:layout_constraintVertical_bias="0.0"
         tools:layout_editor_absoluteX="36dp">
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -49,14 +50,14 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
+            android:background="@drawable/style_spinner"
             android:gravity="center_vertical"
-            android:textSize="14sp"
             android:paddingVertical="10dp"
             android:textColor="@color/black"
-            android:background="@drawable/style_spinner"
+            android:textSize="14sp"
             app:layout_constraintEnd_toStartOf="@+id/gradutionHeading"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/gradutionHeading"/>
+            app:layout_constraintTop_toBottomOf="@+id/gradutionHeading" />
 
 
         <View
@@ -64,7 +65,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/grey1"
-            app:layout_constraintTop_toBottomOf="@+id/filledTextGraduation"/>
+            app:layout_constraintTop_toBottomOf="@+id/filledTextGraduation" />
 
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -74,8 +75,8 @@
             android:layout_marginTop="20dp"
             android:fontFamily="@font/poppins"
             android:text="@string/major_in"
-            android:textSize="14sp"
             android:textColor="@color/grey1"
+            android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/viewGradution" />
 
@@ -83,23 +84,23 @@
             android:id="@+id/filledTextMajor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingVertical="10dp"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:textSize="14sp"
-            android:gravity="center_vertical"
-            android:textColor="@color/black"
             android:background="@drawable/style_spinner"
+            android:gravity="center_vertical"
+            android:paddingVertical="10dp"
+            android:textColor="@color/black"
+            android:textSize="14sp"
             app:layout_constraintEnd_toStartOf="@+id/majorHeading"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/majorHeading"/>
+            app:layout_constraintTop_toBottomOf="@+id/majorHeading" />
 
         <View
             android:id="@+id/viewMajor"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/grey1"
-            app:layout_constraintTop_toBottomOf="@+id/filledTextMajor"/>
+            app:layout_constraintTop_toBottomOf="@+id/filledTextMajor" />
 
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -109,8 +110,8 @@
             android:layout_marginTop="20dp"
             android:fontFamily="@font/poppins"
             android:text="@string/country"
-            android:textSize="14sp"
             android:textColor="@color/grey1"
+            android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/filledTextMajor" />
 
@@ -118,16 +119,16 @@
             android:id="@+id/filledTextCountry"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingVertical="10dp"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:gravity="center_vertical"
-            android:textSize="14sp"
-            android:textColor="@color/black"
             android:background="@drawable/style_spinner"
+            android:gravity="center_vertical"
+            android:paddingVertical="10dp"
+            android:textColor="@color/black"
+            android:textSize="14sp"
             app:layout_constraintEnd_toStartOf="@+id/countryHeading"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/countryHeading"/>
+            app:layout_constraintTop_toBottomOf="@+id/countryHeading" />
 
 
         <View
@@ -135,7 +136,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/grey1"
-            app:layout_constraintTop_toBottomOf="@+id/filledTextCountry"/>
+            app:layout_constraintTop_toBottomOf="@+id/filledTextCountry" />
 
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -156,22 +157,36 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
+            android:background="@drawable/style_spinner"
             android:gravity="center_vertical"
-            android:textSize="14sp"
             android:paddingVertical="10dp"
             android:textColor="@color/black"
-            android:background="@drawable/style_spinner"
+            android:textSize="14sp"
             app:layout_constraintEnd_toStartOf="@+id/cityHeading"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cityHeading"/>
+            app:layout_constraintTop_toBottomOf="@+id/cityHeading" />
 
         <View
             android:id="@+id/viewCity"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/grey1"
-            app:layout_constraintTop_toBottomOf="@+id/filledTextCity"/>
+            app:layout_constraintTop_toBottomOf="@+id/filledTextCity" />
 
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/btn_next"
+            style="@style/customButtonStyle"
+            android:layout_width="290dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:gravity="center"
+            android:padding="14dp"
+            android:text="@string/next"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:textAllCaps="false" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
