@@ -142,7 +142,6 @@ fun mute(toMute:Boolean){
 
     override fun onCLickOnMenuButton() {
         toggleDrawer()
-
     }
 
     private fun toggleDrawer() {
@@ -174,7 +173,6 @@ fun mute(toMute:Boolean){
                 }
                 back_pressed = System.currentTimeMillis();
 */
-
                 finish()
 
             }

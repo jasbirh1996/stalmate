@@ -18,14 +18,16 @@ import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentreellistBinding
 import com.stalmate.user.modules.reels.Extensions.Companion.findFirstVisibleItemPosition
 import com.stalmate.user.modules.reels.Extensions.Companion.isAtTop
+import com.stalmate.user.modules.reels.player.holders.VideoReelViewHolder
 
 class ReelListFragment : BaseFragment() {
-    lateinit var adapter:ReelAdapter
+    lateinit var adapter: ReelAdapter
     private var controlsVisibleShowHide: Boolean = false;
     private val HIDE_THRESHOLD = 100;
     private var isHeaderAlreadyHidden = false;
     lateinit var binding: FragmentreellistBinding;
     private var scrolledDistance: Int = 0;
+    var videoAutoPlayHelper: VideoAutoPlayHelper? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,15 +42,17 @@ class ReelListFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         /* Set adapter (items are being used inside adapter, you can setup in your own way*/
         adapter = ReelAdapter(requireContext())
-        binding.recyclerView.layoutManager=LinearLayoutManager(requireContext(),RecyclerView.VERTICAL,false)
+        binding.recyclerView.layoutManager =
+            LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
         val snapHelper: SnapHelper = PagerSnapHelper()
         snapHelper.attachToRecyclerView(binding.recyclerView)
         binding.recyclerView.adapter = adapter
 
         /*Helper class to provide AutoPlay feature inside cell*/
-        val videoAutoPlayHelper =
+        videoAutoPlayHelper =
             VideoAutoPlayHelper(recyclerView = binding.recyclerView)
-        videoAutoPlayHelper.startObserving();
+        videoAutoPlayHelper!!.startObserving();
+
 
         /*Helper class to provide show/hide toolBar*/
 
@@ -166,20 +170,27 @@ class ReelListFragment : BaseFragment() {
     }
 
 
-    override fun onPause() {
-        super.onPause()
-        try {
-            Log.d("aklsjdasd","alsjd;las")
-            adapter.instaLikePlayerView.removePlayer()
+    override fun onStart() {
+            if (videoAutoPlayHelper!=null){
+                var viewholder =
+                    binding.recyclerView.findViewHolderForAdapterPosition(videoAutoPlayHelper!!.currentPlayingVideoItemPos);
+                if (viewholder!=null){
+                    val viewMainHolder = (viewholder as VideoReelViewHolder)
+                    viewMainHolder.customPlayerView.startPlaying()
+                }
 
-        }catch (e:Exception){
-            Log.d("aklsjdasd",e.message.toString())
-
-        }
+            }
+        super.onStart()
     }
 
 
-
+    override fun onPause() {
+        var viewholder =
+            binding.recyclerView.findViewHolderForAdapterPosition(videoAutoPlayHelper!!.currentPlayingVideoItemPos);
+        val viewMainHolder = (viewholder as VideoReelViewHolder)
+        viewMainHolder.customPlayerView.removePlayer()
+        super.onPause()
+    }
 
 
 }

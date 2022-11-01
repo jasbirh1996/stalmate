@@ -106,7 +106,7 @@ class FragmentSongPickerInGroup : BaseFragment(), FriendAdapter.Callbackk,
         }
     }
     fun downloadSelectedSong(song: Song) {
-        showLoader()
+
         val songs = File(requireActivity().filesDir, "songs")
         if (!songs.exists() && !songs.mkdirs()) {
             Log.w(
@@ -119,7 +119,7 @@ class FragmentSongPickerInGroup : BaseFragment(), FriendAdapter.Callbackk,
             closeWithSelection(song, Uri.fromFile(audio))
             return
         }
-
+        showLoader()
         val input = Data.Builder()
             .putString(FileDownloadWorker.KEY_URL, song.audio)
             .putString(FileDownloadWorker.KEY_PATH, audio.absolutePath)
@@ -144,6 +144,7 @@ class FragmentSongPickerInGroup : BaseFragment(), FriendAdapter.Callbackk,
 
     private fun closeWithSelection(song: Song, file: Uri) {
         val data = Intent()
+
         data.putExtra(EXTRA_SONG_ID, song.id)
         data.putExtra(EXTRA_SONG_NAME, song.title)
         data.putExtra(EXTRA_SONG_FILE, file)

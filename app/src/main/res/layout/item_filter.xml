@@ -6,8 +6,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="100dp"
     android:layout_height="100dp"
-    android:elevation="10dp"
-    android:layout_margin="5dp">
+    android:elevation="2dp"
+    android:layout_margin="2dp">
 
     <jp.co.cyberagent.android.gpuimage.GPUImageView
         android:id="@+id/image"

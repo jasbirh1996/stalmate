@@ -33,8 +33,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layoutCameraControllers"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="20dp">
+        android:layout_height="match_parent">
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -64,9 +63,12 @@
 
         <pt.tornelas.segmentedprogressbar.SegmentedProgressBar
             android:id="@+id/segmented_progressbar"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="5dp"
             android:layout_margin="8dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -85,6 +87,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/segmented_progressbar">
 
@@ -242,6 +245,7 @@
             android:id="@+id/buttonCameraChanger"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:layout_marginEnd="20dp"
             android:padding="10dp"
             android:src="@drawable/ic_live_rotate_camera"
             app:layout_constraintBottom_toBottomOf="@+id/buttonRecord"
@@ -253,6 +257,7 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
             android:src="@drawable/color_filter_icon"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -290,6 +295,7 @@
             android:id="@+id/buttonDone"
             android:layout_width="60dp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
             android:layout_marginBottom="20dp"
             android:background="@drawable/small_done_button"
             android:elevation="10dp"
@@ -309,12 +315,13 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
 
-            android:layout_marginBottom="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginBottom="10dp"
             android:background="@drawable/round_very_small_corner_very_light_primary"
             android:padding="6dp"
-            app:layout_constraintBottom_toTopOf="@+id/rvFilters"
-            app:layout_constraintStart_toStartOf="parent"
 
+            app:layout_constraintBottom_toTopOf="@+id/tabbarspeed"
+            app:layout_constraintStart_toStartOf="parent"
             app:tabBackground="@drawable/round_very_small_corner_very_light_primary"
             app:tabIndicator="@drawable/round_very_small_corner_white"
             app:tabIndicatorColor="@color/white"
@@ -327,6 +334,29 @@
             app:tabTextColor="@color/app_color"
             app:tabUnboundedRipple="true" />
 
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabbarspeed"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+
+            android:layout_marginStart="20dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/round_very_small_corner_very_light_primary"
+
+            android:padding="6dp"
+            app:layout_constraintBottom_toTopOf="@+id/rvFilters"
+            app:layout_constraintStart_toStartOf="parent"
+            app:tabBackground="@drawable/round_very_small_corner_very_light_primary"
+            app:tabIndicator="@drawable/round_very_small_corner_white"
+            app:tabIndicatorColor="@color/white"
+            app:tabIndicatorGravity="stretch"
+            app:tabMaxWidth="0dp"
+            app:tabMode="fixed"
+            app:tabRippleColor="@color/white"
+            app:tabSelectedTextColor="@color/colorPrimary"
+            app:tabTextAppearance="@style/MineCustomTabText"
+            app:tabTextColor="@color/app_color"
+            app:tabUnboundedRipple="true" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvFilters"

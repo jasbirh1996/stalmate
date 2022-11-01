@@ -1,8 +1,11 @@
 package com.stalmate.user.modules.reels.activity
-import com.stalmate.user.R
+
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.Point
 import android.graphics.PointF
+import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.media.MediaPlayer
 import android.media.PlaybackParams
@@ -11,11 +14,13 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.provider.DocumentsContract
-import android.provider.MediaStore
+import android.util.AttributeSet
 import android.util.Log
 import android.util.Size
+import android.view.Display
 import android.view.View
+import android.view.ViewGroup.MarginLayoutParams
+import android.view.WindowManager
 import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
@@ -24,6 +29,10 @@ import androidx.annotation.Nullable
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearSmoothScroller
+import androidx.recyclerview.widget.LinearSnapHelper
+import androidx.recyclerview.widget.RecyclerView
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkInfo
@@ -46,8 +55,8 @@ import com.otaliastudios.cameraview.filters.GammaFilter
 import com.otaliastudios.cameraview.filters.SharpnessFilter
 import com.otaliastudios.cameraview.gesture.Gesture
 import com.otaliastudios.cameraview.gesture.GestureAction
-import com.simform.videooperations.Common
 import com.stalmate.user.Helper.IntentHelper
+import com.stalmate.user.R
 import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.databinding.ActivityVideoRecorderBinding
 import com.stalmate.user.modules.reels.adapter.FilterAdapter
@@ -57,11 +66,11 @@ import com.stalmate.user.modules.reels.utils.VideoUtil
 import com.stalmate.user.modules.reels.workers.MergeAudioVideoWorker
 import com.stalmate.user.modules.reels.workers.MergeVideosWorker
 import com.stalmate.user.modules.reels.workers.VideoSpeedWorker
+import com.stalmate.user.utilities.Common
 import com.user.vaibhavmodules.reels.utils.SharedConstants
 import java.io.File
 import java.util.*
 import java.util.concurrent.TimeUnit
-import kotlin.collections.ArrayList
 
 
 class ActivityVideoRecorder : BaseActivity() {
@@ -75,6 +84,7 @@ class ActivityVideoRecorder : BaseActivity() {
     private var mMediaPlayer: MediaPlayer? = null
     val PICK_FILE = 99
     var isDurationTabbarShowing=false
+    var isspeedTabbarShowing=false
     private val mStopper = Runnable { stopRecording() }
     lateinit var binding: ActivityVideoRecorderBinding
     override fun onClick(viewId: Int, view: View?) {
@@ -145,9 +155,9 @@ class ActivityVideoRecorder : BaseActivity() {
                         result.toBitmap {
                             Glide.with(this@ActivityVideoRecorder).load(it!!).into(binding.selectedPhoto)
                         }
-
-
-                        createVideo(it!!.absolutePath, result.size)
+                      //  createVideo(it!!.absolutePath, result.size)
+                        mModel!!.video = File(it!!.absolutePath)
+                    closeFinally(mModel!!.video!!)
                     }
 
                 })
@@ -266,18 +276,99 @@ class ActivityVideoRecorder : BaseActivity() {
                             filter!!
                         )
                     }
+                    val snapHelper = LinearSnapHelper()
+                    snapHelper.attachToRecyclerView(  binding.rvFilters)
+
+
                     binding.rvFilters.setNestedScrollingEnabled(false)
                     binding.rvFilters.setHasFixedSize(true)
                     binding.rvFilters.adapter = adapter
+                    binding.rvFilters.addItemDecoration(OffsetItemDecoration(this@ActivityVideoRecorder))
+                   // binding.rvFilters.layoutManager=CenterLayoutManager(this@ActivityVideoRecorder, LinearLayoutManager.HORIZONTAL, false)
+                    binding.rvFilters.layoutManager=CenterZoomLayoutManager(this@ActivityVideoRecorder, LinearLayoutManager.HORIZONTAL, false)
+
+                    binding.rvFilters.addOnScrollListener(object :RecyclerView.OnScrollListener(){
+
+                        override fun onScrollStateChanged(
+                            recyclerView: RecyclerView,
+                            newState: Int
+                        ) {
+                            super.onScrollStateChanged(recyclerView, newState)
+                            if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                                val centerView = snapHelper.findSnapView(binding.rvFilters.layoutManager)
+                                val pos = (binding.rvFilters.layoutManager as CenterZoomLayoutManager).getPosition(centerView!!)
+
+                                when(pos){
+                                    0->{
+                                        applyPreviewFilter(VideoFilter.NONE)
+                                    }
+                                    1->{
+                                        applyPreviewFilter(VideoFilter.BRIGHTNESS)
+                                    }
+                                    2->{
+                                        applyPreviewFilter(VideoFilter.EXPOSURE)
+                                    }
+                                    3->{
+                                        applyPreviewFilter(VideoFilter.GAMMA)
+                                    }
+                                    4->{
+                                        applyPreviewFilter(VideoFilter.GRAYSCALE)
+                                    }
+                                    5->{
+                                        applyPreviewFilter(VideoFilter.HAZE)
+                                    }
+                                    6->{
+                                        applyPreviewFilter(VideoFilter.INVERT)
+                                    }
+                                    7->{
+                                        applyPreviewFilter(VideoFilter.MONOCHROME)
+                                    }
+                                    8->{
+                                        applyPreviewFilter(VideoFilter.PIXELATED)
+                                    }
+                                    9->{
+                                        applyPreviewFilter(VideoFilter.POSTERIZE)
+                                    }
+                                    10->{
+                                        applyPreviewFilter(VideoFilter.SEPIA)
+                                    }
+                                    11->{
+                                        applyPreviewFilter(VideoFilter.SHARP)
+                                    }
+                                    12->{
+                                        applyPreviewFilter(VideoFilter.SOLARIZE)
+                                    }
+                                    13->{
+                                        applyPreviewFilter(VideoFilter.VIGNETTE)
+                                    }
+
+
+                                }
+
+
+
+
+                            }
+
+                        }
+
+
+                    })
+
                 }
 
                 override fun onLoadCleared(@Nullable placeholder: Drawable?) {}
             })
     }
 
+
+
+
+
+
     private fun applyPreviewFilter(filter: VideoFilter) {
 
-        binding.rvFilters.visibility=View.GONE
+     //   binding.rvFilters.visibility=View.GONE
 
 
         when (filter) {
@@ -515,13 +606,14 @@ class ActivityVideoRecorder : BaseActivity() {
             }
     }
 
-    private fun closeFinally(video: File) {
+    private fun closeFinally(file: File) {
 
         binding.cameraView.close()
         binding.cameraView.destroy()
         val intent = Intent(this, ActivityVideoEditor::class.java)
-        intent.putExtra(ActivityFilter.EXTRA_SONG, mModel!!.song)
-        intent.putExtra(ActivityFilter.EXTRA_VIDEO, video.absolutePath)
+        intent.putExtra(ActivityFilter.EXTRA_SONG, mModel!!.audio)
+        intent.putExtra(ActivityFilter.EXTRA_VIDEO, file.absolutePath)
+        intent.putExtra("isImage", isImage)
         startActivity(intent)
         finish()
 
@@ -739,6 +831,10 @@ class ActivityVideoRecorder : BaseActivity() {
         })
     }
 
+
+
+
+
     fun hideDurationBar(show:Boolean){
 
         if (show){
@@ -748,9 +844,60 @@ class ActivityVideoRecorder : BaseActivity() {
                 binding.tabbarduration.animate().translationX(-1000f).setDuration(500).start()
             },500)
         }
-
-
     }
+
+
+    fun setuptabSpeedRecclerview() {
+        var speed = 1f
+        binding.tabbarspeed.animate().translationX(-1000f).setDuration(0).start()
+        binding.tabbarspeed.addTab( binding.tabbarspeed.newTab().setText("0.5x"))
+        binding.tabbarspeed.addTab(binding.tabbarspeed.newTab().setText("1x"))
+        binding.tabbarspeed.addTab(binding.tabbarspeed.newTab().setText("2x"))
+        binding.tabbarspeed.addTab(binding.tabbarspeed.newTab().setText("3x"))
+        binding.tabbarspeed.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                when (tab!!.position) {
+                    0 -> {
+                        speed = 0.5f
+                        hideSpeedBar(show = false)
+                    }
+                    1 -> {
+                        speed = 1f
+                       hideSpeedBar(show = false)
+                    }
+                    2 -> {
+                        speed = 2f
+                        hideSpeedBar(show = false)
+                    }
+                    3 -> {
+                        speed = 3f
+                       hideSpeedBar(show = false)
+                    }
+                }
+                mModel!!.speed=speed
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+                hideSpeedBar(show = false)
+            }
+        })
+    }
+    fun hideSpeedBar(show:Boolean){
+
+        if (show){
+            binding.tabbarspeed.animate().translationX(0f).setDuration(500).start()
+        }else{
+            Handler(Looper.myLooper()!!).postDelayed(Runnable {
+                binding.tabbarspeed.animate().translationX(-1000f).setDuration(500).start()
+            },500)
+        }
+    }
+
+
 
 
     fun setUPViews(){
@@ -827,17 +974,7 @@ class ActivityVideoRecorder : BaseActivity() {
                     Toast.makeText(this, R.string.recorder_error_in_progress, Toast.LENGTH_SHORT)
                         .show()
                 } else {
-                    /*val intent = Intent(
-                        this@ActivityVideoRecorder,
-                        ActivitySongPicker::class.java
-                    )
-                    startActivityForResult(intent, SharedConstants.REQUEST_CODE_PICK_SONG)*/
-       /*             val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
-                    intent.addCategory(Intent.CATEGORY_OPENABLE)
-                    intent.type = "audio/*"
-                    startActivityForResult(intent, PICK_FILE)*/
 
-        */
                     resultCallbackOfSelectedMusicTrack.launch(IntentHelper.getSongPickerActivity(this))
                 }
             }
@@ -861,13 +998,12 @@ class ActivityVideoRecorder : BaseActivity() {
                 Toast.makeText(this, R.string.recorder_error_in_progress, Toast.LENGTH_SHORT)
                     .show()
             } else {
-                binding.speeds.setVisibility(if (binding.speeds.getVisibility() == View.VISIBLE) View.GONE else View.VISIBLE)
-
-                if (binding.speeds.getVisibility() == View.VISIBLE){
-                    binding.ivSpeed.setImageDrawable(ContextCompat.getDrawable(this@ActivityVideoRecorder,R.drawable.ic_crtpost_speed_active))
+                if (isspeedTabbarShowing){
+                    isspeedTabbarShowing=false
+                    hideSpeedBar(show = false)
                 }else{
-                    binding.ivSpeed.setImageDrawable(ContextCompat.getDrawable(this@ActivityVideoRecorder,R.drawable.ic_crtpost_speed))
-
+                    isspeedTabbarShowing=true
+                    hideSpeedBar(show = true)
                 }
             }
         }
@@ -937,10 +1073,139 @@ class ActivityVideoRecorder : BaseActivity() {
 
         }
         setupRecordDurationRecclerview()
+        setuptabSpeedRecclerview()
     }
 
 
-    fun setUpActiveButton(){}
 
 
+
+}
+
+
+
+class CenterLayoutManager : LinearLayoutManager {
+    constructor(context: Context) : super(context)
+    constructor(context: Context, orientation: Int, reverseLayout: Boolean) : super(context, orientation, reverseLayout)
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes)
+
+    override fun smoothScrollToPosition(recyclerView: RecyclerView, state: RecyclerView.State, position: Int) {
+        val centerSmoothScroller = CenterSmoothScroller(recyclerView.context)
+        centerSmoothScroller.targetPosition = position
+        startSmoothScroll(centerSmoothScroller)
+
+    }
+
+    private class CenterSmoothScroller(context: Context) : LinearSmoothScroller(context) {
+        override fun calculateDtToFit(viewStart: Int, viewEnd: Int, boxStart: Int, boxEnd: Int, snapPreference: Int): Int = (boxStart + (boxEnd - boxStart) / 2) - (viewStart + (viewEnd - viewStart) / 2)
+    }
+}
+
+class OffsetItemDecoration(private val ctx: Context) : RecyclerView.ItemDecoration() {
+    override fun getItemOffsets(
+        outRect: Rect,
+        view: View,
+        parent: RecyclerView,
+        state: RecyclerView.State
+    ) {
+        super.getItemOffsets(outRect, view, parent, state)
+        val offset = (screenWidth / 2.toFloat()).toInt() - view.layoutParams.width / 2
+        val lp = view.layoutParams as MarginLayoutParams
+        if (parent.getChildAdapterPosition(view) == 0) {
+            (view.layoutParams as MarginLayoutParams).leftMargin = 0
+            setupOutRect(outRect, offset, true)
+        } else if (parent.getChildAdapterPosition(view) == state.itemCount - 1) {
+            (view.layoutParams as MarginLayoutParams).rightMargin = 0
+            setupOutRect(outRect, offset, false)
+        }
+    }
+
+    private fun setupOutRect(rect: Rect, offset: Int, start: Boolean) {
+        if (start) {
+            rect.left = offset
+        } else {
+            rect.right = offset
+        }
+    }
+
+    private val screenWidth: Int
+        get() {
+            val wm = ctx.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+            val display: Display = wm.defaultDisplay
+            val size = Point()
+            display.getSize(size)
+            return size.x
+        }
+
+}
+
+class CenterZoomLayoutManager : LinearLayoutManager {
+    private val mShrinkAmount = 0.15f
+    private val mShrinkDistance = 0.9f
+
+    constructor(context: Context?) : super(context) {}
+    constructor(context: Context?, orientation: Int, reverseLayout: Boolean) : super(
+        context,
+        orientation,
+        reverseLayout
+    ) {
+    }
+
+    override fun scrollVerticallyBy(
+        dy: Int,
+        recycler: RecyclerView.Recycler,
+        state: RecyclerView.State
+    ): Int {
+        val orientation = orientation
+        return if (orientation == VERTICAL) {
+            val scrolled = super.scrollVerticallyBy(dy, recycler, state)
+            val midpoint = height / 2f
+            val d0 = 0f
+            val d1 = mShrinkDistance * midpoint
+            val s0 = 1f
+            val s1 = 1f - mShrinkAmount
+            for (i in 0 until childCount) {
+                val child = getChildAt(i)
+                val childMidpoint = (getDecoratedBottom(child!!) + getDecoratedTop(
+                    child
+                )) / 2f
+                val d = Math.min(d1, Math.abs(midpoint - childMidpoint))
+                val scale = s0 + (s1 - s0) * (d - d0) / (d1 - d0)
+                child.scaleX = scale
+                child.scaleY = scale
+            }
+            scrolled
+        } else {
+            0
+        }
+    }
+
+    override fun scrollHorizontallyBy(
+        dx: Int,
+        recycler: RecyclerView.Recycler,
+        state: RecyclerView.State
+    ): Int {
+        val orientation = orientation
+        return if (orientation == HORIZONTAL) {
+            val scrolled = super.scrollHorizontallyBy(dx, recycler, state)
+            val midpoint = width / 2f
+            val d0 = 0f
+            val d1 = mShrinkDistance * midpoint
+            val s0 = 1f
+            val s1 = 1f - mShrinkAmount
+            for (i in 0 until childCount) {
+                val child = getChildAt(i)
+                val childMidpoint = (getDecoratedRight(child!!) + getDecoratedLeft(
+                    child
+                )) / 2f
+                val d = Math.min(d1, Math.abs(midpoint - childMidpoint))
+                val scale = s0 + (s1 - s0) * (d - d0) / (d1 - d0)
+                child.scaleX = scale
+                child.scaleY = scale
+            }
+            scrolled
+        } else {
+            0
+        }
+    }
 }

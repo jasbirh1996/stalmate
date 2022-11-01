@@ -24,14 +24,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <TextureView
+    <com.google.android.exoplayer2.ui.PlayerView
         android:id="@+id/videoSurface"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:use_controller="false" />
 
     <ja.burhanrashid52.photoeditor.PhotoEditorView
         android:id="@+id/ivImage"
@@ -41,6 +42,136 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layoutTrim"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/top_round_corner_white"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <RelativeLayout
+
+            android:id="@+id/layoutSeekbar"
+            style="@style/LView"
+            android:layout_gravity="bottom"
+            android:layout_marginTop="20dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription,UnusedAttribute">
+
+            <com.stalmate.user.modules.reels.audioVideoTrimmer.ui.seekbar.widgets.CrystalRangeSeekbar
+                android:id="@+id/range_seek_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="25dp"
+                android:layout_marginEnd="25dp"
+                android:elevation="4dp"
+                android:padding="7dp"
+                app:bar_color="@android:color/transparent"
+                app:bar_highlight_color="@android:color/transparent"
+                app:data_type="_integer"
+                app:left_thumb_image="@drawable/ic_min_seek"
+                app:right_thumb_image="@drawable/ic_max_seek" />
+
+            <com.stalmate.user.modules.reels.audioVideoTrimmer.ui.seekbar.widgets.CrystalSeekbar
+                android:id="@+id/seekbar_controller"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:elevation="4dp"
+                android:padding="8dp"
+                app:bar_color="@android:color/transparent"
+                app:bar_highlight_color="@android:color/transparent"
+                app:thumb_image="@drawable/ic_vertical_line" />
+
+            <LinearLayout
+                android:id="@+id/view_image"
+                style="@style/LView"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:background="@color/black">
+
+                <ImageView
+                    android:id="@+id/image_one"
+                    style="@style/ImageTrim"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp" />
+
+                <ImageView
+                    android:id="@+id/image_two"
+                    style="@style/ImageTrim"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp" />
+
+                <ImageView
+                    android:id="@+id/image_three"
+                    style="@style/ImageTrim"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp" />
+
+                <ImageView
+                    android:id="@+id/image_four"
+                    style="@style/ImageTrim"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp" />
+
+                <ImageView
+                    android:id="@+id/image_five"
+                    style="@style/ImageTrim"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp" />
+
+                <ImageView
+                    android:id="@+id/image_six"
+                    style="@style/ImageTrim"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp" />
+
+                <ImageView
+                    android:id="@+id/image_seven"
+                    style="@style/ImageTrim"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp" />
+
+                <ImageView
+                    android:id="@+id/image_eight"
+                    style="@style/ImageTrim"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <Button
+
+            android:id="@+id/buttonTrimDone"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@color/colorPrimary"
+            android:fontFamily="@font/poppins"
+            android:padding="8dp"
+            android:paddingStart="@dimen/_10sdp"
+            android:paddingTop="@dimen/_4sdp"
+            android:paddingEnd="@dimen/_10sdp"
+            android:paddingBottom="6dp"
+
+            android:text="@string/trim"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/layoutSeekbar"
+            app:layout_constraintStart_toStartOf="@+id/layoutSeekbar"
+            app:layout_constraintTop_toBottomOf="@+id/layoutSeekbar" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     <ImageView
@@ -60,7 +191,7 @@
         android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
-        
+
         android:padding="8dp"
         android:src="@drawable/ic_undo"
         android:visibility="gone"
@@ -72,22 +203,31 @@
         android:id="@+id/imgText"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
-        
+
         android:padding="8dp"
         android:src="@drawable/ic_crtpost_top_text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toBottomOf="@+id/ivMusic"
+        app:layout_constraintEnd_toStartOf="@+id/ivMusic"
+        app:layout_constraintTop_toTopOf="@+id/ivMusic" />
 
     <ImageView
         android:id="@+id/imgDraw"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="10dp"
-        
+
         android:padding="8dp"
         android:src="@drawable/ic_crtpost_top_sketch"
+        app:layout_constraintBottom_toBottomOf="@+id/ivEmoji"
+        app:layout_constraintEnd_toStartOf="@+id/imgTrim"
+        app:layout_constraintTop_toTopOf="@+id/ivEmoji" />
+
+    <ImageView
+        android:id="@+id/imgTrim"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+
+        android:padding="8dp"
+        android:src="@drawable/ic_crtpost_top_cut"
         app:layout_constraintBottom_toBottomOf="@+id/ivEmoji"
         app:layout_constraintEnd_toStartOf="@+id/ivEmoji"
         app:layout_constraintTop_toTopOf="@+id/ivEmoji" />
@@ -97,7 +237,7 @@
         android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        
+
         android:padding="8dp"
         android:src="@drawable/ic_sticker"
         android:visibility="gone"
@@ -108,8 +248,7 @@
         android:id="@+id/ivEmoji"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="10dp"
-        
+
         android:padding="8dp"
         android:src="@drawable/ic_crtpost_top_emoji"
         app:layout_constraintBottom_toBottomOf="@+id/imgText"
@@ -121,11 +260,11 @@
         android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
-        
+
+        android:layout_marginEnd="10dp"
         android:padding="8dp"
         android:src="@drawable/ic_crtpost_top_music"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -134,7 +273,7 @@
         android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        
+
         android:padding="8dp"
         android:src="@drawable/ic_close"
         android:visibility="gone"

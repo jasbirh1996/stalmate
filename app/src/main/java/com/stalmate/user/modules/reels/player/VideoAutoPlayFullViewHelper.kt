@@ -1,14 +1,14 @@
 package com.stalmate.user.modules.reels.player
+
 import android.graphics.Rect
-import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-
+import com.stalmate.user.modules.reels.adapter.ReelFullViewAdapter
 import com.stalmate.user.modules.reels.player.holders.ReelViewHolder
-import com.stalmate.user.modules.reels.player.holders.VideoReelViewHolder
+import com.stalmate.user.modules.reels.player.holders.VideoReelFullViewHolder
 
 
-class VideoAutoPlayHelper(var recyclerView: RecyclerView) {
+class VideoAutoPlayFullViewHelper(var recyclerView: RecyclerView) {
 
     private var lastPlayerView: InstaLikePlayerView? = null
     val MIN_LIMIT_VISIBILITY =
@@ -16,7 +16,7 @@ class VideoAutoPlayHelper(var recyclerView: RecyclerView) {
 
     var currentPlayingVideoItemPos = -1; // -1 indicates nothing playing
 
-    fun onScrolled(recyclerView: RecyclerView, feedAdapter: ReelAdapter) {
+    fun onScrolled(recyclerView: RecyclerView, feedAdapter: ReelFullViewAdapter) {
 
         val firstVisiblePosition: Int = findFirstVisibleItemPosition()
         val lastVisiblePosition: Int = findLastVisibleItemPosition()
@@ -52,7 +52,7 @@ class VideoAutoPlayHelper(var recyclerView: RecyclerView) {
         val feedViewHolder: ReelViewHolder =
             (recyclerView.findViewHolderForAdapterPosition(pos) as ReelViewHolder?)!!
 
-        if(feedViewHolder is VideoReelViewHolder) {
+        if(feedViewHolder is VideoReelFullViewHolder) {
             /** in case its a video**/
             if (lastPlayerView==null || lastPlayerView != feedViewHolder.customPlayerView) {
                 feedViewHolder.customPlayerView.startPlaying()
@@ -152,8 +152,8 @@ class VideoAutoPlayHelper(var recyclerView: RecyclerView) {
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                if (recyclerView.adapter is ReelAdapter) {
-                    onScrolled(recyclerView, recyclerView.adapter as ReelAdapter)
+                if (recyclerView.adapter is ReelFullViewAdapter) {
+                    onScrolled(recyclerView, recyclerView.adapter as ReelFullViewAdapter)
                 } else {
                     throw IllegalStateException("Adapter should be FeedAdapter or extend FeedAdapter")
                 }

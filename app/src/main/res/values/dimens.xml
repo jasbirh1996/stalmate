@@ -674,6 +674,10 @@
     <dimen name="_minus8sdp">-8.00dp</dimen>
     <dimen name="_minus9sdp">-9.00dp</dimen>
 
+    <dimen name="thumb_width">30dp</dimen>
+    <dimen name="thumb_height">30dp</dimen>
 
+    <dimen name="bubble_thumb_width">70dp</dimen>
+    <dimen name="bubble_thumb_height">70dp</dimen>
 
 </resources>

@@ -654,6 +654,13 @@
     <string name="add_location">Add Location</string>
     <string name="everyone_can_reply">Everyone can Reply</string>
     <string name="post">Post</string>
+    <string name="open_file_location">Open File Location</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="txt_smaller">Small</string>
+    <string name="txt_trimming_video">Trimm</string>
+    <string name="txt_cancel">Cancel</string>
+    <string name="trim">Trim</string>
     <string-array name="marrage">
         <item><font fgcolor="#B7B7B7">Marital Status</font></item>
         <item><font fgcolor="#B7B7B7">Single</font></item>

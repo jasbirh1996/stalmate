@@ -1,57 +1,76 @@
 package com.stalmate.user.modules.reels.activity
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
+import android.app.Dialog
 import android.app.ProgressDialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.SurfaceTexture
-import android.media.AudioManager
+import android.graphics.BitmapFactory
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
+import android.graphics.drawable.Drawable
 import android.media.MediaMetadataRetriever
-import android.media.MediaPlayer
 import android.media.MediaPlayer.OnCompletionListener
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
-import android.provider.DocumentsContract
-import android.provider.MediaStore
+import android.os.Handler
 import android.util.DisplayMetrics
 import android.util.Log
+import android.util.Size
 import android.view.*
-import android.view.TextureView.SurfaceTextureListener
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.NonNull
 import androidx.core.content.ContextCompat
 import androidx.work.Data
+import androidx.work.OneTimeWorkRequest
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
 import com.bumptech.glide.Glide
-import com.github.hiteshsondhi88.libffmpeg.FFmpeg
-import com.github.hiteshsondhi88.libffmpeg.FFmpegExecuteResponseHandler
-import com.github.hiteshsondhi88.libffmpeg.FFmpegLoadBinaryResponseHandler
-import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedException
-import com.simform.videooperations.*
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.request.RequestOptions
+import com.daasuu.imagetovideo.EncodeListener
+import com.daasuu.imagetovideo.ImageToVideoConverter
+import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.Player
+import com.google.android.exoplayer2.source.MediaSource
+import com.google.android.exoplayer2.source.MergingMediaSource
+import com.google.android.exoplayer2.source.ProgressiveMediaSource
+import com.google.android.exoplayer2.upstream.FileDataSource
+import com.googlecode.mp4parser.authoring.Track
+import com.googlecode.mp4parser.authoring.tracks.CroppedTrack
+import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.databinding.ActivityPreviewVideoBinding
+import com.stalmate.user.modules.reels.activity.ActivityFilter.Companion.EXTRA_SONG
 import com.stalmate.user.modules.reels.activity.ActivityFilter.Companion.EXTRA_VIDEO
+import com.stalmate.user.modules.reels.audioVideoTrimmer.ui.seekbar.widgets.CrystalRangeSeekbar
+import com.stalmate.user.modules.reels.audioVideoTrimmer.ui.seekbar.widgets.CrystalSeekbar
+import com.stalmate.user.modules.reels.audioVideoTrimmer.utils.*
 import com.stalmate.user.modules.reels.photo_editing.EmojiBSFragment
 import com.stalmate.user.modules.reels.photo_editing.PropertiesBSFragment
 import com.stalmate.user.modules.reels.photo_editing.StickerBSFragment
 import com.stalmate.user.modules.reels.photo_editing.TextEditorDialogFragment
+import com.stalmate.user.modules.reels.workers.MergeAudioVideoWorker
+import com.stalmate.user.modules.reels.workers.MergeVideosWorker
+import com.stalmate.user.modules.reels.workers.VideoTrimmerWorker
+import com.stalmate.user.modules.reels.workers.WatermarkWorker
+import com.stalmate.user.utilities.Common
+import com.stalmate.user.utilities.ValidationHelper
 import ja.burhanrashid52.photoeditor.*
 import ja.burhanrashid52.photoeditor.Utils.getScaledDimension
 import java.io.*
-import androidx.work.WorkInfo
-
-import com.stalmate.user.modules.reels.workers.WatermarkWorker
-
-import androidx.work.OneTimeWorkRequest
-
-import androidx.work.WorkManager
-import com.stalmate.user.Helper.IntentHelper
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import java.util.*
-import kotlin.collections.ArrayList
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 
 
 class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
@@ -62,30 +81,52 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
     private val globalVideoUrl = ""
     lateinit var propertiesBSFragment: PropertiesBSFragment
     lateinit var mStickerBSFragment: StickerBSFragment
-    private var mediaPlayer: MediaPlayer? = null
+    private var mediaPlayer: ExoPlayer? = null
     private var videoPath = ""
+    private var audioPath = ""
     private var imagePath = ""
-    private var exeCmd: ArrayList<String>? = null
-    lateinit var fFmpeg: FFmpeg
+    private lateinit var exeCmd: ArrayList<String>
     val PICK_FILE = 99
     var id = 0
     private lateinit var newCommand: Array<String?>
-    private var progressDialog: ProgressDialog? = null
+    private lateinit var progressDialog: ProgressDialog
     override fun onClick(viewId: Int, view: View?) {
 
     }
+
+    var isIMage = false
 
     private var originalDisplayWidth = 0
     private var originalDisplayHeight = 0
     private var newCanvasWidth = 0
     private var newCanvasHeight = 0
-    private var mEmojiBSFragment: EmojiBSFragment? = null
+    private lateinit var mEmojiBSFragment: EmojiBSFragment
     private var DRAW_CANVASW = 0
     private var DRAW_CANVASH = 0
-    private val onCompletionListener: OnCompletionListener =
-        OnCompletionListener { mediaPlayer ->{
-            //  mediaPlayer.start()
-        } }
+
+
+    var resultCallbackOfSelectedMusicTrack: ActivityResultLauncher<Intent> =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            if (result!!.resultCode == RESULT_OK) {
+                val data: Intent = result.getData()!!
+                val id = data.getStringExtra(EXTRA_SONG_ID)
+                val name = data.getStringExtra(EXTRA_SONG_NAME)
+                val audio = data.getParcelableExtra<Uri>(EXTRA_SONG_FILE)
+
+                Log.d("klajsdasd", audio!!.path.toString())
+                /*        binding.tvMusicName.text=name
+                        binding.layoutSelectedMusic.visibility=View.VISIBLE*/
+
+
+                audioPath = File(audio.path!!).absolutePath
+
+                initializePlayer()
+
+
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,43 +135,89 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
             WindowManager.LayoutParams.FLAG_FULLSCREEN,
             WindowManager.LayoutParams.FLAG_FULLSCREEN
         )
-        binding= ActivityPreviewVideoBinding.inflate(layoutInflater)
+        binding = ActivityPreviewVideoBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
+
+
+
+
+
+
+
+
+        isIMage = intent.getBooleanExtra("isImage", false)
         initViews()
         //        Drawable transparentDrawable = new ColorDrawable(Color.TRANSPARENT);
 //        Glide.with(this).load(getIntent().getStringExtra("DATA")).into(binding.ivImage.getSource());
-        Glide.with(this).load(R.drawable.trans).centerCrop().into(binding.ivImage.source)
+
         videoPath = intent.getStringExtra(EXTRA_VIDEO).toString()
-        val retriever = MediaMetadataRetriever()
-        retriever.setDataSource(videoPath)
-        val metaRotation =
-            retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION)
-        val rotation = metaRotation?.toInt() ?: 0
-        if (rotation == 90 || rotation == 270) {
-            DRAW_CANVASH =
-                Integer.valueOf(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH))
-            DRAW_CANVASW =
-                Integer.valueOf(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT))
+        audioPath = intent.getStringExtra(EXTRA_SONG).toString()
+
+        if (!isIMage) {
+            val retriever = MediaMetadataRetriever()
+            Log.d("pathhhh", videoPath)
+            Log.d("pathhhh", "videoPath")
+            retriever.setDataSource(videoPath)
+            val metaRotation =
+                retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION)
+            val rotation = metaRotation?.toInt() ?: 0
+            if (rotation == 90 || rotation == 270) {
+                DRAW_CANVASH =
+                    Integer.valueOf(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH))
+                DRAW_CANVASW =
+                    Integer.valueOf(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT))
+            } else {
+                DRAW_CANVASW =
+                    Integer.valueOf(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH))
+                DRAW_CANVASH =
+                    Integer.valueOf(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT))
+            }
+
+
         } else {
-            DRAW_CANVASW =
-                Integer.valueOf(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH))
-            DRAW_CANVASH =
-                Integer.valueOf(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT))
+
+            getDropboxIMGSize(Uri.parse(videoPath!!))
         }
+
+
+
+
+
+
+        initializePlayer()
         setCanvasAspectRatio()
         binding.videoSurface.getLayoutParams().width = newCanvasWidth
         binding.videoSurface.getLayoutParams().height = newCanvasHeight
         binding.ivImage.getLayoutParams().width = newCanvasWidth
         binding.ivImage.getLayoutParams().height = newCanvasHeight
-        Log.d(
-            ">>",
-            "width>> " + newCanvasWidth + "height>> " + newCanvasHeight + " rotation >> " + rotation
-        )
+        Log.d("asldkjshlad", newCanvasWidth.toString())
+        Log.d("asldkjshlad", newCanvasHeight.toString())
+    }
+
+
+    private fun getDropboxIMGSize(uri: Uri) {
+        val options = BitmapFactory.Options()
+        options.inJustDecodeBounds = true
+        BitmapFactory.decodeFile(File(uri.path).absolutePath, options)
+        val imageHeight = options.outHeight
+        val imageWidth = options.outWidth
+        DRAW_CANVASW =
+            imageWidth
+        DRAW_CANVASH =
+            imageHeight
 
     }
 
+
     private fun initViews() {
-        fFmpeg = FFmpeg.getInstance(this)
+
+
+        seekbar = findViewById(R.id.range_seek_bar)
+        seekbarController = findViewById(R.id.seekbar_controller)
+        seekHandler = Handler()
+
         progressDialog = ProgressDialog(this)
         mStickerBSFragment = StickerBSFragment()
         mStickerBSFragment.setStickerListener(this)
@@ -151,111 +238,12 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
         binding.imgUndo.setOnClickListener(this)
         binding.imgSticker.setOnClickListener(this)
         binding.ivEmoji.setOnClickListener(this)
-        binding.ivMusic.setOnClickListener(this)
-        binding.videoSurface.setSurfaceTextureListener(object : SurfaceTextureListener {
-            override fun onSurfaceTextureAvailable(
-                surfaceTexture: SurfaceTexture,
-                i: Int,
-                i1: Int
-            ) {
-//                activityHomeBinding.videoSurface.getLayoutParams().height=640;
-//                activityHomeBinding.videoSurface.getLayoutParams().width=720;
-                val surface = Surface(surfaceTexture)
-                try {
-                    mediaPlayer = MediaPlayer()
-                    //                    mediaPlayer.setDataSource("http://daily3gp.com/vids/747.3gp");
-                    Log.d("VideoPath>>", videoPath)
-                    mediaPlayer!!.setDataSource(videoPath)
-                    mediaPlayer!!.setSurface(surface)
-                    mediaPlayer!!.prepare()
-                    mediaPlayer!!.setOnCompletionListener(onCompletionListener)
-                    mediaPlayer!!.setAudioStreamType(AudioManager.STREAM_MUSIC)
-                    mediaPlayer!!.start()
-                } catch (e: IllegalArgumentException) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace()
-                } catch (e: SecurityException) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace()
-                } catch (e: IllegalStateException) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace()
-                } catch (e: IOException) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace()
-                }
-            }
-
-            override fun onSurfaceTextureSizeChanged(
-                surfaceTexture: SurfaceTexture,
-                i: Int,
-                i1: Int
-            ) {
-            }
-
-            override fun onSurfaceTextureDestroyed(surfaceTexture: SurfaceTexture): Boolean {
-                return false
-            }
-
-            override fun onSurfaceTextureUpdated(surfaceTexture: SurfaceTexture) {}
-        })
-        exeCmd = ArrayList()
-        try {
-            fFmpeg.loadBinary(object : FFmpegLoadBinaryResponseHandler {
-                override
-                fun onFailure() {
-                    Log.d("binaryLoad", "onFailure")
-                }
-                override
-                fun onSuccess() {
-                    Log.d("binaryLoad", "onSuccess")
-                }
-                override
-                fun onStart() {
-                    Log.d("binaryLoad", "onStart")
-                }
-                override
-                fun onFinish() {
-                    Log.d("binaryLoad", "onFinish")
-                }
-            })
-        } catch (e: FFmpegNotSupportedException) {
-            e.printStackTrace()
+        binding.buttonTrimDone.setOnClickListener {
+            submitForTrim()
         }
-    }
+        binding.ivMusic.setOnClickListener(this)
 
-    fun executeCommand(command: Array<String?>?, absolutePath: String?) {
-        Log.e("asgjhdasd","alisjdlad")
-        fFmpeg.execute(command, object : FFmpegExecuteResponseHandler {
-            override
-            fun onSuccess(s: String) {
-                Log.d("CommandExecute", "onSuccess  $s")
-                Toast.makeText(getApplicationContext(), "Sucess", Toast.LENGTH_SHORT).show()
-                /*      val i = Intent(this@ActivityVideoEditor, ActivityVideoEditor::class.java)
-                      i.putExtra("DATA", absolutePath)
-                      startActivity(i)*/
-            }
-            override
-            fun onProgress(s: String) {
-                progressDialog!!.setMessage(s)
-                Log.d("CommandExecute", "onProgress  $s")
-            }
-            override
-            fun onFailure(s: String) {
-                Log.d("CommandExecute", "onFailure  $s")
-                progressDialog!!.hide()
-            }
-            override
-            fun onStart() {
-                progressDialog!!.setTitle("Preccesing")
-                progressDialog!!.setMessage("Starting")
-                progressDialog!!.show()
-            }
-            override
-            fun onFinish() {
-                progressDialog!!.hide()
-            }
-        })
+        binding.imgTrim.setOnClickListener(this)
     }
 
     override fun onClick(v: View) {
@@ -264,8 +252,10 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
             R.id.imgDone -> saveImage()
             R.id.imgDraw -> setDrawingMode()
 
-            R.id.imgText -> {    val textEditorDialogFragment = TextEditorDialogFragment.show(this)
-                textEditorDialogFragment.setOnTextEditorListener(object : TextEditorDialogFragment.TextEditorListener {
+            R.id.imgText -> {
+                val textEditorDialogFragment = TextEditorDialogFragment.show(this)
+                textEditorDialogFragment.setOnTextEditorListener(object :
+                    TextEditorDialogFragment.TextEditorListener {
                     override fun onDone(inputText: String?, colorCode: Int) {
                         val styleBuilder = TextStyleBuilder()
                         styleBuilder.withTextColor(colorCode)
@@ -292,10 +282,23 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
             )
 
             R.id.ivMusic -> {
-                val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
-                intent.addCategory(Intent.CATEGORY_OPENABLE)
-                intent.type = "audio/*"
-                startActivityForResult(intent, PICK_FILE)
+
+
+                resultCallbackOfSelectedMusicTrack.launch(IntentHelper.getSongPickerActivity(this))
+
+
+            }
+
+
+            R.id.imgTrim -> {
+
+                if (binding.layoutTrim.visibility == View.VISIBLE) {
+                    binding.layoutTrim.visibility = View.GONE
+                } else {
+                    binding.layoutTrim.visibility = View.VISIBLE
+                }
+
+
             }
 
         }
@@ -312,17 +315,34 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
             ),
             DimensionData(originalDisplayWidth, originalDisplayHeight)
         )
+
+
+
         newCanvasWidth = displayDiamenion.width
         newCanvasHeight = displayDiamenion.height
+
     }
 
     private fun setDrawingMode() {
         if (mPhotoEditor.brushDrawableMode == true) {
             mPhotoEditor.setBrushDrawingMode(false)
-            binding.imgDraw.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_crtpost_top_sketch_active))
+            binding.imgDraw.setImageDrawable(
+                ContextCompat.getDrawable(
+                    this,
+                    R.drawable.ic_crtpost_top_sketch
+                )
+            )
         } else {
             mPhotoEditor.setBrushDrawingMode(true)
-            binding.imgDraw.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_crtpost_top_sketch))
+
+
+            binding.imgDraw.setImageDrawable(
+                ContextCompat.getDrawable(
+                    this,
+                    R.drawable.ic_crtpost_top_sketch_active
+                )
+            )
+
             propertiesBSFragment.show(getSupportFragmentManager(), propertiesBSFragment.getTag())
         }
     }
@@ -343,50 +363,61 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
                 .setClearViewsEnabled(true)
                 .setTransparencyEnabled(false)
                 .build()
-            mPhotoEditor.saveAsFile(file.absolutePath, saveSettings, object : PhotoEditor.OnSaveListener {
-                override
-                fun onSuccess(@NonNull imagePath: String) {
-                  //  dismissLoader()
-                    this@ActivityVideoEditor.imagePath = imagePath
-                    Log.d("imagePath>>", imagePath)
-                    Log.d("imagePath2>>", Uri.fromFile(File(imagePath)).toString())
-                    binding.ivImage.source.setImageURI(Uri.fromFile(File(imagePath)))
-            /*        Toast.makeText(
-                        this@ActivityVideoEditor,
-                        "Saved successfully...",
-                        Toast.LENGTH_SHORT
-                    ).show()*/
-                    applayWaterMark()
-                    //  saveVideoToInternalStorage()
-                }
+            mPhotoEditor.saveAsFile(
+                file.absolutePath,
+                saveSettings,
+                object : PhotoEditor.OnSaveListener {
+                    override
+                    fun onSuccess(@NonNull imagePath: String) {
+                        //  dismissLoader()
+                        this@ActivityVideoEditor.imagePath = imagePath
+                        Log.d("imagePath>>", imagePath)
+                        Log.d("imagePath2>>", Uri.fromFile(File(imagePath)).toString())
+                        binding.ivImage.source.setImageURI(Uri.fromFile(File(imagePath)))
+                        /*        Toast.makeText(
+                                    this@ActivityVideoEditor,
+                                    "Saved successfully...",
+                                    Toast.LENGTH_SHORT
+                                ).show()*/
 
-                override fun onFailure(exception: Exception) {
-                    dismissLoader()
-                    Toast.makeText(
-                        this@ActivityVideoEditor,
-                        "Saving Failed...",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
+                        if (isIMage) {
+                            convertImageToVideo(imagePath)
+                        } else {
+                            applayWaterMark(File(videoPath))
+                        }
 
 
-            })
+                        //  saveVideoToInternalStorage()
+                    }
+
+                    override fun onFailure(exception: Exception) {
+                        dismissLoader()
+                        Toast.makeText(
+                            this@ActivityVideoEditor,
+                            "Saving Failed...",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
+
+                })
         } catch (e: IOException) {
             dismissLoader()
             e.printStackTrace()
         }
     }
 
-    private fun applayWaterMark() {
+    private fun applayWaterMark(beforeWatermarkAddedFile: File) {
 
         try {
             //    addWaterMarkProcess()
-            addToWatermark()
+            addToWatermark(beforeWatermarkAddedFile)
         } catch (e: Exception) {
-            Log.d("lkajsdlasd",e!!.toString())
+            Log.d("lkajsdlasd", e!!.toString())
             e.printStackTrace()
         }
     }
+
     override
     fun onStickerClick(bitmap: Bitmap?) {
         mPhotoEditor.setBrushDrawingMode(false)
@@ -412,28 +443,25 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
 
     override
     fun onColorChanged(colorCode: Int) {
-        mPhotoEditor.brushColor=colorCode
+        mPhotoEditor.brushColor = colorCode
         binding.txtCurrentTool.setText(R.string.label_brush)
     }
+
     override
     fun onOpacityChanged(opacity: Int) {
         binding.txtCurrentTool.setText(R.string.label_brush)
 
     }
-    override
-    fun onBrushSizeChanged(brushSize: Int) {}
 
-    companion object {
-        private val TAG = ActivityVideoEditor::class.java.simpleName
-        private val CAMERA_REQUEST = 52
-        private val PICK_REQUEST = 53
+    override
+    fun onBrushSizeChanged(brushSize: Int) {
     }
 
-
-
     override fun onEditTextChangeListener(rootView: View?, text: String?, colorCode: Int) {
-        val textEditorDialogFragment = TextEditorDialogFragment.show(this, text.toString(), colorCode)
-        textEditorDialogFragment.setOnTextEditorListener (object : TextEditorDialogFragment.TextEditorListener {
+        val textEditorDialogFragment =
+            TextEditorDialogFragment.show(this, text.toString(), colorCode)
+        textEditorDialogFragment.setOnTextEditorListener(object :
+            TextEditorDialogFragment.TextEditorListener {
             override fun onDone(inputText: String?, colorCode: Int) {
                 val styleBuilder = TextStyleBuilder()
                 styleBuilder.withTextColor(colorCode)
@@ -468,53 +496,17 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
     }
 
 
-
-
     override fun onEmojiClick(emojiUnicode: String?) {
         mPhotoEditor.addEmoji(emojiUnicode)
         // binding.txtCurrentTool.setText(R.string.label_emoji)
     }
 
 
-
-
-    val ffmpegQueryExtension = FFmpegQueryExtension()
-    private fun addWaterMarkProcess() {
-        val outputPath = Common.getFilePath(this, Common.VIDEO)
-        val xPos = 0f
-        val yPos = 0f
-
-        val query = ffmpegQueryExtension.addVideoWaterMark(videoPath, imagePath, xPos, yPos, outputPath)
-        CallBackOfQuery().callQuery(query, object : FFmpegCallBack {
-            override fun process(logMessage: LogMessage) {
-
-            }
-
-            override fun success() {
-
-            }
-
-            override fun cancel() {
-
-            }
-
-            override fun failed() {
-
-            }
-        })
-    }
-
-
-
-
-
-    fun addToWatermark(){
-        Log.d("lkajsdlasd","oaspdoa")
-
+    fun addToWatermark(beforeWatermarkAddedFile: File) {
         val wm = WorkManager.getInstance(this)
         val output = File(cacheDir, UUID.randomUUID().toString())
-        val data: Data =  Data.Builder()
-            .putString(WatermarkWorker.KEY_INPUT, videoPath)
+        val data: Data = Data.Builder()
+            .putString(WatermarkWorker.KEY_INPUT, beforeWatermarkAddedFile.absolutePath)
             .putString(WatermarkWorker.ICON, imagePath)
             .putString(WatermarkWorker.KEY_OUTPUT, output.absolutePath)
             .build()
@@ -524,33 +516,19 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
         wm.enqueue(request)
         wm.getWorkInfoByIdLiveData(request.id)
             .observe(this) { info: WorkInfo ->
-
-
-
                 val ended = (info.state == WorkInfo.State.CANCELLED
                         || info.state == WorkInfo.State.FAILED)
                 if (info.state == WorkInfo.State.SUCCEEDED) {
-                    Log.d("lkajsdlasd","oaspdofdgha")
                     dismissLoader()
                     saveVideoToInternalStorage(output.path)
-
                 } else if (ended) {
-                    Log.d("lkajsdlasd","oaspdfghdoa")
                 }
-                Log.d("lkajsdlasd","oaspfghdoa")
             }
-        Log.d("lkajsdlasd","oaspdodfgha")
 
     }
 
 
-
-
-
-
-
-
-    private fun saveVideoToInternalStorage(path:String) {
+    private fun saveVideoToInternalStorage(path: String) {
         try {
             val currentFile: File = File(path)
             val newfile = File(Common.getFilePath(this, Common.VIDEO))
@@ -567,11 +545,13 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
                 outputStream.close()
 
 
-
-         /*       Toast.makeText(applicationContext, "Video has just saved!!", Toast.LENGTH_LONG)
-                    .show()
-                */
-                startActivity(IntentHelper.getCreateFuntimePostScreen(this)!!.putExtra(EXTRA_VIDEO,newfile.absolutePath))
+                /*       Toast.makeText(applicationContext, "Video has just saved!!", Toast.LENGTH_LONG)
+                           .show()
+                       */
+                startActivity(
+                    IntentHelper.getCreateFuntimePostScreen(this)!!
+                        .putExtra(EXTRA_VIDEO, newfile.absolutePath)
+                )
 
 
             } else {
@@ -587,8 +567,480 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
     }
 
 
+    private fun releasePlayer() {
+        mediaPlayer!!.release()
+    }
+
+    public override fun onStart() {
+        super.onStart()
 
 
+    }
 
+    public override fun onStop() {
+        super.onStop()
+        //  releasePlayer()
+    }
+
+
+    fun initializePlayer() {
+        mediaPlayer = ExoPlayer.Builder(this@ActivityVideoEditor).build()
+        binding.videoSurface.player = mediaPlayer
+        binding.videoSurface.hideController()
+        binding.videoSurface.useController = false
+        // mediaPlayer!!.repeatMode = ExoPlayer.REPEAT_MODE_ALL
+        mediaPlayer!!.addListener(object : Player.Listener {
+            override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
+                /*   imagePlayPause.visibility = if (playWhenReady) View.GONE else View.VISIBLE*/
+            }
+
+            override fun onPlaybackStateChanged(state: Int) {
+                when (state) {
+                    Player.STATE_ENDED -> {
+                        /*      imagePlayPause.visibility = View.VISIBLE*/
+                        isVideoEnded = true
+                    }
+                    Player.STATE_READY -> {
+                        isVideoEnded = false
+                        /*         imagePlayPause.visibility = View.GONE*/
+                        startProgress() //use this when start audio trimmer
+
+                    }
+                    else -> {}
+                }
+            }
+        })
+        setupDataOverExoplayer()
+    }
+
+    override fun onPause() {
+        super.onPause()
+      //  mediaPlayer!!.setPlayWhenReady(false)
+    }
+
+    fun setupDataOverExoplayer() {
+
+        var videoSource: MediaSource =
+            ProgressiveMediaSource.Factory(FileDataSource.Factory()).createMediaSource(
+                MediaItem.fromUri(Uri.parse(videoPath))
+            )
+        var audioSource: MediaSource? = null
+        var mergedSource: MediaSource? = null
+        if (!ValidationHelper.isNull(audioPath)) {
+            audioSource =
+                ProgressiveMediaSource.Factory(FileDataSource.Factory()).createMediaSource(
+                    MediaItem.fromUri(Uri.parse(audioPath))
+                )
+            mergedSource = MergingMediaSource(videoSource, audioSource);
+            if (isIMage) {
+                Glide.with(this).load(Drawable.createFromPath(videoPath)).centerCrop()
+                    .into(binding.ivImage.source)
+                mediaPlayer!!.setMediaSource(audioSource)
+
+            } else {
+                mediaPlayer!!.setMediaSource(mergedSource)
+            }
+        } else {
+            if (isIMage) {
+                binding.videoSurface.defaultArtwork = Drawable.createFromPath(videoPath)
+                Glide.with(this).load(Drawable.createFromPath(videoPath)).centerCrop()
+                    .into(binding.ivImage.source)
+            } else {
+                mediaPlayer!!.setMediaSource(videoSource)
+            }
+        }
+        mediaPlayer!!.playWhenReady = true
+        mediaPlayer!!.prepare()
+        setDataInView()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (mediaPlayer != null) mediaPlayer!!.release()
+        deleteFile("temp_file")
+        stopRepeatingTask()
+    }
+
+
+    lateinit var imageToVideo: ImageToVideoConverter
+    private fun convertImageToVideo(imagePath: String) {
+        //int height = getInputData().getInt(ICON,0);
+        // int width = getInputData().getInt(ICON,0);
+
+        val outputPath = Common.getFilePath(this, Common.VIDEO)
+        imageToVideo = ImageToVideoConverter(
+            outputPath = outputPath,
+            inputImagePath = imagePath,
+            size = Size(528, 1072),
+            duration = TimeUnit.SECONDS.toMicros(10),
+            listener = object : EncodeListener {
+                override fun onProgress(progress: Float) {
+                    Log.d("progress", "progress = $progress")
+                    runOnUiThread {
+
+                    }
+                }
+
+                override fun onCompleted() {
+                    runOnUiThread {
+                        mergeAudioVideo(outputPath)
+                    }
+                }
+
+                override fun onFailed(exception: Exception) {
+
+                }
+            }
+        )
+        imageToVideo?.start()
+
+
+        /*
+
+
+           val outputPath = Common.getFilePath(this, Common.VIDEO)
+           val size: ISize = SizeOfImage(imagePath)
+           val query = ffmpegQueryExtension.imageToVideo(
+               imagePath,
+               outputPath,
+               10,
+               size.width(),
+               size.height()
+           )
+
+           CallBackOfQuery().callQuery(query, object : FFmpegCallBack {
+               override fun process(logMessage: LogMessage) {
+
+               }
+
+               override fun success() {
+                   Log.d("as;ldasd", outputPath)
+                   mModel!!.video = File(outputPath)
+
+                   val segment = RecordSegment()
+                   segment.file = mModel!!.video
+                   val duration: Long =
+                       VideoUtil.getDuration(this@ActivityVideoRecorder, Uri.fromFile(mModel!!.video))
+                   segment.duration = duration
+                   Log.d("as;ldasd", duration.toString())
+                   mModel!!.segments.add(segment)
+                   commitImage()
+
+               }
+
+               override fun cancel() {
+
+               }
+
+               override fun failed() {
+
+               }
+
+           })*/
+    }
+
+    private fun mergeAudioVideo(filePath: String) {
+        val videos: MutableList<String> = ArrayList()
+        videos.add(filePath)
+        val merged1 = File(cacheDir, UUID.randomUUID().toString())
+        val data1: Data = Data.Builder()
+            .putStringArray(MergeVideosWorker.KEY_VIDEOS, videos.toTypedArray())
+            .putString(MergeVideosWorker.KEY_OUTPUT, merged1.absolutePath)
+            .build()
+
+        val request1: OneTimeWorkRequest = OneTimeWorkRequest.Builder(MergeVideosWorker::class.java)
+            .setInputData(data1)
+            .build()
+
+        val wm: WorkManager = WorkManager.getInstance(this)
+        if (!ValidationHelper.isNull(audioPath)) {
+            val merged2 = File(cacheDir, UUID.randomUUID().toString())
+            val audioFile: File = File(audioPath)
+            val data2 =
+                Data.Builder() // .putString(MergeAudioVideoWorker.KEY_AUDIO,mModel.audio.getPath())
+                    .putString(MergeAudioVideoWorker.KEY_AUDIO, audioFile.absolutePath)
+                    .putString(MergeAudioVideoWorker.KEY_VIDEO, merged1.absolutePath)
+                    .putString(MergeAudioVideoWorker.KEY_OUTPUT, merged2.absolutePath)
+                    .build()
+            Log.d("===>>", audioFile.absolutePath)
+            Log.d("===>>", merged1.absolutePath)
+            val request2 =
+                OneTimeWorkRequest.Builder(MergeAudioVideoWorker::class.java).setInputData(data2)
+                    .build()
+            wm.beginWith(request1).then(request2).enqueue()
+            wm.getWorkInfoByIdLiveData(request2.id)
+                .observe(this) { info: WorkInfo ->
+                    Log.d("states====>", info.state.toString())
+                    val ended = (info.state == WorkInfo.State.CANCELLED
+                            || info.state == WorkInfo.State.FAILED)
+                    if (info.state == WorkInfo.State.SUCCEEDED) {
+                        applayWaterMark(merged2)
+                    } else if (ended) {
+                    }
+                }
+        } else {
+            wm.enqueue(request1)
+            wm.getWorkInfoByIdLiveData(request1.getId())
+                .observe(this) { info ->
+                    val ended = (info.getState() === WorkInfo.State.CANCELLED
+                            || info.getState() === WorkInfo.State.FAILED)
+                    if (info.getState() === WorkInfo.State.SUCCEEDED) {
+                        applayWaterMark(merged1)
+                    } else if (ended) {
+
+                    }
+                }
+        }
+    }
+
+
+    private fun getCroppedTrack(track: Track, startTimeMs: Int, endTimeMs: Int): CroppedTrack? {
+        var currentSample: Long = 0
+        var currentTime = 0.0
+        var startSample: Long = -1
+        var endSample: Long = -1
+        val startTime = (startTimeMs / 1000).toDouble()
+        val endTime = (endTimeMs / 1000).toDouble()
+        for (i in 0 until track.sampleDurations.size) {
+            if (currentTime <= startTime) {
+                // current sample is still before the new starttime
+                startSample = currentSample
+            }
+            endSample = if (currentTime <= endTime) {
+                // current sample is after the new start time and still before the new endtime
+                currentSample
+            } else {
+                // current sample is after the end of the cropped video
+                break
+            }
+            currentTime += track.sampleDurations.get(i).toDouble() / track.trackMetaData
+                .timescale.toDouble()
+            currentSample++
+        }
+        return CroppedTrack(track, startSample, endSample)
+    }
+
+
+/*    private lateinit var imagePlayPause: ImageView*/
+
+    private var imageViews = ArrayList<ImageView>()
+
+    private var totalDuration: Long = 0
+
+    private lateinit var dialog: Dialog
+
+
+/*    private lateinit var txtStartDuration: TextView
+    private  lateinit var txtEndDuration:TextView*/
+
+    private lateinit var seekbar: CrystalRangeSeekbar
+
+    private var lastMinValue: Long = 0
+
+    private var lastMaxValue: Long = 0
+
+    private var menuDone: MenuItem? = null
+
+    private var seekbarController: CrystalSeekbar? = null
+
+    private var isValidVideo = true
+    private var isVideoEnded: kotlin.Boolean = false
+
+    private var seekHandler: Handler? = null
+
+    private lateinit var bundle: Bundle
+
+
+    private var currentDuration: Long = 0
+    private var lastClickedTime: kotlin.Long = 0
+    var updateSeekbar: Runnable = object : Runnable {
+        override fun run() {
+            try {
+                Log.d("aksdasda", "ioasjdsa")
+                currentDuration = mediaPlayer!!.getCurrentPosition() / 1000
+                if (!mediaPlayer!!.getPlayWhenReady()) return
+                if (currentDuration <= lastMaxValue) seekbarController!!.setMinStartValue(
+                    currentDuration.toInt().toFloat()
+                ).apply() else mediaPlayer!!.setPlayWhenReady(false)
+            } finally {
+                seekHandler!!.postDelayed(this, 1000)
+            }
+        }
+    }
+    private var trimType = 0
+    private var fixedGap: Long = 0
+    private var minGap: kotlin.Long = 0
+    private var minFromGap: kotlin.Long = 0
+    private var maxToGap: kotlin.Long = 0
+    private var hidePlayerSeek =
+        false
+    private var progressView: CustomProgressView? = null
+
+
+    private fun setUpSeekBar() {
+        seekbar.visibility = View.VISIBLE
+        /*       txtStartDuration.setVisibility(View.VISIBLE)
+               txtEndDuration.setVisibility(View.VISIBLE)*/
+        seekbarController!!.setMaxValue(totalDuration.toFloat()).apply()
+        seekbar.setMaxValue(totalDuration.toFloat()).apply()
+        seekbar.setMaxStartValue(totalDuration.toFloat()).apply()
+        lastMaxValue = if (trimType == 1) {
+            seekbar.setFixGap(fixedGap.toFloat()).apply()
+            totalDuration
+        } else if (trimType == 2) {
+            seekbar.setMaxStartValue(minGap.toFloat())
+            seekbar.setGap(minGap.toFloat()).apply()
+            totalDuration
+        } else if (trimType == 3) {
+            seekbar.setMaxStartValue(maxToGap.toFloat())
+            seekbar.setGap(minFromGap.toFloat()).apply()
+            maxToGap
+        } else {
+            seekbar.setGap(2F).apply()
+            totalDuration
+        }
+        if (hidePlayerSeek) seekbarController!!.visibility = View.GONE
+        seekbar.setOnRangeSeekbarFinalValueListener { minValue, maxValue ->
+            if (!hidePlayerSeek) seekbarController!!.visibility = View.VISIBLE
+        }
+        seekbar.setOnRangeSeekbarChangeListener { minValue, maxValue ->
+            val minVal = minValue as Long
+            val maxVal = maxValue as Long
+            if (lastMinValue != minVal) {
+                seekTo(minValue)
+                if (!hidePlayerSeek) seekbarController!!.visibility = View.INVISIBLE
+            }
+            lastMinValue = minVal
+            lastMaxValue = maxVal
+
+            Log.d("akjsdasdoo", lastMinValue.toString())
+            Log.d("akjsdasdoo", lastMaxValue.toString())
+
+/*            txtStartDuration.setText(TrimmerUtils.formatSeconds(minVal))
+            txtEndDuration.setText(TrimmerUtils.formatSeconds(maxVal))*/
+            if (trimType == 3) setDoneColor(minVal, maxVal)
+        }
+        seekbarController!!.setOnSeekbarFinalValueListener { value ->
+            val value1 = value as Long
+            if (value1 < lastMaxValue && value1 > lastMinValue) {
+                seekTo(value1)
+                return@setOnSeekbarFinalValueListener
+            }
+            if (value1 > lastMaxValue) seekbarController!!.setMinStartValue(
+                lastMaxValue.toInt().toFloat()
+            ).apply() else if (value1 < lastMinValue) {
+                seekbarController!!.setMinStartValue(lastMinValue.toInt().toFloat()).apply()
+                if (mediaPlayer!!.playWhenReady) seekTo(lastMinValue)
+            }
+        }
+    }
+
+
+    private fun seekTo(sec: Long) {
+        if (mediaPlayer != null) mediaPlayer!!.seekTo(sec * 1000)
+    }
+
+    private fun setDoneColor(minVal: Long, maxVal: Long) {
+        try {
+            if (menuDone == null) return
+            //changed value is less than maxDuration
+            if (maxVal - minVal <= maxToGap) {
+                menuDone!!.icon.colorFilter =
+                    PorterDuffColorFilter(
+                        ContextCompat.getColor(this, R.color.white),
+                        PorterDuff.Mode.SRC_IN
+                    )
+                isValidVideo = true
+            } else {
+                menuDone!!.icon.colorFilter =
+                    PorterDuffColorFilter(
+                        ContextCompat.getColor(this, R.color.black),
+                        PorterDuff.Mode.SRC_IN
+                    )
+                isValidVideo = false
+            }
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
+    }
+
+
+    private fun setDataInView() {
+        try {
+            val fileUriRunnable = Runnable {
+                runOnUiThread {
+                    totalDuration = TrimmerUtils.getDuration(this, Uri.parse(videoPath))
+
+                    // imagePlayPause.setOnClickListener { v: View? -> onVideoClicked() }
+                    /*                 Objects.requireNonNull<View>(playerView.getVideoSurfaceView())
+                                         .setOnClickListener { v: View? -> onVideoClicked() }*/
+
+                    loadThumbnails()
+                    setUpSeekBar()
+                }
+            }
+            Executors.newSingleThreadExecutor().execute(fileUriRunnable)
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    /*
+     *  loading thumbnails
+     * */
+    private fun loadThumbnails() {
+        try {
+            val diff = totalDuration / 8
+            var sec = 1
+            for (img in imageViews) {
+                val interval = diff * sec * 1000000
+                val options = RequestOptions().frame(interval)
+                Glide.with(this)
+                    .load(bundle.getString(TrimVideo.TRIM_VIDEO_URI))
+                    .apply(options)
+                    .transition(DrawableTransitionOptions.withCrossFade(300))
+                    .into(img)
+                if (sec < totalDuration) sec++
+            }
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    fun startProgress() {
+        updateSeekbar.run()
+    }
+
+
+    fun stopRepeatingTask() {
+        seekHandler!!.removeCallbacks(updateSeekbar)
+    }
+
+    private fun submitForTrim() {
+        val wm = WorkManager.getInstance(this)
+        val trimmed = File(cacheDir, UUID.randomUUID().toString())
+        val data = Data.Builder()
+            .putString(VideoTrimmerWorker.KEY_INPUT, videoPath)
+            .putString(VideoTrimmerWorker.KEY_OUTPUT, trimmed.absolutePath)
+            .putLong(VideoTrimmerWorker.KEY_START, lastMinValue * 1000)
+            .putLong(VideoTrimmerWorker.KEY_END, lastMaxValue * 1000)
+            .build()
+        val request = OneTimeWorkRequest.Builder(VideoTrimmerWorker::class.java)
+            .setInputData(data)
+            .build()
+        wm.enqueue(request)
+        wm.getWorkInfoByIdLiveData(request.id)
+            .observe(this) { info: WorkInfo ->
+                val ended = (info.state == WorkInfo.State.CANCELLED
+                        || info.state == WorkInfo.State.FAILED)
+                if (info.state == WorkInfo.State.SUCCEEDED) {
+                    videoPath = trimmed.absolutePath
+                    binding.layoutTrim.visibility = View.GONE
+                    initializePlayer()
+                } else if (ended) {
+
+                }
+            }
+    }
 
 }
