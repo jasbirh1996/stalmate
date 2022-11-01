@@ -1,5 +1,7 @@
 package com.stalmate.user.modules.reels.activity
 
+
+
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -14,7 +16,9 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.provider.MediaStore
 import android.util.AttributeSet
+import android.util.DisplayMetrics
 import android.util.Log
 import android.util.Size
 import android.view.Display
@@ -23,6 +27,7 @@ import android.view.ViewGroup.MarginLayoutParams
 import android.view.WindowManager
 import android.widget.RadioGroup
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.Nullable
@@ -31,7 +36,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSmoothScroller
-import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequest
@@ -68,7 +72,10 @@ import com.stalmate.user.modules.reels.workers.MergeVideosWorker
 import com.stalmate.user.modules.reels.workers.VideoSpeedWorker
 import com.stalmate.user.utilities.Common
 import com.user.vaibhavmodules.reels.utils.SharedConstants
+import jp.co.cyberagent.android.gpuimage.filter.*
 import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -144,20 +151,33 @@ class ActivityVideoRecorder : BaseActivity() {
         binding.cameraView.mapGesture(Gesture.TAP, GestureAction.AUTO_FOCUS);
         binding.cameraView.mapGesture(Gesture.LONG_TAP, GestureAction.TAKE_PICTURE);
         binding.cameraView.addCameraListener(object : CameraListener() {
+
+
             override fun onPictureTaken(result: PictureResult) {
 
 
                 result.toFile(File(cacheDir, UUID.randomUUID().toString()), FileCallback {
 
-                    runOnUiThread {
 
+                            mModel!!.video=it
+
+
+                    runOnUiThread {
                         binding.selectedPhoto.visibility=View.VISIBLE
                         result.toBitmap {
-                            Glide.with(this@ActivityVideoRecorder).load(it!!).into(binding.selectedPhoto)
+                           runOnUiThread {
+                               binding.selectedPhoto.setImage(it);
+                               binding.cameraView.visibility=View.GONE
+                           }
                         }
+
+
+
                       //  createVideo(it!!.absolutePath, result.size)
-                        mModel!!.video = File(it!!.absolutePath)
-                    closeFinally(mModel!!.video!!)
+                        binding.rvFilters.visibility=View.VISIBLE
+                        binding.buttonDone.visibility=View.VISIBLE
+                        binding.layoutBottomControll.visibility=View.GONE
+                   // closeFinally(mModel!!.video!!)
                     }
 
                 })
@@ -233,30 +253,7 @@ class ActivityVideoRecorder : BaseActivity() {
     }
 
 
-/*    fun onBtnSavePng(view: View?) {
-        try {
-            val fileName: String = getCurrentTimeString().toString() + ".jpg"
-            val values = ContentValues()
-            values.put(MediaStore.Images.Media.DISPLAY_NAME, fileName)
-            values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpg")
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                values.put(MediaStore.MediaColumns.RELATIVE_PATH, "DCIM/")
-                values.put(MediaStore.MediaColumns.IS_PENDING, 1)
-            } else {
-                val directory =
-                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)
-                val file = File(directory, fileName)
-                values.put(MediaStore.MediaColumns.DATA, file.absolutePath)
-            }
-            val uri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
-            contentResolver.openOutputStream(uri!!).use { output ->
-                val bm: Bitmap = textureView.getBitmap()
-                bm.compress(Bitmap.CompressFormat.JPEG, 100, output)
-            }
-        } catch (e: Exception) {
-            Log.d("onBtnSavePng", e.toString()) // java.io.IOException: Operation not permitted
-        }
-    }*/
+
 
     fun setUpFilterAdapter() {
         //  binding.cameraView.
@@ -276,25 +273,33 @@ class ActivityVideoRecorder : BaseActivity() {
                             filter!!
                         )
                     }
-                    val snapHelper = LinearSnapHelper()
+      /*            val snapHelper = LinearSnapHelper()
                     snapHelper.attachToRecyclerView(  binding.rvFilters)
-
+*/
 
                     binding.rvFilters.setNestedScrollingEnabled(false)
                     binding.rvFilters.setHasFixedSize(true)
                     binding.rvFilters.adapter = adapter
-                    binding.rvFilters.addItemDecoration(OffsetItemDecoration(this@ActivityVideoRecorder))
+                  //  binding.rvFilters.addItemDecoration(OffsetItemDecoration(this@ActivityVideoRecorder))
                    // binding.rvFilters.layoutManager=CenterLayoutManager(this@ActivityVideoRecorder, LinearLayoutManager.HORIZONTAL, false)
-                    binding.rvFilters.layoutManager=CenterZoomLayoutManager(this@ActivityVideoRecorder, LinearLayoutManager.HORIZONTAL, false)
-
-                    binding.rvFilters.addOnScrollListener(object :RecyclerView.OnScrollListener(){
+                  //  binding.rvFilters.layoutManager=CenterZoomLayoutManager(this@ActivityVideoRecorder, LinearLayoutManager.HORIZONTAL, false)
+                    binding.rvFilters.layoutManager=LinearLayoutManager(this@ActivityVideoRecorder, LinearLayoutManager.HORIZONTAL, false)
+         /*           val layoutManager = CarouselLayoutManager(CarouselLayoutManager.HORIZONTAL, true)
+                    layoutManager.setPostLayoutListener(CarouselZoomPostLayoutListener())
+                    binding.rvFilters.layoutManager = layoutManager
+                    binding.rvFilters.addOnScrollListener(CenterScrollListener())
+                    binding.rvFilters.setNestedScrollingEnabled(false)
+                    binding.rvFilters.setHasFixedSize(true)
+                    binding.rvFilters.adapter = adapter
+*/
+            /*        binding.rvFilters.addOnScrollListener(object :RecyclerView.OnScrollListener(){
 
                         override fun onScrollStateChanged(
                             recyclerView: RecyclerView,
                             newState: Int
                         ) {
                             super.onScrollStateChanged(recyclerView, newState)
-                            if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                          if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                                 val centerView = snapHelper.findSnapView(binding.rvFilters.layoutManager)
                                 val pos = (binding.rvFilters.layoutManager as CenterZoomLayoutManager).getPosition(centerView!!)
 
@@ -353,7 +358,7 @@ class ActivityVideoRecorder : BaseActivity() {
                         }
 
 
-                    })
+                    })*/
 
                 }
 
@@ -368,8 +373,46 @@ class ActivityVideoRecorder : BaseActivity() {
 
     private fun applyPreviewFilter(filter: VideoFilter) {
 
-     //   binding.rvFilters.visibility=View.GONE
-
+        if (isImage){
+            when (filter) {
+                VideoFilter.BRIGHTNESS -> {
+                    val glf = GPUImageBrightnessFilter()
+                    glf.setBrightness(0.2f)
+                     binding.selectedPhoto.setFilter(glf)
+                }
+                VideoFilter.EXPOSURE ->  binding.selectedPhoto.setFilter(GPUImageExposureFilter())
+                VideoFilter.GAMMA -> {
+                    val glf = GPUImageGammaFilter()
+                    glf.setGamma(2f)
+                     binding.selectedPhoto.setFilter(glf)
+                }
+                VideoFilter.GRAYSCALE ->  binding.selectedPhoto.setFilter(GPUImageGrayscaleFilter())
+                VideoFilter.HAZE -> {
+                    val glf = GPUImageHazeFilter()
+                    glf.setSlope(-0.5f)
+                     binding.selectedPhoto.setFilter(glf)
+                }
+                VideoFilter.INVERT ->  binding.selectedPhoto.setFilter(GPUImageColorInvertFilter())
+                VideoFilter.MONOCHROME ->  binding.selectedPhoto.setFilter(GPUImageMonochromeFilter())
+                VideoFilter.PIXELATED -> {
+                    val glf = GPUImagePixelationFilter()
+                    glf.setPixel(5f)
+                     binding.selectedPhoto.setFilter(glf)
+                }
+                VideoFilter.POSTERIZE ->  binding.selectedPhoto.setFilter(GPUImagePosterizeFilter())
+                VideoFilter.SEPIA ->  binding.selectedPhoto.setFilter(GPUImageSepiaToneFilter())
+                VideoFilter.SHARP -> {
+                    val glf = GPUImageSharpenFilter()
+                    glf.setSharpness(1f)
+                     binding.selectedPhoto.setFilter(glf)
+                }
+                VideoFilter.SOLARIZE ->  binding.selectedPhoto.setFilter(GPUImageSolarizeFilter())
+                VideoFilter.VIGNETTE ->  binding.selectedPhoto.setFilter(GPUImageVignetteFilter())
+                else ->  binding.selectedPhoto.setFilter(GPUImageFilter())
+            }
+        }else{
+            binding.rvFilters.visibility=View.GONE
+        }
 
         when (filter) {
             VideoFilter.BRIGHTNESS -> {
@@ -408,6 +451,9 @@ class ActivityVideoRecorder : BaseActivity() {
             VideoFilter.VIGNETTE -> binding.cameraView.setFilter(Filters.VIGNETTE.newInstance())
             else -> binding.cameraView.setFilter(Filters.NONE.newInstance())
         }
+
+
+
     }
 
     var recorded = 0.toLong()
@@ -640,46 +686,54 @@ class ActivityVideoRecorder : BaseActivity() {
     }
 
 
- /*   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
+    private fun imageChooser() {
+        val i = Intent()
+        i.type = "image/*"
+        i.action = Intent.ACTION_GET_CONTENT
+        launchActivityForImagePick.launch(i)
+    }
 
-        var filePath: String? = ""
-        if (requestCode == PICK_FILE && resultCode == RESULT_OK) {
+    var launchActivityForImagePick = registerForActivityResult<Intent, ActivityResult>(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result: ActivityResult ->
+        if (result.getResultCode()
+            == RESULT_OK
+        ) {
+            var  data: Intent = result.data!!
+            // do your operation from here....
+            if (data != null
+                && data.data != null
+            ) {
+                val selectedImageUri = data.data
+                val selectedImageBitmap: Bitmap
+                try {
+                    selectedImageBitmap = MediaStore.Images.Media.getBitmap(
+                        this.contentResolver,
+                        selectedImageUri
+                    )
+                 Handler(Looper.getMainLooper()).post {
+                     binding.selectedPhoto.visibility=View.VISIBLE
+                     binding.selectedPhoto.gpuImage.deleteImage()
+                     runOnUiThread {
+                         binding.selectedPhoto.setImage(selectedImageBitmap);
+                         binding.cameraView.visibility=View.GONE
+                         //  createVideo(it!!.absolutePath, result.size)
+                         binding.buttonDone.visibility=View.VISIBLE
+                         binding.layoutBottomControll.visibility=View.GONE
+                         // closeFinally(mModel!!.video!!)
+                     }
+                 }
+                    Log.d(";alsjkdasd","alskjdasd")
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
 
-            val uri: Uri? = data!!.getData()
-            val wholeID = DocumentsContract.getDocumentId(uri)
 
-            // Split at colon, use second item in the array
-            val id = wholeID.split(":").toTypedArray()[1]
 
-            val column = arrayOf(MediaStore.MediaColumns.DATA)
-
-            // where id is equal to
-            val sel = MediaStore.Audio.Media._ID + "=?"
-
-            val cursor = contentResolver.query(
-                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                column, sel, arrayOf(id), null
-            )
-
-            val columnIndex = cursor!!.getColumnIndex(column[0])
-
-            if (cursor.moveToFirst()) {
-                filePath = cursor.getString(columnIndex)
             }
-            cursor.close()
-
-            Log.d("jcbjscb", "Chosen path = $filePath")
-
-          //  mModel!!.audio = filePath
-            //  mMediaPlayer = MediaPlayer.create(this, data.getData())
-
-            *//*         var mp=MediaPlayer()
-                                    mp.setDataSource(this,Uri.parse(filePath))
-                                    mp.prepare()
-                                    mp.start()*//*
         }
-    }*/
+    }
+
 
     var resultCallbackOfSelectedMusicTrack: ActivityResultLauncher<Intent> =
         registerForActivityResult(
@@ -919,20 +973,15 @@ class ActivityVideoRecorder : BaseActivity() {
             }
         }
 
-        if (isImage){
-
-        }
-
-
         binding.buttonDone.setOnClickListener { view: View? ->
-
             if (isImage) {
 
-                if (mModel!!.segments.isEmpty()){
-                   // Toast.makeText(this, R.string.recorder_error_in_progress, Toast.LENGTH_SHORT).show()
-                }else{
-                    commitImage()
-                }
+                createDirectoryAndSaveFile(binding.selectedPhoto.capture())
+           /*     binding.selectedPhoto.saveToPictures("yoo", System.currentTimeMillis().toString() + ".jpg",700,700,object :GPUImageView.OnPictureSavedListener{
+                    override fun onPictureSaved(uri: Uri?) {
+
+                    }
+                })*/
             } else {
                 if (binding.cameraView.isTakingVideo()) {
                     Toast.makeText(this, R.string.recorder_error_in_progress, Toast.LENGTH_SHORT)
@@ -944,14 +993,6 @@ class ActivityVideoRecorder : BaseActivity() {
                     commitRecordings()
                 }
             }
-
-         /*   if (binding.cameraView.isTakingVideo()) {
-                Toast.makeText(this, R.string.recorder_error_in_progress, Toast.LENGTH_SHORT).show()
-            } else if (mModel!!.segments.isEmpty()) {
-                Toast.makeText(this, R.string.recorder_error_no_clips, Toast.LENGTH_SHORT).show()
-            } else {
-                commitRecordings()
-            }*/
         }
         binding.buttonMusic.setOnClickListener { view: View? ->
 
@@ -981,6 +1022,18 @@ class ActivityVideoRecorder : BaseActivity() {
 
 
         }
+
+
+
+
+        binding.buttonPickData.setOnClickListener {
+            if (isImage){
+                imageChooser()
+            }else{
+
+            }
+        }
+
         binding.buttonCameraChanger.setOnClickListener { view: View? ->
             if (binding.cameraView.isTakingVideo()) {
                 Toast.makeText(this, R.string.recorder_error_in_progress, Toast.LENGTH_SHORT)
@@ -1078,6 +1131,63 @@ class ActivityVideoRecorder : BaseActivity() {
 
 
 
+    private val displayWidth: Int
+        private get() {
+            val displayMetrics = DisplayMetrics()
+            getWindowManager().getDefaultDisplay().getMetrics(displayMetrics)
+            return displayMetrics.widthPixels
+        }
+    private val displayHeight: Int
+        private get() {
+            val displayMetrics = DisplayMetrics()
+            getWindowManager().getDefaultDisplay().getMetrics(displayMetrics)
+            return displayMetrics.heightPixels
+        }
+
+/*    fun onBtnSavePng() {
+        try {
+            UUID.randomUUID().toString()
+            val fileName: String = getCurrentTimeString().toString() + ".jpg"
+            val values = ContentValues()
+            values.put(MediaStore.Images.Media.DISPLAY_NAME, fileName)
+            values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpg")
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                values.put(MediaStore.MediaColumns.RELATIVE_PATH, "DCIM/")
+                values.put(MediaStore.MediaColumns.IS_PENDING, 1)
+            } else {
+                val directory =
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)
+                val file = File(cacheDir, fileName)
+                values.put(MediaStore.MediaColumns.DATA, file.absolutePath)
+            }
+            val uri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+            contentResolver.openOutputStream(uri!!).use { output ->
+                val bm: Bitmap = binding.selectedPhoto.capture()
+                bm.compress(Bitmap.CompressFormat.JPEG, 100, output)
+            }
+        } catch (e: Exception) {
+            Log.d("onBtnSavePng", e.toString()) // java.io.IOException: Operation not permitted
+        }
+    }*/
+
+
+    private fun createDirectoryAndSaveFile(imageToSave: Bitmap) {
+
+        val file = File(cacheDir, UUID.randomUUID().toString())
+        if (file.exists()) {
+            file.delete()
+        }
+        try {
+            val out = FileOutputStream(file)
+            imageToSave.compress(Bitmap.CompressFormat.JPEG, 100, out)
+            out.flush()
+            out.close()
+            mModel!!.video = File(file.absolutePath)
+            closeFinally(mModel!!.video!!)
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
+    }
 
 
 }
@@ -1208,4 +1318,7 @@ class CenterZoomLayoutManager : LinearLayoutManager {
             0
         }
     }
+
+
+
 }

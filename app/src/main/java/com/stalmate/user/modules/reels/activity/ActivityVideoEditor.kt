@@ -17,6 +17,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
+import android.os.Looper
 import android.util.DisplayMetrics
 import android.util.Log
 import android.util.Size
@@ -33,6 +34,7 @@ import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.ImageHeaderParser
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.daasuu.imagetovideo.EncodeListener
@@ -119,9 +121,7 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
                 /*        binding.tvMusicName.text=name
                         binding.layoutSelectedMusic.visibility=View.VISIBLE*/
 
-
                 audioPath = File(audio.path!!).absolutePath
-
                 initializePlayer()
 
 
@@ -148,6 +148,7 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
 
 
         isIMage = intent.getBooleanExtra("isImage", false)
+
         initViews()
         //        Drawable transparentDrawable = new ColorDrawable(Color.TRANSPARENT);
 //        Glide.with(this).load(getIntent().getStringExtra("DATA")).into(binding.ivImage.getSource());
@@ -177,7 +178,11 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
 
 
         } else {
-
+         Handler(Looper.myLooper()!!).post {
+             runOnUiThread {
+                binding.videoSurface.visibility=View.GONE
+             }
+         }
             getDropboxIMGSize(Uri.parse(videoPath!!))
         }
 
@@ -584,6 +589,9 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
 
 
     fun initializePlayer() {
+
+
+
         mediaPlayer = ExoPlayer.Builder(this@ActivityVideoEditor).build()
         binding.videoSurface.player = mediaPlayer
         binding.videoSurface.hideController()
@@ -615,40 +623,56 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
 
     override fun onPause() {
         super.onPause()
-      //  mediaPlayer!!.setPlayWhenReady(false)
+        //  mediaPlayer!!.setPlayWhenReady(false)
     }
 
     fun setupDataOverExoplayer() {
 
-        var videoSource: MediaSource =
-            ProgressiveMediaSource.Factory(FileDataSource.Factory()).createMediaSource(
-                MediaItem.fromUri(Uri.parse(videoPath))
-            )
+        var videoSource: MediaSource?=null
         var audioSource: MediaSource? = null
         var mergedSource: MediaSource? = null
-        if (!ValidationHelper.isNull(audioPath)) {
-            audioSource =
-                ProgressiveMediaSource.Factory(FileDataSource.Factory()).createMediaSource(
-                    MediaItem.fromUri(Uri.parse(audioPath))
-                )
-            mergedSource = MergingMediaSource(videoSource, audioSource);
-            if (isIMage) {
-                Glide.with(this).load(Drawable.createFromPath(videoPath)).centerCrop()
-                    .into(binding.ivImage.source)
-                mediaPlayer!!.setMediaSource(audioSource)
-
-            } else {
+        if (!isIMage){
+            videoSource=    ProgressiveMediaSource.Factory(FileDataSource.Factory()).createMediaSource(
+                MediaItem.fromUri(Uri.parse(videoPath))
+            )
+            if (!ValidationHelper.isNull(audioPath)){
+                audioSource =
+                    ProgressiveMediaSource.Factory(FileDataSource.Factory()).createMediaSource(
+                        MediaItem.fromUri(Uri.parse(audioPath))
+                    )
+                mergedSource = MergingMediaSource(videoSource!!, audioSource);
                 mediaPlayer!!.setMediaSource(mergedSource)
+
+            }else{
+
+
+                mediaPlayer!!.setMediaSource(audioSource!!)
+
             }
-        } else {
-            if (isIMage) {
-                binding.videoSurface.defaultArtwork = Drawable.createFromPath(videoPath)
-                Glide.with(this).load(Drawable.createFromPath(videoPath)).centerCrop()
-                    .into(binding.ivImage.source)
-            } else {
-                mediaPlayer!!.setMediaSource(videoSource)
+        }else{
+
+
+
+
+            if (!ValidationHelper.isNull(audioPath)) {
+                audioSource =
+                    ProgressiveMediaSource.Factory(FileDataSource.Factory()).createMediaSource(
+                        MediaItem.fromUri(Uri.parse(audioPath))
+                    )
+                mediaPlayer!!.setMediaSource(audioSource)
             }
+
+         Handler(Looper.myLooper()!!).post {
+            runOnUiThread {
+                Glide.with(this).load(Drawable.createFromPath(videoPath)).centerCrop().into(binding.ivImage.source)
+                binding.ivImage.source.scaleType=ImageView.ScaleType.FIT_XY
+            }
+         }
+
+
         }
+
+
         mediaPlayer!!.playWhenReady = true
         mediaPlayer!!.prepare()
         setDataInView()

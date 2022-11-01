@@ -7,11 +7,18 @@
     android:layout_height="match_parent"
     tools:context=".modules.reels.activity.ActivityVideoRecorder">
 
+    <jp.co.cyberagent.android.gpuimage.GPUImageView
+        android:id="@+id/selectedPhoto"
+        android:layout_width="match_parent"
+        android:scaleType="fitXY"
+        android:layout_height="match_parent"
+        android:visibility="visible" />
 
     <com.otaliastudios.cameraview.CameraView
         android:id="@+id/cameraView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="visible"
         app:cameraAudio="on"
         app:cameraAudioCodec="aac"
         app:cameraEngine="camera2"
@@ -22,14 +29,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-<!--
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width=""
-        android:layout_height="">
 
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>-->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layoutCameraControllers"
         android:layout_width="match_parent"
@@ -241,53 +241,74 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-        <ImageView
-            android:id="@+id/buttonCameraChanger"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginEnd="20dp"
-            android:padding="10dp"
-            android:src="@drawable/ic_live_rotate_camera"
-            app:layout_constraintBottom_toBottomOf="@+id/buttonRecord"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/buttonRecord" />
-
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/buttonRecord"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
-            android:src="@drawable/color_filter_icon"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/segmented_progressbar"
-            app:layout_constraintVertical_bias="1.0">
+            android:id="@+id/layoutBottomControll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintBottom_toBottomOf="parent">
 
-            <com.airbnb.lottie.LottieAnimationView
-                android:id="@+id/recordAnimationView"
+            <ImageView
+                android:id="@+id/buttonCameraChanger"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginEnd="20dp"
+                android:padding="10dp"
+                android:src="@drawable/ic_live_rotate_camera"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/buttonPickData"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="20dp"
+                android:padding="10dp"
+                android:src="@drawable/ic_gallery"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="visible" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/buttonRecord"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:visibility="gone"
+                android:layout_marginTop="20dp"
+                android:src="@drawable/color_filter_icon"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:lottie_autoPlay="true"
-                app:lottie_loop="true"
-                app:lottie_rawRes="@raw/recording" />
+                app:layout_constraintVertical_bias="1.0"
+                tools:visibility="visible">
 
-            <ImageView
-                android:id="@+id/stopIConView"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:src="@drawable/record"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/recordAnimationView"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:lottie_autoPlay="true"
+                    app:lottie_loop="true"
+                    app:lottie_rawRes="@raw/recording" />
 
+                <ImageView
+                    android:id="@+id/stopIConView"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/record"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -296,7 +317,7 @@
             android:layout_width="60dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="10dp"
             android:background="@drawable/small_done_button"
             android:elevation="10dp"
             android:gravity="center"
@@ -306,7 +327,7 @@
             android:textColor="@color/black"
             android:textSize="12sp"
             android:visibility="visible"
-            app:layout_constraintBottom_toTopOf="@+id/speeds"
+            app:layout_constraintBottom_toTopOf="@+id/rvFilters"
             app:layout_constraintEnd_toEndOf="parent" />
 
 
@@ -362,13 +383,13 @@
             android:id="@+id/rvFilters"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="10dp"
             android:clipToPadding="false"
             android:orientation="horizontal"
             android:padding="5dp"
             android:visibility="gone"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintBottom_toTopOf="@+id/buttonRecord"
+            app:layout_constraintBottom_toTopOf="@+id/layoutBottomControll"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             tools:visibility="gone" />
@@ -437,12 +458,5 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:visibility="gone"
-        android:id="@+id/selectedPhoto"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
