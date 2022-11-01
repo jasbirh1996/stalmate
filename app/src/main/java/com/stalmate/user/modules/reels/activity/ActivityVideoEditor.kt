@@ -969,14 +969,14 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
             if (menuDone == null) return
             //changed value is less than maxDuration
             if (maxVal - minVal <= maxToGap) {
-                menuDone!!.icon.colorFilter =
+                menuDone!!.icon!!.colorFilter =
                     PorterDuffColorFilter(
                         ContextCompat.getColor(this, R.color.white),
                         PorterDuff.Mode.SRC_IN
                     )
                 isValidVideo = true
             } else {
-                menuDone!!.icon.colorFilter =
+                menuDone!!.icon!!.colorFilter =
                     PorterDuffColorFilter(
                         ContextCompat.getColor(this, R.color.black),
                         PorterDuff.Mode.SRC_IN

@@ -1,8 +1,5 @@
 package com.stalmate.user.view.dashboard
 
-
-
-
 import android.animation.ValueAnimator
 import android.content.Intent
 import android.os.Bundle
@@ -28,7 +25,6 @@ import com.stalmate.user.view.dashboard.HomeFragment.FragmentHome
 import com.stalmate.user.view.dashboard.HomeFragment.FragmentMenu
 import com.stalmate.user.view.dashboard.VideoReels.FragmentReels
 import com.stalmate.user.view.dashboard.funtime.FragmentFunTime
-
 
 class ActivityDashboard : AppCompatActivity(), FragmentHome.Callback , FragmentFriend.Callbackk, FragmentMenu.Callback/*, FragmentFunTime.Callbackk*/{
     private val TIME_INTERVAL = 2000
@@ -57,12 +53,12 @@ class ActivityDashboard : AppCompatActivity(), FragmentHome.Callback , FragmentF
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        if (intent!!.getStringExtra("notificationType") != null) {
-            startActivity(
-                IntentHelper.getOtherUserProfileScreen(this)!!
-                    .putExtra("id", intent.getStringExtra("userId").toString())
-            )
-        }
+//        if (intent!!.getStringExtra("notificationType") != null) {
+//            startActivity(
+//                IntentHelper.getOtherUserProfileScreen(this)!!
+//                    .putExtra("id", intent.getStringExtra("userId").toString())
+//            )
+//        }
         super.onNewIntent(intent)
     }
 
@@ -111,7 +107,6 @@ class ActivityDashboard : AppCompatActivity(), FragmentHome.Callback , FragmentF
 
                 }
                 else -> {
-
                 }
             }
             true

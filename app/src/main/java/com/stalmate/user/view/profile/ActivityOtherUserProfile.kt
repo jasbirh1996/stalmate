@@ -93,14 +93,7 @@ class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk,
         getUserProfileData()
     }
 
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-    }
-
-
     fun setupData() {
-
 
         binding.layout.layoutFollowers.setOnClickListener {
             startActivity(
@@ -114,7 +107,6 @@ class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk,
                     .putExtra("type", "following")
             )
         }
-
 
         binding.buttonFriendUpdate.setOnClickListener {
             updateFriendStatus("add_friend")
@@ -305,33 +297,39 @@ class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk,
             aboutArrayList.add(AboutProfileLine(R.drawable.ic_profile_graduation, "Student", userData.results.profile_data[0].education[0].sehool, "at"))
         }
 
+        if ( userData.results.profile_data[0].home_town.isNotEmpty()) {
 
-        aboutArrayList.add(
-            AboutProfileLine(
-                R.drawable.ic_profile_location,
-                "Lives at",
-                userData.results.profile_data[0].home_town,
-                "at"
+            aboutArrayList.add(
+                AboutProfileLine(
+                    R.drawable.ic_profile_location,
+                    "Lives at",
+                    userData.results.profile_data[0].home_town,
+                    "at"
+                )
             )
-        )
-        aboutArrayList.add(
-            AboutProfileLine(
-                R.drawable.ic_profile_location,
-                "From",
-                userData.results.profile_data[0].location,
-                ""
-            )
-        )
+        }
 
-
-        aboutArrayList.add(
-            AboutProfileLine(
-                R.drawable.ic_profile_heart_icon,
-                "",
-                userData.results.profile_data[0].marital_status,
-                ""
+        if (userData.results.profile_data[0].location.isNotEmpty()) {
+            aboutArrayList.add(
+                AboutProfileLine(
+                    R.drawable.ic_profile_location,
+                    "From",
+                    userData.results.profile_data[0].location,
+                    ""
+                )
             )
-        )
+        }
+
+        if (userData.results.profile_data[0].marital_status.isNotEmpty()){
+            aboutArrayList.add(
+                AboutProfileLine(
+                    R.drawable.ic_profile_heart_icon,
+                    "",
+                    userData.results.profile_data[0].marital_status,
+                    ""
+                )
+            )
+        }
 
         binding.layout.rvAbout.layoutManager = LinearLayoutManager(this)
         var profileAboutAdapter = ProfileAboutAdapter(networkViewModel, this, this)
@@ -386,5 +384,7 @@ class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk,
             }
         }
     }
+
+
 }
 

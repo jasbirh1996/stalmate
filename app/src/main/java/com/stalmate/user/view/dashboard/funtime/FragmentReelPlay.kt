@@ -26,10 +26,11 @@ class FragmentReelPlay : BaseFragment, Player.Listener {
     var menuPager: VerticalViewPager? = null
     var item: ResultFuntime? = null
     private var exoplayer: ExoPlayer? = null
-    private lateinit var binding : FragmentReelPlayBinding
+    private lateinit var binding: FragmentReelPlayBinding
     var animationRunning = false
     var handler: Handler? = null
     var runnable: Runnable? = null
+
     constructor(
         item: ResultFuntime?,
         menuPager: VerticalViewPager?,
@@ -47,14 +48,19 @@ class FragmentReelPlay : BaseFragment, Player.Listener {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View?{
+    ): View? {
 
 
-
-        binding = DataBindingUtil.bind<FragmentReelPlayBinding>(inflater.inflate(R.layout.fragment_reel_play, container, false))!!
-   Handler(Looper.getMainLooper()).post {
-       initializePlayer()
-   }
+        binding = DataBindingUtil.bind<FragmentReelPlayBinding>(
+            inflater.inflate(
+                R.layout.fragment_reel_play,
+                container,
+                false
+            )
+        )!!
+        Handler(Looper.getMainLooper()).post {
+            initializePlayer()
+        }
         setData()
 
 
@@ -100,20 +106,21 @@ class FragmentReelPlay : BaseFragment, Player.Listener {
         var hashmap = HashMap<String, String>()
         hashmap.put("funtime_id", item!!.id)
         networkViewModel.funtimeLiveLikeUnlikeData(hashmap)
-        networkViewModel.funtimeLiveLikeUnlikeData.observe(viewLifecycleOwner){
-            if (it!!.message=="Liked") {
+        networkViewModel.funtimeLiveLikeUnlikeData.observe(viewLifecycleOwner) {
+            if (it!!.message == "Liked") {
                 binding.like.text = it.like_count.toString()
                 binding.likeIcon.setImageDrawable(resources.getDrawable(R.drawable.ic_funtime_post_like_fill))
-            }else{
+            } else {
                 binding.like.text = it.like_count.toString()
             }
         }
     }
 
-    fun setData(){
+    fun setData() {
 
-        binding.tvUserName.text= item!!.first_name+ " " +item!!.last_name
-        Glide.with(this).load(item!!.profile_img).placeholder(R.drawable.profileplaceholder).into(binding.imgUserProfile)
+        binding.tvUserName.text = item!!.first_name + " " + item!!.last_name
+        Glide.with(this).load(item!!.profile_img).placeholder(R.drawable.profileplaceholder)
+            .into(binding.imgUserProfile)
 
         binding.like.text = item!!.like_count.toString()
         binding.comment.text = item!!.comment_count.toString()
@@ -124,19 +131,18 @@ class FragmentReelPlay : BaseFragment, Player.Listener {
             likeApiHit()
         }
 
-       /* val timesAg = TimesAgo2.covertTimeToText(item!!.Created_date, true)*/
+        /* val timesAg = TimesAgo2.covertTimeToText(item!!.Created_date, true)*/
         binding.tvStoryPostTime.text = item!!.Created_date
 
 
     }
 
 
-
     // initlize the player for play video
     private fun initializePlayer() {
-        Log.d("alskdasd","aosdasddfgdfg")
+        Log.d("alskdasd", "aosdasddfgdfg")
         if (exoplayer == null && item != null) {
-            Log.d("alskdasd","aosdasfgjhd")
+            Log.d("alskdasd", "aosdasfgjhd")
             val executorService = Executors.newSingleThreadExecutor()
             executorService.execute {
 
@@ -157,16 +163,16 @@ class FragmentReelPlay : BaseFragment, Player.Listener {
                     DefaultDataSourceFactory(
                         requireView().context, requireContext().getString(R.string.app_name)
                     )
-                Log.d("alskdasd","aosdasd")
+                Log.d("alskdasd", "aosdasd")
                 val videoSource: MediaSource = ProgressiveMediaSource.Factory(dataSourceFactory)
                     .createMediaSource(MediaItem.fromUri(item!!.file))
                 //  exoplayer!!.setThrowsWhenUsingWrongThread(false)
                 exoplayer!!.addMediaSource(videoSource)
-                Log.d("alskdasd","aosdasd")
+                Log.d("alskdasd", "aosdasd")
                 exoplayer!!.prepare()
                 exoplayer!!.addListener(this@FragmentReelPlay)
                 exoplayer!!.repeatMode = Player.REPEAT_MODE_ALL
-             /*   val audioAttributes = AudioAttributes.Builder()
+                /*   val audioAttributes = AudioAttributes.Builder()
                         .setUsage(C.USAGE_MEDIA)
                         .setContentType(C.AUDIO_CONTENT_TYPE_MOVIE)
                         .build()
@@ -176,14 +182,14 @@ class FragmentReelPlay : BaseFragment, Player.Listener {
             }
 
             requireActivity().runOnUiThread(Runnable {
-                Log.d("jkasdas","aklsdlaskjdfgkjlas")
-                binding.playerView.findViewById<View>(com.google.android.exoplayer2.R.id.exo_play).setVisibility(View.GONE)
+                Log.d("jkasdas", "aklsdlaskjdfgkjlas")
+                binding.playerView.findViewById<View>(com.google.android.exoplayer2.R.id.exo_play)
+                    .setVisibility(View.GONE)
                 if (exoplayer != null) {
-                    Log.d("jkasdas","aklsdlaskjdlas")
-                    binding.playerView.player=exoplayer
+                    Log.d("jkasdas", "aklsdlaskjdlas")
+                    binding.playerView.player = exoplayer
                 }
             })
-
 
 
         }
@@ -196,27 +202,30 @@ class FragmentReelPlay : BaseFragment, Player.Listener {
                     exoplayer!!.playWhenReady = true
                 } else {
                     exoplayer!!.playWhenReady = false
-                    binding.playerView.findViewById<View>(com.google.android.exoplayer2.ui.R.id.exo_play).setAlpha(1f)
+                    binding.playerView.findViewById<View>(com.google.android.exoplayer2.ui.R.id.exo_play)
+                        .setAlpha(1f)
                 }
             }
             binding.playerView.setOnTouchListener(object : OnSwipeTouchListener(requireActivity()) {
 
-        override
+                override
                 fun onLongClick() {
                     if (isVisibleToUser) {
-                       // showVideoOption(item)
+                        // showVideoOption(item)
                     }
                 }
 
                 fun onSingleClick() {
                     if (!exoplayer!!.playWhenReady) {
                         exoplayer!!.playWhenReady = true
-                        binding.playerView.findViewById<View>(com.google.android.exoplayer2.ui.R.id.exo_play).setAlpha(0f)
-                      //  countdownTimer(true)
+                        binding.playerView.findViewById<View>(com.google.android.exoplayer2.ui.R.id.exo_play)
+                            .setAlpha(0f)
+                        //  countdownTimer(true)
                     } else {
-                      //  countdownTimer(false)
+                        //  countdownTimer(false)
                         exoplayer!!.playWhenReady = false
-                        binding.playerView.findViewById<View>(com.google.android.exoplayer2.ui.R.id.exo_play).setAlpha(1f)
+                        binding.playerView.findViewById<View>(com.google.android.exoplayer2.ui.R.id.exo_play)
+                            .setAlpha(1f)
                     }
                 }
 
@@ -226,7 +235,7 @@ class FragmentReelPlay : BaseFragment, Player.Listener {
                     }
                 }
             })
-        /*    if (item.promote != null && item.promote.equals("1") && showad) {
+            /*    if (item.promote != null && item.promote.equals("1") && showad) {
                 item.promote = "0"
                 showAd()
             } else {
@@ -255,7 +264,8 @@ class FragmentReelPlay : BaseFragment, Player.Listener {
             exoplayer!!.playWhenReady = true
         } else if (exoplayer != null && !isvisible) {
             exoplayer!!.playWhenReady = false
-            binding.playerView.findViewById<View>(com.google.android.exoplayer2.ui.R.id.exo_play).setAlpha(1f)
+            binding.playerView.findViewById<View>(com.google.android.exoplayer2.ui.R.id.exo_play)
+                .setAlpha(1f)
         }
     }
 
@@ -267,9 +277,9 @@ class FragmentReelPlay : BaseFragment, Player.Listener {
             exoplayer = null
         }
     }
-    override
-    fun onDestroy() {
-       releasePriviousPlayer()
+
+    override fun onDestroy() {
+        releasePriviousPlayer()
         super.onDestroy()
     }
 
@@ -277,7 +287,8 @@ class FragmentReelPlay : BaseFragment, Player.Listener {
         super.onPause()
         if (exoplayer != null) {
             exoplayer!!.playWhenReady = false
-            binding.playerView.findViewById<View>(com.google.android.exoplayer2.ui.R.id.exo_play).setAlpha(1f)
+            binding.playerView.findViewById<View>(com.google.android.exoplayer2.ui.R.id.exo_play)
+                .setAlpha(1f)
         }
     }
 
@@ -286,25 +297,8 @@ class FragmentReelPlay : BaseFragment, Player.Listener {
         super.onStop()
         if (exoplayer != null) {
             exoplayer!!.playWhenReady = false
-            binding.playerView.findViewById<View>(com.google.android.exoplayer2.ui.R.id.exo_play).setAlpha(1f)
+            binding.playerView.findViewById<View>(com.google.android.exoplayer2.ui.R.id.exo_play)
+                .setAlpha(1f)
         }
     }
-
-
-    // handle that call on the player state change
-    override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
-   /*     if (playbackState == Player.STATE_BUFFERING) {
-            pbar!!.visibility = View.VISIBLE
-        } else if (playbackState == Player.STATE_READY) {
-            thumb_image.setVisibility(View.GONE)
-            pbar!!.visibility = View.GONE
-        }*/
-    }
-    override 
-    fun onDetach() {
-        super.onDetach()
-        //mPermissionResult.unregister()
-    }
-
-
 }

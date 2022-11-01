@@ -47,8 +47,6 @@ class ActivityfuntimeRandom : AppCompatActivity() {
                 setGuidelines(CropImageView.Guidelines.ON)
             }
         )
-
-
     }
 
     private val cropImage = registerForActivityResult(CropImageContract()) { result ->

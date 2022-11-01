@@ -50,6 +50,11 @@ class FragmentAlbumPhotoListInGrid : BaseFragment(),  PhotoAdapter.Callback {
         binding = DataBindingUtil.bind<FragmentAlbumPhotoListInGridBinding>(view)!!
         photoAdapter = PhotoAdapter(networkViewModel, requireContext(),this)
         getAlbumImagelist()
+
+
+        binding.toolbar.back.setOnClickListener {
+            requireActivity().onBackPressed()
+        }
         return binding.root
     }
 

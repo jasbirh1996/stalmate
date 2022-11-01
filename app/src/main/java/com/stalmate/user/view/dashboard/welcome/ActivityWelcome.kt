@@ -58,27 +58,18 @@ class ActivityWelcome : BaseActivity(),
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_welcome)
         toolbar(true, "Welcome")
-/*
-        var viewpagerAdapter = ViewPagerAdapter(supportFragmentManager)
-        viewpagerAdapter.add(FragmentWelcomePage(), "title")
-        viewpagerAdapter.add(FragmentInformationSuggestions(this), "title")
-        viewpagerAdapter.add(FragmentInterestSuggestionList(), "title")
-        viewpagerAdapter.add(FragmentSync(), "title")
-        viewpagerAdapter.add(FragmentGroupSuggestionList(), "title")
-        viewpagerAdapter.add(FragmentPageSugggestionsList(), "title")
-        viewpagerAdapter.add(FragmentEventSuggestionsList(), "title")*/
 
-
-//        binding.viewpager.adapter = viewpagerAdapter
         val filter = IntentFilter()
         filter.addAction(Constants.ACTION_SYNC_COMPLETED)
         syncBroadcastreceiver = SyncBroadcasReceiver()
         registerReceiver(syncBroadcastreceiver, filter)
+
         var viewpagerAdapter = ViewPagerAdapter(supportFragmentManager)
 
         viewpagerAdapter.add(FragmentWelcomePage(), "title")
         viewpagerAdapter.add(FragmentInterestSuggestionList(), "title")
         viewpagerAdapter.add(FragmentInformationSuggestions(this),"title")
+        viewpagerAdapter.add(FragmentSync(this), "title")
         viewpagerAdapter.add(FragmentSync(this), "title")
        /* viewpagerAdapter.add(FragmentGroupSuggestionList(), "title")
         viewpagerAdapter.add(FragmentPageSugggestionsList(), "title")
@@ -87,7 +78,6 @@ class ActivityWelcome : BaseActivity(),
 
         binding.viewpager.adapter = viewpagerAdapter
         binding.indicator.setViewPager(binding.viewpager)
-
 
         count = binding.viewpager.currentItem
         binding.viewpager.setOnTouchListener(OnTouchListener { v, event -> true })
@@ -98,14 +88,11 @@ class ActivityWelcome : BaseActivity(),
 
         binding.btnNext.setOnClickListener {
             var page = viewpagerAdapter.getItem(count)
-
-
             if (count == 3) {
                 finish()
             } else {
                 if (page is FragmentInformationSuggestions) {
-
-                     if (page.isValid()){
+                    if (page.isValid()){
                     val hashMap = HashMap<String, String>()
                     hashMap["university_name"] = graduationText
                     hashMap["university_id"] = graduationTextId
@@ -127,22 +114,13 @@ class ActivityWelcome : BaseActivity(),
                                 count++
                                 binding.viewpager.setCurrentItem(count, true)
                             }else{
-
                                 dismissLoader()
                                 makeToast(message)
-
                             }
                         }
                     }
 
                 }
-                    /* count = count +1
-                 binding.viewpager.setCurrentItem(count,true)
- */
-                    /*if (page.isValid()) {
-                        count++
-                        binding.viewpager.setCurrentItem(count, true)
-                    }*/
                 } else if (page is FragmentInterestSuggestionList) {
 
                     if (page.getSelectedDAta().size > 0) {
@@ -171,11 +149,7 @@ class ActivityWelcome : BaseActivity(),
 
                                     }
                                 }
-
-
                         }
-
-
                     } else {
                         makeToast("Select atleast one interest")
                     }
@@ -183,11 +157,7 @@ class ActivityWelcome : BaseActivity(),
                 } else {
                     count++
                     binding.viewpager.setCurrentItem(count, true)
-
-
                 }
-
-
             }
 
             binding.viewpager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
@@ -222,39 +192,25 @@ class ActivityWelcome : BaseActivity(),
                             setUpNextButton(true)
 
                         }
-
-
                     }
                 }
 
                 override fun onPageScrollStateChanged(state: Int) {
-
                 }
             })
 
             /*ToolBar Set*/
             toolbar(true, "Welcome")
 
-            var permissionArray = arrayOf(
-                android.Manifest.permission.READ_CONTACTS,
-            )
+            var permissionArray = arrayOf(android.Manifest.permission.READ_CONTACTS)
             if (isPermissionGranted(permissionArray)) {
                 Log.d("alskjdasd", ";aosjldsad")
-
-
-
-                startService(
-                    Intent(
-                        this,
-                        SyncService::class.java
-                    )
+                startService(Intent(this, SyncService::class.java)
                 )
             }
-
-
         }
-
     }
+
 
 
     inner class SyncBroadcasReceiver : BroadcastReceiver() {
@@ -265,15 +221,12 @@ class ActivityWelcome : BaseActivity(),
                 dismissLoader()
                 makeToast("Synced")
                 if (p1.extras!!.getString("contacts") != null) {
-                    startActivity(
-                        IntentHelper.getSearchScreen(this@ActivityWelcome)!!
-                            .putExtra("contacts", p1.extras!!.getString("contacts").toString())
+                    startActivity(IntentHelper.getSearchScreen(this@ActivityWelcome)!!.putExtra("contacts", p1.extras!!.getString("contacts").toString())
                     )
                 }
             }
         }
     }
-
 
     fun toolbar(isCenterVisible: Boolean, text: String) {
 

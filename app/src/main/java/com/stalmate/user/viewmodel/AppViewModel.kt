@@ -338,7 +338,7 @@ open class AppViewModel : ViewModel() {
 
 
     var UplodedAlbumImageLiveData: LiveData<CommonModelResponse?> = MutableLiveData<CommonModelResponse?>()
-    fun uploadAlbumImageApi(@Part album_image: MultipartBody.Part? = null,        @Part("album_id") albumId: RequestBody, ) {
+    fun uploadAlbumImageApi(@Part album_image: MultipartBody.Part? = null,  @Part("album_id") albumId: RequestBody, ) {
         val temp = MutableLiveData<CommonModelResponse?>()
         UplodedAlbumImageLiveData = temp
         getResult(temp, apiInterface.addAlbumImage(album_image!!,albumId))

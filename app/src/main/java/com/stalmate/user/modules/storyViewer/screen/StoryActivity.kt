@@ -184,9 +184,10 @@ class StoryActivity : AppCompatActivity(),
                 duration = 400L
                 interpolator = FastOutSlowInInterpolator()
                 addListener(object : Animator.AnimatorListener {
-                    override fun onAnimationRepeat(p0: Animator?) {}
+                    override fun onAnimationRepeat(p0: Animator) {}
 
-                    override fun onAnimationEnd(animation: Animator?) {
+
+                    override fun onAnimationEnd(p0: Animator) {
                         removeAllUpdateListeners()
                         if (viewPager.isFakeDragging) {
                             viewPager.endFakeDrag()
@@ -194,7 +195,7 @@ class StoryActivity : AppCompatActivity(),
                         prevDragPosition = 0
                     }
 
-                    override fun onAnimationCancel(animation: Animator?) {
+                    override fun onAnimationCancel(p0: Animator) {
                         removeAllUpdateListeners()
                         if (viewPager.isFakeDragging) {
                             viewPager.endFakeDrag()
@@ -202,7 +203,9 @@ class StoryActivity : AppCompatActivity(),
                         prevDragPosition = 0
                     }
 
-                    override fun onAnimationStart(p0: Animator?) {}
+                    override fun onAnimationStart(p0: Animator) {
+
+                    }
                 })
                 addUpdateListener {
                     if (!viewPager.isFakeDragging) return@addUpdateListener

@@ -42,6 +42,7 @@ class DialogAddEditProfession(
     var endYear = ""
     var startMonth = ""
     var endMonth = ""
+    var radioButtonWorking = false
 
 
     var isDialogShowing = false
@@ -85,8 +86,6 @@ class DialogAddEditProfession(
                    startMonth = monthOfYear.toString()
 
                 binding.tvCdFrom.text = sdf.format(startCal.time)
-            /*val start: LocalDate = LocalDate.parse(binding.tvCdFrom.text, formatter)
-            startDate = start.toString()*/
             }
 
         binding.tvCdFrom.setOnClickListener {
@@ -110,8 +109,6 @@ class DialogAddEditProfession(
             endYear = year.toString()
             endMonth = monthOfYear.toString()
                 binding.tvCdTo.text = sdf.format(endCal.time)
-                /*val end: LocalDate = LocalDate.parse(binding.tvCdTo.text, formatter)
-                endDate = end.toString()*/
             }
 
         binding.tvCdTo.setOnClickListener {
@@ -125,24 +122,41 @@ class DialogAddEditProfession(
 
         binding.btnSave.setOnClickListener {
             if (isValid()){
+                hitAddEditApi()
+                Log.d("=================================", startYear)
+                Log.d("=================================", endYear)
+                Log.d("=================================", startMonth)
+                Log.d("=================================", endMonth)
 
-                if (startYear < endYear){
+             /*   if (startYear < endYear){
                     hitAddEditApi()
-                }else if(startYear == endYear){
+                }
+
+                if(startYear == endYear){
                     if (startMonth < endMonth){
                         hitAddEditApi()
                     }else {
-                        makeToast("Start working date should be grater")
+                        makeToast("End working date should be grater")
                     }
-                }
-
-
+                }*/
             }
         }
 
-        binding.radioButtonCurrentWork.setOnCheckedChangeListener { p0, p1 ->
-            binding.tvCdTo.isClickable = false
+        binding.radioButtonCurrentWork.setOnClickListener {
+
+            if (!radioButtonWorking){
+                radioButtonWorking = true
+                binding.radioButtonCurrentWork.isChecked=true
+               // binding.tvCdTo.isClickable = false
+                Log.d("=========AAAAAAAAAAAAA", "true")
+            }else{
+                Log.d("=========AAAAAAAAAAAAA", "false")
+                radioButtonWorking = false
+                binding.radioButtonCurrentWork.isChecked=false
+            }
+
         }
+
 
         binding.ivClose.setOnClickListener {
             dismiss()
@@ -154,6 +168,7 @@ class DialogAddEditProfession(
           if (profession.currently_working_here=="Yes"){
               binding.radioButtonCurrentWork.isChecked=true
               binding.tvCdTo.isClickable = false
+              radioButtonWorking = true
           }
 
             binding.tvCdTo.setText(profession.to)

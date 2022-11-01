@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
@@ -20,6 +21,7 @@ import com.stalmate.user.databinding.FragmentHomeBinding
 import com.stalmate.user.model.Feed
 import com.stalmate.user.model.User
 import com.stalmate.user.utilities.Constants
+import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.view.adapter.SuggestedFriendAdapter
 import com.stalmate.user.view.adapter.UserHomeStoryAdapter
 import com.stalmate.user.view.dialogs.DialogFragmentLoader
@@ -62,14 +64,13 @@ class FragmentHome(var callback:Callback) : BaseFragment(), AdapterFeed.Callback
         binding.shimmerViewContainer.startShimmer()
         binding.shimmerLayoutFeeds.startShimmer()
 
-
         binding.rvFeeds.adapter=feedAdapter
         binding.rvStory.adapter=homeStoryAdapter
-
 
         binding.rvFeeds.layoutManager= LinearLayoutManager(context)
         binding.rvStory.layoutManager= LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
 
+        Glide.with(requireContext()).load(PrefManager.getInstance(requireContext())!!.userProfileDetail.results.profile_img1).placeholder(R.drawable.profileplaceholder).into(binding.postContant.userImage)
 
         networkViewModel.getFeedList("", HashMap())
         networkViewModel.feedLiveData.observe(viewLifecycleOwner, Observer {

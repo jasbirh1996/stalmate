@@ -34,7 +34,7 @@ data class User(
     val gender:String,
     val last_name: String,
     val number: String,
-    val profile_data: List<ProfileData>,
+    val profile_data: ArrayList<ProfileData>,
     val profile_img: List<Photo>,
     val profile_img1: String,
     val schoolandcollege: String,

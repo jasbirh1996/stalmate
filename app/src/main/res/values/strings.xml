@@ -557,7 +557,7 @@
     <string name="your_account_has_been_successfully_created">Your account has been successfully created</string>
     <string name="sync_contacts">Sync Contacts</string>
     <string name="enter_bio">Enter Bio</string>
-    <string name="profession">Add Profession</string>
+    <string name="profession">Profession</string>
     <string name="mobile_number">Mobile Number</string>
     <string name="add_more">+Add</string>
     <string name="marital_status">Marital Status</string>
@@ -612,8 +612,8 @@
     <string name="bachelors_in_technology">Bachelors in Technology</string>
     <string name="electronics_amp_communication_engineering"><![CDATA[Electronics & Communication Engineering]]></string>
     <string name="save">Save</string>
-    <string name="add_education">Add Education</string>
-    <string name="education">Add Education</string>
+    <string name="add_education">Education</string>
+    <string name="education">Education</string>
     <string name="company_name">Company Name</string>
     <string name="designation">Designation</string>
     <string name="from">From</string>

@@ -4,9 +4,10 @@ plugins {
     id 'com.google.gms.google-services'
     id 'kotlin-parcelize'
 }
+apply plugin: 'kotlin-android'
 
 android {
-    compileSdk 32
+    compileSdk 33
     defaultConfig {
         applicationId "com.zhpan.viewpagerindicator"
         applicationId "com.stalmate.user"
@@ -141,6 +142,7 @@ dependencies {
     implementation 'com.google.android.exoplayer:exoplayer-ui:2.18.1'
     implementation 'com.github.MasayukiSuda:ImageToVideoAndroid:v0.1.0'
     implementation 'com.github.castorflex.verticalviewpager:library:19.0.1'
+    implementation "androidx.core:core-ktx:+"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.arthenica:mobile-ffmpeg-min:4.4.LTS'
-
 }

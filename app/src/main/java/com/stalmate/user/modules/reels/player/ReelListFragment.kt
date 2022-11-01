@@ -185,8 +185,7 @@ class ReelListFragment : BaseFragment() {
 
 
     override fun onPause() {
-        var viewholder =
-            binding.recyclerView.findViewHolderForAdapterPosition(videoAutoPlayHelper!!.currentPlayingVideoItemPos);
+        var viewholder = binding.recyclerView.findViewHolderForAdapterPosition(videoAutoPlayHelper!!.currentPlayingVideoItemPos);
         val viewMainHolder = (viewholder as VideoReelViewHolder)
         viewMainHolder.customPlayerView.removePlayer()
         super.onPause()

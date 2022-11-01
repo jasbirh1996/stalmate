@@ -34,7 +34,7 @@ class EducationListAdapter(val viewModel: AppViewModel, val context: Context, va
     override fun getItemCount(): Int {
         return list.size
     }
-    fun submitList(albumList: List<Education>) {
+    fun submitList(albumList: ArrayList<Education>) {
         list.clear()
         list.addAll(albumList)
         notifyDataSetChanged()
@@ -44,14 +44,14 @@ class EducationListAdapter(val viewModel: AppViewModel, val context: Context, va
         val size = list.size
         list.add(feedList)
         val sizeNew = list.size
-       /* notifyItemRangeChanged(size, sizeNew)*/
+        notifyItemRangeChanged(size, sizeNew)
         notifyDataSetChanged()
     }
 
 
     public interface Callbackk {
         fun onClickItemEdit(position: Education, index: Int)
-        fun deleteitem()
+
     }
 
     inner class AlbumViewHolder(var binding: ItemEducationprofileBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -68,9 +68,7 @@ class EducationListAdapter(val viewModel: AppViewModel, val context: Context, va
             }
 
             binding.ivedit.setOnClickListener {
-                callback.onClickItemEdit(
-                    list[bindingAdapterPosition],
-                    bindingAdapterPosition)
+                callback.onClickItemEdit(list[bindingAdapterPosition], bindingAdapterPosition)
             }
 
         }
@@ -90,7 +88,7 @@ class EducationListAdapter(val viewModel: AppViewModel, val context: Context, va
                 if (it.status){
                     list.removeAt(position)
                     notifyItemRemoved(position)
-                    callback.deleteitem()
+
                 }
             }
         }

@@ -55,10 +55,7 @@ class FragmentOTPEnter : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-
         startTimer()
-
 
         email = requireArguments().getString("email").toString()
         password = requireArguments().getString("password").toString()
@@ -79,9 +76,6 @@ class FragmentOTPEnter : BaseFragment() {
 
 
         binding.btnProcess.setOnClickListener {
-
-
-
 
             /*Otp Verify Api Call*/
 
@@ -106,7 +100,7 @@ class FragmentOTPEnter : BaseFragment() {
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
                 if (p0!=null && p0.length==4){
-                    hideKeyboard(binding.root)
+//                    hideKeyboard(binding.root)
                 }
             }
 
