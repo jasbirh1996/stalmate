@@ -24,19 +24,24 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+
+
+
     <com.google.android.exoplayer2.ui.PlayerView
         android:id="@+id/videoSurface"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/black"
+        app:surface_type="texture_view"
+        app:scrubber_color="@color/black"
+        app:shutter_background_color="@color/black"
         app:use_controller="false" />
 
     <ja.burhanrashid52.photoeditor.PhotoEditorView
         android:id="@+id/ivImage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
-        />
-
+        android:visibility="visible" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layoutTrim"
@@ -184,13 +189,13 @@
         android:id="@+id/imgUndo"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
 
         android:padding="8dp"
         android:src="@drawable/ic_undo"
-        android:visibility="gone"
-        app:layout_constraintEnd_toStartOf="@id/imgText"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/ivEmoji"
+        app:layout_constraintEnd_toStartOf="@+id/imgTrim"
+        app:layout_constraintTop_toTopOf="@+id/ivEmoji" />
 
 
     <ImageView
@@ -212,7 +217,7 @@
         android:padding="8dp"
         android:src="@drawable/ic_crtpost_top_sketch"
         app:layout_constraintBottom_toBottomOf="@+id/ivEmoji"
-        app:layout_constraintEnd_toStartOf="@+id/imgTrim"
+        app:layout_constraintEnd_toStartOf="@+id/imgUndo"
         app:layout_constraintTop_toTopOf="@+id/ivEmoji" />
 
     <ImageView
@@ -275,6 +280,16 @@
         app:layout_constraintStart_toStartOf="@id/imgSticker"
         app:layout_constraintTop_toBottomOf="@id/imgSticker" />
 
+    <com.stalmate.user.modules.reels.utils.ColorSeekBar
+        android:id="@+id/color_seek_bar"
+        android:layout_width="300dp"
+        android:layout_height="40dp"
+        android:rotation="270"
+        android:layout_marginEnd="-126dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imgSticker" />
 
     <Button
 

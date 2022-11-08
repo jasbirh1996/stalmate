@@ -14,6 +14,13 @@
             android:id="@+id/action_fragmentFuntimePost_to_fragmentFuntimeTag"
             app:destination="@id/fragmentFuntimeTag"
             />
+        <action
+            android:id="@+id/action_fragmentFuntimePost_to_FragmentFuntimePrivacyOptions"
+            app:destination="@id/FragmentFuntimePrivacyOptions"
+            />
+
+
+
     </fragment>
 
     <fragment
@@ -35,5 +42,11 @@
 
     </fragment>
 
+    <fragment
+        android:id="@+id/FragmentFuntimePrivacyOptions"
+        android:name="com.stalmate.user.view.dashboard.funtime.FragmentFuntimePrivacyOptions"
+        android:label="fragmentPrivacy"
+        tools:layout="@layout/fragment_funtime_privacy_options" >
 
+    </fragment>
 </navigation>

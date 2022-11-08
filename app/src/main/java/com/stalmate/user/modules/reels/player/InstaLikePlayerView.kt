@@ -9,9 +9,11 @@ import android.util.Log
 import android.view.*
 import android.widget.FrameLayout
 import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.C.*
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.ui.AdViewProvider
+import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
 import com.google.android.exoplayer2.upstream.DefaultAllocator
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import com.google.android.exoplayer2.upstream.cache.CacheDataSource
@@ -50,7 +52,7 @@ class InstaLikePlayerView @JvmOverloads constructor(
      * @param player The [Player] to use, or `null` to detach the current player. Only
      * players which are accessed on the main thread are supported (`player.getApplicationLooper() == Looper.getMainLooper()`).
      */
-    fun setPlayer(player: ExoPlayer?) {
+    fun setPlayer(player: SimpleExoPlayer?) {
         Assertions.checkState(Looper.myLooper() == Looper.getMainLooper())
         Assertions.checkArgument(
             player == null || player.applicationLooper == Looper.getMainLooper()
@@ -177,8 +179,10 @@ class InstaLikePlayerView @JvmOverloads constructor(
 
         val trackSelector = DefaultTrackSelector(context)
 
-        val simpleExoPlayer = ExoPlayer.Builder(context).setTrackSelector(trackSelector).setLoadControl(loadControl)
+        val simpleExoPlayer = SimpleExoPlayer.Builder(context).setTrackSelector(trackSelector).setLoadControl(loadControl).setVideoScalingMode(
+            VIDEO_SCALING_MODE_SCALE_TO_FIT)
             .build()
+  /*      simpleExoPlayer.videoScalingMode= VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING*/
         simpleExoPlayer.repeatMode = Player.REPEAT_MODE_ONE;
         simpleExoPlayer.addListener(object : Player.Listener {
 

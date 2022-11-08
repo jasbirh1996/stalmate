@@ -70,7 +70,7 @@ class FragmentHome(var callback:Callback) : BaseFragment(), AdapterFeed.Callback
         binding.rvFeeds.layoutManager= LinearLayoutManager(context)
         binding.rvStory.layoutManager= LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
 
-        Glide.with(requireContext()).load(PrefManager.getInstance(requireContext())!!.userProfileDetail.results.profile_img1).placeholder(R.drawable.profileplaceholder).into(binding.postContant.userImage)
+     //   Glide.with(requireContext()).load(PrefManager.getInstance(requireContext())!!.userProfileDetail.results.profile_img1).placeholder(R.drawable.profileplaceholder).into(binding.postContant.userImage)
 
         networkViewModel.getFeedList("", HashMap())
         networkViewModel.feedLiveData.observe(viewLifecycleOwner, Observer {

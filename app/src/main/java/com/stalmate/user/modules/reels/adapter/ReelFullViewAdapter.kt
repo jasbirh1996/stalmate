@@ -1,10 +1,11 @@
 package com.stalmate.user.modules.reels.adapter
 
-import com.stalmate.user.modules.reels.player.ImageAdapter
-import com.stalmate.user.modules.reels.player.InstaLikePlayerView
-
+import android.app.Activity
 import android.content.Context
 import android.net.Uri
+import android.os.Build
+import android.os.Bundle
+import android.text.Html
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -14,19 +15,23 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
+import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.databinding.HorizontalItemReelBinding
 import com.stalmate.user.databinding.ItemFullViewReelBinding
+import com.stalmate.user.modules.reels.player.ImageAdapter
 import com.stalmate.user.modules.reels.player.holders.ImageReelViewHolder
 import com.stalmate.user.modules.reels.player.holders.ReelViewHolder
 import com.stalmate.user.modules.reels.player.holders.VideoReelFullViewHolder
+import com.stalmate.user.utilities.SeeModetextViewHelper
+import com.stalmate.user.utilities.ValidationHelper
 import com.stalmate.user.view.dashboard.funtime.ResultFuntime
 
 
 class ReelFullViewAdapter(val context: Context) :
     ListAdapter<ResultFuntime, ReelViewHolder>(DIFF_CALLBACK) {
     var reelList = ArrayList<ResultFuntime>()
-    lateinit var instaLikePlayerView: InstaLikePlayerView
     companion object {
         /** Mandatory implementation inorder to use "ListAdapter" - new JetPack component" **/
         val DIFF_CALLBACK = object : DiffUtil.ItemCallback<ResultFuntime>() {
@@ -81,11 +86,7 @@ class ReelFullViewAdapter(val context: Context) :
     private fun handleViewHolder(holder: VideoReelFullViewHolder, position: Int) {
         /*Reset ViewHolder */
         removeImageFromImageView(holder.videoThumbnail)
-        try {
-            instaLikePlayerView=holder.customPlayerView
-        }catch (e:Exception){
 
-        }
         holder.customPlayerView.reset()
 
         /*Set seperate ID for each player view, to prevent it being overlapped by other player's changes*/
@@ -110,6 +111,11 @@ class ReelFullViewAdapter(val context: Context) :
         )
 
         val res: Drawable = context.getResources().getDrawable(resID, null)*/
+
+/*        (context as Activity).runOnUiThread(Runnable {
+            //change View Data
+        })*/
+
         val requestOptions = RequestOptions()
         Glide.with(context)
             .load(reelList[position].file)
@@ -118,20 +124,50 @@ class ReelFullViewAdapter(val context: Context) :
             .into(holder.videoThumbnail)
         //  holder.videoThumbnail.setImageDrawable(res);
 
-        holder.tvUserName.text= reelList[position]!!.first_name+ " " +reelList[position]!!.last_name
-        Glide.with(context).load(reelList[position]!!.profile_img).placeholder(R.drawable.profileplaceholder).into(holder.imgUserProfile)
+        holder.tvUserName.text= reelList[position].first_name+ " " +reelList[position].last_name
+        Glide.with(context).load(reelList[position].profile_img).placeholder(R.drawable.profileplaceholder).into(holder.imgUserProfile)
 
-        holder.likeCount.text = reelList[position]!!.like_count.toString()
-        holder.commentCount.text = reelList[position]!!.comment_count.toString()
-        holder.shareCount.text = reelList[position]!!.share_count.toString()
-        holder.tvStatusDescription.text = reelList[position]!!.text
+        holder.likeCount.text = reelList[position].like_count.toString()
+        holder.commentCount.text = reelList[position].comment_count.toString()
+      //  holder.shareCount.text = reelList[position].share_count.toString()
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            holder.tvStatusDescription.setText(Html.fromHtml(reelList[position]!!.text, Html.FROM_HTML_MODE_COMPACT));
+        } else {
+            holder.tvStatusDescription.setText(Html.fromHtml(reelList[position]!!.text));
+        }
+
+        if (holder.tvStatusDescription.getText().toString().split(System.getProperty("line.separator")).size>2){
+            SeeModetextViewHelper.makeTextViewResizable(
+                holder.tvStatusDescription,
+                2,
+                "more",
+                true
+            );
+        }
         holder.buttonLike.setOnClickListener {
             // likeApiHit()
         }
 
-        /* val timesAg = TimesAgo2.covertTimeToText(item!!.Created_date, true)*/
-        holder.tvStoryPostTime.text = reelList[position]!!.Created_date
+        /* val timesAg = TimesAgo2.covertTimeToText(item.Created_date, true)*/
+        if (!ValidationHelper.isNull(reelList[position].sound_name)){
+            holder.layoutMusic.visibility=View.VISIBLE
+            holder.layoutMusic.setOnClickListener {
+
+                context.startActivity(IntentHelper.getReelListByAudioScreen(context)!!.putExtra("data",reelList[position]))
+            }
+            holder.tvMusic.text=reelList[position].sound_name
+            holder.tvMusicArtist.text=reelList[position].artist_name
+        }
+
+
+        holder.tvStoryPostTime.text = reelList[position].Created_date
+        holder.buttonAdd.setOnClickListener {
+            context.startActivity(IntentHelper.getCreateReelsScreen(context))
+        }
+
+
+
 
 
     }

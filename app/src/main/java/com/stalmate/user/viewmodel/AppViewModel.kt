@@ -71,6 +71,16 @@ open class AppViewModel : ViewModel() {
         getResult(temp, apiInterface.getFuntimeList(map))
     }
 
+/*
+    var funtimeDetailListLiveData: LiveData<ModelFuntimeResponse?> = MutableLiveData<ModelFuntimeResponse?>()
+
+    fun funtimeDetailListLiveData(map: HashMap<String, String>) {
+        val temp = MutableLiveData<ModelFuntimeResponse?>()
+        funtimeDetailListLiveData = temp
+        getResult(temp, apiInterface.getFuntimeDetailListList(map))
+    }
+*/
+
     var funtimeLiveLikeUnlikeData: LiveData<ModelFuntimeLikeResponse?> = MutableLiveData<ModelFuntimeLikeResponse?>()
     fun funtimeLiveLikeUnlikeData(map: HashMap<String, String>) {
         val temp = MutableLiveData<ModelFuntimeLikeResponse?>()
@@ -94,6 +104,15 @@ open class AppViewModel : ViewModel() {
         categoryFriendLiveData = temp
         getResult(temp, apiInterface.getCategoryList())
     }
+    var reelVideosByAudioLiveData: MutableLiveData<ModelFuntimeResponse?> = MutableLiveData<ModelFuntimeResponse?>()
+    fun get_song_funtime_list(map: HashMap<String, String>) {
+        val temp = MutableLiveData<ModelFuntimeResponse?>()
+        reelVideosByAudioLiveData = temp
+        getResult(temp, apiInterface.get_song_funtime_list(map))
+    }
+
+
+
 
     /*var categoryIntrestLiveData: LiveData<ModelIntrestResponse?> = MutableLiveData<ModelIntrestResponse?>()
 
@@ -387,6 +406,7 @@ open class AppViewModel : ViewModel() {
                  @Part("file_type") file_type: RequestBody,
                  @Part("text") text: RequestBody,
                  @Part("tag_id") tag_id: RequestBody,
+                 @Part("sound_id") sound_id: RequestBody,
                  @Part("location") location: RequestBody,
                  @Part("privacy") privacy: RequestBody,
                  @Part("privacy_data") privacy_data: RequestBody,
@@ -395,7 +415,7 @@ open class AppViewModel : ViewModel() {
                  ) {
         val temp = MutableLiveData<CommonModelResponse?>()
         postReelLiveData = temp
-        getResult(temp, apiInterface.postReel(album_image!!,file_type, text, tag_id, location, privacy, privacy_data, deviceId, deviceToken))
+        getResult(temp, apiInterface.postReel(album_image!!,file_type, text, tag_id, sound_id,location, privacy, privacy_data, deviceId, deviceToken))
     }
 
 }

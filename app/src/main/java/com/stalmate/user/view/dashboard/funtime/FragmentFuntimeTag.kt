@@ -2,15 +2,14 @@ package com.stalmate.user.view.dashboard.funtime
 
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.clearFragmentResultListener
 import androidx.fragment.app.setFragmentResultListener
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,18 +24,20 @@ import com.stalmate.user.databinding.FragmentFuntimeTagBinding
 import com.stalmate.user.model.User
 import com.stalmate.user.modules.reels.activity.ActivityFilter
 import com.stalmate.user.view.adapter.FriendAdapter
+import com.stalmate.user.view.dashboard.funtime.viewmodel.TagPeopleViewModel
 import java.io.File
 
 class FragmentFuntimeTag : BaseFragment(), FriendAdapter.Callbackk, TaggedUsersAdapter.Callback {
     private var mPlayer: ExoPlayer? = null
     lateinit var binding: FragmentFuntimeTagBinding
     lateinit var peopleAdapter: TaggedUsersAdapter
+    lateinit var tagPeopleViewModel: TagPeopleViewModel
     var mVideo = ""
 //    var activityDashboard : ActivityDashboard
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -56,10 +57,12 @@ class FragmentFuntimeTag : BaseFragment(), FriendAdapter.Callbackk, TaggedUsersA
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mVideo = requireActivity().intent.getStringExtra(ActivityFilter.EXTRA_VIDEO)!!
-        peopleAdapter = TaggedUsersAdapter(taggedPeopleViewModel, requireContext(),true,this)
+
+        tagPeopleViewModel= ViewModelProvider(requireActivity()).get(TagPeopleViewModel::class.java)
+        peopleAdapter = TaggedUsersAdapter(tagPeopleViewModel, requireContext(),false,this)
         binding.rvPeople.adapter = peopleAdapter
         binding.rvPeople.layoutManager = LinearLayoutManager(requireContext())
-
+        Log.d("asdasdgkn","okpppoo")
         mPlayer = ExoPlayer.Builder(requireContext()).build()
         mPlayer!!.repeatMode = ExoPlayer.REPEAT_MODE_ALL
         val factory = DefaultDataSourceFactory(requireContext(), getString(R.string.app_name))
@@ -73,14 +76,14 @@ class FragmentFuntimeTag : BaseFragment(), FriendAdapter.Callbackk, TaggedUsersA
         binding.layoutAddMoreButton.setOnClickListener {
             setFragmentResultListener(SELECT_USER) { key, bundle ->
                 clearFragmentResultListener(requestKey = SELECT_USER)
-                var arrayList=ArrayList<User>()
+              /*  var arrayList=ArrayList<User>()
                 arrayList.add(bundle.getSerializable(SELECT_USER) as User)
-                peopleAdapter.addToList(arrayList)
+                peopleAdapter.addToList(arrayList)*/
             }
 
             findNavController().navigate(R.id.action_fragmentFuntimeTag_to_fragmentSingleUserSelector)
         }
-        taggedPeopleViewModel.taggedPeopleLiveData.observe(viewLifecycleOwner, Observer {
+        tagPeopleViewModel.getTaggedPeopleList().observe(viewLifecycleOwner, Observer {
             peopleAdapter.submitList(it)
         })
 
@@ -88,6 +91,12 @@ class FragmentFuntimeTag : BaseFragment(), FriendAdapter.Callbackk, TaggedUsersA
         binding.ivDone.setOnClickListener {
             findNavController().popBackStack()
         }
+        binding.ivCloseScreen.setOnClickListener {
+            findNavController().popBackStack()
+        }
+
+
+
 
     }
 
@@ -105,9 +114,8 @@ class FragmentFuntimeTag : BaseFragment(), FriendAdapter.Callbackk, TaggedUsersA
         mPlayer!!.release()
         mPlayer = null
     }
-    open class TagPeopleViewModel : ViewModel() {
-        var taggedPeopleLiveData =MutableLiveData<ArrayList<User>>()
-    }
+
+
 
     override fun onUserSelected(user: User) {
 
@@ -115,6 +123,23 @@ class FragmentFuntimeTag : BaseFragment(), FriendAdapter.Callbackk, TaggedUsersA
     override fun onDestroyView() {
         super.onDestroyView()
     }
+
+
+    override fun onResume() {
+        if (mPlayer!=null){
+            mPlayer!!.play()
+        }
+        super.onResume()
+    }
+
+
+    override fun onPause() {
+        if (mPlayer!=null){
+            mPlayer!!.release()
+        }
+        super.onPause()
+    }
+
 
 
 

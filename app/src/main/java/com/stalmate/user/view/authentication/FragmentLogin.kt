@@ -54,11 +54,11 @@ class FragmentLogin : BaseFragment() {
             findNavController().navigate(R.id.fragmentForgetPassword)
         }
 
-        requireActivity().onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
+/*        requireActivity().onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                requireActivity().finish()
             }
-        })
+        })*/
 
         binding.btnLogin.setOnClickListener {
             if (isValid()) {
@@ -88,8 +88,7 @@ class FragmentLogin : BaseFragment() {
 
         binding.createAccount.setOnClickListener {
             findNavController().apply {
-                navigate(R.id.fragmentSignUp)
-                backQueue.clear()
+                navigate(R.id.action_fragmentLogin_to_fragmentSignUp)
             }
         }
 

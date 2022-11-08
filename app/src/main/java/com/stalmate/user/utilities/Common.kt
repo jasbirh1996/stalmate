@@ -2,18 +2,14 @@ package com.stalmate.user.utilities
 
 
 import android.content.Context
-import android.content.Intent
 import android.media.MediaExtractor
 import android.media.MediaFormat
 import android.text.TextUtils
-import androidx.appcompat.app.AppCompatActivity
-
 import java.io.File
 import java.io.FileInputStream
 import java.io.IOException
 import java.text.DecimalFormat
-import java.util.Formatter
-import java.util.Locale
+import java.util.*
 
 
 object Common {
@@ -146,3 +142,4 @@ object Common {
             }
         }
 }
+

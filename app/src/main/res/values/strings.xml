@@ -661,6 +661,10 @@
     <string name="txt_trimming_video">Trimm</string>
     <string name="txt_cancel">Cancel</string>
     <string name="trim">Trim</string>
+    <string name="my_followers">My Followers</string>
+    <string name="people_who_follow_you">People who follow you on Stalmate</string>
+    <string name="funtime_posts">Funtime Posts</string>
+    <string name="text_verify">Verify</string>
     <string-array name="marrage">
         <item><font fgcolor="#B7B7B7">Marital Status</font></item>
         <item><font fgcolor="#B7B7B7">Single</font></item>

@@ -10,7 +10,7 @@
     <jp.co.cyberagent.android.gpuimage.GPUImageView
         android:id="@+id/selectedPhoto"
         android:layout_width="match_parent"
-        android:scaleType="fitXY"
+        android:scaleType="fitCenter"
         android:layout_height="match_parent"
         android:visibility="visible" />
 
@@ -23,6 +23,7 @@
         app:cameraAudioCodec="aac"
         app:cameraEngine="camera2"
         app:cameraFacing="front"
+        app:cameraPreview="glSurface"
         app:cameraPreviewFrameRate="30"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -82,6 +83,17 @@
             app:timePerSegment="2000"
             app:totalSegments="10" />
 
+        <ImageView
+            android:id="@+id/ivClose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:padding="10dp"
+            android:src="@drawable/ic_close"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/segmented_progressbar" />
+
+
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
@@ -105,6 +117,7 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:padding="10dp"
+
                     android:src="@drawable/ic_crtpost_magic_stick"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

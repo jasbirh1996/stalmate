@@ -36,10 +36,11 @@ class ActivityAuthentication : AppCompatActivity() {
 
     fun setUpNavigation() {
         navController=findNavController(R.id.nav_host_fragment)
-
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
+        if (!navController.popBackStack()){
+            super.onBackPressed()
+        }
     }
 }

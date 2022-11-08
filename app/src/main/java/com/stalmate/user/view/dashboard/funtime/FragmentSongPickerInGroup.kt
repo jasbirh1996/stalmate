@@ -74,6 +74,10 @@ class FragmentSongPickerInGroup : BaseFragment(), FriendAdapter.Callbackk,
                 findNavController().navigate(R.id.FragmentSongPickerSearch)
             }
         }
+
+        binding.toolbar.back.setOnClickListener {
+            findNavController().popBackStack()
+        }
     }
 
     override fun onClickOnUpdateFriendRequest(friend: User, status: String) {
@@ -144,7 +148,7 @@ class FragmentSongPickerInGroup : BaseFragment(), FriendAdapter.Callbackk,
 
     private fun closeWithSelection(song: Song, file: Uri) {
         val data = Intent()
-
+        Log.d("klajsdasd",song.id)
         data.putExtra(EXTRA_SONG_ID, song.id)
         data.putExtra(EXTRA_SONG_NAME, song.title)
         data.putExtra(EXTRA_SONG_FILE, file)

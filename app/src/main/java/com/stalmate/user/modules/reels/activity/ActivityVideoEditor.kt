@@ -1,18 +1,13 @@
 package com.stalmate.user.modules.reels.activity
 
 import android.annotation.SuppressLint
-import android.app.AlertDialog
 import android.app.Dialog
 import android.app.ProgressDialog
-import android.content.DialogInterface
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.PorterDuff
-import android.graphics.PorterDuffColorFilter
+import android.graphics.*
+import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.media.MediaMetadataRetriever
-import android.media.MediaPlayer.OnCompletionListener
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -23,7 +18,6 @@ import android.util.Log
 import android.util.Size
 import android.view.*
 import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -34,7 +28,6 @@ import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.ImageHeaderParser
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.daasuu.imagetovideo.EncodeListener
@@ -61,12 +54,14 @@ import com.stalmate.user.modules.reels.photo_editing.EmojiBSFragment
 import com.stalmate.user.modules.reels.photo_editing.PropertiesBSFragment
 import com.stalmate.user.modules.reels.photo_editing.StickerBSFragment
 import com.stalmate.user.modules.reels.photo_editing.TextEditorDialogFragment
+import com.stalmate.user.modules.reels.utils.ColorSeekBar
 import com.stalmate.user.modules.reels.workers.MergeAudioVideoWorker
 import com.stalmate.user.modules.reels.workers.MergeVideosWorker
 import com.stalmate.user.modules.reels.workers.VideoTrimmerWorker
 import com.stalmate.user.modules.reels.workers.WatermarkWorker
 import com.stalmate.user.utilities.Common
 import com.stalmate.user.utilities.ValidationHelper
+import com.stalmate.user.view.dialogs.CommonConfirmationDialog
 import ja.burhanrashid52.photoeditor.*
 import ja.burhanrashid52.photoeditor.Utils.getScaledDimension
 import java.io.*
@@ -87,6 +82,7 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
     private var videoPath = ""
     private var audioPath = ""
     private var imagePath = ""
+    private var songId = ""
     private lateinit var exeCmd: ArrayList<String>
     val PICK_FILE = 99
     var id = 0
@@ -113,18 +109,16 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
         ) { result ->
             if (result!!.resultCode == RESULT_OK) {
                 val data: Intent = result.getData()!!
-                val id = data.getStringExtra(EXTRA_SONG_ID)
+                songId = data.getStringExtra(EXTRA_SONG_ID).toString()
                 val name = data.getStringExtra(EXTRA_SONG_NAME)
                 val audio = data.getParcelableExtra<Uri>(EXTRA_SONG_FILE)
-
+                Log.d("klajsdasd", songId)
                 Log.d("klajsdasd", audio!!.path.toString())
                 /*        binding.tvMusicName.text=name
                         binding.layoutSelectedMusic.visibility=View.VISIBLE*/
 
                 audioPath = File(audio.path!!).absolutePath
-                initializePlayer()
-
-
+                setupDataOverExoplayer()
             }
         }
 
@@ -137,8 +131,7 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
         )
         binding = ActivityPreviewVideoBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-
+        initializePlayer()
 
 
 
@@ -150,13 +143,43 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
         isIMage = intent.getBooleanExtra("isImage", false)
 
         initViews()
-        //        Drawable transparentDrawable = new ColorDrawable(Color.TRANSPARENT);
-//        Glide.with(this).load(getIntent().getStringExtra("DATA")).into(binding.ivImage.getSource());
-
         videoPath = intent.getStringExtra(EXTRA_VIDEO).toString()
         audioPath = intent.getStringExtra(EXTRA_SONG).toString()
+        try {
+            Log.d("askldjlasd", audioPath)
+        } catch (e: java.lang.Exception) {
 
+        }
+        songId = intent.getStringExtra(EXTRA_SONG_ID).toString()
         if (!isIMage) {
+
+
+            Handler(Looper.myLooper()!!).post {
+                runOnUiThread {
+                    var drawable: Drawable
+
+                    var view = View(this)
+                    view.setLayoutParams(
+                        ViewGroup.LayoutParams(
+                            displayWidth,
+                            displayHeight
+                        )
+                    )
+
+                    drawable = BitmapDrawable(resources, loadBitmapFromView(view))
+                    drawable.setAlpha(1)
+                    binding.ivImage.source.setImageDrawable(drawable)
+
+
+                    mPhotoEditor = PhotoEditor.Builder(this, binding.ivImage)
+                        .setPinchTextScalable(true)
+                        .setClipSourceImage(true)
+                        .build()
+                }
+            }
+
+
+            binding.imgTrim.visibility = View.VISIBLE
             val retriever = MediaMetadataRetriever()
             Log.d("pathhhh", videoPath)
             Log.d("pathhhh", "videoPath")
@@ -178,27 +201,47 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
 
 
         } else {
-         Handler(Looper.myLooper()!!).post {
-             runOnUiThread {
-                binding.videoSurface.visibility=View.GONE
-             }
-         }
+            Handler(Looper.myLooper()!!).post {
+                runOnUiThread {
+                    binding.videoSurface.visibility = View.GONE
+                }
+            }
             getDropboxIMGSize(Uri.parse(videoPath!!))
         }
 
 
+        //  initializePlayer()
+
+        Handler(Looper.getMainLooper()).post {
+            setCanvasAspectRatio()
+/*            binding.ivImage.getLayoutParams().width = newCanvasWidth
+            binding.ivImage.getLayoutParams().height = newCanvasHeight*/
+            /*     binding.videoSurface.getLayoutParams().width = newCanvasWidth
+                 binding.videoSurface.getLayoutParams().height = newCanvasHeight
+     */
+
+            binding.ivImage.getLayoutParams().width = displayWidth
+            binding.ivImage.getLayoutParams().height = displayHeight
+            binding.videoSurface.getLayoutParams().width = displayWidth
+            binding.videoSurface.getLayoutParams().height = displayHeight
 
 
+            Log.d("asldkjshlad", newCanvasWidth.toString())
+            Log.d("asldkjshlad", newCanvasHeight.toString())
+        }
+    }
 
 
-        initializePlayer()
-        setCanvasAspectRatio()
-        binding.videoSurface.getLayoutParams().width = newCanvasWidth
-        binding.videoSurface.getLayoutParams().height = newCanvasHeight
-        binding.ivImage.getLayoutParams().width = newCanvasWidth
-        binding.ivImage.getLayoutParams().height = newCanvasHeight
-        Log.d("asldkjshlad", newCanvasWidth.toString())
-        Log.d("asldkjshlad", newCanvasHeight.toString())
+    fun loadBitmapFromView(v: View): Bitmap? {
+        val b = Bitmap.createBitmap(
+            v.layoutParams.width,
+            v.layoutParams.height,
+            Bitmap.Config.ARGB_8888
+        )
+        val c = Canvas(b)
+        v.layout(v.left, v.top, v.right, v.bottom)
+        v.draw(c)
+        return b
     }
 
 
@@ -232,6 +275,7 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
         mPhotoEditor = PhotoEditor.Builder(this, binding.ivImage)
             .setPinchTextScalable(true) // set flag to make text scalable when pinch
             .setDeleteView(binding.imgDelete) //.setDefaultTextTypeface(mTextRobotoTf)
+
             // .setDefaultEmojiTypeface(mEmojiTypeFace)
             .build() // build photo editor sdk
         mPhotoEditor.setOnPhotoEditorListener(this)
@@ -253,9 +297,50 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
 
     override fun onClick(v: View) {
         when (v.id) {
-            R.id.imgClose -> onBackPressed()
+            R.id.imgClose -> {
+
+                onBackPressed()
+
+
+            }
             R.id.imgDone -> saveImage()
-            R.id.imgDraw -> setDrawingMode()
+            R.id.imgDraw -> {
+
+
+                if (mPhotoEditor.brushDrawableMode == true) {
+                    binding.colorSeekBar.visibility = View.GONE
+                    mPhotoEditor.setBrushDrawingMode(false)
+                    binding.imgDraw.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            this,
+                            R.drawable.ic_crtpost_top_sketch
+                        )
+                    )
+                } else {
+
+                    binding.colorSeekBar.visibility = View.VISIBLE
+                    mPhotoEditor.setBrushDrawingMode(true)
+
+
+                    binding.imgDraw.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            this,
+                            R.drawable.ic_crtpost_top_sketch_active
+                        )
+                    )
+                }
+
+
+                //setDrawingMode()
+                binding.colorSeekBar.setOnColorChangeListener(object :
+                    ColorSeekBar.OnColorChangeListener {
+                    override fun onColorChangeListener(color: Int) {
+                        mPhotoEditor.brushColor = color
+                    }
+
+                })
+
+            }
 
             R.id.imgText -> {
                 val textEditorDialogFragment = TextEditorDialogFragment.show(this)
@@ -273,37 +358,42 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
 
             R.id.imgUndo -> {
                 Log.d("canvas>>", mPhotoEditor.undo().toString() + "")
-                mPhotoEditor.clearAllViews()
+                mPhotoEditor.undo()
             }
 
-            R.id.imgSticker -> mStickerBSFragment.show(
-                supportFragmentManager,
-                mStickerBSFragment.tag
-            )
+            R.id.imgSticker -> {
 
-            R.id.ivEmoji -> mEmojiBSFragment!!.show(
-                supportFragmentManager,
-                mEmojiBSFragment!!.tag
-            )
+                if (mStickerBSFragment.isAdded) {
+                    return
+                }
+                mStickerBSFragment.show(
+                    supportFragmentManager,
+                    mStickerBSFragment.tag
+                )
+
+            }
+
+            R.id.ivEmoji -> {
+                if (mEmojiBSFragment.isAdded) {
+                    return
+                }
+                mEmojiBSFragment!!.show(
+                    supportFragmentManager,
+                    mEmojiBSFragment!!.tag
+                )
+
+            }
 
             R.id.ivMusic -> {
-
-
                 resultCallbackOfSelectedMusicTrack.launch(IntentHelper.getSongPickerActivity(this))
-
-
             }
 
-
             R.id.imgTrim -> {
-
                 if (binding.layoutTrim.visibility == View.VISIBLE) {
                     binding.layoutTrim.visibility = View.GONE
                 } else {
                     binding.layoutTrim.visibility = View.VISIBLE
                 }
-
-
             }
 
         }
@@ -327,6 +417,22 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
         newCanvasHeight = displayDiamenion.height
 
     }
+
+    override fun onBackPressed() {
+        var commonConfirmationDialog = CommonConfirmationDialog(
+            this,
+            "Save as Draft",
+            "Drafts let you save your edits, so you can come back later.",
+            "Yes",
+            "Delete Video",
+            object : CommonConfirmationDialog.Callback {
+                override fun onDialogResult(isPermissionGranted: Boolean) {
+                    finish()
+                }
+            })
+        commonConfirmationDialog.show()
+    }
+
 
     private fun setDrawingMode() {
         if (mPhotoEditor.brushDrawableMode == true) {
@@ -448,6 +554,8 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
 
     override
     fun onColorChanged(colorCode: Int) {
+
+
         mPhotoEditor.brushColor = colorCode
         binding.txtCurrentTool.setText(R.string.label_brush)
     }
@@ -553,12 +661,16 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
                 /*       Toast.makeText(applicationContext, "Video has just saved!!", Toast.LENGTH_LONG)
                            .show()
                        */
+                try {
+                    Log.d("asdasdasd", "songIdvv")
+                    Log.d("asdasdasd", songId)
+                } catch (e: java.lang.Exception) {
+                    Log.d("asdasdasd", "songId")
+                }
                 startActivity(
                     IntentHelper.getCreateFuntimePostScreen(this)!!
-                        .putExtra(EXTRA_VIDEO, newfile.absolutePath)
+                        .putExtra(EXTRA_VIDEO, newfile.absolutePath).putExtra(EXTRA_SONG_ID, songId)
                 )
-
-
             } else {
                 Toast.makeText(
                     applicationContext,
@@ -578,25 +690,16 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
 
     public override fun onStart() {
         super.onStart()
-
-
-    }
-
-    public override fun onStop() {
-        super.onStop()
-        //  releasePlayer()
+        setupDataOverExoplayer()
     }
 
 
     fun initializePlayer() {
-
-
-
         mediaPlayer = ExoPlayer.Builder(this@ActivityVideoEditor).build()
         binding.videoSurface.player = mediaPlayer
         binding.videoSurface.hideController()
         binding.videoSurface.useController = false
-        // mediaPlayer!!.repeatMode = ExoPlayer.REPEAT_MODE_ALL
+        mediaPlayer!!.repeatMode = ExoPlayer.REPEAT_MODE_ALL
         mediaPlayer!!.addListener(object : Player.Listener {
             override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
                 /*   imagePlayPause.visibility = if (playWhenReady) View.GONE else View.VISIBLE*/
@@ -618,24 +721,26 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
                 }
             }
         })
-        setupDataOverExoplayer()
+
     }
 
     override fun onPause() {
+        mediaPlayer!!.pause()
         super.onPause()
-        //  mediaPlayer!!.setPlayWhenReady(false)
+
     }
 
     fun setupDataOverExoplayer() {
 
-        var videoSource: MediaSource?=null
+        var videoSource: MediaSource? = null
         var audioSource: MediaSource? = null
         var mergedSource: MediaSource? = null
-        if (!isIMage){
-            videoSource=    ProgressiveMediaSource.Factory(FileDataSource.Factory()).createMediaSource(
-                MediaItem.fromUri(Uri.parse(videoPath))
-            )
-            if (!ValidationHelper.isNull(audioPath)){
+        if (!isIMage) {
+            videoSource =
+                ProgressiveMediaSource.Factory(FileDataSource.Factory()).createMediaSource(
+                    MediaItem.fromUri(Uri.parse(videoPath))
+                )
+            if (!ValidationHelper.isNull(audioPath)) {
                 audioSource =
                     ProgressiveMediaSource.Factory(FileDataSource.Factory()).createMediaSource(
                         MediaItem.fromUri(Uri.parse(audioPath))
@@ -643,15 +748,13 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
                 mergedSource = MergingMediaSource(videoSource!!, audioSource);
                 mediaPlayer!!.setMediaSource(mergedSource)
 
-            }else{
+            } else {
 
 
-                mediaPlayer!!.setMediaSource(audioSource!!)
+                mediaPlayer!!.setMediaSource(videoSource)
 
             }
-        }else{
-
-
+        } else {
 
 
             if (!ValidationHelper.isNull(audioPath)) {
@@ -662,12 +765,13 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
                 mediaPlayer!!.setMediaSource(audioSource)
             }
 
-         Handler(Looper.myLooper()!!).post {
-            runOnUiThread {
-                Glide.with(this).load(Drawable.createFromPath(videoPath)).centerCrop().into(binding.ivImage.source)
-                binding.ivImage.source.scaleType=ImageView.ScaleType.FIT_XY
+            Handler(Looper.myLooper()!!).post {
+                runOnUiThread {
+                    Glide.with(this).load(Drawable.createFromPath(videoPath)).centerCrop()
+                        .into(binding.ivImage.source)
+                    binding.ivImage.source.scaleType = ImageView.ScaleType.FIT_XY
+                }
             }
-         }
 
 
         }
@@ -1060,7 +1164,7 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
                 if (info.state == WorkInfo.State.SUCCEEDED) {
                     videoPath = trimmed.absolutePath
                     binding.layoutTrim.visibility = View.GONE
-                    initializePlayer()
+                    setupDataOverExoplayer()
                 } else if (ended) {
 
                 }

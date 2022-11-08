@@ -12,10 +12,11 @@ object Constants {
     const val URL_BLOCKED_LIST="auth_service/friend_api/get_block_user_list"
     const val URL_CATEGORY_LIST="auth_service/friend_api/friend_category_list"
     const val URLFUNTIME_LIST="auth_service/funtime_api/get_funtime_list"
+    const val URLFUNTIME_DETAIL_LIST="auth_service/funtime_api/get_funtime_detail"
     const val URL_FUNTIME_MUSIC_LIST="auth_service/funtime_api/get_sound_api"
     const val URL_FUNTIME_LIKE_UNLIKE="auth_service/funtime_api/like_unlike_funtime"
 
-
+    const val URL_FUNTIME_LIST_BY_AUDIO="auth_service/funtime_api/get_song_funtime_list"
 
 
     const val URL_OTP_REGISTRATION="auth_service/auth_api/otp_register_process"
@@ -112,5 +113,22 @@ object Constants {
     const val MESSAGE_LOC_API_EMPTY_RESULT = "Pin Location"
 
     const val ACTION_SYNC_COMPLETED: String = "ACTION_SYNC_COMPLETED"
+
+
+
+
+
+
+
+
+
+
+    const val PRIVACY_TYPE_PUBLIC: String = "public"
+    const val PRIVACY_TYPE_PRIVATE: String = "privaacte"
+    const val PRIVACY_TYPE_MY_FOLLOWER: String = "follower"
+    const val PRIVACY_TYPE_SPECIFIC: String = "specific"
+
+
+
 
 }

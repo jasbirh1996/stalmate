@@ -157,6 +157,11 @@ class ReelListFragment : BaseFragment() {
         val index = 0
         var hashmap = HashMap<String, String>()
         hashmap.put("page", "1")
+        hashmap.put("limit", "5")
+        hashmap.put("id_user", "")
+        hashmap.put("fun_id", "")
+
+
         networkViewModel.funtimeLiveData(hashmap)
         networkViewModel.funtimeLiveData.observe(viewLifecycleOwner) {
             isApiRuning = false
@@ -178,16 +183,19 @@ class ReelListFragment : BaseFragment() {
                     val viewMainHolder = (viewholder as VideoReelViewHolder)
                     viewMainHolder.customPlayerView.startPlaying()
                 }
-
             }
         super.onStart()
     }
 
 
     override fun onPause() {
-        var viewholder = binding.recyclerView.findViewHolderForAdapterPosition(videoAutoPlayHelper!!.currentPlayingVideoItemPos);
-        val viewMainHolder = (viewholder as VideoReelViewHolder)
-        viewMainHolder.customPlayerView.removePlayer()
+       try {
+           var viewholder = binding.recyclerView.findViewHolderForAdapterPosition(videoAutoPlayHelper!!.currentPlayingVideoItemPos);
+           val viewMainHolder = (viewholder as VideoReelViewHolder)
+           viewMainHolder.customPlayerView.removePlayer()
+       }catch (e:Exception){
+
+       }
         super.onPause()
     }
 

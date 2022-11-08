@@ -12,37 +12,53 @@
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_gravity="center"
-            android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
-            android:background="@drawable/search_background"
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/imageView12"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_header_search" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/colorGray"
+                app:layout_constraintBottom_toBottomOf="parent" />
 
             <EditText
 
                 android:id="@+id/etSearch"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginEnd="4dp"
                 android:background="@null"
+                android:includeFontPadding="false"
                 android:fontFamily="@font/poppins"
                 android:hint="@string/search"
                 android:textSize="12sp"
+                android:minHeight="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/appCompatImageView6"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/ivClear"
+                app:layout_constraintStart_toEndOf="@+id/imageView12"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/appCompatImageView6"
+                android:id="@+id/ivClear"
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:layout_marginEnd="16dp"
-                android:src="@drawable/search"
+                android:src="@drawable/ic_close"
+                app:tint="@color/colorGray"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -128,6 +144,7 @@
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

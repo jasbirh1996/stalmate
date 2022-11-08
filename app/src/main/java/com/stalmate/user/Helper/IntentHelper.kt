@@ -17,6 +17,7 @@ import com.stalmate.user.modules.reels.activity.ActivityFullViewReels
 import com.stalmate.user.modules.reels.activity.ActivitySongPicker
 import com.stalmate.user.modules.reels.activity.ActivityVideoRecorder
 import com.stalmate.user.view.dashboard.funtime.ActivityFuntimePost
+import com.stalmate.user.view.dashboard.funtime.ActivityReelsByAudio
 
 public class IntentHelper {
 
@@ -92,6 +93,15 @@ public class IntentHelper {
             return Intent(context, ActivityFullViewReels::class.java)
                 .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
         }
+
+
+
+        fun getReelListByAudioScreen(context: Context?): Intent? {
+            return Intent(context, ActivityReelsByAudio::class.java)
+                .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        }
+
+
 
     }
 

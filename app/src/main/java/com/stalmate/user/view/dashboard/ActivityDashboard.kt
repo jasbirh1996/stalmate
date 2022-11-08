@@ -3,6 +3,8 @@ package com.stalmate.user.view.dashboard
 import android.animation.ValueAnimator
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -16,6 +18,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
+import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.databinding.ActivityDashboardBinding
 import com.stalmate.user.modules.reels.player.Constants
 import com.stalmate.user.modules.reels.player.VideoPreLoadingService
@@ -26,10 +29,13 @@ import com.stalmate.user.view.dashboard.HomeFragment.FragmentMenu
 import com.stalmate.user.view.dashboard.VideoReels.FragmentReels
 import com.stalmate.user.view.dashboard.funtime.FragmentFunTime
 
-class ActivityDashboard : AppCompatActivity(), FragmentHome.Callback , FragmentFriend.Callbackk, FragmentMenu.Callback/*, FragmentFunTime.Callbackk*/{
+class ActivityDashboard : BaseActivity(), FragmentHome.Callback , FragmentFriend.Callbackk, FragmentMenu.Callback/*, FragmentFunTime.Callbackk*/{
     private val TIME_INTERVAL = 2000
     var back_pressed: Long = 0
     private lateinit var binding: ActivityDashboardBinding
+    override fun onClick(viewId: Int, view: View?) {
+
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +43,7 @@ class ActivityDashboard : AppCompatActivity(), FragmentHome.Callback , FragmentF
         binding = ActivityDashboardBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setupBottomBar()
-        onNewIntent(intent)
+       // onNewIntent(intent)
 
         /*loadDrawerFragment(FragmentMenu())*/
         //  setBottomNavigationInNormalWay(savedInstanceState)
@@ -59,7 +65,7 @@ class ActivityDashboard : AppCompatActivity(), FragmentHome.Callback , FragmentF
 //                    .putExtra("id", intent.getStringExtra("userId").toString())
 //            )
 //        }
-        super.onNewIntent(intent)
+
     }
 
 
@@ -119,7 +125,7 @@ fun mute(toMute:Boolean){
    if (toMute){
        if (active is FragmentFunTime){
            Log.d("askldjalsd","alksdjasd")
-           (active as FragmentFunTime).onPause()
+           (active as FragmentFunTime).pauseMusic()
        }else{
            
        }
@@ -149,32 +155,29 @@ fun mute(toMute:Boolean){
         }
     }
 
-
+    private var doubleBackToExitPressedOnce = false
     override fun onBackPressed() {
         if (binding.drawerLayout.isDrawerOpen(GravityCompat.END)) {
             toggleDrawer()
-        } else {
-            if (active is FragmentFunTime){
-             onClickBack()
-            }else if (active is FragmentHome){
-           /*     if (back_pressed + TIME_INTERVAL > System.currentTimeMillis()) {
-                    onClickBack()
-                } else {
-                    Toast.makeText(
-                        getBaseContext(),
-                        "Press once again to exit!", Toast.LENGTH_SHORT
-                    )
-                        .show();
-                }
-                back_pressed = System.currentTimeMillis();
-*/
-                finish()
-
-            }
-            else{
-                super.onBackPressed()
-            }
         }
+
+
+        else if (active is FragmentHome){
+            if (doubleBackToExitPressedOnce) {
+                super.onBackPressed()
+                return
+            }
+
+            this.doubleBackToExitPressedOnce = true
+            Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show()
+
+            Handler(Looper.getMainLooper()).postDelayed(Runnable { doubleBackToExitPressedOnce = false }, 2000)
+
+        }
+            else{
+                onClickBack()
+            }
+
 
     }
 

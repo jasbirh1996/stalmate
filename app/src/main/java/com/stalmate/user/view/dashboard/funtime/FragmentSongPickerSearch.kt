@@ -14,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.work.*
 import com.google.android.exoplayer2.ExoPlayer
@@ -85,6 +86,10 @@ class FragmentSongPickerSearch : BaseFragment(), FriendAdapter.Callbackk,
 
             }
         })
+
+        binding.toolbar.back.setOnClickListener {
+            findNavController().popBackStack()
+        }
     }
 
     override fun onClickOnUpdateFriendRequest(friend: User, status: String) {

@@ -67,6 +67,7 @@ android {
             }
         }
     }
+    buildToolsVersion '33.0.0'
 }
 
 dependencies {
@@ -84,6 +85,15 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+
+
+
+
+
+
+
+
+
 
     /*Material Edittext DD*/
     implementation "com.google.android.material:material:1.7.0-beta01"
@@ -132,9 +142,9 @@ dependencies {
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
     implementation platform('com.google.firebase:firebase-bom:30.0.2')
     implementation 'com.google.firebase:firebase-analytics'
-    implementation 'com.google.firebase:firebase-messaging:23.0.8'
+    implementation 'com.google.firebase:firebase-messaging:23.1.0'
     implementation 'com.google.android.libraries.places:places:2.6.0'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.8'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.9'
     implementation 'com.github.Dimezis:BlurView:version-2.0.2'
     implementation 'com.google.android.exoplayer:exoplayer:2.18.1'
     implementation 'com.google.android.exoplayer:exoplayer-core:2.18.1'
@@ -142,7 +152,8 @@ dependencies {
     implementation 'com.google.android.exoplayer:exoplayer-ui:2.18.1'
     implementation 'com.github.MasayukiSuda:ImageToVideoAndroid:v0.1.0'
     implementation 'com.github.castorflex.verticalviewpager:library:19.0.1'
-    implementation "androidx.core:core-ktx:+"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.arthenica:mobile-ffmpeg-min:4.4.LTS'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.9'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1'
+    implementation 'jp.wasabeef:richeditor-android:2.0.0'
 }

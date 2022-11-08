@@ -262,14 +262,14 @@ class FragmentOTPEnter : BaseFragment() {
 
         if (forgetPasswordScreen == "SignUp") {
 
-            binding.toolbar.toolBarCenterText.text =  getString(R.string.sign_up)
+            binding.toolbar.toolBarCenterText.text =  getString(R.string.text_verify)
         } else if (forgetPasswordScreen == "ForgetPassword") {
 
             binding.toolbar.toolBarCenterText.text =  getString(R.string.forget_post)
         }
 
         binding.toolbar.back.setOnClickListener {
-            activity?.onBackPressed()
+            findNavController().popBackStack()
         }
     }
 

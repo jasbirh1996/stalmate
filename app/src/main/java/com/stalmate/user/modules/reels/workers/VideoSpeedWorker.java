@@ -2,14 +2,17 @@ package com.stalmate.user.modules.reels.workers;
 
 import android.content.Context;
 import android.util.Log;
+import android.util.Size;
 
 import androidx.annotation.NonNull;
 import androidx.concurrent.futures.CallbackToFutureAdapter;
 import androidx.work.ListenableWorker;
 import androidx.work.WorkerParameters;
 
+import com.daasuu.mp4compose.VideoFormatMimeType;
 import com.daasuu.mp4compose.composer.Mp4Composer;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.stalmate.user.modules.reels.utils.VideoUtil;
 
 public class VideoSpeedWorker extends ListenableWorker {
 
@@ -37,6 +40,10 @@ public class VideoSpeedWorker extends ListenableWorker {
         String output = getInputData().getString(KEY_OUTPUT);
         float speed = getInputData().getFloat(KEY_SPEED, 1f);
         Mp4Composer composer = new Mp4Composer(input, output);
+        Size size = null;
+        size = VideoUtil.getDimensions(input);
+        composer.videoBitrate((int) (.07 * 30 * size.getWidth() * size.getHeight()));
+
         composer.mute(true);
         composer.timeScale(speed);
         composer.listener(new Mp4Composer.Listener() {
