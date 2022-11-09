@@ -78,34 +78,32 @@ class ActivityDashboard : AppCompatActivity(), FragmentHome.Callback , FragmentF
                     mute(true)
                     fm.beginTransaction().hide(active).show(fragment1).commit()
                     active = fragment1
-
-
                 }
+
                 R.id.funTime -> {
                     mute(false)
                     fm.beginTransaction().hide(active).show(fragment2).commit()
                     active = fragment2
-
-
                 }
+
                 R.id.chat -> {
                     mute(true)
                     fm.beginTransaction().hide(active).show(fragment3).commit()
                     active = fragment3
-
                 }
+
                 R.id.video -> {
                     mute(true)
                     fm.beginTransaction().hide(active).show(fragment4).commit()
                     active = fragment4
-
                 }
+
                 R.id.friend -> {
                     mute(true)
                     fm.beginTransaction().hide(active).show(fragment5).commit()
                     active = fragment5
-
                 }
+
                 else -> {
                 }
             }
@@ -125,7 +123,6 @@ fun mute(toMute:Boolean){
        }
    }
 }
-
 
     val fragment1: Fragment = FragmentHome(this)
     val fragment2: Fragment = FragmentFunTime()

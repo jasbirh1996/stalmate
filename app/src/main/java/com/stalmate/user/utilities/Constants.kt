@@ -15,9 +15,6 @@ object Constants {
     const val URL_FUNTIME_MUSIC_LIST="auth_service/funtime_api/get_sound_api"
     const val URL_FUNTIME_LIKE_UNLIKE="auth_service/funtime_api/like_unlike_funtime"
 
-
-
-
     const val URL_OTP_REGISTRATION="auth_service/auth_api/otp_register_process"
     const val url_friend_list="auth_service/friend_api/get_friend_list"
     const val url_send_friend_request="auth_service/friend_api/send_friend_request"
@@ -45,9 +42,6 @@ object Constants {
     const val START_DATE = "01"
     const val ADD_REEL="auth_service/funtime_api/add_funtime"
 
-
-
-
     const val TYPE_FRIEND_REQUEST = "request"
     const val TYPE_FRIEND_SUGGESTIONS = "suggestions"
     const val TYPE_MY_FRIENDS = "friends"
@@ -56,13 +50,10 @@ object Constants {
     const val TYPE_USER_TYPE_FOLLOWERS = "follower"
     const val TYPE_USER_TYPE_FOLLOWINGS = "following"
 
-
     const val TYPE_FRIEND_SUGGESTIONS_SUGGESTED = "01"
     const val TYPE_FRIEND_SUGGESTIONS_FOLLOWERS = "02"
     const val TYPE_FRIEND_FOLLOWING = "following"
     const val TYPE_FRIEND_FOLLOWER = "follower"
-
-
 
     const val TYPE_USER_ACTION_ADD_FRIEND = "add_friend"
     const val TYPE_USER_ACTION_REMOVE_FRIEND = "add_friend"
@@ -73,19 +64,10 @@ object Constants {
     const val TYPE_USER_ACTION_FOLLOW = "follow"
     const val TYPE_USER_ACTION_UNFOLLOW = "unfollow"
 
-
-
-
-
     const val FRIEND_CONNECTION_STATUS_PENDING = "Pending"
     const val FRIEND_CONNECTION_STATUS_ACCEPT = "Accept"
 
-
-
-
-
     const val PARAMETER_EMAIL = "email"
-
 
     const val FILTER_NOTIFICATIONS = "com.stalmateuser"
     const val LOCATION_NOTIFICATION_BROADCAST = "com.stalmateuser"
@@ -94,23 +76,16 @@ object Constants {
     const val CHANNEL_NAME = "Notification"
     const val CHANNEL_DESCRIPTION = "Example Partner Notifications"
 
-
-
-
-
     const val NOTIFICATION_TYPE_FRIEND_REQUEST_ACCEPTED = "friendRequestAccepted"
     const val NOTIFICATION_TYPE_NEW_FOLLOWER_REQUEST = "newFollowerRequest"
     const val NOTIFICATION_TYPE_NEW_FRIEND_REQUEST = "newFriendRequest"
     const val NOTIFICATION_TYPE_FOLLOWER_REQUESTED_ACCEPTED = "followRequestAccepted"
-
-
 
     const val ACCOUNT_TYPE: String = "com.stalmate.user"
     const val ACCOUNT_NAME: String = "SyncContacts"
 
 
     const val MESSAGE_LOC_API_EMPTY_RESULT = "Pin Location"
-
     const val ACTION_SYNC_COMPLETED: String = "ACTION_SYNC_COMPLETED"
 
 }
