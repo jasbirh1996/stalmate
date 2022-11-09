@@ -14,6 +14,7 @@ import androidx.core.app.NotificationManagerCompat
 import com.bumptech.glide.Glide
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import com.google.gson.Gson
 import com.stalmate.user.R
 import com.stalmate.user.utilities.Constants
 import com.stalmate.user.view.dashboard.ActivityDashboard
@@ -38,9 +39,11 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
         Log.d("a;lskd;asd","remotee")
+
         val notificationIntent = Intent(Constants.FILTER_NOTIFICATION_BROADCAST)
         val nData = remoteMessage.data
         if (nData != null && nData.isNotEmpty()) {
+            Log.d("a;lskd;asd",Gson().toJson(remoteMessage))
             Log.d("Notification", "From: $nData")
             for (key in nData.keys) {
                 notificationIntent.putExtra(key, nData[key])
@@ -60,15 +63,21 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             mChannel.lightColor = Color.RED
             notificationManager.createNotificationChannel(mChannel)
             val intent = Intent(this, ActivityDashboard::class.java)
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+          //  intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
 
             if (remoteMessage.data["title"] != null) {
                 intent.putExtra("title", remoteMessage.data["title"])
             }
+
             if (remoteMessage.data["userId"] != null) {
                 intent.putExtra("userId", remoteMessage.data["userId"])
             }
+
+            if (remoteMessage.data["funTimeId"] != null) {
+                intent.putExtra("funTimeId", remoteMessage.data["funTimeId"])
+            }
+
 
 
             /*           intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
@@ -78,7 +87,8 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
             intent.putExtra("notificationType", remoteMessage.data["notificationType"])
             //   intent.setFlags( Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_MUTABLE)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+            val pendingIntent = PendingIntent.getActivity(this, System.currentTimeMillis().toInt(), intent, PendingIntent.FLAG_MUTABLE)
             val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
             val mBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
             mBuilder.setSmallIcon(R.drawable.add_friend_icon)

@@ -21,10 +21,7 @@ import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.commonadapters.TaggedUsersAdapter
 import com.stalmate.user.databinding.FragmentSongPickerInGroupBinding
 import com.stalmate.user.model.User
-import com.stalmate.user.modules.reels.activity.ActivityFilter
-import com.stalmate.user.modules.reels.activity.EXTRA_SONG_FILE
-import com.stalmate.user.modules.reels.activity.EXTRA_SONG_ID
-import com.stalmate.user.modules.reels.activity.EXTRA_SONG_NAME
+import com.stalmate.user.modules.reels.activity.*
 import com.stalmate.user.modules.reels.model.Song
 import com.stalmate.user.modules.reels.workers.FileDownloadWorker
 import com.stalmate.user.modules.reels.workers.VideoSpeedWorker.TAG
@@ -152,6 +149,7 @@ class FragmentSongPickerInGroup : BaseFragment(), FriendAdapter.Callbackk,
         data.putExtra(EXTRA_SONG_ID, song.id)
         data.putExtra(EXTRA_SONG_NAME, song.title)
         data.putExtra(EXTRA_SONG_FILE, file)
+        data.putExtra(EXTRA_SONG_COVER, song.cover)
         requireActivity().setResult(AppCompatActivity.RESULT_OK, data)
         requireActivity().finish()
     }
@@ -161,6 +159,7 @@ class FragmentSongPickerInGroup : BaseFragment(), FriendAdapter.Callbackk,
         downloadableSong.id=song.id
         downloadableSong.audio=song.sound_file
         downloadableSong.title=song.sound_name
+        downloadableSong.cover=song.image
         downloadSelectedSong(downloadableSong)
     }
 

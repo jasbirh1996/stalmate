@@ -112,7 +112,12 @@
             android:name=".view.dashboard.ActivityDashboard"
             android:exported="false"
             android:hardwareAccelerated="true"
-            android:launchMode="singleTask" />
+            android:launchMode="singleTop"
+            android:taskAffinity=""
+            android:excludeFromRecents="true"
+
+
+            />
         <activity
             android:name=".modules.reels.activity.ActivityVideoEditor"
             android:exported="false"

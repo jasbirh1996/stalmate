@@ -126,6 +126,7 @@ class ReelFullViewAdapter(val context: Context) :
 
         holder.tvUserName.text= reelList[position].first_name+ " " +reelList[position].last_name
         Glide.with(context).load(reelList[position].profile_img).placeholder(R.drawable.profileplaceholder).into(holder.imgUserProfile)
+        Glide.with(context).load(reelList[position].sound_image).placeholder(R.drawable.profileplaceholder).into(holder.ivMusicImage)
 
         holder.likeCount.text = reelList[position].like_count.toString()
         holder.commentCount.text = reelList[position].comment_count.toString()

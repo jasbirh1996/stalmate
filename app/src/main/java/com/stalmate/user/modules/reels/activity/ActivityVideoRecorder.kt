@@ -4,10 +4,7 @@ package com.stalmate.user.modules.reels.activity
 import android.content.Context
 import android.content.Intent
 import android.database.Cursor
-import android.graphics.Bitmap
-import android.graphics.Point
-import android.graphics.PointF
-import android.graphics.Rect
+import android.graphics.*
 import android.graphics.drawable.Drawable
 import android.media.AudioAttributes
 import android.media.MediaPlayer
@@ -67,6 +64,7 @@ import com.stalmate.user.modules.reels.utils.VideoUtil
 import com.stalmate.user.modules.reels.workers.MergeAudioVideoWorker
 import com.stalmate.user.modules.reels.workers.MergeVideosWorker
 import com.stalmate.user.modules.reels.workers.VideoSpeedWorker
+import com.stalmate.user.utilities.ImageLoaderHelperGlide
 import com.stalmate.user.view.dialogs.CommonConfirmationDialog
 import com.user.vaibhavmodules.reels.utils.SharedConstants
 import jp.co.cyberagent.android.gpuimage.GPUImage
@@ -115,6 +113,7 @@ class ActivityVideoRecorder : BaseActivity() {
         binding.cameraView.mapGesture(Gesture.PINCH, GestureAction.ZOOM);
         binding.cameraView.mapGesture(Gesture.TAP, GestureAction.AUTO_FOCUS);
         binding.cameraView.clearGesture(Gesture.LONG_TAP)
+        binding.cameraView.useDeviceOrientation=false
         binding.cameraView.addCameraListener(object : CameraListener() {
 
 
@@ -209,6 +208,8 @@ class ActivityVideoRecorder : BaseActivity() {
             binding.tvMusicName.text = intent.getStringExtra(EXTRA_SONG_NAME).toString()
             binding.layoutSelectedMusic.visibility = View.VISIBLE
             mModel!!.audio = Uri.parse(intent.getStringExtra(EXTRA_SONG_FILE).toString())
+            ImageLoaderHelperGlide.setGlideCorner(this,binding.ivMusicImage,intent.getStringExtra(EXTRA_SONG_COVER).toString(),R.drawable.user_placeholder)
+
         }
 
 
@@ -297,6 +298,9 @@ class ActivityVideoRecorder : BaseActivity() {
           if (!isImageTakenByCamera){
               binding.cameraView.open()
           }
+            if (!isImage){
+                binding.cameraView.open()
+            }
         }
         super.onStart()
     }
@@ -316,6 +320,8 @@ class ActivityVideoRecorder : BaseActivity() {
                 ) {
                     bitmap = resource
                     //  binding.buttonColorFilterIcon.setImageBitmap(resource)
+
+
                     val adapter =
                         FilterAdapter(this@ActivityVideoRecorder, bitmap, binding.cameraView, true)
                     adapter.setListener { filter: VideoFilter? ->
@@ -462,43 +468,44 @@ class ActivityVideoRecorder : BaseActivity() {
             }
         } else {
             binding.rvFilters.visibility = View.GONE
-            when (filter) {
-                VideoFilter.BRIGHTNESS -> {
-                    val glf = Filters.BRIGHTNESS.newInstance() as BrightnessFilter
-                    glf.brightness = 1.2f
-                    binding.cameraView.setFilter(glf)
-                }
-                VideoFilter.EXPOSURE -> binding.cameraView.setFilter(ExposureFilter())
-                VideoFilter.GAMMA -> {
-                    val glf = Filters.GAMMA.newInstance() as GammaFilter
-                    glf.gamma = 2f
-                    binding.cameraView.setFilter(glf)
-                }
-                VideoFilter.GRAYSCALE -> binding.cameraView.setFilter(Filters.GRAYSCALE.newInstance())
-                VideoFilter.HAZE -> {
-                    val glf = HazeFilter()
-                    glf.setSlope(-0.5f)
-                    binding.cameraView.setFilter(glf)
-                }
 
-                VideoFilter.INVERT -> binding.cameraView.setFilter(Filters.INVERT_COLORS.newInstance())
-                VideoFilter.MONOCHROME -> binding.cameraView.setFilter(MonochromeFilter())
-                VideoFilter.PIXELATED -> {
-                    val glf = PixelatedFilter()
-                    glf.setPixel(5.0f)
-                    binding.cameraView.setFilter(glf)
-                }
-                VideoFilter.POSTERIZE -> binding.cameraView.setFilter(Filters.POSTERIZE.newInstance())
-                VideoFilter.SEPIA -> binding.cameraView.setFilter(Filters.SEPIA.newInstance())
-                VideoFilter.SHARP -> {
-                    val glf = Filters.SHARPNESS.newInstance() as SharpnessFilter
-                    glf.sharpness = 0.25f
-                    binding.cameraView.setFilter(glf)
-                }
-                VideoFilter.SOLARIZE -> binding.cameraView.setFilter(SolarizeFilter())
-                VideoFilter.VIGNETTE -> binding.cameraView.setFilter(Filters.VIGNETTE.newInstance())
-                else -> binding.cameraView.setFilter(Filters.NONE.newInstance())
+        }
+        when (filter) {
+            VideoFilter.BRIGHTNESS -> {
+                val glf = Filters.BRIGHTNESS.newInstance() as BrightnessFilter
+                glf.brightness = 1.2f
+                binding.cameraView.setFilter(glf)
             }
+            VideoFilter.EXPOSURE -> binding.cameraView.setFilter(ExposureFilter())
+            VideoFilter.GAMMA -> {
+                val glf = Filters.GAMMA.newInstance() as GammaFilter
+                glf.gamma = 2f
+                binding.cameraView.setFilter(glf)
+            }
+            VideoFilter.GRAYSCALE -> binding.cameraView.setFilter(Filters.GRAYSCALE.newInstance())
+            VideoFilter.HAZE -> {
+                val glf = HazeFilter()
+                glf.setSlope(-0.5f)
+                binding.cameraView.setFilter(glf)
+            }
+
+            VideoFilter.INVERT -> binding.cameraView.setFilter(Filters.INVERT_COLORS.newInstance())
+            VideoFilter.MONOCHROME -> binding.cameraView.setFilter(MonochromeFilter())
+            VideoFilter.PIXELATED -> {
+                val glf = PixelatedFilter()
+                glf.setPixel(5.0f)
+                binding.cameraView.setFilter(glf)
+            }
+            VideoFilter.POSTERIZE -> binding.cameraView.setFilter(Filters.POSTERIZE.newInstance())
+            VideoFilter.SEPIA -> binding.cameraView.setFilter(Filters.SEPIA.newInstance())
+            VideoFilter.SHARP -> {
+                val glf = Filters.SHARPNESS.newInstance() as SharpnessFilter
+                glf.sharpness = 0.25f
+                binding.cameraView.setFilter(glf)
+            }
+            VideoFilter.SOLARIZE -> binding.cameraView.setFilter(SolarizeFilter())
+            VideoFilter.VIGNETTE -> binding.cameraView.setFilter(Filters.VIGNETTE.newInstance())
+            else -> binding.cameraView.setFilter(Filters.NONE.newInstance())
         }
 
 
@@ -666,7 +673,7 @@ class ActivityVideoRecorder : BaseActivity() {
 
 
         startActivity(intent)
-        finish()
+       // finish()
 
     }
 
@@ -872,7 +879,7 @@ class ActivityVideoRecorder : BaseActivity() {
                 songId = data.getStringExtra(EXTRA_SONG_ID).toString()
                 val name = data.getStringExtra(EXTRA_SONG_NAME)
                 val audio = data.getParcelableExtra<Uri>(EXTRA_SONG_FILE)
-
+                ImageLoaderHelperGlide.setGlideCorner(this,binding.ivMusicImage,data.getStringExtra(EXTRA_SONG_COVER).toString(),R.drawable.user_placeholder)
                 Log.d("klajsdasd", audio!!.path.toString())
                 binding.tvMusicName.text = name
                 binding.layoutSelectedMusic.visibility = View.VISIBLE
@@ -1244,6 +1251,18 @@ class ActivityVideoRecorder : BaseActivity() {
         }
     }
 
+/*
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        val decorView = window.decorView
+        if (hasFocus) {
+            decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
+        }
+    }*/
+
 
 }
 
@@ -1392,6 +1411,10 @@ class CenterZoomLayoutManager : LinearLayoutManager {
             0
         }
     }
+
+
+
+
 
 
 }

@@ -25,6 +25,7 @@ data class ResultFuntime(
     val share_count: Int,
     val sound_file: String,
     val sound_name: String,
+    val sound_image: String,
     val artist_name: String,
     val tag_id: String,
     val text: String,

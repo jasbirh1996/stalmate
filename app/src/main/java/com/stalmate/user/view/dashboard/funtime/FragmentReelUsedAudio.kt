@@ -18,12 +18,14 @@ import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentReelUsedAudioBinding
+import com.stalmate.user.modules.reels.activity.EXTRA_SONG_COVER
 import com.stalmate.user.modules.reels.activity.EXTRA_SONG_FILE
 import com.stalmate.user.modules.reels.activity.EXTRA_SONG_ID
 import com.stalmate.user.modules.reels.activity.EXTRA_SONG_NAME
 import com.stalmate.user.modules.reels.model.Song
 import com.stalmate.user.modules.reels.workers.FileDownloadWorker
 import com.stalmate.user.modules.reels.workers.VideoSpeedWorker
+import com.stalmate.user.utilities.ImageLoaderHelperGlide
 import com.stalmate.user.utilities.ValidationHelper
 import java.io.File
 import java.io.IOException
@@ -63,6 +65,7 @@ class FragmentReelUsedAudio(var reelData: ResultFuntime) : BaseFragment(){
         adapter=ReelVideosByAudioAdapter(requireContext())
         binding.rvList.layoutManager=GridLayoutManager(context,3)
         binding.rvList.adapter=adapter
+        ImageLoaderHelperGlide.setGlideCorner(requireContext(),binding.ivImage,reelData.sound_image,R.drawable.user_placeholder)
 
         binding.ivplayPauseButton.setOnClickListener {
             if (mediaPlayer!!.isPlaying){
@@ -82,7 +85,7 @@ class FragmentReelUsedAudio(var reelData: ResultFuntime) : BaseFragment(){
 
         binding.buttonUseAudio.setOnClickListener {
             if (reelData.sound_id!=null){
-                onSongSelected(reelData.sound_id!!,reelData.sound_file,reelData.sound_name)
+                onSongSelected(reelData.sound_id!!,reelData.sound_file,reelData.sound_name,reelData.sound_image)
             }
 
 
@@ -279,14 +282,16 @@ class FragmentReelUsedAudio(var reelData: ResultFuntime) : BaseFragment(){
 
     private fun closeWithSelection(song: Song, file: Uri) {
 
-        startActivity(IntentHelper.getCreateReelsScreen(context)!!.putExtra(EXTRA_SONG_ID,song.id).putExtra(EXTRA_SONG_NAME,song.title).putExtra(EXTRA_SONG_FILE,File(file.path).absolutePath).putExtra("type","image"))
+        startActivity(IntentHelper.getCreateReelsScreen(context)!!.putExtra(EXTRA_SONG_ID,song.id).putExtra(EXTRA_SONG_NAME,song.title).putExtra(EXTRA_SONG_FILE,File(file.path).absolutePath).putExtra("type","image").putExtra(
+            EXTRA_SONG_COVER,song.album))
     }
 
-     fun onSongSelected(songId:String,songUrl:String,songTitle:String) {
+     fun onSongSelected(songId: String, songUrl: String, songTitle: String, soundImage: String) {
         var downloadableSong= Song()
         downloadableSong.id=songId
         downloadableSong.audio=songUrl
         downloadableSong.title=songTitle
+         downloadableSong.album=soundImage
         downloadSelectedSong(downloadableSong)
     }
 
