@@ -37,5 +37,10 @@ class VideoReelFullViewHolder(binding: ItemFullViewReelBinding) : ReelViewHolder
     val tvStoryPostTime = binding.tvStoryPostTime;
     val videoThumbnail =
         binding.feedThumbnailView;
+    val buttonAdd = binding.addPostButton;
 
+    val tvMusic = binding.tvMusicName;
+    val tvMusicArtist = binding.tvMusicArtist;
+    val ivMusicImage = binding.ivMusic;
+    val layoutMusic = binding.layoutMusic;
 }

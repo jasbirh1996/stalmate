@@ -1,24 +1,21 @@
 package com.stalmate.user.modules.reels.photo_editing
 
+
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import androidx.recyclerview.widget.RecyclerView
+import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.stalmate.user.R
 import com.stalmate.user.base.App
-
-
-import java.lang.NumberFormatException
-import java.util.ArrayList
 
 class EmojiBSFragment : BottomSheetDialogFragment() {
     private var mEmojiListener: EmojiListener? = null
@@ -37,19 +34,27 @@ class EmojiBSFragment : BottomSheetDialogFragment() {
         override fun onSlide(bottomSheet: View, slideOffset: Float) {}
     }
 
+
+
     @SuppressLint("RestrictedApi")
     override fun setupDialog(dialog: Dialog, style: Int) {
         super.setupDialog(dialog, style)
         val contentView = View.inflate(context, R.layout.fragment_bottom_sticker_emoji_dialog, null)
         dialog.setContentView(contentView)
         val params = (contentView.parent as View).layoutParams as CoordinatorLayout.LayoutParams
-        val behavior = params.behavior
+       val behavior = params.behavior
         if (behavior != null && behavior is BottomSheetBehavior<*>) {
             behavior.setBottomSheetCallback(mBottomSheetBehaviorCallback)
         }
+
+
+        val closeIcon: ImageView = contentView.findViewById(R.id.txtClose)
+        closeIcon.setOnClickListener {
+            dismiss()
+        }
         (contentView.parent as View).setBackgroundColor(resources.getColor(android.R.color.transparent))
         val rvEmoji: RecyclerView = contentView.findViewById(R.id.rvEmoji)
-        val gridLayoutManager = GridLayoutManager(activity, 5)
+        val gridLayoutManager = GridLayoutManager(activity, 4)
         rvEmoji.layoutManager = gridLayoutManager
         val emojiAdapter = EmojiAdapter()
         rvEmoji.adapter = emojiAdapter
@@ -70,6 +75,7 @@ class EmojiBSFragment : BottomSheetDialogFragment() {
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             holder.txtEmoji.text = emojisList[position]
+
         }
 
         override fun getItemCount(): Int {
@@ -78,6 +84,7 @@ class EmojiBSFragment : BottomSheetDialogFragment() {
 
         inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             val txtEmoji: TextView = itemView.findViewById(R.id.txtEmoji)
+
 
             init {
                 itemView.setOnClickListener {

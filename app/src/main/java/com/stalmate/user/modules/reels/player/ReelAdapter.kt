@@ -1,7 +1,9 @@
 package com.stalmate.user.modules.reels.player
 import android.content.Context
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.text.Html
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +20,7 @@ import com.stalmate.user.databinding.ItemReelBinding
 import com.stalmate.user.modules.reels.player.holders.ImageReelViewHolder
 import com.stalmate.user.modules.reels.player.holders.ReelViewHolder
 import com.stalmate.user.modules.reels.player.holders.VideoReelViewHolder
+import com.stalmate.user.utilities.SeeModetextViewHelper
 import com.stalmate.user.view.dashboard.funtime.ResultFuntime
 
 
@@ -102,9 +105,6 @@ class ReelAdapter(val context: Context) :
 
 
         holder.customPlayerView.setOnClickListener {
-            Log.d("aksjdasd","a;sdklasd")
-            var bundle=Bundle()
-            bundle.putParcelable("data",reelList[position])
             context.startActivity(IntentHelper.getFullViewReelActivity(context)!!.putExtra("data",reelList[position]))
         }
 
@@ -130,8 +130,20 @@ class ReelAdapter(val context: Context) :
 
         holder.like.text = reelList[position]!!.like_count.toString()
         holder.comment.text = reelList[position]!!.comment_count.toString()
-        holder.share.text = reelList[position]!!.share_count.toString()
-        holder.tvStatusDescription.text = reelList[position]!!.text
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            holder.tvStatusDescription.setText(Html.fromHtml(reelList[position]!!.text, Html.FROM_HTML_MODE_COMPACT));
+        } else {
+            holder.tvStatusDescription.setText(Html.fromHtml(reelList[position]!!.text));
+        }
+        if (holder.tvStatusDescription.getText().toString().split(System.getProperty("line.separator")).size>2){
+            SeeModetextViewHelper.makeTextViewResizable(
+                holder.tvStatusDescription,
+                2,
+                "more",
+                true
+            );
+        }
 
         holder.like.setOnClickListener {
            // likeApiHit()

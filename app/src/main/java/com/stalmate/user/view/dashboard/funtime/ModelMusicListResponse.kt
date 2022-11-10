@@ -16,6 +16,7 @@ data class ResultMusic(
     val sound_category: String,
     val sound_file: String,
     val sound_language: String,
-    val sound_name: String
+    val sound_name: String,
+    val image: String
 )
 

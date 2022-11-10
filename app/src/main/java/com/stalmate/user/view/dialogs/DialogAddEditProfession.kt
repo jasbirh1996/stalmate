@@ -247,16 +247,8 @@ class DialogAddEditProfession(
         return true
     }
 
-
-
-
-
-
-
     fun makeToast(message:String){
         Toast.makeText(context,message,Toast.LENGTH_SHORT).show()
     }
-
-
 
 }

@@ -6,15 +6,19 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.otaliastudios.opengl.core.use
 import com.stalmate.user.R
 import com.stalmate.user.databinding.ItemFriendBigBinding
 import com.stalmate.user.databinding.ItemTaggedUsersBinding
 import com.stalmate.user.model.User
+import com.stalmate.user.utilities.ImageLoaderHelperGlide
 import com.stalmate.user.view.dashboard.funtime.FragmentFuntimeTag
+import com.stalmate.user.view.dashboard.funtime.viewmodel.TagPeopleViewModel
 import com.stalmate.user.viewmodel.AppViewModel
 
 class TaggedUsersAdapter(
-    val viewModel: FragmentFuntimeTag.TagPeopleViewModel,
+    val viewModel:TagPeopleViewModel,
     val context: Context, var isToSelect:Boolean,var callback : Callback
 ) :
     RecyclerView.Adapter<TaggedUsersAdapter.FeedViewHolder>() {
@@ -41,10 +45,11 @@ class TaggedUsersAdapter(
         RecyclerView.ViewHolder(binding.root) {
         fun bind(user: User) {
 
+            binding.tvUserName.text=user.first_name+" "+user.last_name
+            binding.tvUserId.text= user.id
+           ImageLoaderHelperGlide.setGlideCorner(context,binding.userImage,user.img,R.drawable.user_placeholder)
             binding.ivRemove.setOnClickListener {
-                list.removeAt(absoluteAdapterPosition)
-                viewModel.taggedPeopleLiveData.postValue(list)
-
+                viewModel.removeFromList(user)
             }
             if (isToSelect){
                 binding.ivRemove.visibility= View.GONE

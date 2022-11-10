@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
@@ -70,6 +71,12 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterView
         RequestOptions requestOptions = new RequestOptions();
         requestOptions = requestOptions.transforms(new CenterCrop(), new RoundedCorners(24));
         holder.image.setImage(mThumbnail);
+
+
+      //  Glide.with(mContext).load(mThumbnail).apply(requestOptions).into(holder.image.)
+
+
+
         holder.image.setVisibility(View.VISIBLE);
         //  holder.filteredcameraView = cameraView;
         return holder;
@@ -145,11 +152,11 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterView
             String name = filter.name().toLowerCase(Locale.US);
             holder.name.setText(name.substring(0, 1).toUpperCase() + name.substring(1));
 
-       /*     holder.itemView.setOnClickListener(view -> {
+          holder.itemView.setOnClickListener(view -> {
                 if (mListener != null) {
                     mListener.onSelectFilter(filter);
                 }
-            });*/
+            });
         }
     }
 

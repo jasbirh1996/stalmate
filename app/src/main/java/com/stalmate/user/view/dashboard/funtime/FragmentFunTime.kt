@@ -20,12 +20,14 @@ import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentFunTimeBinding
+import com.stalmate.user.databinding.FragmentreellistBinding
 import com.stalmate.user.modules.reels.player.Constants
 import com.stalmate.user.modules.reels.player.ReelListFragment
 import com.stalmate.user.modules.reels.player.VideoPreLoadingService
+import com.stalmate.user.view.dashboard.ActivityDashboard
 import fr.castorflex.android.verticalviewpager.VerticalViewPager
 
-class FragmentFunTime() : BaseFragment(), Player.Listener, FragmentCallBack {
+class FragmentFunTime() : BaseFragment(), FragmentCallBack {
     var handler: Handler? = null
         var isPlusButtonActive=false
     lateinit var binding: FragmentFunTimeBinding
@@ -46,36 +48,17 @@ class FragmentFunTime() : BaseFragment(), Player.Listener, FragmentCallBack {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.ivBack.setOnClickListener {
-           
+            (requireActivity() as ActivityDashboard).onBackPressed()
         }
 
         binding.ivAddButton.setOnClickListener {
-
-
-            binding.ivAddButton.animate().rotation(360.0f).setDuration(500).start();
-
-            toggleButton()
-
+            startActivity(IntentHelper.getCreateReelsScreen(requireActivity())!!.putExtra("type","image"))
         }
 
         loadFragment(ReelListFragment())
 
 
-        binding.tvImage.setOnClickListener {
-            if (isPlusButtonActive){
-                toggleButton()
 
-                startActivity(IntentHelper.getCreateReelsScreen(requireActivity())!!.putExtra("type","image"))
-
-            }
-        }
-        binding.tvVideo.setOnClickListener {
-            if (isPlusButtonActive){
-                toggleButton()
-                startActivity(IntentHelper.getCreateReelsScreen(requireActivity())!!)
-            }
-
-        }
     }
 
 
@@ -108,6 +91,15 @@ class FragmentFunTime() : BaseFragment(), Player.Listener, FragmentCallBack {
 
     override fun onResponce(bundle: Bundle?) {
         
+    }
+
+    fun pauseMusic(){
+          var fragment=  childFragmentManager.findFragmentById(binding.frame.id) as ReelListFragment
+        fragment.onPause()
+    }
+    fun resumeMusic(){
+        var fragment=  childFragmentManager.findFragmentById(binding.frame.id) as ReelListFragment
+        fragment.onStart()
     }
 
 

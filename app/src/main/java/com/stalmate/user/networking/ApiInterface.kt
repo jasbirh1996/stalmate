@@ -44,6 +44,11 @@ interface ApiInterface {
     @POST(Constants.URLFUNTIME_LIST)
     fun getFuntimeList(@Body map: HashMap<String, String>): Call<ModelFuntimeResponse>
 
+    @POST(Constants.URLFUNTIME_DETAIL_LIST)
+    fun getFuntimeDetailListList(@Body map: HashMap<String, String>): Call<ModelFuntimeResponse>
+
+
+
     @PATCH(Constants.URL_FUNTIME_LIKE_UNLIKE)
     fun getFuntimeLikeUnlike(@Body map: HashMap<String, String>): Call<ModelFuntimeLikeResponse>
 
@@ -52,6 +57,11 @@ interface ApiInterface {
 
     @GET(Constants.URL_CATEGORY_LIST)
     fun getCategoryList(): Call<ModelCategoryResponse>
+
+    @POST(Constants.URL_FUNTIME_LIST_BY_AUDIO)
+    fun get_song_funtime_list(@Body map: HashMap<String, String>): Call<ModelFuntimeResponse>
+
+
 
     @POST(Constants.URL_PHOTO_ALBUM_PHOTO)
     fun getPhotoList(@Body map: HashMap<String, String>): Call<ModelPhotoResponse>
@@ -187,6 +197,7 @@ interface ApiInterface {
         @Part("file_type") file_type: RequestBody,
         @Part("text") text: RequestBody,
         @Part("tag_id") tag_id: RequestBody,
+        @Part("sound_id") sound_id: RequestBody,
         @Part("location") location: RequestBody,
         @Part("privacy") privacy: RequestBody,
         @Part("privacy_data") privacy_data: RequestBody,

@@ -281,16 +281,11 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
             Log.d("imageUrl======", uriContent.toString())
             Log.d("imageUrl======", uriFilePath.toString())
 
-            if (isCoverImage) {
-                Glide.with(this)
-                    .load(uriContent)
-                    .placeholder(R.drawable.profileplaceholder)
-                    .into(binding.ivBackground)
+            /*if (isCoverImage) {
+                Glide.with(this).load(uriContent).into(binding.ivBackground)
             } else {
-                Glide.with(this).load(uriContent)
-                    .placeholder(R.drawable.profileplaceholder)
-                    .into(binding.ivUserThumb)
-            }
+                Glide.with(this).load(uriContent).into(binding.ivUserThumb)
+            }*/
 
             updateProfileImageApiHit()
 
@@ -333,6 +328,7 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
                 makeToast(it!!.message)
                 var hashMap = HashMap<String, String>()
                 networkViewModel.getProfileData(hashMap)
+                getUserProfileData()
             }
         })
     }
@@ -405,7 +401,7 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
                 AboutProfileLine(
                     R.drawable.ic_profile_location,
                     "From",
-                    userData.profile_data[0].location,
+                    userData.profile_data[0].home_town,
                     ""
                 )
             )

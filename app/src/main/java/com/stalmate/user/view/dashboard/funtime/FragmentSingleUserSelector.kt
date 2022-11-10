@@ -9,6 +9,7 @@ import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.stalmate.user.R
@@ -19,10 +20,12 @@ import com.stalmate.user.databinding.FragmentSingleUserSelectorBinding
 import com.stalmate.user.model.User
 import com.stalmate.user.utilities.Constants
 import com.stalmate.user.view.adapter.FriendAdapter
+import com.stalmate.user.view.dashboard.funtime.viewmodel.TagPeopleViewModel
 import java.util.ArrayList
 
 class FragmentSingleUserSelector: BaseFragment(), FriendAdapter.Callbackk,
     TaggedUsersAdapter.Callback {
+    lateinit var tagPeopleViewModel: TagPeopleViewModel
     lateinit var friendAdapter: TaggedUsersAdapter
     lateinit var binding: FragmentSingleUserSelectorBinding
     var searchData = ""
@@ -52,7 +55,9 @@ class FragmentSingleUserSelector: BaseFragment(), FriendAdapter.Callbackk,
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        friendAdapter = TaggedUsersAdapter(taggedPeopleViewModel, requireContext(),isToSelect = true,this)
+
+        tagPeopleViewModel= ViewModelProvider(requireActivity()).get(TagPeopleViewModel::class.java)
+        friendAdapter = TaggedUsersAdapter(tagPeopleViewModel, requireContext(),isToSelect = true,this)
         binding.etSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
@@ -74,6 +79,16 @@ class FragmentSingleUserSelector: BaseFragment(), FriendAdapter.Callbackk,
 
             }
         })
+
+        binding.ivClear.setOnClickListener {
+            searchData = ""
+            binding.etSearch.setText("")
+
+            Handler(Looper.myLooper()!!).post {
+                hitApi(true, searchData)
+            }
+        }
+
         binding.rvFriends.adapter = friendAdapter
         binding.rvFriends.layoutManager = LinearLayoutManager(context)
 
@@ -164,11 +179,15 @@ class FragmentSingleUserSelector: BaseFragment(), FriendAdapter.Callbackk,
     }
 
     override fun onUserSelected(user: User) {
-        var bundle=Bundle()
+
+
+        tagPeopleViewModel.addToList(user)
+
+   /*     var bundle=Bundle()
         bundle.putSerializable(SELECT_USER,user)
         setFragmentResult(
             SELECT_USER,bundle
-        )
+        )*/
         findNavController().popBackStack()
     }
 

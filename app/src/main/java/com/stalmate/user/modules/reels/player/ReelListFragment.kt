@@ -19,6 +19,7 @@ import com.stalmate.user.databinding.FragmentreellistBinding
 import com.stalmate.user.modules.reels.Extensions.Companion.findFirstVisibleItemPosition
 import com.stalmate.user.modules.reels.Extensions.Companion.isAtTop
 import com.stalmate.user.modules.reels.player.holders.VideoReelViewHolder
+import com.stalmate.user.utilities.NetworkUtils
 
 class ReelListFragment : BaseFragment() {
     lateinit var adapter: ReelAdapter
@@ -41,25 +42,33 @@ class ReelListFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         /* Set adapter (items are being used inside adapter, you can setup in your own way*/
-        adapter = ReelAdapter(requireContext())
-        binding.recyclerView.layoutManager =
-            LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
-        val snapHelper: SnapHelper = PagerSnapHelper()
-        snapHelper.attachToRecyclerView(binding.recyclerView)
-        binding.recyclerView.adapter = adapter
-
-        /*Helper class to provide AutoPlay feature inside cell*/
-        videoAutoPlayHelper =
-            VideoAutoPlayHelper(recyclerView = binding.recyclerView)
-        videoAutoPlayHelper!!.startObserving();
 
 
-        /*Helper class to provide show/hide toolBar*/
+        if (isNetworkAvailable()){
+            adapter = ReelAdapter(requireContext())
+            binding.recyclerView.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+            val snapHelper: SnapHelper = PagerSnapHelper()
+            snapHelper.attachToRecyclerView(binding.recyclerView)
+            binding.recyclerView.adapter = adapter
 
-        /*Helper class to provide show/hide toolBar*/
-        //  attachScrollControlListener(binding.customToolBar, binding.recyclerView)
-        callApi()
+            /*Helper class to provide AutoPlay feature inside cell*/
+            videoAutoPlayHelper = VideoAutoPlayHelper(recyclerView = binding.recyclerView)
+            videoAutoPlayHelper!!.startObserving();
 
+
+            /*Helper class to provide show/hide toolBar*/
+
+            /*Helper class to provide show/hide toolBar*/
+            //  attachScrollControlListener(binding.customToolBar, binding.recyclerView)
+            callApi()
+        }
+
+
+    }
+
+    fun isNetworkAvailable() : Boolean{
+
+        return NetworkUtils.isNetworkAvailable()
     }
 
 
@@ -157,6 +166,11 @@ class ReelListFragment : BaseFragment() {
         val index = 0
         var hashmap = HashMap<String, String>()
         hashmap.put("page", "1")
+        hashmap.put("limit", "5")
+        hashmap.put("id_user", "")
+        hashmap.put("fun_id", "")
+
+
         networkViewModel.funtimeLiveData(hashmap)
         networkViewModel.funtimeLiveData.observe(viewLifecycleOwner) {
             isApiRuning = false
@@ -178,16 +192,19 @@ class ReelListFragment : BaseFragment() {
                     val viewMainHolder = (viewholder as VideoReelViewHolder)
                     viewMainHolder.customPlayerView.startPlaying()
                 }
-
             }
         super.onStart()
     }
 
 
     override fun onPause() {
-        var viewholder = binding.recyclerView.findViewHolderForAdapterPosition(videoAutoPlayHelper!!.currentPlayingVideoItemPos);
-        val viewMainHolder = (viewholder as VideoReelViewHolder)
-        viewMainHolder.customPlayerView.removePlayer()
+       try {
+           var viewholder = binding.recyclerView.findViewHolderForAdapterPosition(videoAutoPlayHelper!!.currentPlayingVideoItemPos);
+           val viewMainHolder = (viewholder as VideoReelViewHolder)
+           viewMainHolder.customPlayerView.removePlayer()
+       }catch (e:Exception){
+
+       }
         super.onPause()
     }
 

@@ -122,7 +122,7 @@ class Mp4ComposerEngine {
                 // Only LOLLIPOP sets KEY_FRAME_RATE here.
                 actualVideoOutputFormat.setInteger(MediaFormat.KEY_FRAME_RATE, 30);
             }
-
+            Log.d("klajsdasd",actualVideoOutputFormat.getString(MediaFormat.KEY_MIME));
             // setup video composer
             videoComposer = new VideoComposer(mediaExtractor, videoTrackIndex, actualVideoOutputFormat, muxRender, timeScale, trimStartMs, trimEndMs, logger);
             videoComposer.setUp(filter, rotation, outputResolution, inputResolution, fillMode, fillModeCustomItem, flipVertical, flipHorizontal, shareContext);

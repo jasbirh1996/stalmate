@@ -24,7 +24,6 @@ class EducationListAdapter(val viewModel: AppViewModel, val context: Context, va
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EducationListAdapter.AlbumViewHolder {
         var view = LayoutInflater.from(parent.context).inflate(R.layout.item_educationprofile, parent, false)
         return AlbumViewHolder(DataBindingUtil.bind<ItemEducationprofileBinding>(view)!!)
-
     }
 
     override fun onBindViewHolder(holder: AlbumViewHolder, position: Int) {
@@ -57,8 +56,6 @@ class EducationListAdapter(val viewModel: AppViewModel, val context: Context, va
     inner class AlbumViewHolder(var binding: ItemEducationprofileBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(response : Education){
-
-
             binding.tveducation.text =response.sehool
             binding.tvcource.text = response.course
             binding.tvcourcetype.text =response.branch
@@ -73,8 +70,6 @@ class EducationListAdapter(val viewModel: AppViewModel, val context: Context, va
 
         }
     }
-
-
 
     fun onClickItemDelete(id: String, position: Int, lifecycleObserver: LifecycleOwner) {
         val hashMap = HashMap<String, String>()

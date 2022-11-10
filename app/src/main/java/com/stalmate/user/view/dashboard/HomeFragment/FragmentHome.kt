@@ -21,6 +21,7 @@ import com.stalmate.user.databinding.FragmentHomeBinding
 import com.stalmate.user.model.Feed
 import com.stalmate.user.model.User
 import com.stalmate.user.utilities.Constants
+import com.stalmate.user.utilities.NetworkUtils
 import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.view.adapter.SuggestedFriendAdapter
 import com.stalmate.user.view.adapter.UserHomeStoryAdapter
@@ -58,6 +59,30 @@ class FragmentHome(var callback:Callback) : BaseFragment(), AdapterFeed.Callback
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.refreshLayout.setOnRefreshListener {
+            binding.refreshLayout.isRefreshing=false
+            if (isNetworkAvailable()){
+
+                homeSetUp()
+            }else{
+
+                binding.nointernet.visibility = View.VISIBLE
+            }
+        }
+
+        if (isNetworkAvailable()){
+
+            homeSetUp()
+                   }else{
+
+            binding.nointernet.visibility = View.VISIBLE
+        }
+
+
+    }
+
+
+    fun homeSetUp(){
         setupSearchBox()
         feedAdapter = AdapterFeed(networkViewModel, requireContext(), this)
         homeStoryAdapter = UserHomeStoryAdapter(networkViewModel, requireContext(), this)
@@ -101,9 +126,7 @@ class FragmentHome(var callback:Callback) : BaseFragment(), AdapterFeed.Callback
             startActivity(IntentHelper.getActivityWelcomeScreen(requireContext()))
         }
 
-        binding.refreshLayout.setOnRefreshListener {
-            binding.refreshLayout.isRefreshing=false
-        }
+
 
         binding.toolbar.ivButtonMenu.setOnClickListener {
 //            startActivity(Intent(requireContext(), ActivitySideDawer::class.java))
@@ -111,7 +134,7 @@ class FragmentHome(var callback:Callback) : BaseFragment(), AdapterFeed.Callback
             callback.onCLickOnMenuButton()
         }
 
-
+        binding.nointernet.visibility = View.GONE
 
     }
 
@@ -131,6 +154,11 @@ class FragmentHome(var callback:Callback) : BaseFragment(), AdapterFeed.Callback
         startActivity(
             IntentHelper.getOtherUserProfileScreen(requireContext())!!.putExtra("id", friend.id)
         )
+    }
+
+    fun isNetworkAvailable() : Boolean{
+
+        return NetworkUtils.isNetworkAvailable()
     }
 
 

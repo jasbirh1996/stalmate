@@ -14,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.work.*
 import com.google.android.exoplayer2.ExoPlayer
@@ -22,6 +23,7 @@ import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.commonadapters.TaggedUsersAdapter
 import com.stalmate.user.databinding.FragmentSongPickerSearchBinding
 import com.stalmate.user.model.User
+import com.stalmate.user.modules.reels.activity.EXTRA_SONG_COVER
 import com.stalmate.user.modules.reels.activity.EXTRA_SONG_FILE
 import com.stalmate.user.modules.reels.activity.EXTRA_SONG_ID
 import com.stalmate.user.modules.reels.activity.EXTRA_SONG_NAME
@@ -85,6 +87,10 @@ class FragmentSongPickerSearch : BaseFragment(), FriendAdapter.Callbackk,
 
             }
         })
+
+        binding.toolbar.back.setOnClickListener {
+            findNavController().popBackStack()
+        }
     }
 
     override fun onClickOnUpdateFriendRequest(friend: User, status: String) {
@@ -148,6 +154,7 @@ class FragmentSongPickerSearch : BaseFragment(), FriendAdapter.Callbackk,
         data.putExtra(EXTRA_SONG_ID, song.id)
         data.putExtra(EXTRA_SONG_NAME, song.title)
         data.putExtra(EXTRA_SONG_FILE, file)
+        data.putExtra(EXTRA_SONG_COVER, song.cover)
         requireActivity().setResult(AppCompatActivity.RESULT_OK, data)
         requireActivity().finish()
     }
@@ -157,6 +164,7 @@ class FragmentSongPickerSearch : BaseFragment(), FriendAdapter.Callbackk,
         downloadableSong.id=song.id
         downloadableSong.audio=song.sound_file
         downloadableSong.title=song.sound_name
+        downloadableSong.cover=song.image
         downloadSelectedSong(downloadableSong)
     }
 

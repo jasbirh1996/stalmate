@@ -13,6 +13,7 @@ import com.google.android.exoplayer2.audio.AudioAttributes
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
+import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
 import com.google.android.exoplayer2.upstream.*
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
@@ -167,6 +168,8 @@ class FragmentReelPlay : BaseFragment, Player.Listener {
                 val videoSource: MediaSource = ProgressiveMediaSource.Factory(dataSourceFactory)
                     .createMediaSource(MediaItem.fromUri(item!!.file))
                 //  exoplayer!!.setThrowsWhenUsingWrongThread(false)
+
+                binding.playerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FILL);
                 exoplayer!!.addMediaSource(videoSource)
                 Log.d("alskdasd", "aosdasd")
                 exoplayer!!.prepare()

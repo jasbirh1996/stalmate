@@ -25,11 +25,8 @@ open class BaseFragment : Fragment(), BaseCallBacks {
 
     val networkViewModel: AppViewModel by lazy {
         ViewModelProvider(this)[AppViewModel::class.java]
+    }
 
-    }
-    val taggedPeopleViewModel: FragmentFuntimeTag.TagPeopleViewModel by lazy {
-        ViewModelProvider(this)[FragmentFuntimeTag.TagPeopleViewModel::class.java]
-    }
 
     override fun onAttach(context: Context) {
         Log.d("fjha", "ppp")

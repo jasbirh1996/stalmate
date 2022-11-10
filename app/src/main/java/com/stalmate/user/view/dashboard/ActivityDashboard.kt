@@ -3,6 +3,8 @@ package com.stalmate.user.view.dashboard
 import android.animation.ValueAnimator
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -16,6 +18,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
+import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.databinding.ActivityDashboardBinding
 import com.stalmate.user.modules.reels.player.Constants
 import com.stalmate.user.modules.reels.player.VideoPreLoadingService
@@ -26,10 +29,13 @@ import com.stalmate.user.view.dashboard.HomeFragment.FragmentMenu
 import com.stalmate.user.view.dashboard.VideoReels.FragmentReels
 import com.stalmate.user.view.dashboard.funtime.FragmentFunTime
 
-class ActivityDashboard : AppCompatActivity(), FragmentHome.Callback , FragmentFriend.Callbackk, FragmentMenu.Callback/*, FragmentFunTime.Callbackk*/{
+class ActivityDashboard : BaseActivity(), FragmentHome.Callback , FragmentFriend.Callbackk, FragmentMenu.Callback/*, FragmentFunTime.Callbackk*/{
     private val TIME_INTERVAL = 2000
     var back_pressed: Long = 0
     private lateinit var binding: ActivityDashboardBinding
+    override fun onClick(viewId: Int, view: View?) {
+
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,14 +59,47 @@ class ActivityDashboard : AppCompatActivity(), FragmentHome.Callback , FragmentF
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-//        if (intent!!.getStringExtra("notificationType") != null) {
-//            startActivity(
-//                IntentHelper.getOtherUserProfileScreen(this)!!
-//                    .putExtra("id", intent.getStringExtra("userId").toString())
-//            )
-//        }
-        super.onNewIntent(intent)
+       if (intent!!.getStringExtra("notificationType") != null) {
+           Log.d("casdafgg",intent.getStringExtra("notificationType").toString())
+
+
+           if (intent.getStringExtra("notificationType")=="newFriendRequest"){
+               startActivity(
+                   IntentHelper.getOtherUserProfileScreen(this)!!
+                       .putExtra("id", intent.getStringExtra("userId").toString())
+               )
+
+           }else if (intent.getStringExtra("notificationType")=="funtimeTag"){
+               getReelVideoById(intent.getStringExtra("funTimeId").toString())
+           }
+
+
+       }
+
     }
+
+    var page_count = 0
+    var isApiRuning = false
+    var handler: Handler? = null
+    private fun getReelVideoById(id:String) {
+        isApiRuning = true
+        val index = 0
+        var hashmap = HashMap<String, String>()
+        hashmap.put("page", "1")
+        hashmap.put("limit", "5")
+        hashmap.put("id_user", "")
+        hashmap.put("fun_id", id)
+        networkViewModel.funtimeLiveData(hashmap)
+        networkViewModel.funtimeLiveData.observe(this) {
+            isApiRuning = false
+            //  binding.shimmerLayout.visibility =  View.GONE
+            Log.d("========", "empty")
+            if (it!!.results.isNotEmpty()) {
+                startActivity(IntentHelper.getFullViewReelActivity(this)!!.putExtra("data",it!!.results[0]))
+            }
+        }
+    }
+
 
 
     fun setupBottomBar() {
@@ -117,7 +156,7 @@ fun mute(toMute:Boolean){
    if (toMute){
        if (active is FragmentFunTime){
            Log.d("askldjalsd","alksdjasd")
-           (active as FragmentFunTime).onPause()
+           (active as FragmentFunTime).pauseMusic()
        }else{
            
        }
@@ -146,32 +185,29 @@ fun mute(toMute:Boolean){
         }
     }
 
-
+    private var doubleBackToExitPressedOnce = false
     override fun onBackPressed() {
         if (binding.drawerLayout.isDrawerOpen(GravityCompat.END)) {
             toggleDrawer()
-        } else {
-            if (active is FragmentFunTime){
-             onClickBack()
-            }else if (active is FragmentHome){
-           /*     if (back_pressed + TIME_INTERVAL > System.currentTimeMillis()) {
-                    onClickBack()
-                } else {
-                    Toast.makeText(
-                        getBaseContext(),
-                        "Press once again to exit!", Toast.LENGTH_SHORT
-                    )
-                        .show();
-                }
-                back_pressed = System.currentTimeMillis();
-*/
-                finish()
-
-            }
-            else{
-                super.onBackPressed()
-            }
         }
+
+
+        else if (active is FragmentHome){
+            if (doubleBackToExitPressedOnce) {
+                super.onBackPressed()
+                return
+            }
+
+            this.doubleBackToExitPressedOnce = true
+            Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show()
+
+            Handler(Looper.getMainLooper()).postDelayed(Runnable { doubleBackToExitPressedOnce = false }, 2000)
+
+        }
+            else{
+                onClickBack()
+            }
+
 
     }
 

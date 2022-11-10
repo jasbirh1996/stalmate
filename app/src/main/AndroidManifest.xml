@@ -32,9 +32,13 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
-            android:hardwareAccelerated="true"
+            android:name=".view.dashboard.funtime.ActivityReelsByAudio"
+            android:exported="false">
+        </activity>
+        <activity
             android:name=".modules.reels.activity.ActivityFullViewReels"
-            android:exported="false" />
+            android:exported="false"
+            android:hardwareAccelerated="true" />
         <activity
             android:name=".view.dashboard.funtime.ActivityFuntimePost"
             android:exported="false" />
@@ -61,13 +65,10 @@
         <activity
             android:name=".view.dashboard.welcome.ActivityWelcome"
             android:exported="false" />
-
         <activity android:name=".view.photoalbum.ActivityPhotoGallery" />
-
         <activity
             android:name=".view.myStory.ActivityMyStory"
             android:exported="false" />
-
         <activity
             android:name=".view.ActivityCreatePost"
             android:exported="false" />
@@ -111,7 +112,12 @@
             android:name=".view.dashboard.ActivityDashboard"
             android:exported="false"
             android:hardwareAccelerated="true"
-            android:launchMode="singleTask" />
+            android:launchMode="singleTop"
+            android:taskAffinity=""
+            android:excludeFromRecents="true"
+
+
+            />
         <activity
             android:name=".modules.reels.activity.ActivityVideoEditor"
             android:exported="false"

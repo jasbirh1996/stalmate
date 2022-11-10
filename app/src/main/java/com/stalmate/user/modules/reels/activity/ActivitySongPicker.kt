@@ -34,7 +34,7 @@ import java.io.File
 const val EXTRA_SONG_FILE = "song_file"
 const val EXTRA_SONG_ID = "song_id"
 const val  EXTRA_SONG_NAME = "song_name"
-
+const val EXTRA_SONG_COVER = "song_cover"
 
 
 class ActivitySongPicker : BaseActivity() {

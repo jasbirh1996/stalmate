@@ -444,6 +444,7 @@
             android:id="@+id/appCompatImageView19"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:src="@drawable/ic_profile_heart_icon"
             app:layout_constraintBottom_toBottomOf="@+id/tvmarriage"
             app:layout_constraintStart_toStartOf="parent"
