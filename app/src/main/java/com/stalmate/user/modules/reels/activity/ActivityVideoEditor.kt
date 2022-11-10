@@ -9,10 +9,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.media.MediaMetadataRetriever
 import android.net.Uri
-import android.os.Bundle
-import android.os.Environment
-import android.os.Handler
-import android.os.Looper
+import android.os.*
 import android.util.DisplayMetrics
 import android.util.Log
 import android.util.Size
@@ -23,6 +20,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.NonNull
 import androidx.core.content.ContextCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkInfo
@@ -50,6 +48,7 @@ import com.stalmate.user.modules.reels.activity.ActivityFilter.Companion.EXTRA_V
 import com.stalmate.user.modules.reels.audioVideoTrimmer.ui.seekbar.widgets.CrystalRangeSeekbar
 import com.stalmate.user.modules.reels.audioVideoTrimmer.ui.seekbar.widgets.CrystalSeekbar
 import com.stalmate.user.modules.reels.audioVideoTrimmer.utils.*
+import com.stalmate.user.modules.reels.audioVideoTrimmer.utils.TrimVideo.activity
 import com.stalmate.user.modules.reels.photo_editing.EmojiBSFragment
 import com.stalmate.user.modules.reels.photo_editing.PropertiesBSFragment
 import com.stalmate.user.modules.reels.photo_editing.StickerBSFragment
@@ -122,13 +121,28 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
             }
         }
 
+/*
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        val decorView = window.decorView
+        if (hasFocus) {
+            decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
+        }
+    }
+*/
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
+     //   window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         super.onCreate(savedInstanceState)
-        requestWindowFeature(Window.FEATURE_NO_TITLE)
+   /*     requestWindowFeature(Window.FEATURE_NO_TITLE)
         getWindow().setFlags(
             WindowManager.LayoutParams.FLAG_FULLSCREEN,
             WindowManager.LayoutParams.FLAG_FULLSCREEN
-        )
+        )*/
         binding = ActivityPreviewVideoBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initializePlayer()
@@ -220,14 +234,34 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
                  binding.videoSurface.getLayoutParams().height = newCanvasHeight
      */
 
-            binding.ivImage.getLayoutParams().width = displayWidth
+         binding.ivImage.getLayoutParams().width = displayWidth //to be used when not in full mode
             binding.ivImage.getLayoutParams().height = displayHeight
             binding.videoSurface.getLayoutParams().width = displayWidth
             binding.videoSurface.getLayoutParams().height = displayHeight
 
 
-            Log.d("asldkjshlad", newCanvasWidth.toString())
-            Log.d("asldkjshlad", newCanvasHeight.toString())
+   /*         var statusBarHeight =0
+            var navigationBarHeight =0
+            val insets: WindowInsets =
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    getWindowManager().getCurrentWindowMetrics().getWindowInsets()
+                } else {
+                    TODO("VERSION.SDK_INT < R")
+                }
+             statusBarHeight =
+                insets.getInsets(WindowInsetsCompat.Type.statusBars()).top //in pixels
+
+             navigationBarHeight =
+                insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom //in pixels
+
+
+            Log.d("asldkjshladww", binding.ivImage.getLayoutParams().height.toString())
+            Log.d("asldkjshladww", binding.ivImage.getLayoutParams().width.toString())
+            binding.ivImage.getLayoutParams().width = displayWidth
+            binding.ivImage.getLayoutParams().height = displayHeight+statusBarHeight+navigationBarHeight
+            binding.videoSurface.getLayoutParams().width = displayWidth
+            binding.videoSurface.getLayoutParams().height = displayHeight+statusBarHeight+navigationBarHeight
+          */
         }
     }
 
@@ -471,7 +505,7 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
         try {
             file.createNewFile()
             val saveSettings: SaveSettings = SaveSettings.Builder()
-                .setClearViewsEnabled(true)
+                .setClearViewsEnabled(false)
                 .setTransparencyEnabled(false)
                 .build()
             mPhotoEditor.saveAsFile(
