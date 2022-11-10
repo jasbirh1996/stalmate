@@ -295,8 +295,8 @@ class FragmentFriendList(var type: String, var subtype: String,var userId:String
       
       if (friendAdapter.list.isEmpty()){
             binding.layoutNoData.visibility=View.VISIBLE
-            binding.ivSortIcon.visibility=View.GONE
-            binding.layoutFilter.visibility=View.GONE
+           /* binding.ivSortIcon.visibility=View.GONE
+            binding.layoutFilter.visibility=View.GONE*/
       }else{
           binding.layoutNoData.visibility=View.GONE
 

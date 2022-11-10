@@ -313,12 +313,9 @@ class ActivityWelcome : BaseActivity(),
         }else{
             binding.btnNext.animate().translationY(0f).setDuration(100).start()
         }
-
-
     }
 
     override fun onClickOnNextButtonOnSyncPage() {
         binding.btnNext.performClick()
     }
-
 }

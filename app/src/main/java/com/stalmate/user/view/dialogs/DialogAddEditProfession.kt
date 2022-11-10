@@ -143,20 +143,15 @@ class DialogAddEditProfession(
         }
 
         binding.radioButtonCurrentWork.setOnClickListener {
-
             if (!radioButtonWorking){
                 radioButtonWorking = true
                 binding.radioButtonCurrentWork.isChecked=true
-               // binding.tvCdTo.isClickable = false
-                Log.d("=========AAAAAAAAAAAAA", "true")
+                binding.tvCdTo.isClickable = false
             }else{
-                Log.d("=========AAAAAAAAAAAAA", "false")
                 radioButtonWorking = false
                 binding.radioButtonCurrentWork.isChecked=false
             }
-
         }
-
 
         binding.ivClose.setOnClickListener {
             dismiss()
@@ -252,16 +247,8 @@ class DialogAddEditProfession(
         return true
     }
 
-
-
-
-
-
-
     fun makeToast(message:String){
         Toast.makeText(context,message,Toast.LENGTH_SHORT).show()
     }
-
-
 
 }

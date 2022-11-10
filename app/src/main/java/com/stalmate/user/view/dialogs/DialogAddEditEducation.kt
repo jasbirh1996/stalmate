@@ -41,8 +41,6 @@ class DialogAddEditEducation(
         dialog!!.show()
         isDialogShowing = true
 
-
-
         dialog!!.setCancelable(false)
         if (dialog!!.window != null) {
             dialog!!.window!!.setBackgroundDrawable(null)
@@ -68,8 +66,8 @@ class DialogAddEditEducation(
 
         if (isEdit){
             binding.etGraduation.setText(education.sehool)
-            binding.etBachlore.setText(education.branch)
-            binding.etBachloreType.setText(education.course)
+            binding.etBachlore.setText(education.course)
+            binding.etBachloreType.setText(education.branch)
         }
     }
 

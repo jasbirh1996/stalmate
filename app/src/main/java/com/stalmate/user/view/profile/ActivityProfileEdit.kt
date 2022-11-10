@@ -141,10 +141,17 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, Prof
 
 
         binding.btnCrateAccount.setOnClickListener {
+
             if (ValidationHelper.isNull(selectedMarriageStatus)) {
                 makeToast("Please select marriage Status")
-            } else if (verifyPhoneNumber.isNotEmpty()) {
-                updateProfileApiHit()
+            } else  if (verifyPhoneNumber.isNotEmpty()) {
+
+                if (verifyPhoneNumber == binding.layout.etNumber.text.toString()){
+                    updateProfileApiHit()
+                }else{
+                    makeToast("Please verify the mobile number")
+                }
+
             } else {
                 makeToast("Please verify the mobile number")
             }
@@ -161,6 +168,9 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, Prof
                         userData.results.profile_data[0].education.add(education)
                         educationAdapter.addToList(education)
                         networkViewModel.profileLiveData.postValue(userData)
+                        professionListAdapter.notifyDataSetChanged()
+                        educationAdapter.notifyDataSetChanged()
+                        getUserProfileData()
                     }
                 })
             dialogAddEditEducation.show()
@@ -176,8 +186,9 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, Prof
                 object : DialogAddEditProfession.Callbackk {
                     override fun onSuccessfullyEditedProfession(profession: Profession) {
                         userData.results.profile_data[0].profession.add(profession)
-                        networkViewModel.profileLiveData.postValue(userData)
                         professionListAdapter.addToList(profession)
+                        networkViewModel.profileLiveData.postValue(userData)
+                        getUserProfileData()
                     }
                 })
             dialogAddEditProfession.show()
@@ -458,11 +469,13 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, Prof
                 override fun onSuccessfullyEditedEducation(education: Education) {
                     userData.results.profile_data[0].education[0] = education
                     networkViewModel.profileLiveData.postValue(userData)
+                    educationAdapter.notifyDataSetChanged()
                 }
             })
         dialogAddEditProfession.show()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onClickItemProfessionEdit(position: Profession, index: Int) {
         var dialogAddEditProfession = DialogAddEditProfession(
             this,
@@ -473,6 +486,7 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, Prof
                 override fun onSuccessfullyEditedProfession(profession: Profession) {
                     userData.results.profile_data[0].profession[0] = profession
                     networkViewModel.profileLiveData.postValue(userData)
+                    professionListAdapter.notifyDataSetChanged()
                 }
             })
         dialogAddEditProfession.show()
@@ -517,10 +531,7 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, Prof
 
                     }
                 }
-
-
             }
-
         }
     }
 

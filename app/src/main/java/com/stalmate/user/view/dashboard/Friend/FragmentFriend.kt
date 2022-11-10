@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
@@ -82,6 +83,7 @@ class FragmentFriend(var callback: Callbackk) : BaseFragment(), FriendAdapter.Ca
                 when (tab!!.position) {
 
                     0 -> {
+
                         binding.btnCreateCategory.visibility = View.VISIBLE
                         bundle.putString("categoryType", Constants.TYPE_FRIEND_REQUEST)
                         navController.navigate(
@@ -91,6 +93,7 @@ class FragmentFriend(var callback: Callbackk) : BaseFragment(), FriendAdapter.Ca
                         )
                     }
                     1 -> {
+
                         binding.btnCreateCategory.visibility = View.GONE
                         bundle.putString("categoryType", Constants.TYPE_FRIEND_SUGGESTIONS)
                         navController.navigate(
@@ -100,6 +103,7 @@ class FragmentFriend(var callback: Callbackk) : BaseFragment(), FriendAdapter.Ca
                         )
                     }
                     2 -> {
+
                         binding.btnCreateCategory.visibility = View.GONE
                         bundle.putString("categoryType", Constants.TYPE_MY_FRIENDS)
                         navController.navigate(
@@ -116,7 +120,10 @@ class FragmentFriend(var callback: Callbackk) : BaseFragment(), FriendAdapter.Ca
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {
-
+                binding.tabLayout.setTabTextColors(context?.let {
+                    ContextCompat.getColorStateList(
+                        it, R.color.grey_dark)
+                });
             }
 
             override fun onTabReselected(tab: TabLayout.Tab?) {

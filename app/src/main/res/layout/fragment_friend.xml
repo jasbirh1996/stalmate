@@ -60,7 +60,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbarFriend"
             app:tabTextAppearance="@style/MineCustomTabText"
-            app:tabTextColor="@color/app_color" />
+            app:tabTextColor="@color/grey_dark" />
 
 
         <fragment

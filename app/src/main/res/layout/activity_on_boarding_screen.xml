@@ -33,7 +33,6 @@
             app:dotsColor="@color/grey_light"
             app:dotsCornerRadius="8dp"
             app:dotsSize="12dp"
-
             app:dotsSpacing="4dp"
             app:dotsWidthFactor="2"
             app:layout_constraintBottom_toBottomOf="@+id/btn_next"

@@ -21,11 +21,12 @@ import com.stalmate.user.utilities.Constants
 
 
 class FragmentSync(var callback: Callback) : BaseFragment() {
+
     private lateinit var mAccount: Account
     lateinit var binding: FragmentSyncBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
     }
 
     override fun onCreateView(
@@ -99,19 +100,20 @@ class FragmentSync(var callback: Callback) : BaseFragment() {
         // Get an instance of the Android account manager
         val accountManager = context.getSystemService(ACCOUNT_SERVICE) as AccountManager
         /*
-     * Add the account and account type, no password or user data
-     * If successful, return the Account object, otherwise report an error.
-     */
+        * Add the account and account type, no password or user data
+        * If successful, return the Account object, otherwise report an error.
+        */
         return if (accountManager.addAccountExplicitly(newAccount, null, null)) {
          /*
-          * If you don't set android:syncable="true" in
-          * in your <provider> element in the manifest,
-          * then call context.setIsSyncable(account, AUTHORITY, 1)
-          * here.
-          */
+        * If you don't set android:syncable="true" in
+        * in your <provider> element in the manifest,
+        * then call context.setIsSyncable(account, AUTHORITY, 1)
+        * here.
+        */
             Log.d("asdasd","pppooo")
             ContentResolver.setIsSyncable(newAccount, "com.android.contacts", 1)
             ContentResolver.setSyncAutomatically(newAccount, "com.android.contacts", true)
+
             newAccount
         } else {
             Log.d("asdasd","ppp")
