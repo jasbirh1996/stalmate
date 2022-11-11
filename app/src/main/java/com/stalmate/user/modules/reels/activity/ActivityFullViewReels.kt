@@ -1,5 +1,6 @@
 package com.stalmate.user.modules.reels.activity
 
+import android.graphics.Rect
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -158,7 +159,7 @@ class ActivityFullViewReels : BaseActivity() {
 
     }
 
-    fun setSystemUIVisibility(hide: Boolean) {
+/*    fun setSystemUIVisibility(hide: Boolean) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             val window = window.insetsController!!
             val windows = WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars()
@@ -171,7 +172,7 @@ class ActivityFullViewReels : BaseActivity() {
                     View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
             window.decorView.systemUiVisibility = if (hide) view else view.inv()
         }
-    }
+    }*/
 
 /*    override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
@@ -183,5 +184,11 @@ class ActivityFullViewReels : BaseActivity() {
                     or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
         }
     }*/
+
+    fun getStatusBarHeight(): Int {
+        val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
+        return if (resourceId > 0) resources.getDimensionPixelSize(resourceId)
+        else Rect().apply { window.decorView.getWindowVisibleDisplayFrame(this) }.top
+    }
 
 }

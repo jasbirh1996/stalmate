@@ -31,6 +31,7 @@ import com.stalmate.user.model.User
 import com.stalmate.user.modules.reels.activity.ActivityFilter
 import com.stalmate.user.modules.reels.activity.EXTRA_SONG_ID
 import com.stalmate.user.utilities.Constants
+import com.stalmate.user.utilities.ValidationHelper
 import com.stalmate.user.view.adapter.FriendAdapter
 import com.stalmate.user.view.dashboard.ActivityDashboard
 import com.stalmate.user.view.dashboard.funtime.viewmodel.TagPeopleViewModel
@@ -119,9 +120,6 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
             setFragmentResultListener(SELECT_PRIVACY) { key, bundle ->
                 clearFragmentResultListener(requestKey = SELECT_PRIVACY)
                 selectedPrivacy= bundle.getString(SELECT_PRIVACY) as String
-
-
-
                 when(selectedPrivacy){
                     Constants.PRIVACY_TYPE_MY_FOLLOWER->{
                         binding.tvPrivacyData.text="My Followers"
@@ -201,10 +199,15 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
             file.name,
             thumbnailBody
         ) //image[] for multiple image
+        var data=""
+        if (!ValidationHelper.isNull(binding.editor.html)){
+            data=binding.editor.html.toString()
+        }
+
       networkViewModel.postReel(
             profile_image1,
             getRequestBody(".mp4"),
-            getRequestBody(binding.editor.html.toString()),
+            getRequestBody(data),
             getRequestBody(commaSeparatedStr),
           getRequestBody(requireActivity().intent.getStringExtra(EXTRA_SONG_ID).toString()),
             getRequestBody(city+", "+country),

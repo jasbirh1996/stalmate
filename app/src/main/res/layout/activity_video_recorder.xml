@@ -78,26 +78,23 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <pt.tornelas.segmentedprogressbar.SegmentedProgressBar
+        <com.google.android.material.progressindicator.LinearProgressIndicator
             android:id="@+id/segmented_progressbar"
             android:layout_width="0dp"
             android:layout_height="5dp"
-            android:layout_margin="8dp"
+
             android:layout_marginStart="20dp"
+            app:layout_goneMarginEnd="@dimen/_20sdp"
             android:layout_marginTop="20dp"
+            app:indicatorColor="@color/colorRed"
+            app:trackCornerRadius="6dp"
+            app:trackThickness="8dp"
             android:layout_marginEnd="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:segmentBackgroundColor="@color/design_default_color_error"
-            app:segmentCornerRadius="2dp"
-            app:segmentMargins="@dimen/default_segment_margin"
-            app:segmentSelectedBackgroundColor="@color/black"
-            app:segmentSelectedStrokeColor="@android:color/black"
-            app:segmentStrokeColor="@android:color/black"
-            app:segmentStrokeWidth="0dp"
-            app:timePerSegment="2000"
-            app:totalSegments="10" />
+
+          />
 
         <ImageView
             android:id="@+id/ivClose"

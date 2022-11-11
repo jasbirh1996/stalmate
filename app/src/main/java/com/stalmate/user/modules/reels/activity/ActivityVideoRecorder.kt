@@ -1,7 +1,6 @@
 package com.stalmate.user.modules.reels.activity
 
 
-import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.database.Cursor
@@ -10,6 +9,7 @@ import android.graphics.drawable.Drawable
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -28,7 +28,9 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.Nullable
 import androidx.core.content.ContextCompat
-import androidx.core.content.FileProvider
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.loader.content.CursorLoader
@@ -102,7 +104,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-      //  window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+
         super.onCreate(savedInstanceState)
         binding = ActivityVideoRecorderBinding.inflate(layoutInflater)
         binding.cameraView.engine = Engine.CAMERA2
@@ -115,7 +117,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                 .setUsage(AudioAttributes.USAGE_MEDIA)
                 .build()
         )
-        getGalleryData()
+        // getGalleryData()
         binding.selectedPhoto.setScaleType(GPUImage.ScaleType.CENTER_INSIDE)
         binding.cameraView.mapGesture(Gesture.PINCH, GestureAction.ZOOM);
         binding.cameraView.mapGesture(Gesture.TAP, GestureAction.AUTO_FOCUS);
@@ -172,7 +174,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
 
             override fun onVideoRecordingEnd() {
                 binding.buttonDone.visibility = View.VISIBLE
-                binding.segmentedProgressbar.pause()
+                pauseProgress()
                 //    binding.segmentedProgressbar.addDivider()
                 binding.buttonRecord.setSelected(false)
                 /*       if (mMediaPlayer != null) {
@@ -202,7 +204,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                        }
                        mMediaPlayer!!.start()
                    }*/
-                binding.segmentedProgressbar.start()
+                resumeProgress()
             }
         })
 
@@ -250,6 +252,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
             mMediaPlayer!!.release()
             mMediaPlayer = null
             binding.cameraView.destroy()
+            progressHandler.removeCallbacks(runnable)
         }
     }
 
@@ -282,6 +285,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                 binding.buttonDone.visibility = View.VISIBLE
                 binding.cameraView.setMode(Mode.VIDEO);
                 binding.segmentedProgressbar.visibility = View.VISIBLE
+
                 binding.stopIConView.setImageDrawable(
                     ContextCompat.getDrawable(
                         this,
@@ -736,29 +740,31 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                 if (type == "jpg") {
                     Log.d(";lasda", "imagee")
                     isImage = true
+                    isImageTakenByCamera = true
                     val selectedImageUri = data.data
                     val selectedImageBitmap: Bitmap
-                    try {
-                        selectedImageBitmap = MediaStore.Images.Media.getBitmap(
-                            this.contentResolver,
-                            selectedImageUri
-                        )
-                        Handler(Looper.getMainLooper()).post {
-                            binding.selectedPhoto.visibility = View.VISIBLE
-                            binding.selectedPhoto.gpuImage.deleteImage()
-                            runOnUiThread {
-                                binding.selectedPhoto.setImage(selectedImageBitmap);
-                                binding.cameraView.visibility = View.GONE
-                                //  createVideo(it!!.absolutePath, result.size)
-                                binding.buttonDone.visibility = View.VISIBLE
-                                binding.layoutBottomControll.visibility = View.GONE
-                                // closeFinally(mModel!!.video!!)
-                            }
-                        }
-                        Log.d(";alsjkdasd", "alskjdasd")
-                    } catch (e: IOException) {
-                        e.printStackTrace()
-                    }
+                    startCrop(selectedImageUri!!)
+                    /*       try {
+                               selectedImageBitmap = MediaStore.Images.Media.getBitmap(
+                                   this.contentResolver,
+                                   selectedImageUri
+                               )
+                               Handler(Looper.getMainLooper()).post {
+                                   binding.selectedPhoto.visibility = View.VISIBLE
+                                   binding.selectedPhoto.gpuImage.deleteImage()
+                                   runOnUiThread {
+                                       binding.selectedPhoto.setImage(selectedImageBitmap);
+                                       binding.cameraView.visibility = View.GONE
+                                       //  createVideo(it!!.absolutePath, result.size)
+                                       binding.buttonDone.visibility = View.VISIBLE
+                                       binding.layoutBottomControll.visibility = View.GONE
+                                       // closeFinally(mModel!!.video!!)
+                                   }
+                               }
+                               Log.d(";alsjkdasd", "alskjdasd")
+                           } catch (e: IOException) {
+                               e.printStackTrace()
+                           }*/
                 } else if (type == "mp4") {
                     Log.d(";lasda", "video")
                     isImage = false
@@ -1119,23 +1125,23 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
 
 
         binding.buttonPickData.setOnClickListener {
-            /*      if (isImage) {
-                      imageChooser()
-                  } else {
-                      videoChooser()
-                  }*/
-            //  imageChooser()
+            /* if (isImage) {
+                    imageChooser()
+                } else {
+                    videoChooser()
+                }*/
+            imageChooser()
 
-            var mEmojiBSFragment = FragmentGallery(thumbnails, typeMedia, arrPath)
-            mEmojiBSFragment.setEmojiListener(this)
-            if (mEmojiBSFragment.isAdded) {
+            /*        var mEmojiBSFragment = FragmentGallery(thumbnails, typeMedia, arrPath)
+                    mEmojiBSFragment.setEmojiListener(this)
+                    if (mEmojiBSFragment.isAdded) {
 
-            }
-            mEmojiBSFragment!!.show(
-                supportFragmentManager,
-                mEmojiBSFragment!!.tag
-            )
-
+                    }
+                    mEmojiBSFragment!!.show(
+                        supportFragmentManager,
+                        mEmojiBSFragment!!.tag
+                    )
+        */
 
         }
 
@@ -1277,14 +1283,26 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                     finish()
                 }
             })
+        if (isImage){
+            if (isImageTakenByCamera) {
+                commonConfirmationDialog.show()
+            }else{
+                super.onBackPressed()
+            }
 
-        if (isImage && isImageTakenByCamera) {
-            commonConfirmationDialog.show()
-        } else {
+        }else{
             if (mModel!!.segments!!.size > 0) {
                 commonConfirmationDialog.show()
+            }else{
+                super.onBackPressed()
             }
         }
+
+
+
+
+
+
 
 
     }
@@ -1305,6 +1323,19 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
             e.printStackTrace()
         }
     }
+
+
+    private fun hideSystemBars() {
+        val windowInsetsController =
+            ViewCompat.getWindowInsetsController(window.decorView) ?: return
+        // Configure the behavior of the hidden system bars
+        windowInsetsController.systemBarsBehavior =
+            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        // Hide both the status bar and the navigation bar
+        windowInsetsController.hide(WindowInsetsCompat.Type.navigationBars())
+    }
+
+
 
 
 /*    override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -1450,16 +1481,19 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
             bmOptions.inPurgeable = true
             val type: Int = cursor.getColumnIndex(MediaStore.Files.FileColumns.MEDIA_TYPE)
             val t: Int = cursor.getInt(type)
-            if (t == 1) thumbnails[i] = MediaStore.Images.Thumbnails.getThumbnail(
-                getContentResolver(), id.toLong(),
-                MediaStore.Images.Thumbnails.MINI_KIND, bmOptions
-            ) else if (t == 3) thumbnails[i] = MediaStore.Video.Thumbnails.getThumbnail(
-                getContentResolver(), id.toLong(),
-                MediaStore.Video.Thumbnails.MINI_KIND, bmOptions
-            )
-            arrPath[i] = cursor.getString(dataColumnIndex)
-            typeMedia[i] = cursor.getInt(type)
+            try {
+                if (t == 1) thumbnails[i] = MediaStore.Images.Thumbnails.getThumbnail(
+                    getContentResolver(), id.toLong(),
+                    MediaStore.Images.Thumbnails.MINI_KIND, bmOptions
+                ) else if (t == 3) thumbnails[i] = MediaStore.Video.Thumbnails.getThumbnail(
+                    getContentResolver(), id.toLong(),
+                    MediaStore.Video.Thumbnails.MINI_KIND, bmOptions
+                )
+                arrPath[i] = cursor.getString(dataColumnIndex)
+                typeMedia[i] = cursor.getInt(type)
 
+            } catch (e: Exception) {
+            }
 
         }
 
@@ -1587,6 +1621,36 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                 setOutputCompressFormat(Bitmap.CompressFormat.PNG)
             }
         )
+    }
+
+
+    var progressHandler = Handler()
+    var progressStatus = 0
+
+    fun pauseProgress() {
+        progressHandler!!.removeCallbacks(runnable)
+    }
+
+    fun resumeProgress() {
+        progressHandler!!.post(runnable)
+    }
+
+    var prolength = 0 //
+
+    //
+    var runnable: Runnable = object : Runnable {
+        override fun run() {
+
+            prolength = binding.segmentedProgressbar.getProgress() + 1
+            binding.segmentedProgressbar.setProgress(prolength)
+            //100,1000runnable
+            if (prolength < 100) {
+                progressHandler.postDelayed(this, 1000)
+            } else {
+                binding.segmentedProgressbar.setProgress(0)
+                progressHandler.post(this)
+            }
+        }
     }
 
 

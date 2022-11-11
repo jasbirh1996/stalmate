@@ -19,8 +19,11 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.NonNull
+import androidx.appcompat.app.ActionBar
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkInfo
@@ -93,10 +96,6 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
 
     var isIMage = false
 
-    private var originalDisplayWidth = 0
-    private var originalDisplayHeight = 0
-    private var newCanvasWidth = 0
-    private var newCanvasHeight = 0
     private lateinit var mEmojiBSFragment: EmojiBSFragment
     private var DRAW_CANVASW = 0
     private var DRAW_CANVASH = 0
@@ -121,53 +120,31 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
             }
         }
 
-/*
-    override fun onWindowFocusChanged(hasFocus: Boolean) {
-        super.onWindowFocusChanged(hasFocus)
-        val decorView = window.decorView
-        if (hasFocus) {
-            decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                    or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                    or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                    or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
-        }
+
+    private fun hideSystemBars() {
+        val windowInsetsController =
+            ViewCompat.getWindowInsetsController(window.decorView) ?: return
+        // Configure the behavior of the hidden system bars
+        windowInsetsController.systemBarsBehavior =
+            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        // Hide both the status bar and the navigation bar
+        windowInsetsController.hide(WindowInsetsCompat.Type.navigationBars())
     }
-*/
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-     //   window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+
         super.onCreate(savedInstanceState)
-   /*     requestWindowFeature(Window.FEATURE_NO_TITLE)
-        getWindow().setFlags(
-            WindowManager.LayoutParams.FLAG_FULLSCREEN,
-            WindowManager.LayoutParams.FLAG_FULLSCREEN
-        )*/
         binding = ActivityPreviewVideoBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        initializePlayer()
-
-
-
-
-
-
-
-
         isIMage = intent.getBooleanExtra("isImage", false)
-
-        initViews()
         videoPath = intent.getStringExtra(EXTRA_VIDEO).toString()
         audioPath = intent.getStringExtra(EXTRA_SONG).toString()
-        try {
-            Log.d("askldjlasd", audioPath)
-        } catch (e: java.lang.Exception) {
-
-        }
         songId = intent.getStringExtra(EXTRA_SONG_ID).toString()
+        renderUi()
+        initializePlayer()
         if (!isIMage) {
-
-
             Handler(Looper.myLooper()!!).post {
                 runOnUiThread {
                     var drawable: Drawable
@@ -218,52 +195,59 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
             Handler(Looper.myLooper()!!).post {
                 runOnUiThread {
                     binding.videoSurface.visibility = View.GONE
+
                 }
             }
-            getDropboxIMGSize(Uri.parse(videoPath!!))
+          //  getDropboxIMGSize(Uri.parse(videoPath!!))
         }
+        initViews()
+
+    }
 
 
-        //  initializePlayer()
 
-        Handler(Looper.getMainLooper()).post {
-            setCanvasAspectRatio()
-/*            binding.ivImage.getLayoutParams().width = newCanvasWidth
+    fun renderUi(){
+        /*            binding.ivImage.getLayoutParams().width = newCanvasWidth
             binding.ivImage.getLayoutParams().height = newCanvasHeight*/
-            /*     binding.videoSurface.getLayoutParams().width = newCanvasWidth
-                 binding.videoSurface.getLayoutParams().height = newCanvasHeight
-     */
+        /*     binding.videoSurface.getLayoutParams().width = newCanvasWidth
+             binding.videoSurface.getLayoutParams().height = newCanvasHeight
+ */
 
-         binding.ivImage.getLayoutParams().width = displayWidth //to be used when not in full mode
+
+            binding.ivImage.getLayoutParams().width = displayWidth //to be used when not in full mode
             binding.ivImage.getLayoutParams().height = displayHeight
             binding.videoSurface.getLayoutParams().width = displayWidth
             binding.videoSurface.getLayoutParams().height = displayHeight
 
 
-   /*         var statusBarHeight =0
-            var navigationBarHeight =0
-            val insets: WindowInsets =
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                    getWindowManager().getCurrentWindowMetrics().getWindowInsets()
-                } else {
-                    TODO("VERSION.SDK_INT < R")
-                }
-             statusBarHeight =
-                insets.getInsets(WindowInsetsCompat.Type.statusBars()).top //in pixels
 
-             navigationBarHeight =
-                insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom //in pixels
+/*        var statusBarHeight =0
+        var navigationBarHeight =0
+        val insets: WindowInsets =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                getWindowManager().getCurrentWindowMetrics().getWindowInsets()
+            } else {
+                TODO("VERSION.SDK_INT < R")
+            }
+        statusBarHeight =
+            insets.getInsets(WindowInsetsCompat.Type.statusBars()).top //in pixels
 
+        navigationBarHeight =
+            insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom //in pixels
 
-            Log.d("asldkjshladww", binding.ivImage.getLayoutParams().height.toString())
-            Log.d("asldkjshladww", binding.ivImage.getLayoutParams().width.toString())
+        Log.d("asldkjshladww", statusBarHeight.toString())
+        Log.d("asldkjshladww", displayHeight.toString())
+        Log.d("asldkjshladww", navigationBarHeight.toString())
+        runOnUiThread {
             binding.ivImage.getLayoutParams().width = displayWidth
             binding.ivImage.getLayoutParams().height = displayHeight+statusBarHeight+navigationBarHeight
             binding.videoSurface.getLayoutParams().width = displayWidth
             binding.videoSurface.getLayoutParams().height = displayHeight+statusBarHeight+navigationBarHeight
-          */
-        }
+        }*/
+
     }
+
+
 
 
     fun loadBitmapFromView(v: View): Bitmap? {
@@ -295,7 +279,6 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
 
     private fun initViews() {
 
-
         seekbar = findViewById(R.id.range_seek_bar)
         seekbarController = findViewById(R.id.seekbar_controller)
         seekHandler = Handler()
@@ -306,12 +289,14 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
         propertiesBSFragment = PropertiesBSFragment()
         propertiesBSFragment.setPropertiesChangeListener(this)
         mEmojiBSFragment = EmojiBSFragment()
-        mPhotoEditor = PhotoEditor.Builder(this, binding.ivImage)
-            .setPinchTextScalable(true) // set flag to make text scalable when pinch
-            .setDeleteView(binding.imgDelete) //.setDefaultTextTypeface(mTextRobotoTf)
+  runOnUiThread {
+      mPhotoEditor = PhotoEditor.Builder(this, binding.ivImage)
+          .setPinchTextScalable(true) // set flag to make text scalable when pinch
+          .setDeleteView(binding.imgDelete) //.setDefaultTextTypeface(mTextRobotoTf)
 
-            // .setDefaultEmojiTypeface(mEmojiTypeFace)
-            .build() // build photo editor sdk
+          // .setDefaultEmojiTypeface(mEmojiTypeFace)
+          .build() // build photo editor sdk
+  }
         mPhotoEditor.setOnPhotoEditorListener(this)
         mEmojiBSFragment?.setEmojiListener(this)
         binding.imgClose.setOnClickListener(this)
@@ -434,23 +419,6 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
     }
 
 
-    private fun setCanvasAspectRatio() {
-        originalDisplayHeight = displayHeight
-        originalDisplayWidth = displayWidth
-        val displayDiamenion: DimensionData = getScaledDimension(
-            DimensionData(
-                DRAW_CANVASW,
-                DRAW_CANVASH
-            ),
-            DimensionData(originalDisplayWidth, originalDisplayHeight)
-        )
-
-
-
-        newCanvasWidth = displayDiamenion.width
-        newCanvasHeight = displayDiamenion.height
-
-    }
 
     override fun onBackPressed() {
         var commonConfirmationDialog = CommonConfirmationDialog(
@@ -569,7 +537,6 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
         binding.imgDraw.setBackgroundColor(ContextCompat.getColor(this, R.color.black_trasp))
 
         mPhotoEditor.addImage(bitmap)
-        binding.txtCurrentTool.setText(R.string.label_sticker)
     }
 
 
@@ -591,12 +558,12 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
 
 
         mPhotoEditor.brushColor = colorCode
-        binding.txtCurrentTool.setText(R.string.label_brush)
+
     }
 
     override
     fun onOpacityChanged(opacity: Int) {
-        binding.txtCurrentTool.setText(R.string.label_brush)
+
 
     }
 

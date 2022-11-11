@@ -38,6 +38,7 @@
         <activity
             android:name=".modules.reels.activity.ActivityFullViewReels"
             android:exported="false"
+            android:theme="@style/FullViewScreen"
             android:hardwareAccelerated="true" />
         <activity
             android:name=".view.dashboard.funtime.ActivityFuntimePost"
@@ -121,10 +122,12 @@
         <activity
             android:name=".modules.reels.activity.ActivityVideoEditor"
             android:exported="false"
+
             android:hardwareAccelerated="true" />
         <activity
             android:name=".modules.reels.activity.ActivityVideoRecorder"
             android:exported="true"
+
             android:label="@string/app_name" />
         <activity
             android:name=".view.Splash.ActivitySplash"
@@ -132,7 +135,6 @@
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

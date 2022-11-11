@@ -92,4 +92,9 @@
        <item name="cornerRadius">30dp</item>
     </style>
 
+<!--    <style name="customProgressBar" parent="Widget.AppCompat.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/custom_progress_horizontal</item>
+    </style>-->
+
+
 </resources>
