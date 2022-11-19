@@ -11,6 +11,7 @@ import com.bumptech.glide.Glide
 import com.stalmate.user.R
 import com.stalmate.user.databinding.ItemMusicLayoutBinding
 import com.stalmate.user.model.User
+import com.stalmate.user.utilities.ImageLoaderHelperGlide
 import com.stalmate.user.viewmodel.AppViewModel
 
 class AdapterFunTimeMusic(val viewModel: AppViewModel,
@@ -25,8 +26,7 @@ class AdapterFunTimeMusic(val viewModel: AppViewModel,
             var radius = 20f
             var decorView: View = (context as Activity?)!!.window.getDecorView();
 
-            Glide.with(context).load(R.drawable.logo).into(binding.ivMusicImage)
-
+            ImageLoaderHelperGlide.setGlideCorner(context,binding.ivMusicImage,funtimeMusicResponse.image,R.drawable.user_placeholder)
             binding.tvMusicName.text = funtimeMusicResponse.sound_name
             binding.tvMusicDescription.text = funtimeMusicResponse.artist_name
 

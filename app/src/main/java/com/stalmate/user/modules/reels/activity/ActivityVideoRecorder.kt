@@ -3,13 +3,13 @@ package com.stalmate.user.modules.reels.activity
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.database.Cursor
 import android.graphics.*
 import android.graphics.drawable.Drawable
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -76,13 +76,13 @@ import com.stalmate.user.modules.reels.workers.MergeVideosWorker
 import com.stalmate.user.modules.reels.workers.VideoSpeedWorker
 import com.stalmate.user.utilities.ImageLoaderHelperGlide
 import com.stalmate.user.view.dialogs.CommonConfirmationDialog
-import com.user.vaibhavmodules.reels.utils.SharedConstants
 import jp.co.cyberagent.android.gpuimage.GPUImage
 import jp.co.cyberagent.android.gpuimage.filter.*
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 
 class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListener {
@@ -94,6 +94,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
     var songId = ""
     private var isImage = true
     private var isImageTakenByCamera = false
+    private var isMusicSelected = false
     private var mMediaPlayer: MediaPlayer? = null
     val PICK_FILE = 99
     private val mStopper = Runnable { stopRecording() }
@@ -102,14 +103,22 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
 
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         binding = ActivityVideoRecorderBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         binding.cameraView.engine = Engine.CAMERA2
         mModel = ViewModelProvider(this)[RecorderActivityViewModel::class.java]
-        setContentView(binding.root)
+        isPermissionGranted(
+            arrayOf(
+                android.Manifest.permission.READ_EXTERNAL_STORAGE,
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                android.Manifest.permission.CAMERA,
+                android.Manifest.permission.RECORD_AUDIO,
+            )
+        )
+
         mMediaPlayer = MediaPlayer()
         mMediaPlayer!!.setAudioAttributes(
             AudioAttributes.Builder()
@@ -117,7 +126,9 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                 .setUsage(AudioAttributes.USAGE_MEDIA)
                 .build()
         )
+
         // getGalleryData()
+
         binding.selectedPhoto.setScaleType(GPUImage.ScaleType.CENTER_INSIDE)
         binding.cameraView.mapGesture(Gesture.PINCH, GestureAction.ZOOM);
         binding.cameraView.mapGesture(Gesture.TAP, GestureAction.AUTO_FOCUS);
@@ -139,7 +150,6 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                         result.toBitmap {
                             runOnUiThread {
                                 binding.selectedPhoto.setImage(it);
-
                                 binding.cameraView.visibility = View.GONE
                             }
                         }
@@ -149,6 +159,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                         //  binding.rvFilters.visibility=View.VISIBLE
                         binding.buttonDone.visibility = View.VISIBLE
                         binding.layoutBottomControll.visibility = View.GONE
+                        setupProgressBarWithDuration()
                         // closeFinally(mModel!!.video!!)
                     }
 
@@ -174,7 +185,8 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
 
             override fun onVideoRecordingEnd() {
                 binding.buttonDone.visibility = View.VISIBLE
-                pauseProgress()
+                mMediaPlayer!!.pause()
+                progressHandler.removeCallbacks(runnable)
                 //    binding.segmentedProgressbar.addDivider()
                 binding.buttonRecord.setSelected(false)
                 /*       if (mMediaPlayer != null) {
@@ -184,7 +196,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
             }
 
             override fun onVideoRecordingStart() {
-
+                mMediaPlayer!!.start()
                 binding.buttonRecord.setSelected(true)
                 /*   if (mMediaPlayer != null) {
                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -204,11 +216,11 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                        }
                        mMediaPlayer!!.start()
                    }*/
-                resumeProgress()
+                progressHandler.removeCallbacks(runnable)
+                progressHandler.post(runnable)
+                Log.d("aplskdasd","recordingStarted")
             }
         })
-
-
         if (intent.getStringExtra(EXTRA_SONG_ID) != null) {
 
             Log.d("ajkhdkasd", intent.getStringExtra(EXTRA_SONG_ID).toString())
@@ -225,44 +237,45 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
             )
 
         }
-
-
-
-
-        isPermissionGranted(
-            arrayOf(
-                android.Manifest.permission.READ_EXTERNAL_STORAGE,
-                android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            )
-        )
         setUPViews()
         setUpCameraView()
 
 
     }
 
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-    override fun onDestroy() {
-        super.onDestroy()
+      if (requestCode==BaseActivity.MULTIPLE_PERMISSIONS){
 
-        if (mMediaPlayer != null) {
-            if (mMediaPlayer!!.isPlaying()) {
-                mMediaPlayer!!.stop()
-            }
-            mMediaPlayer!!.release()
-            mMediaPlayer = null
-            binding.cameraView.destroy()
-            progressHandler.removeCallbacks(runnable)
-        }
+
+          Log.d("alksjdlsadas","aosjdopasd")
+
+          var isPerpermissionForAllGranted = false
+          if (grantResults.isNotEmpty() && permissions.size == grantResults.size) {
+              var i = 0
+              while (i < permissions.size) {
+                  isPerpermissionForAllGranted = grantResults[i] == PackageManager.PERMISSION_GRANTED
+                  i++
+              }
+              Log.e("value", "Permission Granted, Now you can use local drive .")
+          } else {
+              isPerpermissionForAllGranted = true
+              Log.e("value", "Permission Denied, You cannot use local drive .")
+          }
+          if (isPerpermissionForAllGranted) {
+              runOnUiThread {
+                  binding.cameraView.open()
+              }
+          }
+      }
     }
 
 
-    override fun onStop() {
-        if (mMediaPlayer != null) {
-            mMediaPlayer!!.pause()
-        }
-        super.onStop()
-    }
 
 
     fun setUpCameraView() {
@@ -300,17 +313,10 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
         }
     }
 
-    override fun onPause() {
-        if (mMediaPlayer != null) {
-            mMediaPlayer!!.pause()
-            binding.cameraView.close()
-        }
-        super.onPause()
-    }
-
     override fun onStart() {
         if (mMediaPlayer != null) {
             mMediaPlayer!!.start()
+            resumeProgress()
             if (!isImageTakenByCamera) {
                 binding.cameraView.open()
             }
@@ -323,6 +329,43 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
         }
         super.onStart()
     }
+
+
+
+    override fun onPause() {
+        if (mMediaPlayer != null) {
+            pauseProgress()
+            binding.cameraView.close()
+        }
+        super.onPause()
+    }
+
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        if (mMediaPlayer != null) {
+
+            if (mMediaPlayer!!.isPlaying()) {
+                mMediaPlayer!!.stop()
+            }
+            mMediaPlayer!!.release()
+            mMediaPlayer = null
+            binding.cameraView.destroy()
+
+        }
+    }
+
+
+    override fun onStop() {
+        if (mMediaPlayer != null) {
+            pauseProgress()
+
+        }
+        super.onStop()
+    }
+
 
 
     fun setUpFilterAdapter() {
@@ -530,7 +573,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
     var recorded = 0.toLong()
     private fun startRecording() {
         recorded = mModel!!.recorded()
-        if (recorded >= SharedConstants.MAX_DURATION) {
+        if (recorded >= TimeUnit.SECONDS.toMillis(imageVideoDuration.toLong())) {
             Toast.makeText(
                 this@ActivityVideoRecorder,
                 R.string.recorder_error_maxed_out,
@@ -541,7 +584,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
             binding.buttonPickData.visibility = View.GONE
             binding.buttonDone.visibility = View.GONE
             binding.cameraView.takeVideoSnapshot(
-                mModel!!.video!!, ((SharedConstants.MAX_DURATION - recorded).toInt())
+                mModel!!.video!!, ((TimeUnit.SECONDS.toMillis(imageVideoDuration.toLong()) - recorded).toInt())
             )
         }
     }
@@ -675,8 +718,11 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
             intent.putExtra(ActivityFilter.EXTRA_SONG, File(mModel!!.audio!!.path!!).absolutePath)
         }
 
-
+        intent.putExtra(EXTRA_SONG_DURATION, imageVideoDuration.toString())
         intent.putExtra(ActivityFilter.EXTRA_VIDEO, file.absolutePath)
+
+
+
         intent.putExtra("isImage", isImage)
         intent.putExtra(EXTRA_SONG_ID, songId)
         try {
@@ -687,7 +733,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
         }
 
 
-
+        pauseProgress()
         startActivity(intent)
         // finish()
 
@@ -853,6 +899,8 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
     fun playMusic(soundFile: String) {
 
         try {
+
+            mMediaPlayer!!.reset()
             mMediaPlayer!!.setDataSource(soundFile)
             mMediaPlayer!!.prepareAsync()
         } catch (e: IOException) {
@@ -862,6 +910,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
         mMediaPlayer!!.setOnPreparedListener { mp: MediaPlayer ->
             mMediaPlayer!!.start()
         }
+
 
     }
 
@@ -894,6 +943,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                 songId = data.getStringExtra(EXTRA_SONG_ID).toString()
                 val name = data.getStringExtra(EXTRA_SONG_NAME)
                 val audio = data.getParcelableExtra<Uri>(EXTRA_SONG_FILE)
+                isMusicSelected=true
                 ImageLoaderHelperGlide.setGlideCorner(
                     this,
                     binding.ivMusicImage,
@@ -908,7 +958,11 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                 isMusicActive = true
                 updateColorButtons()
 
-
+              if (isImage){
+                  binding.segmentedProgressbar.progress=0
+                  setupProgressBarWithDuration()
+                  resumeProgress()
+              }
             }
         }
 
@@ -921,6 +975,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
 
         binding.tabbarduration.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
+                binding.tvTimer.setTextColor(resources.getColor(R.color.colorYellow, null))
                 when (tab!!.position) {
                     0 -> {
                         imageVideoDuration = 15
@@ -931,6 +986,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                             )
                         )
                         hideDurationBar(show = false)
+                        setupProgressBarWithDuration()
                     }
                     1 -> {
                         imageVideoDuration = 30
@@ -941,6 +997,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                             )
                         )
                         hideDurationBar(show = false)
+                        setupProgressBarWithDuration()
                     }
                     2 -> {
                         imageVideoDuration = 60
@@ -951,6 +1008,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                             )
                         )
                         hideDurationBar(show = false)
+                        setupProgressBarWithDuration()
                     }
                 }
             }
@@ -1031,6 +1089,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
 
 
     fun setUPViews() {
+        setupProgressBarWithDuration()
         binding.buttonRecord.setOnClickListener {
             if (isImage) {
                 if (!binding.cameraView.isTakingPicture) {
@@ -1050,9 +1109,10 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
         }
 
         binding.buttonRecord.setOnLongClickListener {
-
             isImage = false
             setUpCameraView()
+            binding.segmentedProgressbar.progress=0
+            mMediaPlayer!!.reset()
             startRecording()
             binding.recordAnimationView.visibility = View.VISIBLE
             binding.stopIConView.visibility = View.GONE
@@ -1283,26 +1343,20 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                     finish()
                 }
             })
-        if (isImage){
+        if (isImage) {
             if (isImageTakenByCamera) {
                 commonConfirmationDialog.show()
-            }else{
+            } else {
                 super.onBackPressed()
             }
 
-        }else{
+        } else {
             if (mModel!!.segments!!.size > 0) {
                 commonConfirmationDialog.show()
-            }else{
+            } else {
                 super.onBackPressed()
             }
         }
-
-
-
-
-
-
 
 
     }
@@ -1336,8 +1390,6 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
     }
 
 
-
-
 /*    override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         val decorView = window.decorView
@@ -1364,7 +1416,9 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                     R.drawable.ic_crtpost_top_music_active
                 )
             )
+            binding.tvMusic.setTextColor(resources.getColor(R.color.colorYellow, null))
         } else {
+            binding.tvMusic.setTextColor(resources.getColor(R.color.white, null))
             binding.ivMusic.setImageDrawable(
                 ContextCompat.getDrawable(
                     this,
@@ -1373,8 +1427,6 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
             )
         }
 
-
-
         if (isSpeedActive) {
             binding.ivSpeed.setImageDrawable(
                 ContextCompat.getDrawable(
@@ -1382,7 +1434,9 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                     R.drawable.ic_crtpost_speed_active
                 )
             )
+            binding.tvSped.setTextColor(resources.getColor(R.color.colorYellow, null))
         } else {
+            binding.tvSped.setTextColor(resources.getColor(R.color.white, null))
             binding.ivSpeed.setImageDrawable(
                 ContextCompat.getDrawable(
                     this,
@@ -1399,7 +1453,9 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                     R.drawable.ic_crtpost_magic_stick_active
                 )
             )
+            binding.tvFilter.setTextColor(resources.getColor(R.color.colorYellow, null))
         } else {
+            binding.tvFilter.setTextColor(resources.getColor(R.color.white, null))
             binding.ivFilter.setImageDrawable(
                 ContextCompat.getDrawable(
                     this,
@@ -1625,14 +1681,19 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
 
 
     var progressHandler = Handler()
-    var progressStatus = 0
 
     fun pauseProgress() {
-        progressHandler!!.removeCallbacks(runnable)
+        mMediaPlayer!!.pause()
+        progressHandler.removeCallbacks(runnable)
     }
 
     fun resumeProgress() {
-        progressHandler!!.post(runnable)
+        progressHandler.removeCallbacks(runnable)
+        if (isMusicSelected  && isImage){
+            progressHandler.post(runnable)
+        }else if (!isImage){
+          //  progressHandler.post(runnable)
+        }
     }
 
     var prolength = 0 //
@@ -1644,14 +1705,23 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
             prolength = binding.segmentedProgressbar.getProgress() + 1
             binding.segmentedProgressbar.setProgress(prolength)
             //100,1000runnable
-            if (prolength < 100) {
+            if (prolength < imageVideoDuration) {
                 progressHandler.postDelayed(this, 1000)
+                Log.d("akjsdasda","akshdasd")
             } else {
-                binding.segmentedProgressbar.setProgress(0)
-                progressHandler.post(this)
+            //    binding.segmentedProgressbar.setProgress(0)
+                mMediaPlayer!!.pause()
+             //   progressHandler.post(this)
+                Log.d("akjsdasda","akshdasdfsdfsd")
             }
         }
     }
+
+    fun setupProgressBarWithDuration(){
+        binding.segmentedProgressbar.visibility=View.VISIBLE
+        binding.segmentedProgressbar.max=imageVideoDuration
+    }
+
 
 
 }

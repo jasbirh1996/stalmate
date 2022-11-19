@@ -43,4 +43,5 @@ class VideoReelFullViewHolder(binding: ItemFullViewReelBinding) : ReelViewHolder
     val tvMusicArtist = binding.tvMusicArtist;
     val ivMusicImage = binding.ivMusic;
     val layoutMusic = binding.layoutMusic;
+    val ivMenu = binding.ivMenu;
 }

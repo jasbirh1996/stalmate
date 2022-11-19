@@ -26,6 +26,7 @@ object Common {
     //Output Files
     const val IMAGE: String = "IMAGE"
     const val VIDEO: String = "VIDEO"
+    const val AVI: String = "AVI"
     const val GIF: String = "GIF"
     const val MP3: String = "MP3"
 
@@ -118,6 +119,9 @@ object Common {
             }
             TextUtils.equals(fileExtension, VIDEO) -> {
                 extension = ".mp4"
+            }
+            TextUtils.equals(fileExtension, AVI) -> {
+                extension = ".avi"
             }
             TextUtils.equals(fileExtension, GIF) -> {
                 extension = ".gif"

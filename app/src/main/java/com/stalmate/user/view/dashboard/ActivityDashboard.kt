@@ -29,7 +29,8 @@ import com.stalmate.user.view.dashboard.HomeFragment.FragmentMenu
 import com.stalmate.user.view.dashboard.VideoReels.FragmentReels
 import com.stalmate.user.view.dashboard.funtime.FragmentFunTime
 
-class ActivityDashboard : BaseActivity(), FragmentHome.Callback , FragmentFriend.Callbackk, FragmentMenu.Callback/*, FragmentFunTime.Callbackk*/{
+class ActivityDashboard : BaseActivity(), FragmentHome.Callback, FragmentFriend.Callbackk,
+    FragmentMenu.Callback/*, FragmentFunTime.Callbackk*/ {
     private val TIME_INTERVAL = 2000
     var back_pressed: Long = 0
     private lateinit var binding: ActivityDashboardBinding
@@ -43,6 +44,13 @@ class ActivityDashboard : BaseActivity(), FragmentHome.Callback , FragmentFriend
         binding = ActivityDashboardBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setupBottomBar()
+
+/*        binding.bottomNavigationView.add(MeowBottomNavigation.Model(1, R.drawable.ic_botm_menu_funtime))
+        binding.bottomNavigationView.add(MeowBottomNavigation.Model(2, R.drawable.ic_botm_menu_chat_inactive))
+        binding.bottomNavigationView.add(MeowBottomNavigation.Model(3, R.drawable.ic_botm_menu_home_inactive))
+        binding.bottomNavigationView.add(MeowBottomNavigation.Model(4, R.drawable.ic_botm_menu_video_inactive))
+        binding.bottomNavigationView.add(MeowBottomNavigation.Model(5, R.drawable.ic_botm_menu_friends_inactive))*/
+        // setupBottomBar()
         onNewIntent(intent)
 
         /*loadDrawerFragment(FragmentMenu())*/
@@ -59,29 +67,29 @@ class ActivityDashboard : BaseActivity(), FragmentHome.Callback , FragmentFriend
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-       if (intent!!.getStringExtra("notificationType") != null) {
-           Log.d("casdafgg",intent.getStringExtra("notificationType").toString())
+        if (intent!!.getStringExtra("notificationType") != null) {
+            Log.d("casdafgg", intent.getStringExtra("notificationType").toString())
 
 
-           if (intent.getStringExtra("notificationType")=="newFriendRequest"){
-               startActivity(
-                   IntentHelper.getOtherUserProfileScreen(this)!!
-                       .putExtra("id", intent.getStringExtra("userId").toString())
-               )
+            if (intent.getStringExtra("notificationType") == "newFriendRequest") {
+                startActivity(
+                    IntentHelper.getOtherUserProfileScreen(this)!!
+                        .putExtra("id", intent.getStringExtra("userId").toString())
+                )
 
-           }else if (intent.getStringExtra("notificationType")=="funtimeTag"){
-               getReelVideoById(intent.getStringExtra("funTimeId").toString())
-           }
+            } else if (intent.getStringExtra("notificationType") == "funtimeTag") {
+                getReelVideoById(intent.getStringExtra("funTimeId").toString())
+            }
 
 
-       }
+        }
 
     }
 
     var page_count = 0
     var isApiRuning = false
     var handler: Handler? = null
-    private fun getReelVideoById(id:String) {
+    private fun getReelVideoById(id: String) {
         isApiRuning = true
         val index = 0
         var hashmap = HashMap<String, String>()
@@ -95,20 +103,25 @@ class ActivityDashboard : BaseActivity(), FragmentHome.Callback , FragmentFriend
             //  binding.shimmerLayout.visibility =  View.GONE
             Log.d("========", "empty")
             if (it!!.results.isNotEmpty()) {
-                startActivity(IntentHelper.getFullViewReelActivity(this)!!.putExtra("data",it!!.results[0]))
+                startActivity(
+                    IntentHelper.getFullViewReelActivity(this)!!.putExtra("data", it!!.results[0])
+                )
             }
         }
     }
 
 
-
     fun setupBottomBar() {
         binding.bottomNavigationView.selectedItemId = R.id.home
 
-        fm.beginTransaction().add(binding.fragmentContainerView.id, fragment5, "5").hide(fragment5).commit()
-        fm.beginTransaction().add(binding.fragmentContainerView.id, fragment4, "4").hide(fragment4).commit()
-        fm.beginTransaction().add(binding.fragmentContainerView.id, fragment3, "3").hide(fragment3).commit()
-        fm.beginTransaction().add(binding.fragmentContainerView.id, fragment2, "2").hide(fragment2).commit()
+        fm.beginTransaction().add(binding.fragmentContainerView.id, fragment5, "5").hide(fragment5)
+            .commit()
+        fm.beginTransaction().add(binding.fragmentContainerView.id, fragment4, "4").hide(fragment4)
+            .commit()
+        fm.beginTransaction().add(binding.fragmentContainerView.id, fragment3, "3").hide(fragment3)
+            .commit()
+        fm.beginTransaction().add(binding.fragmentContainerView.id, fragment2, "2").hide(fragment2)
+            .commit()
         fm.beginTransaction().add(binding.fragmentContainerView.id, fragment1, "1").commit()
 
         binding.bottomNavigationView.setOnItemSelectedListener {
@@ -151,17 +164,65 @@ class ActivityDashboard : BaseActivity(), FragmentHome.Callback , FragmentFriend
     }
 
 
+    /*  fun setupBottomBar() {
 
-fun mute(toMute:Boolean){
-   if (toMute){
-       if (active is FragmentFunTime){
-           Log.d("askldjalsd","alksdjasd")
-           (active as FragmentFunTime).pauseMusic()
-       }else{
-           
-       }
-   }
-}
+
+             fm.beginTransaction().add(binding.fragmentContainerView.id, fragment5, "5").hide(fragment5).commit()
+             fm.beginTransaction().add(binding.fragmentContainerView.id, fragment4, "4").hide(fragment4).commit()
+             fm.beginTransaction().add(binding.fragmentContainerView.id, fragment3, "3").hide(fragment3).commit()
+             fm.beginTransaction().add(binding.fragmentContainerView.id, fragment2, "2").hide(fragment2).commit()
+             fm.beginTransaction().add(binding.fragmentContainerView.id, fragment1, "1").commit()
+
+             binding.bottomNavigationView.setOnClickMenuListener {
+                 when (it.id) {
+                     1 -> {
+                         mute(true)
+                         fm.beginTransaction().hide(active).show(fragment1).commit()
+                         active = fragment1
+                     }
+
+                     2 -> {
+                         mute(false)
+                         fm.beginTransaction().hide(active).show(fragment2).commit()
+                         active = fragment2
+                     }
+
+                     3 -> {
+                         mute(true)
+                         fm.beginTransaction().hide(active).show(fragment3).commit()
+                         active = fragment3
+                     }
+
+                     4 -> {
+                         mute(true)
+                         fm.beginTransaction().hide(active).show(fragment4).commit()
+                         active = fragment4
+                     }
+
+                     5 -> {
+                         mute(true)
+                         fm.beginTransaction().hide(active).show(fragment5).commit()
+                         active = fragment5
+                     }
+
+                     else -> {
+                     }
+                 }
+                 true
+             }
+         }*/
+
+
+    fun mute(toMute: Boolean) {
+        if (toMute) {
+            if (active is FragmentFunTime) {
+                Log.d("askldjalsd", "alksdjasd")
+                (active as FragmentFunTime).pauseMusic()
+            } else {
+
+            }
+        }
+    }
 
     val fragment1: Fragment = FragmentHome(this)
     val fragment2: Fragment = FragmentFunTime()
@@ -189,10 +250,7 @@ fun mute(toMute:Boolean){
     override fun onBackPressed() {
         if (binding.drawerLayout.isDrawerOpen(GravityCompat.END)) {
             toggleDrawer()
-        }
-
-
-        else if (active is FragmentHome){
+        } else if (active is FragmentHome) {
             if (doubleBackToExitPressedOnce) {
                 super.onBackPressed()
                 return
@@ -201,12 +259,13 @@ fun mute(toMute:Boolean){
             this.doubleBackToExitPressedOnce = true
             Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show()
 
-            Handler(Looper.getMainLooper()).postDelayed(Runnable { doubleBackToExitPressedOnce = false }, 2000)
+            Handler(Looper.getMainLooper()).postDelayed(Runnable {
+                doubleBackToExitPressedOnce = false
+            }, 2000)
 
+        } else {
+            onClickBack()
         }
-            else{
-                onClickBack()
-            }
 
 
     }
@@ -227,6 +286,8 @@ fun mute(toMute:Boolean){
 
     override fun onClickBack() {
         binding.bottomNavigationView.selectedItemId = R.id.home
+        //    binding.bottomNavigationView
+
     }
 
     override fun onCLickBackButton() {
@@ -240,7 +301,6 @@ fun mute(toMute:Boolean){
      * This method will start service to preCache videos from remoteUrl in to Cache Directory
      * So the Player will not reload videos from server if they are already loaded in cache
      */
-
 
 
 }

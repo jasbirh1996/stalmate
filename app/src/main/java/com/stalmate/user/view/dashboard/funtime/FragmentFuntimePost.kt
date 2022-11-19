@@ -97,8 +97,18 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
 
         }
         binding.layoutTagPeople.setOnClickListener { findNavController().navigate(R.id.action_fragmentFuntimePost_to_fragmentFuntimeTag) }
+/*
         val bitmap = ThumbnailUtils.createVideoThumbnail(mVideo, MediaStore.Video.Thumbnails.MICRO_KIND)
         Glide.with(requireActivity()).load(bitmap).into(binding.thumbnail)
+*/
+
+
+        Glide.with(requireContext())
+            .load(mVideo)
+          /*  .apply(requestOptions)*/
+            .thumbnail(Glide.with(requireContext()).load(mVideo))
+            .into(binding.thumbnail);
+
         binding.buttonPost.setOnClickListener { apiPostReel(File(mVideo)) }
         tagPeopleViewModel.getTaggedPeopleList().observe(viewLifecycleOwner) {
             Log.d("asdasdasd","apsdkpasd")
@@ -123,6 +133,7 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
                 when(selectedPrivacy){
                     Constants.PRIVACY_TYPE_MY_FOLLOWER->{
                         binding.tvPrivacyData.text="My Followers"
+
                     }
                     Constants.PRIVACY_TYPE_PRIVATE->{
                         binding.tvPrivacyData.text="Private"
@@ -203,7 +214,7 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
         if (!ValidationHelper.isNull(binding.editor.html)){
             data=binding.editor.html.toString()
         }
-
+Log.d(";lasjd;asd",selectedPrivacy)
       networkViewModel.postReel(
             profile_image1,
             getRequestBody(".mp4"),

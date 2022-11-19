@@ -34,7 +34,9 @@
             app:layout_constraintBottom_toBottomOf="@id/feedThumbnailView"
             app:layout_constraintEnd_toEndOf="@id/feedThumbnailView"
             app:layout_constraintStart_toStartOf="@id/feedThumbnailView"
-            app:layout_constraintTop_toTopOf="@id/feedThumbnailView" />
+            app:layout_constraintTop_toTopOf="@id/feedThumbnailView" >
+
+        </com.stalmate.user.modules.reels.player.InstaLikePlayerView>
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -43,6 +45,17 @@
             android:layout_height="wrap_content"
             android:padding="@dimen/_20sdp"
             app:layout_constraintBottom_toBottomOf="parent">
+
+            <ImageView
+                android:id="@+id/ivMenu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:padding="@dimen/_10sdp"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_user_name"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/tv_user_name"
+                app:srcCompat="@drawable/ic_privacy_threedot" />
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/img_user_profile"
@@ -57,17 +70,18 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:fontFamily="@font/poppins_light"
-                android:text=""
-                android:textColor="@color/white"
+                android:layout_marginEnd="20dp"
                 android:ellipsize="end"
+                android:fontFamily="@font/poppins_light"
                 android:shadowColor="#55000000"
                 android:shadowDx="6"
                 android:shadowDy="6"
                 android:shadowRadius="6"
+                android:text=""
+                android:textColor="@color/white"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toTopOf="@+id/tv_story_post_time"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/ivMenu"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/img_user_profile"
                 app:layout_constraintTop_toTopOf="@+id/img_user_profile"

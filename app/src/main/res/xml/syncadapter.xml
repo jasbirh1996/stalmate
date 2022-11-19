@@ -6,4 +6,6 @@
     android:supportsUploading="false"
     android:userVisible="true"
     android:allowParallelSyncs="true"
-    android:isAlwaysSyncable="true" />
+    android:isAlwaysSyncable="true"
+
+    />

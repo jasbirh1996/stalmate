@@ -81,12 +81,15 @@ class FragmentSingleUserSelector: BaseFragment(), FriendAdapter.Callbackk,
         })
 
         binding.ivClear.setOnClickListener {
-            searchData = ""
+         /*   searchData = ""
             binding.etSearch.setText("")
 
             Handler(Looper.myLooper()!!).post {
                 hitApi(true, searchData)
-            }
+            }*/
+
+            findNavController().popBackStack()
+
         }
 
         binding.rvFriends.adapter = friendAdapter

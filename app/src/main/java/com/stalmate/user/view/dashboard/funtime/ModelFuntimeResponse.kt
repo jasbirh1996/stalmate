@@ -30,6 +30,7 @@ data class ResultFuntime(
     val tag_id: String,
     val text: String,
     val sound_id:String?,
+    val is_my:String,
     val url: String,
     var tag_user:ArrayList<TaggedUser>
 ):Parcelable

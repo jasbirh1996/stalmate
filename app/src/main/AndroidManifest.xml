@@ -3,6 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.stalmate.user">
 
+    <permission android:name="android.permission.QUERY_ALL_PACKAGES" />
+
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+        </intent>
+    </queries>
+
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -19,7 +27,7 @@
 
     <application
         android:name="com.stalmate.user.base.App"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:hardwareAccelerated="true"
@@ -30,16 +38,23 @@
         android:roundIcon="@drawable/app_logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true"
+        tools:replace="android:allowBackup">
+        <activity
+            android:name=".view.dashboard.funtime.ActivityReportUser"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
         <activity
             android:name=".view.dashboard.funtime.ActivityReelsByAudio"
-            android:exported="false">
-        </activity>
+            android:exported="false"/>
         <activity
             android:name=".modules.reels.activity.ActivityFullViewReels"
             android:exported="false"
-            android:theme="@style/FullViewScreen"
-            android:hardwareAccelerated="true" />
+            android:hardwareAccelerated="true"
+            android:theme="@style/FullViewScreen" />
         <activity
             android:name=".view.dashboard.funtime.ActivityFuntimePost"
             android:exported="false" />
@@ -111,23 +126,18 @@
             android:launchMode="singleTop" />
         <activity
             android:name=".view.dashboard.ActivityDashboard"
+            android:excludeFromRecents="true"
             android:exported="false"
             android:hardwareAccelerated="true"
             android:launchMode="singleTop"
-            android:taskAffinity=""
-            android:excludeFromRecents="true"
-
-
-            />
+            android:taskAffinity="" />
         <activity
             android:name=".modules.reels.activity.ActivityVideoEditor"
             android:exported="false"
-
             android:hardwareAccelerated="true" />
         <activity
             android:name=".modules.reels.activity.ActivityVideoRecorder"
             android:exported="true"
-
             android:label="@string/app_name" />
         <activity
             android:name=".view.Splash.ActivitySplash"
@@ -135,6 +145,7 @@
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

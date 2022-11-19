@@ -19,7 +19,6 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.NonNull
-import androidx.appcompat.app.ActionBar
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -28,6 +27,8 @@ import androidx.work.Data
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
+import com.arthenica.ffmpegkit.FFmpegKit
+import com.arthenica.ffmpegkit.ReturnCode
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
@@ -51,7 +52,6 @@ import com.stalmate.user.modules.reels.activity.ActivityFilter.Companion.EXTRA_V
 import com.stalmate.user.modules.reels.audioVideoTrimmer.ui.seekbar.widgets.CrystalRangeSeekbar
 import com.stalmate.user.modules.reels.audioVideoTrimmer.ui.seekbar.widgets.CrystalSeekbar
 import com.stalmate.user.modules.reels.audioVideoTrimmer.utils.*
-import com.stalmate.user.modules.reels.audioVideoTrimmer.utils.TrimVideo.activity
 import com.stalmate.user.modules.reels.photo_editing.EmojiBSFragment
 import com.stalmate.user.modules.reels.photo_editing.PropertiesBSFragment
 import com.stalmate.user.modules.reels.photo_editing.StickerBSFragment
@@ -65,7 +65,6 @@ import com.stalmate.user.utilities.Common
 import com.stalmate.user.utilities.ValidationHelper
 import com.stalmate.user.view.dialogs.CommonConfirmationDialog
 import ja.burhanrashid52.photoeditor.*
-import ja.burhanrashid52.photoeditor.Utils.getScaledDimension
 import java.io.*
 import java.util.*
 import java.util.concurrent.Executors
@@ -85,6 +84,7 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
     private var audioPath = ""
     private var imagePath = ""
     private var songId = ""
+    private var duration = 0
     private lateinit var exeCmd: ArrayList<String>
     val PICK_FILE = 99
     var id = 0
@@ -132,7 +132,6 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
     }
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -142,6 +141,7 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
         videoPath = intent.getStringExtra(EXTRA_VIDEO).toString()
         audioPath = intent.getStringExtra(EXTRA_SONG).toString()
         songId = intent.getStringExtra(EXTRA_SONG_ID).toString()
+        duration = intent.getStringExtra(EXTRA_SONG_DURATION).toString().toInt()
         renderUi()
         initializePlayer()
         if (!isIMage) {
@@ -198,15 +198,14 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
 
                 }
             }
-          //  getDropboxIMGSize(Uri.parse(videoPath!!))
+            //  getDropboxIMGSize(Uri.parse(videoPath!!))
         }
         initViews()
 
     }
 
 
-
-    fun renderUi(){
+    fun renderUi() {
         /*            binding.ivImage.getLayoutParams().width = newCanvasWidth
             binding.ivImage.getLayoutParams().height = newCanvasHeight*/
         /*     binding.videoSurface.getLayoutParams().width = newCanvasWidth
@@ -214,11 +213,10 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
  */
 
 
-            binding.ivImage.getLayoutParams().width = displayWidth //to be used when not in full mode
-            binding.ivImage.getLayoutParams().height = displayHeight
-            binding.videoSurface.getLayoutParams().width = displayWidth
-            binding.videoSurface.getLayoutParams().height = displayHeight
-
+        binding.ivImage.getLayoutParams().width = displayWidth //to be used when not in full mode
+        binding.ivImage.getLayoutParams().height = displayHeight
+        binding.videoSurface.getLayoutParams().width = displayWidth
+        binding.videoSurface.getLayoutParams().height = displayHeight
 
 
 /*        var statusBarHeight =0
@@ -246,8 +244,6 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
         }*/
 
     }
-
-
 
 
     fun loadBitmapFromView(v: View): Bitmap? {
@@ -289,14 +285,14 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
         propertiesBSFragment = PropertiesBSFragment()
         propertiesBSFragment.setPropertiesChangeListener(this)
         mEmojiBSFragment = EmojiBSFragment()
-  runOnUiThread {
-      mPhotoEditor = PhotoEditor.Builder(this, binding.ivImage)
-          .setPinchTextScalable(true) // set flag to make text scalable when pinch
-          .setDeleteView(binding.imgDelete) //.setDefaultTextTypeface(mTextRobotoTf)
+        runOnUiThread {
+            mPhotoEditor = PhotoEditor.Builder(this, binding.ivImage)
+                .setPinchTextScalable(true) // set flag to make text scalable when pinch
+                .setDeleteView(binding.imgDelete) //.setDefaultTextTypeface(mTextRobotoTf)
 
-          // .setDefaultEmojiTypeface(mEmojiTypeFace)
-          .build() // build photo editor sdk
-  }
+                // .setDefaultEmojiTypeface(mEmojiTypeFace)
+                .build() // build photo editor sdk
+        }
         mPhotoEditor.setOnPhotoEditorListener(this)
         mEmojiBSFragment?.setEmojiListener(this)
         binding.imgClose.setOnClickListener(this)
@@ -419,7 +415,6 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
     }
 
 
-
     override fun onBackPressed() {
         var commonConfirmationDialog = CommonConfirmationDialog(
             this,
@@ -494,7 +489,8 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
                                 ).show()*/
 
                         if (isIMage) {
-                            convertImageToVideo(imagePath)
+                            imageToVideo(imagePath)
+                            //  convertImageToVideo(imagePath)
                         } else {
                             applayWaterMark(File(videoPath))
                         }
@@ -619,25 +615,34 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
     fun addToWatermark(beforeWatermarkAddedFile: File) {
         val wm = WorkManager.getInstance(this)
         val output = File(cacheDir, UUID.randomUUID().toString())
-        val data: Data = Data.Builder()
-            .putString(WatermarkWorker.KEY_INPUT, beforeWatermarkAddedFile.absolutePath)
-            .putString(WatermarkWorker.ICON, imagePath)
-            .putString(WatermarkWorker.KEY_OUTPUT, output.absolutePath)
-            .build()
-        val request = OneTimeWorkRequest.Builder(WatermarkWorker::class.java)
-            .setInputData(data)
-            .build()
-        wm.enqueue(request)
-        wm.getWorkInfoByIdLiveData(request.id)
-            .observe(this) { info: WorkInfo ->
-                val ended = (info.state == WorkInfo.State.CANCELLED
-                        || info.state == WorkInfo.State.FAILED)
-                if (info.state == WorkInfo.State.SUCCEEDED) {
-                    dismissLoader()
-                    saveVideoToInternalStorage(output.path)
-                } else if (ended) {
+
+        if (isIMage) {
+            val outputPath = Common.getFilePath(this, Common.VIDEO)
+            ffmpegWatermark(beforeWatermarkAddedFile.absolutePath, outputPath, imagePath)
+        } else {
+            val data: Data = Data.Builder()
+                .putString(WatermarkWorker.KEY_INPUT, beforeWatermarkAddedFile.absolutePath)
+                .putString(WatermarkWorker.ICON, imagePath)
+                .putString(WatermarkWorker.KEY_OUTPUT, output.absolutePath)
+                .build()
+            val request = OneTimeWorkRequest.Builder(WatermarkWorker::class.java)
+                .setInputData(data)
+                .build()
+            wm.enqueue(request)
+            wm.getWorkInfoByIdLiveData(request.id)
+                .observe(this) { info: WorkInfo ->
+                    val ended = (info.state == WorkInfo.State.CANCELLED
+                            || info.state == WorkInfo.State.FAILED)
+                    if (info.state == WorkInfo.State.SUCCEEDED) {
+                        dismissLoader()
+                        saveVideoToInternalStorage(output.path)
+                    } else if (ended) {
+                    }
                 }
-            }
+
+
+        }
+
 
     }
 
@@ -647,17 +652,19 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
             val currentFile: File = File(path)
             val newfile = File(Common.getFilePath(this, Common.VIDEO))
             if (currentFile.exists()) {
-                val inputStream: InputStream = FileInputStream(currentFile)
-                val outputStream: OutputStream = FileOutputStream(newfile)
-                val buf = ByteArray(1024)
-                var len: Int
-                while (inputStream.read(buf).also { len = it } > 0) {
-                    outputStream.write(buf, 0, len)
-                }
-                outputStream.flush()
-                inputStream.close()
-                outputStream.close()
+             Handler(Looper.getMainLooper()).post {
+                 val inputStream: InputStream = FileInputStream(currentFile)
+                 val outputStream: OutputStream = FileOutputStream(newfile)
+                 val buf = ByteArray(1024)
+                 var len: Int
+                 while (inputStream.read(buf).also { len = it } > 0) {
+                     outputStream.write(buf, 0, len)
+                 }
+                 outputStream.flush()
+                 inputStream.close()
+                 outputStream.close()
 
+             }
 
                 /*       Toast.makeText(applicationContext, "Video has just saved!!", Toast.LENGTH_LONG)
                            .show()
@@ -824,48 +831,6 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
         imageToVideo?.start()
 
 
-        /*
-
-
-           val outputPath = Common.getFilePath(this, Common.VIDEO)
-           val size: ISize = SizeOfImage(imagePath)
-           val query = ffmpegQueryExtension.imageToVideo(
-               imagePath,
-               outputPath,
-               10,
-               size.width(),
-               size.height()
-           )
-
-           CallBackOfQuery().callQuery(query, object : FFmpegCallBack {
-               override fun process(logMessage: LogMessage) {
-
-               }
-
-               override fun success() {
-                   Log.d("as;ldasd", outputPath)
-                   mModel!!.video = File(outputPath)
-
-                   val segment = RecordSegment()
-                   segment.file = mModel!!.video
-                   val duration: Long =
-                       VideoUtil.getDuration(this@ActivityVideoRecorder, Uri.fromFile(mModel!!.video))
-                   segment.duration = duration
-                   Log.d("as;ldasd", duration.toString())
-                   mModel!!.segments.add(segment)
-                   commitImage()
-
-               }
-
-               override fun cancel() {
-
-               }
-
-               override fun failed() {
-
-               }
-
-           })*/
     }
 
     private fun mergeAudioVideo(filePath: String) {
@@ -1171,5 +1136,90 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
                 }
             }
     }
+
+    private fun imageToVideo(imagePath: String) {
+        val outputPath = Common.getFilePath(this, Common.VIDEO)
+
+        val options: BitmapFactory.Options = BitmapFactory.Options()
+        options.inJustDecodeBounds = true
+        BitmapFactory.decodeFile(File(imagePath).getAbsolutePath(), options)
+        val imageHeight = 1072
+        val imageWidth = 528
+
+        val session =
+            FFmpegKit.execute("-loop 1 -framerate 5 -t $duration -i $imagePath -c:v mpeg4 -pix_fmt yuv420p -vf scale=$imageWidth:$imageHeight -c:a aac $outputPath")
+        //   val session = FFmpegKit.execute("-loop 1 -framerate 1 -t $duration -i $imagePath -c:v libx264 -preset ultrafast -vf scale=$imageWidth:$imageHeight $outputPath")
+
+
+        if (ReturnCode.isSuccess(session.returnCode)) {
+            Log.d("lkasjldasd", "asdasdasd")
+            Log.d("kashdkhasd", outputPath)
+            mergeAudioVideo(outputPath)
+            // SUCCESS
+        } else if (ReturnCode.isCancel(session.returnCode)) {
+            Log.d("lkasjldasd", "asdasdasdgfsd")
+            // CANCEL
+        } else {
+            Log.d("lkasjldasd", "asdassfdajjsd")
+            // FAILURE
+            Log.d(
+                "asdasdasd",
+                String.format(
+                    "Command failed with state %s and rc %s.%s",
+                    session.state,
+                    session.returnCode,
+                    session.failStackTrace
+                )
+            )
+        }
+    }
+
+
+    fun ffmpegWatermark(input: String, output: String, image: String) {
+
+    Handler(Looper.getMainLooper()).post {
+        val session =
+            FFmpegKit.execute("-i $input -i $image -c:v mpeg4 -filter_complex [1][0]scale2ref=w=oh*mdar:h=ih*1.1[logo][video];[video][logo]overlay=0:0 -c:a aac $output")
+
+        if (ReturnCode.isSuccess(session.returnCode)) {
+
+
+            dismissLoader()
+            saveVideoToInternalStorage(output)
+
+            // SUCCESS
+        } else if (ReturnCode.isCancel(session.returnCode)) {
+            Log.d("lkasjldasd", "asdasdasdgfsd")
+            // CANCEL
+        } else {
+            Log.d("lkasjldasd", "asdassfdajjsd")
+            // FAILURE
+        }
+    }
+
+    }
+
+
+    fun generateCreateVideoWithPipesScript(
+        image3Pipe: String,
+        videoFilePath: String
+    ): String? {
+        return "-i " + image3Pipe + " " +
+                "-filter_complex \"" +
+                "[0:v]loop=loop=-1:size=1:start=0,setpts=PTS-STARTPTS,scale=w=\'if(gte(iw/ih,640/427),min(iw,640),-1)\':h=\'if(gte(iw/ih,640/427),-1,min(ih,427))\',scale=trunc(iw/2)*2:trunc(ih/2)*2,setsar=sar=1/1,split=2[stream1out1][stream1out2];" +
+                "[1:v]loop=loop=-1:size=1:start=0,setpts=PTS-STARTPTS,scale=w=\'if(gte(iw/ih,640/427),min(iw,640),-1)\':h=\'if(gte(iw/ih,640/427),-1,min(ih,427))\',scale=trunc(iw/2)*2:trunc(ih/2)*2,setsar=sar=1/1,split=2[stream2out1][stream2out2];" +
+                "[2:v]loop=loop=-1:size=1:start=0,setpts=PTS-STARTPTS,scale=w=\'if(gte(iw/ih,640/427),min(iw,640),-1)\':h=\'if(gte(iw/ih,640/427),-1,min(ih,427))\',scale=trunc(iw/2)*2:trunc(ih/2)*2,setsar=sar=1/1,split=2[stream3out1][stream3out2];" +
+                "[stream1out1]pad=width=640:height=427:x=(640-iw)/2:y=(427-ih)/2:color=#00000000,trim=duration=3,select=lte(n\\,90)[stream1overlaid];" +
+                "[stream1out2]pad=width=640:height=427:x=(640-iw)/2:y=(427-ih)/2:color=#00000000,trim=duration=1,select=lte(n\\,30)[stream1ending];" +
+                "[stream2out1]pad=width=640:height=427:x=(640-iw)/2:y=(427-ih)/2:color=#00000000,trim=duration=2,select=lte(n\\,60)[stream2overlaid];" +
+                "[stream2out2]pad=width=640:height=427:x=(640-iw)/2:y=(427-ih)/2:color=#00000000,trim=duration=1,select=lte(n\\,30),split=2[stream2starting][stream2ending];" +
+                "[stream3out1]pad=width=640:height=427:x=(640-iw)/2:y=(427-ih)/2:color=#00000000,trim=duration=2,select=lte(n\\,60)[stream3overlaid];" +
+                "[stream3out2]pad=width=640:height=427:x=(640-iw)/2:y=(427-ih)/2:color=#00000000,trim=duration=1,select=lte(n\\,30)[stream3starting];" +
+                "[stream2starting][stream1ending]blend=all_expr=\'if(gte(X,(W/2)*T/1)*lte(X,W-(W/2)*T/1),B,A)\':shortest=1[stream2blended];" +
+                "[stream3starting][stream2ending]blend=all_expr=\'if(gte(X,(W/2)*T/1)*lte(X,W-(W/2)*T/1),B,A)\':shortest=1[stream3blended];" +
+                "[stream1overlaid][stream2blended][stream2overlaid][stream3blended][stream3overlaid]concat=n=5:v=1:a=0,scale=w=640:h=424,format=yuv420p[video]\"" +
+                " -map [video] -vsync 2 -async 1 -c:v mpeg4 -r 30 " + videoFilePath
+    }
+
 
 }

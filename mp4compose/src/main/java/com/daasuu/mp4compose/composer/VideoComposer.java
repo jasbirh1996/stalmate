@@ -217,6 +217,7 @@ class VideoComposer {
     private int drainEncoder() {
         if (isEncoderEOS) return DRAIN_STATE_NONE;
         int result = encoder.dequeueOutputBuffer(bufferInfo, 0);
+        Log.d("a;lsjdasd",String.valueOf(result));
         switch (result) {
             case MediaCodec.INFO_TRY_AGAIN_LATER:
                 return DRAIN_STATE_NONE;

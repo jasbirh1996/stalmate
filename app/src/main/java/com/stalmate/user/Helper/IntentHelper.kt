@@ -18,6 +18,7 @@ import com.stalmate.user.modules.reels.activity.ActivitySongPicker
 import com.stalmate.user.modules.reels.activity.ActivityVideoRecorder
 import com.stalmate.user.view.dashboard.funtime.ActivityFuntimePost
 import com.stalmate.user.view.dashboard.funtime.ActivityReelsByAudio
+import com.stalmate.user.view.dashboard.funtime.ActivityReportUser
 
 public class IntentHelper {
 
@@ -101,7 +102,10 @@ public class IntentHelper {
                 .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
         }
 
-
+        fun getReportUserScreen(context: Context?): Intent? {
+            return Intent(context, ActivityReportUser::class.java)
+                .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        }
 
     }
 

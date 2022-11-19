@@ -150,18 +150,25 @@ abstract class BaseActivity : AppCompatActivity(), View.OnClickListener,
         return true
     }
 
-    override fun onRequestPermissionsResult(
+/*    override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>,
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
+
+
+
+
             READ_WRITE_STORAGE -> isPermissionGranted(
                 grantResults[0] == PackageManager.PERMISSION_GRANTED, permissions[0]
             )
+
+
+
         }
-    }
+    }*/
 
     fun isPermissionGranted(isGranted: Boolean, permission: String?) {}
 

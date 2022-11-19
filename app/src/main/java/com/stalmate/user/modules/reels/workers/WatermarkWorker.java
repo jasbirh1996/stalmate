@@ -99,9 +99,9 @@ public class WatermarkWorker extends ListenableWorker {
         watermark = Bitmap.createScaledBitmap(watermark,size.getWidth(),size.getHeight(),true);*/
         // Log.v(TAG, "Watermark bitmap size is " + watermark.getWidth() + 'x' + watermark.getHeight() + '.');
         String output = getInputData().getString(KEY_OUTPUT);
-
+        Log.d("akjdasd",output);
         Mp4Composer composer = new Mp4Composer(input, output);
-        composer.videoBitrate((int) (.07 * 30 * size.getWidth() * size.getHeight()));
+       composer.videoBitrate((int) (.07 * 30 * size.getWidth() * size.getHeight()));
         composer.filter(new GlWatermarkFilter(watermark, GlWatermarkFilter.Position.LEFT_BOTTOM));
         composer.listener(new Mp4Composer.Listener() {
             @Override

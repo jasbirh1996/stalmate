@@ -86,17 +86,13 @@ object Constants {
 
     const val ACCOUNT_TYPE: String = "com.stalmate.user"
     const val ACCOUNT_NAME: String = "SyncContacts"
-
-
     const val MESSAGE_LOC_API_EMPTY_RESULT = "Pin Location"
     const val ACTION_SYNC_COMPLETED: String = "ACTION_SYNC_COMPLETED"
+    const val PRIVACY_TYPE_PUBLIC: String = "Public"
+    const val PRIVACY_TYPE_PRIVATE: String = "Private"
+    const val PRIVACY_TYPE_MY_FOLLOWER: String = "My Followers"
+    const val PRIVACY_TYPE_SPECIFIC: String = "Specific Friends"
 
-
-
-    const val PRIVACY_TYPE_PUBLIC: String = "public"
-    const val PRIVACY_TYPE_PRIVATE: String = "privaacte"
-    const val PRIVACY_TYPE_MY_FOLLOWER: String = "follower"
-    const val PRIVACY_TYPE_SPECIFIC: String = "specific"
 
 
 }

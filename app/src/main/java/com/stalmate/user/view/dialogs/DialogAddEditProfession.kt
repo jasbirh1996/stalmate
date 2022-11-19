@@ -10,6 +10,7 @@ import android.os.Build
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.Window
 import android.view.WindowManager
 import android.widget.LinearLayout
@@ -21,10 +22,10 @@ import com.stalmate.user.R
 import com.stalmate.user.databinding.DialougeAddProfessionBinding
 import com.stalmate.user.model.Profession
 import com.stalmate.user.viewmodel.AppViewModel
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.time.format.DateTimeFormatter
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 
 class DialogAddEditProfession(
@@ -122,7 +123,15 @@ class DialogAddEditProfession(
 
         binding.btnSave.setOnClickListener {
             if (isValid()){
-                hitAddEditApi()
+
+
+                if (isValidDates(binding.tvCdFrom.text.toString(),binding.tvCdTo.text.toString())){
+                    hitAddEditApi()
+                }else{
+                    makeToast("End Date Must be greater than start date")
+                }
+
+              //
                 Log.d("=================================", startYear)
                 Log.d("=================================", endYear)
                 Log.d("=================================", startMonth)
@@ -147,9 +156,11 @@ class DialogAddEditProfession(
                 radioButtonWorking = true
                 binding.radioButtonCurrentWork.isChecked=true
                 binding.tvCdTo.isClickable = false
+                binding.viewTo.visibility= View.VISIBLE
             }else{
                 radioButtonWorking = false
                 binding.radioButtonCurrentWork.isChecked=false
+                binding.viewTo.visibility= View.GONE
             }
         }
 
@@ -236,13 +247,11 @@ class DialogAddEditProfession(
             makeToast("Please Enter Starting Date")
             return false
         }else if (!binding.radioButtonCurrentWork.isChecked){
-
             if (binding.tvCdTo.text.isEmpty()){
-                makeToast("Please Enter Work Status")
+                makeToast("Please Enter End Date")
                 return false
             }
         }
-
 
         return true
     }
@@ -250,5 +259,27 @@ class DialogAddEditProfession(
     fun makeToast(message:String){
         Toast.makeText(context,message,Toast.LENGTH_SHORT).show()
     }
+
+    fun isValidDates(startDate:String,endDate:String): Boolean {
+        Log.d("klajsdlasd",binding.radioButtonCurrentWork.isChecked.toString())
+        if (!binding.radioButtonCurrentWork.isChecked){
+            val dateFormat = SimpleDateFormat(
+                "dd-MM-yyyy"
+            )
+            var convertedDate: Date? = Date()
+            var convertedDate2 = Date()
+            convertedDate = dateFormat.parse(startDate)
+            convertedDate2 = dateFormat.parse(endDate)
+
+            Log.d("klajsdlasd",convertedDate2.after(convertedDate).toString())
+
+            return convertedDate2.after(convertedDate)
+        }
+        return true
+
+
+
+    }
+
 
 }

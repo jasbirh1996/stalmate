@@ -73,7 +73,7 @@ class FragmentSongPickerInGroup : BaseFragment(), FriendAdapter.Callbackk,
         }
 
         binding.toolbar.back.setOnClickListener {
-            findNavController().popBackStack()
+            requireActivity().finish()
         }
     }
 

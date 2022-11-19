@@ -20,6 +20,8 @@ import com.stalmate.user.modules.reels.Extensions.Companion.findFirstVisibleItem
 import com.stalmate.user.modules.reels.Extensions.Companion.isAtTop
 import com.stalmate.user.modules.reels.player.holders.VideoReelViewHolder
 import com.stalmate.user.utilities.NetworkUtils
+import com.stalmate.user.view.dashboard.ActivityDashboard
+import com.stalmate.user.view.dashboard.funtime.FragmentFunTime
 
 class ReelListFragment : BaseFragment() {
     lateinit var adapter: ReelAdapter
@@ -190,7 +192,12 @@ class ReelListFragment : BaseFragment() {
                     binding.recyclerView.findViewHolderForAdapterPosition(videoAutoPlayHelper!!.currentPlayingVideoItemPos);
                 if (viewholder!=null){
                     val viewMainHolder = (viewholder as VideoReelViewHolder)
-                    viewMainHolder.customPlayerView.startPlaying()
+
+                    if ((requireActivity()  as ActivityDashboard).active is FragmentFunTime){
+                        viewMainHolder.customPlayerView.startPlaying()
+                    }
+
+
                 }
             }
         super.onStart()

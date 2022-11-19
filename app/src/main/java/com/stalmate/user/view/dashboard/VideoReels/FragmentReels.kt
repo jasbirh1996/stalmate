@@ -43,7 +43,6 @@ class FragmentReels : BaseFragment() {
         binding.tabLayout.addTab(tabLayout!!.newTab().setText(getString(R.string.your_video)))
         binding.tabLayout.addTab(tabLayout!!.newTab().setText(getString(R.string.folllowing)))
         binding.tabLayout.addTab(tabLayout!!.newTab().setText(getString(R.string.saved)))
-
         tabLayout!!.tabGravity = TabLayout.GRAVITY_FILL
 
         /*TAb ViewPager Adapter*/

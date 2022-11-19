@@ -20,6 +20,7 @@ xmlns:app="http://schemas.android.com/apk/res-auto">
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/videoLayout"
             android:layout_width="match_parent"
@@ -71,64 +72,84 @@ xmlns:app="http://schemas.android.com/apk/res-auto">
                 app:layout_constraintStart_toStartOf="@id/feedThumbnailView"
                 app:layout_constraintTop_toTopOf="@id/feedThumbnailView" />
 
-
-
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/img_user_profile"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginStart="24dp"
-                android:layout_marginTop="24dp"
-                android:src="@drawable/logo"
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:background="@drawable/shade_reel_up"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layoutTop"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_user_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:fontFamily="@font/poppins_light"
-                android:text=""
-                android:textColor="@color/white"
-                android:ellipsize="end"
-                android:shadowColor="#55000000"
-                android:shadowDx="6"
-                android:shadowDy="6"
-                android:shadowRadius="6"
-                android:textSize="16sp"
-                app:layout_constraintStart_toEndOf="@+id/img_user_profile"
-                app:layout_constraintTop_toTopOf="@+id/img_user_profile" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_story_post_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/poppins_light"
-                android:text=""
-                android:textColor="@color/white"
-                android:ellipsize="end"
-                android:shadowColor="#55000000"
-                android:shadowDx="6"
-                android:shadowDy="6"
-                android:shadowRadius="6"
-                android:textSize="8sp"
-                app:layout_constraintStart_toStartOf="@+id/tv_user_name"
-                app:layout_constraintTop_toBottomOf="@+id/tv_user_name" />
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/img_user_profile"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="24dp"
+                    android:src="@drawable/logo"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="24dp"
-                android:src="@drawable/ic_sound_off"
-                android:tint="@color/white"
 
-                app:layout_constraintBottom_toBottomOf="@+id/tv_story_post_time"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/tv_user_name" />
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_user_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/poppins_light"
+                    android:shadowColor="#55000000"
+                    android:shadowDx="6"
+                    android:shadowDy="6"
+                    android:shadowRadius="6"
+                    android:text=""
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    app:layout_constraintStart_toEndOf="@+id/img_user_profile"
+                    app:layout_constraintTop_toTopOf="@+id/img_user_profile" />
 
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_story_post_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/poppins_light"
+                    android:shadowColor="#55000000"
+                    android:shadowDx="6"
+                    android:shadowDy="6"
+                    android:shadowRadius="6"
+                    android:text=""
+                    android:textColor="@color/white"
+                    android:textSize="8sp"
+                    app:layout_constraintStart_toStartOf="@+id/tv_user_name"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_user_name" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="24dp"
+                    android:src="@drawable/ic_sound_off"
+                    android:tint="@color/white"
+
+                    app:layout_constraintBottom_toBottomOf="@+id/tv_story_post_time"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/tv_user_name" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_80sdp"
+                android:background="@drawable/shade_reel_down"
+                app:layout_constraintBottom_toBottomOf="@+id/feedThumbnailView" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_status_description"
