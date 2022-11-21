@@ -457,14 +457,14 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
 
     @SuppressLint("MissingPermission")
     private fun saveImage() {
-        showLoader()
+
         val file = File(
             getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
                 .toString() + File.separator + ""
                     + System.currentTimeMillis() + ".png"
         )
 
-
+        showLoader()
         try {
             file.createNewFile()
             val saveSettings: SaveSettings = SaveSettings.Builder()
@@ -492,7 +492,8 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
                             imageToVideo(imagePath)
                             //  convertImageToVideo(imagePath)
                         } else {
-                            applayWaterMark(File(videoPath))
+                            mergeAudioVideo(videoPath)
+                          /*  applayWaterMark(File(videoPath))*/
                         }
 
 
@@ -612,10 +613,11 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
     }
 
 
+
     fun addToWatermark(beforeWatermarkAddedFile: File) {
         val wm = WorkManager.getInstance(this)
-        val output = File(cacheDir, UUID.randomUUID().toString())
-
+       // val output = File(cacheDir, UUID.randomUUID().toString())
+        val outputPathss = Common.getFilePath(this, Common.VIDEO)
         if (isIMage) {
             val outputPath = Common.getFilePath(this, Common.VIDEO)
             ffmpegWatermark(beforeWatermarkAddedFile.absolutePath, outputPath, imagePath)
@@ -623,7 +625,7 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
             val data: Data = Data.Builder()
                 .putString(WatermarkWorker.KEY_INPUT, beforeWatermarkAddedFile.absolutePath)
                 .putString(WatermarkWorker.ICON, imagePath)
-                .putString(WatermarkWorker.KEY_OUTPUT, output.absolutePath)
+                .putString(WatermarkWorker.KEY_OUTPUT, outputPathss)
                 .build()
             val request = OneTimeWorkRequest.Builder(WatermarkWorker::class.java)
                 .setInputData(data)
@@ -635,7 +637,7 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
                             || info.state == WorkInfo.State.FAILED)
                     if (info.state == WorkInfo.State.SUCCEEDED) {
                         dismissLoader()
-                        saveVideoToInternalStorage(output.path)
+                        saveVideoToInternalStorage(outputPathss)
                     } else if (ended) {
                     }
                 }
@@ -663,7 +665,6 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
                  outputStream.flush()
                  inputStream.close()
                  outputStream.close()
-
              }
 
                 /*       Toast.makeText(applicationContext, "Video has just saved!!", Toast.LENGTH_LONG)
@@ -1145,16 +1146,15 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
         BitmapFactory.decodeFile(File(imagePath).getAbsolutePath(), options)
         val imageHeight = 1072
         val imageWidth = 528
-
         val session =
-            FFmpegKit.execute("-loop 1 -framerate 5 -t $duration -i $imagePath -c:v mpeg4 -pix_fmt yuv420p -vf scale=$imageWidth:$imageHeight -c:a aac $outputPath")
+            FFmpegKit.execute("-loop 1  -framerate 2 -i $imagePath -c:v mpeg4 -t $duration -pix_fmt yuv420p -vf scale=$imageWidth:$imageHeight -c:a aac $outputPath")
         //   val session = FFmpegKit.execute("-loop 1 -framerate 1 -t $duration -i $imagePath -c:v libx264 -preset ultrafast -vf scale=$imageWidth:$imageHeight $outputPath")
 
 
         if (ReturnCode.isSuccess(session.returnCode)) {
             Log.d("lkasjldasd", "asdasdasd")
             Log.d("kashdkhasd", outputPath)
-            mergeAudioVideo(outputPath)
+           mergeAudioVideo(outputPath)
             // SUCCESS
         } else if (ReturnCode.isCancel(session.returnCode)) {
             Log.d("lkasjldasd", "asdasdasdgfsd")
@@ -1180,10 +1180,7 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
     Handler(Looper.getMainLooper()).post {
         val session =
             FFmpegKit.execute("-i $input -i $image -c:v mpeg4 -filter_complex [1][0]scale2ref=w=oh*mdar:h=ih*1.1[logo][video];[video][logo]overlay=0:0 -c:a aac $output")
-
         if (ReturnCode.isSuccess(session.returnCode)) {
-
-
             dismissLoader()
             saveVideoToInternalStorage(output)
 
