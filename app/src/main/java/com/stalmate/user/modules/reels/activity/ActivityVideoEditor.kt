@@ -323,6 +323,7 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
 
 
                 if (mPhotoEditor.brushDrawableMode == true) {
+                    binding.imgUndo.visibility=View.GONE
                     binding.colorSeekBar.visibility = View.GONE
                     mPhotoEditor.setBrushDrawingMode(false)
                     binding.imgDraw.setImageDrawable(
@@ -332,7 +333,7 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
                         )
                     )
                 } else {
-
+                    binding.imgUndo.visibility=View.VISIBLE
                     binding.colorSeekBar.visibility = View.VISIBLE
                     mPhotoEditor.setBrushDrawingMode(true)
 

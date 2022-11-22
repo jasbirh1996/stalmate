@@ -27,16 +27,16 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.Nullable
+import androidx.annotation.Px
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.loader.content.CursorLoader
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.LinearSmoothScroller
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.*
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkInfo
@@ -67,6 +67,7 @@ import com.stalmate.user.R
 import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.databinding.ActivityVideoRecorderBinding
 import com.stalmate.user.modules.reels.adapter.FilterAdapter
+import com.stalmate.user.modules.reels.adapter.FilterAdapterNew
 import com.stalmate.user.modules.reels.adapter.GalleryItem
 import com.stalmate.user.modules.reels.filters.*
 import com.stalmate.user.modules.reels.utils.VideoFilter
@@ -85,7 +86,8 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 
-class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListener {
+class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListener,
+    FilterAdapterNew.OnFilterSelectListener {
 
     private val TAG = "RecorderActivity"
     private var imageVideoDuration = 15
@@ -151,16 +153,16 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                             runOnUiThread {
                                 binding.selectedPhoto.setImage(it);
                                 binding.cameraView.visibility = View.GONE
+                                binding.buttonDone.visibility = View.VISIBLE
+                                binding.rvFilters.visibility=View.GONE
+                                setupProgressBarWithDuration()
+                                setUPCameraViewsOnCapture(false)
+                                binding.rvFilters.visibility=View.GONE
+                                isFilterActive=false
+                                updateColorButtons()
                             }
                         }
 
-
-                        //  createVideo(it!!.absolutePath, result.size)
-                        //  binding.rvFilters.visibility=View.VISIBLE
-                        binding.buttonDone.visibility = View.VISIBLE
-                        binding.layoutBottomControll.visibility = View.GONE
-                        setupProgressBarWithDuration()
-                        // closeFinally(mModel!!.video!!)
                     }
 
                 })
@@ -184,18 +186,27 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
             }
 
             override fun onVideoRecordingEnd() {
-                binding.buttonDone.visibility = View.VISIBLE
+                runOnUiThread {
+                    binding.buttonDone.visibility = View.VISIBLE
+                }
                 mMediaPlayer!!.pause()
                 progressHandler.removeCallbacks(runnable)
                 //    binding.segmentedProgressbar.addDivider()
+                setUPCameraViewsOnCapture(true)
                 binding.buttonRecord.setSelected(false)
                 /*       if (mMediaPlayer != null) {
                            mMediaPlayer!!.pause()
                        }*/
                 mHandler.postDelayed({ processCurrentRecording() }, 500)
             }
-
+    
             override fun onVideoRecordingStart() {
+
+                runOnUiThread {
+                    binding.rvFilters.visibility=View.GONE
+                    isFilterActive=false
+                    updateColorButtons()
+                }
                 mMediaPlayer!!.start()
                 binding.buttonRecord.setSelected(true)
                 /*   if (mMediaPlayer != null) {
@@ -218,7 +229,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                    }*/
                 progressHandler.removeCallbacks(runnable)
                 progressHandler.post(runnable)
-                Log.d("aplskdasd","recordingStarted")
+                Log.d("aplskdasd", "recordingStarted")
             }
         })
         if (intent.getStringExtra(EXTRA_SONG_ID) != null) {
@@ -238,7 +249,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
 
         }
         setUPViews()
-        setUpCameraView()
+        setUPCameraViewsOnCapture(true)
 
 
     }
@@ -250,43 +261,57 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-      if (requestCode==BaseActivity.MULTIPLE_PERMISSIONS){
+        if (requestCode == BaseActivity.MULTIPLE_PERMISSIONS) {
+            Log.d("alksjdlsadas", "aosjdopasd")
 
-
-          Log.d("alksjdlsadas","aosjdopasd")
-
-          var isPerpermissionForAllGranted = false
-          if (grantResults.isNotEmpty() && permissions.size == grantResults.size) {
-              var i = 0
-              while (i < permissions.size) {
-                  isPerpermissionForAllGranted = grantResults[i] == PackageManager.PERMISSION_GRANTED
-                  i++
-              }
-              Log.e("value", "Permission Granted, Now you can use local drive .")
-          } else {
-              isPerpermissionForAllGranted = true
-              Log.e("value", "Permission Denied, You cannot use local drive .")
-          }
-          if (isPerpermissionForAllGranted) {
-              runOnUiThread {
-                  binding.cameraView.open()
-              }
-          }
-      }
+            var isPerpermissionForAllGranted = false
+            if (grantResults.isNotEmpty() && permissions.size == grantResults.size) {
+                var i = 0
+                while (i < permissions.size) {
+                    isPerpermissionForAllGranted =
+                        grantResults[i] == PackageManager.PERMISSION_GRANTED
+                    i++
+                }
+                Log.e("value", "Permission Granted, Now you can use local drive .")
+            } else {
+                isPerpermissionForAllGranted = true
+                Log.e("value", "Permission Denied, You cannot use local drive .")
+            }
+            if (isPerpermissionForAllGranted) {
+                runOnUiThread {
+                    binding.cameraView.open()
+                }
+            }
+        }
     }
 
 
-
-
-    fun setUpCameraView() {
+    fun setUPCameraViewsOnCapture(isDefault: Boolean) {
 
 
         runOnUiThread {
             if (isImage) {
-                binding.buttonSpeed.visibility = View.GONE
-                binding.buttonDone.visibility = View.GONE
-                binding.cameraView.setMode(Mode.PICTURE);
-                binding.segmentedProgressbar.visibility = View.GONE
+
+
+                if (isDefault) {
+                    binding.buttonSpeed.visibility = View.VISIBLE
+                    binding.buttonDone.visibility = View.GONE
+
+                } else {
+                    binding.buttonSpeed.visibility = View.GONE
+                    binding.buttonDone.visibility = View.VISIBLE
+                    binding.layoutBottomControll.visibility = View.GONE
+                    binding.buttonFlash.visibility = View.GONE
+                    binding.cameraView.close()
+                    binding.cameraView.invalidate()
+
+                }
+                if (isMusicSelected) {
+                    binding.segmentedProgressbar.visibility = View.VISIBLE
+                } else {
+                    binding.segmentedProgressbar.visibility = View.GONE
+                }
+
                 binding.stopIConView.setImageDrawable(
                     ContextCompat.getDrawable(
                         this,
@@ -294,24 +319,40 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                     )
                 )
             } else {
-                binding.buttonSpeed.visibility = View.VISIBLE
-                binding.buttonDone.visibility = View.VISIBLE
-                binding.cameraView.setMode(Mode.VIDEO);
-                binding.segmentedProgressbar.visibility = View.VISIBLE
-
+                if (isDefault) {
+                    binding.buttonMusic.visibility = View.VISIBLE
+                    binding.buttonDurationTimer.visibility = View.VISIBLE
+                    binding.buttonSpeed.visibility = View.VISIBLE
+                    binding.buttonFlash.visibility = View.VISIBLE
+                    binding.segmentedProgressbar.visibility = View.VISIBLE
+                    binding.buttonColorFilterIcon.visibility = View.VISIBLE
+                } else {
+                    binding.buttonMusic.visibility = View.GONE
+                    binding.buttonDurationTimer.visibility = View.GONE
+                    binding.buttonSpeed.visibility = View.GONE
+                    binding.buttonColorFilterIcon.visibility = View.GONE
+                    binding.buttonFlash.visibility = View.GONE
+                    binding.buttonSpeed.visibility = View.GONE
+                    binding.buttonDone.visibility = View.GONE
+                    binding.rvFilters.visibility=View.GONE
+                    binding.segmentedProgressbar.visibility = View.VISIBLE
+                }
                 binding.stopIConView.setImageDrawable(
                     ContextCompat.getDrawable(
                         this,
                         R.drawable.record
                     )
                 )
+
+                /*             binding.cameraView.close()
+                             binding.cameraView.invalidate()
+                             binding.cameraView.open()*/
             }
-            binding.cameraView.close()
-            binding.cameraView.invalidate()
-            binding.cameraView.open()
+
 
         }
     }
+
 
     override fun onStart() {
         if (mMediaPlayer != null) {
@@ -331,7 +372,6 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
     }
 
 
-
     override fun onPause() {
         if (mMediaPlayer != null) {
             pauseProgress()
@@ -339,7 +379,6 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
         }
         super.onPause()
     }
-
 
 
     override fun onDestroy() {
@@ -366,11 +405,12 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
         super.onStop()
     }
 
-
-
+    private val snapHelper = CenterSnapHelper()
     fun setUpFilterAdapter() {
         //  binding.cameraView.
         var bitmap: Bitmap? = null
+
+
         val into = Glide.with(this).asBitmap().load(R.drawable.placeholder_filter)
             .into(object : CustomTarget<Bitmap?>() {
                 override fun onResourceReady(
@@ -380,29 +420,14 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                     bitmap = resource
                     //  binding.buttonColorFilterIcon.setImageBitmap(resource)
 
+                    setupFiltersRV()
 
-                    val adapter =
-                        FilterAdapter(this@ActivityVideoRecorder, bitmap, binding.cameraView, true)
-                    adapter.setListener { filter: VideoFilter? ->
-                        this@ActivityVideoRecorder.applyPreviewFilter(
-                            filter!!
-                        )
-                    }
-                    /*            val snapHelper = LinearSnapHelper()
-                                  snapHelper.attachToRecyclerView(  binding.rvFilters)
-              */
-
-                    binding.rvFilters.setNestedScrollingEnabled(false)
-                    binding.rvFilters.setHasFixedSize(true)
-                    binding.rvFilters.adapter = adapter
-                    //  binding.rvFilters.addItemDecoration(OffsetItemDecoration(this@ActivityVideoRecorder))
-                    // binding.rvFilters.layoutManager=CenterLayoutManager(this@ActivityVideoRecorder, LinearLayoutManager.HORIZONTAL, false)
-                    //  binding.rvFilters.layoutManager=CenterZoomLayoutManager(this@ActivityVideoRecorder, LinearLayoutManager.HORIZONTAL, false)
-                    binding.rvFilters.layoutManager = LinearLayoutManager(
-                        this@ActivityVideoRecorder,
-                        LinearLayoutManager.HORIZONTAL,
-                        false
-                    )
+                    //   binding.rvFilters.layoutManager=CenterZoomLayoutManager(this@ActivityVideoRecorder, LinearLayoutManager.HORIZONTAL, false)
+                    /*        binding.rvFilters.layoutManager = LinearLayoutManager(
+                                this@ActivityVideoRecorder,
+                                LinearLayoutManager.HORIZONTAL,
+                                false
+                            )*/
                     /*           val layoutManager = CarouselLayoutManager(CarouselLayoutManager.HORIZONTAL, true)
                                layoutManager.setPostLayoutListener(CarouselZoomPostLayoutListener())
                                binding.rvFilters.layoutManager = layoutManager
@@ -482,8 +507,102 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                 }
 
                 override fun onLoadCleared(@Nullable placeholder: Drawable?) {}
+
             })
     }
+
+
+    fun setupFiltersRV(){
+        val adapter =
+            FilterAdapterNew(
+                this@ActivityVideoRecorder,
+
+                binding.cameraView,
+                true
+            )
+        adapter.setListener(this)
+
+        /*          val snapHelper = LinearSnapHelper()
+                       snapHelper.attachToRecyclerView(  binding.rvFilters)
+*/
+
+        binding.rvFilters.setNestedScrollingEnabled(false)
+        binding.rvFilters.setHasFixedSize(true)
+        binding.rvFilters.adapter = adapter
+        /*                  binding.rvFilters.addItemDecoration(OffsetItemDecoration(this@ActivityVideoRecorder))
+                          binding.rvFilters.layoutManager=CenterLayoutManager(this@ActivityVideoRecorder, LinearLayoutManager.HORIZONTAL, false)*/
+        binding.rvFilters.addItemDecoration(CenterDecoration(0))
+        snapHelper.attachToRecyclerView(binding.rvFilters)
+
+        binding.rvFilters.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+
+            override fun onScrollStateChanged(
+                recyclerView: RecyclerView,
+                newState: Int
+            ) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    val centerView =
+                        snapHelper.findSnapView(binding.rvFilters.layoutManager)
+                    val pos =
+                        (binding.rvFilters.layoutManager as LinearLayoutManager).getPosition(
+                            centerView!!
+                        )
+
+                    when (pos) {
+                        0 -> {
+                            applyPreviewFilter(VideoFilter.NONE)
+                        }
+                        1 -> {
+                            applyPreviewFilter(VideoFilter.BRIGHTNESS)
+                        }
+                        2 -> {
+                            applyPreviewFilter(VideoFilter.EXPOSURE)
+                        }
+                        3 -> {
+                            applyPreviewFilter(VideoFilter.GAMMA)
+                        }
+                        4 -> {
+                            applyPreviewFilter(VideoFilter.GRAYSCALE)
+                        }
+                        5 -> {
+                            applyPreviewFilter(VideoFilter.HAZE)
+                        }
+                        6 -> {
+                            applyPreviewFilter(VideoFilter.INVERT)
+                        }
+                        7 -> {
+                            applyPreviewFilter(VideoFilter.MONOCHROME)
+                        }
+                        8 -> {
+                            applyPreviewFilter(VideoFilter.PIXELATED)
+                        }
+                        9 -> {
+                            applyPreviewFilter(VideoFilter.POSTERIZE)
+                        }
+                        10 -> {
+                            applyPreviewFilter(VideoFilter.SEPIA)
+                        }
+                        11 -> {
+                            applyPreviewFilter(VideoFilter.SHARP)
+                        }
+                        12 -> {
+                            applyPreviewFilter(VideoFilter.SOLARIZE)
+                        }
+                        13 -> {
+                            applyPreviewFilter(VideoFilter.VIGNETTE)
+                        }
+
+
+                    }
+                }
+
+            }
+        })
+
+
+    }
+
 
 
     private fun applyPreviewFilter(filter: VideoFilter) {
@@ -526,7 +645,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                 else -> binding.selectedPhoto.setFilter(GPUImageFilter())
             }
         } else {
-            binding.rvFilters.visibility = View.GONE
+          //  binding.rvFilters.visibility = View.GONE
 
         }
         when (filter) {
@@ -584,7 +703,8 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
             binding.buttonPickData.visibility = View.GONE
             binding.buttonDone.visibility = View.GONE
             binding.cameraView.takeVideoSnapshot(
-                mModel!!.video!!, ((TimeUnit.SECONDS.toMillis(imageVideoDuration.toLong()) - recorded).toInt())
+                mModel!!.video!!,
+                ((TimeUnit.SECONDS.toMillis(imageVideoDuration.toLong()) - recorded).toInt())
             )
         }
     }
@@ -814,7 +934,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                 } else if (type == "mp4") {
                     Log.d(";lasda", "video")
                     isImage = false
-                    setUpCameraView()
+                    setUPCameraViewsOnCapture(false)
                     val selectedVideo = data.data
                     val selectedImageBitmap: Bitmap
                     try {
@@ -943,7 +1063,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                 songId = data.getStringExtra(EXTRA_SONG_ID).toString()
                 val name = data.getStringExtra(EXTRA_SONG_NAME)
                 val audio = data.getParcelableExtra<Uri>(EXTRA_SONG_FILE)
-                isMusicSelected=true
+                isMusicSelected = true
                 ImageLoaderHelperGlide.setGlideCorner(
                     this,
                     binding.ivMusicImage,
@@ -958,11 +1078,11 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                 isMusicActive = true
                 updateColorButtons()
 
-              if (isImage){
-                  binding.segmentedProgressbar.progress=0
-                  setupProgressBarWithDuration()
-                  resumeProgress()
-              }
+                if (isImage) {
+                    binding.segmentedProgressbar.progress = 0
+                    setupProgressBarWithDuration()
+                    resumeProgress()
+                }
             }
         }
 
@@ -1097,10 +1217,12 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                 }
             } else {
                 if (binding.cameraView.isTakingVideo) {
+                    setUPCameraViewsOnCapture(false)
                     stopRecording()
                     binding.recordAnimationView.visibility = View.GONE
                     binding.stopIConView.visibility = View.VISIBLE
                 } else {
+                    setUPCameraViewsOnCapture(false)
                     startRecording()
                     binding.recordAnimationView.visibility = View.VISIBLE
                     binding.stopIConView.visibility = View.GONE
@@ -1110,8 +1232,8 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
 
         binding.buttonRecord.setOnLongClickListener {
             isImage = false
-            setUpCameraView()
-            binding.segmentedProgressbar.progress=0
+            setUPCameraViewsOnCapture(false)
+            binding.segmentedProgressbar.progress = 0
             mMediaPlayer!!.reset()
             startRecording()
             binding.recordAnimationView.visibility = View.VISIBLE
@@ -1270,14 +1392,11 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
         }
         binding.buttonFlash.setOnClickListener { view: View? ->
             if (binding.cameraView.isTakingVideo) {
-                Toast.makeText(this, R.string.recorder_error_in_progress, Toast.LENGTH_SHORT)
-                    .show()
+                Toast.makeText(this, R.string.recorder_error_in_progress, Toast.LENGTH_SHORT).show()
             } else {
                 binding.cameraView.setFlash(if (binding.cameraView.getFlash() === Flash.OFF) Flash.TORCH else Flash.OFF)
-
                 isFlashActive = !isFlashActive
                 updateColorButtons()
-
             }
         }
         binding.speeds.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { group: RadioGroup?, checked: Int ->
@@ -1330,8 +1449,9 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
         setuptabSpeedRecclerview()
     }
 
-
     override fun onBackPressed() {
+        super.onBackPressed()
+/*
         var commonConfirmationDialog = CommonConfirmationDialog(
             this,
             "Save as Draft",
@@ -1357,6 +1477,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                 super.onBackPressed()
             }
         }
+*/
 
 
     }
@@ -1409,76 +1530,86 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
 
 
     fun updateColorButtons() {
-        if (isMusicActive) {
-            binding.ivMusic.setImageDrawable(
-                ContextCompat.getDrawable(
-                    this,
-                    R.drawable.ic_crtpost_top_music_active
-                )
-            )
-            binding.tvMusic.setTextColor(resources.getColor(R.color.colorYellow, null))
-        } else {
-            binding.tvMusic.setTextColor(resources.getColor(R.color.white, null))
-            binding.ivMusic.setImageDrawable(
-                ContextCompat.getDrawable(
-                    this,
-                    R.drawable.ic_crtpost_top_music
-                )
-            )
-        }
-
-        if (isSpeedActive) {
-            binding.ivSpeed.setImageDrawable(
-                ContextCompat.getDrawable(
-                    this,
-                    R.drawable.ic_crtpost_speed_active
-                )
-            )
-            binding.tvSped.setTextColor(resources.getColor(R.color.colorYellow, null))
-        } else {
-            binding.tvSped.setTextColor(resources.getColor(R.color.white, null))
-            binding.ivSpeed.setImageDrawable(
-                ContextCompat.getDrawable(
-                    this,
-                    R.drawable.ic_crtpost_speed
-                )
-            )
-        }
 
 
-        if (isFilterActive) {
-            binding.ivFilter.setImageDrawable(
-                ContextCompat.getDrawable(
-                    this,
-                    R.drawable.ic_crtpost_magic_stick_active
-                )
-            )
-            binding.tvFilter.setTextColor(resources.getColor(R.color.colorYellow, null))
-        } else {
-            binding.tvFilter.setTextColor(resources.getColor(R.color.white, null))
-            binding.ivFilter.setImageDrawable(
-                ContextCompat.getDrawable(
-                    this,
-                    R.drawable.ic_crtpost_magic_stick
-                )
-            )
-        }
+   runOnUiThread {
 
-        if (isFlashActive) {
-            binding.buttonFlash.setImageDrawable(
-                ContextCompat.getDrawable(
-                    this,
-                    R.drawable.ic_crtpost_speed_active
-                )
-            )
-        } else {
-            binding.buttonFlash.setImageDrawable(
-                ContextCompat.getDrawable(
-                    this,
-                    R.drawable.ic_live_flash
-                )
-            )
-        }
+
+       if (isMusicActive) {
+           binding.ivMusic.setImageDrawable(
+               ContextCompat.getDrawable(
+                   this,
+                   R.drawable.ic_crtpost_top_music_active
+               )
+           )
+           binding.tvMusic.setTextColor(resources.getColor(R.color.colorYellow, null))
+       } else {
+           binding.tvMusic.setTextColor(resources.getColor(R.color.white, null))
+           binding.ivMusic.setImageDrawable(
+               ContextCompat.getDrawable(
+                   this,
+                   R.drawable.ic_crtpost_top_music
+               )
+           )
+       }
+
+       if (isSpeedActive) {
+           binding.ivSpeed.setImageDrawable(
+               ContextCompat.getDrawable(
+                   this,
+                   R.drawable.ic_crtpost_speed_active
+               )
+           )
+           binding.tvSped.setTextColor(resources.getColor(R.color.colorYellow, null))
+       } else {
+           binding.tvSped.setTextColor(resources.getColor(R.color.white, null))
+           binding.ivSpeed.setImageDrawable(
+               ContextCompat.getDrawable(
+                   this,
+                   R.drawable.ic_crtpost_speed
+               )
+           )
+       }
+
+
+       if (isFilterActive) {
+           binding.ivFilter.setImageDrawable(
+               ContextCompat.getDrawable(
+                   this,
+                   R.drawable.ic_crtpost_magic_stick_active
+               )
+           )
+           binding.tvFilter.setTextColor(resources.getColor(R.color.colorYellow, null))
+       } else {
+           binding.tvFilter.setTextColor(resources.getColor(R.color.white, null))
+           binding.ivFilter.setImageDrawable(
+               ContextCompat.getDrawable(
+                   this,
+                   R.drawable.ic_crtpost_magic_stick
+               )
+           )
+       }
+
+       if (isFlashActive) {
+           binding.buttonFlash.setImageDrawable(
+               ContextCompat.getDrawable(
+                   this,
+                   R.drawable.ic_crtpost_speed_active
+               )
+           )
+       } else {
+           binding.buttonFlash.setImageDrawable(
+               ContextCompat.getDrawable(
+                   this,
+                   R.drawable.ic_live_flash
+               )
+           )
+       }
+
+
+   }
+
+
 
 
     }
@@ -1601,7 +1732,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
             uri = getVideoContentUri(this, item.uri)!!
             Log.d(";lasda", "video")
             isImage = false
-            setUpCameraView()
+            setUPCameraViewsOnCapture(false)
             val selectedVideo = uri
             val selectedImageBitmap: Bitmap
             try {
@@ -1689,10 +1820,10 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
 
     fun resumeProgress() {
         progressHandler.removeCallbacks(runnable)
-        if (isMusicSelected  && isImage){
+        if (isMusicSelected && isImage) {
             progressHandler.post(runnable)
-        }else if (!isImage){
-          //  progressHandler.post(runnable)
+        } else if (!isImage) {
+            //  progressHandler.post(runnable)
         }
     }
 
@@ -1707,23 +1838,38 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
             //100,1000runnable
             if (prolength < imageVideoDuration) {
                 progressHandler.postDelayed(this, 1000)
-                Log.d("akjsdasda","akshdasd")
+                Log.d("akjsdasda", "akshdasd")
             } else {
-            //    binding.segmentedProgressbar.setProgress(0)
+                //    binding.segmentedProgressbar.setProgress(0)
                 mMediaPlayer!!.pause()
-             //   progressHandler.post(this)
-                Log.d("akjsdasda","akshdasdfsdfsd")
+                //   progressHandler.post(this)
+                Log.d("akjsdasda", "akshdasdfsdfsd")
             }
         }
     }
 
-    fun setupProgressBarWithDuration(){
-        binding.segmentedProgressbar.visibility=View.VISIBLE
-        binding.segmentedProgressbar.max=imageVideoDuration
+    fun setupProgressBarWithDuration() {
+        if (isImage) {
+            if (isMusicSelected) {
+                binding.segmentedProgressbar.visibility = View.VISIBLE
+            } else {
+                binding.segmentedProgressbar.visibility = View.GONE
+            }
+        } else {
+            binding.segmentedProgressbar.visibility = View.VISIBLE
+        }
+        binding.segmentedProgressbar.max = imageVideoDuration
     }
 
+    override fun onSelectFilter(filter: VideoFilter?, position: Int) {
+        applyPreviewFilter(
+            filter!!
+        )
+
+        binding.rvFilters.getLayoutManager()!!.scrollToPosition(position);
 
 
+    }
 }
 
 
@@ -1873,4 +2019,204 @@ class CenterZoomLayoutManager : LinearLayoutManager {
     }
 
 
+}
+
+
+/**
+ * A LinearSnapHelper that ignores item decorations to determine a view's center
+ */
+class CenterSnapHelper : LinearSnapHelper() {
+
+    private var verticalHelper: OrientationHelper? = null
+    private var horizontalHelper: OrientationHelper? = null
+    private var scrolled = false
+    private var recyclerView: RecyclerView? = null
+    private val scrollListener = object : RecyclerView.OnScrollListener() {
+        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+            super.onScrollStateChanged(recyclerView, newState)
+            if (newState == RecyclerView.SCROLL_STATE_IDLE && scrolled) {
+                if (recyclerView.layoutManager != null) {
+                    val view = findSnapView(recyclerView.layoutManager)
+                    if (view != null) {
+                        val out = calculateDistanceToFinalSnap(recyclerView.layoutManager!!, view)
+                        if (out != null) {
+                            recyclerView.smoothScrollBy(out[0], out[1])
+                        }
+                    }
+                }
+                scrolled = false
+            } else {
+                scrolled = true
+            }
+        }
+    }
+
+    fun scrollTo(position: Int, smooth: Boolean) {
+        if (recyclerView?.layoutManager != null) {
+            val viewHolder = recyclerView!!.findViewHolderForAdapterPosition(position)
+            if (viewHolder != null) {
+                val distances = calculateDistanceToFinalSnap(
+                    recyclerView!!.layoutManager!!,
+                    viewHolder.itemView
+                )
+                if (smooth) {
+                    recyclerView!!.smoothScrollBy(distances!![0], distances[1])
+                } else {
+                    recyclerView!!.scrollBy(distances!![0], distances[1])
+                }
+            } else {
+                if (smooth) {
+                    recyclerView!!.smoothScrollToPosition(position)
+                } else {
+                    recyclerView!!.scrollToPosition(position)
+                }
+            }
+        }
+    }
+
+    override fun findSnapView(layoutManager: RecyclerView.LayoutManager?): View? {
+        if (layoutManager == null) {
+            return null
+        }
+        if (layoutManager.canScrollVertically()) {
+            return findCenterView(layoutManager, getVerticalHelper(layoutManager))
+        } else if (layoutManager.canScrollHorizontally()) {
+            return findCenterView(layoutManager, getHorizontalHelper(layoutManager))
+        }
+        return null
+    }
+
+    override fun attachToRecyclerView(recyclerView: RecyclerView?) {
+        this.recyclerView = recyclerView
+        recyclerView?.addOnScrollListener(scrollListener)
+    }
+
+    override fun calculateDistanceToFinalSnap(
+        layoutManager: RecyclerView.LayoutManager,
+        targetView: View
+    ): IntArray? {
+        val out = IntArray(2)
+        if (layoutManager.canScrollHorizontally()) {
+            out[0] = distanceToCenter(layoutManager, targetView, getHorizontalHelper(layoutManager))
+        } else {
+            out[0] = 0
+        }
+        if (layoutManager.canScrollVertically()) {
+            out[1] = distanceToCenter(layoutManager, targetView, getVerticalHelper(layoutManager))
+        } else {
+            out[1] = 0
+        }
+        return out
+    }
+
+    private fun findCenterView(
+        layoutManager: RecyclerView.LayoutManager,
+        helper: OrientationHelper
+    ): View? {
+        val childCount = layoutManager.childCount
+        if (childCount == 0) {
+            return null
+        }
+        var closestChild: View? = null
+        val center: Int = if (layoutManager.clipToPadding) {
+            helper.startAfterPadding + helper.totalSpace / 2
+        } else {
+            helper.end / 2
+        }
+        var absClosest = Integer.MAX_VALUE
+
+        for (i in 0 until childCount) {
+            val child = layoutManager.getChildAt(i)
+            val childCenter = if (helper == horizontalHelper) {
+                (child!!.x + child.width / 2).toInt()
+            } else {
+                (child!!.y + child.height / 2).toInt()
+            }
+            val absDistance = Math.abs(childCenter - center)
+
+            if (absDistance < absClosest) {
+                absClosest = absDistance
+                closestChild = child
+            }
+        }
+        return closestChild
+    }
+
+    private fun distanceToCenter(
+        layoutManager: RecyclerView.LayoutManager,
+        targetView: View,
+        helper: OrientationHelper
+    ): Int {
+        val childCenter = if (helper == horizontalHelper) {
+            (targetView.x + targetView.width / 2).toInt()
+        } else {
+            (targetView.y + targetView.height / 2).toInt()
+        }
+        val containerCenter = if (layoutManager.clipToPadding) {
+            helper.startAfterPadding + helper.totalSpace / 2
+        } else {
+            helper.end / 2
+        }
+        return childCenter - containerCenter
+    }
+
+    private fun getVerticalHelper(layoutManager: RecyclerView.LayoutManager): OrientationHelper {
+        if (verticalHelper == null || verticalHelper!!.layoutManager !== layoutManager) {
+            verticalHelper = OrientationHelper.createVerticalHelper(layoutManager)
+        }
+        return verticalHelper!!
+    }
+
+    private fun getHorizontalHelper(
+        layoutManager: RecyclerView.LayoutManager
+    ): OrientationHelper {
+        if (horizontalHelper == null || horizontalHelper!!.layoutManager !== layoutManager) {
+            horizontalHelper = OrientationHelper.createHorizontalHelper(layoutManager)
+        }
+        return horizontalHelper!!
+    }
+}
+
+
+class CenterDecoration(@Px private val spacing: Int) : RecyclerView.ItemDecoration() {
+
+    private var firstViewWidth = -1
+    private var lastViewWidth = -1
+
+    override fun getItemOffsets(
+        outRect: Rect,
+        view: View,
+        parent: RecyclerView,
+        state: RecyclerView.State
+    ) {
+        super.getItemOffsets(outRect, view, parent, state)
+        val adapterPosition = (view.layoutParams as RecyclerView.LayoutParams).viewAdapterPosition
+        val lm = parent.layoutManager as LinearLayoutManager
+        if (adapterPosition == 0) {
+            // Invalidate decorations when this view width has changed
+            if (view.width != firstViewWidth) {
+                view.doOnPreDraw { parent.invalidateItemDecorations() }
+            }
+            firstViewWidth = view.width
+            outRect.left = parent.width / 2 - view.width / 2
+            // If we have more items, use the spacing provided
+            if (lm.itemCount > 1) {
+                outRect.right = spacing / 2
+            } else {
+                // Otherwise, make sure this to fill the whole width with the decoration
+                outRect.right = outRect.left
+            }
+        } else if (adapterPosition == lm.itemCount - 1) {
+            // Invalidate decorations when this view width has changed
+            if (view.width != lastViewWidth) {
+                view.doOnPreDraw { parent.invalidateItemDecorations() }
+            }
+            lastViewWidth = view.width
+            outRect.right = parent.width / 2 - view.width / 2
+            outRect.left = spacing / 2
+        } else {
+            outRect.left = spacing / 2
+            outRect.right = spacing / 2
+        }
+    }
 }

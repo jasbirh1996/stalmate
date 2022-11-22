@@ -49,7 +49,7 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
     lateinit var tagPeopleViewModel: TagPeopleViewModel
     var mVideo = ""
     var city=""
-    var selectedPrivacy=""
+    var selectedPrivacy="Public"
     var country=""
     var mAudioId = ""
 //    var activityDashboard : ActivityDashboard

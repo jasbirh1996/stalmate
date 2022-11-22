@@ -177,7 +177,7 @@
 
         android:padding="8dp"
         android:src="@drawable/ic_undo"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/ivEmoji"
         app:layout_constraintEnd_toStartOf="@+id/imgTrim"
         app:layout_constraintTop_toTopOf="@+id/ivEmoji" />

@@ -181,7 +181,6 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.FilterView
 
 
     public interface OnFilterSelectListener {
-
         void onSelectFilter(VideoFilter filter);
     }
 }
