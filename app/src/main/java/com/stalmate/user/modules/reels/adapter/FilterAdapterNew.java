@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -110,16 +111,6 @@ public class FilterAdapterNew extends RecyclerView.Adapter<FilterAdapterNew.Filt
         String name = filter.name().toLowerCase(Locale.US);
         holder.name.setText(name.substring(0, 1).toUpperCase() + name.substring(1));
 
-/*        if (position==showingposition){
-
-            holder.itemView.setVisibility(View.VISIBLE);
-            holder.itemView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        }else {
-            holder.itemView.setVisibility(View.GONE);
-            holder.itemView.setLayoutParams(new RecyclerView.LayoutParams(0, 0));
-        }
-        */
-
         holder.image.setBackground(ContextCompat.getDrawable(mContext,mFilters.get(position).color));
 
         if (isAllShowing){
@@ -136,14 +127,22 @@ public class FilterAdapterNew extends RecyclerView.Adapter<FilterAdapterNew.Filt
         }
 
 
+        if (position==showingposition){
+            holder.layout.setBackground(ContextCompat.getDrawable(mContext,R.drawable.round_circle_primary));
+        }else {
+            holder.layout.setBackground(ContextCompat.getDrawable(mContext,R.drawable.round_circle_white));
+        }
+
+
+
+
 
 
         holder.itemView.setOnClickListener(view -> {
             if (mListener != null) {
                 showingposition=position;
                 isAllShowing= !isAllShowing;
-                showAllFilters(isAllShowing);
-                mListener.onSelectFilter(filter,position);
+                mListener.onSelectFilter(filter,position,isAllShowing);
             }
         });
 
@@ -158,19 +157,30 @@ public class FilterAdapterNew extends RecyclerView.Adapter<FilterAdapterNew.Filt
         public ImageView image;
         public TextView name;
 
+        public ConstraintLayout layout;
 
         public FilterViewHolder(@NonNull View root) {
             super(root);
             image = root.findViewById(R.id.image);
             name = root.findViewById(R.id.name);
 
-
+            layout = root.findViewById(R.id.frmBorder);
         }
+    }
+
+
+
+    public void setCenterColor(Integer position){
+
+        showingposition=position;
+        notifyDataSetChanged();
+
+
     }
     
     
     
-    private void showAllFilters(Boolean isShow){
+    public void showAllFilters(Boolean isShow){
 
         if (isShow){
             for (int i = 0; i<mFilters.size(); i++){
@@ -195,7 +205,7 @@ public class FilterAdapterNew extends RecyclerView.Adapter<FilterAdapterNew.Filt
 
 
     public interface OnFilterSelectListener {
-        void onSelectFilter(VideoFilter filter, int position);
+        void onSelectFilter(VideoFilter filter, int position, Boolean isAllShowing);
     }
     public class FilterData {
 

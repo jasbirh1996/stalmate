@@ -305,8 +305,8 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
         binding.buttonTrimDone.setOnClickListener {
             submitForTrim()
         }
-        binding.ivMusic.setOnClickListener(this)
 
+        binding.ivMusic.setOnClickListener(this)
         binding.imgTrim.setOnClickListener(this)
     }
 
@@ -373,12 +373,11 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
 
 
             R.id.imgUndo -> {
-                Log.d("canvas>>", mPhotoEditor.undo().toString() + "")
+            //    Log.d("canvas>>", mPhotoEditor.undo().toString() + "")
                 mPhotoEditor.undo()
             }
 
             R.id.imgSticker -> {
-
                 if (mStickerBSFragment.isAdded) {
                     return
                 }
@@ -386,7 +385,6 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
                     supportFragmentManager,
                     mStickerBSFragment.tag
                 )
-
             }
 
             R.id.ivEmoji -> {

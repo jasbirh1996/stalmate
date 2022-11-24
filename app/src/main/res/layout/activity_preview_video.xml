@@ -17,9 +17,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/black"
-        app:surface_type="texture_view"
         app:scrubber_color="@color/black"
         app:shutter_background_color="@color/black"
+        app:surface_type="texture_view"
         app:use_controller="false" />
 
     <ja.burhanrashid52.photoeditor.PhotoEditorView
@@ -188,11 +188,12 @@
         android:layout_width="50dp"
         android:layout_height="wrap_content"
 
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="10dp"
         android:padding="8dp"
         android:src="@drawable/ic_crtpost_top_text"
-        app:layout_constraintBottom_toBottomOf="@+id/ivMusic"
-        app:layout_constraintEnd_toStartOf="@+id/ivMusic"
-        app:layout_constraintTop_toTopOf="@+id/ivMusic" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/imgDraw"
@@ -249,7 +250,7 @@
         android:layout_marginEnd="10dp"
         android:padding="8dp"
         android:src="@drawable/ic_crtpost_top_music"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -269,8 +270,8 @@
         android:id="@+id/color_seek_bar"
         android:layout_width="300dp"
         android:layout_height="40dp"
-        android:rotation="270"
         android:layout_marginEnd="-126dp"
+        android:rotation="270"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
