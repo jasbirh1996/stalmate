@@ -1,7 +1,6 @@
 package com.stalmate.user.view.dashboard.HomeFragment
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,10 +8,10 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
 import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
@@ -22,15 +21,11 @@ import com.stalmate.user.model.Feed
 import com.stalmate.user.model.User
 import com.stalmate.user.utilities.Constants
 import com.stalmate.user.utilities.NetworkUtils
-import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.view.adapter.SuggestedFriendAdapter
 import com.stalmate.user.view.adapter.UserHomeStoryAdapter
-import com.stalmate.user.view.dialogs.DialogFragmentLoader
-import com.stalmate.user.view.profile.ActivitySideDawer
 
 
-class FragmentHome(var callback:Callback) : BaseFragment(), AdapterFeed.Callbackk, UserHomeStoryAdapter.Callbackk,
-    SuggestedFriendAdapter.Callbackk {
+class FragmentHome(var callback:Callback) : BaseFragment(), AdapterFeed.Callbackk, UserHomeStoryAdapter.Callbackk, SuggestedFriendAdapter.Callbackk {
 
     private lateinit var binding: FragmentHomeBinding
     lateinit var feedAdapter: AdapterFeed
@@ -44,6 +39,8 @@ class FragmentHome(var callback:Callback) : BaseFragment(), AdapterFeed.Callback
 
     public interface Callback{
         fun onCLickOnMenuButton()
+        fun onCLickOnProfileButton()
+        fun onScoll(toHide:Boolean)
     }
 
     override fun onCreateView(
@@ -77,6 +74,27 @@ class FragmentHome(var callback:Callback) : BaseFragment(), AdapterFeed.Callback
 
             binding.nointernet.visibility = View.VISIBLE
         }
+
+        binding.nestedScrollview.setOnScrollChangeListener(object : NestedScrollView.OnScrollChangeListener {
+
+            override fun onScrollChange(
+                v: NestedScrollView,
+                scrollX: Int,
+                scrollY: Int,
+                oldScrollX: Int,
+                oldScrollY: Int
+            ) {
+
+                if (oldScrollY<scrollY){//increase
+                    callback.onScoll(true)
+                }else{
+                    callback.onScoll(false)
+                }
+
+
+            }
+        })
+
 
 
     }
@@ -118,7 +136,8 @@ class FragmentHome(var callback:Callback) : BaseFragment(), AdapterFeed.Callback
         getFriendSuggestionListing()
 
         binding.postContant.userImage.setOnClickListener {
-            startActivity(IntentHelper.getProfileScreen(requireContext()))
+            callback.onCLickOnProfileButton()
+
         }
 
 
@@ -154,6 +173,7 @@ class FragmentHome(var callback:Callback) : BaseFragment(), AdapterFeed.Callback
         startActivity(
             IntentHelper.getOtherUserProfileScreen(requireContext())!!.putExtra("id", friend.id)
         )
+
     }
 
     fun isNetworkAvailable() : Boolean{

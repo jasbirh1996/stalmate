@@ -28,6 +28,7 @@ import com.stalmate.user.view.dashboard.HomeFragment.FragmentHome
 import com.stalmate.user.view.dashboard.HomeFragment.FragmentMenu
 import com.stalmate.user.view.dashboard.VideoReels.FragmentReels
 import com.stalmate.user.view.dashboard.funtime.FragmentFunTime
+import com.stalmate.user.view.profile.FragmentProfile
 
 class ActivityDashboard : BaseActivity(), FragmentHome.Callback, FragmentFriend.Callbackk,
     FragmentMenu.Callback/*, FragmentFunTime.Callbackk*/ {
@@ -40,7 +41,6 @@ class ActivityDashboard : BaseActivity(), FragmentHome.Callback, FragmentFriend.
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityDashboardBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setupBottomBar()
@@ -229,12 +229,34 @@ class ActivityDashboard : BaseActivity(), FragmentHome.Callback, FragmentFriend.
     val fragment3: Fragment = FragmentChatNCallBase()
     val fragment4: Fragment = FragmentReels()
     val fragment5: Fragment = FragmentFriend(this)
+    val fragmentProfile: FragmentProfile = FragmentProfile()
     val fm: FragmentManager = supportFragmentManager
     var active = fragment1
 
     override fun onCLickOnMenuButton() {
         toggleDrawer()
     }
+
+    override fun onCLickOnProfileButton() {
+
+        if (fragmentProfile.isAdded) {
+            Log.d(":ajsdasd","aposkdasd")
+            fm.beginTransaction().show(fragmentProfile).commit()
+            return
+        }else{
+            fm.beginTransaction().add(binding.fragmentContainerView.id, fragmentProfile, "6").hide(active)
+                .commit()
+        }
+
+
+        active = fragmentProfile
+    }
+
+    override fun onScoll(toHide: Boolean) {
+
+    }
+
+
 
     private fun toggleDrawer() {
         val drawerLayout: DrawerLayout = findViewById(R.id.drawerLayout)
@@ -263,7 +285,15 @@ class ActivityDashboard : BaseActivity(), FragmentHome.Callback, FragmentFriend.
                 doubleBackToExitPressedOnce = false
             }, 2000)
 
+        } else if (active is FragmentProfile){
+            Log.d(";laksd;asd","removeddd")
+           fm.beginTransaction().remove(fragmentProfile).show(fragment1).commit()
+            active=fragment1
+            Log.d("lkjasdoas",active.javaClass.toString())
         } else {
+
+            Log.d("lkjasdoas",active.javaClass.toString())
+
             onClickBack()
         }
 
@@ -276,7 +306,8 @@ class ActivityDashboard : BaseActivity(), FragmentHome.Callback, FragmentFriend.
         val fragmentTag = backStateName
         val manager: FragmentManager = supportFragmentManager
         val fragmentPopped = manager.popBackStackImmediate(backStateName, 1)
-        if (!fragmentPopped && manager.findFragmentByTag(fragmentTag) == null) { //fragment not in back stack, create it.
+        if (!fragmentPopped && manager.findFragmentByTag(fragmentTag) == null) {
+            //fragment not in back stack, create it.
             val ft = manager.beginTransaction()
             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
             ft.add(binding.frameDrawer.id, fragment, fragmentTag)
@@ -286,13 +317,16 @@ class ActivityDashboard : BaseActivity(), FragmentHome.Callback, FragmentFriend.
 
     override fun onClickBack() {
         binding.bottomNavigationView.selectedItemId = R.id.home
+        active=fragment1
         //    binding.bottomNavigationView
-
     }
+
 
     override fun onCLickBackButton() {
         toggleDrawer()
     }
+
+
 
 /*    override fun onClickonFuntimeBackButton() {
        onClickBack()

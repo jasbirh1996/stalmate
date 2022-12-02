@@ -24,7 +24,7 @@ import com.stalmate.user.databinding.FragmentreellistBinding
 import com.stalmate.user.modules.reels.player.Constants
 import com.stalmate.user.modules.reels.player.ReelListFragment
 import com.stalmate.user.modules.reels.player.VideoPreLoadingService
-import com.stalmate.user.view.dashboard.ActivityDashboard
+import com.stalmate.user.view.dashboard.ActivityDashboardNew
 import fr.castorflex.android.verticalviewpager.VerticalViewPager
 
 class FragmentFunTime() : BaseFragment(), FragmentCallBack {
@@ -48,7 +48,7 @@ class FragmentFunTime() : BaseFragment(), FragmentCallBack {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.ivBack.setOnClickListener {
-            (requireActivity() as ActivityDashboard).onBackPressed()
+            (requireActivity() as ActivityDashboardNew).onBackPressed()
         }
 
         binding.ivAddButton.setOnClickListener {

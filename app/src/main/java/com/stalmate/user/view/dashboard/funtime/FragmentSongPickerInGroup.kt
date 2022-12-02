@@ -115,11 +115,12 @@ class FragmentSongPickerInGroup : BaseFragment(), FriendAdapter.Callbackk,
                 "Could not create directory at $songs"
             )
         }
-        val audio = File(songs, song.title.toString() + ".aac")
+        val audio = File(songs, song.id.toString() + ".aac")
         if (audio.exists()) {
             closeWithSelection(song, Uri.fromFile(audio))
             return
         }
+
         showLoader()
         val input = Data.Builder()
             .putString(FileDownloadWorker.KEY_URL, song.audio)

@@ -23,10 +23,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import androidx.work.Data
-import androidx.work.OneTimeWorkRequest
-import androidx.work.WorkInfo
-import androidx.work.WorkManager
+import androidx.work.*
 import com.arthenica.ffmpegkit.FFmpegKit
 import com.arthenica.ffmpegkit.ReturnCode
 import com.bumptech.glide.Glide
@@ -57,8 +54,6 @@ import com.stalmate.user.modules.reels.photo_editing.PropertiesBSFragment
 import com.stalmate.user.modules.reels.photo_editing.StickerBSFragment
 import com.stalmate.user.modules.reels.photo_editing.TextEditorDialogFragment
 import com.stalmate.user.modules.reels.utils.ColorSeekBar
-import com.stalmate.user.modules.reels.workers.MergeAudioVideoWorker
-import com.stalmate.user.modules.reels.workers.MergeVideosWorker
 import com.stalmate.user.modules.reels.workers.VideoTrimmerWorker
 import com.stalmate.user.modules.reels.workers.WatermarkWorker
 import com.stalmate.user.utilities.Common
@@ -415,7 +410,8 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
 
 
     override fun onBackPressed() {
-        var commonConfirmationDialog = CommonConfirmationDialog(
+        super.onBackPressed()
+/*        var commonConfirmationDialog = CommonConfirmationDialog(
             this,
             "Save as Draft",
             "Drafts let you save your edits, so you can come back later.",
@@ -426,7 +422,7 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
                     finish()
                 }
             })
-        commonConfirmationDialog.show()
+        commonConfirmationDialog.show()*/
     }
 
 
@@ -834,7 +830,7 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
     }
 
     private fun mergeAudioVideo(filePath: String) {
-        val videos: MutableList<String> = ArrayList()
+/*        val videos: MutableList<String> = ArrayList()
         videos.add(filePath)
         val merged1 = File(cacheDir, UUID.randomUUID().toString())
         val data1: Data = Data.Builder()
@@ -884,7 +880,71 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
 
                     }
                 }
-        }
+        }*/
+
+
+/*
+            Movie temp = MovieCreator.build(clip);
+            Track v = null;
+            for (Track track : temp.getTracks()) {
+                if (TextUtils.equals(track.getHandler(), "vide")) {
+                    v = track;
+                    break;
+                }
+            }
+
+            Movie merged = new Movie();
+            //noinspection ConstantConditions
+            merged.addTrack(v);
+            //noinspection ConstantConditions
+            if (audio.endsWith(".mp4")) {
+                Track a = null;
+                for (Track track : temp.getTracks()) {
+                    if (TextUtils.equals(track.getHandler(), "soun")) {
+                        a = track;
+                        break;
+                    }
+                }
+
+                //noinspection ConstantConditions
+                merged.addTrack(crop(clip, a));
+            } else {
+                merged.addTrack(crop(clip, new AACTrackImpl(new FileDataSourceImpl(audio))));
+            }
+
+
+
+            Container mp4 = new DefaultMp4Builder().build(merged);
+            //noinspection ConstantConditions
+            os = new FileOutputStream(new File(output));
+            mp4.writeContainer(os.getChannel());
+            return Result.success();
+
+
+
+*/
+
+
+   if (!ValidationHelper.isNull(audioPath)){
+
+    Log.d("aklshjdasd",audioPath)
+
+
+       val output = File(cacheDir, UUID.randomUUID().toString()+".mp4")
+       val session = FFmpegKit.execute("-i $filePath -i $audioPath -map 0:v -map 1:a -t $duration -c:v copy -c:a copy $output")
+       if (ReturnCode.isSuccess(session.returnCode)) {
+           applayWaterMark(output)
+           // SUCCESS
+       } else if (ReturnCode.isCancel(session.returnCode)) {
+           Log.d("lkasjldasd", "asdasdasdgfsd")
+           // CANCEL
+       } else {
+           Log.d("lkasjldasd", "asdassfdajjsd")
+           // FAILURE
+       }
+   }else{
+       applayWaterMark(File(filePath))
+   }
     }
 
 

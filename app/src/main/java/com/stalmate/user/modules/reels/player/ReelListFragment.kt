@@ -193,9 +193,9 @@ class ReelListFragment : BaseFragment() {
                 if (viewholder!=null){
                     val viewMainHolder = (viewholder as VideoReelViewHolder)
 
-                    if ((requireActivity()  as ActivityDashboard).active is FragmentFunTime){
+                  /*  if ((requireActivity()  as ActivityDashboard).active is FragmentFunTime){
                         viewMainHolder.customPlayerView.startPlaying()
-                    }
+                    }*/
 
 
                 }

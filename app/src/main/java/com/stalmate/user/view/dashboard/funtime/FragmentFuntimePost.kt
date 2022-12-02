@@ -33,7 +33,7 @@ import com.stalmate.user.modules.reels.activity.EXTRA_SONG_ID
 import com.stalmate.user.utilities.Constants
 import com.stalmate.user.utilities.ValidationHelper
 import com.stalmate.user.view.adapter.FriendAdapter
-import com.stalmate.user.view.dashboard.ActivityDashboard
+import com.stalmate.user.view.dashboard.ActivityDashboardNew
 import com.stalmate.user.view.dashboard.funtime.viewmodel.TagPeopleViewModel
 import com.stalmate.user.view.singlesearch.ActivitySingleSearch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -52,7 +52,7 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
     var selectedPrivacy="Public"
     var country=""
     var mAudioId = ""
-//    var activityDashboard : ActivityDashboard
+//    var ActivityDashboardNew : ActivityDashboardNew
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -112,11 +112,11 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
         binding.buttonPost.setOnClickListener { apiPostReel(File(mVideo)) }
         tagPeopleViewModel.getTaggedPeopleList().observe(viewLifecycleOwner) {
             Log.d("asdasdasd","apsdkpasd")
-            Log.d("asdasdasd",it.size.toString())
-          if (it.isNotEmpty()){
-              binding.tvPeopleCount.text=it.size.toString()+" People"
+
+          if (it.taggedPeopleList.isNotEmpty()){
+              binding.tvPeopleCount.text=it.taggedPeopleList.size.toString()+" People"
               binding.tvPeopleCount.visibility=View.VISIBLE
-              taggedPeople=it
+              taggedPeople=it.taggedPeopleList
           }
         }
 
@@ -232,7 +232,7 @@ Log.d(";lasjd;asd",selectedPrivacy)
             it.let {
                 dismissLoader()
                 if (it!!.status == true) {
-                    val intent = Intent(context, ActivityDashboard::class.java)
+                    val intent = Intent(context, ActivityDashboardNew::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                     requireContext().startActivity(intent)
                     (context as Activity).finishAffinity()

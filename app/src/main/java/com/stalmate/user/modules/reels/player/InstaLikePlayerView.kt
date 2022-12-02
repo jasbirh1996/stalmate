@@ -212,6 +212,10 @@ class InstaLikePlayerView @JvmOverloads constructor(
 
 
 
+
+
+
+
 /*
     *//**
      * This will resuse the player and will play new URI we have provided

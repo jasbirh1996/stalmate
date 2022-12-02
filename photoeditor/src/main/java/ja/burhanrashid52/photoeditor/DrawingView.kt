@@ -171,6 +171,10 @@ class DrawingView @JvmOverloads constructor(
     }
 
     fun undo(): Boolean {
+
+
+
+
         if (!drawShapes.empty()) {
             redoShapes.push(drawShapes.pop())
             invalidate()

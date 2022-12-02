@@ -38,6 +38,21 @@
         android:layout_height="match_parent">
 
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvFilters"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            android:layout_marginBottom="4dp"
+            android:visibility="gone"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:visibility="gone" />
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layoutSelectedMusic"
             android:layout_width="wrap_content"
@@ -255,7 +270,40 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/buttonCaptureCounter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/buttonSpeed">
 
+                <ImageView
+
+                    android:id="@+id/ivCounterx"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_crtpost_speed"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+                <TextView
+                    android:id="@+id/tvCounter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins"
+                    android:text="Counter"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_12sdp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/ivCounterx" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
             <ImageView
                 android:id="@+id/buttonFlash"
                 android:layout_width="50dp"
@@ -389,11 +437,11 @@
             android:layout_height="50dp"
 
             android:layout_marginStart="20dp"
-            android:layout_marginBottom="10dp"
             android:background="@drawable/round_very_small_corner_very_light_primary"
-
+            android:layout_marginBottom="160dp"
             android:padding="6dp"
-            app:layout_constraintBottom_toTopOf="@+id/rvFilters"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:tabBackground="@drawable/round_very_small_corner_very_light_primary"
             app:tabIndicator="@drawable/round_very_small_corner_white"
@@ -406,21 +454,6 @@
             app:tabTextAppearance="@style/MineCustomTabText"
             app:tabTextColor="@color/app_color"
             app:tabUnboundedRipple="true" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvFilters"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:clipToPadding="false"
-            android:orientation="horizontal"
-            android:padding="5dp"
-            android:visibility="gone"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintBottom_toTopOf="@+id/layoutBottomControll"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:visibility="gone" />
 
 
         <info.hoang8f.android.segmented.SegmentedGroup

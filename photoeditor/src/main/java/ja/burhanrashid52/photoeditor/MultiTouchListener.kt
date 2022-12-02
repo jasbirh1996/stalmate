@@ -63,7 +63,7 @@ internal class MultiTouchListener(
                 mPrevRawY = event.rawY
                 mActivePointerId = event.getPointerId(0)
                 if (deleteView != null) {
-                    deleteView.visibility = View.VISIBLE
+                   // deleteView.visibility = View.VISIBLE
                 }
                 view.bringToFront()
                 firePhotoEditorSDKListener(view, true)

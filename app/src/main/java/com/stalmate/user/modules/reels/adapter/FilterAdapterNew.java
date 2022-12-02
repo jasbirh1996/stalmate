@@ -141,8 +141,23 @@ public class FilterAdapterNew extends RecyclerView.Adapter<FilterAdapterNew.Filt
         holder.itemView.setOnClickListener(view -> {
             if (mListener != null) {
                 showingposition=position;
-                isAllShowing= !isAllShowing;
-                mListener.onSelectFilter(filter,position,isAllShowing);
+              //  isAllShowing= !isAllShowing;
+                mListener.onSelectFilter(filter,position,isAllShowing,false);
+            }
+        });
+
+
+
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener(){
+            @Override
+            public boolean onLongClick(View v) {
+
+                if (mListener != null) {
+                    showingposition=position;
+                    //  isAllShowing= !isAllShowing;
+                    mListener.onSelectFilter(filter,position,isAllShowing,true);
+                }
+                return true;
             }
         });
 
@@ -205,7 +220,7 @@ public class FilterAdapterNew extends RecyclerView.Adapter<FilterAdapterNew.Filt
 
 
     public interface OnFilterSelectListener {
-        void onSelectFilter(VideoFilter filter, int position, Boolean isAllShowing);
+        void onSelectFilter(VideoFilter filter, int position, Boolean isAllShowing,Boolean isLongClick);
     }
     public class FilterData {
 

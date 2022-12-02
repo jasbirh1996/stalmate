@@ -84,7 +84,7 @@ class FragmentFuntimeTag : BaseFragment(), FriendAdapter.Callbackk, TaggedUsersA
             findNavController().navigate(R.id.action_fragmentFuntimeTag_to_fragmentSingleUserSelector)
         }
         tagPeopleViewModel.getTaggedPeopleList().observe(viewLifecycleOwner, Observer {
-            peopleAdapter.submitList(it)
+            peopleAdapter.submitList(it.taggedPeopleList)
         })
 
 

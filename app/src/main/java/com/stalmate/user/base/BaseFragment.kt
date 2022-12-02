@@ -3,6 +3,7 @@ package com.stalmate.user.base
 import android.R
 import android.app.Activity
 import android.content.Context
+import android.content.pm.PackageManager
 import android.util.Log
 import android.view.Gravity
 import android.view.View
@@ -10,6 +11,8 @@ import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.FrameLayout
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -66,6 +69,29 @@ open class BaseFragment : Fragment(), BaseCallBacks {
             Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
         }
     }*/
+
+
+
+    fun isPermissionGranted(permissions: Array<String>,context: Context): Boolean {
+        var result: Int
+        val listPermissionsNeeded: MutableList<String> = ArrayList()
+        for (p in permissions) {
+            result = ContextCompat.checkSelfPermission(context, p)
+            if (result != PackageManager.PERMISSION_GRANTED) {
+                listPermissionsNeeded.add(p)
+            }
+        }
+        if (!listPermissionsNeeded.isEmpty()) {
+            ActivityCompat.requestPermissions(
+                context as Activity,
+                listPermissionsNeeded.toTypedArray(),
+                BaseActivity.MULTIPLE_PERMISSIONS
+            )
+            return false
+        }
+        return true
+    }
+
     protected fun showSnackbar(message: String) {
         val snack = Snackbar.make(
             activity!!.findViewById(R.id.content),

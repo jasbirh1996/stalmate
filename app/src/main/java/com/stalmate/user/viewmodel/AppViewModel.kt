@@ -275,8 +275,29 @@ open class AppViewModel : ViewModel() {
     }
 
 
+    var repliesLiveData: LiveData<ModelGetComment?> = MutableLiveData<ModelGetComment?>()
+    fun getRepliesList(map: HashMap<String, String>) {
+        val temp = MutableLiveData<ModelGetComment?>()
+        repliesLiveData = temp
+        getResult(temp, apiInterface.getReplyList(map))
+    }
+
+    var commentLiveData: LiveData<ModelGetComment?> = MutableLiveData<ModelGetComment?>()
+    fun getCommentList(map: HashMap<String, String>) {
+        val temp = MutableLiveData<ModelGetComment?>()
+        commentLiveData = temp
+        getResult(temp, apiInterface.getCommentList(map))
+    }
 
 
+
+
+    var addCommentLiveData: LiveData<ModelComment?> = MutableLiveData<ModelComment?>()
+    fun addComment(map: HashMap<String, String>) {
+        val temp = MutableLiveData<ModelComment?>()
+        addCommentLiveData = temp
+        getResult(temp, apiInterface.addComment(map))
+    }
 
 
     var otpVerifyRegistarionData: LiveData<CommonModelResponse?> = MutableLiveData<CommonModelResponse?>()

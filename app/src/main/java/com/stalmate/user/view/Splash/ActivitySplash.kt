@@ -17,6 +17,7 @@ import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.view.OnBoarding.ActivityOnBoardingScreen
 import com.stalmate.user.view.authentication.ActivityAuthentication
 import com.stalmate.user.view.dashboard.ActivityDashboard
+import com.stalmate.user.view.dashboard.ActivityDashboardNew
 
 class ActivitySplash : BaseActivity() {
     val SPLASH_DURATION: Long = 1000
@@ -34,7 +35,7 @@ class ActivitySplash : BaseActivity() {
         prefManager = PrefManager(context)
         Handler(Looper.getMainLooper()).postDelayed({
             if (prefManager.keyIsLoggedIn) {
-                startActivity(Intent(applicationContext, ActivityDashboard::class.java))
+                startActivity(Intent(applicationContext, ActivityDashboardNew::class.java))
                 finish()
             } else {
 

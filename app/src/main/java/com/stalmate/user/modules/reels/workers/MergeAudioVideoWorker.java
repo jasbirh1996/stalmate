@@ -7,6 +7,9 @@ import androidx.annotation.NonNull;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
+import com.arthenica.ffmpegkit.FFmpegKit;
+import com.arthenica.ffmpegkit.FFmpegSession;
+import com.arthenica.ffmpegkit.ReturnCode;
 import com.coremedia.iso.IsoFile;
 import com.coremedia.iso.boxes.Container;
 import com.coremedia.iso.boxes.MovieHeaderBox;
@@ -45,6 +48,7 @@ public class MergeAudioVideoWorker extends Worker {
         FileOutputStream os = null;
         try {
             //noinspection ConstantConditions
+
             Movie temp = MovieCreator.build(clip);
             Track v = null;
             for (Track track : temp.getTracks()) {
@@ -70,7 +74,7 @@ public class MergeAudioVideoWorker extends Worker {
                 //noinspection ConstantConditions
                 merged.addTrack(crop(clip, a));
             } else {
-                merged.addTrack(crop(clip, new AACTrackImpl(new FileDataSourceImpl(audio))));
+              //  merged.addTrack(crop(clip, new AACTrackImpl(new FileDataSourceImpl(audio))));
             }
 
 
@@ -80,6 +84,34 @@ public class MergeAudioVideoWorker extends Worker {
             os = new FileOutputStream(new File(output));
             mp4.writeContainer(os.getChannel());
             return Result.success();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         } catch (Exception e) {
             Log.e(TAG, "Failed to output at " + output, e);
         } finally {

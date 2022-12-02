@@ -11,6 +11,7 @@ class VideoReelViewHolder(binding: ItemReelBinding) : ReelViewHolder(binding.roo
     val like = binding.like;
     val share = binding.share;
     val comment = binding.comment;
+    val soundIcon = binding.ivSoundButton;
     val tvStatusDescription = binding.tvStatusDescription;
     val tvStoryPostTime = binding.tvStoryPostTime;
     val videoThumbnail =

@@ -134,6 +134,10 @@ class FragmentFriend(var callback: Callbackk) : BaseFragment(), FriendAdapter.Ca
 
     }
 
+
+
+
+
     override fun onClickOnUpdateFriendRequest(friend: User, status: String) {
 
     }

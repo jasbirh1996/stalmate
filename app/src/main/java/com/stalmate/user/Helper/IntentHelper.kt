@@ -16,6 +16,7 @@ import  com.c2m.storyviewer.screen.StoryActivity
 import com.stalmate.user.modules.reels.activity.ActivityFullViewReels
 import com.stalmate.user.modules.reels.activity.ActivitySongPicker
 import com.stalmate.user.modules.reels.activity.ActivityVideoRecorder
+import com.stalmate.user.view.dashboard.ActivityDashboardNew
 import com.stalmate.user.view.dashboard.funtime.ActivityFuntimePost
 import com.stalmate.user.view.dashboard.funtime.ActivityReelsByAudio
 import com.stalmate.user.view.dashboard.funtime.ActivityReportUser
@@ -39,7 +40,7 @@ public class IntentHelper {
         }
 
         fun getDashboardScreen(context: Context?): Intent? {
-            return Intent(context, ActivityDashboard::class.java)
+            return Intent(context, ActivityDashboardNew::class.java)
                .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
         }
 

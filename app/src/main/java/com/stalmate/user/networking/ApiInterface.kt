@@ -157,6 +157,22 @@ interface ApiInterface {
     fun getGlobalSearch(@Body map: HashMap<String, String>): Call<ModelGlobalSearch>
 
 
+
+
+    @POST(Constants.URL_COMMENT_LIST)
+    fun getCommentList(@Body map: HashMap<String, String>): Call<ModelGetComment>
+
+
+
+    @POST(Constants.URL_REPLY_LIST)
+    fun getReplyList(@Body map: HashMap<String, String>): Call<ModelGetComment>
+
+    @PATCH(Constants.URL_ADD_COMMENT)
+    fun addComment(@Body map: HashMap<String, String>): Call<ModelComment>
+
+
+
+
     @Multipart
     @POST(Constants.UPDATE_PROFILE_API)
     fun updateUserProfile(

@@ -132,8 +132,9 @@ xmlns:app="http://schemas.android.com/apk/res-auto">
                 <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:id="@+id/ivSoundButton"
                     android:layout_marginEnd="24dp"
-                    android:src="@drawable/ic_sound_off"
+                    android:src="@drawable/ic_sound_on"
                     android:tint="@color/white"
 
                     app:layout_constraintBottom_toBottomOf="@+id/tv_story_post_time"

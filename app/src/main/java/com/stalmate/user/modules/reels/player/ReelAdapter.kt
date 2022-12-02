@@ -2,30 +2,34 @@ package com.stalmate.user.modules.reels.player
 import android.content.Context
 import android.net.Uri
 import android.os.Build
-import android.os.Bundle
 import android.text.Html
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
+import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.databinding.HorizontalItemReelBinding
 import com.stalmate.user.databinding.ItemReelBinding
 import com.stalmate.user.modules.reels.player.holders.ImageReelViewHolder
 import com.stalmate.user.modules.reels.player.holders.ReelViewHolder
 import com.stalmate.user.modules.reels.player.holders.VideoReelViewHolder
 import com.stalmate.user.utilities.SeeModetextViewHelper
+import com.stalmate.user.view.dashboard.funtime.DialogFragmentComments
 import com.stalmate.user.view.dashboard.funtime.ResultFuntime
 
 
 class ReelAdapter(val context: Context) :
     ListAdapter<ResultFuntime, ReelViewHolder>(DIFF_CALLBACK) {
+    var isMuted=false
     var reelList = ArrayList<ResultFuntime>()
     lateinit var instaLikePlayerView:InstaLikePlayerView
     companion object {
@@ -109,6 +113,18 @@ class ReelAdapter(val context: Context) :
         }
 
 
+
+ /*       if (isMuted){
+            holder.soundIcon.setImageDrawable(ContextCompat.getDrawable(context,R.drawable.ic_sound_off))
+        }else{
+            holder.soundIcon.setImageDrawable(ContextCompat.getDrawable(context,R.drawable.ic_sound_on))
+        }
+*/
+
+
+
+
+
   /*      *//*Set video's thumbnail locally (by drawable), you can set it by remoteUrl too*//*
         val resID: Int = context.getResources().getIdentifier(
             "thumbnail_" + position,
@@ -123,6 +139,7 @@ class ReelAdapter(val context: Context) :
             .apply(requestOptions)
             .thumbnail(Glide.with(context).load(reelList[position].file))
             .into(holder.videoThumbnail)
+      //  holder.videoThumbnail.setImageDrawable(res);
       //  holder.videoThumbnail.setImageDrawable(res);
 
         holder.tvUserName.text= reelList[position]!!.first_name+ " " +reelList[position]!!.last_name
@@ -148,6 +165,34 @@ class ReelAdapter(val context: Context) :
         holder.like.setOnClickListener {
            // likeApiHit()
         }
+
+        holder.comment.setOnClickListener {
+           var dialogFragmen= DialogFragmentComments((context as BaseActivity).networkViewModel, funtimeId = reelList[position].id)
+            dialogFragmen.show((context as AppCompatActivity).supportFragmentManager,"")
+        }
+
+        holder.soundIcon.setOnClickListener {
+
+            if (holder.customPlayerView.getPlayer()!!.volume==0f){
+                holder.customPlayerView.getPlayer()!!.volume= holder.customPlayerView.getPlayer()!!.deviceVolume.toFloat()
+                holder.soundIcon.setImageDrawable(ContextCompat.getDrawable(context,R.drawable.ic_sound_on))
+            }else{
+                holder.customPlayerView.getPlayer()!!.volume= 0f
+                holder.soundIcon.setImageDrawable(ContextCompat.getDrawable(context,R.drawable.ic_sound_off))
+            }
+
+     /*       if (holder.customPlayerView.getPlayer()!!.volume==0f){
+                holder.soundIcon.setImageDrawable(ContextCompat.getDrawable(context,R.drawable.ic_sound_off))
+            }else{
+                holder.soundIcon.setImageDrawable(ContextCompat.getDrawable(context,R.drawable.ic_sound_on))
+            }
+*/
+
+          //  notifyItemChanged(position)
+
+
+        }
+
 
         /* val timesAg = TimesAgo2.covertTimeToText(item!!.Created_date, true)*/
         holder.tvStoryPostTime.text = reelList[position]!!.Created_date

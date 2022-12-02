@@ -1,95 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="16dp">
 
+    <ImageView
+        android:id="@+id/ivUserImage"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:srcCompat="@tools:sample/avatars" />
+
     <TextView
         android:id="@+id/tv_date"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?attr/textAppearanceCaption"
+        android:textSize="10sp"
         android:textStyle="bold"
-        tools:text="15/05/2021 at 12:25"
-        />
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="@+id/tv_comment"
+        app:layout_constraintTop_toBottomOf="@+id/tv_comment"
+        tools:text="15/05/2021 at 12:25" />
+
+    <TextView
+        android:id="@+id/tvLikesCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/tvReply"
+        app:layout_constraintEnd_toStartOf="@+id/tvReply"
+        app:layout_constraintTop_toTopOf="@+id/tvReply"
+        tools:text="0 Likes" />
+
+    <TextView
+        android:id="@+id/tvReply"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@+id/tv_comment"
+        app:layout_constraintTop_toBottomOf="@+id/tv_comment"
+        tools:text="Reply" />
 
     <TextView
         android:id="@+id/tv_comment"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:textAppearance="?attr/textAppearanceBody1"
-        tools:text="This is a comment"
-        />
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@+id/tvUserName"
+        app:layout_constraintStart_toStartOf="@+id/tvUserName"
+        app:layout_constraintTop_toBottomOf="@+id/tvUserName"
+        tools:text="This is a comment" />
 
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/tvUserName"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_like"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="42"
-            android:layout_weight="1"
-            android:textAppearance="?attr/textAppearanceCaption"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            app:icon="@drawable/ic_like_thumb_inactive"
-            />
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_dislike"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="69"
-            android:textAppearance="?attr/textAppearanceCaption"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            app:icon="@drawable/ic_like_thumb_inactive"
-            android:rotation="180"
-            />
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_reply"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Reply"
-            android:textAppearance="?attr/textAppearanceCaption"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            app:icon="@drawable/ic_funtime_post_comments"
-            />
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_report"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Report"
-            android:textAppearance="?attr/textAppearanceCaption"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            app:icon="@drawable/ic_post_create_post_create_poll"
-            />
-    </androidx.appcompat.widget.LinearLayoutCompat>
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="20dp"
+        android:fontFamily="@font/poppins_medium"
+        android:text="This is a comment"
+        android:textColor="@color/black"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toStartOf="@+id/ivHearIcon"
+        app:layout_constraintStart_toEndOf="@+id/ivUserImage"
+        app:layout_constraintTop_toTopOf="@+id/ivUserImage" />
 
-    <Button
+    <View
+        android:id="@+id/view15"
+        android:layout_width="@dimen/_40sdp"
+        android:layout_height="@dimen/_1sdp"
+        android:layout_marginTop="10dp"
+        android:background="@color/colorNormalGray"
+        app:layout_constraintStart_toStartOf="@+id/tvUserName"
+        app:layout_constraintTop_toBottomOf="@+id/tv_date" />
+
+
+    <TextView
         android:id="@+id/btn_more"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:visibility="gone"
-        android:textAppearance="?attr/textAppearanceCaption"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
-        tools:text="Show replies"
-        />
+        android:layout_marginStart="10dp"
+        android:text="View More Replies"
+        android:textSize="12sp"
+        android:visibility="visible"
+
+        app:layout_constraintBottom_toBottomOf="@+id/view15"
+        app:layout_constraintStart_toEndOf="@+id/view15"
+        app:layout_constraintTop_toTopOf="@+id/view15"
+        tools:visibility="visible" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/ll_replies"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:orientation="vertical"
-        android:layout_marginTop="8dp"
-        android:visibility="gone"
-        />
+        android:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@+id/btn_more"
+        tools:layout_editor_absoluteX="45dp" />
 
-</androidx.appcompat.widget.LinearLayoutCompat>
+    <ImageView
+        android:id="@+id/ivHearIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/ivUserImage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/ivUserImage"
+        app:srcCompat="@drawable/ic_profile_heart_icon" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

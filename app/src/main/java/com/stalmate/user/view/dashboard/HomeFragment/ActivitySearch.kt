@@ -25,9 +25,7 @@ class ActivitySearch : BaseActivity() {
     lateinit var binding: ActivitySearchBinding
     var searchData = ""
     override fun onClick(viewId: Int, view: View?) {
-
     }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_search)

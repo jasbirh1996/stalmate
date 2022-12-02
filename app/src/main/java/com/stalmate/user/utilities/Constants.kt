@@ -34,6 +34,11 @@ object Constants {
     const val URL_UPDATE_FRIEND_CATEGORY="auth_service/friend_api/add_update_friend_category"
 
 
+
+
+    const val URL_COMMENT_LIST="auth_service/funtime_api/get_funtime_comment"
+    const val URL_REPLY_LIST="auth_service/funtime_api/get_funtime_comment"
+    const val URL_ADD_COMMENT="auth_service/funtime_api/comment_funtime"
     const val url_send_follower_request="auth_service/friend_api/send_follower_request"
     const val GET_PROFILE_API="auth_service/auth_api/get_profile_data"
     const val GET_OTHER_USER_PROFILE_API="auth_service/auth_api/get_profile_user"
