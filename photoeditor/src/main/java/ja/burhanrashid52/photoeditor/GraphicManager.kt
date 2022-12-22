@@ -1,5 +1,6 @@
 package ja.burhanrashid52.photoeditor
 
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
@@ -21,7 +22,11 @@ internal class GraphicManager(
         )
         params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE)
         mPhotoEditorView.addView(view, params)
-        mViewState.addAddedView(view)
+
+        if (graphic.viewType==ViewType.BRUSH_DRAWING){
+            mViewState.addAddedView(view,graphic.viewType)
+        }
+
 
         onPhotoEditorListener?.onAddViewListener(
             graphic.viewType,
@@ -30,8 +35,9 @@ internal class GraphicManager(
     }
 
     fun removeView(graphic: Graphic) {
+        Log.d("asdasdasdfsdf","alskdapsd")
         val view = graphic.rootView
-        if (mViewState.containsAddedView(view)) {
+   /*     if (mViewState.containsAddedView(view)) {
             mPhotoEditorView.removeView(view)
             mViewState.removeAddedView(view)
             mViewState.pushRedoView(view)
@@ -39,7 +45,8 @@ internal class GraphicManager(
                 graphic.viewType,
                 mViewState.addedViewsCount
             )
-        }
+        }*/
+        mPhotoEditorView.removeView(view)
     }
 
     fun updateView(view: View) {
@@ -53,6 +60,9 @@ internal class GraphicManager(
                 mViewState.addedViewsCount - 1
             )
             if (removeView is DrawingView) {
+                var x=removeView.tag.toString() ==ViewType.BRUSH_DRAWING.toString()
+                Log.d("ioajsdasd",x.toString())
+
                 return removeView.undo()
             } else {
                 mViewState.removeAddedView(mViewState.addedViewsCount - 1)
@@ -79,7 +89,7 @@ internal class GraphicManager(
             } else {
                 mViewState.popRedoView()
                 mPhotoEditorView.addView(redoView)
-                mViewState.addAddedView(redoView)
+              //  mViewState.addAddedView(redoView, graphic.viewType)
             }
             when (val viewTag = redoView.tag) {
                 is ViewType -> onPhotoEditorListener?.onAddViewListener(

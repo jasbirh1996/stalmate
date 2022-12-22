@@ -19,16 +19,19 @@ import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.commonadapters.AdapterFeed
 import com.stalmate.user.databinding.FragmentDashboardBinding
+import com.stalmate.user.utilities.Constants
 import com.stalmate.user.view.dashboard.ActivityDashboardNew
 import com.stalmate.user.view.dashboard.Chat.FragmentChatNCallBase
+import com.stalmate.user.view.dashboard.Chat.FragmentSocketChat
 import com.stalmate.user.view.dashboard.Friend.FragmentFriend
 import com.stalmate.user.view.dashboard.VideoReels.FragmentReels
 import com.stalmate.user.view.dashboard.funtime.FragmentFunTime
+import com.stalmate.user.view.dialogs.CommonConfirmationDialog
 import com.stalmate.user.view.profile.FragmentProfile
 
 
 class FragmentDashboard: BaseFragment(), View.OnClickListener, FragmentHome.Callback,
-    FragmentFriend.Callbackk {
+    FragmentFriend.Callbackk, FragmentProfile.Callback {
     private lateinit var binding: FragmentDashboardBinding
     lateinit var feedAdapter: AdapterFeed
 
@@ -50,6 +53,7 @@ class FragmentDashboard: BaseFragment(), View.OnClickListener, FragmentHome.Call
                         requireActivity().onBackPressed()
                     }*/
 
+
                     var currentVisibleFragment=  childFragmentManager.findFragmentById(binding.navHostContainer.id)
                     Log.d("alsjkdlasd",currentVisibleFragment.toString())
                     if (currentVisibleFragment is FragmentHome){
@@ -57,7 +61,18 @@ class FragmentDashboard: BaseFragment(), View.OnClickListener, FragmentHome.Call
                         if ((requireActivity() as ActivityDashboardNew).drawerLayout.isDrawerOpen(GravityCompat.END)) {
                             (requireActivity() as ActivityDashboardNew).drawerLayout.closeDrawer(GravityCompat.END)
                         }else{
-                            requireActivity().finish()
+
+
+                            var custumConfirmDialog= CommonConfirmationDialog(requireContext(),"Exit App ?","Are you Sure you want to Exit","Yes","Cancel",object :
+                                CommonConfirmationDialog.Callback{
+                                override fun onDialogResult(isPermissionGranted: Boolean) {
+                                    if (isPermissionGranted){
+                                        requireActivity().finish()
+                                    }
+                                }
+                            })
+                            custumConfirmDialog.show()
+
                         }
 
                     }else{
@@ -99,10 +114,10 @@ class FragmentDashboard: BaseFragment(), View.OnClickListener, FragmentHome.Call
 
     val fragmentHome: Fragment = FragmentHome(this)
     val fragmentFuntime: Fragment = FragmentFunTime()
-    val fragmentChat: Fragment = FragmentChatNCallBase()
+    val fragmentChat: Fragment = FragmentSocketChat("62eb8ff7578e3c1fcee4a7bd")
     val fragmentReels: Fragment = FragmentReels()
-    val fragmentFriends: Fragment = FragmentFriend(this)
-    val fragmentProfile: FragmentProfile = FragmentProfile()
+    val fragmentFriends: Fragment = FragmentProfile(this)
+    val fragmentProfile: FragmentProfile = FragmentProfile(this)
 
 
 
@@ -121,9 +136,6 @@ class FragmentDashboard: BaseFragment(), View.OnClickListener, FragmentHome.Call
 
             1->{
                 loadFragment(fragmentChat)
-
-
-
 
                 binding.navigationBar.tabFuntime.tabIcon.setColorFilter(requireContext().getResources().getColor(R.color.colorPrimary));
                 binding.navigationBar.tabChat.tabIcon.setColorFilter(requireContext().getResources().getColor(R.color.white));
@@ -272,14 +284,14 @@ class FragmentDashboard: BaseFragment(), View.OnClickListener, FragmentHome.Call
 
     override fun onScoll(toHide:Boolean) {
         Log.d("klajsdasd",toHide.toString())
-        if (toHide) {
+  /*      if (toHide) {
        //     binding.navigationBar.root.setVisibility(View.GONE)
             binding.navigationBar.root.animate().translationY((binding.navigationBar.root.getHeight() + 60).toFloat())
                 .setInterpolator(LinearInterpolator()).start()
         }else{
             binding.navigationBar.root.animate().translationY(0f).setInterpolator(LinearInterpolator()).start()
          //   binding.navigationBar.root.setVisibility(View.VISIBLE)
-        }
+        }*/
     }
 
     override fun onClickBack() {

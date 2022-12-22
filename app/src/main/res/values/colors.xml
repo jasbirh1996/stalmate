@@ -107,9 +107,11 @@
     <color name="progress_secondary">#9E9E9E</color>
     <color name="progress_max_active">@color/white</color>
 
-
-
-
+    <color name="colorWhatsappPrimary">#1F2C34</color>
+    <color name="colorWhatsappBrightGreen">#00A884</color>
+    <color name="colorWhatsappSecondary">#005D4B</color>
+    <color name="colorWhatsappLight">#63727B</color>
+    <color name="colorWhatsappEditbox">#1F2C34</color>
     <color name="black_trasp">#99000000</color>
     <string-array name="color">
     <item>#f64c73</item>

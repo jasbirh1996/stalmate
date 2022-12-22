@@ -14,25 +14,30 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.LinearInterpolator
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat.registerReceiver
+import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.CropImageView
 import com.canhub.cropper.options
 import com.google.android.material.shape.CornerFamily
 import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.commonadapters.AdapterFeed
+import com.stalmate.user.commonadapters.AdapterTabPager
 import com.stalmate.user.databinding.ActivityProfileBinding
 import com.stalmate.user.databinding.FragmentProfileBinding
 import com.stalmate.user.model.AboutProfileLine
@@ -45,13 +50,15 @@ import com.stalmate.user.utilities.ValidationHelper
 import com.stalmate.user.view.adapter.ProfileAboutAdapter
 import com.stalmate.user.view.adapter.ProfileFriendAdapter
 import com.stalmate.user.view.dashboard.ActivityDashboardNew
+import com.stalmate.user.view.dashboard.HomeFragment.FragmentProfileActivityLog
+import com.stalmate.user.view.dashboard.HomeFragment.FragmentProfileFuntime
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
 
 
-class FragmentProfile : BaseFragment(), ProfileAboutAdapter.Callbackk, AdapterFeed.Callbackk,
+class FragmentProfile(var callback:Callback) : BaseFragment(), ProfileAboutAdapter.Callbackk, AdapterFeed.Callbackk,
     ProfileFriendAdapter.Callbackk {
 
 
@@ -59,7 +66,6 @@ class FragmentProfile : BaseFragment(), ProfileAboutAdapter.Callbackk, AdapterFe
 
     lateinit var syncBroadcastreceiver: SyncBroadcasReceiver
     lateinit var binding: FragmentProfileBinding
-    lateinit var feedAdapter: AdapterFeed
     lateinit var friendAdapter: ProfileFriendAdapter
     var permissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.READ_CONTACTS)
     var WRITE_REQUEST_CODE = 100
@@ -100,6 +106,7 @@ class FragmentProfile : BaseFragment(), ProfileAboutAdapter.Callbackk, AdapterFe
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
         val filter = IntentFilter()
         filter.addAction(Constants.ACTION_SYNC_COMPLETED)
         syncBroadcastreceiver = SyncBroadcasReceiver()
@@ -113,25 +120,84 @@ class FragmentProfile : BaseFragment(), ProfileAboutAdapter.Callbackk, AdapterFe
             )
         }
 
-        binding.appCompatTextView17.setOnClickListener {
 
-            retreiveGoogleContacts()
-        }
 
-        requestPermissions(permissions, WRITE_REQUEST_CODE)
+        var adapterTabPager= AdapterTabPager(requireActivity())
+        adapterTabPager.addFragment(FragmentProfileActivityLog(),"Activity Log")
+        adapterTabPager.addFragment(FragmentProfileFuntime(),"Funtime")
+        binding.viewpager.adapter=adapterTabPager
+        TabLayoutMediator(binding.tabLayout, binding.viewpager) { tab, position ->
+            tab.text = adapterTabPager.getTabTitle(position)
+            binding.viewpager.setCurrentItem(tab.position, true)
+        }.attach()
 
-        binding.layout.buttonEditProfile.visibility = View.VISIBLE
-        feedAdapter = AdapterFeed(networkViewModel, requireContext(), this)
-        binding.layout.rvFeeds.setNestedScrollingEnabled(false);
-        binding.layout.rvFeeds.adapter = feedAdapter
-        binding.layout.rvFeeds.layoutManager = LinearLayoutManager(requireContext())
-        networkViewModel.getFeedList("", HashMap())
-        networkViewModel.feedLiveData.observe(viewLifecycleOwner, Observer {
-            it.let {
-                feedAdapter.submitList(it!!.results)
+
+
+
+
+        binding.nestedScrollView.setOnScrollChangeListener(object :
+            NestedScrollView.OnScrollChangeListener {
+
+            override fun onScrollChange(
+                v: NestedScrollView,
+                scrollX: Int,
+                scrollY: Int,
+                oldScrollX: Int,
+                oldScrollY: Int
+            ) {
+
+          /*      if (oldScrollY < scrollY) {//increase
+                    callback.onScoll(true)
+                    Log.d("aklsjdasdasd","aposkdasd")
+                    onScrollToHideTopHeader(true)
+                } else {
+                    onScrollToHideTopHeader(false)
+                    Log.d("aklsjdasdasd","aposkdasdfghfgh")
+                    callback.onScoll(false)
+                }*/
+
+
             }
         })
 
+
+
+
+
+
+
+
+
+
+
+  /*      binding.viewpager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                val view = // ... get the view
+                    view.post {
+                        val wMeasureSpec = View.MeasureSpec.makeMeasureSpec(view.width, View.MeasureSpec.EXACTLY)
+                        val hMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+                        view.measure(wMeasureSpec, hMeasureSpec)
+
+                        if (binding.viewpager.layoutParams.height != view.measuredHeight) {
+                            // ParentViewGroup is, for example, LinearLayout
+                            // ... or whatever the parent of the ViewPager2 is
+                            binding.viewpager.layoutParams = (binding.viewpager.layoutParams as ViewGroup.LayoutParams)
+                                .also { lp -> lp.height = view.measuredHeight }
+                        }
+                    }
+            }
+        })*/
+
+
+
+
+
+        binding.appCompatTextView17.setOnClickListener {
+            retreiveGoogleContacts()
+        }
+        requestPermissions(permissions, WRITE_REQUEST_CODE)
+        binding.layout.buttonEditProfile.visibility = View.VISIBLE
 
         val radius = resources.getDimension(R.dimen.dp_10)
 
@@ -160,10 +226,12 @@ class FragmentProfile : BaseFragment(), ProfileAboutAdapter.Callbackk, AdapterFe
             }
         })
 
-        binding.ivBack.setOnClickListener {
+
+
+        binding.toolbar.tvhead.text="Profile"
+        binding.toolbar.topAppBar.setNavigationOnClickListener {
             (requireActivity() as ActivityDashboardNew).onBackPressed()
         }
-
 
         binding.layout.tvAlbumPhotoSeeMore.setOnClickListener {
             if (binding.layout.photoTab.selectedTabPosition ==0){
@@ -196,6 +264,18 @@ class FragmentProfile : BaseFragment(), ProfileAboutAdapter.Callbackk, AdapterFe
 
     }
 
+    fun onScrollToHideTopHeader(toHide:Boolean) {
+        Log.d("klajsdasd",toHide.toString())
+        if (toHide) {
+            //     binding.navigationBar.root.setVisibility(View.GONE)
+            binding.toolbar.root.animate().translationY(-(binding.toolbar.root.getHeight() + 60).toFloat())
+                .setInterpolator(LinearInterpolator()).start()
+        }else{
+            binding.toolbar.root.animate().translationY(0f).setInterpolator(LinearInterpolator()).start()
+            //   binding.navigationBar.root.setVisibility(View.VISIBLE)
+        }
+    }
+
     inner class SyncBroadcasReceiver : BroadcastReceiver() {
         override fun onReceive(p0: Context?, p1: Intent?) {
             if (p1!!.action == Constants.ACTION_SYNC_COMPLETED) {
@@ -208,6 +288,11 @@ class FragmentProfile : BaseFragment(), ProfileAboutAdapter.Callbackk, AdapterFe
             }
         }
     }
+
+    public interface Callback {
+        fun onScoll(toHide: Boolean)
+    }
+
 
     override fun onResume() {
         super.onResume()
@@ -380,7 +465,7 @@ class FragmentProfile : BaseFragment(), ProfileAboutAdapter.Callbackk, AdapterFe
 
         Log.d("ajkbcb", tabType)
 
-        if (userData.about.isEmpty()) {
+        if (userData.about!!.isEmpty()) {
             binding.tvUserAbout.visibility = View.GONE
         }
 

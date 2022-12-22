@@ -23,6 +23,7 @@ import com.stalmate.user.commonadapters.TaggedUsersAdapter
 import com.stalmate.user.databinding.FragmentFuntimeTagBinding
 import com.stalmate.user.model.User
 import com.stalmate.user.modules.reels.activity.ActivityFilter
+import com.stalmate.user.utilities.Constants
 import com.stalmate.user.view.adapter.FriendAdapter
 import com.stalmate.user.view.dashboard.funtime.viewmodel.TagPeopleViewModel
 import java.io.File
@@ -37,6 +38,8 @@ class FragmentFuntimeTag : BaseFragment(), FriendAdapter.Callbackk, TaggedUsersA
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
+
+    var isEdit=false
 
 
     override fun onCreateView(
@@ -56,7 +59,16 @@ class FragmentFuntimeTag : BaseFragment(), FriendAdapter.Callbackk, TaggedUsersA
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mVideo = requireActivity().intent.getStringExtra(ActivityFilter.EXTRA_VIDEO)!!
+
+        if (requireActivity().intent.getStringExtra(ActivityFilter.EXTRA_VIDEO)!=null){
+            mVideo = requireActivity().intent.getStringExtra(ActivityFilter.EXTRA_VIDEO)!!
+        }
+
+
+
+
+
+
 
         tagPeopleViewModel= ViewModelProvider(requireActivity()).get(TagPeopleViewModel::class.java)
         peopleAdapter = TaggedUsersAdapter(tagPeopleViewModel, requireContext(),false,this)
@@ -66,25 +78,59 @@ class FragmentFuntimeTag : BaseFragment(), FriendAdapter.Callbackk, TaggedUsersA
         mPlayer = ExoPlayer.Builder(requireContext()).build()
         mPlayer!!.repeatMode = ExoPlayer.REPEAT_MODE_ALL
         val factory = DefaultDataSourceFactory(requireContext(), getString(R.string.app_name))
-        val mediaItem: MediaItem = MediaItem.fromUri(Uri.fromFile(File(mVideo!!)))
+        val mediaItem: MediaItem
+        if ((requireActivity() as ActivityFuntimePost).isEdit){
+             mediaItem = MediaItem.fromUri(Uri.parse((requireActivity() as ActivityFuntimePost).funtime.file))
+        }else{
+            mediaItem = MediaItem.fromUri(Uri.fromFile(File(mVideo!!)))
+        }
+
+
+
+
+
         val source: ProgressiveMediaSource = ProgressiveMediaSource.Factory(factory).createMediaSource(mediaItem)
+
+
+
+
         binding.playerView.player=mPlayer;
         mPlayer!!.prepare(source);
         mPlayer!!.playWhenReady = true;
         mPlayer!!.play()
 
         binding.layoutAddMoreButton.setOnClickListener {
-            setFragmentResultListener(SELECT_USER) { key, bundle ->
+        /*    setFragmentResultListener(SELECT_USER) { key, bundle ->
                 clearFragmentResultListener(requestKey = SELECT_USER)
-              /*  var arrayList=ArrayList<User>()
+              *//*  var arrayList=ArrayList<User>()
                 arrayList.add(bundle.getSerializable(SELECT_USER) as User)
-                peopleAdapter.addToList(arrayList)*/
+                peopleAdapter.addToList(arrayList)*//*
+            }*/
+            if (binding.layoutWhio.visibility==View.GONE){
+                binding.layoutWhio.visibility=View.VISIBLE
+            }else{
+                binding.layoutWhio.visibility=View.GONE
             }
 
+        }
+
+
+
+        binding.layoutWhio.setOnClickListener {
             findNavController().navigate(R.id.action_fragmentFuntimeTag_to_fragmentSingleUserSelector)
         }
+
         tagPeopleViewModel.getTaggedPeopleList().observe(viewLifecycleOwner, Observer {
-            peopleAdapter.submitList(it.taggedPeopleList)
+            binding.layoutWhio.visibility=View.GONE
+            if (it.policy==Constants.PRIVACY_TYPE_PUBLIC){
+                peopleAdapter.submitList(it.taggedPeopleList)
+                if (it.taggedPeopleList.size>0){
+                    binding.buttonOk.visibility=View.VISIBLE
+                    binding.buttonOk.setOnClickListener {
+                        findNavController().popBackStack()
+                    }
+                }
+            }
         })
 
 

@@ -25,7 +25,8 @@ internal class PhotoEditorViewState {
         addedViews.clear()
     }
 
-    fun addAddedView(view: View) {
+    fun addAddedView(view: View, viewType: ViewType) {
+        view.tag=viewType
         addedViews.add(view)
     }
 

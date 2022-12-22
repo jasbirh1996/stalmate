@@ -23,11 +23,12 @@ import com.stalmate.user.modules.reels.player.holders.ImageReelViewHolder
 import com.stalmate.user.modules.reels.player.holders.ReelViewHolder
 import com.stalmate.user.modules.reels.player.holders.VideoReelViewHolder
 import com.stalmate.user.utilities.SeeModetextViewHelper
+import com.stalmate.user.utilities.ValidationHelper
 import com.stalmate.user.view.dashboard.funtime.DialogFragmentComments
 import com.stalmate.user.view.dashboard.funtime.ResultFuntime
 
 
-class ReelAdapter(val context: Context) :
+class ReelAdapter(val context: Context,var callback:Callback) :
     ListAdapter<ResultFuntime, ReelViewHolder>(DIFF_CALLBACK) {
     var isMuted=false
     var reelList = ArrayList<ResultFuntime>()
@@ -109,7 +110,12 @@ class ReelAdapter(val context: Context) :
 
 
         holder.customPlayerView.setOnClickListener {
-            context.startActivity(IntentHelper.getFullViewReelActivity(context)!!.putExtra("data",reelList[position]))
+    callback.onClickOnFullView(reelList[position])
+        }
+        if (!ValidationHelper.isNull(reelList[position].location)){
+            holder.tvLocation.text=reelList[position].location
+            holder.tvLocation.visibility=View.VISIBLE
+            holder.ivLocation.visibility=View.VISIBLE
         }
 
 
@@ -208,6 +214,12 @@ class ReelAdapter(val context: Context) :
 
 
     }
+
+
+    public interface Callback{
+        fun onClickOnFullView(resultFuntime: ResultFuntime)
+    }
+
 
     override fun getItemCount(): Int {
         Log.d("akljsdasd",reelList.size.toString())

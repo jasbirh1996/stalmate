@@ -49,4 +49,13 @@
         tools:layout="@layout/fragment_funtime_privacy_options" >
 
     </fragment>
+
+
+    <fragment
+        android:id="@+id/FragmentFuntimePostEdit"
+        android:name="com.stalmate.user.view.dashboard.funtime.FragmentFuntimePostEdit"
+        android:label="fragmentpostedit"
+        tools:layout="@layout/fragment_funtime_post_edit" >
+
+    </fragment>
 </navigation>

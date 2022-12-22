@@ -44,6 +44,19 @@ interface ApiInterface {
     @POST(Constants.URLFUNTIME_LIST)
     fun getFuntimeList(@Body map: HashMap<String, String>): Call<ModelFuntimeResponse>
 
+    @POST(Constants.URL_CREATE_ROOM)
+    fun createroomId(@Body map: HashMap<String, String>): Call<ModelRoom>
+
+
+
+
+    @POST(Constants.URLMY_FUNTIME_LIST)
+    fun getMyFuntimeList(@Body map: HashMap<String, String>): Call<ModelFuntimeResponse>
+
+
+
+
+
     @POST(Constants.URLFUNTIME_DETAIL_LIST)
     fun getFuntimeDetailListList(@Body map: HashMap<String, String>): Call<ModelFuntimeResponse>
 
@@ -77,9 +90,21 @@ interface ApiInterface {
     @POST(Constants.url_friend_list)
     fun getFriendList(@Body map: HashMap<String, String>): Call<ModelFriend>
 
+    @POST(Constants.URL_FUNTIME_UPDATE)
+    fun funtimeUpdate(@Body map: HashMap<String, String>): Call<ModelSuccess>
+
+
+
 
     @POST(Constants.URL_SIGN_UP)
     fun setSignupDetails(@Body map: HashMap<String, String>): Call<ModelLoginResponse>
+
+
+    @POST(Constants.URL_EMAIL_CHECK)
+    fun checkIfOldEmail(@Body map: HashMap<String, String>): Call<ModelSuccess>
+
+
+
 
 
     @PATCH(Constants.URL_OTP)
@@ -169,6 +194,9 @@ interface ApiInterface {
 
     @PATCH(Constants.URL_ADD_COMMENT)
     fun addComment(@Body map: HashMap<String, String>): Call<ModelComment>
+
+    @PATCH(Constants.URL_LIKE_COMMENT)
+    fun likeComment(@Body map: HashMap<String, String>): Call<ModelSuccess>
 
 
 

@@ -60,6 +60,9 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent">
 
+
+
+
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/materialCardView"
                         android:layout_width="match_parent"
@@ -78,11 +81,59 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent">
 
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/layoutWhio"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:elevation="1dp"
+                            android:foregroundGravity="center"
+                            android:padding="@dimen/_10sdp"
+                            android:visibility="visible">
+
+
+                            <View
+                                android:id="@+id/rectangle"
+                                android:layout_width="100dp"
+                                android:layout_height="30dp"
+                                android:background="@drawable/round_very_small_corner_primary"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent" />
+
+                            <ImageView
+                                android:id="@+id/triangle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:rotation="180"
+                                android:src="@drawable/ic_profile_dropdown"
+                                app:layout_constraintBottom_toTopOf="@+id/rectangle"
+                                app:layout_constraintEnd_toEndOf="@+id/rectangle"
+                                app:layout_constraintStart_toStartOf="@+id/rectangle"
+                                app:tint="@color/colorPrimary" />
+
+
+                            <TextView
+                                android:id="@+id/textView8"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/poppins_light"
+                                android:text="who's this?"
+
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/_10sdp"
+                                app:layout_constraintBottom_toBottomOf="@+id/rectangle"
+                                app:layout_constraintEnd_toEndOf="@+id/rectangle"
+                                app:layout_constraintStart_toStartOf="@+id/rectangle"
+                                app:layout_constraintTop_toTopOf="@+id/rectangle" />
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
                         <com.google.android.exoplayer2.ui.PlayerView
                             android:id="@+id/playerView"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-
+                            app:use_controller="false"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintDimensionRatio="2:1"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -91,6 +142,8 @@
 
                         </com.google.android.exoplayer2.ui.PlayerView>
                     </com.google.android.material.card.MaterialCardView>
+
+
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -129,9 +182,22 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="20dp"
+                    app:layout_constraintBottom_toTopOf="@+id/buttonOk"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/layoutAddMoreButton" />
+
+                <Button
+                    android:id="@+id/buttonOk"
+                    style="@style/customButtonStyle"
+                    android:layout_width="match_parent"
+                    android:text="Done Tagging Users"
+                    android:visibility="gone"
+                    android:textSize="14sp"
+                    android:layout_height="@dimen/_60sdp"
+                    android:background="@color/colorPrimary"
+                    app:layout_constraintBottom_toBottomOf="parent" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

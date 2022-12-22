@@ -41,20 +41,29 @@ class FragmentFuntimePrivacyOptions : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         tagPeopleViewModel= ViewModelProvider(requireActivity()).get(TagPeopleViewModel::class.java)
-        multiUserSelectFragment = FragmentMultiUserSelector(networkViewModel)
+        multiUserSelectFragment = FragmentMultiUserSelector(networkViewModel,tagPeopleViewModel)
 
-/*        tagPeopleViewModel.postPolicyLiveData.observe(viewLifecycleOwner,{
-
-    if (it.size>0){
-          if (it[0]==Constants.PRIVACY_TYPE_PRIVATE){
-
-           }
-           proceed(it)
-    }
-
-        })*/
+        tagPeopleViewModel.tagModelLiveData.observe(viewLifecycleOwner) {
+            Log.d("aklsdasd",it.policy)
+            selectedType=it.policy
+            selectedOption(selectedType)
+        }
         binding.layoutMyFollower.setOnClickListener {
-            proceed(Constants.PRIVACY_TYPE_MY_FOLLOWER)
+
+
+            if (tagPeopleViewModel.taggedModelObject.taggedPeopleList.size>0){
+                var custumConfirmDialog= CommonConfirmationDialog(requireContext(),"","Tagged people removed when you select My Followers, Private or Specific friend","Yes","Cancel",object :CommonConfirmationDialog.Callback{
+                    override fun onDialogResult(isPermissionGranted: Boolean) {
+                        if (isPermissionGranted){
+                            tagPeopleViewModel.clearList()
+                            proceed(Constants.PRIVACY_TYPE_MY_FOLLOWER)
+                        }
+                    }
+                })
+                custumConfirmDialog.show()
+            }else{
+                proceed(Constants.PRIVACY_TYPE_MY_FOLLOWER)
+            }
         }
 
         binding.layoutPublic.setOnClickListener {
@@ -62,40 +71,34 @@ class FragmentFuntimePrivacyOptions : BaseFragment() {
         }
 
         binding.layoutSpecific.setOnClickListener {
-            proceed(Constants.PRIVACY_TYPE_SPECIFIC)
-
-
-            if (tagPeopleViewModel.taggedModelObject.taggedPeopleList.size>0){
-       /*         var custumConfirmDialog= CommonConfirmationDialog(requireContext(),"make Specific ?","Tagged people removed when you select My Followers, Private or Specific friend","Yes","Cancel",object :CommonConfirmationDialog.Callback{
+            if (tagPeopleViewModel.taggedModelObject.policy!=Constants.PRIVACY_TYPE_SPECIFIC){
+               var custumConfirmDialog= CommonConfirmationDialog(requireContext(),"","Tagged people removed when you select My Followers, Private or Specific friend","Yes","Cancel",object :CommonConfirmationDialog.Callback{
                     override fun onDialogResult(isPermissionGranted: Boolean) {
                         if (isPermissionGranted){
-                            proceed(Constants.PRIVACY_TYPE_SPECIFIC)
-                           // tagPeopleViewModel.clearList()
-                          //  openBottomSheetDialog()
+
+                            tagPeopleViewModel.clearList()
+                            openBottomSheetDialog()
                         }
                     }
                 })
 
-                custumConfirmDialog.show()*/
-                proceed(Constants.PRIVACY_TYPE_SPECIFIC)
+                custumConfirmDialog.show()
             }else{
-                proceed(Constants.PRIVACY_TYPE_SPECIFIC)
+                openBottomSheetDialog()
             }
 
         }
         binding.layoutPrivate.setOnClickListener {
             if (tagPeopleViewModel.taggedModelObject.taggedPeopleList.size>0){
-     /*           var custumConfirmDialog= CommonConfirmationDialog(requireContext(),"Make Private ?","Tagged People Removed when you Select Private","Yes","Cancel",object :CommonConfirmationDialog.Callback{
+                var custumConfirmDialog= CommonConfirmationDialog(requireContext(),"","Tagged People Removed when you Select Private","Yes","Cancel",object :CommonConfirmationDialog.Callback{
                     override fun onDialogResult(isPermissionGranted: Boolean) {
                         if (isPermissionGranted){
+                           tagPeopleViewModel.clearList()
                             proceed(Constants.PRIVACY_TYPE_PRIVATE)
-                           // tagPeopleViewModel.clearList()
-                          //  openBottomSheetDialog()
                         }
                     }
                 })
-                custumConfirmDialog.show()*/
-                proceed(Constants.PRIVACY_TYPE_PRIVATE)
+                custumConfirmDialog.show()
             }else{
                 proceed(Constants.PRIVACY_TYPE_PRIVATE)
             }
@@ -120,7 +123,7 @@ class FragmentFuntimePrivacyOptions : BaseFragment() {
 
     private fun proceed(type: String) {
         selectedType=type
-
+        tagPeopleViewModel.setPolicy(selectedType)
         selectedOption(type)
 
 
@@ -128,6 +131,7 @@ class FragmentFuntimePrivacyOptions : BaseFragment() {
     }
     private lateinit var multiUserSelectFragment: FragmentMultiUserSelector
     fun openBottomSheetDialog(){
+        proceed(Constants.PRIVACY_TYPE_SPECIFIC)
         if (multiUserSelectFragment.isAdded) {
             return
         }

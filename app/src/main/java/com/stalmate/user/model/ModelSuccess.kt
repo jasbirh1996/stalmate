@@ -1,4 +1,12 @@
 package com.stalmate.user.model
 
-class ModelSuccess {
-}
+
+data class ModelSuccess(
+    val status: Boolean,
+    val results: Comment,
+)
+data class ModelRoom(
+    val status: Boolean,
+    val results: Comment,
+    val Room_id:String
+)

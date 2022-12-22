@@ -19,6 +19,7 @@ import androidx.annotation.ColorInt
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import com.stalmate.user.R
+import com.stalmate.user.modules.reels.utils.ColorSeekBar
 
 
 /**
@@ -62,7 +63,7 @@ class TextEditorDialogFragment : DialogFragment() {
             requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         mAddTextDoneTextView = view.findViewById(R.id.add_text_done_tv)
 
-        //Setup the color picker for text color
+   /*     //Setup the color picker for text color
         val addTextColorPickerRecyclerView: RecyclerView =
             view.findViewById(R.id.add_text_color_picker_recycler_view)
         val layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
@@ -78,7 +79,21 @@ class TextEditorDialogFragment : DialogFragment() {
                 mAddTextEditText!!.setTextColor(colorCode)
             }
         })
-        addTextColorPickerRecyclerView.adapter = colorPickerAdapter
+        addTextColorPickerRecyclerView.adapter = colorPickerAdapter*/
+        val colorSeekBar: ColorSeekBar =
+            view.findViewById(R.id.color_seek_bar)
+
+        colorSeekBar.setOnColorChangeListener(object :
+            ColorSeekBar.OnColorChangeListener {
+            override fun onColorChangeListener(color: Int) {
+                mColorCode = color
+                mAddTextEditText!!.setTextColor(color)
+
+            }
+
+        })
+
+
         mAddTextEditText!!.setText(requireArguments().getString(EXTRA_INPUT_TEXT))
         mColorCode = requireArguments().getInt(EXTRA_COLOR_CODE)
         mAddTextEditText!!.setTextColor(mColorCode)

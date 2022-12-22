@@ -64,7 +64,7 @@ class SuggestedFriendAdapter(
             )
             binding.tvUserName.text = friend.first_name
 
-            Log.d("asdasdasd",  friend.img)
+            Log.d("asdasdasd", friend.img!!)
 
             binding.buttonAddFriend.setOnClickListener {
                 updateFriendStatus(

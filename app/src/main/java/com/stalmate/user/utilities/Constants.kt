@@ -5,6 +5,10 @@ object Constants {
     const val url_language_list="auth_service/auth_api/language_list"
     const val URL_INTREST_LIST="auth_service/auth_api/category_list"
     const val URL_SIGN_UP="auth_service/auth_api/user_register"
+    const val URL_EMAIL_CHECK="auth_service/auth_api/email_number_check"
+
+
+
     const val URL_LOGIN="auth_service/auth_api/user_login"
     const val URL_UPDATE_ABOUT="auth_service/auth_api/update_about"
     const val URL_OTP="auth_service/auth_api/update_password"
@@ -12,6 +16,14 @@ object Constants {
     const val URL_BLOCKED_LIST="auth_service/friend_api/get_block_user_list"
     const val URL_CATEGORY_LIST="auth_service/friend_api/friend_category_list"
     const val URLFUNTIME_LIST="auth_service/funtime_api/get_funtime_list"
+    const val URL_CREATE_ROOM="auth_service/friend_api/group_create"
+
+
+
+    const val URLMY_FUNTIME_LIST="auth_service/funtime_api/get_my_funtime_list"
+
+
+
     const val URLFUNTIME_DETAIL_LIST="auth_service/funtime_api/get_funtime_detail"
     const val URL_FUNTIME_MUSIC_LIST="auth_service/funtime_api/get_sound_api"
     const val URL_FUNTIME_LIKE_UNLIKE="auth_service/funtime_api/like_unlike_funtime"
@@ -20,6 +32,9 @@ object Constants {
 
     const val URL_OTP_REGISTRATION="auth_service/auth_api/otp_register_process"
     const val url_friend_list="auth_service/friend_api/get_friend_list"
+    const val URL_FUNTIME_UPDATE="auth_service/funtime_api/funtime_update"
+
+
     const val url_send_friend_request="auth_service/friend_api/send_friend_request"
     const val url_update_friend_request="auth_service/friend_api/update_friend_request"
     const val url_remove_user_from_suggestions="auth_service/friend_api/remove_suggestions"
@@ -39,6 +54,11 @@ object Constants {
     const val URL_COMMENT_LIST="auth_service/funtime_api/get_funtime_comment"
     const val URL_REPLY_LIST="auth_service/funtime_api/get_funtime_comment"
     const val URL_ADD_COMMENT="auth_service/funtime_api/comment_funtime"
+    const val URL_LIKE_COMMENT="auth_service/funtime_api/like_unlike_funtime_comment"
+
+
+
+
     const val url_send_follower_request="auth_service/friend_api/send_follower_request"
     const val GET_PROFILE_API="auth_service/auth_api/get_profile_data"
     const val GET_OTHER_USER_PROFILE_API="auth_service/auth_api/get_profile_user"

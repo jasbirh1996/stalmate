@@ -71,6 +71,28 @@ open class AppViewModel : ViewModel() {
         getResult(temp, apiInterface.getFuntimeList(map))
     }
 
+    var myfuntimeLiveData: LiveData<ModelFuntimeResponse?> = MutableLiveData<ModelFuntimeResponse?>()
+
+    fun myfuntimeLiveData(map: HashMap<String, String>) {
+        val temp = MutableLiveData<ModelFuntimeResponse?>()
+        myfuntimeLiveData = temp
+        getResult(temp, apiInterface.getMyFuntimeList(map))
+    }
+
+
+
+
+
+
+    var createRoomIdLiveData: LiveData<ModelRoom?> = MutableLiveData<ModelRoom?>()
+
+    fun createroomId(map: HashMap<String, String>) {
+        val temp = MutableLiveData<ModelRoom?>()
+        createRoomIdLiveData = temp
+        getResult(temp, apiInterface.createroomId(map))
+    }
+
+
 /*
     var funtimeDetailListLiveData: LiveData<ModelFuntimeResponse?> = MutableLiveData<ModelFuntimeResponse?>()
 
@@ -161,6 +183,14 @@ open class AppViewModel : ViewModel() {
         getResult(temp, apiInterface.getFriendList(map))
     }
 
+    var funtimeUpdateLiveData: MutableLiveData<ModelSuccess?> = MutableLiveData<ModelSuccess?>()
+    fun funtimUpdate(map: HashMap<String, String>) {
+        val temp = MutableLiveData<ModelSuccess?>()
+        funtimeUpdateLiveData = temp
+        getResult(temp, apiInterface.funtimeUpdate(map))
+    }
+
+
 
     var updateFriendRequestLiveData: LiveData<CommonModelResponse?> = MutableLiveData<CommonModelResponse?>()
     fun updateFriendRequest(map: HashMap<String, String>) {
@@ -205,6 +235,15 @@ open class AppViewModel : ViewModel() {
         val temp = MutableLiveData<ModelLoginResponse?>()
         registerData = temp
         getResult(temp, apiInterface.setSignupDetails(map))
+
+    }
+
+
+    var checkIfOldEmailLiveData: LiveData<ModelSuccess?> = MutableLiveData<ModelSuccess?>()
+    fun checkIfOldEmail(map: HashMap<String, String>) {
+        val temp = MutableLiveData<ModelSuccess?>()
+        checkIfOldEmailLiveData = temp
+        getResult(temp, apiInterface.checkIfOldEmail(map))
 
     }
 
@@ -298,6 +337,15 @@ open class AppViewModel : ViewModel() {
         addCommentLiveData = temp
         getResult(temp, apiInterface.addComment(map))
     }
+
+    var likeCommentLiveData: LiveData<ModelSuccess?> = MutableLiveData<ModelSuccess?>()
+    fun likeComment(map: HashMap<String, String>) {
+        val temp = MutableLiveData<ModelSuccess?>()
+        likeCommentLiveData = temp
+        getResult(temp, apiInterface.likeComment(map))
+    }
+
+
 
 
     var otpVerifyRegistarionData: LiveData<CommonModelResponse?> = MutableLiveData<CommonModelResponse?>()

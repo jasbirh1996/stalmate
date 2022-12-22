@@ -41,7 +41,6 @@ class FragmentLogin : BaseFragment() {
         // Inflate the layout for this fragment
         var view = inflater.inflate(R.layout.fragment_login, container, false)
         binding = DataBindingUtil.bind<FragmentLoginBinding>(view)!!
-
         return binding.root
     }
 

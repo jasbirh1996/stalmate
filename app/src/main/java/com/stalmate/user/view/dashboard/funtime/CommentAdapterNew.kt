@@ -6,20 +6,24 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.Nullable
-import androidx.core.view.isVisible
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.stalmate.user.R
 import com.stalmate.user.databinding.ItemCommentBinding
 import com.stalmate.user.model.Comment
+import com.stalmate.user.viewmodel.AppViewModel
 
-class CommentAdapterNew(var context:Context,var callBack: Callback) : RecyclerView.Adapter< CommentAdapterNew.CommentViewHolder>() {
+class CommentAdapterNew(
+    var context: Context, var callback: Callback,
+    var networkViewModel: AppViewModel, var funTimeId: String, var lifecyclerOwner: LifecycleOwner
+) : RecyclerView.Adapter<CommentAdapterNew.CommentViewHolder>() {
     var commentList = ArrayList<Comment>()
-    private val listShowReplies = arrayListOf<String>()
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommentViewHolder {
+
         return CommentViewHolder(
             ItemCommentBinding.inflate(
                 LayoutInflater.from(parent.context),
@@ -30,15 +34,15 @@ class CommentAdapterNew(var context:Context,var callBack: Callback) : RecyclerVi
     }
 
     override fun onBindViewHolder(holder: CommentViewHolder, position: Int) {
+
         holder.bind(commentList[position])
     }
 
 
-    inner class CommentViewHolder(private val binding: ItemCommentBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-
-        private fun initBinding(binding: ItemCommentBinding, shortComment: Comment) {
-
+    inner class CommentViewHolder(val binding: ItemCommentBinding) :
+        RecyclerView.ViewHolder(binding.root),
+        ChildCommentAdapter.Callback {
+        fun bind(shortComment: Comment) {
             binding.tvDate.text = "${shortComment.date}"
             binding.tvUserName.text = "${shortComment.first_name} ${shortComment.last_name}"
             binding.tvReply.text = "Reply"
@@ -46,22 +50,30 @@ class CommentAdapterNew(var context:Context,var callBack: Callback) : RecyclerVi
             binding.tvComment.text = shortComment.comment
             Glide.with(context).load(shortComment.profile_img).circleCrop()
                 .into(binding.ivUserImage)
-
-
             binding.tvReply.setOnClickListener {
-                callBack.onClickOnReply(shortComment, bindingAdapterPosition)
+                callback.onClickOnReply(shortComment, bindingAdapterPosition,0,false)
             }
 
             binding.btnMore.setOnClickListener {
-                callBack.onClickOnViewMoreReply(shortComment, bindingAdapterPosition)
+                if (shortComment.isExpanded) {
+                    Log.d("a;ksdasd", "laskjdlasd")
+                    shortComment.isExpanded = false
+                    binding.btnMore.text = "Hide replies"
+                    commentList[bindingAdapterPosition].replies.clear()
+
+                    notifyItemChanged(bindingAdapterPosition)
+                } else {
+                    shortComment.isExpanded = true
+                    viewReplies(shortComment, bindingAdapterPosition)
+                }
             }
-            Log.d(
-                "aklsjdasd",
-                shortComment.replies.size.toString() + "fdg" + shortComment.level.toString()
-            )
-            if (shortComment.replies.isNotEmpty()) {
-                createNestedComment(binding, shortComment)
-            }
+
+            var commentRepliedAdapter = ChildCommentAdapter(context, this, funTimeId,networkViewModel,lifecyclerOwner)
+            commentRepliedAdapter.addToList(shortComment.replies)
+            binding.rvChildReplies.layoutManager =
+                LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+            binding.rvChildReplies.adapter = commentRepliedAdapter
+
             /* binding.tvReply.setOnClickListener {
                     commentListener.onSendComment(
                         "author",
@@ -78,46 +90,57 @@ class CommentAdapterNew(var context:Context,var callBack: Callback) : RecyclerVi
                 binding.btnMore.visibility = View.VISIBLE
                 binding.btnMore.text = "Show ${shortComment.child_count} replies"
                 binding.view15.visibility = View.VISIBLE
-            }
 
-        }
-
-        fun bind(shortComment: Comment) {
-            initBinding(binding, shortComment)
-        }
-
-
-        private fun createNestedComment(binding: ItemCommentBinding, shortComment: Comment) {
-            binding.btnMore.isVisible = true
-            binding.btnMore.text = "Show ${shortComment.replies.size} replies"
-
-
-
-
-
-
-            if (!listShowReplies.contains(shortComment._id)) {
-                listShowReplies.add(shortComment._id)
-                binding.btnMore.text = "Hide replies"
-                shortComment.replies.forEach { nestedComment ->
-                    val newComment = ItemCommentBinding.inflate(
-                        LayoutInflater.from(binding.root.context),
-                        null,
-                        false
-                    )
-                    initBinding(newComment, nestedComment)
-                    binding.llReplies.addView(newComment.root)
+                if (shortComment.isExpanded) {
+                    binding.btnMore.text = "Hide replies"
+                } else {
+                    binding.btnMore.text = "Show ${shortComment.child_count} replies"
                 }
-                binding.llReplies.isVisible = true
-            } else {
-                binding.btnMore.text = "Show ${shortComment.replies.size} replies"
-                listShowReplies.remove(shortComment._id)
-                binding.llReplies.removeAllViews()
-                binding.llReplies.isVisible = false
+
             }
+
+
+
+            if (shortComment.isLiked=="Yes"){
+                binding.ivHearIcon.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        context,
+                        R.drawable.like_heart
+                    )
+                )
+            }else{
+                binding.ivHearIcon.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        context,
+                        R.drawable.ic_profile_heart_icon
+                    )
+                )
+            }
+
+
+            binding.ivHearIcon.setOnClickListener {
+                likeComment(shortComment._id,bindingAdapterPosition)
+            }
+
         }
 
 
+        override fun onClickOnReply(shortComment: Comment, childPosition: Int) {
+            callback.onClickOnReply(shortComment,bindingAdapterPosition, childPosition,true)
+        }
+
+        override fun onClickOnViewMoreReply(shortComment: Comment, position: Int) {
+            callback.onClickOnViewMoreReply(shortComment, position)
+        }
+
+
+    }
+
+
+    public interface Callback {
+        fun onClickOnReply(shortComment: Comment, parentPosition: Int,childPosition: Int,isChild:Boolean)
+        fun onClickOnViewMoreReply(shortComment: Comment, position: Int)
+        fun onCommentAddedSucessfully()
     }
 
     object ShortCommentDiffUtil : DiffUtil.ItemCallback<Comment>() {
@@ -131,39 +154,187 @@ class CommentAdapterNew(var context:Context,var callBack: Callback) : RecyclerVi
         }
     }
 
-    open class CommentClickListener(
-        private val sendComment: (author: String, message: String, level: Int, parentId: String?, position: Int) -> Unit
-    ) {
-        fun onSendComment(
-            author: String,
-            message: String,
-            level: Int,
-            parentId: String? = null,
-            position: Int
-        ) =
-            sendComment(author, message, level, parentId, position)
-    }
-
-
-    public interface Callback {
-        fun onClickOnReply(shortComment: Comment, position: Int)
-        fun onClickOnViewMoreReply(shortComment: Comment, position: Int)
-    }
 
     override fun getItemCount(): Int {
-       return commentList.size
+        return commentList.size
     }
 
-    fun addToList(users: List<Comment>) {
+    fun addToList(comments: List<Comment>) {
+
         val size = commentList.size
-        commentList.addAll(users)
+        commentList.addAll(comments)
         val sizeNew = commentList.size
         notifyItemRangeChanged(size, sizeNew)
     }
-    fun submitList(users: List<Comment>) {
+
+    fun submitList(comments: List<Comment>) {
         commentList.clear()
-        commentList.addAll(users)
+        commentList.addAll(comments)
         notifyDataSetChanged()
+    }
+
+
+    fun addComment(data: String) {
+        var hashmap = HashMap<String, String>()
+        hashmap.put("funtime_id", funTimeId)
+        hashmap.put("comment", data)
+        hashmap.put("id", "")
+        hashmap.put("comment_id", "")
+        hashmap.put("is_delete", "0")
+
+        networkViewModel.addComment(hashmap)
+        networkViewModel.addCommentLiveData.observe(lifecyclerOwner) {
+            it.let {
+
+                if (it!!.status) {
+                    /*      viewModel.addComment(
+                              Comment(
+                                  it.results._id,
+                                  Calendar.getInstance(Locale.ROOT).toSimpleDate(),
+                                  "test",
+                                  data,
+                                  first_name = PrefManager.getInstance(requireContext())!!.userDetail.results[0].first_name,
+                                  last_name = PrefManager.getInstance(requireContext())!!.userDetail.results[0].last_name,
+                                  child_count = it.results.child_count,
+                                  profile_img = it.results.profile_img
+                              )
+                          )*/
+                    it.results.replies = ArrayList<Comment>()
+                    commentList.add(it.results)
+                    notifyItemInserted(commentList.size - 1)
+                    callback.onCommentAddedSucessfully()
+                }
+
+
+            }
+        }
+    }
+    fun replyOverComment(
+        data: String,
+        commentId: String,
+        parentPosition: Int,
+        childPosition: Int,
+        isReplyisChildComment: Boolean
+    ) {
+        Log.d("akjshdasdsdfsd",isReplyisChildComment.toString())
+        Log.d("akjshdasdsdfsdparentINdex",isReplyisChildComment.toString())
+        Log.d("akjshdasdsdfsdchildINdex",isReplyisChildComment.toString())
+        var hashmap = HashMap<String, String>()
+        hashmap.put("funtime_id", funTimeId)
+        hashmap.put("comment", data)
+        hashmap.put("id", "")
+        hashmap.put("comment_id", commentId)
+        hashmap.put("is_delete", "0")
+
+        networkViewModel.addComment(hashmap)
+        networkViewModel.addCommentLiveData.observe(lifecyclerOwner) {
+            it.let {
+
+                if (it!!.status) {
+                    /*    viewModel.addComment(
+                            Comment(
+                                it.results._id,
+                                Calendar.getInstance(Locale.ROOT).toSimpleDate(),
+                                "test",
+                                data,
+                                parentId = it.results.parentId ?: it.results._id,
+                                first_name = PrefManager.getInstance(requireContext())!!.userDetail.results[0].first_name,
+                                last_name = PrefManager.getInstance(requireContext())!!.userDetail.results[0].last_name,
+                                child_count = it.results.child_count,
+                                profile_img = it.results.profile_img
+                            )
+                        )*/
+
+
+                    if (isReplyisChildComment){
+                        it.results.replies = ArrayList<Comment>()
+                        commentList[parentPosition].isExpanded=true
+                        commentList[parentPosition].child_count++
+                        commentList[parentPosition].replies.add(it.results)
+                        notifyItemChanged(parentPosition)
+                    }else{
+                        it.results.replies = ArrayList<Comment>()
+                        commentList[parentPosition].isExpanded=true
+                        commentList[parentPosition].child_count++
+                        commentList[parentPosition].replies.add(it.results)
+                        notifyItemChanged(parentPosition)
+                    }
+
+                    callback.onCommentAddedSucessfully()
+
+
+
+                }
+            }
+        }
+    }
+
+    fun viewReplies(comment: Comment, position: Int) {
+
+        var hashmap = HashMap<String, String>()
+        hashmap.put("funtime_id", funTimeId)
+        hashmap.put("comment_id", comment._id)
+
+        networkViewModel.getRepliesList(hashmap)
+        networkViewModel.repliesLiveData.observe(lifecyclerOwner) { mainIt ->
+            run {
+                if (mainIt!!.status) {
+
+                    mainIt.results.forEach {
+                        /*      viewModel.addComment(
+                                  Comment(
+                                      it._id,
+                                      Calendar.getInstance(Locale.ROOT).toSimpleDate(),
+                                      "test",
+                                      it.comment,
+                                      parentId = it.parentId,
+                                      first_name = PrefManager.getInstance(requireContext())!!.userDetail.results[0].first_name,
+                                      last_name = PrefManager.getInstance(requireContext())!!.userDetail.results[0].last_name,
+                                      child_count = 0,
+                                      profile_img = it.profile_img
+                                  )
+                              )*/
+                        it.replies = kotlin.collections.ArrayList<Comment>()
+
+
+                    }
+                    commentList[position].replies.addAll(mainIt.results)
+                    notifyItemChanged(position)
+
+
+                }
+            }
+
+        }
+    }
+
+
+    fun likeComment(commentId: String,position: Int) {
+
+        var hashmap = HashMap<String, String>()
+        hashmap.put("funtime_id", funTimeId)
+        hashmap.put("comment_id", commentId)
+
+        networkViewModel.likeComment(hashmap)
+        networkViewModel.likeCommentLiveData.observe(lifecyclerOwner) { mainIt ->
+            run {
+                if (mainIt!!.status) {
+
+
+                    if (commentList[position].isLiked=="Yes"){
+                        commentList[position].isLiked="No"
+                    }else{
+                        commentList[position].isLiked="Yes"
+                    }
+                    notifyItemChanged(position)
+
+
+
+
+                }
+            }
+
+        }
     }
 
 }

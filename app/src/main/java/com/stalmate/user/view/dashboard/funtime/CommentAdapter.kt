@@ -16,7 +16,6 @@ import com.stalmate.user.model.Comment
 class CommentAdapter(private val commentListener: CommentClickListener,var context:Context,var callBack: Callback)
     : ListAdapter<Comment, CommentAdapter.CommentViewHolder>(ShortCommentDiffUtil) {
 
-    private val listShowReplies = arrayListOf<String>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommentViewHolder {
         return CommentViewHolder(ItemCommentBinding.inflate(LayoutInflater.from(parent.context), parent, false))
@@ -25,9 +24,6 @@ class CommentAdapter(private val commentListener: CommentClickListener,var conte
     override fun onBindViewHolder(holder: CommentViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
-
-
-
 
     inner class CommentViewHolder(private val binding: ItemCommentBinding): RecyclerView.ViewHolder(binding.root) {
 
@@ -42,19 +38,21 @@ class CommentAdapter(private val commentListener: CommentClickListener,var conte
 
 
             binding.tvReply.setOnClickListener {
+
                 callBack.onClickOnReply(shortComment,bindingAdapterPosition)
             }
 
             binding.btnMore.setOnClickListener {
+                shortComment.isExpanded=true
                 callBack.onClickOnViewMoreReply(shortComment,bindingAdapterPosition)
             }
-            Log.d("aklsjdasd",shortComment.replies.size.toString()+"fdg"+shortComment.level.toString())
-            if(shortComment.replies.isNotEmpty()  && shortComment.level==1){
-                createNestedComment(binding, shortComment)
-            }
+
+     /*       if(shortComment.replies.isNotEmpty()  && shortComment.level==1){
+                createNestedComment(binding, shortComment,bindingAdapterPosition)
+            }*/
 
 
-            if (shortComment.child_count==0 || !toShowhead){
+            if (!toShowhead){
                 binding.btnMore.visibility= View.GONE
                 binding.view15.visibility=View.GONE
             }else{
@@ -62,16 +60,6 @@ class CommentAdapter(private val commentListener: CommentClickListener,var conte
                 binding.btnMore.text = "Show ${shortComment.child_count} replies"
                 binding.view15.visibility=View.VISIBLE
             }
-
-
-
-        /* binding.tvReply.setOnClickListener {
-                commentListener.onSendComment(
-                    "author",
-                    "message",
-                    shortComment.level, shortComment.parentId ?: shortComment._id,bindingAdapterPosition
-                )
-            }*/
 
 
 
@@ -90,47 +78,43 @@ class CommentAdapter(private val commentListener: CommentClickListener,var conte
 
 
 
-        private fun createNestedComment(binding: ItemCommentBinding, shortComment: Comment) {
+
+
+
+        private fun createNestedComment(
+            binding: ItemCommentBinding,
+            shortComment: Comment,
+            parentPosition: Int
+        ) {
 
             binding.btnMore.isVisible = true
-            binding.btnMore.text = "Show ${shortComment.replies.size} replies"
 
-
-
-
-            if(!listShowReplies.contains(shortComment._id)) {
-                listShowReplies.add(shortComment._id)
+/*
+            if (shortComment.isExpanded){
                 binding.btnMore.text = "Hide replies"
+                Log.d("aklsjdasd","expanded")
+                binding.llReplies.removeAllViews()
                 shortComment.replies.forEach { nestedComment ->
                     val newComment = ItemCommentBinding.inflate(LayoutInflater.from(binding.root.context), null, false)
-                    initBinding(newComment, nestedComment,false)
+                    initBinding(newComment, nestedComment, false)
                     binding.llReplies.addView(newComment.root)
                 }
                 binding.llReplies.isVisible = true
-            } else {
+
+
+
+            }else{
                 binding.btnMore.text = "Show ${shortComment.replies.size} replies"
-                listShowReplies.remove(shortComment._id)
+                Log.d("aklsjdasd","collapsed")
                 binding.llReplies.removeAllViews()
                 binding.llReplies.isVisible = false
             }
+*/
 
 
             binding.btnMore.setOnClickListener {
-                if(!listShowReplies.contains(shortComment._id)) {
-                    listShowReplies.add(shortComment._id)
-                    binding.btnMore.text = "Hide replies"
-                    shortComment.replies.forEach { nestedComment ->
-                        val newComment = ItemCommentBinding.inflate(LayoutInflater.from(binding.root.context), null, false)
-                        initBinding(newComment, nestedComment, false)
-                        binding.llReplies.addView(newComment.root)
-                    }
-                    binding.llReplies.isVisible = true
-                } else {
-                    binding.btnMore.text = "Show ${shortComment.replies.size} replies"
-                    listShowReplies.remove(shortComment._id)
-                    binding.llReplies.removeAllViews()
-                    binding.llReplies.isVisible = false
-                }
+               shortComment.isExpanded=!shortComment.isExpanded
+                notifyItemChanged(bindingAdapterPosition)
             }
 
         }
@@ -140,10 +124,12 @@ class CommentAdapter(private val commentListener: CommentClickListener,var conte
 
 
 
+
+
+
     }
 
     object ShortCommentDiffUtil: DiffUtil.ItemCallback<Comment>() {
-
         override fun areItemsTheSame(oldItem: Comment, newItem: Comment): Boolean {
             return oldItem._id == newItem._id
         }
@@ -159,8 +145,6 @@ class CommentAdapter(private val commentListener: CommentClickListener,var conte
         fun onSendComment(author: String, message: String, level: Int, parentId: String? = null,position:Int) =
             sendComment(author, message, level, parentId,position)
     }
-
-
 
     public interface Callback{
         fun onClickOnReply(shortComment:Comment,position:Int)

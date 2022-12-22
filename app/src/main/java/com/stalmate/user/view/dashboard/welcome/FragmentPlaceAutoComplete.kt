@@ -4,26 +4,25 @@ package com.stalmate.user.view.dashboard.welcome
 import android.app.Activity
 import android.content.Intent
 import android.location.Address
+import android.location.Geocoder
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.model.TypeFilter
+import com.google.gson.Gson
 import com.stalmate.user.R
+import com.stalmate.user.base.App
+import com.stalmate.user.base.App.Companion.getInstance
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.base.callbacks.AddressCallbacks
 import com.stalmate.user.databinding.FragmentAutoPlaceCompleteBinding
 import com.stalmate.user.model.Category
-import com.stalmate.user.model.SelectedList
 import com.stalmate.user.view.adapter.AdapterCategory
 
 
@@ -93,7 +92,36 @@ class FragmentPlaceAutoComplete(var type:TypeFilter) : BaseFragment(), AdapterCa
     override fun clickPlaces(place: Place?, v: View?) {
 
 
-        addressManager.findAddress(place!!.latLng,true)
+      //  addressManager.findAddress(place!!.latLng,true)
+
+        val geocoder: Geocoder
+        val addresses: List<Address>
+        geocoder = App.Companion.getInstance().getGeoCoder()!!
+
+        addresses = geocoder.getFromLocation(
+            place!!.latLng.latitude,
+            place!!.latLng.longitude,
+            1
+        )!! // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+
+
+        val address =
+            addresses[0].getAddressLine(0) // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+
+        val city = addresses[0].locality
+        val state = addresses[0].adminArea
+        val country = addresses[0].countryName
+
+        var bundle= Intent()
+
+        Log.d("alkjdsad",city)
+        Log.d("alkjdsad",state)
+        Log.d("alkjdsad",country)
+       bundle.putExtra("city",city)
+        bundle.putExtra("country",country)
+        requireActivity().setResult(Activity.RESULT_OK,bundle)
+        requireActivity().finish()
+
 
     }
 
@@ -107,6 +135,11 @@ class FragmentPlaceAutoComplete(var type:TypeFilter) : BaseFragment(), AdapterCa
 
     override fun onPlaceFoundByAddressManager(address: Address?) {
         var bundle= Intent()
+        Log.d("alkjdsad",Gson().toJson(address))
+        Log.d("alkjdsad",address!!.adminArea)
+        Log.d("alkjdsad",address!!.subAdminArea)
+        Log.d("alkjdsad",address!!.locality)
+        Log.d("alkjdsad",address!!.subLocality)
         bundle.putExtra("city",address!!.subAdminArea)
         bundle.putExtra("country",address.countryName)
         requireActivity().setResult(Activity.RESULT_OK,bundle)

@@ -27,7 +27,6 @@ abstract class BaseActivity : AppCompatActivity(), View.OnClickListener,
 
     val networkViewModel: AppViewModel by lazy {
         ViewModelProvider(this)[AppViewModel::class.java]
-
     }
 
 

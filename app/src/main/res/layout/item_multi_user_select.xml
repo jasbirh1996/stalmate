@@ -35,18 +35,29 @@
             app:layout_constraintTop_toTopOf="@+id/user_image" />
 
 
-        <androidx.appcompat.widget.AppCompatImageView
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/ivChecked"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_marginEnd="16dp"
-            android:padding="@dimen/_10sdp"
-            android:src="@drawable/ic_close"
+            android:background="@drawable/circle_black_border"
+            app:tint="@color/colorPrimary"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/colorTextDarkGray" />
+            >
+
+            <ImageView
+                android:id="@+id/ivCheckImahe"
+                android:layout_width="@dimen/_24sdp"
+                android:layout_height="@dimen/_24sdp"
+                android:background="@drawable/round_circle_primary_filled"
+                android:padding="4dp"
+                android:src="@drawable/ic_login_check_tick"
+                android:visibility="gone"
+                app:tint="@color/white" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
         <androidx.appcompat.widget.AppCompatTextView

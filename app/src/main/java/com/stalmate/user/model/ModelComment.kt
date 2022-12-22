@@ -16,13 +16,14 @@ data class Comment(
     val date: String,
     val author: String,
     val comment: String,
-    var level: Int = 1,
     var replies: MutableList<Comment> = mutableListOf(),
     val parentId: String? = null,
+    var isLiked : String? = null,
     val first_name: String,
     val last_name: String,
     var child_count: Int,
     var profile_img:String,
+    var isExpanded: Boolean =false,
     var isShowingReplies:Boolean=false
 )
 

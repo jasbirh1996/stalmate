@@ -42,7 +42,7 @@ public class ImageLoaderHelperGlide extends Activity {
               .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                 .skipMemoryCache(false)
                // .dontAnimate()
-                .transform(new CenterCrop(), new RoundedCorners(20))
+                .transform(new CenterCrop(), new RoundedCorners(5))
               .placeholder(placeholer)
                 .priority(Priority.IMMEDIATE)
                 .encodeFormat(Bitmap.CompressFormat.PNG)

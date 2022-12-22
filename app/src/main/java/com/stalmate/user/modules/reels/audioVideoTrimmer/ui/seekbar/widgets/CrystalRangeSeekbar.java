@@ -16,6 +16,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 
@@ -702,6 +703,12 @@ public class CrystalRangeSeekbar extends View {
     protected void drawBar(final Canvas canvas, final Paint paint, final RectF rect){
         canvas.drawRoundRect(rect, cornerRadius, cornerRadius, paint);
     }
+
+
+
+
+
+
 
     protected void setupHighlightBar(final Canvas canvas, final Paint paint, final RectF rect){
         rect.left = normalizedToScreen(normalizedMinValue) + (getThumbWidth() / 2);

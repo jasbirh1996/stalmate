@@ -14,6 +14,7 @@ import androidx.databinding.DataBindingUtil
 
 import com.stalmate.user.R
 import com.stalmate.user.databinding.AppCommonAlterDialogBinding
+import com.stalmate.user.utilities.ValidationHelper
 
 
 class CommonConfirmationDialog(
@@ -44,6 +45,11 @@ class CommonConfirmationDialog(
                 .setLayout( LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)*/
 
         }
+
+        if (ValidationHelper.isNull(heading)){
+            binding!!.tvHead.visibility=View.GONE
+        }
+
         binding!!.buttonProceed.setText(buttonPrimary)
         binding!!.buttonClose.setText(buttonSecondry)
         binding!!.tvHead.setText(heading)

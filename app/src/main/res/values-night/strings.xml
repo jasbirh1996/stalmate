@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="welcome_to_satalment" translatable="false">Welcome to Stalment</string>
-    <string name="enter_your_email_id" translatable="false">Email*</string>
+    <string name="welcome_to_satalment" translatable="false">Welcome to Stalmate</string>
+    <string name="enter_your_email_id" translatable="false">Enter Your Email id*</string>
     <string name="enter_your_password" translatable="false">Enter Your Password</string>
     <string name="creates_password">Create Password</string>
     <string name="forget_password" translatable="false">Forget Password?</string>

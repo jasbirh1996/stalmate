@@ -33,6 +33,7 @@ class ActivityDashboardNew : BaseActivity(), FragmentMenu.Callback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
        binding=DataBindingUtil. setContentView(this,R.layout.activity_dashboard_new)
+        drawerLayout= findViewById(R.id.drawerLayout)
         loadFragment(fragmentDashboard)
     //    onNewIntent(intent)
 
@@ -59,7 +60,6 @@ class ActivityDashboardNew : BaseActivity(), FragmentMenu.Callback {
     fun onClickOnFuntime(){
         loadFragment(fragmentFuntime)
     }
-
     val fragmentFuntime: Fragment = FragmentFunTime()
     val fragmentDashboard: Fragment = FragmentDashboard()
 
@@ -120,7 +120,7 @@ class ActivityDashboardNew : BaseActivity(), FragmentMenu.Callback {
 
     lateinit var drawerLayout: DrawerLayout
     public fun toggleDrawer() {
-         drawerLayout= findViewById(R.id.drawerLayout)
+
         if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
             drawerLayout.closeDrawer(GravityCompat.END)
         } else {

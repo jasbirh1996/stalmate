@@ -17,6 +17,7 @@ import com.stalmate.user.modules.reels.activity.ActivityFullViewReels
 import com.stalmate.user.modules.reels.activity.ActivitySongPicker
 import com.stalmate.user.modules.reels.activity.ActivityVideoRecorder
 import com.stalmate.user.view.dashboard.ActivityDashboardNew
+import com.stalmate.user.view.dashboard.Chat.ActivityChat
 import com.stalmate.user.view.dashboard.funtime.ActivityFuntimePost
 import com.stalmate.user.view.dashboard.funtime.ActivityReelsByAudio
 import com.stalmate.user.view.dashboard.funtime.ActivityReportUser
@@ -48,6 +49,11 @@ public class IntentHelper {
             return Intent(context, ActivityCategoryCreate::class.java)
                .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
         }
+        fun getChatScreen(context: Context?): Intent? {
+            return Intent(context, ActivityChat::class.java)
+                .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        }
+
 
 
         fun getSearchScreen(context: Context?): Intent? {

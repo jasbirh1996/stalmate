@@ -78,13 +78,17 @@ public class AddressManager {
     private static String getAddress(LatLng location){
         Geocoder geocoder = App.Companion.getInstance().getGeoCoder();
         try {
-            List<Address> addresses = geocoder.getFromLocation(location.latitude,
-                    location.longitude, 1);
+
+
+            assert geocoder != null;
+            List<Address> addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1);
             if (addresses != null&& addresses.size()>0) {
+
                 Address returnedAddress = addresses.get(0);
                 try {
+
                     callbacks.onPlaceFoundByAddressManager(returnedAddress);
-                    Log.d("asihd","awsd");
+
                 }catch (Exception ex){
                     Log.d("asihd",ex.getMessage());
                 }

@@ -2,15 +2,14 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-
         android:layout_height="match_parent">
 
         <FrameLayout
             android:id="@+id/nav_host_container"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:visibility="visible"
             app:defaultNavHost="true"
             app:layout_constraintBottom_toBottomOf="@+id/navigationBar"
@@ -18,15 +17,31 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <include
-            android:id="@+id/navigationBar"
-            layout="@layout/custum_bottom_bar_layout"
-            android:layout_width="0dp"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
             android:background="@android:color/transparent"
-            android:layout_height="wrap_content"
+            app:layout_scrollFlags="enterAlways|scroll|snap"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            app:elevation="0dp"
+            android:layout_gravity="bottom"
+            app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
+            app:layout_constraintStart_toStartOf="parent"
+            android:id="@+id/bottomNavigationView">
+
+            <include
+                android:id="@+id/navigationBar"
+                layout="@layout/custum_bottom_bar_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+        </com.google.android.material.bottomnavigation.BottomNavigationView>
+
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

@@ -2,6 +2,8 @@ package com.stalmate.user.modules.reels.player
 
 
 import android.animation.Animator
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -10,10 +12,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SnapHelper
+import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentreellistBinding
 import com.stalmate.user.modules.reels.Extensions.Companion.findFirstVisibleItemPosition
@@ -22,8 +27,9 @@ import com.stalmate.user.modules.reels.player.holders.VideoReelViewHolder
 import com.stalmate.user.utilities.NetworkUtils
 import com.stalmate.user.view.dashboard.ActivityDashboard
 import com.stalmate.user.view.dashboard.funtime.FragmentFunTime
+import com.stalmate.user.view.dashboard.funtime.ResultFuntime
 
-class ReelListFragment : BaseFragment() {
+class ReelListFragment : BaseFragment(), ReelAdapter.Callback {
     lateinit var adapter: ReelAdapter
     private var controlsVisibleShowHide: Boolean = false;
     private val HIDE_THRESHOLD = 100;
@@ -47,7 +53,7 @@ class ReelListFragment : BaseFragment() {
 
 
         if (isNetworkAvailable()){
-            adapter = ReelAdapter(requireContext())
+            adapter = ReelAdapter(requireContext(),this)
             binding.recyclerView.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
             val snapHelper: SnapHelper = PagerSnapHelper()
             snapHelper.attachToRecyclerView(binding.recyclerView)
@@ -214,6 +220,26 @@ class ReelListFragment : BaseFragment() {
        }
         super.onPause()
     }
+
+    override fun onClickOnFullView(resultFuntime: ResultFuntime) {
+        startActivity(IntentHelper.getFullViewReelActivity(context)!!.putExtra("data",resultFuntime))
+
+      //  startForResultReels.launch(IntentHelper.getFullViewReelActivity(requireContext()))
+    }
+
+    val startForResultReels = registerForActivityResult(ActivityResultContracts.StartActivityForResult())
+    { result: ActivityResult ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            //  you will get result here in result.data
+            Log.d(";laskdasd",";alksdasd")
+
+
+            adapter
+        }
+
+    }
+
+
 
 
 }

@@ -11,7 +11,6 @@ import com.google.android.material.shape.CornerFamily
 import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseActivity
-import com.stalmate.user.commonadapters.AdapterFeed
 import com.stalmate.user.databinding.ActivityOtherUserProfileBinding
 import com.stalmate.user.model.AboutProfileLine
 
@@ -24,11 +23,10 @@ import com.stalmate.user.view.adapter.ProfileAboutAdapter
 
 import com.stalmate.user.view.adapter.ProfileFriendAdapter
 
-class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk,
+class ActivityOtherUserProfile : BaseActivity(),
     ProfileFriendAdapter.Callbackk, ProfileAboutAdapter.Callbackk {
 
     lateinit var binding: ActivityOtherUserProfileBinding
-    lateinit var feedAdapter: AdapterFeed
     lateinit var friendAdapter: ProfileFriendAdapter
     var userId = ""
     lateinit var userData: ModelUser
@@ -70,20 +68,10 @@ class ActivityOtherUserProfile : BaseActivity(), AdapterFeed.Callbackk,
             }
         })
 
-        feedAdapter = AdapterFeed(networkViewModel, this, this)
-        binding.layout.rvFeeds.adapter = feedAdapter
-        binding.layout.rvFeeds.setNestedScrollingEnabled(false);
-        binding.layout.rvFeeds.layoutManager = LinearLayoutManager(this)
-        networkViewModel.getFeedList("", HashMap())
-        networkViewModel.feedLiveData.observe(this, Observer {
 
-
-            Log.d("asdasdasd", "oaspiasddsad")
-            it.let {
-                feedAdapter.submitList(it!!.results)
-            }
-
-        })
+        binding.buttonChat.setOnClickListener {
+            startActivity(IntentHelper.getChatScreen(this)!!.putExtra("id",userData.results.id))
+        }
 
         setupData()
     }

@@ -10,6 +10,7 @@ import androidx.work.ListenableWorker;
 import androidx.work.WorkerParameters;
 
 import com.daasuu.mp4compose.FillMode;
+import com.daasuu.mp4compose.Rotation;
 import com.daasuu.mp4compose.VideoFormatMimeType;
 import com.daasuu.mp4compose.composer.Mp4Composer;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -45,8 +46,14 @@ public class VideoSpeedWorker extends ListenableWorker {
         Size size = null;
         size = VideoUtil.getDimensions(input);
         composer.videoBitrate((int) (.07 * 30 * size.getWidth() * size.getHeight()));
+        composer.rotation(Rotation.NORMAL);
+       // composer.size((width) 540, (height) 960);
+        composer.fillMode(FillMode.PRESERVE_ASPECT_FIT);
+        Log.d("speedworker",(.07 * 30 * size.getWidth() * size.getHeight())+"");
+        composer .size(Integer.parseInt(String.valueOf(size.getWidth())),Integer.parseInt(String.valueOf(size.getHeight())));
         composer.mute(true);
-        composer.timeScale(speed);
+
+     //   composer.timeScale(speed);
         composer.listener(new Mp4Composer.Listener() {
 
             @Override

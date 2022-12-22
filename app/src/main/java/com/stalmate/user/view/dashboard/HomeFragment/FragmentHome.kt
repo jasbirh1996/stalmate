@@ -12,6 +12,7 @@ import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
@@ -21,26 +22,28 @@ import com.stalmate.user.model.Feed
 import com.stalmate.user.model.User
 import com.stalmate.user.utilities.Constants
 import com.stalmate.user.utilities.NetworkUtils
+import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.view.adapter.SuggestedFriendAdapter
 import com.stalmate.user.view.adapter.UserHomeStoryAdapter
 
 
-class FragmentHome(var callback:Callback) : BaseFragment(), AdapterFeed.Callbackk, UserHomeStoryAdapter.Callbackk, SuggestedFriendAdapter.Callbackk {
+class FragmentHome(var callback: Callback) : BaseFragment(), AdapterFeed.Callbackk,
+    UserHomeStoryAdapter.Callbackk, SuggestedFriendAdapter.Callbackk {
 
     private lateinit var binding: FragmentHomeBinding
     lateinit var feedAdapter: AdapterFeed
     lateinit var homeStoryAdapter: UserHomeStoryAdapter
-    lateinit var suggestedFriendAdapter:  SuggestedFriendAdapter
+    lateinit var suggestedFriendAdapter: SuggestedFriendAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
     }
 
-    public interface Callback{
+    public interface Callback {
         fun onCLickOnMenuButton()
         fun onCLickOnProfileButton()
-        fun onScoll(toHide:Boolean)
+        fun onScoll(toHide: Boolean)
     }
 
     override fun onCreateView(
@@ -48,8 +51,8 @@ class FragmentHome(var callback:Callback) : BaseFragment(), AdapterFeed.Callback
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        var view=inflater.inflate(R.layout.fragment_home, container, false)
-        binding=DataBindingUtil.bind<FragmentHomeBinding>(view)!!
+        var view = inflater.inflate(R.layout.fragment_home, container, false)
+        binding = DataBindingUtil.bind<FragmentHomeBinding>(view)!!
         return binding.root
     }
 
@@ -57,25 +60,26 @@ class FragmentHome(var callback:Callback) : BaseFragment(), AdapterFeed.Callback
         super.onViewCreated(view, savedInstanceState)
 
         binding.refreshLayout.setOnRefreshListener {
-            binding.refreshLayout.isRefreshing=false
-            if (isNetworkAvailable()){
+            binding.refreshLayout.isRefreshing = false
+            if (isNetworkAvailable()) {
 
                 homeSetUp()
-            }else{
+            } else {
 
                 binding.nointernet.visibility = View.VISIBLE
             }
         }
 
-        if (isNetworkAvailable()){
-
+        if (isNetworkAvailable()) {
+            getUserProfileData()
             homeSetUp()
-                   }else{
+        } else {
 
             binding.nointernet.visibility = View.VISIBLE
         }
 
-        binding.nestedScrollview.setOnScrollChangeListener(object : NestedScrollView.OnScrollChangeListener {
+        binding.nestedScrollview.setOnScrollChangeListener(object :
+            NestedScrollView.OnScrollChangeListener {
 
             override fun onScrollChange(
                 v: NestedScrollView,
@@ -85,9 +89,9 @@ class FragmentHome(var callback:Callback) : BaseFragment(), AdapterFeed.Callback
                 oldScrollY: Int
             ) {
 
-                if (oldScrollY<scrollY){//increase
+                if (oldScrollY < scrollY) {//increase
                     callback.onScoll(true)
-                }else{
+                } else {
                     callback.onScoll(false)
                 }
 
@@ -96,39 +100,38 @@ class FragmentHome(var callback:Callback) : BaseFragment(), AdapterFeed.Callback
         })
 
 
-
     }
 
 
-    fun homeSetUp(){
+    fun homeSetUp() {
         setupSearchBox()
         feedAdapter = AdapterFeed(networkViewModel, requireContext(), this)
         homeStoryAdapter = UserHomeStoryAdapter(networkViewModel, requireContext(), this)
         binding.shimmerViewContainer.startShimmer()
         binding.shimmerLayoutFeeds.startShimmer()
 
-        binding.rvFeeds.adapter=feedAdapter
-        binding.rvStory.adapter=homeStoryAdapter
+        binding.rvFeeds.adapter = feedAdapter
+        binding.rvStory.adapter = homeStoryAdapter
 
-        binding.rvFeeds.layoutManager= LinearLayoutManager(context)
-        binding.rvStory.layoutManager= LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
+        binding.rvFeeds.layoutManager = LinearLayoutManager(context)
+        binding.rvStory.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
-      //  Glide.with(requireContext()).load(PrefManager.getInstance(requireContext())!!.userProfileDetail.results.profile_img1).placeholder(R.drawable.profileplaceholder).into(binding.postContant.userImage)
 
         networkViewModel.getFeedList("", HashMap())
         networkViewModel.feedLiveData.observe(viewLifecycleOwner, Observer {
-            Log.d("asdasdasd","oaspiasddsad")
+            Log.d("asdasdasd", "oaspiasddsad")
             it.let {
                 feedAdapter.submitList(it!!.results)
                 binding.shimmerLayoutFeeds.stopShimmer()
-                binding.rvFeeds.visibility=View.VISIBLE
+                binding.rvFeeds.visibility = View.VISIBLE
             }
         })
 
         networkViewModel.feedLiveData.observe(viewLifecycleOwner, Observer {
             it.let {
                 binding.shimmerViewContainer.stopShimmer()
-                binding.storyView.visibility=View.VISIBLE
+                binding.storyView.visibility = View.VISIBLE
                 homeStoryAdapter.submitList(it!!.results)
             }
         })
@@ -157,6 +160,24 @@ class FragmentHome(var callback:Callback) : BaseFragment(), AdapterFeed.Callback
 
     }
 
+
+    fun getUserProfileData() {
+        var hashMap = HashMap<String, String>()
+        networkViewModel.getProfileData(hashMap)
+        networkViewModel.profileLiveData.observe(requireActivity(), Observer {
+            it.let {
+                if (it != null) {
+                    PrefManager.getInstance(requireContext())!!.userProfileDetail = it
+                }
+                Glide.with(requireContext())
+                    .load(PrefManager.getInstance(requireContext())!!.userProfileDetail.results.profile_img1)
+                    .placeholder(R.drawable.profileplaceholder).circleCrop()
+                    .into(binding.postContant.userImage)
+
+            }
+        })
+    }
+
     override fun onClickOnViewComments(postId: Int) {
 
     }
@@ -176,7 +197,7 @@ class FragmentHome(var callback:Callback) : BaseFragment(), AdapterFeed.Callback
 
     }
 
-    fun isNetworkAvailable() : Boolean{
+    fun isNetworkAvailable(): Boolean {
 
         return NetworkUtils.isNetworkAvailable()
     }
@@ -186,7 +207,7 @@ class FragmentHome(var callback:Callback) : BaseFragment(), AdapterFeed.Callback
 
         var hashmap = HashMap<String, String>()
         hashmap.put("id_user", "")
-        hashmap.put("type",Constants.TYPE_FRIEND_SUGGESTIONS)
+        hashmap.put("type", Constants.TYPE_FRIEND_SUGGESTIONS)
         hashmap.put("sub_type", "")
         hashmap.put("search", "")
         hashmap.put("page", "1")
@@ -195,38 +216,42 @@ class FragmentHome(var callback:Callback) : BaseFragment(), AdapterFeed.Callback
         networkViewModel.getFriendList(hashmap)
         networkViewModel.friendLiveData.observe(viewLifecycleOwner, Observer {
             it.let {
-                Log.d("asdasdasd","asdasdasdasd")
+                Log.d("asdasdasd", "asdasdasdasd")
 
-                suggestedFriendAdapter = SuggestedFriendAdapter(networkViewModel, requireContext(), this)
-                binding.rvSuggestedFriends.layoutManager= LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
-                binding.rvSuggestedFriends.adapter=suggestedFriendAdapter
+                suggestedFriendAdapter =
+                    SuggestedFriendAdapter(networkViewModel, requireContext(), this)
+                binding.rvSuggestedFriends.layoutManager =
+                    LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+                binding.rvSuggestedFriends.adapter = suggestedFriendAdapter
                 suggestedFriendAdapter.submitList(it!!.results)
             }
         })
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private  fun setupSearchBox(){
-      binding.toolbar.layoutSearchBox.setOnTouchListener(View.OnTouchListener { v, event ->
-          val x = event.x.toInt()
-          val y = event.y.toInt()
-          when (event.action) {
-              MotionEvent.ACTION_DOWN ->{
-                  binding.toolbar.layoutSearchBox.background=ContextCompat.getDrawable(requireContext(),R.drawable.tapped_search_background)
-              }
-              MotionEvent.ACTION_MOVE -> Log.i("TAG", "moving: ($x, $y)")
-              MotionEvent.ACTION_UP ->{
-                  binding.toolbar.layoutSearchBox.background=ContextCompat.getDrawable(requireContext(),R.drawable.search_background)
+    private fun setupSearchBox() {
+        binding.toolbar.layoutSearchBox.setOnTouchListener(View.OnTouchListener { v, event ->
+            val x = event.x.toInt()
+            val y = event.y.toInt()
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    binding.toolbar.layoutSearchBox.background = ContextCompat.getDrawable(
+                        requireContext(),
+                        R.drawable.tapped_search_background
+                    )
+                }
+                MotionEvent.ACTION_MOVE -> Log.i("TAG", "moving: ($x, $y)")
+                MotionEvent.ACTION_UP -> {
+                    binding.toolbar.layoutSearchBox.background =
+                        ContextCompat.getDrawable(requireContext(), R.drawable.search_background)
 
 
-                  startActivity(IntentHelper.getSearchScreen(requireContext()))
+                    startActivity(IntentHelper.getSearchScreen(requireContext()))
 
-              }
-          }
-          true
-      })
-
-
+                }
+            }
+            true
+        })
 
 
     }

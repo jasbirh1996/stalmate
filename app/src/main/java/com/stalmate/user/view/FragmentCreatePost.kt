@@ -64,6 +64,8 @@ class FragmentCreatePost : BaseFragment(), AdapterFeed.Callbackk, UserHomeStoryA
 
 
 
+
+
     }
 
     override fun onClickOnViewComments(postId: Int) {

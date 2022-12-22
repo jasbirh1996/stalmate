@@ -45,7 +45,6 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
     ProfileAboutAdapter.Callbackk {
     lateinit var syncBroadcastreceiver: SyncBroadcasReceiver
     lateinit var binding: ActivityProfileBinding
-    lateinit var feedAdapter: AdapterFeed
     lateinit var friendAdapter: ProfileFriendAdapter
     var permissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.READ_CONTACTS)
     var WRITE_REQUEST_CODE = 100
@@ -87,16 +86,6 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
         requestPermissions(permissions, WRITE_REQUEST_CODE)
 
         binding.layout.buttonEditProfile.visibility = View.VISIBLE
-        feedAdapter = AdapterFeed(networkViewModel, this, this)
-        binding.layout.rvFeeds.setNestedScrollingEnabled(false);
-        binding.layout.rvFeeds.adapter = feedAdapter
-        binding.layout.rvFeeds.layoutManager = LinearLayoutManager(this)
-        networkViewModel.getFeedList("", HashMap())
-        networkViewModel.feedLiveData.observe(this, Observer {
-            it.let {
-                feedAdapter.submitList(it!!.results)
-            }
-        })
 
 
         val radius = resources.getDimension(R.dimen.dp_10)
@@ -350,7 +339,7 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
 
         Log.d("ajkbcb", tabType)
 
-        if (userData.about.isEmpty()) {
+        if (userData.about!!.isEmpty()) {
             binding.tvUserAbout.visibility = View.GONE
         }
 

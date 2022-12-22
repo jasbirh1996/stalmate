@@ -21,4 +21,16 @@ class CommentViewModel: ViewModel() {
         }
         _commentList.value = newList
     }
+
+    fun likeComment(shortComment: Comment) {
+        val newList = _commentList.value ?: mutableListOf()
+        newList
+
+        if(shortComment.parentId != null) {
+            newList.find { it._id == shortComment.parentId }?.isLiked=="Yes"
+        } else {
+            newList.add(shortComment)
+        }
+        _commentList.value = newList
+    }
 }

@@ -21,6 +21,7 @@ import com.stalmate.user.model.User
 import com.stalmate.user.utilities.Constants
 import com.stalmate.user.view.adapter.FriendAdapter
 import com.stalmate.user.view.dashboard.funtime.viewmodel.TagPeopleViewModel
+import com.stalmate.user.view.dialogs.CommonConfirmationDialog
 import java.util.ArrayList
 
 class FragmentSingleUserSelector: BaseFragment(), FriendAdapter.Callbackk,
@@ -58,6 +59,13 @@ class FragmentSingleUserSelector: BaseFragment(), FriendAdapter.Callbackk,
 
         tagPeopleViewModel= ViewModelProvider(requireActivity()).get(TagPeopleViewModel::class.java)
         friendAdapter = TaggedUsersAdapter(tagPeopleViewModel, requireContext(),isToSelect = true,this)
+
+       tagPeopleViewModel.tagModelLiveData.observe(viewLifecycleOwner, Observer {
+
+
+
+        })
+
         binding.etSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
@@ -184,7 +192,49 @@ class FragmentSingleUserSelector: BaseFragment(), FriendAdapter.Callbackk,
     override fun onUserSelected(user: User) {
 
 
-        tagPeopleViewModel.addToList(user)
+
+
+
+
+        if (tagPeopleViewModel.getPolicy().value!!.policy!=Constants.PRIVACY_TYPE_PUBLIC){
+
+
+            var custumConfirmDialogForAccountPublic= CommonConfirmationDialog(requireContext(),"","Make your account public to tag others who don't follow you","Ok","Close",object :
+                CommonConfirmationDialog.Callback{
+                override fun onDialogResult(isPermissionGranted: Boolean) {
+                    if (isPermissionGranted){
+                    /*    tagPeopleViewModel.clearList()
+                        tagPeopleViewModel.addToList(user)*/
+
+                    }
+                }
+            })
+            custumConfirmDialogForAccountPublic.show()
+
+
+      /*      var custumConfirmDialog= CommonConfirmationDialog(requireContext(),"make Specific ?","Tagged people removed when you select My Followers, Private or Specific friend","Yes","Cancel",object :
+                CommonConfirmationDialog.Callback{
+                override fun onDialogResult(isPermissionGranted: Boolean) {
+                    if (isPermissionGranted){
+
+                        tagPeopleViewModel.clearList()
+
+                    }
+                }
+            })
+            custumConfirmDialog.show()*/
+        }else{
+            tagPeopleViewModel.addToList(user)
+        }
+
+
+
+
+
+
+
+      //  tagPeopleViewModel.setPolicy(Constants.PRIVACY_TYPE_PUBLIC)
+
 
    /*     var bundle=Bundle()
         bundle.putSerializable(SELECT_USER,user)

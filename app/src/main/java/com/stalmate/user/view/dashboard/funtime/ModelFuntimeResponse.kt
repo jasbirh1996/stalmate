@@ -19,7 +19,7 @@ data class ResultFuntime(
     val hastag: String,
     val id: String,
     val last_name: String,
-    val like_count: Int,
+    var like_count: Int,
     val location: String,
     val profile_img: String,
     val share_count: Int,
@@ -28,10 +28,12 @@ data class ResultFuntime(
     val sound_image: String,
     val artist_name: String,
     val tag_id: String,
+    var isLiked:String?=null,
     val text: String,
     val sound_id:String?,
-    val is_my:String,
+    val is_my:String?,
     val url: String,
+    val user_id:String,
     var tag_user:ArrayList<TaggedUser>
 ):Parcelable
 
@@ -40,5 +42,6 @@ data class ResultFuntime(
 data class TaggedUser(
     val _id: String,
     val first_name: String,
-    val last_name: String
+    val last_name: String,
+    val profile_img_1:String=""
 ): Parcelable

@@ -99,8 +99,8 @@ class FriendAdapter(
                         }else{
                             list[position].request_status=Constants.FRIEND_CONNECTION_STATUS_PENDING
                         }
-                    }else{
-                        list[position].isFriend=1
+                    }else if (list[position].isFriend==1){
+                        list[position].isFriend=0
                     }
 
                     notifyItemChanged(position)
@@ -352,7 +352,7 @@ class FriendAdapter(
             binding.tvLineOne.visibility = View.VISIBLE
         }
 
-        if (friend.mutual_friend.isNotEmpty()){
+        if (friend.mutual_friend!!.isNotEmpty()){
             binding.tvMutualFirnds.text ="Mutual Friends : "+ friend.mutual_friend
             binding.tvMutualFirnds.visibility = View.VISIBLE
         }

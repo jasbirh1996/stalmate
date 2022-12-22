@@ -144,14 +144,23 @@
 
 
     <style name="FullViewScreen"
-        parent="Theme.MaterialComponents.DayNight.NoActionBar">
-
+        parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/app_color</item>
+        <item name="colorPrimaryDark">@color/app_color</item>
+        <item name="colorAccent">@color/app_color</item>
+        <item name="colorOnSecondary">@color/white</item>
         <item name="android:windowTranslucentNavigation">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowActivityTransitions">true</item>
 
     </style>
 
+
+
+
+    <style name="ChatBackground" parent="AppTheme">
+        <item name="android:windowBackground">@drawable/whatsapp_dark_background</item>
+    </style>
 
 
 

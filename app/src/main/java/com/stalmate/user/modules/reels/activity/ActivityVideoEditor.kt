@@ -24,8 +24,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.work.*
-import com.arthenica.ffmpegkit.FFmpegKit
-import com.arthenica.ffmpegkit.ReturnCode
+import com.arthenica.mobileffmpeg.FFmpeg
+
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
@@ -117,19 +117,21 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
 
 
     private fun hideSystemBars() {
+        window.setStatusBarColor(ContextCompat.getColor(this, R.color.black));
         val windowInsetsController =
             ViewCompat.getWindowInsetsController(window.decorView) ?: return
         // Configure the behavior of the hidden system bars
         windowInsetsController.systemBarsBehavior =
             WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         // Hide both the status bar and the navigation bar
-        windowInsetsController.hide(WindowInsetsCompat.Type.navigationBars())
+        windowInsetsController.hide(WindowInsetsCompat.Type.statusBars())
     }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
+        hideSystemBars()
         super.onCreate(savedInstanceState)
+
         binding = ActivityPreviewVideoBinding.inflate(layoutInflater)
         setContentView(binding.root)
         isIMage = intent.getBooleanExtra("isImage", false)
@@ -303,7 +305,11 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
 
         binding.ivMusic.setOnClickListener(this)
         binding.imgTrim.setOnClickListener(this)
+        binding.imgDrawingDone.setOnClickListener(this)
+
     }
+
+    var isTextEnabled = false
 
     override fun onClick(v: View) {
         when (v.id) {
@@ -314,31 +320,43 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
 
             }
             R.id.imgDone -> saveImage()
+            R.id.imgDrawingDone -> {
+                binding.layoutDrawWithUndo.visibility = View.GONE
+                binding.layoutTopControlls.visibility = View.VISIBLE
+                binding.colorSeekBar.visibility = View.GONE
+                binding.layoutTopControlls.visibility = View.VISIBLE
+                binding.layoutDrawWithUndo.visibility = View.GONE
+                binding.imgDone.visibility = View.VISIBLE
+                mPhotoEditor.setBrushDrawingMode(false)
+            }
             R.id.imgDraw -> {
 
 
                 if (mPhotoEditor.brushDrawableMode == true) {
-                    binding.imgUndo.visibility=View.GONE
-                    binding.colorSeekBar.visibility = View.GONE
-                    mPhotoEditor.setBrushDrawingMode(false)
-                    binding.imgDraw.setImageDrawable(
-                        ContextCompat.getDrawable(
-                            this,
-                            R.drawable.ic_crtpost_top_sketch
-                        )
-                    )
+                    /*       binding.imgUndo.visibility=View.GONE
+                           binding.colorSeekBar.visibility = View.GONE
+                           binding.layoutTopControlls.visibility=View.VISIBLE
+                           binding.layoutDrawWithUndo.visibility=View.GONE
+                           mPhotoEditor.setBrushDrawingMode(false)
+                           binding.imgDraw.setImageDrawable(
+                               ContextCompat.getDrawable(
+                                   this,
+                                   R.drawable.ic_crtpost_top_sketch
+                               )
+                           )*/
                 } else {
-                    binding.imgUndo.visibility=View.VISIBLE
+                    binding.imgUndo.visibility = View.VISIBLE
                     binding.colorSeekBar.visibility = View.VISIBLE
                     mPhotoEditor.setBrushDrawingMode(true)
-
-
-                    binding.imgDraw.setImageDrawable(
-                        ContextCompat.getDrawable(
-                            this,
-                            R.drawable.ic_crtpost_top_sketch_active
-                        )
-                    )
+                    binding.layoutTopControlls.visibility = View.GONE
+                    binding.layoutDrawWithUndo.visibility = View.VISIBLE
+                    binding.imgDone.visibility = View.GONE
+                    /*   binding.imgDraw.setImageDrawable(
+                           ContextCompat.getDrawable(
+                               this,
+                               R.drawable.ic_crtpost_top_sketch_active
+                           )
+                       )*/
                 }
 
 
@@ -354,6 +372,45 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
             }
 
             R.id.imgText -> {
+
+
+/*
+
+                if (isTextEnabled) {
+                    binding.colorSeekBar.visibility = View.GONE
+                    mPhotoEditor.setBrushDrawingMode(false)
+                    binding.imgText.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            this,
+                            R.drawable.ic_crtpost_top_text
+                        )
+                    )
+                } else {
+                    binding.colorSeekBar.visibility = View.VISIBLE
+                    mPhotoEditor.setBrushDrawingMode(false)
+
+
+                    binding.imgText.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            this,
+                            R.drawable.ic_crtpost_top_text_active
+                        )
+                    )
+                }
+
+
+                binding.colorSeekBar.setOnColorChangeListener(object :
+                    ColorSeekBar.OnColorChangeListener {
+                    override fun onColorChangeListener(color: Int) {
+
+
+                    }
+
+                })
+
+*/
+
+
                 val textEditorDialogFragment = TextEditorDialogFragment.show(this)
                 textEditorDialogFragment.setOnTextEditorListener(object :
                     TextEditorDialogFragment.TextEditorListener {
@@ -368,7 +425,7 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
 
 
             R.id.imgUndo -> {
-            //    Log.d("canvas>>", mPhotoEditor.undo().toString() + "")
+                //    Log.d("canvas>>", mPhotoEditor.undo().toString() + "")
                 mPhotoEditor.undo()
             }
 
@@ -488,7 +545,7 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
                             //  convertImageToVideo(imagePath)
                         } else {
                             mergeAudioVideo(videoPath)
-                          /*  applayWaterMark(File(videoPath))*/
+                            /*  applayWaterMark(File(videoPath))*/
                         }
 
 
@@ -608,12 +665,11 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
     }
 
 
-
     fun addToWatermark(beforeWatermarkAddedFile: File) {
         val wm = WorkManager.getInstance(this)
-       // val output = File(cacheDir, UUID.randomUUID().toString())
+        // val output = File(cacheDir, UUID.randomUUID().toString())
         val outputPathss = Common.getFilePath(this, Common.VIDEO)
-        if (isIMage) {
+/*        if (isIMage) {
             val outputPath = Common.getFilePath(this, Common.VIDEO)
             ffmpegWatermark(beforeWatermarkAddedFile.absolutePath, outputPath, imagePath)
         } else {
@@ -638,7 +694,10 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
                 }
 
 
-        }
+        }*/
+
+        val outputPath = Common.getFilePath(this, Common.VIDEO)
+        ffmpegWatermark(beforeWatermarkAddedFile.absolutePath, outputPath, imagePath)
 
 
     }
@@ -649,18 +708,18 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
             val currentFile: File = File(path)
             val newfile = File(Common.getFilePath(this, Common.VIDEO))
             if (currentFile.exists()) {
-             Handler(Looper.getMainLooper()).post {
-                 val inputStream: InputStream = FileInputStream(currentFile)
-                 val outputStream: OutputStream = FileOutputStream(newfile)
-                 val buf = ByteArray(1024)
-                 var len: Int
-                 while (inputStream.read(buf).also { len = it } > 0) {
-                     outputStream.write(buf, 0, len)
-                 }
-                 outputStream.flush()
-                 inputStream.close()
-                 outputStream.close()
-             }
+                Handler(Looper.getMainLooper()).post {
+                    val inputStream: InputStream = FileInputStream(currentFile)
+                    val outputStream: OutputStream = FileOutputStream(newfile)
+                    val buf = ByteArray(1024)
+                    var len: Int
+                    while (inputStream.read(buf).also { len = it } > 0) {
+                        outputStream.write(buf, 0, len)
+                    }
+                    outputStream.flush()
+                    inputStream.close()
+                    outputStream.close()
+                }
 
                 /*       Toast.makeText(applicationContext, "Video has just saved!!", Toast.LENGTH_LONG)
                            .show()
@@ -925,26 +984,44 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
 */
 
 
-   if (!ValidationHelper.isNull(audioPath)){
+        if (!ValidationHelper.isNull(audioPath)) {
 
-    Log.d("aklshjdasd",audioPath)
+           Log.d("aklshjdasd", audioPath)
 
 
-       val output = File(cacheDir, UUID.randomUUID().toString()+".mp4")
-       val session = FFmpegKit.execute("-i $filePath -i $audioPath -map 0:v -map 1:a -t $duration -c:v copy -c:a copy $output")
-       if (ReturnCode.isSuccess(session.returnCode)) {
-           applayWaterMark(output)
-           // SUCCESS
-       } else if (ReturnCode.isCancel(session.returnCode)) {
-           Log.d("lkasjldasd", "asdasdasdgfsd")
-           // CANCEL
-       } else {
-           Log.d("lkasjldasd", "asdassfdajjsd")
-           // FAILURE
-       }
-   }else{
-       applayWaterMark(File(filePath))
-   }
+            val output = File(cacheDir, UUID.randomUUID().toString() + ".mp4")
+    /*        val session =
+                FFmpegKit.execute("-i $filePath -i $audioPath -map 0:v -map 1:a -t $duration -c:v copy -c:a copy $output")
+            if (ReturnCode.isSuccess(session.returnCode)) {
+                applayWaterMark(output)
+                // SUCCESS
+            } else if (ReturnCode.isCancel(session.returnCode)) {
+                Log.d("lkasjldasd", "asdasdasdgfsd")
+                // CANCEL
+            } else {
+                Log.d("lkasjldasd", "asdassfdajjsd")
+                // FAILURE
+            }*/
+
+
+
+
+            val asyncTask =
+                FFmpegAsyncTask("-i $filePath -i $audioPath -map 0:v -map 1:a -t $duration -crf 23 -preset ultrafast -vcodec libx264 -c:a aac $output",
+                    object : FFmpegAsyncTask.OnTaskCompleted {
+                        override fun onTaskCompleted(isSuccess: Boolean) {
+                            runOnUiThread {
+                                applayWaterMark(output)
+                            }
+
+                        }
+                    })
+            asyncTask.execute()
+
+
+        } else {
+            applayWaterMark(File(filePath))
+        }
     }
 
 
@@ -1198,9 +1275,9 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
     }
 
     private fun imageToVideo(imagePath: String) {
-        val outputPath = Common.getFilePath(this, Common.VIDEO)
+       val outputPath = Common.getFilePath(this, Common.VIDEO)
 
-        val options: BitmapFactory.Options = BitmapFactory.Options()
+  /*      val options: BitmapFactory.Options = BitmapFactory.Options()
         options.inJustDecodeBounds = true
         BitmapFactory.decodeFile(File(imagePath).getAbsolutePath(), options)
         val imageHeight = 1072
@@ -1213,7 +1290,7 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
         if (ReturnCode.isSuccess(session.returnCode)) {
             Log.d("lkasjldasd", "asdasdasd")
             Log.d("kashdkhasd", outputPath)
-           mergeAudioVideo(outputPath)
+            mergeAudioVideo(outputPath)
             // SUCCESS
         } else if (ReturnCode.isCancel(session.returnCode)) {
             Log.d("lkasjldasd", "asdasdasdgfsd")
@@ -1230,31 +1307,70 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
                     session.failStackTrace
                 )
             )
+        }*/
+
+
+         var height = 0
+        var width = 0
+            if (displayWidth%2==0){
+                width=displayWidth
+            }else{
+                width=displayWidth-1
+            }
+
+        if (displayHeight%2==0){
+            height=displayHeight
+        }else{
+            height=displayHeight-1
         }
+
+        val asyncTask =
+            FFmpegAsyncTask("-loop 1  -framerate 2 -i $imagePath -c:v mpeg4 -t $duration -pix_fmt yuv420p  -crf 23 -preset ultrafast -vcodec libx264 -c:a aac -vf scale=$width:$height  $outputPath",
+                object : FFmpegAsyncTask.OnTaskCompleted {
+                    override fun onTaskCompleted(isSuccess: Boolean) {
+                        runOnUiThread {
+                            mergeAudioVideo(outputPath)
+                        }
+
+                    }
+                })
+        asyncTask.execute()
     }
 
 
     fun ffmpegWatermark(input: String, output: String, image: String) {
+        Log.d("la';sdlasd","lasjdasd")
+  /*      Handler(Looper.getMainLooper()).post {
+            val session =
+                FFmpegKit.execute("-i $input -i $image -c:v mpeg4 -filter_complex [1][0]scale2ref=w=oh*mdar:h=ih*1.1[logo][video];[video][logo]overlay=0:0 -c:a aac $output")
+            if (ReturnCode.isSuccess(session.returnCode)) {
+                dismissLoader()
+                saveVideoToInternalStorage(output)
 
-    Handler(Looper.getMainLooper()).post {
-        val session =
-            FFmpegKit.execute("-i $input -i $image -c:v mpeg4 -filter_complex [1][0]scale2ref=w=oh*mdar:h=ih*1.1[logo][video];[video][logo]overlay=0:0 -c:a aac $output")
-        if (ReturnCode.isSuccess(session.returnCode)) {
-            dismissLoader()
-            saveVideoToInternalStorage(output)
+                // SUCCESS
+            } else if (ReturnCode.isCancel(session.returnCode)) {
+                Log.d("lkasjldasd", "asdasdasdgfsd")
+                // CANCEL
+            } else {
+                Log.d("lkasjldasd", "asdassfdajjsd")
+                // FAILURE
+            }
+        }*/
 
-            // SUCCESS
-        } else if (ReturnCode.isCancel(session.returnCode)) {
-            Log.d("lkasjldasd", "asdasdasdgfsd")
-            // CANCEL
-        } else {
-            Log.d("lkasjldasd", "asdassfdajjsd")
-            // FAILURE
-        }
+
+        val asyncTask =
+            FFmpegAsyncTask("-i $input -i $image -filter_complex [1][0]scale2ref=w=oh*mdar:h=ih*1.1[logo][video];[video][logo]overlay=0:0 -crf 23 -preset ultrafast -vcodec libx264 -c:a aac $output",
+                object : FFmpegAsyncTask.OnTaskCompleted {
+                    override fun onTaskCompleted(isSuccess: Boolean) {
+                       runOnUiThread {
+                           dismissLoader()
+                           saveVideoToInternalStorage(output)
+                       }
+
+                    }
+                })
+        asyncTask.execute()
     }
-
-    }
-
 
     fun generateCreateVideoWithPipesScript(
         image3Pipe: String,
@@ -1278,4 +1394,27 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
     }
 
 
+    private class FFmpegAsyncTask(var command:String,var callback:OnTaskCompleted) :
+        AsyncTask<Void?, Void?, Void?>() {
+        protected override fun onPreExecute() {
+            super.onPreExecute()
+
+        }
+
+        protected override fun doInBackground(vararg nc: Void?): Void? {
+
+            FFmpeg.execute(command);
+            return null
+        }
+
+        protected override fun onPostExecute(v: Void?) {
+            callback.onTaskCompleted(true)
+            super.onPostExecute(v)
+        }
+
+
+        public interface OnTaskCompleted{
+            fun  onTaskCompleted(isSuccess:Boolean);
+        }
+    }
 }

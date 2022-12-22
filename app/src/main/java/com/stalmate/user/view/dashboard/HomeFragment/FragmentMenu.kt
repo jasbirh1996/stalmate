@@ -35,6 +35,7 @@ class FragmentMenu(var callback : Callback) : BaseFragment(),  DrawerAdapter.Cal
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         // Inflate the layout for this fragment
         binding = DataBindingUtil.bind<FragmentMenuBinding>(inflater.inflate(R.layout.fragment_menu, container, false))!!
         return binding.root

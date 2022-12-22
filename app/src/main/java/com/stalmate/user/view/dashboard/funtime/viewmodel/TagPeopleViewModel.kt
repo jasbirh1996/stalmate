@@ -15,10 +15,14 @@ import java.io.Serializable
 class TagPeopleViewModel(state: SavedStateHandle) : ViewModel() {
     private val state: SavedStateHandle
     var tagModelLiveData = MutableLiveData<TagModel>()
-    var taggedModelObject: TagModel = TagModel(ArrayList(),"")
+    var taggedModelObject: TagModel = TagModel(ArrayList())
     fun addToList(user: User) {
-        taggedModelObject.taggedPeopleList.add(user)
-        tagModelLiveData.postValue(taggedModelObject)
+        if (!taggedModelObject.taggedPeopleList.any {
+                user.id== it.id
+            }){
+            taggedModelObject.taggedPeopleList.add(user)
+            tagModelLiveData.postValue(taggedModelObject)
+        }
     }
 
     fun clearList() {
@@ -56,8 +60,7 @@ class TagPeopleViewModel(state: SavedStateHandle) : ViewModel() {
 
 data class TagModel(
     var taggedPeopleList: ArrayList<User>,
-    var policy: String,
-
+    var policy: String="",
     ):Serializable
 
 

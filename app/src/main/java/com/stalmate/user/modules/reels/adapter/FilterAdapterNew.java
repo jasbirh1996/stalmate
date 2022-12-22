@@ -113,24 +113,29 @@ public class FilterAdapterNew extends RecyclerView.Adapter<FilterAdapterNew.Filt
 
         holder.image.setBackground(ContextCompat.getDrawable(mContext,mFilters.get(position).color));
 
-        if (isAllShowing){
-            holder.itemView.setVisibility(View.VISIBLE);
-            holder.itemView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        }else {
-            if (position==showingposition){
-                holder.itemView.setVisibility(View.VISIBLE);
-                holder.itemView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            }else {
-                holder.itemView.setVisibility(View.GONE);
-                holder.itemView.setLayoutParams(new RecyclerView.LayoutParams(0, 0));
-            }
-        }
 
 
         if (position==showingposition){
             holder.layout.setBackground(ContextCompat.getDrawable(mContext,R.drawable.round_circle_primary));
         }else {
             holder.layout.setBackground(ContextCompat.getDrawable(mContext,R.drawable.round_circle_white));
+        }
+
+
+
+
+        if (isAllShowing){
+            holder.itemView.setVisibility(View.VISIBLE);
+            holder.itemView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        }else {
+            if (position==showingposition){
+                holder.itemView.setVisibility(View.VISIBLE);
+               holder.itemView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+            }else {
+                holder.itemView.setVisibility(View.GONE);
+                holder.itemView.setLayoutParams(new RecyclerView.LayoutParams(0, 0));
+            }
         }
 
 

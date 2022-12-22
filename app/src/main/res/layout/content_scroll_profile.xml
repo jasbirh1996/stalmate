@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:tools="http://schemas.android.com/tools">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -80,15 +80,16 @@
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvsince"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Connected since 2007"
             android:gravity="center"
-            android:visibility="gone"
+            android:text="Connected since 2007"
             android:textColor="@color/grey1"
-            app:layout_constraintTop_toBottomOf="@+id/layoutabout"/>
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@+id/layoutabout" />
 
         <View
             android:id="@+id/view2"
@@ -260,38 +261,6 @@
             app:layout_constraintTop_toBottomOf="@+id/layoutWebsite"
             tools:layout_editor_absoluteX="10dp" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            app:layout_constraintTop_toBottomOf="@+id/layoutcreatepost"
-            tools:layout_editor_absoluteX="10dp"
-            android:id="@+id/layoutFeeds">
-
-            <TextView
-                android:id="@+id/textView8"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:fontFamily="@font/poppins_medium"
-                android:text="@string/activity_log"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvFeeds"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView8" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_friend"
@@ -345,10 +314,14 @@
                 android:background="@drawable/search_background"
                 android:drawableStart="@drawable/ic_header_search"
                 android:drawablePadding="10dp"
+                android:maxLines="1"
+                android:lines="1"
+                android:imeOptions="actionSearch"
                 android:fontFamily="@font/poppins"
                 android:hint="@string/search_friends"
                 android:includeFontPadding="false"
                 android:minHeight="0dp"
+                android:inputType="text"
                 android:padding="8dp"
                 android:textColor="@color/black"
                 android:textSize="12sp"
@@ -367,25 +340,25 @@
                 app:layout_constraintTop_toBottomOf="@+id/etSearchFriend" />
 
 
-                <com.google.android.material.tabs.TabLayout
-                    android:id="@+id/photoTab"
-                    android:layout_width="150dp"
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/photoTab"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="@+id/rvFriends"
+                app:layout_constraintTop_toBottomOf="@+id/rvFriends"
+                app:tabIndicator="@null">
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:tabIndicator="@null"
-                    app:layout_constraintStart_toStartOf="@+id/rvFriends"
-                    app:layout_constraintTop_toBottomOf="@+id/rvFriends">
+                    android:text="Photos" />
 
-                    <com.google.android.material.tabs.TabItem
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Photos" />
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Albums" />
 
-                    <com.google.android.material.tabs.TabItem
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Albums" />
-
-                </com.google.android.material.tabs.TabLayout>
+            </com.google.android.material.tabs.TabLayout>
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tvAlbumPhotoSeeMore"
@@ -403,39 +376,39 @@
                 app:layout_constraintTop_toTopOf="@+id/photoTab" />
 
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/tvPhotos"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp_10"
-                    android:fontFamily="@font/poppins_medium"
-                    android:text="Photos"
-                    android:visibility="gone"
-                    android:textColor="@color/black"
-                    android:textSize="16sp"
-                    app:layout_constraintStart_toStartOf="@+id/rvFriends"
-                    app:layout_constraintTop_toBottomOf="@+id/rvFriends" />
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvPhotos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_10"
+                android:fontFamily="@font/poppins_medium"
+                android:text="Photos"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="@+id/rvFriends"
+                app:layout_constraintTop_toBottomOf="@+id/rvFriends" />
 
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvPhotoAlbumData"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    android:orientation="horizontal"
-                    tools:itemCount="5"
-                    android:visibility="visible"
-                    android:layout_marginTop="@dimen/dp_10"
-                    app:layout_constraintStart_toStartOf="@+id/tvPhotos"
-                    app:layout_constraintTop_toBottomOf="@+id/photoTab"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvPhotoAlbumData"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_10"
+                android:orientation="horizontal"
+                android:visibility="visible"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintStart_toStartOf="@+id/tvPhotos"
+                app:layout_constraintTop_toBottomOf="@+id/photoTab"
+                tools:itemCount="5" />
 
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_marginTop="20dp"
-                android:visibility="gone"
                 android:background="@drawable/rectangle_grey_backgorund"
+                android:visibility="gone"
                 app:layout_constraintTop_toBottomOf="@id/rvFriends">
 
                 <TextView

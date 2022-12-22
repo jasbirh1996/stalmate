@@ -43,6 +43,7 @@
             android:id="@+id/layoutBottom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
             android:padding="@dimen/_20sdp"
             app:layout_constraintBottom_toBottomOf="parent">
 
@@ -80,7 +81,6 @@
                 android:text=""
                 android:textColor="@color/white"
                 android:textSize="16sp"
-                app:layout_constraintBottom_toTopOf="@+id/tv_story_post_time"
                 app:layout_constraintEnd_toStartOf="@+id/ivMenu"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/img_user_profile"
@@ -89,106 +89,200 @@
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_story_post_time"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/poppins_light"
-                android:text="jhkjhkjhk"
-                android:textColor="@color/white"
-                android:textSize="8sp"
                 android:ellipsize="end"
+                android:fontFamily="@font/poppins_light"
                 android:shadowColor="#55000000"
                 android:shadowDx="6"
                 android:shadowDy="6"
                 android:shadowRadius="6"
-                app:layout_constraintBottom_toBottomOf="@+id/img_user_profile"
+                android:text="jhkjhkjhk"
+                android:textColor="@color/white"
+                android:textSize="8sp"
+                app:layout_constraintEnd_toEndOf="@+id/tv_user_name"
                 app:layout_constraintStart_toStartOf="@+id/tv_user_name"
+                app:layout_constraintTop_toBottomOf="@+id/tvLocation" />
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvLocation"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:ellipsize="end"
+                android:fontFamily="@font/poppins_light"
+                android:shadowColor="#55000000"
+                android:shadowDx="6"
+                android:shadowDy="6"
+                android:shadowRadius="6"
+                android:text="Location"
+                android:textColor="@color/white"
+                android:textSize="8sp"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="@+id/tv_user_name"
+                app:layout_constraintStart_toEndOf="@+id/ivLocation"
                 app:layout_constraintTop_toBottomOf="@+id/tv_user_name" />
 
+            <ImageView
+                android:id="@+id/ivLocation"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:src="@drawable/location_icon"
+                android:visibility="gone"
+                app:layout_constraintBottom_toTopOf="@+id/tv_story_post_time"
+                app:layout_constraintStart_toStartOf="@+id/tv_user_name"
+                app:layout_constraintTop_toBottomOf="@+id/tv_user_name"
+                app:tint="@color/white" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_status_description"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="16dp"
-                android:fontFamily="@font/poppins"
-                android:text="asdasdcfstvgsy h x"
-                android:textColor="@color/white"
-                android:textSize="12sp"
+                android:layout_marginTop="4dp"
                 android:ellipsize="end"
+                android:fontFamily="@font/poppins"
                 android:shadowColor="#55000000"
                 android:shadowDx="6"
                 android:shadowDy="6"
                 android:shadowRadius="6"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:text="asdasdcfstvgsy h x"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="@+id/tv_user_name"
                 app:layout_constraintStart_toStartOf="@+id/img_user_profile"
-                app:layout_constraintTop_toBottomOf="@+id/img_user_profile" />
-
+                app:layout_constraintTop_toBottomOf="@+id/tv_story_post_time" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/layoutMusic"
+                android:id="@+id/constraintLayout14"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_status_description">
 
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/ivMusic"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/logo"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/layoutTagged"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintDimensionRatio=""
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/tvMusicName"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="6dp"
-                    android:fontFamily="@font/poppins"
-                    android:text="Music"
-                    android:textColor="@color/white"
-                    android:textSize="11sp"
-                    app:layout_constraintBottom_toBottomOf="@+id/ivMusic"
-                    app:layout_constraintStart_toEndOf="@+id/ivMusic"
-                    app:layout_constraintTop_toTopOf="@+id/ivMusic" />
-
-                <View
-                    android:id="@+id/view12"
-                    android:layout_width="6dp"
-                    android:layout_height="6dp"
-                    android:layout_marginStart="4dp"
-                    android:background="@drawable/circle_light_yellow"
-                    app:layout_constraintBottom_toBottomOf="@+id/tvMusicName"
-                    app:layout_constraintStart_toEndOf="@+id/tvMusicName"
-                    app:layout_constraintTop_toTopOf="@+id/tvMusicName" />
-
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/tvMusicArtist"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginEnd="10dp"
-                    android:fontFamily="@font/poppins_light"
-                    android:text="Artist"
-                    android:textColor="@color/white"
-                    android:textSize="10sp"
-                    app:layout_constraintBottom_toBottomOf="@+id/view12"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/view12"
-                    app:layout_constraintTop_toTopOf="@+id/view12" />
+                    app:layout_constraintTop_toTopOf="parent">
 
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/ivTagImage"
+                        android:layout_width="@dimen/_24sdp"
+                        android:layout_height="@dimen/_24sdp"
+                        android:layout_marginEnd="4dp"
+                        android:background="@drawable/circle_white_border"
+                        android:padding="4dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/tvTaggedPeopleCount"
+                        app:layout_constraintDimensionRatio=""
+                        app:layout_constraintEnd_toStartOf="@+id/tvTaggedPeopleCount"
+                        app:layout_constraintTop_toTopOf="@+id/tvTaggedPeopleCount">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:padding="6dp"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/user_icooo"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="@color/white" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tvTaggedPeopleCount"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:ellipsize="end"
+                        android:fontFamily="@font/poppins"
+                        android:shadowColor="#55000000"
+                        android:shadowDx="6"
+                        android:shadowDy="6"
+                        android:shadowRadius="6"
+                        android:text="3 People tagged"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/layoutMusic"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/layoutTagged"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/ivMusic"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/logo"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintDimensionRatio=""
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tvMusicName"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        android:fontFamily="@font/poppins"
+                        android:text="Music"
+                        android:textColor="@color/white"
+                        android:textSize="11sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/ivMusic"
+                        app:layout_constraintStart_toEndOf="@+id/ivMusic"
+                        app:layout_constraintTop_toTopOf="@+id/ivMusic" />
+
+                    <View
+                        android:id="@+id/view12"
+                        android:layout_width="6dp"
+                        android:layout_height="6dp"
+                        android:layout_marginStart="4dp"
+                        android:background="@drawable/circle_light_yellow"
+                        app:layout_constraintBottom_toBottomOf="@+id/tvMusicName"
+                        app:layout_constraintStart_toEndOf="@+id/tvMusicName"
+                        app:layout_constraintTop_toTopOf="@+id/tvMusicName" />
+
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tvMusicArtist"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginEnd="10dp"
+                        android:fontFamily="@font/poppins_light"
+                        android:text="Artist"
+                        android:textColor="@color/white"
+                        android:textSize="10sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/view12"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/view12"
+                        app:layout_constraintTop_toTopOf="@+id/view12" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

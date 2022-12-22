@@ -31,7 +31,7 @@ import com.stalmate.user.view.dashboard.funtime.FragmentFunTime
 import com.stalmate.user.view.profile.FragmentProfile
 
 class ActivityDashboard : BaseActivity(), FragmentHome.Callback, FragmentFriend.Callbackk,
-    FragmentMenu.Callback/*, FragmentFunTime.Callbackk*/ {
+    FragmentMenu.Callback, FragmentProfile.Callback/*, FragmentFunTime.Callbackk*/ {
     private val TIME_INTERVAL = 2000
     var back_pressed: Long = 0
     private lateinit var binding: ActivityDashboardBinding
@@ -228,8 +228,9 @@ class ActivityDashboard : BaseActivity(), FragmentHome.Callback, FragmentFriend.
     val fragment2: Fragment = FragmentFunTime()
     val fragment3: Fragment = FragmentChatNCallBase()
     val fragment4: Fragment = FragmentReels()
-    val fragment5: Fragment = FragmentFriend(this)
-    val fragmentProfile: FragmentProfile = FragmentProfile()
+  //  val fragment5: Fragment = FragmentFriend(this)
+    val fragment5: Fragment = FragmentProfile(this)
+    val fragmentProfile: FragmentProfile = FragmentProfile(this)
     val fm: FragmentManager = supportFragmentManager
     var active = fragment1
 
@@ -296,12 +297,9 @@ class ActivityDashboard : BaseActivity(), FragmentHome.Callback, FragmentFriend.
 
             onClickBack()
         }
-
-
     }
 
     private fun loadDrawerFragment(fragment: Fragment) {
-
         val backStateName = fragment.javaClass.name
         val fragmentTag = backStateName
         val manager: FragmentManager = supportFragmentManager
@@ -321,12 +319,9 @@ class ActivityDashboard : BaseActivity(), FragmentHome.Callback, FragmentFriend.
         //    binding.bottomNavigationView
     }
 
-
     override fun onCLickBackButton() {
         toggleDrawer()
     }
-
-
 
 /*    override fun onClickonFuntimeBackButton() {
        onClickBack()

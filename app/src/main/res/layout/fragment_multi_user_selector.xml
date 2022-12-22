@@ -5,8 +5,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:background="@color/white"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/white">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layoutSearchBox"
@@ -43,11 +43,11 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="4dp"
                 android:background="@null"
-                android:includeFontPadding="false"
                 android:fontFamily="@font/poppins"
                 android:hint="@string/search"
-                android:textSize="12sp"
+                android:includeFontPadding="false"
                 android:minHeight="0dp"
+                android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/ivClear"
                 app:layout_constraintStart_toEndOf="@+id/imageView12"
@@ -59,31 +59,44 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:src="@drawable/ic_close"
-                app:tint="@color/black"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/black" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/nestedScrollView"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="@dimen/_600sdp"
             android:layout_marginTop="10dp"
             android:background="@color/background"
             android:clipToPadding="false"
+            android:fillViewport="true"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/layoutSearchBox">
+            app:layout_constraintTop_toBottomOf="@+id/layoutSearchBox"
+            app:layout_constraintVertical_bias="0.0">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
 
                 tools:context=".view.dashboard.Friend.FragmentFriendList">
+
+                <Button
+                    android:id="@+id/buttonOk"
+                    style="@style/primaryButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:text="Done"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvFriends"
@@ -99,6 +112,7 @@
                     android:layout_height="100dp"
                     android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/rvFriends"
                     app:lottie_autoPlay="true"

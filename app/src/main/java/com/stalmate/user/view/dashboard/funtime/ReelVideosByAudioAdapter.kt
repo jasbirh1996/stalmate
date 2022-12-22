@@ -23,7 +23,7 @@ import com.stalmate.user.databinding.ItemReelByAudioBinding
 
 
 class ReelVideosByAudioAdapter(
-                          val context: Context
+                          val context: Context,var callback:Callback
 ) : RecyclerView.Adapter<ReelVideosByAudioAdapter.ViewHolder>() {
 
     var list = ArrayList<ResultFuntime>()
@@ -40,9 +40,7 @@ class ReelVideosByAudioAdapter(
            // new DownloadImage(YourImageView).execute("Your URL");
           //  Glide.with(context).load(SeeModetextViewHelper.retriveVideoFrameFromVideo(video.file)).into(binding.ivMusicImage)
             binding.root.setOnClickListener {
-                var bundle= Bundle()
-                bundle.putParcelable("data",list[position])
-                context.startActivity(IntentHelper.getFullViewReelActivity(context)!!.putExtra("data",list[position]))
+        callback.onClickOnReel(video)
             }
 
 
@@ -80,7 +78,7 @@ class ReelVideosByAudioAdapter(
     }
 
     public interface Callback{
-        fun onSongSelected(song:ResultMusic)
+        fun onClickOnReel(reel:ResultFuntime)
     }
 
 }

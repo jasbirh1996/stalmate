@@ -18,7 +18,7 @@ class BrushDrawingStateListener internal constructor(
         if (mViewState.redoViewsCount > 0) {
             mViewState.popRedoView()
         }
-        mViewState.addAddedView(drawingView)
+        mViewState.addAddedView(drawingView, ViewType.BRUSH_DRAWING)
         mOnPhotoEditorListener?.onAddViewListener(
             ViewType.BRUSH_DRAWING,
             mViewState.addedViewsCount

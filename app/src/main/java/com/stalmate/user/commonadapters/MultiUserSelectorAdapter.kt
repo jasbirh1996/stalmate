@@ -11,6 +11,7 @@ import com.bumptech.glide.Glide
 import com.otaliastudios.opengl.core.use
 import com.stalmate.user.R
 import com.stalmate.user.databinding.ItemFriendBigBinding
+import com.stalmate.user.databinding.ItemMultiUserSelectBinding
 import com.stalmate.user.databinding.ItemTaggedUsersBinding
 import com.stalmate.user.model.User
 import com.stalmate.user.utilities.ImageLoaderHelperGlide
@@ -20,7 +21,7 @@ import com.stalmate.user.viewmodel.AppViewModel
 
 class MultiUserSelectorAdapter(
     val viewModel:TagPeopleViewModel,
-    val context: Context,var callback : Callback
+    val context: Context
 ) :
     RecyclerView.Adapter<MultiUserSelectorAdapter.FeedViewHolder>() {
     var list = ArrayList<User>()
@@ -31,7 +32,7 @@ class MultiUserSelectorAdapter(
     ): MultiUserSelectorAdapter.FeedViewHolder {
         var view =
             LayoutInflater.from(parent.context).inflate(R.layout.item_multi_user_select, parent, false)
-        return FeedViewHolder(DataBindingUtil.bind<ItemTaggedUsersBinding>(view)!!)
+        return FeedViewHolder(DataBindingUtil.bind<ItemMultiUserSelectBinding>(view)!!)
     }
 
     override fun onBindViewHolder(holder: MultiUserSelectorAdapter.FeedViewHolder, position: Int) {
@@ -42,16 +43,39 @@ class MultiUserSelectorAdapter(
         return list.size
     }
 
-    inner class FeedViewHolder(var binding: ItemTaggedUsersBinding) :
+    inner class FeedViewHolder(var binding: ItemMultiUserSelectBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(user: User) {
 
             binding.tvUserName.text=user.first_name+" "+user.last_name
             binding.tvUserId.text= user.id
             ImageLoaderHelperGlide.setGlideCorner(context,binding.userImage,user.img,R.drawable.user_placeholder)
-            binding.ivRemove.setOnClickListener {
-                viewModel.removeFromList(user)
+
+            if (user.isSelected){
+                binding.ivCheckImahe.visibility=View.VISIBLE
+            }else{
+                binding.ivCheckImahe.visibility=View.GONE
             }
+
+
+
+            binding.ivChecked.setOnClickListener {
+                user.isSelected = !user.isSelected
+
+
+            /*    if (user.isSelected){
+                    viewModel.addToList(user)
+                }else{
+                    viewModel.removeFromList(user)
+                }*/
+                notifyItemChanged(absoluteAdapterPosition)
+            }
+
+
+
+
+
+
 
         }
     }
@@ -70,9 +94,6 @@ class MultiUserSelectorAdapter(
         notifyItemRangeChanged(size, sizeNew)
     }
 
-    public interface Callback{
-        fun onUserSelected(user: ArrayList<User>)
-    }
 
 
 

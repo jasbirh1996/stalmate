@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.work.*
+import com.google.gson.Gson
 import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
@@ -32,7 +33,8 @@ import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 
-class FragmentReelUsedAudio(var reelData: ResultFuntime) : BaseFragment(){
+class FragmentReelUsedAudio(var reelData: ResultFuntime) : BaseFragment(),
+    ReelVideosByAudioAdapter.Callback {
     private var playingAudio = false
     var currentPos=0
     var runnable: Runnable? = null
@@ -62,7 +64,7 @@ class FragmentReelUsedAudio(var reelData: ResultFuntime) : BaseFragment(){
         handler= Handler()
         binding.tvArtistName.text=reelData.artist_name
         binding.tvMusicName.text=reelData.sound_name
-        adapter=ReelVideosByAudioAdapter(requireContext())
+        adapter=ReelVideosByAudioAdapter(requireContext(),this)
         binding.rvList.layoutManager=GridLayoutManager(context,3)
         binding.rvList.adapter=adapter
         ImageLoaderHelperGlide.setGlideCorner(requireContext(),binding.ivImage,reelData.sound_image,R.drawable.user_placeholder)
@@ -293,6 +295,16 @@ class FragmentReelUsedAudio(var reelData: ResultFuntime) : BaseFragment(){
         downloadableSong.title=songTitle
          downloadableSong.album=soundImage
         downloadSelectedSong(downloadableSong)
+    }
+
+    override fun onClickOnReel(reel: ResultFuntime) {
+        var bundle= Bundle()
+
+        var taghhedUser=TaggedUser("","","","")
+        reel.tag_user.add(taghhedUser)
+        bundle.putParcelable("data",reel)
+        Log.d("lkajsdlasd",Gson().toJson(reel))
+        startActivity(IntentHelper.getFullViewReelActivity(context)!!.putExtra("data",reel))
     }
 
 }

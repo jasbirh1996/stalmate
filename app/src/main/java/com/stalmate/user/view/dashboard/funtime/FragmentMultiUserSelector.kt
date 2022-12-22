@@ -30,8 +30,11 @@ import com.stalmate.user.viewmodel.AppViewModel
 
 import kotlin.collections.ArrayList
 
-class FragmentMultiUserSelector(var networkViewModel: AppViewModel) : BottomSheetDialogFragment(), FriendAdapter.Callbackk,
-    TaggedUsersAdapter.Callback, MultiUserSelectorAdapter.Callback {
+class FragmentMultiUserSelector(
+    var networkViewModel: AppViewModel,
+    tagPeopleViewModel: TagPeopleViewModel
+) : BottomSheetDialogFragment(), FriendAdapter.Callbackk,
+    TaggedUsersAdapter.Callback{
     lateinit var tagPeopleViewModel: TagPeopleViewModel
     lateinit var friendAdapter: MultiUserSelectorAdapter
     lateinit var binding: FragmentMultiUserSelectorBinding
@@ -93,7 +96,8 @@ class FragmentMultiUserSelector(var networkViewModel: AppViewModel) : BottomShee
         super.onViewCreated(view, savedInstanceState)
 
         tagPeopleViewModel= ViewModelProvider(requireActivity()).get(TagPeopleViewModel::class.java)
-        friendAdapter = MultiUserSelectorAdapter(tagPeopleViewModel, requireContext(),this)
+
+        friendAdapter = MultiUserSelectorAdapter(tagPeopleViewModel, requireContext())
         binding.etSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
@@ -125,6 +129,20 @@ class FragmentMultiUserSelector(var networkViewModel: AppViewModel) : BottomShee
                }*/
 
             findNavController().popBackStack()
+
+        }
+
+
+        binding.buttonOk.setOnClickListener {
+
+            tagPeopleViewModel.setPolicy(Constants.PRIVACY_TYPE_SPECIFIC)
+
+            friendAdapter.list.forEach {
+              if (it.isSelected){
+                  tagPeopleViewModel.addToList(it)
+              }
+            }
+            dismiss()
 
         }
 
@@ -230,9 +248,7 @@ class FragmentMultiUserSelector(var networkViewModel: AppViewModel) : BottomShee
         findNavController().popBackStack()
     }
 
-    override fun onUserSelected(user: ArrayList<User>) {
 
-    }
 
 
 }

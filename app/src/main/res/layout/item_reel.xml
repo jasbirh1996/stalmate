@@ -82,25 +82,27 @@ xmlns:app="http://schemas.android.com/apk/res-auto">
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/layoutTop"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/img_user_profile"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginTop="24dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="20dp"
                     android:src="@drawable/logo"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tv_user_name"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
+                    android:layout_marginEnd="20dp"
                     android:ellipsize="end"
                     android:fontFamily="@font/poppins_light"
                     android:shadowColor="#55000000"
@@ -110,12 +112,15 @@ xmlns:app="http://schemas.android.com/apk/res-auto">
                     android:text=""
                     android:textColor="@color/white"
                     android:textSize="16sp"
+                    app:layout_constraintEnd_toStartOf="@+id/ivSoundButton"
+                    app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toEndOf="@+id/img_user_profile"
-                    app:layout_constraintTop_toTopOf="@+id/img_user_profile" />
+                    app:layout_constraintTop_toTopOf="@+id/img_user_profile"
+                    app:layout_constraintVertical_chainStyle="packed" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tv_story_post_time"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:fontFamily="@font/poppins_light"
@@ -123,16 +128,49 @@ xmlns:app="http://schemas.android.com/apk/res-auto">
                     android:shadowDx="6"
                     android:shadowDy="6"
                     android:shadowRadius="6"
-                    android:text=""
+                    android:text="jhkjhkjhk"
                     android:textColor="@color/white"
                     android:textSize="8sp"
+                    app:layout_constraintEnd_toEndOf="@+id/tv_user_name"
                     app:layout_constraintStart_toStartOf="@+id/tv_user_name"
+                    app:layout_constraintTop_toBottomOf="@+id/tvLocation" />
+
+                <ImageView
+                    android:id="@+id/ivLocation"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:src="@drawable/location_icon"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toTopOf="@+id/tv_story_post_time"
+                    app:layout_constraintStart_toStartOf="@+id/tv_user_name"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_user_name"
+                    app:tint="@color/white" />
+
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvLocation"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/poppins_light"
+                    android:shadowColor="#55000000"
+                    android:shadowDx="6"
+                    android:shadowDy="6"
+                    android:shadowRadius="6"
+                    android:text="Location"
+                    android:textColor="@color/white"
+                    android:textSize="8sp"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="@+id/tv_user_name"
+                    app:layout_constraintStart_toEndOf="@+id/ivLocation"
                     app:layout_constraintTop_toBottomOf="@+id/tv_user_name" />
 
+
                 <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/ivSoundButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/ivSoundButton"
                     android:layout_marginEnd="24dp"
                     android:src="@drawable/ic_sound_on"
                     android:tint="@color/white"

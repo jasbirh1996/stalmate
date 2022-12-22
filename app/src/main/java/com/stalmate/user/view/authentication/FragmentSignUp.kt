@@ -34,9 +34,10 @@ import java.util.regex.Pattern
 class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
     private lateinit var binding: FragmentsignupBinding
     private lateinit var bindingpopup: TermandconditionpopupBinding
-    var PASSWORDPATTERN = "\"^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$\""
+    var PASSWORDPATTERN =
+        "\"^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$\""
     private var GANDER: String = ""
-    var currentYear=""
+    var currentYear = ""
     val SPLASH_DURATION: Long = 1000
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,8 +69,6 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
 
         // attaching data adapter to spinner
         binding.spMonth.setAdapter(dataAdapter);
-
-
 
 
 //        binding.spDate.setBackgroundColor()
@@ -139,7 +138,7 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
                 @SuppressLint("ResourceAsColor")
                 override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                     if (isValidEmail(binding.etEmail.text.toString())) {
-                        binding.appCompatImageView12.visibility = View.VISIBLE
+                        hitApiCheckOldEmail()
                     } else {
                         binding.appCompatImageView12.visibility = View.GONE
                     }
@@ -317,19 +316,26 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
 
                 if (currentYear < selectedYear) {
                     makeToast("Your age should be 13 years or more")
-                }else {
-                    createAccountApiCall()
+                } else {
+                    if (!isUsedEmail) {
+                        createAccountApiCall()
+                    }else{
+                        makeToast("Email Already Used")
+                    }
                 }
             }
         }
 
-        CustumEditText.setup(binding.filledTextEmail,binding.etEmail)
-        CustumEditText.setup(binding.filledTextPassword,binding.etPassword)
+        CustumEditText.setup(binding.filledTextEmail, binding.etEmail)
+        CustumEditText.setup(binding.filledTextPassword, binding.etPassword)
     }
+
+
+    var isUsedEmail = false
 
     fun isValid(): Boolean {
 
-        lateinit var successdialogBuilder:AlertDialog
+        lateinit var successdialogBuilder: AlertDialog
         if (ValidationHelper.isNull(binding.etName.text.toString())) {
             makeToast(getString(R.string.first_name_toast))
             return false
@@ -345,12 +351,13 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
         } else if (!binding.rdmale.isChecked && !binding.rdFamel.isChecked && !binding.rdOthers.isChecked) {
             makeToast(getString(R.string.select_gendar_error))
             return false
-        } else  if (ValidationHelper.isNull(binding.etPassword.text.toString())) {
+        } else if (ValidationHelper.isNull(binding.etPassword.text.toString())) {
             makeToast(getString(R.string.password_error_toast))
             return false
         } else if (!isValidPassword(binding.etPassword.text.toString().trim())) {
             Handler(Looper.getMainLooper()).postDelayed({
-                successdialogBuilder = AlertDialog.Builder(requireContext(), R.style.CustomAlertDialog).create()
+                successdialogBuilder =
+                    AlertDialog.Builder(requireContext(), R.style.CustomAlertDialog).create()
                 val view = layoutInflater.inflate(R.layout.password_validation_error_popup, null)
 
                 successdialogBuilder.setView(view)
@@ -360,8 +367,8 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
 
             return false
         } else if (!binding.tmcheckbox.isChecked) {
-                makeToast(getString(R.string.accept_tnc))
-                return false
+            makeToast(getString(R.string.accept_tnc))
+            return false
         }
         return true
     }
@@ -391,66 +398,46 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
         }
 
 
-
         val bundle = Bundle()
         bundle.putString("email", binding.etEmail.text.toString())
         bundle.putString("password", binding.etPassword.text.toString())
         bundle.putString("first_name", binding.etName.text.toString())
         bundle.putString("last_name", binding.etLastName.text.toString())
-        bundle.putString("gender",  gander_name)
+        bundle.putString("gender", gander_name)
 //        bundle.putString("schoolandcollege", binding.etschoolcollege.text.toString())
-        bundle.putString("dob",  selectedYear+"-"+selectedMonth+"-"+selectedDay)
-        bundle.putString("year",  selectedYear)
+        bundle.putString("dob", selectedYear + "-" + selectedMonth + "-" + selectedDay)
+        bundle.putString("year", selectedYear)
         bundle.putString("month", selectedMonth)
-        bundle.putString("date",  selectedDay)
+        bundle.putString("date", selectedDay)
         bundle.putString("device_token", App.getInstance().firebaseToken.toString())
         bundle.putString("device_type", "android")
         bundle.putString("layout", "SignUp")
         findNavController().navigate(R.id.fragmentOTPEnter, bundle)
         Log.d("kacajhshc", bundle.toString())
 
-       /* val hashMap = HashMap<String, String>()
+
+    }
+
+
+    fun hitApiCheckOldEmail() {
+        val hashMap = HashMap<String, String>()
         hashMap["email"] = binding.etEmail.text.toString()
-        hashMap["password"] = binding.etPassword.text.toString()
-        hashMap["first_name"] = binding.etName.text.toString()
-        hashMap["last_name"] = binding.etLastName.text.toString()
-        hashMap["gender"] = gander_name
-        hashMap["schoolandcollege"] = binding.etschoolcollege.text.toString()
-        hashMap["dob"] = year+"-"+month+"-"+dates
-        hashMap["device_id"] = ""
-        hashMap["device_token"] = App.getInstance().firebaseToken.toString()
-        hashMap["device_type"] = "android"
-        binding.progressBar.visibility = View.VISIBLE
-        networkViewModel.registration(hashMap)
-        networkViewModel.registerData.observe(requireActivity()) {
-
+        hashMap["number"] = ""
+        networkViewModel.checkIfOldEmail(hashMap)
+        networkViewModel.checkIfOldEmailLiveData.observe(requireActivity()) {
             it?.let {
-                val message = it.message
-
-                if (it.status == true) {
-
-                    PrefManager.getInstance(requireContext())!!.userDetail = it
-                    val bundle = Bundle()
-                    bundle.putString("email", binding.etEmail.text.toString())
-                    bundle.putString("password", binding.etPassword.text.toString())
-                    bundle.putString("first_name", binding.etName.text.toString())
-                    bundle.putString("last_name", binding.etLastName.text.toString())
-                    bundle.putString("gender",  gander_name)
-                    bundle.putString("schoolandcollege", binding.etschoolcollege.text.toString())
-                    bundle.putString("dob",  year+"-"+month+"-"+dates)
-                    bundle.putString("device_token", App.getInstance().firebaseToken.toString())
-                    bundle.putString("device_type", "android")
-                    bundle.putString("layout", "SignUp")
-                    findNavController().navigate(R.id.fragmentOTPEnter, bundle)
-                    Log.d("kacajhshc", bundle.toString())
-                    makeToast(message)
+                if (it.status) {
+                    binding.appCompatImageView12.visibility = View.VISIBLE
+                    isUsedEmail = false
                 } else {
-                    makeToast(message)
+                    isUsedEmail = true
+                    binding.appCompatImageView12.visibility = View.GONE
                 }
             }
-            binding.progressBar.visibility = View.GONE
-        }*/
+        }
+
     }
+
 
     private fun toolbarSetUp() {
         binding.toolbar.toolBarCenterText.visibility = View.VISIBLE
@@ -474,31 +461,34 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
     }
 
 
-
-    var selectedDay="1"
-    var selectedMonth="January"
-    var selectedYear="1996"
+    var selectedDay = "1"
+    var selectedMonth = "January"
+    var selectedYear = "1996"
     lateinit var dataAdapter: ArrayAdapter<String>
 
-    fun fetchDOB(date:String){
-        val calender=Calendar.getInstance()
-        val datee= PriceFormatter.getDateObject(date)
-        calender.time=datee
-        selectedYear= calender.get(Calendar.YEAR).toString()
-        selectedMonth= PriceFormatter.getMonth(date)
-        Log.d(";lksdf;l",selectedMonth)
+    fun fetchDOB(date: String) {
+        val calender = Calendar.getInstance()
+        val datee = PriceFormatter.getDateObject(date)
+        calender.time = datee
+        selectedYear = calender.get(Calendar.YEAR).toString()
+        selectedMonth = PriceFormatter.getMonth(date)
+        Log.d(";lksdf;l", selectedMonth)
         selectedDay = calender.get(Calendar.DAY_OF_MONTH).toString()
-        val selectedYearIndex = getResources().getStringArray(R.array.year).indexOf(selectedYear.toString())
-        val selectedMonthIndex = getResources().getStringArray(R.array.month).indexOf(selectedMonth.toString())
-        val selectedDayIndex = getResources().getStringArray(R.array.date).indexOf(selectedDay.toString())
+        val selectedYearIndex =
+            getResources().getStringArray(R.array.year).indexOf(selectedYear.toString())
+        val selectedMonthIndex =
+            getResources().getStringArray(R.array.month).indexOf(selectedMonth.toString())
+        val selectedDayIndex =
+            getResources().getStringArray(R.array.date).indexOf(selectedDay.toString())
         binding.spYear.setSelection(selectedYearIndex)
         binding.spMonth.setSelection(selectedMonthIndex)
         binding.spDate.setSelection(selectedDayIndex)
     }
 
 
-    fun setupSpinnerListener(){
-        dataAdapter= ArrayAdapter(requireContext(),
+    fun setupSpinnerListener() {
+        dataAdapter = ArrayAdapter(
+            requireContext(),
             android.R.layout.simple_spinner_item,
             resources.getStringArray(R.array.month)
         )
@@ -511,13 +501,14 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
                 p3: Long
             ) {
                 selectedDay = p0!!.getItemAtPosition(position).toString()
-                dataAdapter= ArrayAdapter(requireContext(),
+                dataAdapter = ArrayAdapter(
+                    requireContext(),
                     android.R.layout.simple_spinner_item,
                     resources.getStringArray(R.array.month)
                 )
 
-                if (selectedDay.toInt() ==31){
-                    dataAdapter= ArrayAdapter(
+                if (selectedDay.toInt() == 31) {
+                    dataAdapter = ArrayAdapter(
                         requireContext(),
                         android.R.layout.simple_spinner_item,
                         resources.getStringArray(R.array.monthOfthreeOne)
@@ -525,16 +516,16 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
                 }
 
 
-                if (selectedDay.toInt() ==30){
-                    dataAdapter= ArrayAdapter(
+                if (selectedDay.toInt() == 30) {
+                    dataAdapter = ArrayAdapter(
                         requireContext(),
                         android.R.layout.simple_spinner_item,
                         resources.getStringArray(R.array.monthOfThirty)
                     )
                 }
 
-                if (selectedDay.toInt() ==28){
-                    dataAdapter= ArrayAdapter(
+                if (selectedDay.toInt() == 28) {
+                    dataAdapter = ArrayAdapter(
                         requireContext(),
                         android.R.layout.simple_spinner_item,
                         resources.getStringArray(R.array.monthOfTwentyEight)

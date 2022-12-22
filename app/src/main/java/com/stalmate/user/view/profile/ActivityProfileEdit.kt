@@ -3,6 +3,7 @@ package com.stalmate.user.view.profile
 import android.Manifest
 import android.accounts.Account
 import android.accounts.AccountManager
+import android.app.ActivityOptions
 import android.content.ContentResolver
 import android.content.Context
 import android.os.Build
@@ -20,6 +21,7 @@ import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.CropImageView
 import com.canhub.cropper.options
 import com.google.android.material.shape.CornerFamily
+import com.google.android.material.tabs.TabLayout
 import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseActivity
@@ -30,6 +32,7 @@ import com.stalmate.user.utilities.Constants
 import com.stalmate.user.utilities.ImageLoaderHelperGlide
 import com.stalmate.user.utilities.PriceFormatter
 import com.stalmate.user.utilities.ValidationHelper
+import com.stalmate.user.view.adapter.ProfileAboutAdapter
 import com.stalmate.user.view.dialogs.DialogAddEditEducation
 import com.stalmate.user.view.dialogs.DialogAddEditProfession
 import com.stalmate.user.view.dialogs.DialogVerifyNumber
@@ -64,6 +67,8 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, Prof
 
     override fun onClick(viewId: Int, view: View?) {
     }
+    var currentYear=""
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,7 +76,8 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, Prof
         binding = DataBindingUtil.setContentView(this, R.layout.activity_profile_edit)
         setupSpinnerListener()
         getUserProfileData()
-
+        var cal = Calendar.getInstance()
+        currentYear = (cal.get(Calendar.YEAR) - 13).toString()
 
         binding.buttonSyncContacts.setOnClickListener {
             retreiveGoogleContacts()
@@ -118,6 +124,7 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, Prof
             }
         }
         clickLister()
+        callForAlbum()
     }
 
     /*override fun onResume() {
@@ -144,7 +151,14 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, Prof
 
             if (ValidationHelper.isNull(selectedMarriageStatus)) {
                 makeToast("Please select marriage Status")
-            } else  if (verifyPhoneNumber.isNotEmpty()) {
+            }else  if (currentYear < selectedYear) {
+                makeToast("Your age should be 13 years or more")
+            }
+
+
+
+
+            else  if (verifyPhoneNumber.isNotEmpty()) {
 
                 if (verifyPhoneNumber == binding.layout.etNumber.text.toString()){
                     updateProfileApiHit()
@@ -407,12 +421,12 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, Prof
 
         getAlbumPhotosById("profile_img")
         getAlbumPhotosById("cover_img")
-        fetchDOB(userData.results.dob)
+        fetchDOB(userData.results.dob!!)
         binding.layout.etName.setText(userData.results.first_name)
         binding.layout.etLastName.setText(userData.results.last_name)
         binding.layout.bio.setText(userData.results.about)
         binding.layout.filledTextEmail.setText(userData.results.email)
-        verifyPhoneNumber = userData.results.number
+        verifyPhoneNumber = userData.results.number!!
         binding.layout.etNumber.setText(userData.results.number)
 
         binding.layout.etHowTown.setText(userData.results.profile_data[0].home_town)
@@ -454,6 +468,9 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, Prof
                 feedAdapter.submitList(it!!.results)
             }
         })
+
+        setUpAboutUI("Photos")
+
 
 
     }
@@ -730,5 +747,56 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, Prof
     }
 
 
+    fun callForAlbum() {
 
+
+
+        binding.albumLayout.tvAlbumPhotoSeeMore.setOnClickListener {
+            if (binding.albumLayout.photoTab.selectedTabPosition ==0){
+                startActivity(IntentHelper.getPhotoGalleryAlbumScreen(this)!!.putExtra("viewType", "viewNormal").putExtra("type", "photos"))
+            }else{
+                startActivity(IntentHelper.getPhotoGalleryAlbumScreen(this)!!.putExtra("viewType", "viewNormal").putExtra("type", "albums"))
+            }
+        }
+
+        binding.albumLayout.photoTab.addOnTabSelectedListener(object :TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                val position = tab!!.position
+                if (position == 0){
+                    setUpAboutUI("Photos")
+                }else if(position == 1){
+                    setUpAboutUI("Albums")
+                }
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+
+            }
+        })
+
+
+    }
+
+
+    private lateinit var albumImageAdapter: ProfileAlbumImageAdapter
+    private lateinit var albumAdapter: SelfProfileAlbumAdapter
+
+    fun setUpAboutUI(tabType : String) {
+
+        if (tabType== "Photos") {
+            albumImageAdapter = ProfileAlbumImageAdapter(networkViewModel,this, "")
+            binding.albumLayout.rvPhotoAlbumData.adapter = albumImageAdapter
+            albumImageAdapter.submitList(userData.results.photos)
+        }else if (tabType== "Albums"){
+            albumAdapter = SelfProfileAlbumAdapter(networkViewModel, this, "")
+            binding.albumLayout.rvPhotoAlbumData.adapter =albumAdapter
+            albumAdapter.submitList(userData.results.albums)
+
+        }
+
+    }
 }

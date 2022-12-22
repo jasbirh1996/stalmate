@@ -16,8 +16,10 @@ class VideoReelViewHolder(binding: ItemReelBinding) : ReelViewHolder(binding.roo
     val tvStoryPostTime = binding.tvStoryPostTime;
     val videoThumbnail =
         binding.feedThumbnailView;
-
-
+    val tvLocation =
+        binding.tvLocation;
+    val ivLocation =
+        binding.ivLocation;
 
 
 }
@@ -39,10 +41,17 @@ class VideoReelFullViewHolder(binding: ItemFullViewReelBinding) : ReelViewHolder
     val videoThumbnail =
         binding.feedThumbnailView;
     val buttonAdd = binding.addPostButton;
-
+    val tvTaggedPeopleCount =
+        binding.tvTaggedPeopleCount;
+    val layoutTagged =
+        binding.layoutTagged;
     val tvMusic = binding.tvMusicName;
     val tvMusicArtist = binding.tvMusicArtist;
     val ivMusicImage = binding.ivMusic;
     val layoutMusic = binding.layoutMusic;
     val ivMenu = binding.ivMenu;
+    val tvLocation =
+        binding.tvLocation;
+    val ivLocation =
+        binding.ivLocation;
 }
