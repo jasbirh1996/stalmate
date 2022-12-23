@@ -97,7 +97,7 @@ class FragmentMultiUserSelector(
 
         tagPeopleViewModel= ViewModelProvider(requireActivity()).get(TagPeopleViewModel::class.java)
 
-        friendAdapter = MultiUserSelectorAdapter(tagPeopleViewModel, requireContext())
+        friendAdapter = MultiUserSelectorAdapter(requireContext())
         binding.etSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
@@ -137,11 +137,20 @@ class FragmentMultiUserSelector(
 
             tagPeopleViewModel.setPolicy(Constants.PRIVACY_TYPE_SPECIFIC)
 
+
+
+            var sizeofselectedUsers=0
             friendAdapter.list.forEach {
               if (it.isSelected){
-                  tagPeopleViewModel.addToList(it)
+                  sizeofselectedUsers++
+                  tagPeopleViewModel.addToSpecificList(it)
               }
             }
+
+            if (sizeofselectedUsers==0){
+                tagPeopleViewModel.clearSpecificFriendList()
+            }
+
             dismiss()
 
         }
@@ -198,8 +207,19 @@ class FragmentMultiUserSelector(
 
 
                 if (it!!.results.isNotEmpty()){
+                    tagPeopleViewModel.taggedModelObject.specifFriendsList.forEach { userdata->
+                        run {
+                       try {
+                           it.results.find { it.id == userdata.id }!!.isSelected = true
+                       }catch (e:java.lang.Exception){}
+                        }
+                    }
+
 
                     if (isFresh){
+
+
+
                         friendAdapter.submitList(it.results as ArrayList<User>)
                     }else{
                         friendAdapter.addToList(it.results as ArrayList<User>)
@@ -212,6 +232,10 @@ class FragmentMultiUserSelector(
                         binding.progressLoading.visibility = View.VISIBLE
                     }
                 }else{
+
+
+
+
                     if (isFresh){
                         friendAdapter.submitList(it.results as ArrayList<User>)
                     }

@@ -9,11 +9,14 @@ import android.app.ActivityOptions
 import android.content.*
 import android.database.Cursor
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.provider.ContactsContract
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AccelerateInterpolator
 import android.view.animation.LinearInterpolator
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat.registerReceiver
@@ -102,7 +105,8 @@ class FragmentProfile(var callback:Callback) : BaseFragment(), ProfileAboutAdapt
         )!!
         return binding.root
     }
-
+    var isIncreasingPreviousValue=0
+    var isIncreasingCurrentValue=1
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -146,15 +150,16 @@ class FragmentProfile(var callback:Callback) : BaseFragment(), ProfileAboutAdapt
                 oldScrollY: Int
             ) {
 
-          /*      if (oldScrollY < scrollY) {//increase
+             if (oldScrollY < scrollY) {//increase
+
                     callback.onScoll(true)
                     Log.d("aklsjdasdasd","aposkdasd")
                     onScrollToHideTopHeader(true)
                 } else {
-                    onScrollToHideTopHeader(false)
-                    Log.d("aklsjdasdasd","aposkdasdfghfgh")
-                    callback.onScoll(false)
-                }*/
+
+                 onScrollToHideTopHeader(false)
+                 Log.d("aklsjdasdasd", "aposkdasdfghfgh")
+             }
 
 
             }
@@ -263,15 +268,28 @@ class FragmentProfile(var callback:Callback) : BaseFragment(), ProfileAboutAdapt
 
 
     }
-
+    var scrollEnable=true
     fun onScrollToHideTopHeader(toHide:Boolean) {
         Log.d("klajsdasd",toHide.toString())
         if (toHide) {
-            //     binding.navigationBar.root.setVisibility(View.GONE)
-            binding.toolbar.root.animate().translationY(-(binding.toolbar.root.getHeight() + 60).toFloat())
-                .setInterpolator(LinearInterpolator()).start()
+            if (scrollEnable){
+                binding.toolbar.root.animate().translationY(-(binding.toolbar.root.getHeight() + 60).toFloat()).setDuration(150)
+                    .setInterpolator(LinearInterpolator()).start()
+                scrollEnable=false
+                Handler(Looper.getMainLooper()).postDelayed(Runnable { scrollEnable=true },150)
+            }
+
+
+
+
         }else{
-            binding.toolbar.root.animate().translationY(0f).setInterpolator(LinearInterpolator()).start()
+            if (scrollEnable){
+                binding.toolbar.root.animate().translationY(0f).setInterpolator(LinearInterpolator()).setDuration(150).start()
+                scrollEnable=false
+                Handler(Looper.getMainLooper()).postDelayed(Runnable {  scrollEnable=true },150)
+            }
+
+
             //   binding.navigationBar.root.setVisibility(View.VISIBLE)
         }
     }

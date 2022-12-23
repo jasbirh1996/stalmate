@@ -17,6 +17,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.provider.MediaStore
+import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
 import android.webkit.MimeTypeMap
@@ -794,6 +795,12 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
     private fun processCurrentRecording() {
         showLoader()
         val duration: Long = VideoUtil.getDuration(this, Uri.fromFile(mModel!!.video))
+
+
+
+
+
+
         applyVideoSpeed(mModel!!.video!!, mModel!!.speed, duration)
 /*        mModel!!.speed = 1f
         mModel!!.video = null*/
@@ -934,6 +941,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                 if (isImage) {
                     Handler(Looper.getMainLooper()).postDelayed(Runnable {
                         Log.d("alksdas", "pppppp")
+
                         multipleImageToVideo(pathList, perImageDuration)
                     }, 500)
                 } else {
@@ -1136,15 +1144,13 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                 binding.tvMusicName.text = name
                 binding.layoutSelectedMusic.visibility = View.VISIBLE
                 mModel!!.audio = audio
-                playMusic(audio!!.path.toString())
+                playMusic(audio.path.toString())
                 isMusicActive = true
                 updateColorButtons()
 
-                if (isImage) {
-                    binding.segmentedProgressbar.progress = 0
-                    setupProgressBarWithDuration()
-                    resumeProgress()
-                }
+                binding.segmentedProgressbar.progress = 0
+                setupProgressBarWithDuration()
+                resumeProgress()
             }
         }
 
@@ -1628,7 +1634,36 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
     }
 
 
+    private val displayWidth: Int
+        private get() {
+            val displayMetrics = DisplayMetrics()
+            getWindowManager().getDefaultDisplay().getMetrics(displayMetrics)
+            return displayMetrics.widthPixels
+        }
+    private val displayHeight: Int
+        private get() {
+            val displayMetrics = DisplayMetrics()
+            getWindowManager().getDefaultDisplay().getMetrics(displayMetrics)
+            return displayMetrics.heightPixels
+        }
+
     private fun multipleImageToVideo(pathList: ArrayList<String>, persond: Int) {
+        showLoader()
+        var height = 0
+        var width = 0
+        if (displayWidth % 2 == 0) {
+            width = displayWidth
+        } else {
+            width = displayWidth - 1
+        }
+
+        if (displayHeight % 2 == 0) {
+            height = displayHeight
+        } else {
+            height = displayHeight - 1
+        }
+
+
         isVideoTaken = true
         isImage = false
         val outputPath = Common.getFilePath(this, Common.VIDEO)
@@ -1638,7 +1673,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                     pathList,
                     persond
                 )
-            } -c:v libx264 -r 30 -pix_fmt yuv420p -crf 23 -t ${pathList.size * persond} -preset ultrafast -vcodec libx264 -c:a aac $outputPath",
+            } -c:v libx264 -r 15 -pix_fmt yuv420p -crf 23 -t ${pathList.size * persond} -vf scale=$width:$height -preset ultrafast -vcodec libx264 -c:a aac $outputPath",
                 object : FFmpegAsyncTask.OnTaskCompleted {
                     override fun onTaskCompleted(isSuccess: Boolean) {
                         var recordSegment = RecordSegment()
@@ -1652,6 +1687,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                             isVideoTaken = true
                             binding.buttonDone.visibility = View.VISIBLE
                             binding.selectedVideo.visibility = View.VISIBLE
+                            resumeProgress()
                             setUpPlayer()
                         }
 
@@ -1669,7 +1705,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
     private fun setUpPlayer() {
         Log.d("lasdasd", "aoskdasasdasdd")
         mPlayer = ExoPlayer.Builder(this).build()
-        mPlayer!!.repeatMode = ExoPlayer.REPEAT_MODE_ALL
+        mPlayer!!.repeatMode = ExoPlayer.REPEAT_MODE_OFF
         val factory = DefaultDataSourceFactory(this, getString(R.string.app_name))
         val mediaItem: MediaItem
         mediaItem = MediaItem.fromUri(Uri.fromFile(mModel!!.segments[0].file))
@@ -1712,6 +1748,13 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                             binding.selectedVideo.visibility = View.VISIBLE
                             setUpPlayer()
                         }
+
+                        binding.segmentedProgressbar.progress = 0
+                        Log.d(";laksdasd",duration.toString())
+                        imageVideoDuration= ((duration/1000).toInt())
+                        Log.d(";laksdasd",imageVideoDuration.toString())
+                        setupProgressBarWithDuration()
+                        resumeProgress()
                     }
                 })
         asyncTask.execute()
@@ -2030,8 +2073,8 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
         progressHandler.removeCallbacks(runnable)
         if (isMusicSelected && isImage) {
             progressHandler.post(runnable)
-        } else if (!isImage) {
-            //  progressHandler.post(runnable)
+        } else if (!isImage && isVideoTaken) {
+            progressHandler.post(runnable)
         }
     }
 
@@ -2050,6 +2093,8 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
             } else {
                 //    binding.segmentedProgressbar.setProgress(0)
                 mMediaPlayer!!.pause()
+
+
                 //   progressHandler.post(this)
                 Log.d("akjsdasda", "akshdasdfsdfsd")
             }
@@ -2101,23 +2146,25 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
         applyPreviewFilter(
             filter!!
         )
-
         /*  filterAdapter.showAllFilters(isAllShowing)
           binding.rvFilters.getLayoutManager()!!.scrollToPosition(position);*/
 
         if (isLongClick) {
             isImage = false
-
-            uiWhenRecording()
-            binding.segmentedProgressbar.progress = 0
-            mMediaPlayer!!.reset()
-            startRecording()
-            binding.recordAnimationView.visibility = View.VISIBLE
-            binding.stopIConView.visibility = View.GONE
-            binding.buttonRecord.setOnLongClickListener(null)
-
+            if (!isVideoTaken) {
+                uiWhenRecording()
+                binding.segmentedProgressbar.progress = 0
+                mMediaPlayer!!.reset()
+                startRecording()
+                binding.recordAnimationView.visibility = View.VISIBLE
+                binding.stopIConView.visibility = View.GONE
+                binding.buttonRecord.setOnLongClickListener(null)
+            }
         } else {
-            binding.buttonRecord.performClick()//it is image
+            if (isImageTakenByCamera) {
+                binding.buttonRecord.performClick()//it is image
+            }
+
         }
 
 
@@ -2129,7 +2176,10 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
     }
 
     var countdownTimerDuration = 0
-    override fun onCaptureAfternSeconds(seconds: Int) {
+    override fun onCaptureAfternSeconds(type: String, seconds: Int) {
+
+        isImage = type != "video"
+
         uiWhenCountdownActive()
         countdownTimerDuration = seconds
         captureTimerHandler.removeCallbacks(runnableForTimer)

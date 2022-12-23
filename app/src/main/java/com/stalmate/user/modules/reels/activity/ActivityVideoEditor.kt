@@ -3,6 +3,7 @@ package com.stalmate.user.modules.reels.activity
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.app.ProgressDialog
+import android.content.Context
 import android.content.Intent
 import android.graphics.*
 import android.graphics.drawable.BitmapDrawable
@@ -14,7 +15,9 @@ import android.util.DisplayMetrics
 import android.util.Log
 import android.util.Size
 import android.view.*
+import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -25,7 +28,6 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.work.*
 import com.arthenica.mobileffmpeg.FFmpeg
-
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
@@ -42,6 +44,7 @@ import com.googlecode.mp4parser.authoring.Track
 import com.googlecode.mp4parser.authoring.tracks.CroppedTrack
 import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
+import com.stalmate.user.base.App
 import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.databinding.ActivityPreviewVideoBinding
 import com.stalmate.user.modules.reels.activity.ActivityFilter.Companion.EXTRA_SONG
@@ -55,10 +58,8 @@ import com.stalmate.user.modules.reels.photo_editing.StickerBSFragment
 import com.stalmate.user.modules.reels.photo_editing.TextEditorDialogFragment
 import com.stalmate.user.modules.reels.utils.ColorSeekBar
 import com.stalmate.user.modules.reels.workers.VideoTrimmerWorker
-import com.stalmate.user.modules.reels.workers.WatermarkWorker
 import com.stalmate.user.utilities.Common
 import com.stalmate.user.utilities.ValidationHelper
-import com.stalmate.user.view.dialogs.CommonConfirmationDialog
 import ja.burhanrashid52.photoeditor.*
 import java.io.*
 import java.util.*
@@ -134,6 +135,15 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
 
         binding = ActivityPreviewVideoBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        imageViews.add(binding.imageOne)
+        imageViews.add(binding.imageTwo)
+        imageViews.add(binding.imageThree)
+        imageViews.add(binding.imageFour)
+        imageViews.add(binding.imageFive)
+        imageViews.add(binding.imageSix)
+        imageViews.add(binding.imageSeven)
+        imageViews.add(binding.imageEight)
+
         isIMage = intent.getBooleanExtra("isImage", false)
         videoPath = intent.getStringExtra(EXTRA_VIDEO).toString()
         audioPath = intent.getStringExtra(EXTRA_SONG).toString()
@@ -666,40 +676,8 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
 
 
     fun addToWatermark(beforeWatermarkAddedFile: File) {
-        val wm = WorkManager.getInstance(this)
-        // val output = File(cacheDir, UUID.randomUUID().toString())
-        val outputPathss = Common.getFilePath(this, Common.VIDEO)
-/*        if (isIMage) {
-            val outputPath = Common.getFilePath(this, Common.VIDEO)
-            ffmpegWatermark(beforeWatermarkAddedFile.absolutePath, outputPath, imagePath)
-        } else {
-            val data: Data = Data.Builder()
-                .putString(WatermarkWorker.KEY_INPUT, beforeWatermarkAddedFile.absolutePath)
-                .putString(WatermarkWorker.ICON, imagePath)
-                .putString(WatermarkWorker.KEY_OUTPUT, outputPathss)
-                .build()
-            val request = OneTimeWorkRequest.Builder(WatermarkWorker::class.java)
-                .setInputData(data)
-                .build()
-            wm.enqueue(request)
-            wm.getWorkInfoByIdLiveData(request.id)
-                .observe(this) { info: WorkInfo ->
-                    val ended = (info.state == WorkInfo.State.CANCELLED
-                            || info.state == WorkInfo.State.FAILED)
-                    if (info.state == WorkInfo.State.SUCCEEDED) {
-                        dismissLoader()
-                        saveVideoToInternalStorage(outputPathss)
-                    } else if (ended) {
-                    }
-                }
-
-
-        }*/
-
         val outputPath = Common.getFilePath(this, Common.VIDEO)
         ffmpegWatermark(beforeWatermarkAddedFile.absolutePath, outputPath, imagePath)
-
-
     }
 
 
@@ -889,122 +867,8 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
     }
 
     private fun mergeAudioVideo(filePath: String) {
-/*        val videos: MutableList<String> = ArrayList()
-        videos.add(filePath)
-        val merged1 = File(cacheDir, UUID.randomUUID().toString())
-        val data1: Data = Data.Builder()
-            .putStringArray(MergeVideosWorker.KEY_VIDEOS, videos.toTypedArray())
-            .putString(MergeVideosWorker.KEY_OUTPUT, merged1.absolutePath)
-            .build()
-
-        val request1: OneTimeWorkRequest = OneTimeWorkRequest.Builder(MergeVideosWorker::class.java)
-            .setInputData(data1)
-            .build()
-
-        val wm: WorkManager = WorkManager.getInstance(this)
         if (!ValidationHelper.isNull(audioPath)) {
-            val merged2 = File(cacheDir, UUID.randomUUID().toString())
-            val audioFile: File = File(audioPath)
-            val data2 =
-                Data.Builder() // .putString(MergeAudioVideoWorker.KEY_AUDIO,mModel.audio.getPath())
-                    .putString(MergeAudioVideoWorker.KEY_AUDIO, audioFile.absolutePath)
-                    .putString(MergeAudioVideoWorker.KEY_VIDEO, merged1.absolutePath)
-                    .putString(MergeAudioVideoWorker.KEY_OUTPUT, merged2.absolutePath)
-                    .build()
-            Log.d("===>>", audioFile.absolutePath)
-            Log.d("===>>", merged1.absolutePath)
-            val request2 =
-                OneTimeWorkRequest.Builder(MergeAudioVideoWorker::class.java).setInputData(data2)
-                    .build()
-            wm.beginWith(request1).then(request2).enqueue()
-            wm.getWorkInfoByIdLiveData(request2.id)
-                .observe(this) { info: WorkInfo ->
-                    Log.d("states====>", info.state.toString())
-                    val ended = (info.state == WorkInfo.State.CANCELLED
-                            || info.state == WorkInfo.State.FAILED)
-                    if (info.state == WorkInfo.State.SUCCEEDED) {
-                        applayWaterMark(merged2)
-                    } else if (ended) {
-                    }
-                }
-        } else {
-            wm.enqueue(request1)
-            wm.getWorkInfoByIdLiveData(request1.getId())
-                .observe(this) { info ->
-                    val ended = (info.getState() === WorkInfo.State.CANCELLED
-                            || info.getState() === WorkInfo.State.FAILED)
-                    if (info.getState() === WorkInfo.State.SUCCEEDED) {
-                        applayWaterMark(merged1)
-                    } else if (ended) {
-
-                    }
-                }
-        }*/
-
-
-/*
-            Movie temp = MovieCreator.build(clip);
-            Track v = null;
-            for (Track track : temp.getTracks()) {
-                if (TextUtils.equals(track.getHandler(), "vide")) {
-                    v = track;
-                    break;
-                }
-            }
-
-            Movie merged = new Movie();
-            //noinspection ConstantConditions
-            merged.addTrack(v);
-            //noinspection ConstantConditions
-            if (audio.endsWith(".mp4")) {
-                Track a = null;
-                for (Track track : temp.getTracks()) {
-                    if (TextUtils.equals(track.getHandler(), "soun")) {
-                        a = track;
-                        break;
-                    }
-                }
-
-                //noinspection ConstantConditions
-                merged.addTrack(crop(clip, a));
-            } else {
-                merged.addTrack(crop(clip, new AACTrackImpl(new FileDataSourceImpl(audio))));
-            }
-
-
-
-            Container mp4 = new DefaultMp4Builder().build(merged);
-            //noinspection ConstantConditions
-            os = new FileOutputStream(new File(output));
-            mp4.writeContainer(os.getChannel());
-            return Result.success();
-
-
-
-*/
-
-
-        if (!ValidationHelper.isNull(audioPath)) {
-
-           Log.d("aklshjdasd", audioPath)
-
-
             val output = File(cacheDir, UUID.randomUUID().toString() + ".mp4")
-    /*        val session =
-                FFmpegKit.execute("-i $filePath -i $audioPath -map 0:v -map 1:a -t $duration -c:v copy -c:a copy $output")
-            if (ReturnCode.isSuccess(session.returnCode)) {
-                applayWaterMark(output)
-                // SUCCESS
-            } else if (ReturnCode.isCancel(session.returnCode)) {
-                Log.d("lkasjldasd", "asdasdasdgfsd")
-                // CANCEL
-            } else {
-                Log.d("lkasjldasd", "asdassfdajjsd")
-                // FAILURE
-            }*/
-
-
-
 
             val asyncTask =
                 FFmpegAsyncTask("-i $filePath -i $audioPath -map 0:v -map 1:a -t $duration -crf 23 -preset ultrafast -vcodec libx264 -c:a aac $output",
@@ -1143,6 +1007,8 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
             }
             lastMinValue = minVal
             lastMaxValue = maxVal
+            seekbar.setLeftThumbBitmap(createDrawableFromView(lastMinValue,R.drawable.switch_button_thumb))
+            seekbar.setRightThumbBitmap(createDrawableFromView(lastMaxValue,R.drawable.switch_button_thumb))
 
             Log.d("akjsdasdoo", lastMinValue.toString())
             Log.d("akjsdasdoo", lastMaxValue.toString())
@@ -1165,6 +1031,43 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
             }
         }
     }
+
+
+
+
+    fun createDrawableFromView(progress: Long, drawable:Int): Bitmap? {
+        val inflatedFrame: View = (App.getInstance()
+            .getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(
+            R.layout.view_custom_thumb,
+            null
+        )
+  /*
+      val ivStar: ImageView = inflatedFrame.findViewById(R.id.ivIcon) as ImageView
+
+        ivStar.setImageDrawable(
+            ContextCompat.getDrawable(
+                App.getInstance(),
+                drawable
+            )
+        )
+*/
+        val tvValue: TextView = inflatedFrame.findViewById(R.id.tvValue) as TextView
+        tvValue.setText(progress.toString()+"s")
+        val frameLayout: FrameLayout = inflatedFrame.findViewById(R.id.screen) as FrameLayout
+
+
+        frameLayout.setDrawingCacheEnabled(true)
+        frameLayout.measure(
+            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+        )
+        frameLayout.layout(0, 0, frameLayout.getMeasuredWidth(), frameLayout.getMeasuredHeight())
+        frameLayout.buildDrawingCache(true)
+        return frameLayout.getDrawingCache()
+    }
+
+
+
 
 
     private fun seekTo(sec: Long) {
@@ -1224,6 +1127,18 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
             val diff = totalDuration / 8
             var sec = 1
             for (img in imageViews) {
+
+                Log.d("klasgfiaf", "poapsdpwof")
+                /*      val retriever = MediaMetadataRetriever()
+                      retriever.setDataSource(videoFile.getAbsolutePath())
+                      val bitmap = retriever.getFrameAtTime(
+                          totalDuration * 1000,
+                          MediaMetadataRetriever.OPTION_CLOSEST_SYNC
+                      )
+
+                      */
+
+
                 val interval = diff * sec * 1000000
                 val options = RequestOptions().frame(interval)
                 Glide.with(this)
@@ -1275,57 +1190,23 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
     }
 
     private fun imageToVideo(imagePath: String) {
-       val outputPath = Common.getFilePath(this, Common.VIDEO)
-
-  /*      val options: BitmapFactory.Options = BitmapFactory.Options()
-        options.inJustDecodeBounds = true
-        BitmapFactory.decodeFile(File(imagePath).getAbsolutePath(), options)
-        val imageHeight = 1072
-        val imageWidth = 528
-        val session =
-            FFmpegKit.execute("-loop 1  -framerate 2 -i $imagePath -c:v mpeg4 -t $duration -pix_fmt yuv420p -vf scale=$imageWidth:$imageHeight -c:a aac $outputPath")
-        //   val session = FFmpegKit.execute("-loop 1 -framerate 1 -t $duration -i $imagePath -c:v libx264 -preset ultrafast -vf scale=$imageWidth:$imageHeight $outputPath")
-
-
-        if (ReturnCode.isSuccess(session.returnCode)) {
-            Log.d("lkasjldasd", "asdasdasd")
-            Log.d("kashdkhasd", outputPath)
-            mergeAudioVideo(outputPath)
-            // SUCCESS
-        } else if (ReturnCode.isCancel(session.returnCode)) {
-            Log.d("lkasjldasd", "asdasdasdgfsd")
-            // CANCEL
-        } else {
-            Log.d("lkasjldasd", "asdassfdajjsd")
-            // FAILURE
-            Log.d(
-                "asdasdasd",
-                String.format(
-                    "Command failed with state %s and rc %s.%s",
-                    session.state,
-                    session.returnCode,
-                    session.failStackTrace
-                )
-            )
-        }*/
-
-
-         var height = 0
+        val outputPath = Common.getFilePath(this, Common.VIDEO)
+        var height = 0
         var width = 0
-            if (displayWidth%2==0){
-                width=displayWidth
-            }else{
-                width=displayWidth-1
-            }
+        if (displayWidth % 2 == 0) {
+            width = displayWidth
+        } else {
+            width = displayWidth - 1
+        }
 
-        if (displayHeight%2==0){
-            height=displayHeight
-        }else{
-            height=displayHeight-1
+        if (displayHeight % 2 == 0) {
+            height = displayHeight
+        } else {
+            height = displayHeight - 1
         }
 
         val asyncTask =
-            FFmpegAsyncTask("-loop 1  -framerate 2 -i $imagePath -c:v mpeg4 -t $duration -pix_fmt yuv420p  -crf 23 -preset ultrafast -vcodec libx264 -c:a aac -vf scale=$width:$height  $outputPath",
+            FFmpegAsyncTask("-loop 1  -framerate 3 -i $imagePath -t $duration -pix_fmt yuv420p  -crf 30 -preset ultrafast -vcodec libx264 -c:a aac -vf scale=$width:$height  $outputPath",
                 object : FFmpegAsyncTask.OnTaskCompleted {
                     override fun onTaskCompleted(isSuccess: Boolean) {
                         runOnUiThread {
@@ -1339,33 +1220,16 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
 
 
     fun ffmpegWatermark(input: String, output: String, image: String) {
-        Log.d("la';sdlasd","lasjdasd")
-  /*      Handler(Looper.getMainLooper()).post {
-            val session =
-                FFmpegKit.execute("-i $input -i $image -c:v mpeg4 -filter_complex [1][0]scale2ref=w=oh*mdar:h=ih*1.1[logo][video];[video][logo]overlay=0:0 -c:a aac $output")
-            if (ReturnCode.isSuccess(session.returnCode)) {
-                dismissLoader()
-                saveVideoToInternalStorage(output)
-
-                // SUCCESS
-            } else if (ReturnCode.isCancel(session.returnCode)) {
-                Log.d("lkasjldasd", "asdasdasdgfsd")
-                // CANCEL
-            } else {
-                Log.d("lkasjldasd", "asdassfdajjsd")
-                // FAILURE
-            }
-        }*/
-
+        Log.d("la';sdlasd", "lasjdasd")
 
         val asyncTask =
             FFmpegAsyncTask("-i $input -i $image -filter_complex [1][0]scale2ref=w=oh*mdar:h=ih*1.1[logo][video];[video][logo]overlay=0:0 -crf 23 -preset ultrafast -vcodec libx264 -c:a aac $output",
                 object : FFmpegAsyncTask.OnTaskCompleted {
                     override fun onTaskCompleted(isSuccess: Boolean) {
-                       runOnUiThread {
-                           dismissLoader()
-                           saveVideoToInternalStorage(output)
-                       }
+                        runOnUiThread {
+                            dismissLoader()
+                            saveVideoToInternalStorage(output)
+                        }
 
                     }
                 })
@@ -1394,7 +1258,7 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
     }
 
 
-    private class FFmpegAsyncTask(var command:String,var callback:OnTaskCompleted) :
+    private class FFmpegAsyncTask(var command: String, var callback: OnTaskCompleted) :
         AsyncTask<Void?, Void?, Void?>() {
         protected override fun onPreExecute() {
             super.onPreExecute()
@@ -1413,8 +1277,9 @@ class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
         }
 
 
-        public interface OnTaskCompleted{
-            fun  onTaskCompleted(isSuccess:Boolean);
+        public interface OnTaskCompleted {
+            fun onTaskCompleted(isSuccess: Boolean);
         }
     }
+
 }

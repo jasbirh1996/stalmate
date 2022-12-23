@@ -15,7 +15,7 @@ import java.io.Serializable
 class TagPeopleViewModel(state: SavedStateHandle) : ViewModel() {
     private val state: SavedStateHandle
     var tagModelLiveData = MutableLiveData<TagModel>()
-    var taggedModelObject: TagModel = TagModel(ArrayList())
+    var taggedModelObject: TagModel = TagModel(ArrayList(),ArrayList())
     fun addToList(user: User) {
         if (!taggedModelObject.taggedPeopleList.any {
                 user.id== it.id
@@ -25,10 +25,26 @@ class TagPeopleViewModel(state: SavedStateHandle) : ViewModel() {
         }
     }
 
+
+    fun addToSpecificList(user: User) {
+        if (!taggedModelObject.specifFriendsList.any {
+                user.id== it.id
+            }){
+            taggedModelObject.specifFriendsList.add(user)
+            tagModelLiveData.postValue(taggedModelObject)
+        }
+    }
+
     fun clearList() {
         taggedModelObject.taggedPeopleList.clear()
         tagModelLiveData.postValue(taggedModelObject)
     }
+    fun clearSpecificFriendList() {
+        taggedModelObject.specifFriendsList.clear()
+        tagModelLiveData.postValue(taggedModelObject)
+    }
+
+
 
     fun removeFromList(user: User) {
         //  taggedPeopleList.add(user)
@@ -36,8 +52,18 @@ class TagPeopleViewModel(state: SavedStateHandle) : ViewModel() {
         tagModelLiveData.postValue(taggedModelObject)
     }
 
+    fun removeSpecificFriendFromList(user: User) {
+        //  taggedPeopleList.add(user)
+        taggedModelObject.specifFriendsList.remove(user)
+        tagModelLiveData.postValue(taggedModelObject)
+    }
+
 
     fun getTaggedPeopleList(): MutableLiveData<TagModel> {
+        return tagModelLiveData
+    }
+
+    fun getSpecifFriendList(): MutableLiveData<TagModel> {
         return tagModelLiveData
     }
 
@@ -60,6 +86,7 @@ class TagPeopleViewModel(state: SavedStateHandle) : ViewModel() {
 
 data class TagModel(
     var taggedPeopleList: ArrayList<User>,
+    var specifFriendsList: ArrayList<User>,
     var policy: String="",
     ):Serializable
 

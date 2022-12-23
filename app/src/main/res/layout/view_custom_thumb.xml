@@ -25,7 +25,7 @@
         android:id="@+id/ivIcon"
         android:layout_width="10dp"
         android:layout_height="50dp"
-        android:background="@color/white_with_alpha"
+        android:background="@color/yellow_color_picker"
         app:layout_constraintEnd_toEndOf="@+id/tvValue"
         app:layout_constraintStart_toStartOf="@+id/tvValue"
         app:layout_constraintTop_toBottomOf="@+id/tvValue" />

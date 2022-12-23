@@ -20,7 +20,6 @@ import com.stalmate.user.view.dashboard.funtime.viewmodel.TagPeopleViewModel
 import com.stalmate.user.viewmodel.AppViewModel
 
 class MultiUserSelectorAdapter(
-    val viewModel:TagPeopleViewModel,
     val context: Context
 ) :
     RecyclerView.Adapter<MultiUserSelectorAdapter.FeedViewHolder>() {
@@ -61,13 +60,6 @@ class MultiUserSelectorAdapter(
 
             binding.ivChecked.setOnClickListener {
                 user.isSelected = !user.isSelected
-
-
-            /*    if (user.isSelected){
-                    viewModel.addToList(user)
-                }else{
-                    viewModel.removeFromList(user)
-                }*/
                 notifyItemChanged(absoluteAdapterPosition)
             }
 

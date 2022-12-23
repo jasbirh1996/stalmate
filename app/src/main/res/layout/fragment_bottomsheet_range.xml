@@ -36,13 +36,98 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
                 android:fontFamily="@font/poppins_semibold"
-                android:text="Drag to change where recording stops."
+                android:text="Countdown for"
                 android:textColor="@color/white"
-                android:textSize="@dimen/_12sdp"
+                android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+
+            <TextView
+                android:id="@+id/textView22"
+                android:layout_width="371dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/poppins_semibold"
+                android:text="Select time for start countdown"
+                android:textColor="@color/white"
+        android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="@+id/radioGroupType"
+                app:layout_constraintTop_toBottomOf="@+id/radioGroupType" />
+
+            <RadioGroup
+                android:id="@+id/radioGroupType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="@+id/textView21"
+                app:layout_constraintTop_toBottomOf="@+id/textView21">
+
+                <RadioButton
+                    android:id="@+id/radioVideo"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:button="@drawable/custom_radio_button"
+                    android:checked="true"
+                    android:textColor="@color/white"
+                    android:text="  Video"
+                    android:textSize="16sp" />
+
+                <RadioButton
+                    android:id="@+id/radioPhoto"
+                    android:layout_width="fill_parent"
+                    android:layout_marginLeft="@dimen/_20sdp"
+                    android:layout_height="wrap_content"
+                    android:button="@drawable/custom_radio_button"
+                    android:checked="false"
+                    android:text="   Photo"      
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+            </RadioGroup>
+
+            <RadioGroup
+                android:id="@+id/radioGroupDuration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="@+id/textView22"
+                app:layout_constraintTop_toBottomOf="@+id/textView22">
+
+                <RadioButton
+                    android:id="@+id/radio5"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:button="@drawable/custom_radio_button"
+                    android:checked="true"
+                    android:text="  5 sec"
+                        android:textSize="16sp" />
+
+                <RadioButton
+                    android:id="@+id/radio10"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:layout_marginLeft="@dimen/_20sdp"
+                    android:button="@drawable/custom_radio_button"
+                    android:checked="false"
+                    android:text="   10 sec"
+                        android:textSize="16sp" />
+
+                <RadioButton
+                    android:id="@+id/radio15"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_20sdp"
+                    android:textColor="@color/white"
+                    android:button="@drawable/custom_radio_button"
+                    android:checked="false"
+                    android:text="   15 sec"
+                        android:textSize="16sp" />
+            </RadioGroup>
 
             <androidx.constraintlayout.widget.ConstraintLayout
 
@@ -55,6 +140,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:gravity="center_vertical"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView21"
@@ -74,6 +160,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
+
                     app:left_thumb_image="@drawable/ic_min_seek"
                     app:right_thumb_image="@drawable/ic_max_seek" />
 
@@ -99,15 +186,15 @@
                 android:padding="8dp"
                 android:paddingStart="@dimen/_10sdp"
                 android:paddingTop="@dimen/_4sdp"
+
                 android:paddingEnd="@dimen/_10sdp"
                 android:paddingBottom="6dp"
-
-                android:text="Start Recording"
+                android:text="Start"
                 android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/layoutSeekbar"
-                app:layout_constraintStart_toStartOf="@+id/layoutSeekbar"
-                app:layout_constraintTop_toBottomOf="@+id/layoutSeekbar" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/radioGroupDuration" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

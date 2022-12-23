@@ -200,15 +200,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:layout_marginStart="25dp"
-                android:layout_marginEnd="25dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="36dp"
                 android:elevation="4dp"
                 android:padding="7dp"
                 app:bar_color="@android:color/transparent"
                 app:bar_highlight_color="@android:color/transparent"
                 app:data_type="_integer"
-                app:left_thumb_image="@drawable/ic_min_seek"
-                app:right_thumb_image="@drawable/ic_max_seek" />
+                app:left_thumb_image="@drawable/vertical_line"
+                app:right_thumb_image="@drawable/vertical_line" />
 
             <com.stalmate.user.modules.reels.audioVideoTrimmer.ui.seekbar.widgets.CrystalSeekbar
                 android:id="@+id/seekbar_controller"

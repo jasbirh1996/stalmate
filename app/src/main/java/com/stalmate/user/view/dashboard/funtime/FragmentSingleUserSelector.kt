@@ -24,19 +24,18 @@ import com.stalmate.user.view.dashboard.funtime.viewmodel.TagPeopleViewModel
 import com.stalmate.user.view.dialogs.CommonConfirmationDialog
 import java.util.ArrayList
 
-class FragmentSingleUserSelector: BaseFragment(), FriendAdapter.Callbackk,
+class FragmentSingleUserSelector : BaseFragment(), FriendAdapter.Callbackk,
     TaggedUsersAdapter.Callback {
     lateinit var tagPeopleViewModel: TagPeopleViewModel
     lateinit var friendAdapter: TaggedUsersAdapter
     lateinit var binding: FragmentSingleUserSelectorBinding
     var searchData = ""
-    var currentPage=1
+    var currentPage = 1
     var isLastPage = false
     var isLoading = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
-
 
 
     override fun onCreateView(
@@ -57,11 +56,12 @@ class FragmentSingleUserSelector: BaseFragment(), FriendAdapter.Callbackk,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        tagPeopleViewModel= ViewModelProvider(requireActivity()).get(TagPeopleViewModel::class.java)
-        friendAdapter = TaggedUsersAdapter(tagPeopleViewModel, requireContext(),isToSelect = true,this)
+        tagPeopleViewModel =
+            ViewModelProvider(requireActivity()).get(TagPeopleViewModel::class.java)
+        friendAdapter =
+            TaggedUsersAdapter(tagPeopleViewModel, requireContext(), isToSelect = true, this)
 
-       tagPeopleViewModel.tagModelLiveData.observe(viewLifecycleOwner, Observer {
-
+        tagPeopleViewModel.tagModelLiveData.observe(viewLifecycleOwner, Observer {
 
 
         })
@@ -89,12 +89,12 @@ class FragmentSingleUserSelector: BaseFragment(), FriendAdapter.Callbackk,
         })
 
         binding.ivClear.setOnClickListener {
-         /*   searchData = ""
-            binding.etSearch.setText("")
+            /*   searchData = ""
+               binding.etSearch.setText("")
 
-            Handler(Looper.myLooper()!!).post {
-                hitApi(true, searchData)
-            }*/
+               Handler(Looper.myLooper()!!).post {
+                   hitApi(true, searchData)
+               }*/
 
             findNavController().popBackStack()
 
@@ -103,7 +103,7 @@ class FragmentSingleUserSelector: BaseFragment(), FriendAdapter.Callbackk,
         binding.rvFriends.adapter = friendAdapter
         binding.rvFriends.layoutManager = LinearLayoutManager(context)
 
-        hitApi(true,searchData)
+        hitApi(true, searchData)
 
         binding.nestedScrollView.getViewTreeObserver()
             .addOnScrollChangedListener(ViewTreeObserver.OnScrollChangedListener {
@@ -126,14 +126,14 @@ class FragmentSingleUserSelector: BaseFragment(), FriendAdapter.Callbackk,
     private fun loadMoreItems() {
         isLoading = true
         currentPage++
-        hitApi(false,searchData)
+        hitApi(false, searchData)
     }
 
 
-    fun hitApi(isFresh:Boolean, dataSearch: String){
+    fun hitApi(isFresh: Boolean, dataSearch: String) {
         this.searchData = dataSearch
-        if (isFresh){
-            currentPage=1
+        if (isFresh) {
+            currentPage = 1
         }
 
         var hashmap = HashMap<String, String>()
@@ -143,37 +143,63 @@ class FragmentSingleUserSelector: BaseFragment(), FriendAdapter.Callbackk,
         hashmap.put("search", this.searchData)
         hashmap.put("page", currentPage.toString())
         hashmap.put("limit", "20")
-        hashmap.put("sortBy","")
-        hashmap.put("filter","")
+        hashmap.put("sortBy", "")
+        hashmap.put("filter", "")
 
         networkViewModel.getFriendList(hashmap)
         networkViewModel.friendLiveData.observe(viewLifecycleOwner, Observer {
             it.let {
-                
 
-                if (it!!.results.isNotEmpty()){
 
-                    if (isFresh){
-                        friendAdapter.submitList(it.results as ArrayList<User>)
-                    }else{
-                        friendAdapter.addToList(it.results as ArrayList<User>)
+                if (it!!.results.isNotEmpty()) {
+
+                    if (isFresh) {
+
+                      if (tagPeopleViewModel.taggedModelObject.policy==Constants.PRIVACY_TYPE_SPECIFIC){
+                          friendAdapter.list.clear()
+                          it.results.forEach { user ->
+
+                              tagPeopleViewModel.taggedModelObject.specifFriendsList.forEach {
+                                  if (user.id == it.id) {
+                                      friendAdapter.addToList(listOf(user))
+                                  }
+                              }
+                          }
+                      }else{
+                          friendAdapter.submitList(it.results as ArrayList<User>)
+                      }
+                    } else {
+
+                        if (tagPeopleViewModel.taggedModelObject.policy==Constants.PRIVACY_TYPE_SPECIFIC){
+                            it.results.forEach { user ->
+                                tagPeopleViewModel.taggedModelObject.specifFriendsList.forEach {
+                                    if (user.id == it.id) {
+                                        friendAdapter.addToList(listOf(user))
+                                    }
+                                }
+                            }
+                        }else{
+                            friendAdapter.addToList(it.results as ArrayList<User>)
+                        }
+
+
                     }
 
-                    isLastPage=false
-                    if (it.results.size<6){
+                    isLastPage = false
+                    if (it.results.size < 6) {
                         binding.progressLoading.visibility = View.GONE
-                    }else{
+                    } else {
                         binding.progressLoading.visibility = View.VISIBLE
                     }
-                }else{
-                    if (isFresh){
+                } else {
+                    if (isFresh) {
                         friendAdapter.submitList(it.results as ArrayList<User>)
                     }
-                    isLastPage=true
+                    isLastPage = true
                     binding.progressLoading.visibility = View.GONE
 
                 }
-                
+
 
             }
         })
@@ -193,54 +219,47 @@ class FragmentSingleUserSelector: BaseFragment(), FriendAdapter.Callbackk,
 
 
 
+        if (tagPeopleViewModel.getPolicy().value!!.policy == Constants.PRIVACY_TYPE_PRIVATE) {
 
 
+            var custumConfirmDialogForAccountPublic = CommonConfirmationDialog(
+                requireContext(),
+                "",
+                "Make your account public to tag others who don't follow you",
+                "Ok",
+                "Close",
+                object :
+                    CommonConfirmationDialog.Callback {
+                    override fun onDialogResult(isPermissionGranted: Boolean) {
+                        if (isPermissionGranted) {
 
-        if (tagPeopleViewModel.getPolicy().value!!.policy!=Constants.PRIVACY_TYPE_PUBLIC){
 
-
-            var custumConfirmDialogForAccountPublic= CommonConfirmationDialog(requireContext(),"","Make your account public to tag others who don't follow you","Ok","Close",object :
-                CommonConfirmationDialog.Callback{
-                override fun onDialogResult(isPermissionGranted: Boolean) {
-                    if (isPermissionGranted){
-                    /*    tagPeopleViewModel.clearList()
-                        tagPeopleViewModel.addToList(user)*/
-
+                        }
                     }
-                }
-            })
+                })
             custumConfirmDialogForAccountPublic.show()
 
 
-      /*      var custumConfirmDialog= CommonConfirmationDialog(requireContext(),"make Specific ?","Tagged people removed when you select My Followers, Private or Specific friend","Yes","Cancel",object :
-                CommonConfirmationDialog.Callback{
-                override fun onDialogResult(isPermissionGranted: Boolean) {
-                    if (isPermissionGranted){
 
-                        tagPeopleViewModel.clearList()
+/*
+      var custumConfirmDialog= CommonConfirmationDialog(requireContext(),"make Specific ?","Tagged people removed when you select My Followers, Private or Specific friend","Yes","Cancel",object :
+                      CommonConfirmationDialog.Callback{
+                      override fun onDialogResult(isPermissionGranted: Boolean) {
+                          if (isPermissionGranted){
 
-                    }
-                }
-            })
-            custumConfirmDialog.show()*/
-        }else{
+                              tagPeopleViewModel.clearList()
+
+                          }
+                      }
+                  })
+                  custumConfirmDialog.show()
+*/
+
+        } else {
             tagPeopleViewModel.addToList(user)
         }
 
 
-
-
-
-
-
-      //  tagPeopleViewModel.setPolicy(Constants.PRIVACY_TYPE_PUBLIC)
-
-
-   /*     var bundle=Bundle()
-        bundle.putSerializable(SELECT_USER,user)
-        setFragmentResult(
-            SELECT_USER,bundle
-        )*/
         findNavController().popBackStack()
     }
 

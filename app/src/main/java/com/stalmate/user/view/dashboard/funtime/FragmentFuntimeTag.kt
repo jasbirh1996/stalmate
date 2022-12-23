@@ -122,13 +122,11 @@ class FragmentFuntimeTag : BaseFragment(), FriendAdapter.Callbackk, TaggedUsersA
 
         tagPeopleViewModel.getTaggedPeopleList().observe(viewLifecycleOwner, Observer {
             binding.layoutWhio.visibility=View.GONE
-            if (it.policy==Constants.PRIVACY_TYPE_PUBLIC){
-                peopleAdapter.submitList(it.taggedPeopleList)
-                if (it.taggedPeopleList.size>0){
-                    binding.buttonOk.visibility=View.VISIBLE
-                    binding.buttonOk.setOnClickListener {
-                        findNavController().popBackStack()
-                    }
+            peopleAdapter.submitList(it.taggedPeopleList)
+            if (it.taggedPeopleList.size>0){
+                binding.buttonOk.visibility=View.VISIBLE
+                binding.buttonOk.setOnClickListener {
+                    findNavController().popBackStack()
                 }
             }
         })

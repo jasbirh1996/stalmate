@@ -71,11 +71,10 @@ class FragmentFuntimePrivacyOptions : BaseFragment() {
         }
 
         binding.layoutSpecific.setOnClickListener {
-            if (tagPeopleViewModel.taggedModelObject.policy!=Constants.PRIVACY_TYPE_SPECIFIC){
+            if (tagPeopleViewModel.taggedModelObject.policy!=Constants.PRIVACY_TYPE_SPECIFIC && tagPeopleViewModel.taggedModelObject.taggedPeopleList.size!=0){
                var custumConfirmDialog= CommonConfirmationDialog(requireContext(),"","Tagged people removed when you select My Followers, Private or Specific friend","Yes","Cancel",object :CommonConfirmationDialog.Callback{
                     override fun onDialogResult(isPermissionGranted: Boolean) {
                         if (isPermissionGranted){
-
                             tagPeopleViewModel.clearList()
                             openBottomSheetDialog()
                         }

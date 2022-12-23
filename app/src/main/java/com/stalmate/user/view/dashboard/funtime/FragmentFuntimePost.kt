@@ -138,7 +138,7 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
              }
 
         tagPeopleViewModel.tagModelLiveData.observe(viewLifecycleOwner) {
-            if (it.taggedPeopleList.isNotEmpty() && it.policy==Constants.PRIVACY_TYPE_PUBLIC) {
+            if (it.taggedPeopleList.isNotEmpty()) {
                 binding.tvPeopleCount.text = it.taggedPeopleList.size.toString() + " People"
                 binding.tvPeopleCount.visibility = View.VISIBLE
                 taggedPeople = it.taggedPeopleList

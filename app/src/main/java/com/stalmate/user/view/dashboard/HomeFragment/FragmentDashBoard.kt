@@ -116,7 +116,7 @@ class FragmentDashboard: BaseFragment(), View.OnClickListener, FragmentHome.Call
     val fragmentFuntime: Fragment = FragmentFunTime()
     val fragmentChat: Fragment = FragmentSocketChat("62eb8ff7578e3c1fcee4a7bd")
     val fragmentReels: Fragment = FragmentReels()
-    val fragmentFriends: Fragment = FragmentProfile(this)
+    val fragmentFriends: Fragment = FragmentFriend(this)
     val fragmentProfile: FragmentProfile = FragmentProfile(this)
 
 

@@ -8,33 +8,31 @@ import android.content.DialogInterface
 import android.graphics.Bitmap
 import android.util.Log
 import android.view.*
+import android.widget.CompoundButton
 import android.widget.FrameLayout
-import android.widget.ImageView
+import android.widget.RadioGroup
 import android.widget.TextView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import com.airbnb.lottie.LottieAnimationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.stalmate.user.R
 import com.stalmate.user.base.App
 import com.stalmate.user.databinding.FragmentBottomsheetRangeBinding
-import com.stalmate.user.modules.reels.audioVideoTrimmer.ui.seekbar.widgets.CrystalRangeSeekbar
 import com.stalmate.user.modules.reels.audioVideoTrimmer.ui.seekbar.widgets.CrystalRangeSeekbarForTrim
 
 
 class RangeBSFragmnet(var videoDuration: Int) : BottomSheetDialogFragment() {
     private var rangeSelectedListener: RangeSelectedListener? = null
     lateinit var binding: FragmentBottomsheetRangeBinding
-
+var type:String="video"
+    var seconds=5
     interface RangeSelectedListener {
-        fun onCaptureAfternSeconds(seconds: Int)
+        fun onCaptureAfternSeconds(type:String, duratio:Int)
         fun onRangeDialogDismiss()
-
-
     }
+
 
     override fun onCancel(dialog: DialogInterface) {
         rangeSelectedListener!!.onRangeDialogDismiss()
@@ -66,16 +64,57 @@ class RangeBSFragmnet(var videoDuration: Int) : BottomSheetDialogFragment() {
         if (behavior != null && behavior is BottomSheetBehavior<*>) {
             behavior.setBottomSheetCallback(mBottomSheetBehaviorCallback)
         }
-        seekbar = contentView.findViewById(R.id.range_seek_bar)
+    //    seekbar = contentView.findViewById(R.id.range_seek_bar)
         (contentView.parent as View).setBackgroundColor(resources.getColor(android.R.color.transparent))
-        totalDuration = (videoDuration + 10).toLong()
+   /*     totalDuration = (videoDuration + 10).toLong()
         fixedGap = videoDuration.toLong()
-        setUpSeekBar()
+        setUpSeekBar()*/
         binding.buttonTrimDone.setOnClickListener {
-            rangeSelectedListener!!.onCaptureAfternSeconds(lastMinValue.toInt())
+            rangeSelectedListener!!.onCaptureAfternSeconds(type,seconds)
             rangeSelectedListener!!.onRangeDialogDismiss()
             dismiss()
         }
+
+
+      binding.radioGroupType.setOnCheckedChangeListener { group, checkedId ->
+          run {
+
+                            when(checkedId){
+                                R.id.radioVideo->{
+                                        type="video"
+                                }
+                                R.id.radioPhoto->{
+type="photo"
+                                }
+
+                            }
+
+          }
+      }
+        binding.radioGroupDuration.setOnCheckedChangeListener { group, checkedId ->
+            run {
+
+                when(checkedId){
+                    R.id.radio5->{
+                            seconds=5
+                    }
+                    R.id.radio10->{
+                        seconds=10
+                    }
+                    R.id.radio15->{
+                        seconds=15
+                    }
+
+                }
+
+            }
+        }
+
+
+
+
+
+
     }
 
 
@@ -83,6 +122,7 @@ class RangeBSFragmnet(var videoDuration: Int) : BottomSheetDialogFragment() {
         rangeSelectedListener = emojiListener
     }
 
+/*
     private var lastMinValue: Long = 0
     private var lastMaxValue: Long = 0
     private var trimType = 1
@@ -95,8 +135,10 @@ class RangeBSFragmnet(var videoDuration: Int) : BottomSheetDialogFragment() {
     private var totalDuration: Long = 0
     private fun setUpSeekBar() {
         seekbar.visibility = View.VISIBLE
-        /*       txtStartDuration.setVisibility(View.VISIBLE)
-               txtEndDuration.setVisibility(View.VISIBLE)*/
+        */
+/*       txtStartDuration.setVisibility(View.VISIBLE)
+               txtEndDuration.setVisibility(View.VISIBLE)*//*
+
         seekbar.setMaxValue(totalDuration.toFloat()).apply()
         seekbar.setMaxStartValue(totalDuration.toFloat()).apply()
 
@@ -141,8 +183,10 @@ class RangeBSFragmnet(var videoDuration: Int) : BottomSheetDialogFragment() {
             Log.d("akjsdasdoo", lastMinValue.toString())
             Log.d("akjsdasdoo", lastMaxValue.toString())
 
+*/
 /*            txtStartDuration.setText(TrimmerUtils.formatSeconds(minVal))
-            txtEndDuration.setText(TrimmerUtils.formatSeconds(maxVal))*/
+            txtEndDuration.setText(TrimmerUtils.formatSeconds(maxVal))*//*
+
         }
     }
 
@@ -153,14 +197,16 @@ class RangeBSFragmnet(var videoDuration: Int) : BottomSheetDialogFragment() {
             R.layout.view_custom_thumb,
             null
         )
-  /*      val ivStar: ImageView = inflatedFrame.findViewById(R.id.ivIcon) as ImageView
+  */
+/*      val ivStar: ImageView = inflatedFrame.findViewById(R.id.ivIcon) as ImageView
 
         ivStar.setImageDrawable(
             ContextCompat.getDrawable(
                 App.getInstance(),
                 drawable
             )
-        )*/
+        )*//*
+
         val tvValue: TextView = inflatedFrame.findViewById(R.id.tvValue) as TextView
         tvValue.setText(progress.toString()+"s")
         val frameLayout: FrameLayout = inflatedFrame.findViewById(R.id.screen) as FrameLayout
@@ -175,5 +221,6 @@ class RangeBSFragmnet(var videoDuration: Int) : BottomSheetDialogFragment() {
         frameLayout.buildDrawingCache(true)
         return frameLayout.getDrawingCache()
     }
+*/
 
 }
