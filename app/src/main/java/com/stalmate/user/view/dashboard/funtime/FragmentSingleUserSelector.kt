@@ -186,7 +186,7 @@ class FragmentSingleUserSelector : BaseFragment(), FriendAdapter.Callbackk,
                     }
 
                     isLastPage = false
-                    if (it.results.size < 6) {
+                    if (it.results.size < 16) {
                         binding.progressLoading.visibility = View.GONE
                     } else {
                         binding.progressLoading.visibility = View.VISIBLE

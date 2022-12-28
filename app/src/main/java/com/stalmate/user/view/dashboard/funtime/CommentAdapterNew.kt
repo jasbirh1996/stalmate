@@ -15,6 +15,8 @@ import com.bumptech.glide.Glide
 import com.stalmate.user.R
 import com.stalmate.user.databinding.ItemCommentBinding
 import com.stalmate.user.model.Comment
+import com.stalmate.user.utilities.PriceFormatter
+import com.stalmate.user.utilities.TimesAgo2
 import com.stalmate.user.viewmodel.AppViewModel
 
 class CommentAdapterNew(
@@ -43,7 +45,7 @@ class CommentAdapterNew(
         RecyclerView.ViewHolder(binding.root),
         ChildCommentAdapter.Callback {
         fun bind(shortComment: Comment) {
-            binding.tvDate.text = "${shortComment.date}"
+            binding.tvDate.text = "${TimesAgo2.covertTimeToText(shortComment.Created_date,true)}"
             binding.tvUserName.text = "${shortComment.first_name} ${shortComment.last_name}"
             binding.tvReply.text = "Reply"
             binding.tvLikesCount.text = "0 Likes"

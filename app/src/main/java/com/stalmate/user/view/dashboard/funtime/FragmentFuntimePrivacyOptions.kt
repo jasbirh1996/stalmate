@@ -93,12 +93,15 @@ class FragmentFuntimePrivacyOptions : BaseFragment() {
                     override fun onDialogResult(isPermissionGranted: Boolean) {
                         if (isPermissionGranted){
                            tagPeopleViewModel.clearList()
+                            tagPeopleViewModel.clearSpecificFriendList()
                             proceed(Constants.PRIVACY_TYPE_PRIVATE)
                         }
                     }
                 })
                 custumConfirmDialog.show()
             }else{
+                tagPeopleViewModel.clearList()
+                tagPeopleViewModel.clearSpecificFriendList()
                 proceed(Constants.PRIVACY_TYPE_PRIVATE)
             }
 

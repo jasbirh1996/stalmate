@@ -39,11 +39,9 @@ class ReelAdapter(val context: Context,var callback:Callback) :
             override fun areItemsTheSame(oldItem: ResultFuntime, newItem: ResultFuntime): Boolean {
                 return false;// oldItem == newItem
             }
-
             override fun areContentsTheSame(oldItem: ResultFuntime, newItem: ResultFuntime): Boolean {
                 return false;//oldItem == newItem
             }
-
         }
 
         const val FEED_TYPE_VIDEO = 1;
@@ -169,7 +167,7 @@ class ReelAdapter(val context: Context,var callback:Callback) :
         }
 
         holder.like.setOnClickListener {
-           // likeApiHit()
+            callback.onClickOnLikeButtonReel(reelList[position]!!)
         }
 
         holder.comment.setOnClickListener {
@@ -206,6 +204,9 @@ class ReelAdapter(val context: Context,var callback:Callback) :
 
     }
 
+
+
+
     private fun handleViewHolder(holder: ImageReelViewHolder, position: Int) {
 
         /* Set adapter (items are being used inside adapter, you can setup in your own way*/
@@ -216,7 +217,11 @@ class ReelAdapter(val context: Context,var callback:Callback) :
     }
 
 
-    public interface Callback{
+    public interface Callback {
+        fun onClickOnRemoveReel(resultFuntime: ResultFuntime)
+        fun onClickOnLikeButtonReel(resultFuntime: ResultFuntime)
+        fun onClickOnEditReel(resultFuntime: ResultFuntime)
+        fun onClickOnBlockUser(resultFuntime: ResultFuntime)
         fun onClickOnFullView(resultFuntime: ResultFuntime)
     }
 

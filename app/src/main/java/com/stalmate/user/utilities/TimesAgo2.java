@@ -21,7 +21,6 @@ public class TimesAgo2 {
         try {
 
             if (isTimeStamp){
-
                 Calendar cal = Calendar.getInstance(Locale.ENGLISH);
 
               //  cal.setTimeInMillis(Long.parseLong(dataDate) * 1000);

@@ -221,6 +221,22 @@ class ReelListFragment : BaseFragment(), ReelAdapter.Callback {
         super.onPause()
     }
 
+    override fun onClickOnRemoveReel(resultFuntime: ResultFuntime) {
+
+    }
+
+    override fun onClickOnLikeButtonReel(resultFuntime: ResultFuntime) {
+
+    }
+
+    override fun onClickOnEditReel(resultFuntime: ResultFuntime) {
+
+    }
+
+    override fun onClickOnBlockUser(resultFuntime: ResultFuntime) {
+
+    }
+
     override fun onClickOnFullView(resultFuntime: ResultFuntime) {
         startActivity(IntentHelper.getFullViewReelActivity(context)!!.putExtra("data",resultFuntime))
 

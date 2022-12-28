@@ -126,7 +126,7 @@ class FragmentDashboard: BaseFragment(), View.OnClickListener, FragmentHome.Call
         when(position){
             0->{
           /*      loadFragment(fragmentFuntime)
-                binding.navigationBar.tabFuntime.tabLayout.background=ContextCompat.getDrawable(requireContext(),R.drawable.active_tab_background)
+                binding.navigationBar.tabFuntime.tabLayout.background=ContextCompat.getDrawable(requireContext(),0R.drawable.active_tab_background)
                 binding.navigationBar.tabChat.tabLayout.background=ContextCompat.getDrawable(requireContext(),R.drawable.in_active_tab_background)
                 binding.navigationBar.tabHome.tabLayout.background=ContextCompat.getDrawable(requireContext(),R.drawable.in_active_tab_background)
                 binding.navigationBar.tabVideos.tabLayout.background=ContextCompat.getDrawable(requireContext(),R.drawable.in_active_tab_background)

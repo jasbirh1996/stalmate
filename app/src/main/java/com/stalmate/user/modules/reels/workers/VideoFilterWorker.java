@@ -9,20 +9,24 @@ import androidx.concurrent.futures.CallbackToFutureAdapter;
 import androidx.work.ListenableWorker;
 import androidx.work.WorkerParameters;
 
-import com.daasuu.mp4compose.composer.Mp4Composer;
-import com.daasuu.mp4compose.filter.GlBrightnessFilter;
-import com.daasuu.mp4compose.filter.GlExposureFilter;
-import com.daasuu.mp4compose.filter.GlGammaFilter;
-import com.daasuu.mp4compose.filter.GlGrayScaleFilter;
-import com.daasuu.mp4compose.filter.GlHazeFilter;
-import com.daasuu.mp4compose.filter.GlInvertFilter;
-import com.daasuu.mp4compose.filter.GlMonochromeFilter;
-import com.daasuu.mp4compose.filter.GlPixelationFilter;
-import com.daasuu.mp4compose.filter.GlPosterizeFilter;
-import com.daasuu.mp4compose.filter.GlSepiaFilter;
-import com.daasuu.mp4compose.filter.GlSharpenFilter;
-import com.daasuu.mp4compose.filter.GlSolarizeFilter;
-import com.daasuu.mp4compose.filter.GlVignetteFilter;
+import com.daasuu.gpuv.composer.FillMode;
+import com.daasuu.gpuv.composer.GPUMp4Composer;
+import com.daasuu.gpuv.composer.Rotation;
+import com.daasuu.gpuv.egl.filter.GlBrightnessFilter;
+import com.daasuu.gpuv.egl.filter.GlExposureFilter;
+import com.daasuu.gpuv.egl.filter.GlFilterGroup;
+
+import com.daasuu.gpuv.egl.filter.GlGammaFilter;
+import com.daasuu.gpuv.egl.filter.GlGrayScaleFilter;
+import com.daasuu.gpuv.egl.filter.GlHazeFilter;
+import com.daasuu.gpuv.egl.filter.GlInvertFilter;
+import com.daasuu.gpuv.egl.filter.GlMonochromeFilter;
+import com.daasuu.gpuv.egl.filter.GlPixelationFilter;
+import com.daasuu.gpuv.egl.filter.GlPosterizeFilter;
+import com.daasuu.gpuv.egl.filter.GlSepiaFilter;
+import com.daasuu.gpuv.egl.filter.GlSharpenFilter;
+import com.daasuu.gpuv.egl.filter.GlSolarizeFilter;
+import com.daasuu.gpuv.egl.filter.GlVignetteFilter;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.stalmate.user.modules.reels.utils.VideoFilter;
 import com.stalmate.user.modules.reels.utils.VideoUtil;
@@ -54,7 +58,7 @@ public class VideoFilterWorker extends ListenableWorker {
     private void doActualWork(CallbackToFutureAdapter.Completer<Result> completer) {
         String input = getInputData().getString(KEY_INPUT);
         String output = getInputData().getString(KEY_OUTPUT);
-        Mp4Composer composer = new Mp4Composer(input, output);
+        GPUMp4Composer composer = new GPUMp4Composer(input, output);
         Size size = null;
         size = VideoUtil.getDimensions(input);
         composer.videoBitrate((int) (.07 * 30 * size.getWidth() * size.getHeight()));
@@ -115,14 +119,10 @@ public class VideoFilterWorker extends ListenableWorker {
                 break;
         }
 
-        composer.listener(new Mp4Composer.Listener() {
+        composer.listener(new GPUMp4Composer.Listener() {
             @Override
             public void onProgress(double progress) { }
 
-            @Override
-            public void onCurrentWrittenVideoTime(long timeUs) {
-
-            }
 
             @Override
             public void onCompleted() {

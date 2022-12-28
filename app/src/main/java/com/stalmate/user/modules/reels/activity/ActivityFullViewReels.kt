@@ -228,7 +228,7 @@ class ActivityFullViewReels : BaseActivity(), ReelFullViewAdapter.Callback {
 
     fun deleteReel(funtime: ResultFuntime) {
 
-        /*   var hashmap = HashMap<String, String>()
+           var hashmap = HashMap<String, String>()
            hashmap.put("id", funtime.id)
            hashmap.put("is_delete", "1")
            hashmap.put("text", "")
@@ -238,18 +238,18 @@ class ActivityFullViewReels : BaseActivity(), ReelFullViewAdapter.Callback {
 
 
                    if (it!!.status) {
-                       adapter.removeReelById(funtime.id)
+                       var position = adapter.reelList.indexOfFirst { it.id == funtime.id }
+                       Log.d("a;lksdasd", position.toString())
+                       binding.recyclerView.smoothScrollToPosition(position + 1)
+                       Handler(Looper.getMainLooper()).postDelayed(
+                           Runnable { adapter.removeReelById(funtime.id) },
+                           500
+                       )
                    }
 
                }
-           })*/
-        var position = adapter.reelList.indexOfFirst { it.id == funtime.id }
-        Log.d("a;lksdasd", position.toString())
-        binding.recyclerView.smoothScrollToPosition(position + 1)
-        Handler(Looper.getMainLooper()).postDelayed(
-            Runnable { adapter.removeReelById(funtime.id) },
-            500
-        )
+           })
+
 
     }
 

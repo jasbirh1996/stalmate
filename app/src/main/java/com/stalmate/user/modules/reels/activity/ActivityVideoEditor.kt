@@ -67,7 +67,7 @@ import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
 
-class ActivityVideoEditor() : BaseActivity(), OnPhotoEditorListener,
+class ActivityVideoEditor : BaseActivity(), OnPhotoEditorListener,
     PropertiesBSFragment.Properties, View.OnClickListener, StickerBSFragment.StickerListener,
     EmojiBSFragment.EmojiListener {
     lateinit var binding: ActivityPreviewVideoBinding

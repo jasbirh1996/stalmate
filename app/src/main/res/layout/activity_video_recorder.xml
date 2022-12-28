@@ -16,19 +16,6 @@
             android:visibility="visible" />
 
 
-        <com.google.android.exoplayer2.ui.PlayerView
-            android:id="@+id/selectedVideo"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:use_controller="false"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-        </com.google.android.exoplayer2.ui.PlayerView>
-
 
         <com.otaliastudios.cameraview.CameraView
             android:id="@+id/cameraView"
@@ -41,6 +28,16 @@
             app:cameraFacing="front"
             app:cameraPreview="glSurface"
             app:cameraPreviewFrameRate="30"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+        <FrameLayout
+            android:id="@+id/layout_movie_wrapper"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:use_controller="false"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

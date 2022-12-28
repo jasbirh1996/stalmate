@@ -7,10 +7,8 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.graphics.*
-import android.graphics.drawable.Drawable
 import android.media.AudioAttributes
 import android.media.MediaPlayer
-import android.media.PlaybackParams
 import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
@@ -20,13 +18,13 @@ import android.provider.MediaStore
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import android.webkit.MimeTypeMap
 import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.Nullable
 import androidx.annotation.Px
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
@@ -37,18 +35,19 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.loader.content.CursorLoader
 import androidx.recyclerview.widget.*
+import androidx.work.Data
+import androidx.work.OneTimeWorkRequest
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
 import com.arthenica.mobileffmpeg.FFmpeg
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
 import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.CropImageView
 import com.canhub.cropper.options
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.PlaybackParameters
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.material.tabs.TabLayout
@@ -70,16 +69,21 @@ import com.stalmate.user.databinding.ActivityVideoRecorderBinding
 import com.stalmate.user.modules.reels.adapter.FilterAdapterNew
 import com.stalmate.user.modules.reels.adapter.GalleryItem
 import com.stalmate.user.modules.reels.filters.*
+import com.stalmate.user.modules.reels.filters.epf.EPlayerView
+import com.stalmate.user.modules.reels.filters.epf.filter.*
 import com.stalmate.user.modules.reels.photo_editing.RangeBSFragmnet
 import com.stalmate.user.modules.reels.utils.VideoFilter
 import com.stalmate.user.modules.reels.utils.VideoUtil
+import com.stalmate.user.modules.reels.workers.VideoFilterWorker
 import com.stalmate.user.utilities.Common
 import com.stalmate.user.utilities.ImageLoaderHelperGlide
 import com.stalmate.user.utilities.PathUtil
+import com.stalmate.user.utilities.PriceFormatter
 import com.stalmate.user.view.dialogs.CommonConfirmationDialog
 import jp.co.cyberagent.android.gpuimage.GPUImage
 import jp.co.cyberagent.android.gpuimage.filter.*
 import java.io.*
+import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -111,6 +115,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
         super.onCreate(savedInstanceState)
         binding = ActivityVideoRecorderBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        mPlayer = ExoPlayer.Builder(this).build()
         getGalleryData()
         rangeFragment = RangeBSFragmnet(imageVideoDuration)
         rangeFragment.setEmojiListener(this)
@@ -183,15 +188,12 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
             }
 
             override fun onVideoRecordingEnd() {
-                binding.buttonDone.visibility = View.VISIBLE
+                Log.d("rwehfilshdlf", "recordingEnd")
+                setUPCameraViewsOnCapture(false)
                 mMediaPlayer!!.pause()
                 progressHandler.removeCallbacks(runnable)
-                //    binding.segmentedProgressbar.addDivider()
-                setUPCameraViewsOnCapture(false)
                 binding.buttonRecord.setSelected(false)
-                /*       if (mMediaPlayer != null) {
-                           mMediaPlayer!!.pause()
-                       }*/
+                pauseProgress()
                 mHandler.postDelayed({ processCurrentRecording() }, 500)
             }
 
@@ -337,7 +339,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                 binding.segmentedProgressbar.visibility = View.GONE
                 binding.buttonPickData.visibility = View.VISIBLE
                 //  binding.buttonFlash.visibility = View.GONE
-                binding.selectedVideo.visibility = View.GONE
+                binding.layoutMovieWrapper.visibility = View.GONE
                 binding.buttonDurationTimer.visibility = View.GONE
                 binding.layoutBottomControll.visibility = View.VISIBLE
 
@@ -349,7 +351,6 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                     binding.segmentedProgressbar.visibility = View.VISIBLE
                     binding.buttonMusic.visibility = View.VISIBLE
                 }
-                Log.d("kajshdasd", isFilterApplied.toString())
                 if (isFilterApplied) {
                     binding.buttonColorFilterIcon.visibility = View.GONE
                 } else {
@@ -358,7 +359,6 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                 runOnUiThread {
                     binding.cameraView.close()
                     binding.cameraView.visibility = View.GONE
-
 
                 }
                 binding.buttonCaptureCounter.visibility = View.GONE
@@ -379,31 +379,36 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                     R.drawable.record
                 )
             )
-
-            /*             binding.cameraView.close()
-                         binding.cameraView.invalidate()
-                         binding.cameraView.open()*/
         }
 
     }
 
 
     override fun onStart() {
+        Log.d("kasdasd", "askldassdfsdfd")
         if (mMediaPlayer != null) {
             mMediaPlayer!!.start()
             resumeProgress()
+            if (this::playerzview.isInitialized){
+                playerzview.pLayer.play()
+            }
             if (!isImageTakenByCamera && isImage) {
                 binding.cameraView.open()
-            }
-            if (!isImage && !isVideoTaken) {
+            } else if (!isImage && !isVideoTaken) {
                 Log.d("aklsjdlasd", "oaiudoiasd")
-                runOnUiThread {
-                    binding.cameraView.open()
-                }
+                binding.cameraView.open()
+            } else {
+
             }
+
+
         }
         super.onStart()
     }
+
+
+
+
 
 
     override fun onPause() {
@@ -411,6 +416,10 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
             pauseProgress()
             binding.cameraView.close()
             captureTimerHandler.removeCallbacks(runnableForTimer)
+            if (this::playerzview.isInitialized){
+                playerzview.pLayer.pause()
+            }
+
         }
         super.onPause()
     }
@@ -432,13 +441,6 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
     }
 
 
-    override fun onStop() {
-        if (mMediaPlayer != null) {
-            pauseProgress()
-
-        }
-        super.onStop()
-    }
 
     private val snapHelper = CenterSnapHelper()
     fun setUpFilterAdapter() {
@@ -539,6 +541,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
 
 
     private fun applyPreviewFilter(filter: VideoFilter) {
+        activeFilter = filter
         isFilterApplied = true
         if (isImage) {
             when (filter) {
@@ -581,46 +584,77 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                     binding.selectedPhoto.setFilter(GPUImageFilter())
                 }
             }
-        } else {
-            //  binding.rvFilters.visibility = View.GONE
-
         }
         when (filter) {
             VideoFilter.BRIGHTNESS -> {
                 val glf = Filters.BRIGHTNESS.newInstance() as BrightnessFilter
                 glf.brightness = 1.2f
                 binding.cameraView.setFilter(glf)
+                playerzview.setGlFilter(GlBrightnessFilter())
+
+
             }
-            VideoFilter.EXPOSURE -> binding.cameraView.setFilter(ExposureFilter())
+            VideoFilter.EXPOSURE -> {
+                binding.cameraView.setFilter(ExposureFilter())
+                  playerzview.setGlFilter(GlExposureFilter())
+            }
             VideoFilter.GAMMA -> {
                 val glf = Filters.GAMMA.newInstance() as GammaFilter
                 glf.gamma = 2f
                 binding.cameraView.setFilter(glf)
+                  playerzview.setGlFilter(GlGammaFilter())
             }
-            VideoFilter.GRAYSCALE -> binding.cameraView.setFilter(Filters.GRAYSCALE.newInstance())
+            VideoFilter.GRAYSCALE -> {
+                binding.cameraView.setFilter(Filters.GRAYSCALE.newInstance())
+                  playerzview.setGlFilter(GlGrayScaleFilter())
+            }
             VideoFilter.HAZE -> {
                 val glf = HazeFilter()
                 glf.setSlope(-0.5f)
                 binding.cameraView.setFilter(glf)
+                  playerzview.setGlFilter(GlHazeFilter())
             }
 
-            VideoFilter.INVERT -> binding.cameraView.setFilter(Filters.INVERT_COLORS.newInstance())
-            VideoFilter.MONOCHROME -> binding.cameraView.setFilter(MonochromeFilter())
+            VideoFilter.INVERT -> {
+                binding.cameraView.setFilter(Filters.INVERT_COLORS.newInstance())
+                  playerzview.setGlFilter(GlInvertFilter())
+            }
+            VideoFilter.MONOCHROME -> {
+                binding.cameraView.setFilter(MonochromeFilter())
+                  playerzview.setGlFilter(GlMonochromeFilter())
+            }
             VideoFilter.PIXELATED -> {
                 val glf = PixelatedFilter()
                 glf.setPixel(5.0f)
                 binding.cameraView.setFilter(glf)
+                  playerzview.setGlFilter(GlPixelationFilter())
             }
-            VideoFilter.POSTERIZE -> binding.cameraView.setFilter(Filters.POSTERIZE.newInstance())
-            VideoFilter.SEPIA -> binding.cameraView.setFilter(Filters.SEPIA.newInstance())
+            VideoFilter.POSTERIZE -> {
+                binding.cameraView.setFilter(Filters.POSTERIZE.newInstance())
+                  playerzview.setGlFilter(GlPosterizeFilter())
+            }
+            VideoFilter.SEPIA -> {
+                binding.cameraView.setFilter(Filters.SEPIA.newInstance())
+                  playerzview.setGlFilter(GlSepiaFilter())
+            }
             VideoFilter.SHARP -> {
                 val glf = Filters.SHARPNESS.newInstance() as SharpnessFilter
                 glf.sharpness = 0.25f
                 binding.cameraView.setFilter(glf)
+                  playerzview.setGlFilter(GlSharpenFilter())
             }
-            VideoFilter.SOLARIZE -> binding.cameraView.setFilter(SolarizeFilter())
-            VideoFilter.VIGNETTE -> binding.cameraView.setFilter(Filters.VIGNETTE.newInstance())
-            else -> binding.cameraView.setFilter(Filters.NONE.newInstance())
+            VideoFilter.SOLARIZE -> {
+                binding.cameraView.setFilter(SolarizeFilter())
+                  playerzview.setGlFilter(GlSolarizeFilter())
+            }
+            VideoFilter.VIGNETTE -> {
+                binding.cameraView.setFilter(Filters.VIGNETTE.newInstance())
+                  playerzview.setGlFilter(GlVignetteFilter())
+            }
+            else -> {
+                binding.cameraView.setFilter(Filters.NONE.newInstance())
+                  playerzview.setGlFilter(GlFilter())
+            }
         }
 
 
@@ -639,7 +673,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
             mModel!!.video = File(cacheDir, UUID.randomUUID().toString())
             binding.cameraView.takeVideoSnapshot(
                 mModel!!.video!!,
-                ((TimeUnit.SECONDS.toMillis(imageVideoDuration.toLong()) - recorded).toInt())
+                ((TimeUnit.SECONDS.toMillis(imageVideoDuration.toLong()) - recorded + 10).toInt())
             )
         }
     }
@@ -649,7 +683,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
         //   mHandler.removeCallbacks(mStopper)
     }
 
-
+    var activeFilter = VideoFilter.NONE
     private fun commitRecordings() {
         showLoader()
         val videos: MutableList<String> = ArrayList()
@@ -670,12 +704,8 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                 FFmpegAsyncTask("-i ${mModel!!.segments[0].file!!.absolutePath} -vf setpts=PTS/${mModel!!.speed.toString()}  -crf 23 -preset ultrafast -vcodec libx264 -c:a aac  $outputPath",
                     object : FFmpegAsyncTask.OnTaskCompleted {
                         override fun onTaskCompleted(isSuccess: Boolean) {
-                            dismissLoader()
-                            closeFinally(File(outputPath))
-                            if (!isImage) {
-                                isVideoTaken = true
-                                binding.buttonDone.visibility = View.VISIBLE
-                            }
+                            Log.d("lkajsdadasd", "ioasoiduasd")
+                            finishVideoWithFilter(File(outputPath))
                         }
                     })
             asyncTask.execute()
@@ -689,18 +719,116 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                 FFmpegAsyncTask("-f concat -safe 0 -i ${generateVideoListFile(videos)}   -crf 23 -preset ultrafast -vcodec libx264 -c:a aac $outputPath",
                     object : FFmpegAsyncTask.OnTaskCompleted {
                         override fun onTaskCompleted(isSuccess: Boolean) {
-                            dismissLoader()
-                            closeFinally(File(outputPath))
-                            if (!isImage) {
-                                isVideoTaken = true
-                                binding.buttonDone.visibility = View.VISIBLE
-                            }
+                            finishVideoWithFilter(File(outputPath))
                         }
                     })
             asyncTask.execute()
         }
 
 
+    }
+
+
+    private fun finishVideoWithFilter(file: File) {
+        mPlayer!!.setPlayWhenReady(false)
+        val wm = WorkManager.getInstance(this)
+        val outputPath = Common.getFilePath(this, Common.VIDEO)
+        val data = Data.Builder()
+            .putString(VideoFilterWorker.KEY_FILTER, activeFilter.toString())
+            .putString(VideoFilterWorker.KEY_INPUT, file.absolutePath)
+            .putString(VideoFilterWorker.KEY_OUTPUT, outputPath)
+            .build()
+        val request = OneTimeWorkRequest.Builder(VideoFilterWorker::class.java)
+            .setInputData(data)
+            .build()
+        wm.enqueue(request)
+        wm.getWorkInfoByIdLiveData(request.id)
+            .observe(this) { info: WorkInfo ->
+                val ended = (info.state == WorkInfo.State.CANCELLED
+                        || info.state == WorkInfo.State.FAILED)
+                if (info.state == WorkInfo.State.SUCCEEDED) {
+
+                    dismissLoader()
+                    closeFinally(File(outputPath))
+                    if (!isImage) {
+                        isVideoTaken = true
+                        binding.buttonDone.visibility = View.VISIBLE
+                    }
+                } else if (ended) {
+
+                }
+            }
+    }
+
+
+    fun applyFilterUsingFFMPEG(filer: VideoFilter) {
+
+        var filterString = ""
+
+        when (filer) {
+            VideoFilter.BRIGHTNESS -> {
+
+            }
+            VideoFilter.EXPOSURE -> {
+
+            }
+            VideoFilter.GAMMA -> {
+
+            }
+            VideoFilter.GRAYSCALE -> {
+
+            }
+            VideoFilter.HAZE -> {
+
+            }
+
+            VideoFilter.INVERT -> {
+
+            }
+            VideoFilter.MONOCHROME -> {
+
+            }
+            VideoFilter.PIXELATED -> {
+
+            }
+            VideoFilter.POSTERIZE -> {
+
+            }
+            VideoFilter.SEPIA -> {
+
+            }
+            VideoFilter.SHARP -> {
+
+            }
+            VideoFilter.SOLARIZE -> {
+
+            }
+            VideoFilter.VIGNETTE -> {
+                filterString = "vignette"
+            }
+            else -> {
+
+            }
+        }
+
+
+        val outputPath = Common.getFilePath(this, Common.VIDEO)
+        showLoader()
+        val options: BitmapFactory.Options = BitmapFactory.Options()
+        options.inJustDecodeBounds = true
+        val asyncTask =
+            FFmpegAsyncTask("-i ${mModel!!.segments[0].file!!.absolutePath} -vf $filterString -preset ultrafast -vcodec libx264 -c:a aac $outputPath",
+                object : FFmpegAsyncTask.OnTaskCompleted {
+                    override fun onTaskCompleted(isSuccess: Boolean) {
+                        dismissLoader()
+                        if (!isImage) {
+                            isVideoTaken = true
+                            binding.buttonDone.visibility = View.VISIBLE
+                        }
+                        closeFinally(File(outputPath))
+                    }
+                })
+        asyncTask.execute()
     }
 
 
@@ -874,14 +1002,12 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
     ) { result: ActivityResult ->
         if (result.resultCode == RESULT_OK
         ) {
+
+
             var data: Intent = result.data!!
-
-
             var pathList = ArrayList<String>()
 
             if (data.clipData != null) {
-
-                Log.d("kasdasd", "askldasd")
 
                 val mClipData: ClipData? = data.clipData
                 val mArrayUri = ArrayList<Uri>()
@@ -906,44 +1032,43 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                             Log.d(";lasda", "video")
                             isImage = false
                             isVideoTaken = true
-                            // setUPCameraViewsOnCapture(false)
+
                             try {
                                 setUPCameraViewsOnCapture(false)
                                 mModel!!.video = File(path)
-                                Log.d("a;lskdasdkjjjjjj", mModel!!.video!!.absolutePath)
-                                val duration: Long =
-                                    VideoUtil.getDuration(this, Uri.fromFile(mModel!!.video))
-                                binding.segmentedProgressbar.progress =
-                                    ((duration * 100) / imageVideoDuration).toInt()
-                                prolength = ((duration * 100) / imageVideoDuration).toInt()
-                                pauseProgress()
-                                processCurrentRecording()
-                                Log.d(";alsjkdasd", "alskjdasd")
+                                val duration: Long = VideoUtil.getDuration(this, Uri.fromFile(mModel!!.video))
+                                Log.d("kjashjkdas",duration.toString())
+
+                                    if (duration>imageVideoDuration*1000){
+                            /*            binding.segmentedProgressbar.progress = ((duration * 100) / imageVideoDuration).toInt()
+                                        prolength = ((duration * 100) / imageVideoDuration).toInt()*/
+                                        pauseProgress()
+                                        applySpeedWithDuration(mModel!!.video!!)
+
+                                    }else{
+                                        binding.segmentedProgressbar.progress = ((duration * 100) / imageVideoDuration).toInt()
+                                        prolength = ((duration * 100) / imageVideoDuration).toInt()
+                                        pauseProgress()
+                                        processCurrentRecording()
+                                    }
+
+
+
+
                             } catch (e: IOException) {
                                 e.printStackTrace()
                             }
                             break
                         } else {
-                            /*       var newfileName = "pic${imageCountname}.jpg"
-                                   copy(File(path), File(cacheDir, newfileName))
-                                   imageCountname++
-                                   Log.d("alkjdasd", cacheDir.path.toString() + "/" + newfileName)
-       */
-
 
                         }
 
                     }
 
-                    // stringBuffer.append(" -loop 1 -framerate 1 -t $perImageDuration -i $path")
                 }
 
                 if (isImage) {
-                    Handler(Looper.getMainLooper()).postDelayed(Runnable {
-                        Log.d("alksdas", "pppppp")
-
-                        multipleImageToVideo(pathList, perImageDuration)
-                    }, 500)
+                    multipleImageToVideo(pathList, perImageDuration)
                 } else {
 
                 }
@@ -1256,13 +1381,15 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                 }
                 mModel!!.speed = speed
                 if (isVideoTaken) {
-                    /*     Log.d("klasdasd","pppppp")
-                         val duration: Long = VideoUtil.getDuration(
-                             this@ActivityVideoRecorder,
-                             Uri.fromFile((mModel!!.segments[0].file!!))
-                         )
-                         applySpeed(mModel!!.segments[0].file!!, speed, duration)*/
-                    setUpPlayer()
+
+                    Handler(Looper.getMainLooper()).post {
+                        runOnUiThread {
+
+                            setUpPlayer()
+                        }
+                    }
+
+
                 }
             }
 
@@ -1298,7 +1425,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                     }
                 } else {
                     if (binding.cameraView.isTakingVideo) {
-                        setUPCameraViewsOnCapture(false)
+
                         stopRecording()
                         binding.recordAnimationView.visibility = View.GONE
                         binding.stopIConView.visibility = View.VISIBLE
@@ -1516,7 +1643,6 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
         })
         binding.buttonDurationTimer.setOnClickListener {
 
-
             if (isCaptureDurationActive) {
                 isCaptureDurationActive = false
                 hideDurationBar(show = false)
@@ -1528,9 +1654,6 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
             }
 
         }
-
-
-
         binding.ivClose.setOnClickListener {
             onBackPressed()
         }
@@ -1666,6 +1789,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
 
         isVideoTaken = true
         isImage = false
+        setUPCameraViewsOnCapture(false)
         val outputPath = Common.getFilePath(this, Common.VIDEO)
         val asyncTask =
             FFmpegAsyncTask("-f concat -safe 0 -i ${
@@ -1673,7 +1797,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                     pathList,
                     persond
                 )
-            } -c:v libx264 -r 15 -pix_fmt yuv420p -crf 23 -t ${pathList.size * persond} -vf scale=$width:$height -preset ultrafast -vcodec libx264 -c:a aac $outputPath",
+            } -c:v libx264 -r 15 -pix_fmt yuv420p -crf 23 -t ${pathList.size * persond} -vf scale=w=${width}:h=${height}:force_original_aspect_ratio=1,pad=${width}:${height}:(ow-iw)/2:(oh-ih)/2 -preset ultrafast -vcodec libx264 -c:a aac $outputPath",
                 object : FFmpegAsyncTask.OnTaskCompleted {
                     override fun onTaskCompleted(isSuccess: Boolean) {
                         var recordSegment = RecordSegment()
@@ -1682,11 +1806,11 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                         mModel!!.segments.clear()
                         mModel!!.segments.add(recordSegment)
                         setUPCameraViewsOnCapture(false)
-
                         if (!isImage) {
                             isVideoTaken = true
-                            binding.buttonDone.visibility = View.VISIBLE
-                            binding.selectedVideo.visibility = View.VISIBLE
+                            binding.selectedPhoto.visibility = View.GONE
+                            binding.cameraView.visibility = View.GONE
+                            binding.layoutMovieWrapper.visibility = View.VISIBLE
                             resumeProgress()
                             setUpPlayer()
                         }
@@ -1700,26 +1824,39 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
 
 
     }
-
+    private lateinit var playerzview:EPlayerView
     private var mPlayer: ExoPlayer? = null
     private fun setUpPlayer() {
-        Log.d("lasdasd", "aoskdasasdasdd")
-        mPlayer = ExoPlayer.Builder(this).build()
+        playerzview= EPlayerView(this)
         mPlayer!!.repeatMode = ExoPlayer.REPEAT_MODE_OFF
         val factory = DefaultDataSourceFactory(this, getString(R.string.app_name))
-        val mediaItem: MediaItem
-        mediaItem = MediaItem.fromUri(Uri.fromFile(mModel!!.segments[0].file))
-
-
+        val mediaItem: MediaItem = MediaItem.fromUri(Uri.fromFile(mModel!!.segments[0].file))
         val source: ProgressiveMediaSource =
             ProgressiveMediaSource.Factory(factory).createMediaSource(mediaItem)
-
         mPlayer!!.setPlaybackSpeed(mModel!!.speed)
-        binding.selectedVideo.player = mPlayer;
         mPlayer!!.prepare(source);
         mPlayer!!.playWhenReady = true;
-        mPlayer!!.play()
+        playerzview.visibility = View.VISIBLE
+        applyPreviewFilter(activeFilter)
+  Handler(Looper.getMainLooper()).postDelayed(Runnable {
+runOnUiThread {
+    playerzview.setSimpleExoPlayer(mPlayer)
+    playerzview.layoutParams = ViewGroup.LayoutParams(
+        ViewGroup.LayoutParams.MATCH_PARENT,
+        ViewGroup.LayoutParams.MATCH_PARENT
+    )
+    // add ePlayerView to WrapperView
+    // add ePlayerView to WrapperView
+
+    binding.layoutMovieWrapper.removeAllViews()
+    binding.layoutMovieWrapper.addView(playerzview)
+    playerzview.onResume()
+}
+
+  },500)
+        Log.d("aklsjdlasd", "fourth")
     }
+
 
     private fun applySpeed(file: File, speed: Float, duration: Long) {
         val outputPath = Common.getFilePath(this, Common.VIDEO)
@@ -1727,7 +1864,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
         val options: BitmapFactory.Options = BitmapFactory.Options()
         options.inJustDecodeBounds = true
         val asyncTask =
-            FFmpegAsyncTask("-i ${file.absolutePath} -vf setpts=PTS/${mModel!!.speed.toString()}  -crf 23 -preset ultrafast -vcodec libx264 -c:a aac  $outputPath",
+            FFmpegAsyncTask("-i \"${file.absolutePath}\" -vf setpts=PTS/${mModel!!.speed.toString()}  -crf 23 -preset ultrafast -vcodec libx264 -c:a aac $outputPath",
                 object : FFmpegAsyncTask.OnTaskCompleted {
                     override fun onTaskCompleted(isSuccess: Boolean) {
                         dismissLoader()
@@ -1739,20 +1876,67 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                         segment.duration = duration
                         mModel!!.segments.clear()
                         mModel!!.segments.add(segment)
-                        Log.d("akljsdas", "ioajsd")
                         file.delete()
                         dismissLoader()
                         if (!isImage) {
                             isVideoTaken = true
                             binding.buttonDone.visibility = View.VISIBLE
-                            binding.selectedVideo.visibility = View.VISIBLE
+                            binding.layoutMovieWrapper.visibility = View.VISIBLE
                             setUpPlayer()
                         }
 
                         binding.segmentedProgressbar.progress = 0
-                        Log.d(";laksdasd",duration.toString())
-                        imageVideoDuration= ((duration/1000).toInt())
-                        Log.d(";laksdasd",imageVideoDuration.toString())
+                        Log.d(";laksdasd", duration.toString())
+                        imageVideoDuration = ((duration / 1000).toInt())
+                        Log.d(";laksdasd", imageVideoDuration.toString())
+                        setupProgressBarWithDuration()
+                        resumeProgress()
+                    }
+                })
+        asyncTask.execute()
+
+    }
+
+    fun formatSeconds(timeInSeconds: Int): String? {
+        val secondsLeft = timeInSeconds % 3600 % 60
+        val minutes = Math.floor((timeInSeconds % 3600 / 60).toDouble()).toInt()
+        val hours = Math.floor((timeInSeconds / 3600).toDouble()).toInt()
+        val HH = (if (hours < 10) "0" else "") + hours
+        val MM = (if (minutes < 10) "0" else "") + minutes
+        val SS = (if (secondsLeft < 10) "0" else "") + secondsLeft
+        return "$HH:$MM:$SS"
+    }
+
+    private fun applySpeedWithDuration(file: File) {
+        val outputPath = Common.getFilePath(this, Common.VIDEO)
+        showLoader()
+        val options: BitmapFactory.Options = BitmapFactory.Options()
+        options.inJustDecodeBounds = true
+        val asyncTask =
+            FFmpegAsyncTask("-i \"${file.absolutePath}\" -vf setpts=PTS/${mModel!!.speed.toString()}  -ss 00:00:00 -to ${formatSeconds(imageVideoDuration.toInt())} -crf 23 -preset ultrafast -vcodec libx264 -c:a aac $outputPath",
+                object : FFmpegAsyncTask.OnTaskCompleted {
+                    override fun onTaskCompleted(isSuccess: Boolean) {
+                        dismissLoader()
+                        Log.d("lkasjldasd", "asdasdasd")
+                        Log.d("kashdkhasd", outputPath)
+                        val duration: Long = VideoUtil.getDuration(this@ActivityVideoRecorder, Uri.fromFile(File(outputPath)))
+                        val segment = RecordSegment()
+                        segment.file = File(outputPath)
+                        segment.duration = duration
+                        mModel!!.segments.clear()
+                        mModel!!.segments.add(segment)
+                        file.delete()
+                        dismissLoader()
+                        if (!isImage) {
+                            isVideoTaken = true
+                            binding.buttonDone.visibility = View.VISIBLE
+                            binding.layoutMovieWrapper.visibility = View.VISIBLE
+                            setUpPlayer()
+                        }
+
+                        binding.segmentedProgressbar.progress = 0
+                        imageVideoDuration = ((duration / 1000).toInt())
+                        Log.d(";laksdasd", imageVideoDuration.toString())
                         setupProgressBarWithDuration()
                         resumeProgress()
                     }
@@ -2093,8 +2277,9 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
             } else {
                 //    binding.segmentedProgressbar.setProgress(0)
                 mMediaPlayer!!.pause()
-
-
+                if (binding.cameraView.isTakingVideo) {
+                    binding.cameraView.stopVideo()
+                }
                 //   progressHandler.post(this)
                 Log.d("akjsdasda", "akshdasdfsdfsd")
             }

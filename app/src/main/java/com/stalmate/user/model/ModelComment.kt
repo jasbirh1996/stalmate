@@ -14,6 +14,7 @@ data class ModelGetComment(
 data class Comment(
     val _id: String,
     val date: String,
+    val Created_date:String,
     val author: String,
     val comment: String,
     var replies: MutableList<Comment> = mutableListOf(),
