@@ -37,7 +37,7 @@ class FragmentProfileFuntime :BaseFragment(), ReelVideosByAudioAdapter.Callback 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter=ReelVideosByAudioAdapter(requireContext(),this)
+        adapter=ReelVideosByAudioAdapter(requireContext(),this,true)
         binding.rvList.layoutManager= GridLayoutManager(context,3)
         binding.rvList.adapter=adapter
         Log.d("akljsdasd","aljsdasd")

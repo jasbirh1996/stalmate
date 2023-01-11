@@ -1,16 +1,15 @@
 package com.stalmate.user.view.dashboard.funtime
 
 
-
-
-
 import android.content.Context
 import android.graphics.Bitmap
 import android.media.MediaMetadataRetriever
 import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.databinding.DataBindingUtil
@@ -23,26 +22,34 @@ import com.stalmate.user.databinding.ItemReelByAudioBinding
 
 
 class ReelVideosByAudioAdapter(
-                          val context: Context,var callback:Callback
+    val context: Context, var callback: Callback, var showData: Boolean
 ) : RecyclerView.Adapter<ReelVideosByAudioAdapter.ViewHolder>() {
 
     var list = ArrayList<ResultFuntime>()
 
-    inner class ViewHolder(var binding : ItemReelByAudioBinding): RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(var binding: ItemReelByAudioBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
-        fun  bind(video : ResultFuntime){
+        fun bind(video: ResultFuntime) {
             val requestOptions = RequestOptions()
             Glide.with(context)
                 .load(video.file)
                 .apply(requestOptions)
                 .thumbnail(Glide.with(context).load(video.file))
                 .into(binding.ivMusicImage);
-           // new DownloadImage(YourImageView).execute("Your URL");
-          //  Glide.with(context).load(SeeModetextViewHelper.retriveVideoFrameFromVideo(video.file)).into(binding.ivMusicImage)
+            // new DownloadImage(YourImageView).execute("Your URL");
+            //  Glide.with(context).load(SeeModetextViewHelper.retriveVideoFrameFromVideo(video.file)).into(binding.ivMusicImage)
             binding.root.setOnClickListener {
-        callback.onClickOnReel(video)
+                callback.onClickOnReel(video)
             }
 
+            if (showData) {
+                binding.tvViews.visibility= View.VISIBLE
+                binding.ivPlay.visibility= View.VISIBLE
+            } else {
+                binding.tvViews.visibility= View.GONE
+                binding.ivPlay.visibility= View.GONE
+            }
 
 
         }
@@ -50,12 +57,14 @@ class ReelVideosByAudioAdapter(
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        var view = LayoutInflater.from(parent.context).inflate(R.layout.item_reel_by_audio, parent, false)
+        var view =
+            LayoutInflater.from(parent.context).inflate(R.layout.item_reel_by_audio, parent, false)
         return ViewHolder(DataBindingUtil.bind<ItemReelByAudioBinding>(view)!!)
 
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        Log.d("lakjsdasd", "asdlasd")
         holder.bind(list.get(position))
     }
 
@@ -64,21 +73,22 @@ class ReelVideosByAudioAdapter(
     }
 
 
-
     fun addToList(users: List<ResultFuntime>) {
         val size = list.size
         list.addAll(users)
         val sizeNew = list.size
         notifyItemRangeChanged(size, sizeNew)
     }
+
     fun submitList(users: List<ResultFuntime>) {
+        Log.d("laksjdlasd", users.size.toString())
         list.clear()
         list.addAll(users)
         notifyDataSetChanged()
     }
 
-    public interface Callback{
-        fun onClickOnReel(reel:ResultFuntime)
+    public interface Callback {
+        fun onClickOnReel(reel: ResultFuntime)
     }
 
 }

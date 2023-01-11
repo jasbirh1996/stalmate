@@ -24,6 +24,8 @@ data class Comment(
     val last_name: String,
     var child_count: Int,
     var profile_img:String,
+    var like_count:Int,
+
     var isExpanded: Boolean =false,
     var isShowingReplies:Boolean=false
 )

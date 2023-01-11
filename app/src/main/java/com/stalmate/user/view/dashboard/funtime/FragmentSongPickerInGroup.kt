@@ -96,7 +96,7 @@ class FragmentSongPickerInGroup : BaseFragment(), FriendAdapter.Callbackk,
 
     private fun getMusicListApi() {
         var hashMap=HashMap<String,String>()
-        hashMap.put("search","")
+
         networkViewModel.funtimeMusicLiveData(hashMap)
         networkViewModel.funtimeMusicLiveData.observe(viewLifecycleOwner) {
 
@@ -106,6 +106,21 @@ class FragmentSongPickerInGroup : BaseFragment(), FriendAdapter.Callbackk,
             }
         }
     }
+
+
+
+    private fun saveUnsaveMusic(song: ResultMusic) {
+        var hashmap = java.util.HashMap<String, String>()
+        hashmap.put("sound_id",song.id)
+        networkViewModel.saveUnsaveMusic(hashmap).observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            it.let {
+               adapterFunTimeMusic.updateSaveStatusList(song)
+            }
+
+
+        })
+    }
+
     fun downloadSelectedSong(song: Song) {
 
         val songs = File(requireActivity().filesDir, "songs")
@@ -162,6 +177,10 @@ class FragmentSongPickerInGroup : BaseFragment(), FriendAdapter.Callbackk,
         downloadableSong.title=song.sound_name
         downloadableSong.cover=song.image
         downloadSelectedSong(downloadableSong)
+    }
+
+    override fun onClickOnFavouriteMusicButton(song: ResultMusic) {
+        saveUnsaveMusic(song)
     }
 
 }

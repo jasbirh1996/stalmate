@@ -11,6 +11,7 @@ import android.text.TextWatcher
 import android.view.*
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -32,7 +33,7 @@ import com.stalmate.user.viewmodel.AppViewModel
 
 import kotlin.collections.ArrayList
 
-class DialogFragmentShareWithFriends(var networkViewModel: AppViewModel, funtime:ResultFuntime) : BottomSheetDialogFragment(),
+class DialogFragmentShareWithFriends(var networkViewModel: AppViewModel,var  funtime:ResultFuntime,var callback:CAllback) : BottomSheetDialogFragment(),
     ShareWithFriendAdapter.Callback {
     lateinit var friendAdapter: ShareWithFriendAdapter
     lateinit var binding: FragmentShareWithFriendsBinding
@@ -40,11 +41,13 @@ class DialogFragmentShareWithFriends(var networkViewModel: AppViewModel, funtime
     var currentPage=1
     var isLastPage = false
     var isLoading = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setStyle(DialogFragment.STYLE_NORMAL, R.style.NonDraggableBottomSheet)
+
+
     }
-
-
 
     @SuppressLint("RestrictedApi")
     override fun setupDialog(dialog: Dialog, style: Int) {
@@ -59,7 +62,20 @@ class DialogFragmentShareWithFriends(var networkViewModel: AppViewModel, funtime
             behavior.setBottomSheetCallback(mBottomSheetBehaviorCallback)
         }
         (contentView.parent as View).setBackgroundColor(resources.getColor(android.R.color.transparent))
+
+
+
+
+
+
+
     }
+
+
+
+
+
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -73,10 +89,30 @@ class DialogFragmentShareWithFriends(var networkViewModel: AppViewModel, funtime
     private val mBottomSheetBehaviorCallback: BottomSheetBehavior.BottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
         override fun onStateChanged(bottomSheet: View, newState: Int) {
             if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                
+
                 dismiss()
             }
         }
         override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+    }
+
+
+    public interface CAllback{
+        fun onTotalShareCountFromDialog(count:Int)
+    }
+
+    override fun onDestroy() {
+        var count=0
+        friendAdapter.list.forEach {
+            if (it.isSelected){
+                count++
+            }
+        }
+
+
+        callback.onTotalShareCountFromDialog(count)
+        super.onDestroy()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -176,12 +212,16 @@ class DialogFragmentShareWithFriends(var networkViewModel: AppViewModel, funtime
                     }else{
                         binding.progressLoading.visibility = View.VISIBLE
                     }
+                    binding.layoutNoData.visibility=View.GONE
                 }else{
                     if (isFresh){
                         friendAdapter.submitList(it.results as ArrayList<User>)
+                        binding.layoutNoData.visibility=View.VISIBLE
                     }
+
                     isLastPage=true
                     binding.progressLoading.visibility = View.GONE
+
 
                 }
 
@@ -190,8 +230,23 @@ class DialogFragmentShareWithFriends(var networkViewModel: AppViewModel, funtime
         })
     }
 
-    override fun onUserSelected(user: ArrayList<User>) {
+    override fun onUserSelected(user: User) {
+        shareWithFriend(user)
+    }
 
+
+    fun shareWithFriend(user:User){
+        var hashmap = HashMap<String, String>()
+        hashmap.put("funtime_id", funtime.id)
+        hashmap.put("user_id", user.id)
+        networkViewModel.shareWithFriend(hashmap)
+        networkViewModel.shareWithFriendLiveData.observe(viewLifecycleOwner, Observer {
+            it.let {
+               if (it!!.status!!){
+
+               }
+            }
+        })
     }
 
 

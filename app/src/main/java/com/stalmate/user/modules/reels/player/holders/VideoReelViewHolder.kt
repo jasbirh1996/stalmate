@@ -8,9 +8,15 @@ class VideoReelViewHolder(binding: ItemReelBinding) : ReelViewHolder(binding.roo
     val customPlayerView = binding.feedPlayerView;
     val tvUserName = binding.tvUserName;
     val imgUserProfile = binding.imgUserProfile;
-    val like = binding.like;
-    val share = binding.share;
-    val comment = binding.comment;
+    val likeCount = binding.like;
+    val shareShareCount = binding.share;
+    val commentCount = binding.comment;
+    val likeIcon=binding.likeIcon
+
+    val likeButton = binding.likeContainer;
+    val shareButton = binding.shareContainer;
+    val commentButton = binding.commentContainer;
+
     val soundIcon = binding.ivSoundButton;
     val tvStatusDescription = binding.tvStatusDescription;
     val tvStoryPostTime = binding.tvStoryPostTime;

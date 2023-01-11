@@ -45,8 +45,6 @@ open class AppViewModel : ViewModel() {
     }
 
 
-
-
     var feedLiveData: LiveData<ModelFeed?> = MutableLiveData<ModelFeed?>()
     fun getFeedList(token: String, map: HashMap<String, String>) {
         val temp = MutableLiveData<ModelFeed?>()
@@ -55,7 +53,8 @@ open class AppViewModel : ViewModel() {
     }
 
 
-    var languageLiveData: LiveData<ModelLanguageResponse?> = MutableLiveData<ModelLanguageResponse?>()
+    var languageLiveData: LiveData<ModelLanguageResponse?> =
+        MutableLiveData<ModelLanguageResponse?>()
 
     fun languageLiveData(map: HashMap<String, String>) {
         val temp = MutableLiveData<ModelLanguageResponse?>()
@@ -71,17 +70,14 @@ open class AppViewModel : ViewModel() {
         getResult(temp, apiInterface.getFuntimeList(map))
     }
 
-    var myfuntimeLiveData: LiveData<ModelFuntimeResponse?> = MutableLiveData<ModelFuntimeResponse?>()
+    var myfuntimeLiveData: LiveData<ModelFuntimeResponse?> =
+        MutableLiveData<ModelFuntimeResponse?>()
 
     fun myfuntimeLiveData(map: HashMap<String, String>) {
         val temp = MutableLiveData<ModelFuntimeResponse?>()
         myfuntimeLiveData = temp
         getResult(temp, apiInterface.getMyFuntimeList(map))
     }
-
-
-
-
 
 
     var createRoomIdLiveData: LiveData<ModelRoom?> = MutableLiveData<ModelRoom?>()
@@ -103,14 +99,37 @@ open class AppViewModel : ViewModel() {
     }
 */
 
-    var funtimeLiveLikeUnlikeData: LiveData<ModelFuntimeLikeResponse?> = MutableLiveData<ModelFuntimeLikeResponse?>()
+    var funtimeLiveLikeUnlikeData: LiveData<ModelFuntimeLikeResponse?> =
+        MutableLiveData<ModelFuntimeLikeResponse?>()
+
     fun funtimeLiveLikeUnlikeData(map: HashMap<String, String>) {
         val temp = MutableLiveData<ModelFuntimeLikeResponse?>()
         funtimeLiveLikeUnlikeData = temp
         getResult(temp, apiInterface.getFuntimeLikeUnlike(map))
     }
 
-    var funtimeMusicLiveData: LiveData<ModelMusicListResponse?> = MutableLiveData<ModelMusicListResponse?>()
+
+    fun saveUnsavePost(map: HashMap<String, String>): LiveData<CommonModelResponse?> {
+        val temp = MutableLiveData<CommonModelResponse?>()
+        var saveLiveDAta: LiveData<CommonModelResponse?>
+        saveLiveDAta = temp
+        getResult(temp, apiInterface.saveUnsaveFuntime(map))
+        return saveLiveDAta
+    }
+
+
+    fun followUnfollowUser(map: HashMap<String, String>): LiveData<ModelSuccess?> {
+        val temp = MutableLiveData<ModelSuccess?>()
+        var saveLiveDAta: LiveData<ModelSuccess?>
+        saveLiveDAta = temp
+        getResult(temp, apiInterface.requestBeFollower(map))
+        return saveLiveDAta
+    }
+
+
+    var funtimeMusicLiveData: LiveData<ModelMusicListResponse?> =
+        MutableLiveData<ModelMusicListResponse?>()
+
     fun funtimeMusicLiveData(map: HashMap<String, String>) {
         val temp = MutableLiveData<ModelMusicListResponse?>()
         funtimeMusicLiveData = temp
@@ -118,22 +137,23 @@ open class AppViewModel : ViewModel() {
     }
 
 
+    var categoryFriendLiveData: MutableLiveData<ModelCategoryResponse?> =
+        MutableLiveData<ModelCategoryResponse?>()
 
-
-    var categoryFriendLiveData: MutableLiveData<ModelCategoryResponse?> = MutableLiveData<ModelCategoryResponse?>()
     fun categoryFriendLiveData() {
         val temp = MutableLiveData<ModelCategoryResponse?>()
         categoryFriendLiveData = temp
         getResult(temp, apiInterface.getCategoryList())
     }
-    var reelVideosByAudioLiveData: MutableLiveData<ModelFuntimeResponse?> = MutableLiveData<ModelFuntimeResponse?>()
+
+    var reelVideosByAudioLiveData: MutableLiveData<ModelFuntimeResponse?> =
+        MutableLiveData<ModelFuntimeResponse?>()
+
     fun get_song_funtime_list(map: HashMap<String, String>) {
         val temp = MutableLiveData<ModelFuntimeResponse?>()
         reelVideosByAudioLiveData = temp
         getResult(temp, apiInterface.get_song_funtime_list(map))
     }
-
-
 
 
     /*var categoryIntrestLiveData: LiveData<ModelIntrestResponse?> = MutableLiveData<ModelIntrestResponse?>()
@@ -147,14 +167,15 @@ open class AppViewModel : ViewModel() {
 
     var searchLiveData: LiveData<ModelSearch?> = MutableLiveData<ModelSearch?>()
 
-    fun searchLiveData(map: HashMap<String, String>,  search: String) {
+    fun searchLiveData(map: HashMap<String, String>, search: String) {
         val temp = MutableLiveData<ModelSearch?>()
         searchLiveData = temp
         getResult(temp, apiInterface.setSearch(search))
     }
+
     var searchBranchLiveData: LiveData<ModelSearch?> = MutableLiveData<ModelSearch?>()
 
-    fun searchBranchLiveData(map: HashMap<String, String>,  search: String) {
+    fun searchBranchLiveData(map: HashMap<String, String>, search: String) {
         val temp = MutableLiveData<ModelSearch?>()
         searchBranchLiveData = temp
         getResult(temp, apiInterface.setSearchBranch(search))
@@ -168,7 +189,9 @@ open class AppViewModel : ViewModel() {
     }
 
 
-    var photoIndexLiveData: LiveData<ModelPhotoIndexDataResponse?> = MutableLiveData<ModelPhotoIndexDataResponse?>()
+    var photoIndexLiveData: LiveData<ModelPhotoIndexDataResponse?> =
+        MutableLiveData<ModelPhotoIndexDataResponse?>()
+
     fun photoIndexLiveData(map: HashMap<String, String>) {
         val temp = MutableLiveData<ModelPhotoIndexDataResponse?>()
         photoIndexLiveData = temp
@@ -191,15 +214,18 @@ open class AppViewModel : ViewModel() {
     }
 
 
+    var updateFriendRequestLiveData: LiveData<CommonModelResponse?> =
+        MutableLiveData<CommonModelResponse?>()
 
-    var updateFriendRequestLiveData: LiveData<CommonModelResponse?> = MutableLiveData<CommonModelResponse?>()
     fun updateFriendRequest(map: HashMap<String, String>) {
         val temp = MutableLiveData<CommonModelResponse?>()
         updateFriendRequestLiveData = temp
         getResult(temp, apiInterface.updateFriendRequest(map))
     }
 
-    var removeUserFromSuggestionLiveData: LiveData<CommonModelResponse?> = MutableLiveData<CommonModelResponse?>()
+    var removeUserFromSuggestionLiveData: LiveData<CommonModelResponse?> =
+        MutableLiveData<CommonModelResponse?>()
+
     fun removeUserFromSuggestion(map: HashMap<String, String>) {
         val temp = MutableLiveData<CommonModelResponse?>()
         removeUserFromSuggestionLiveData = temp
@@ -207,6 +233,14 @@ open class AppViewModel : ViewModel() {
     }
 
 
+    var shareWithFriendLiveData: MutableLiveData<CommonModelResponse?> =
+        MutableLiveData<CommonModelResponse?>()
+
+    fun shareWithFriend(map: HashMap<String, String>) {
+        val temp = MutableLiveData<CommonModelResponse?>()
+        shareWithFriendLiveData = temp
+        getResult(temp, apiInterface.shareWithFriend(map))
+    }
 
 
     var sendFriendRequestLiveData: LiveData<ModelSuccess?> = MutableLiveData<ModelSuccess?>()
@@ -269,35 +303,41 @@ open class AppViewModel : ViewModel() {
         getResult(temp, apiInterface.setUpdateAbout(map))
     }
 
-    var educationData: LiveData<ModelCommonAddEducationAndProfessionResponse?> = MutableLiveData<ModelCommonAddEducationAndProfessionResponse?>()
+    var educationData: LiveData<ModelCommonAddEducationAndProfessionResponse?> =
+        MutableLiveData<ModelCommonAddEducationAndProfessionResponse?>()
+
     fun educationData(map: HashMap<String, String>) {
         val temp = MutableLiveData<ModelCommonAddEducationAndProfessionResponse?>()
         educationData = temp
         getResult(temp, apiInterface.setEducationAddDetails(map))
     }
 
-    var updateFriendCategoryLiveData: LiveData<AddCategoryModel?> = MutableLiveData<AddCategoryModel?>()
+    var updateFriendCategoryLiveData: LiveData<AddCategoryModel?> =
+        MutableLiveData<AddCategoryModel?>()
+
     fun updateFriendCategoryData(map: HashMap<String, String>) {
         val temp = MutableLiveData<AddCategoryModel?>()
         updateFriendCategoryLiveData = temp
         getResult(temp, apiInterface.setUpdateFriendCategoryDetails(map))
     }
 
-    var addUpdateProfessionLiveData: LiveData<ModelCommonAddEducationAndProfessionResponse?> = MutableLiveData<ModelCommonAddEducationAndProfessionResponse?>()
+    var addUpdateProfessionLiveData: LiveData<ModelCommonAddEducationAndProfessionResponse?> =
+        MutableLiveData<ModelCommonAddEducationAndProfessionResponse?>()
+
     fun addUpdateProfessionData(map: HashMap<String, String>) {
         val temp = MutableLiveData<ModelCommonAddEducationAndProfessionResponse?>()
         addUpdateProfessionLiveData = temp
         getResult(temp, apiInterface.setProfessionAddDetails(map))
     }
 
-    var createAlbumData: LiveData<ModelAlbumCreateResponse?> = MutableLiveData<ModelAlbumCreateResponse?>()
+    var createAlbumData: LiveData<ModelAlbumCreateResponse?> =
+        MutableLiveData<ModelAlbumCreateResponse?>()
+
     fun createAlbum(map: HashMap<String, String>) {
         val temp = MutableLiveData<ModelAlbumCreateResponse?>()
         createAlbumData = temp
         getResult(temp, apiInterface.setCreateAlbumDetails(map))
     }
-
-
 
 
     var otpVerifyData: LiveData<CommonModelResponse?> = MutableLiveData<CommonModelResponse?>()
@@ -306,6 +346,7 @@ open class AppViewModel : ViewModel() {
         otpVerifyData = temp
         getResult(temp, apiInterface.setOtpVerify(map))
     }
+
     var blockListLiveData: LiveData<ModelBlockedUser?> = MutableLiveData<ModelBlockedUser?>()
     fun getBlockList(map: HashMap<String, String>) {
         val temp = MutableLiveData<ModelBlockedUser?>()
@@ -329,8 +370,6 @@ open class AppViewModel : ViewModel() {
     }
 
 
-
-
     var addCommentLiveData: LiveData<ModelComment?> = MutableLiveData<ModelComment?>()
     fun addComment(map: HashMap<String, String>) {
         val temp = MutableLiveData<ModelComment?>()
@@ -346,9 +385,8 @@ open class AppViewModel : ViewModel() {
     }
 
 
-
-
-    var otpVerifyRegistarionData: LiveData<CommonModelResponse?> = MutableLiveData<CommonModelResponse?>()
+    var otpVerifyRegistarionData: LiveData<CommonModelResponse?> =
+        MutableLiveData<CommonModelResponse?>()
 
     fun otpVerifyRegistration(map: HashMap<String, String>, email: String, otp: String) {
         val temp = MutableLiveData<CommonModelResponse?>()
@@ -372,7 +410,9 @@ open class AppViewModel : ViewModel() {
     }
 
 
-    var globalSearchLiveData: MutableLiveData<ModelGlobalSearch?> = MutableLiveData<ModelGlobalSearch?>()
+    var globalSearchLiveData: MutableLiveData<ModelGlobalSearch?> =
+        MutableLiveData<ModelGlobalSearch?>()
+
     fun getGlobalSearch(map: HashMap<String, String>) {
         val temp = MutableLiveData<ModelGlobalSearch?>()
         globalSearchLiveData = temp
@@ -380,12 +420,56 @@ open class AppViewModel : ViewModel() {
     }
 
 
-    var UpdateProfileLiveData: LiveData<CommonModelResponse?> = MutableLiveData<CommonModelResponse?>()
+    fun getSavedFuntimMusic(map: HashMap<String, String>): LiveData<ModelMusicListResponse?> {
+        val temp = MutableLiveData<ModelMusicListResponse?>()
+        var saveLiveDAta: LiveData<ModelMusicListResponse?>
+        saveLiveDAta = temp
+        getResult(temp, apiInterface.getSavedFuntimMusic(map))
+        return saveLiveDAta
+    }
+
+
+    fun getSavedFuntimReels(map: HashMap<String, String>): LiveData<ModelFuntimeResponse?> {
+        val temp = MutableLiveData<ModelFuntimeResponse?>()
+        var saveLiveDAta: LiveData<ModelFuntimeResponse?>
+        saveLiveDAta = temp
+        getResult(temp, apiInterface.getSavedFuntimReels(map))
+        return saveLiveDAta
+    }
+
+    fun saveUnsaveMusic(map: HashMap<String, String>): LiveData<CommonModelResponse?> {
+        val temp = MutableLiveData<CommonModelResponse?>()
+        var saveLiveDAta: LiveData<CommonModelResponse?>
+        saveLiveDAta = temp
+        getResult(temp, apiInterface.saveUnsaveMusic(map))
+        return saveLiveDAta
+    }
+
+    fun reportFuntime(
+        @Part file: MultipartBody.Part? = null,
+        @Part("funtime_id") funtimeId: RequestBody,
+        @Part("category") category: RequestBody,
+        @Part("report_reason") report_reason: RequestBody,
+        @Part("detailed_reason") detailed_reason: RequestBody,
+
+    ): LiveData<CommonModelResponse?> {
+        val temp = MutableLiveData<CommonModelResponse?>()
+        var reportFuntimeLiveData: LiveData<CommonModelResponse?> =
+            MutableLiveData<CommonModelResponse?>()
+        reportFuntimeLiveData = temp
+        getResult(temp, apiInterface.reportFuntime(file,funtimeId,category,report_reason,detailed_reason))
+        return reportFuntimeLiveData
+    }
+
+
+    var UpdateProfileLiveData: LiveData<CommonModelResponse?> =
+        MutableLiveData<CommonModelResponse?>()
+
     fun etsProfileApi(
         @Part("first_name") first_name: RequestBody,
         @Part("last_name") last_name: RequestBody,
         @Part("about") about: RequestBody,
-       /* @Part("number") number: RequestBody,*/
+        /* @Part("number") number: RequestBody,*/
         @Part("dob") dob: RequestBody,
         @Part("marital_status") marital_status: RequestBody,
         @Part("home_town") home_town: RequestBody,
@@ -412,44 +496,30 @@ open class AppViewModel : ViewModel() {
                 gender,
                 city,
                 home_town,
-                )
+            )
         )
 
     }
 
 
-    fun etsProfileApi(@Part file_Profile_Image: MultipartBody.Part? = null, ) {
+    fun etsProfileApi(@Part file_Profile_Image: MultipartBody.Part? = null) {
         val temp = MutableLiveData<CommonModelResponse?>()
         UpdateProfileLiveData = temp
         getResult(temp, apiInterface.updateUserProfileImage(file_Profile_Image!!))
     }
 
 
-    var UplodedAlbumImageLiveData: LiveData<CommonModelResponse?> = MutableLiveData<CommonModelResponse?>()
-    fun uploadAlbumImageApi(@Part album_image: MultipartBody.Part? = null,  @Part("album_id") albumId: RequestBody, ) {
+    var UplodedAlbumImageLiveData: LiveData<CommonModelResponse?> =
+        MutableLiveData<CommonModelResponse?>()
+
+    fun uploadAlbumImageApi(
+        @Part album_image: MultipartBody.Part? = null,
+        @Part("album_id") albumId: RequestBody,
+    ) {
         val temp = MutableLiveData<CommonModelResponse?>()
         UplodedAlbumImageLiveData = temp
-        getResult(temp, apiInterface.addAlbumImage(album_image!!,albumId))
+        getResult(temp, apiInterface.addAlbumImage(album_image!!, albumId))
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     var blockData: LiveData<CommonModelResponse?> = MutableLiveData<CommonModelResponse?>()
@@ -469,22 +539,36 @@ open class AppViewModel : ViewModel() {
     }
 
 
-
     var postReelLiveData: LiveData<CommonModelResponse?> = MutableLiveData<CommonModelResponse?>()
-    fun postReel(@Part album_image: MultipartBody.Part? = null,
-                 @Part("file_type") file_type: RequestBody,
-                 @Part("text") text: RequestBody,
-                 @Part("tag_id") tag_id: RequestBody,
-                 @Part("sound_id") sound_id: RequestBody,
-                 @Part("location") location: RequestBody,
-                 @Part("privacy") privacy: RequestBody,
-                 @Part("privacy_data") privacy_data: RequestBody,
-                 @Part("deviceId") deviceId: RequestBody,
-                 @Part("deviceToken") deviceToken: RequestBody,
-                 ) {
+    fun postReel(
+        @Part album_image: MultipartBody.Part? = null,
+        @Part("file_type") file_type: RequestBody,
+        @Part("text") text: RequestBody,
+        @Part("tag_id") tag_id: RequestBody,
+        @Part("sound_id") sound_id: RequestBody,
+        @Part("location") location: RequestBody,
+        @Part("privacy") privacy: RequestBody,
+        @Part("privacy_data") privacy_data: RequestBody,
+        @Part("deviceId") deviceId: RequestBody,
+        @Part("deviceToken") deviceToken: RequestBody,
+    ) {
         val temp = MutableLiveData<CommonModelResponse?>()
         postReelLiveData = temp
-        getResult(temp, apiInterface.postReel(album_image!!,file_type, text, tag_id, sound_id,location, privacy, privacy_data, deviceId, deviceToken))
+        getResult(
+            temp,
+            apiInterface.postReel(
+                album_image!!,
+                file_type,
+                text,
+                tag_id,
+                sound_id,
+                location,
+                privacy,
+                privacy_data,
+                deviceId,
+                deviceToken
+            )
+        )
     }
 
 }

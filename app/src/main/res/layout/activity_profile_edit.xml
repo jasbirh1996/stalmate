@@ -396,7 +396,7 @@
             android:layout_marginEnd="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/layoutCoverImages"
+            app:layout_constraintTop_toBottomOf="@id/layoutPhotoAlbum"
             tools:visibility="gone">
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -455,7 +455,7 @@
             android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/layoutPhotoAlbum"
+            app:layout_constraintTop_toBottomOf="@+id/layoutBlockList"
             app:textAllCaps="false" />
 
         <androidx.appcompat.widget.AppCompatTextView

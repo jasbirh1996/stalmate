@@ -5,13 +5,12 @@ import com.google.gson.GsonBuilder
 import com.stalmate.user.base.App
 import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.utilities.UrlFactory
-
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-
 import java.util.concurrent.TimeUnit
+
 
 class RestClient private constructor() {
     var client: OkHttpClient? = null
@@ -36,10 +35,10 @@ class RestClient private constructor() {
             interceptor.setLevel(if (true) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE)
             builder.addInterceptor(interceptor)
         }
-        val gson = GsonBuilder()
+      val gson = GsonBuilder()
             .setLenient()
             .create()
-
+       // val gson = GsonBuilder().excludeFieldsWithoutExposeAnnotation().create() //now we can use our own variable apart from respones
 
         if (PrefManager.getInstance(App.getInstance())!!.keyIsLoggedIn){
             Log.d("tokenn",PrefManager.getInstance(App.getInstance())!!.userDetail.results[0].token)

@@ -3,16 +3,16 @@ package com.stalmate.user.view.dashboard.funtime
 
 import android.app.Activity
 import android.app.Dialog
+import android.graphics.Color
 import android.os.Bundle
+import android.text.Html
 import android.util.DisplayMetrics
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.view.ViewTreeObserver
+import android.view.*
 import android.widget.FrameLayout
 import androidx.annotation.NonNull
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -23,14 +23,19 @@ import com.stalmate.user.R
 import com.stalmate.user.databinding.FragmentCommentsBinding
 import com.stalmate.user.model.Comment
 import com.stalmate.user.utilities.PrefManager
+import com.stalmate.user.utilities.TimesAgo2
 import com.stalmate.user.viewmodel.AppViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
 
-class DialogFragmentComments(var networkViewModel: AppViewModel, var funtimeId: String) :
-    BottomSheetDialogFragment(), CommentAdapter.Callback, CommentAdapterNew.Callback {
+class DialogFragmentComments(
+    var networkViewModel: AppViewModel,
+    var funtime: ResultFuntime,
+    var callBack: Callback
+) :
+    DialogFragment(), CommentAdapter.Callback, CommentAdapterNew.Callback {
     lateinit var binding: FragmentCommentsBinding
     private val mBottomSheetBehaviorCallback: BottomSheetBehavior.BottomSheetCallback =
         object : BottomSheetBehavior.BottomSheetCallback() {
@@ -56,19 +61,23 @@ class DialogFragmentComments(var networkViewModel: AppViewModel, var funtimeId: 
                 false
             )
         )!!
-
         return binding.root
+    }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setStyle(BottomSheetDialogFragment.STYLE_NORMAL, R.style.BottomSheetDialogTheme);
     }
 
 
     @NonNull
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
-        dialog.setOnShowListener { dialogInterface ->
-            val bottomSheetDialog: BottomSheetDialog = dialogInterface as BottomSheetDialog
-            setupFullHeight(bottomSheetDialog)
-        }
+        dialog.setCancelable(false)
+        /*   dialog.setOnShowListener { dialogInterface ->
+               val bottomSheetDialog: BottomSheetDialog = dialogInterface as BottomSheetDialog
+               setupFullHeight(bottomSheetDialog)
+           }*/
         return dialog
     }
 
@@ -93,33 +102,46 @@ class DialogFragmentComments(var networkViewModel: AppViewModel, var funtimeId: 
         return displayMetrics.heightPixels
     }
 
+    override fun onStart() {
+        super.onStart()
+    }
 
-  //  lateinit var viewModel: CommentViewModel
+
+    override fun onStop() {
+
+        super.onStop()
+
+    }
+
+
+    //  lateinit var viewModel: CommentViewModel
     lateinit var commentAdapter: CommentAdapterNew
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val recyclerView = view.findViewById<RecyclerView>(R.id.rvList)
 
 
-      //  viewModel = ViewModelProvider(this)[CommentViewModel::class.java]
-        commentAdapter = CommentAdapterNew(requireContext(),this,networkViewModel,funtimeId,this)
+        //  viewModel = ViewModelProvider(this)[CommentViewModel::class.java]
+        commentAdapter =
+            CommentAdapterNew(requireContext(), this, networkViewModel, funtime.id, this)
         recyclerView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         recyclerView.adapter = commentAdapter
 
 
-   /*     viewModel.commentList.observe(this) {
+        /*     viewModel.commentList.observe(this) {
 
 
-            it.forEach {
-                Log.d("klajsdasda", it.replies.size.toString())
-            }
-            commentAdapter.submitList(it.toMutableList())
-            // commentAdapter.notifyDataSetChanged()
-        }*/
+                 it.forEach {
+                     Log.d("klajsdasda", it.replies.size.toString())
+                 }
+                 commentAdapter.submitList(it.toMutableList())
+                 // commentAdapter.notifyDataSetChanged()
+             }*/
 
-        binding.toolbar.tvhead.text="Comments"
+        binding.toolbar.tvhead.text = "Comments"
         binding.toolbar.topAppBar.setNavigationOnClickListener {
+            callBack.funOnCommentDialogDismissed(commentAdapter.commentList.size)
             dismiss()
         }
 
@@ -138,10 +160,16 @@ class DialogFragmentComments(var networkViewModel: AppViewModel, var funtimeId: 
             })
 
         binding.tvPOstButton.setOnClickListener {
-        if (commentOverId != "") {
-            commentAdapter.replyOverComment(binding.etComment.text.toString(),commentOverId,parentPosition,childPosition,isReplyisChildComment)
+            if (commentOverId != "") {
+                commentAdapter.replyOverComment(
+                    binding.etComment.text.toString(),
+                    commentOverId,
+                    parentPosition,
+                    childPosition,
+                    isReplyisChildComment
+                )
             } else {
-            commentAdapter.addComment(binding.etComment.text.toString())
+                commentAdapter.addComment(binding.etComment.text.toString())
             }
 
             /*        val id = (viewModel.commentList.value?.size ?: 0) + 1
@@ -157,23 +185,41 @@ class DialogFragmentComments(var networkViewModel: AppViewModel, var funtimeId: 
                     }*/
 
 
-
-        /*    viewModel.addComment(
-                Comment(
-                    id.toString(),
-                    Calendar.getInstance(Locale.ROOT).toSimpleDate(),
-                    "test",
-                    "message$id",
-                    first_name = "dfgdfg",
-                    last_name = "dfgdfg",
-                    child_count = 1,
-                    profile_img = "",
-                    parentId = "6385fff8ec61450e2feff028"
-                )
-            )*/
+            /*    viewModel.addComment(
+                    Comment(
+                        id.toString(),
+                        Calendar.getInstance(Locale.ROOT).toSimpleDate(),
+                        "test",
+                        "message$id",
+                        first_name = "dfgdfg",
+                        last_name = "dfgdfg",
+                        child_count = 1,
+                        profile_img = "",
+                        parentId = "6385fff8ec61450e2feff028"
+                    )
+                )*/
         }
-        Glide.with(requireContext()).load(R.drawable.user_placeholder).circleCrop()
+        Glide.with(requireContext())
+            .load(PrefManager.getInstance(requireContext())!!.userProfileDetail.results.profile_img1)
+            .placeholder(R.drawable.user_placeholder).circleCrop()
             .into(binding.ivUserImage)
+
+        Glide.with(requireContext()).load(funtime.profile_img)
+            .placeholder(R.drawable.user_placeholder).circleCrop()
+            .into(binding.ivMainUserImage)
+
+
+        binding.tvUserName.text = funtime.first_name
+        binding.tvComment.text = funtime.text
+
+
+
+        val text = "<font color=#000000>${funtime.first_name+" "+funtime.last_name+" "}</font> <font color=#0f53b8>${funtime.text} </font>"
+        binding.tvUserName.text= Html.fromHtml(text)
+
+
+        binding.tvDate.text = funtime.Created_date
+
         binding.etComment.setHint(
             "Comment as ${PrefManager.getInstance(requireContext())!!.userDetail.results[0].first_name} ${
                 PrefManager.getInstance(
@@ -188,6 +234,12 @@ class DialogFragmentComments(var networkViewModel: AppViewModel, var funtimeId: 
     fun Calendar.toSimpleDate(): String {
         val formatter = SimpleDateFormat("dd/MM/yyyy HH:mm:ss")
         return formatter.format(time)
+    }
+
+
+    override fun onDestroy() {
+        callBack.funOnCommentDialogDismissed(commentAdapter.commentList.size)
+        super.onDestroy()
     }
 
 
@@ -208,7 +260,7 @@ class DialogFragmentComments(var networkViewModel: AppViewModel, var funtimeId: 
         }
 
         var hashmap = HashMap<String, String>()
-        hashmap.put("funtime_id", funtimeId)
+        hashmap.put("funtime_id", funtime.id)
         hashmap.put("comment_id", "")
 /*        hashmap.put("page", currentPage.toString())*/
 
@@ -219,15 +271,15 @@ class DialogFragmentComments(var networkViewModel: AppViewModel, var funtimeId: 
             if (it!!.status) {
                 if (it.results.isNotEmpty()) {
 
-          /*          it.results.forEach {
-                        it.replies = kotlin.collections.ArrayList()
-                        it.level = 1
-                        viewModel.addComment(it)
-                    }
-                    */
+                    /*          it.results.forEach {
+                                  it.replies = kotlin.collections.ArrayList()
+                                  it.level = 1
+                                  viewModel.addComment(it)
+                              }
+                              */
 
                     it.results.forEach {
-                        it.replies=ArrayList<Comment>()
+                        it.replies = ArrayList<Comment>()
                         commentAdapter.addToList(listOf(it))
                     }
 
@@ -246,9 +298,6 @@ class DialogFragmentComments(var networkViewModel: AppViewModel, var funtimeId: 
             }
         }
     }
-
-
-
 
 
 /*    fun likeComment(id: String) {
@@ -281,13 +330,10 @@ class DialogFragmentComments(var networkViewModel: AppViewModel, var funtimeId: 
     }*/
 
 
-
     var commentOverId = ""
     var parentPosition = 0
     var childPosition = 0
     var isReplyisChildComment = false
-
-
 
 
     override fun onClickOnReply(shortComment: Comment, position: Int) {
@@ -305,15 +351,19 @@ class DialogFragmentComments(var networkViewModel: AppViewModel, var funtimeId: 
         this.childPosition = childPosition
         commentOverId = shortComment.parentId ?: shortComment._id
         binding.etComment.setText("@${shortComment.first_name} ${shortComment.last_name} ")
-        isReplyisChildComment=isChild
+        isReplyisChildComment = isChild
     }
 
     override fun onClickOnViewMoreReply(shortComment: Comment, position: Int) {
-      //  viewReplies(shortComment._id, position)
+        //  viewReplies(shortComment._id, position)
     }
 
     override fun onCommentAddedSucessfully() {
         binding.etComment.setText("")
+    }
+
+    public interface Callback {
+        fun funOnCommentDialogDismissed(commentCount: Int)
     }
 
 

@@ -12,22 +12,25 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.databinding.ItemDrawerLayoutBinding
 import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.view.authentication.ActivityAuthentication
 import com.stalmate.user.viewmodel.AppViewModel
 
-class DrawerAdapter(val viewModel: AppViewModel,
-                    val context: Context,
-                    var callback: Callbackk
+class DrawerAdapter(
+    val viewModel: AppViewModel,
+    val context: Context,
+    var callback: Callbackk
 ) : RecyclerView.Adapter<DrawerAdapter.ViewHolder>() {
 
     var list = ArrayList<ModelDrawer>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
-        var view = LayoutInflater.from(parent.context).inflate(R.layout.item_drawer_layout, parent, false)
+        var view =
+            LayoutInflater.from(parent.context).inflate(R.layout.item_drawer_layout, parent, false)
         return ViewHolder(DataBindingUtil.bind(view)!!)
     }
 
@@ -47,7 +50,8 @@ class DrawerAdapter(val viewModel: AppViewModel,
         return list.size
     }
 
-  inner  class ViewHolder(var binding : ItemDrawerLayoutBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(var binding: ItemDrawerLayoutBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
         @SuppressLint("ResourceAsColor", "ResourceType")
         fun bind(drawerResponse: ModelDrawer) {
@@ -58,12 +62,30 @@ class DrawerAdapter(val viewModel: AppViewModel,
             binding.card.setOnClickListener {
 
                 Log.d("jjjjjjjjj", bindingAdapterPosition.toString())
-                when(bindingAdapterPosition){
-                        13 ->{
-                            PrefManager.getInstance(context)!!.keyIsLoggedIn = false
+                when (bindingAdapterPosition) {
 
-                        context.startActivity(Intent(context, ActivityAuthentication::class.java).putExtra("screen","login").addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK))
-                            (context as Activity).finishAffinity()
+
+                    10-> {
+                        context.startActivity(IntentHelper.getSettingScreen(context))
+
+                    }
+                    12 -> {
+                     context.startActivity(IntentHelper.getSaveFavouriteFuntimeScreen(context))
+
+                    }
+
+
+                    13 -> {
+                        PrefManager.getInstance(context)!!.keyIsLoggedIn = false
+
+                        context.startActivity(
+                            Intent(
+                                context,
+                                ActivityAuthentication::class.java
+                            ).putExtra("screen", "login")
+                                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                        )
+                        (context as Activity).finishAffinity()
                     }
 
                 }

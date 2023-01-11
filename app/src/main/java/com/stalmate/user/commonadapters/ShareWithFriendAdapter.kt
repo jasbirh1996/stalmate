@@ -5,6 +5,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -52,21 +53,24 @@ class ShareWithFriendAdapter(
 
             if (user.isSelected){
                 binding.ivChecked.text="Sent"
+                binding.ivChecked.setTextColor(ContextCompat.getColor(context,R.color.colorPrimary))
+                binding.ivChecked.background=ContextCompat.getDrawable(context,R.drawable.round_very_small_corner_primary_border)
             }else{
                 binding.ivChecked.text="Send"
+                binding.ivChecked.setTextColor(ContextCompat.getColor(context,R.color.white))
+                binding.ivChecked.background=ContextCompat.getDrawable(context,R.drawable.round_very_small_corner_primary)
             }
 
 
 
-     /*       binding.ivChecked.setOnClickListener {
+            binding.ivChecked.setOnClickListener {
                 user.isSelected = !user.isSelected
                 if (user.isSelected){
-                    viewModel.addToList(user)
-                }else{
-                    viewModel.removeFromList(user)
+                    callback.onUserSelected(user)
                 }
+
                 notifyItemChanged(absoluteAdapterPosition)
-            }*/
+            }
 
 
 
@@ -89,7 +93,7 @@ class ShareWithFriendAdapter(
     }
 
     public interface Callback{
-        fun onUserSelected(user: ArrayList<User>)
+        fun onUserSelected(user: User)
     }
 
 

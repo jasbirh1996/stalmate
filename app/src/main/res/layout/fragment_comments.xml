@@ -8,6 +8,10 @@
         android:layout_height="match_parent"
         android:background="@color/white">
 
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/app_toolbar" />
+
         <androidx.core.widget.NestedScrollView
             android:id="@+id/nestedScrollView"
             android:layout_width="match_parent"
@@ -16,23 +20,98 @@
             app:layout_constraintBottom_toTopOf="@+id/layoutBottom"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <include layout="@layout/app_toolbar"
-                    android:id="@+id/toolbar"/>
+
+                <View
+                    android:id="@+id/view18"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/colorGray"
+                    app:layout_constraintBottom_toBottomOf="@+id/toolbar"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/layoutStatus"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintTop_toBottomOf="@+id/view18">
+
+                    <View
+                        android:id="@+id/view19"
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:background="@color/colorGray"
+                        app:layout_constraintBottom_toBottomOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/ivMainUserImage"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:srcCompat="@tools:sample/avatars" />
+
+                    <TextView
+                        android:id="@+id/tv_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="10dp"
+                        android:textSize="10sp"
+                        android:textStyle="bold"
+                        android:visibility="visible"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/tvUserName"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_comment"
+                        tools:text="15/05/2021 at 12:25" />
+
+                    <TextView
+                        android:id="@+id/tv_comment"
+                        android:layout_width="0dp"
+                        android:visibility="gone"
+                        android:layout_height="wrap_content"
+                        android:includeFontPadding="false"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toEndOf="@+id/tvUserName"
+                        app:layout_constraintStart_toStartOf="@+id/tvUserName"
+                        app:layout_constraintTop_toBottomOf="@+id/tvUserName"
+                        tools:text="This is a comment" />
+
+                    <TextView
+                        android:id="@+id/tvUserName"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:fontFamily="@font/poppins_medium"
+                        android:includeFontPadding="false"
+                        android:text="This is a comment"
+                        android:textColor="@color/black"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/ivMainUserImage"
+                        app:layout_constraintTop_toTopOf="@+id/ivMainUserImage" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvList"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="1dp"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/toolbar"
+                    app:layout_constraintTop_toBottomOf="@+id/layoutStatus"
                     tools:listitem="@layout/item_comment"
                     tools:visibility="visible" />
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -75,11 +154,13 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
                 android:background="@color/white"
-
+                android:singleLine="true"
+                android:maxLines="1"
+                android:inputType="text"
                 android:fontFamily="@font/poppins_light"
                 android:hint="Enter Comment"
                 android:textColorHint="@color/colorGray"
-                android:textSize="@dimen/_12sdp"
+                android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="@+id/ivUserImage"
                 app:layout_constraintEnd_toStartOf="@+id/tvPOstButton"
                 app:layout_constraintStart_toEndOf="@+id/ivUserImage"

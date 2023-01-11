@@ -62,11 +62,14 @@ class BlockedUserAdapter(val viewModel: AppViewModel, val context: Context,val c
             it.let {
                 if (it!!.status == true) {
 
+                try {
                     list.removeAt(position)
                     notifyItemRemoved(position)
                     if (list.isEmpty()){
                         callback.onListEmpty()
                     }
+
+                }catch (e:Exception){}
                 }
             }
 

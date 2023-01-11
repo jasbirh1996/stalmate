@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
+import com.stalmate.user.Helper.IntentHelper
 
 
 import com.stalmate.user.R
@@ -82,6 +83,10 @@ class FragmentMenu(var callback : Callback) : BaseFragment(),  DrawerAdapter.Cal
     }
 
     override fun onClickDrawerItem(postId: String) {
+
+
+
+
     }
 
 
@@ -114,7 +119,6 @@ class FragmentMenu(var callback : Callback) : BaseFragment(),  DrawerAdapter.Cal
         Glide.with(requireContext()).load(userData.profile_img1)
             .placeholder(R.drawable.user_placeholder)
             .into(binding.userProfileImage)
-
     }
 
 }

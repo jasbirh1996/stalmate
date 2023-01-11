@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/settings_navigation"
+    app:startDestination="@id/fragment_setting_main">
+
+
+    <fragment
+        android:id="@+id/fragment_setting_main"
+        android:name="com.stalmate.user.view.settings.FragmentSettingListing"
+        android:label="fragmentSettingListing"
+        tools:layout="@layout/fragment_setting_listing" >
+        <action
+            android:id="@+id/fragment_setting_main_to_fragment_account_setting"
+            app:destination="@id/fragment_account_setting"
+            />
+    </fragment>
+
+
+
+    <fragment
+        android:id="@+id/fragment_account_setting"
+        android:name="com.stalmate.user.view.settings.FragmentSettingsAccount"
+        android:label="fragmentAccount"
+        tools:layout="@layout/fragment_settings_account" >
+        <action
+            android:id="@+id/fragment_account_setting_to_fragment_blocked_users"
+            app:destination="@id/fragment_blocked_users"
+            />
+
+
+
+
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/fragment_blocked_users"
+        android:name="com.stalmate.user.view.settings.FragmentBlockedContacts"
+        android:label="fragmentBlocked"
+        tools:layout="@layout/fragment_blocked_contacts" >
+
+    </fragment>
+</navigation>

@@ -168,5 +168,22 @@ class FragmentSongPickerSearch : BaseFragment(), FriendAdapter.Callbackk,
         downloadSelectedSong(downloadableSong)
     }
 
+    override fun onClickOnFavouriteMusicButton(song: ResultMusic) {
+        saveUnsaveMusic(song)
+    }
+
+
+
+    private fun saveUnsaveMusic(song: ResultMusic) {
+        var hashmap = java.util.HashMap<String, String>()
+        hashmap.put("sound_id",song.id)
+        networkViewModel.saveUnsaveMusic(hashmap).observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            it.let {
+                adapterFunTimeMusic.updateSaveStatusList(song)
+            }
+
+
+        })
+    }
 
 }

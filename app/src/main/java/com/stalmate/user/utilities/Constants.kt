@@ -27,8 +27,13 @@ object Constants {
     const val URLFUNTIME_DETAIL_LIST="auth_service/funtime_api/get_funtime_detail"
     const val URL_FUNTIME_MUSIC_LIST="auth_service/funtime_api/get_sound_api"
     const val URL_FUNTIME_LIKE_UNLIKE="auth_service/funtime_api/like_unlike_funtime"
+    const val URL_SAVE_UNSAVE_FUNTIME="auth_service/funtime_api/savefuntime"
 
+
+    const val URL_GET_SAVED_FUNTIME_MUSIC="auth_service/funtime_api/get_save_sound_api"
+    const val URL_GET_SAVED_FUNTIME_REELS="auth_service/funtime_api/get_savefuntime_list"
     const val URL_FUNTIME_LIST_BY_AUDIO="auth_service/funtime_api/get_song_funtime_list"
+    const val URL_SAVE_UNSAVE_MUISIC="auth_service/funtime_api/savesound"
 
     const val URL_OTP_REGISTRATION="auth_service/auth_api/otp_register_process"
     const val url_friend_list="auth_service/friend_api/get_friend_list"
@@ -38,6 +43,7 @@ object Constants {
     const val url_send_friend_request="auth_service/friend_api/send_friend_request"
     const val url_update_friend_request="auth_service/friend_api/update_friend_request"
     const val url_remove_user_from_suggestions="auth_service/friend_api/remove_suggestions"
+    const val URL_SHARE_FUNTIME_WITH_FRIEND="auth_service/funtime_api/funtime_share"
     const val URL_PHOTO_ALBUM="auth_service/auth_api/get_albums"
     const val URL_PHOTO_ALBUM_NAME="auth_service/auth_api/add_update_albums"
     const val URL_PHOTO_ALBUM_PHOTO="auth_service/auth_api/get_albums_img"
@@ -65,7 +71,8 @@ object Constants {
     const val UPDATE_PROFILE_API="auth_service/auth_api/profile_update"
     const val UPDATE_PROFILE_API_FILE="auth_service/auth_api/profile_update_file"
     const val UPLOADE_ALBUM_IMAGE_API_FILE="auth_service/auth_api/add_albums_img"
-    const val BLOCK_API="/auth_service/friend_api/block_user"
+    const val URL_REPORT_FUNTIME="/auth_service/funtime_api/funtime_report"
+    const val BLOCK_API="auth_service/friend_api/block_user"
     const val URL_GLOBAL_SEARCH="auth_service/friend_api/search_list"
     const val START_DATE = "01"
     const val ADD_REEL="auth_service/funtime_api/add_funtime"
@@ -119,5 +126,18 @@ object Constants {
     const val PRIVACY_TYPE_SPECIFIC: String = "Specific Friends"
 
 
+    const val SETTING_TYPE_ACCOUNT: String = "Account Setting"
+    const val SETTING_TYPE_CHAT: String = "Chat Setting"
+    const val SETTING_TYPE_APP: String = "App Setting"
+    const val SETTING_TYPE_NOTIFICATION: String = "Notification Setting"
+    const val SETTING_TYPE_ABOUT_US: String = "About Us"
+    const val SETTING_TYPE_LEGAL: String = "Legal"
 
+
+
+    const val SETTING_ACCOUNT_PRIVACY: String = "Privacy"
+    const val SETTING_CHANGE_NUMBER: String = "Change Number"
+    const val SETTING_CHANGE_PASSWORD: String = "Change Password"
+    const val SETTING_BLOCKED_CONTACTS: String = "Blocked Contacts"
+    const val SETTING_DELETEACCOUNT: String = "Delete my account"
 }

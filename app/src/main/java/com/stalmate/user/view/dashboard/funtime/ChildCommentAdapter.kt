@@ -44,7 +44,8 @@ class ChildCommentAdapter(
 
         private fun initBinding(binding: ItemCommentBinding, shortComment: Comment) {
 
-            binding.tvDate.text = "${TimesAgo2.covertTimeToText(shortComment.Created_date,true)}"
+           // binding.tvDate.text = "${TimesAgo2.covertTimeToText(shortComment.Created_date,true)}"
+            binding.tvDate.text = "${shortComment.Created_date}"
             binding.tvUserName.text = "${shortComment.first_name} ${shortComment.last_name}"
             binding.tvReply.text = "Reply"
             binding.tvLikesCount.text = "0 Likes"
@@ -55,6 +56,7 @@ class ChildCommentAdapter(
             binding.tvReply.setOnClickListener {
                 callBack.onClickOnReply(shortComment, bindingAdapterPosition)
             }
+            binding.tvLikesCount.setText(shortComment.like_count.toString()+" likes")
 
             /* binding.tvReply.setOnClickListener {
                     commentListener.onSendComment(
@@ -81,7 +83,7 @@ class ChildCommentAdapter(
                 binding.ivHearIcon.setImageDrawable(
                     ContextCompat.getDrawable(
                         context,
-                        R.drawable.like_heart
+                        R.drawable.heart_filled
                     )
                 )
             }else{
@@ -225,12 +227,16 @@ fun likeComment(commentId: String,position: Int) {
             if (mainIt!!.status) {
 
 
+
                 if (commentList[position].isLiked=="Yes"){
                     commentList[position].isLiked="No"
+                    commentList[position].like_count--
                 }else{
                     commentList[position].isLiked="Yes"
+                    commentList[position].like_count++
                 }
                 notifyItemChanged(position)
+
 
 
 

@@ -43,9 +43,23 @@
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
         <activity
-            android:name=".view.dashboard.Chat.ActivityChat"
-            android:theme="@style/ChatBackground"
+            android:name=".modules.reels.activity.ActivitySettings"
             android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".view.dashboard.SIdeDrawer.ActivityLeftMenuSavedFuntime"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".view.dashboard.Chat.ActivityChat"
+            android:exported="false"
+            android:theme="@style/ChatBackground">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />

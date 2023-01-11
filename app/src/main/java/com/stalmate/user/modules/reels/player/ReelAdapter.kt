@@ -1,4 +1,5 @@
 package com.stalmate.user.modules.reels.player
+
 import android.content.Context
 import android.net.Uri
 import android.os.Build
@@ -25,21 +26,27 @@ import com.stalmate.user.modules.reels.player.holders.VideoReelViewHolder
 import com.stalmate.user.utilities.SeeModetextViewHelper
 import com.stalmate.user.utilities.ValidationHelper
 import com.stalmate.user.view.dashboard.funtime.DialogFragmentComments
+import com.stalmate.user.view.dashboard.funtime.DialogFragmentShareWithFriends
 import com.stalmate.user.view.dashboard.funtime.ResultFuntime
 
 
-class ReelAdapter(val context: Context,var callback:Callback) :
+class ReelAdapter(val context: Context, var callback: Callback) :
     ListAdapter<ResultFuntime, ReelViewHolder>(DIFF_CALLBACK) {
-    var isMuted=false
+    var isMuted = false
     var reelList = ArrayList<ResultFuntime>()
-    lateinit var instaLikePlayerView:InstaLikePlayerView
+    lateinit var instaLikePlayerView: InstaLikePlayerView
+
     companion object {
         /** Mandatory implementation inorder to use "ListAdapter" - new JetPack component" **/
         val DIFF_CALLBACK = object : DiffUtil.ItemCallback<ResultFuntime>() {
             override fun areItemsTheSame(oldItem: ResultFuntime, newItem: ResultFuntime): Boolean {
                 return false;// oldItem == newItem
             }
-            override fun areContentsTheSame(oldItem: ResultFuntime, newItem: ResultFuntime): Boolean {
+
+            override fun areContentsTheSame(
+                oldItem: ResultFuntime,
+                newItem: ResultFuntime
+            ): Boolean {
                 return false;//oldItem == newItem
             }
         }
@@ -49,7 +56,7 @@ class ReelAdapter(val context: Context,var callback:Callback) :
     }
 
     override fun getItemViewType(position: Int): Int {
-        Log.d("akljsdasd","asdkasd")
+        Log.d("akljsdasd", "asdkasd")
         if (true) {
             return FEED_TYPE_VIDEO;
         } else {
@@ -87,77 +94,62 @@ class ReelAdapter(val context: Context,var callback:Callback) :
     private fun handleViewHolder(holder: VideoReelViewHolder, position: Int) {
         /*Reset ViewHolder */
         removeImageFromImageView(holder.videoThumbnail)
-       try {
-           instaLikePlayerView=holder.customPlayerView
-       }catch (e:Exception){
+        try {
+            instaLikePlayerView = holder.customPlayerView
+        } catch (e: Exception) {
 
-       }
+        }
         holder.customPlayerView.reset()
 
         /*Set seperate ID for each player view, to prevent it being overlapped by other player's changes*/
         holder.customPlayerView.id = View.generateViewId()
 
         /*circlular repeatation of items*/
-      //  val videoPos = (position % Constants.videoList.size);
+        //  val videoPos = (position % Constants.videoList.size);
 
         /*Set ratio according to video*/
-      //  (holder.videoThumbnail.layoutParams as ConstraintLayout.LayoutParams).dimensionRatio = Constants.videoList.get(videoPos).dimension
+        //  (holder.videoThumbnail.layoutParams as ConstraintLayout.LayoutParams).dimensionRatio = Constants.videoList.get(videoPos).dimension
 
         /*Set video's direct url*/
         holder.customPlayerView.setVideoUri(Uri.parse(reelList[position].file))
 
 
         holder.customPlayerView.setOnClickListener {
-    callback.onClickOnFullView(reelList[position])
+            callback.onClickOnFullView(reelList[position])
         }
-        if (!ValidationHelper.isNull(reelList[position].location)){
-            holder.tvLocation.text=reelList[position].location
-            holder.tvLocation.visibility=View.VISIBLE
-            holder.ivLocation.visibility=View.VISIBLE
+        if (!ValidationHelper.isNull(reelList[position].location)) {
+            holder.tvLocation.text = reelList[position].location
+            holder.tvLocation.visibility = View.VISIBLE
+            holder.ivLocation.visibility = View.VISIBLE
         }
 
-
-
- /*       if (isMuted){
-            holder.soundIcon.setImageDrawable(ContextCompat.getDrawable(context,R.drawable.ic_sound_off))
-        }else{
-            holder.soundIcon.setImageDrawable(ContextCompat.getDrawable(context,R.drawable.ic_sound_on))
-        }
-*/
-
-
-
-
-
-  /*      *//*Set video's thumbnail locally (by drawable), you can set it by remoteUrl too*//*
-        val resID: Int = context.getResources().getIdentifier(
-            "thumbnail_" + position,
-            "drawable",
-            context.getPackageName()
-        )
-
-        val res: Drawable = context.getResources().getDrawable(resID, null)*/
         val requestOptions = RequestOptions()
         Glide.with(context)
             .load(reelList[position].file)
             .apply(requestOptions)
             .thumbnail(Glide.with(context).load(reelList[position].file))
             .into(holder.videoThumbnail)
-      //  holder.videoThumbnail.setImageDrawable(res);
-      //  holder.videoThumbnail.setImageDrawable(res);
+        holder.tvUserName.text =
+            reelList[position]!!.first_name + " " + reelList[position]!!.last_name
+        Glide.with(context).load(reelList[position]!!.profile_img)
+            .placeholder(R.drawable.profileplaceholder).into(holder.imgUserProfile)
 
-        holder.tvUserName.text= reelList[position]!!.first_name+ " " +reelList[position]!!.last_name
-        Glide.with(context).load(reelList[position]!!.profile_img).placeholder(R.drawable.profileplaceholder).into(holder.imgUserProfile)
-
-        holder.like.text = reelList[position]!!.like_count.toString()
-        holder.comment.text = reelList[position]!!.comment_count.toString()
+        holder.likeCount.text = reelList[position]!!.like_count.toString()
+        holder.commentCount.text = reelList[position]!!.comment_count.toString()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            holder.tvStatusDescription.setText(Html.fromHtml(reelList[position]!!.text, Html.FROM_HTML_MODE_COMPACT));
+            holder.tvStatusDescription.setText(
+                Html.fromHtml(
+                    reelList[position]!!.text,
+                    Html.FROM_HTML_MODE_COMPACT
+                )
+            );
         } else {
             holder.tvStatusDescription.setText(Html.fromHtml(reelList[position]!!.text));
         }
-        if (holder.tvStatusDescription.getText().toString().split(System.getProperty("line.separator")).size>2){
+        if (holder.tvStatusDescription.getText().toString()
+                .split(System.getProperty("line.separator")).size > 2
+        ) {
             SeeModetextViewHelper.makeTextViewResizable(
                 holder.tvStatusDescription,
                 2,
@@ -166,45 +158,96 @@ class ReelAdapter(val context: Context,var callback:Callback) :
             );
         }
 
-        holder.like.setOnClickListener {
-            callback.onClickOnLikeButtonReel(reelList[position]!!)
-        }
+        holder.likeButton.setOnClickListener {
+            if (reelList[position].isLiked == "Yes") {
+                reelList[position].isLiked = "No"
+                reelList[position].like_count--
+                holder.likeIcon.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        context,
+                        R.drawable.ic_funtime_post_like_unfill
+                    )
+                )
 
-        holder.comment.setOnClickListener {
-           var dialogFragmen= DialogFragmentComments((context as BaseActivity).networkViewModel, funtimeId = reelList[position].id)
-            dialogFragmen.show((context as AppCompatActivity).supportFragmentManager,"")
+            } else {
+                reelList[position].isLiked = "Yes"
+                reelList[position].like_count++
+                holder.likeIcon.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        context,
+                        R.drawable.ic_funtime_post_like_fill
+                    )
+                )
+            }
+            holder.likeCount.text = reelList[position].like_count.toString()
+            callback.onClickOnLikeButtonReel(reelList[position])
         }
+        holder.shareShareCount.setText(reelList[position].share_count.toString())
+        holder.shareButton.setOnClickListener {
+            callback.onClickOnShareReel(reelList[position])
+            var dialogFragmen = DialogFragmentShareWithFriends(
+                (context as BaseActivity).networkViewModel,
+                reelList[position], object : DialogFragmentShareWithFriends.CAllback {
+                    override fun onTotalShareCountFromDialog(count: Int) {
+                        reelList[position].share_count = reelList[position].share_count + count
+                        holder.shareShareCount.setText(reelList[position].share_count.toString())
+                    }
+                }
+            )
+            dialogFragmen.show((context as AppCompatActivity).supportFragmentManager, "")
+        }
+        holder.commentButton.setOnClickListener {
+            var dialogFragmen = DialogFragmentComments(
+                (context as BaseActivity).networkViewModel,
+                reelList[position],
+                object : DialogFragmentComments.Callback {
+                    override fun funOnCommentDialogDismissed(commentCount: Int) {
+                        holder.commentCount.text = commentCount.toString()
+                        reelList[position].comment_count = commentCount
+                        holder.customPlayerView.getPlayer()!!.play()
+                    }
+                })
 
+            holder.customPlayerView.getPlayer()!!.pause()
+            dialogFragmen.show((context as AppCompatActivity).supportFragmentManager, "")
+        }
         holder.soundIcon.setOnClickListener {
-
-            if (holder.customPlayerView.getPlayer()!!.volume==0f){
-                holder.customPlayerView.getPlayer()!!.volume= holder.customPlayerView.getPlayer()!!.deviceVolume.toFloat()
-                holder.soundIcon.setImageDrawable(ContextCompat.getDrawable(context,R.drawable.ic_sound_on))
-            }else{
-                holder.customPlayerView.getPlayer()!!.volume= 0f
-                holder.soundIcon.setImageDrawable(ContextCompat.getDrawable(context,R.drawable.ic_sound_off))
+            if (holder.customPlayerView.getPlayer()!!.volume == 0f) {
+                holder.customPlayerView.getPlayer()!!.volume =
+                    holder.customPlayerView.getPlayer()!!.deviceVolume.toFloat()
+                holder.soundIcon.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        context,
+                        R.drawable.ic_sound_on
+                    )
+                )
+            } else {
+                holder.customPlayerView.getPlayer()!!.volume = 0f
+                holder.soundIcon.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        context,
+                        R.drawable.ic_sound_off
+                    )
+                )
             }
-
-     /*       if (holder.customPlayerView.getPlayer()!!.volume==0f){
-                holder.soundIcon.setImageDrawable(ContextCompat.getDrawable(context,R.drawable.ic_sound_off))
-            }else{
-                holder.soundIcon.setImageDrawable(ContextCompat.getDrawable(context,R.drawable.ic_sound_on))
-            }
-*/
-
-          //  notifyItemChanged(position)
-
-
         }
-
-
-        /* val timesAg = TimesAgo2.covertTimeToText(item!!.Created_date, true)*/
-        holder.tvStoryPostTime.text = reelList[position]!!.Created_date
-
-
+        holder.tvStoryPostTime.text = reelList[position].Created_date
+        if (reelList[position].isLiked == "Yes") {
+            holder.likeIcon.setImageDrawable(
+                ContextCompat.getDrawable(
+                    context,
+                    R.drawable.ic_funtime_post_like_fill
+                )
+            )
+        } else {
+            holder.likeIcon.setImageDrawable(
+                ContextCompat.getDrawable(
+                    context,
+                    R.drawable.ic_funtime_post_like_unfill
+                )
+            )
+        }
     }
-
-
 
 
     private fun handleViewHolder(holder: ImageReelViewHolder, position: Int) {
@@ -223,11 +266,12 @@ class ReelAdapter(val context: Context,var callback:Callback) :
         fun onClickOnEditReel(resultFuntime: ResultFuntime)
         fun onClickOnBlockUser(resultFuntime: ResultFuntime)
         fun onClickOnFullView(resultFuntime: ResultFuntime)
+        fun onClickOnShareReel(resultFuntime: ResultFuntime)
     }
 
 
     override fun getItemCount(): Int {
-        Log.d("akljsdasd",reelList.size.toString())
+        Log.d("akljsdasd", reelList.size.toString())
         return reelList.size;
     }
 
@@ -255,19 +299,28 @@ class ReelAdapter(val context: Context,var callback:Callback) :
         notifyItemRangeChanged(size, sizeNew)
     }
 
-  /*  private fun likeApiHit() {
-        var hashmap = HashMap<String, String>()
-        hashmap.put("funtime_id", item!!.id)
-        networkViewModel.funtimeLiveLikeUnlikeData(hashmap)
-        networkViewModel.funtimeLiveLikeUnlikeData.observe(viewLifecycleOwner){
-            if (it!!.message=="Liked") {
-                binding.like.text = it.like_count.toString()
-                binding.likeIcon.setImageDrawable(resources.getDrawable(R.drawable.ic_funtime_post_like_fill))
-            }else{
-                binding.like.text = it.like_count.toString()
+
+    fun updateList(upatedReelList: ArrayList<ResultFuntime>) {
+
+        for (i in 0 until reelList.size) {
+            upatedReelList.forEach { newItem ->
+                if (reelList[i].id == newItem.id) {
+                    reelList.set(i, newItem)
+                    notifyItemChanged(i)
+                }
             }
         }
-    }*/
+    }
+
+    fun blockUserFromList(userId: String) {
+
+        for (i in 0 until reelList.size) {
+            if (reelList[i].user_id == userId) {
+                reelList.removeAt(i)
+                notifyItemRemoved(i)
+            }
+        }
+    }
 
 
 }

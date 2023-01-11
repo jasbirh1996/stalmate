@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/savedfavouritenavigationgraph"
+    app:startDestination="@id/fragmentsavefavourite">
+
+
+    <fragment
+        android:id="@+id/fragmentsavefavourite"
+        android:name="com.stalmate.user.view.dashboard.SIdeDrawer.FragmentSavedFavourite"
+        tools:layout="@layout/fragment_saved_favourite"
+        android:label="FragmentSavedFavourite">
+
+        <action
+            android:id="@+id/action_fragmentsavefavourite_to_fragmentsavefavouritemusic"
+            app:destination="@id/fragmentsavefavouritemusic" />
+        <action
+            android:id="@+id/action_fragmentsavefavourite_to_fragmentsavefavouritereel"
+            app:destination="@id/fragmentsavefavouritereel" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragmentsavefavouritemusic"
+        android:name="com.stalmate.user.view.dashboard.SIdeDrawer.FragmentSavedMusicList"
+        tools:layout="@layout/fragment_music_list"
+        android:label="fragmentsavefavouritemusic">
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/fragmentsavefavouritereel"
+        android:name="com.stalmate.user.view.dashboard.SIdeDrawer.FragmentSavedFavouriteFuntime"
+        tools:layout="@layout/fragment_saved_favourite_funtime"
+        android:label="fragmentsavefavouritereel">
+
+    </fragment>
+
+
+
+
+
+
+
+
+
+
+
+</navigation>

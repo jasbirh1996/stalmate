@@ -14,10 +14,12 @@ import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SnapHelper
+import com.google.gson.Gson
 import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentreellistBinding
@@ -25,8 +27,6 @@ import com.stalmate.user.modules.reels.Extensions.Companion.findFirstVisibleItem
 import com.stalmate.user.modules.reels.Extensions.Companion.isAtTop
 import com.stalmate.user.modules.reels.player.holders.VideoReelViewHolder
 import com.stalmate.user.utilities.NetworkUtils
-import com.stalmate.user.view.dashboard.ActivityDashboard
-import com.stalmate.user.view.dashboard.funtime.FragmentFunTime
 import com.stalmate.user.view.dashboard.funtime.ResultFuntime
 
 class ReelListFragment : BaseFragment(), ReelAdapter.Callback {
@@ -37,6 +37,11 @@ class ReelListFragment : BaseFragment(), ReelAdapter.Callback {
     lateinit var binding: FragmentreellistBinding;
     private var scrolledDistance: Int = 0;
     var videoAutoPlayHelper: VideoAutoPlayHelper? = null
+
+    private var loading = true
+    var pastVisiblesItems = 0
+    var visibleItemCount: kotlin.Int = 0
+    var totalItemCount: kotlin.Int = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -69,6 +74,32 @@ class ReelListFragment : BaseFragment(), ReelAdapter.Callback {
             /*Helper class to provide show/hide toolBar*/
             //  attachScrollControlListener(binding.customToolBar, binding.recyclerView)
             callApi()
+            binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    if (dy > 0) { //check for scroll down
+                        visibleItemCount =
+                            (binding.recyclerView.layoutManager as LinearLayoutManager).getChildCount()
+                        totalItemCount =
+                            (binding.recyclerView.layoutManager as LinearLayoutManager).getItemCount()
+                        pastVisiblesItems =
+                            (binding.recyclerView.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
+                        if (loading) {
+                            if (visibleItemCount + pastVisiblesItems >= totalItemCount) {
+                                loading = false
+                                Log.v("...", "Last Item Wow !")
+                                // Do pagination.. i.e. fetch new data
+
+                                if (!isApiRuning) {
+                                    page_count++
+                                    callApi()
+                                }
+
+                                loading = true
+                            }
+                        }
+                    }
+                }
+            })
         }
 
 
@@ -166,30 +197,54 @@ class ReelListFragment : BaseFragment(), ReelAdapter.Callback {
     }
 
 
-    var page_count = 0
+    var isFirstApiHit = true
+    var isSelfVideos = false
+    var page_count = 1
     var isApiRuning = false
     var handler: Handler? = null
     private fun callApi() {
         isApiRuning = true
         val index = 0
+
+
         var hashmap = HashMap<String, String>()
-        hashmap.put("page", "1")
-        hashmap.put("limit", "5")
-        hashmap.put("id_user", "")
+        hashmap.put("page", page_count.toString())
+        if (isSelfVideos) {
+            hashmap.put("id_user", adapter.reelList[0].user_id!!)
+        } else {
+            hashmap.put("id_user", "")
+        }
+
         hashmap.put("fun_id", "")
-
-
+        hashmap.put("limit", "5")
         networkViewModel.funtimeLiveData(hashmap)
         networkViewModel.funtimeLiveData.observe(viewLifecycleOwner) {
             isApiRuning = false
             //  binding.shimmerLayout.visibility =  View.GONE
-            Log.d("========", "empty")
             if (it!!.results.isNotEmpty()) {
-                Log.d("========", "full")
-                adapter.addToList(it.results)
+                if (isFirstApiHit) {
+
+                    var list = it.results
+
+                    list.forEach {
+                        it.isDataUpdated=false
+                    }
+                    adapter.addToList(list)
+                } else {
+
+                    var list = it.results
+
+                    list.forEach {
+                        it.isDataUpdated=false
+                    }
+                    adapter.addToList(list)
+                }
+                isFirstApiHit = false
             }
         }
     }
+
+
 
 
     override fun onStart() {
@@ -227,6 +282,26 @@ class ReelListFragment : BaseFragment(), ReelAdapter.Callback {
 
     override fun onClickOnLikeButtonReel(resultFuntime: ResultFuntime) {
 
+        likeApiHit(resultFuntime)
+
+
+
+
+    }
+
+
+    private fun likeApiHit(funtime: ResultFuntime) {
+        var hashmap = HashMap<String, String>()
+        hashmap.put("funtime_id", funtime.id)
+        networkViewModel.funtimeLiveLikeUnlikeData(hashmap)
+        networkViewModel.funtimeLiveLikeUnlikeData.observe(this) {
+
+            it.let {
+                if (it!!.status) {
+
+                }
+            }
+        }
     }
 
     override fun onClickOnEditReel(resultFuntime: ResultFuntime) {
@@ -238,9 +313,26 @@ class ReelListFragment : BaseFragment(), ReelAdapter.Callback {
     }
 
     override fun onClickOnFullView(resultFuntime: ResultFuntime) {
-        startActivity(IntentHelper.getFullViewReelActivity(context)!!.putExtra("data",resultFuntime))
+        startActivityForResult(IntentHelper.getFullViewReelActivity(context)!!.putExtra("data",resultFuntime),120)
 
       //  startForResultReels.launch(IntentHelper.getFullViewReelActivity(requireContext()))
+    }
+
+    override fun onClickOnShareReel(resultFuntime: ResultFuntime) {
+
+    }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode==Activity.RESULT_OK && requestCode==120){
+
+
+            val updatedReelList: ArrayList<ResultFuntime> = data!!.getParcelableArrayListExtra("data")!!
+            Log.d("lakjdasd",Gson().toJson(updatedReelList))
+            adapter.updateList(updatedReelList!!)
+
+        }
     }
 
     val startForResultReels = registerForActivityResult(ActivityResultContracts.StartActivityForResult())

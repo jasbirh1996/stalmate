@@ -65,6 +65,23 @@ interface ApiInterface {
     @PATCH(Constants.URL_FUNTIME_LIKE_UNLIKE)
     fun getFuntimeLikeUnlike(@Body map: HashMap<String, String>): Call<ModelFuntimeLikeResponse>
 
+
+    @PATCH(Constants.URL_SAVE_UNSAVE_FUNTIME)
+    fun saveUnsaveFuntime(@Body map: HashMap<String, String>): Call<CommonModelResponse>
+
+
+    @POST(Constants.URL_GET_SAVED_FUNTIME_MUSIC)
+    fun getSavedFuntimMusic(@Body map: HashMap<String, String>): Call<ModelMusicListResponse>
+
+
+    @POST(Constants.URL_GET_SAVED_FUNTIME_REELS)
+    fun getSavedFuntimReels(@Body map: HashMap<String, String>): Call<ModelFuntimeResponse>
+
+    @PATCH(Constants.URL_SAVE_UNSAVE_MUISIC)
+    fun saveUnsaveMusic(@Body map: HashMap<String, String>): Call<CommonModelResponse>
+
+
+
     @POST(Constants.URL_FUNTIME_MUSIC_LIST)
     fun getFuntimeMusicList(@Body map: HashMap<String, String>): Call<ModelMusicListResponse>
 
@@ -150,6 +167,11 @@ interface ApiInterface {
     @POST(Constants.url_remove_user_from_suggestions)
     fun removeUserFromSuggestions(@Body map: HashMap<String, String>): Call<CommonModelResponse>
 
+    @POST(Constants.URL_SHARE_FUNTIME_WITH_FRIEND)
+    fun shareWithFriend(@Body map: HashMap<String, String>): Call<CommonModelResponse>
+
+
+
 
     @POST(Constants.url_send_follower_request)
     fun requestBeFollower(@Body map: HashMap<String, String>): Call<ModelSuccess>
@@ -227,6 +249,17 @@ interface ApiInterface {
     fun addAlbumImage(
         @Part cover_img: MultipartBody.Part,
         @Part("album_id") firstName: RequestBody,
+    ): Call<CommonModelResponse>
+
+
+    @Multipart
+    @POST(Constants.URL_REPORT_FUNTIME)
+    fun reportFuntime(
+        @Part file: MultipartBody.Part? = null,
+        @Part("funtime_id") funtimeId: RequestBody,
+        @Part("category") category: RequestBody,
+        @Part("report_reason") report_reason: RequestBody,
+        @Part("detailed_reason") detailed_reason: RequestBody,
     ): Call<CommonModelResponse>
 
 

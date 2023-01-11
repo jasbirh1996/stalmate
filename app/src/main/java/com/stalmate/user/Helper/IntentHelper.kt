@@ -14,10 +14,12 @@ import com.stalmate.user.view.profile.ActivityProfile
 import com.stalmate.user.view.profile.ActivityProfileEdit
 import  com.c2m.storyviewer.screen.StoryActivity
 import com.stalmate.user.modules.reels.activity.ActivityFullViewReels
+import com.stalmate.user.modules.reels.activity.ActivitySettings
 import com.stalmate.user.modules.reels.activity.ActivitySongPicker
 import com.stalmate.user.modules.reels.activity.ActivityVideoRecorder
 import com.stalmate.user.view.dashboard.ActivityDashboardNew
 import com.stalmate.user.view.dashboard.Chat.ActivityChat
+import com.stalmate.user.view.dashboard.SIdeDrawer.ActivityLeftMenuSavedFuntime
 import com.stalmate.user.view.dashboard.funtime.ActivityFuntimePost
 import com.stalmate.user.view.dashboard.funtime.ActivityReelsByAudio
 import com.stalmate.user.view.dashboard.funtime.ActivityReportUser
@@ -101,8 +103,15 @@ public class IntentHelper {
             return Intent(context, ActivityFullViewReels::class.java)
                 .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
         }
+        fun getSaveFavouriteFuntimeScreen(context: Context?): Intent? {
+            return Intent(context, ActivityLeftMenuSavedFuntime::class.java)
+                .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        }
 
-
+        fun getSettingScreen(context: Context?): Intent? {
+            return Intent(context, ActivitySettings::class.java)
+                .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        }
 
         fun getReelListByAudioScreen(context: Context?): Intent? {
             return Intent(context, ActivityReelsByAudio::class.java)

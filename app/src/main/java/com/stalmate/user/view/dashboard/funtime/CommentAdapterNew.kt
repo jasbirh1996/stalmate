@@ -2,6 +2,7 @@ package com.stalmate.user.view.dashboard.funtime
 
 
 import android.content.Context
+import android.text.Html
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -15,7 +16,6 @@ import com.bumptech.glide.Glide
 import com.stalmate.user.R
 import com.stalmate.user.databinding.ItemCommentBinding
 import com.stalmate.user.model.Comment
-import com.stalmate.user.utilities.PriceFormatter
 import com.stalmate.user.utilities.TimesAgo2
 import com.stalmate.user.viewmodel.AppViewModel
 
@@ -45,8 +45,12 @@ class CommentAdapterNew(
         RecyclerView.ViewHolder(binding.root),
         ChildCommentAdapter.Callback {
         fun bind(shortComment: Comment) {
-            binding.tvDate.text = "${TimesAgo2.covertTimeToText(shortComment.Created_date,true)}"
+         //   binding.tvDate.text = "${TimesAgo2.covertTimeToText(shortComment.Created_date,true)}"
+            binding.tvDate.text = "${shortComment.Created_date}"
             binding.tvUserName.text = "${shortComment.first_name} ${shortComment.last_name}"
+            val text = "<font color=#000000>${shortComment.first_name+" "} ${shortComment.last_name}</font> <font color=#0f53b8>${shortComment.comment} </font>"
+            binding.tvUserName.text=Html.fromHtml(text)
+
             binding.tvReply.text = "Reply"
             binding.tvLikesCount.text = "0 Likes"
             binding.tvComment.text = shortComment.comment
@@ -55,7 +59,7 @@ class CommentAdapterNew(
             binding.tvReply.setOnClickListener {
                 callback.onClickOnReply(shortComment, bindingAdapterPosition,0,false)
             }
-
+            binding.tvLikesCount.setText(shortComment.like_count.toString()+" likes")
             binding.btnMore.setOnClickListener {
                 if (shortComment.isExpanded) {
                     Log.d("a;ksdasd", "laskjdlasd")
@@ -107,7 +111,7 @@ class CommentAdapterNew(
                 binding.ivHearIcon.setImageDrawable(
                     ContextCompat.getDrawable(
                         context,
-                        R.drawable.like_heart
+                        R.drawable.heart_filled
                     )
                 )
             }else{
@@ -118,6 +122,10 @@ class CommentAdapterNew(
                     )
                 )
             }
+
+            binding.tvLikesCount.setText(shortComment.like_count.toString()+" likes")
+
+
 
 
             binding.ivHearIcon.setOnClickListener {
@@ -261,11 +269,7 @@ class CommentAdapterNew(
                         commentList[parentPosition].replies.add(it.results)
                         notifyItemChanged(parentPosition)
                     }
-
                     callback.onCommentAddedSucessfully()
-
-
-
                 }
             }
         }
@@ -325,8 +329,10 @@ class CommentAdapterNew(
 
                     if (commentList[position].isLiked=="Yes"){
                         commentList[position].isLiked="No"
+                        commentList[position].like_count--
                     }else{
                         commentList[position].isLiked="Yes"
+                        commentList[position].like_count++
                     }
                     notifyItemChanged(position)
 

@@ -64,7 +64,7 @@ class FragmentReelUsedAudio(var reelData: ResultFuntime) : BaseFragment(),
         handler= Handler()
         binding.tvArtistName.text=reelData.artist_name
         binding.tvMusicName.text=reelData.sound_name
-        adapter=ReelVideosByAudioAdapter(requireContext(),this)
+        adapter=ReelVideosByAudioAdapter(requireContext(),this,true)
         binding.rvList.layoutManager=GridLayoutManager(context,3)
         binding.rvList.adapter=adapter
         ImageLoaderHelperGlide.setGlideCorner(requireContext(),binding.ivImage,reelData.sound_image,R.drawable.user_placeholder)
@@ -87,7 +87,7 @@ class FragmentReelUsedAudio(var reelData: ResultFuntime) : BaseFragment(),
 
         binding.buttonUseAudio.setOnClickListener {
             if (reelData.sound_id!=null){
-                onSongSelected(reelData.sound_id!!,reelData.sound_file,reelData.sound_name,reelData.sound_image)
+                onSongSelected(reelData.sound_id!!,reelData.sound_file,reelData.sound_name,reelData.sound_image!!)
             }
 
 
