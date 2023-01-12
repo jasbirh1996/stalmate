@@ -49,7 +49,7 @@ class CommentAdapterNew(
             binding.tvDate.text = "${shortComment.Created_date}"
             binding.tvUserName.text = "${shortComment.first_name} ${shortComment.last_name}"
             val text = "<font color=#000000>${shortComment.first_name+" "} ${shortComment.last_name}</font> <font color=#0f53b8>${shortComment.comment} </font>"
-            binding.tvUserName.text=Html.fromHtml(text)
+            binding.tvUserName.text="${shortComment.first_name} ${shortComment.last_name}"
 
             binding.tvReply.text = "Reply"
             binding.tvLikesCount.text = "0 Likes"
@@ -122,16 +122,10 @@ class CommentAdapterNew(
                     )
                 )
             }
-
             binding.tvLikesCount.setText(shortComment.like_count.toString()+" likes")
-
-
-
-
             binding.ivHearIcon.setOnClickListener {
                 likeComment(shortComment._id,bindingAdapterPosition)
             }
-
         }
 
 

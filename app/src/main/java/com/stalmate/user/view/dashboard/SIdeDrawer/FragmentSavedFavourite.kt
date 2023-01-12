@@ -8,6 +8,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentSavedFavouriteBinding
@@ -57,7 +59,7 @@ lateinit var musicAdapter: SavedGridMusicAdapter
             requireActivity().finish()
         }
         getSavedVideoData()
-        getSavedMusicData()
+
 
 
 
@@ -79,7 +81,27 @@ lateinit var musicAdapter: SavedGridMusicAdapter
                     binding.rvMusicList.layoutManager=GridLayoutManager(requireContext(),1)
                 }
                 if (it!!.results.size==2){
-                    binding.rvMusicList.layoutManager=GridLayoutManager(requireContext(),2)
+
+
+                    binding.rvMusicList.visibility=View.GONE
+                    binding.layoutForTwoAudio.visibility=View.VISIBLE
+                    Glide.with(requireActivity()).load(it.results[0].image).into(binding.ivAudioOne)
+                    Glide.with(requireActivity()).load(it.results[1].image).into(binding.ivAudioTwo)
+
+                    binding.layoutForTwoAudio.setOnTouchListener(object : View.OnTouchListener {
+                        override
+                        fun onTouch(v: View?, event: MotionEvent): Boolean {
+                            Log.d("asdasda","asdasd")
+                            if (event.action==MotionEvent.ACTION_UP)
+                                onClickOnMusic()
+                            return false
+                        }
+                    })
+
+
+                    binding.layoutForTwoAudio.setOnClickListener {
+                        onClickOnMusic()
+                    }
                 }
 
                 if (it!!.results.size==3){
@@ -109,9 +131,22 @@ lateinit var musicAdapter: SavedGridMusicAdapter
                 })
 
 
+                binding.layoutForTwoVideo.setOnClickListener {
+                    onClickOnMusic()
+                }
+
+                if (videoAdapter.list.size==0 && musicAdapter.list.size==0){
+                    binding.gridlayuot.visibility=View.GONE
+                    Log.d("klajsdasd",";asldkasd")
+                    binding.tvNoData.visibility=View.VISIBLE
+                }
+
+
             }
         })
     }
+
+
 
     fun getSavedVideoData() {
         var hashmap = HashMap<String, String>()
@@ -127,7 +162,39 @@ lateinit var musicAdapter: SavedGridMusicAdapter
                     binding.rvReelList.layoutManager=GridLayoutManager(requireContext(),1)
                 }
                 if (it!!.results.size==2){
-                    binding.rvReelList.layoutManager=GridLayoutManager(requireContext(),2)
+                    binding.rvReelList.visibility=View.GONE
+                    binding.layoutForTwoVideo.visibility=View.VISIBLE
+
+
+
+                    val requestOptions = RequestOptions()
+                    Glide.with(requireContext())
+                        .load(it!!.results[0].file)
+                        .apply(requestOptions)
+                        .thumbnail(Glide.with(requireContext()).load(it!!.results[0].file))
+                        .into(binding.ivVideoOne);
+
+
+                    Glide.with(requireContext())
+                        .load(it!!.results[1].file)
+                        .apply(requestOptions)
+                        .thumbnail(Glide.with(requireContext()).load(it!!.results[1].file))
+                        .into(binding.ivVideoTwo);
+
+                    binding.layoutForTwoVideo.setOnTouchListener(object : View.OnTouchListener {
+                        override
+                        fun onTouch(v: View?, event: MotionEvent): Boolean {
+                            Log.d("asdasda","asdasd")
+                            if (event.action==MotionEvent.ACTION_UP)
+                                onClickOnVideo()
+                            return false
+                        }
+                    })
+
+                    binding.layoutForTwoVideo.setOnClickListener {
+                        onClickOnVideo()
+                    }
+
                 }
 
                 if (it!!.results.size==3){
@@ -137,7 +204,6 @@ lateinit var musicAdapter: SavedGridMusicAdapter
                 if (it!!.results.size>3){
                     binding.rvReelList.layoutManager=GridLayoutManager(requireContext(),2)
                 }
-
 
 
                 videoAdapter.submitList(it!!.results)
@@ -152,6 +218,14 @@ lateinit var musicAdapter: SavedGridMusicAdapter
                         return false
                     }
                 })
+
+
+
+                Log.d(";laskdasd",videoAdapter.list.size.toString())
+
+
+                getSavedMusicData()
+
             }
         })
     }
@@ -160,7 +234,6 @@ lateinit var musicAdapter: SavedGridMusicAdapter
      fun onClickOnVideo() {
             findNavController().navigate(R.id.action_fragmentsavefavourite_to_fragmentsavefavouritereel)
     }
-
      fun onClickOnMusic() {
         findNavController().navigate(R.id.action_fragmentsavefavourite_to_fragmentsavefavouritemusic)
     }

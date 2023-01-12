@@ -18,6 +18,7 @@ import com.stalmate.user.modules.reels.activity.ActivitySettings
 import com.stalmate.user.modules.reels.activity.ActivitySongPicker
 import com.stalmate.user.modules.reels.activity.ActivityVideoRecorder
 import com.stalmate.user.view.dashboard.ActivityDashboardNew
+import com.stalmate.user.view.dashboard.Chat.ActivityCall
 import com.stalmate.user.view.dashboard.Chat.ActivityChat
 import com.stalmate.user.view.dashboard.SIdeDrawer.ActivityLeftMenuSavedFuntime
 import com.stalmate.user.view.dashboard.funtime.ActivityFuntimePost
@@ -103,6 +104,12 @@ public class IntentHelper {
             return Intent(context, ActivityFullViewReels::class.java)
                 .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
         }
+
+        fun getCallScreen(context: Context?): Intent? {
+            return Intent(context, ActivityCall::class.java)
+                .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        }
+
         fun getSaveFavouriteFuntimeScreen(context: Context?): Intent? {
             return Intent(context, ActivityLeftMenuSavedFuntime::class.java)
                 .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)

@@ -220,7 +220,7 @@ class ActivityFullViewReels : BaseActivity(), ReelFullViewAdapter.Callback {
             }
         }
         returnIntent.putParcelableArrayListExtra("data", updatedList);
-
+        returnIntent.putParcelableArrayListExtra("blockList", blockLisuUser);
         setResult(
             Activity.RESULT_OK,
             returnIntent
@@ -245,7 +245,22 @@ class ActivityFullViewReels : BaseActivity(), ReelFullViewAdapter.Callback {
                     Log.d("a;lksdasd", position.toString())
                     binding.recyclerView.smoothScrollToPosition(position + 1)
                     Handler(Looper.getMainLooper()).postDelayed(
-                        Runnable { adapter.blockUserFromList(position) },
+                        Runnable {
+
+                            var selectedList=ArrayList<ResultFuntime>()
+                            adapter.reelList.forEach {
+                                if (it.user_id==funtime.user_id){
+                                    selectedList.add(it)
+                                }
+                            }
+
+                            selectedList.forEach {
+                                 adapter.reelList.remove(it)
+                            }
+
+
+
+                            adapter.blockUserFromList(position) },
                         500
                     )
                 }
@@ -301,8 +316,12 @@ class ActivityFullViewReels : BaseActivity(), ReelFullViewAdapter.Callback {
     }
 
     override fun onClickOnBlockUser(resultFuntime: ResultFuntime) {
+        blockLisuUser.clear()
+        blockLisuUser.add(resultFuntime)
         hitBlockApi(resultFuntime)
     }
+
+    var blockLisuUser=ArrayList<ResultFuntime>()
 
 
 }

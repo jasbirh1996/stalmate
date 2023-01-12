@@ -50,5 +50,6 @@ data class TaggedUser(
     val _id: String,
     val first_name: String,
     val last_name: String,
-    val profile_img_1: String = ""
+    @SerializedName("profile_img_1")
+    val profile_img_1: String?=""
 ) : Parcelable

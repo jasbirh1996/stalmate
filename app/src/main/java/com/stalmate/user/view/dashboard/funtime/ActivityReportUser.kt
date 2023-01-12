@@ -1,39 +1,35 @@
 package com.stalmate.user.view.dashboard.funtime
 
-import android.content.ClipData
 import android.content.Intent
-import android.graphics.Bitmap
-import android.net.Uri
 import android.os.Bundle
-import android.os.FileUtils
 import android.view.View
-import android.webkit.MimeTypeMap
 import android.widget.AdapterView
-import android.widget.Toast
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.documentfile.provider.DocumentFile
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
-import com.anggrayudi.storage.SimpleStorage
-import com.anggrayudi.storage.callback.FilePickerCallback
 import com.anggrayudi.storage.file.*
+import com.bumptech.glide.Glide
+import com.canhub.cropper.CropImageContract
+import com.canhub.cropper.CropImageView
+import com.canhub.cropper.options
 import com.google.android.exoplayer2.util.Log
+import com.jaiselrahman.filepicker.utils.FileUtils
+import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.databinding.ActivityReportUserBinding
 import com.stalmate.user.model.ModelCustumSpinner
-import com.stalmate.user.modules.reels.utils.VideoUtil
-import com.stalmate.user.utilities.PathUtil
+import com.stalmate.user.view.dialogs.CommonConfirmationDialog
+import com.stalmate.user.view.dialogs.SuccessDialog
 import com.wedguruphotographer.adapter.CustumSpinAdapter
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.File
-import java.io.IOException
 
 
-class ActivityReportUser : BaseActivity() {
+class ActivityReportUser : BaseActivity(), DialogFilePicker.Callback {
     lateinit var binding: ActivityReportUserBinding
     private lateinit var categoryAdapter: CustumSpinAdapter
 
@@ -48,7 +44,7 @@ class ActivityReportUser : BaseActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_report_user)
 
 
-        var category = ModelCustumSpinner(id = "0", name = "Select category")
+        var category = ModelCustumSpinner(id = "0", name = "Select the category")
         categoryList.add(category)
         categoryList.add(ModelCustumSpinner(id = "0", name = "I just don't like it."))
         categoryList.add(ModelCustumSpinner(id = "0", name = "It's spam."))
@@ -68,14 +64,19 @@ class ActivityReportUser : BaseActivity() {
         categoryAdapter = CustumSpinAdapter(
             this,
             android.R.layout.simple_spinner_item,
-            categoryList, true
+            categoryList, false
         )
         binding.spinnerCategory.setAdapter(categoryAdapter)
 
 
 
         binding.layoutPick.setOnClickListener {
-          //  pickFile()
+
+            var dialog = DialogFilePicker(this )
+            val manager: FragmentManager = getSupportFragmentManager()
+            dialog.show(manager, "asdasd")
+
+
         }
         binding.spinnerCategory.setOnItemSelectedListener(object :
             AdapterView.OnItemSelectedListener {
@@ -92,32 +93,83 @@ class ActivityReportUser : BaseActivity() {
         })
 
         binding.buttonDone.setOnClickListener {
-            report()
+            if (this::file.isInitialized) {
+
+                report()
+            }else{
+                makeToast("Please Upload a File First...")
+            }
+
         }
-        binding.toolbar.tvhead.text="File a Report"
+        binding.toolbar.tvhead.text = "File a Report"
         binding.toolbar.topAppBar.setNavigationOnClickListener {
             finish()
         }
 
     }
 
+    /*Cover Image Picker */
+    private val cropImage = registerForActivityResult(CropImageContract()) { result ->
+        if (result.isSuccessful) {
+            // use the returned uri
+            val uriContent = result.uriContent
+            var uriFilePath = result.getUriFilePath(this) // optional usage
+
+            file=File(uriFilePath)
 
 
+        } else {
+            // an error occurred
+            val exception = result.error
+        }
+    }
+
+    private fun startCrop() {
+        // start picker to get image for cropping and then use the image in cropping activity
+        cropImage.launch(
+            options {
+                setGuidelines(CropImageView.Guidelines.ON)
+            }
+        )
+    }
+
+    fun pickFile() {
+        val i = Intent()
+        i.type = "*/*"
+        i.action = Intent.ACTION_GET_CONTENT
+        i.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
+        startActivityForResult(i, 10)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == 10) {
+
+            file=File(com.stalmate.user.modules.reels.audioVideoTrimmer.utils.FileUtils.getPath(
+                this,
+                data!!.data
+            ))
+
+        }
+
+    }
 
 
     lateinit var file: File
 
 
     private fun report() {
+        showLoader()
         fun getRequestBody(str: String?): RequestBody =
             RequestBody.create("text/plain".toMediaTypeOrNull(), str.toString())
 
         val thumbnailBody: RequestBody =
-            RequestBody.create("image/*".toMediaTypeOrNull(), file!!)
+            RequestBody.create("image/*".toMediaTypeOrNull(), file)
 
         val profile_image1: MultipartBody.Part = MultipartBody.Part.Companion.createFormData(
             "file",
-            file!!.name,
+            file.name,
             thumbnailBody
         ) //image[] for multiple image
 
@@ -129,6 +181,9 @@ class ActivityReportUser : BaseActivity() {
             getRequestBody(binding.spinnerReportReason.text.toString()),
             getRequestBody(binding.etDetailedReason.text.toString())
         ).observe(this, Observer {
+
+            dismissLoader()
+
             it.let {
 
                 if (it!!.status!!) {
@@ -139,6 +194,14 @@ class ActivityReportUser : BaseActivity() {
                 }
             }
         })
+    }
+
+    override fun onClickOnFilePicker(isFilePicker: Boolean) {
+        if (isFilePicker){
+            pickFile()
+        }else{
+            startCrop()
+        }
     }
 
 }

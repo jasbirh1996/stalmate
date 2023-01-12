@@ -43,6 +43,13 @@
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
         <activity
+            android:name=".view.dashboard.Chat.ActivityCall"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".modules.reels.activity.ActivitySettings"
             android:exported="false">
             <meta-data

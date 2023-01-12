@@ -50,7 +50,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/poppins"
-        android:text="No Data"
+        android:text="Block list is empty"
         android:textColor="@color/grey1"
         android:textSize="@dimen/_24sdp"
         android:visibility="gone"

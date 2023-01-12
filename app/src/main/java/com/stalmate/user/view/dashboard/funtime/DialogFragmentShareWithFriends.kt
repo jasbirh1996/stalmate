@@ -9,29 +9,20 @@ import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
+import android.widget.FrameLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.stalmate.user.R
-import com.stalmate.user.commonadapters.MultiUserSelectorAdapter
 import com.stalmate.user.commonadapters.ShareWithFriendAdapter
-import com.stalmate.user.commonadapters.TaggedUsersAdapter
-
 import com.stalmate.user.databinding.FragmentShareWithFriendsBinding
-
 import com.stalmate.user.model.User
 import com.stalmate.user.utilities.Constants
-import com.stalmate.user.view.adapter.FriendAdapter
-import com.stalmate.user.view.dashboard.funtime.viewmodel.TagPeopleViewModel
 import com.stalmate.user.viewmodel.AppViewModel
-
-import kotlin.collections.ArrayList
 
 class DialogFragmentShareWithFriends(var networkViewModel: AppViewModel,var  funtime:ResultFuntime,var callback:CAllback) : BottomSheetDialogFragment(),
     ShareWithFriendAdapter.Callback {
@@ -61,15 +52,14 @@ class DialogFragmentShareWithFriends(var networkViewModel: AppViewModel,var  fun
         if (behavior != null && behavior is BottomSheetBehavior<*>) {
             behavior.setBottomSheetCallback(mBottomSheetBehaviorCallback)
         }
+
+
         (contentView.parent as View).setBackgroundColor(resources.getColor(android.R.color.transparent))
 
 
 
-
-
-
-
     }
+
 
 
 
@@ -201,7 +191,9 @@ class DialogFragmentShareWithFriends(var networkViewModel: AppViewModel,var  fun
                 if (it!!.results.isNotEmpty()){
 
                     if (isFresh){
-                        friendAdapter.submitList(it.results as ArrayList<User>)
+                        friendAdapter.addToList(it.results as ArrayList<User>)
+
+
                     }else{
                         friendAdapter.addToList(it.results as ArrayList<User>)
                     }
@@ -210,6 +202,8 @@ class DialogFragmentShareWithFriends(var networkViewModel: AppViewModel,var  fun
                     if (it.results.size<6){
                         binding.progressLoading.visibility = View.GONE
                     }else{
+
+
                         binding.progressLoading.visibility = View.VISIBLE
                     }
                     binding.layoutNoData.visibility=View.GONE
