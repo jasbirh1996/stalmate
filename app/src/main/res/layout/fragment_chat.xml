@@ -67,6 +67,7 @@
                 tools:listitem="@layout/item_story_chat" />
 
 
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvUsers"
                 android:layout_width="match_parent"

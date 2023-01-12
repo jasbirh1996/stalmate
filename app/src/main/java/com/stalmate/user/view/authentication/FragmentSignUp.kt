@@ -16,6 +16,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import com.stalmate.user.R
@@ -68,7 +69,7 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         // attaching data adapter to spinner
-        binding.spMonth.setAdapter(dataAdapter);
+        binding.spMonth.setAdapter(dataAdapter)
 
 
 //        binding.spDate.setBackgroundColor()
@@ -282,18 +283,18 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
         binding.rdmale.setOnCheckedChangeListener { compoundButton, ischeck ->
             if (ischeck) {
                 GANDER = "1"
-                binding.rdmale.setChecked(true)
-                binding.rdFamel.setChecked(false)
-                binding.rdOthers.setChecked(false)
+                binding.rdmale.isChecked = true
+                binding.rdFamel.isChecked = false
+                binding.rdOthers.isChecked = false
             }
         }
 
         binding.rdFamel.setOnCheckedChangeListener { compoundButton, ischeck ->
             if (ischeck) {
                 GANDER = "2"
-                binding.rdmale.setChecked(false)
-                binding.rdFamel.setChecked(true)
-                binding.rdOthers.setChecked(false)
+                binding.rdmale.isChecked = false
+                binding.rdFamel.isChecked = true
+                binding.rdOthers.isChecked = false
             }
         }
 
@@ -301,9 +302,9 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
         binding.rdOthers.setOnCheckedChangeListener { compoundButton, ischeck ->
             if (ischeck) {
                 GANDER = "3"
-                binding.rdmale.setChecked(false)
-                binding.rdFamel.setChecked(false)
-                binding.rdOthers.setChecked(true)
+                binding.rdmale.isChecked = false
+                binding.rdFamel.isChecked = false
+                binding.rdOthers.isChecked = true
             }
         }
 
@@ -319,7 +320,7 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
                 } else {
                     if (!isUsedEmail) {
                         createAccountApiCall()
-                    }else{
+                    } else {
                         makeToast("Email Already Used")
                     }
                 }
@@ -347,7 +348,7 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
             return false
         } else if (!isValidEmail(binding.etEmail.text.toString())) {
             makeToast(getString(R.string.please_enter_valid_email))
-            return false;
+            return false
         } else if (!binding.rdmale.isChecked && !binding.rdFamel.isChecked && !binding.rdOthers.isChecked) {
             makeToast(getString(R.string.select_gendar_error))
             return false
@@ -445,7 +446,13 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
         binding.toolbar.toolBarCenterText.visibility = View.VISIBLE
         binding.toolbar.backButtonLeftText.visibility = View.GONE
         binding.toolbar.menuChat.visibility = View.VISIBLE
-        binding.toolbar.menuChat.setImageDrawable(getResources().getDrawable(R.drawable.ic_signup_top_logo));
+        //binding.toolbar.menuChat.setImageDrawable(resources.getDrawable(R.drawable.ic_signup_top_logo))
+        binding.toolbar.menuChat.setImageDrawable(
+            ContextCompat.getDrawable(
+                requireActivity(),
+                R.drawable.ic_signup_top_logo
+            )
+        )
 
         binding.toolbar.back.setOnClickListener {
             findNavController().popBackStack()
@@ -475,11 +482,11 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
         Log.d(";lksdf;l", selectedMonth)
         selectedDay = calender.get(Calendar.DAY_OF_MONTH).toString()
         val selectedYearIndex =
-            getResources().getStringArray(R.array.year).indexOf(selectedYear.toString())
+            resources.getStringArray(R.array.year).indexOf(selectedYear)
         val selectedMonthIndex =
-            getResources().getStringArray(R.array.month).indexOf(selectedMonth.toString())
+            resources.getStringArray(R.array.month).indexOf(selectedMonth)
         val selectedDayIndex =
-            getResources().getStringArray(R.array.date).indexOf(selectedDay.toString())
+            resources.getStringArray(R.array.date).indexOf(selectedDay)
         binding.spYear.setSelection(selectedYearIndex)
         binding.spMonth.setSelection(selectedMonthIndex)
         binding.spDate.setSelection(selectedDayIndex)
@@ -537,7 +544,7 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
                 dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
                 // attaching data adapter to spinner
-                binding.spMonth.setAdapter(dataAdapter)
+                binding.spMonth.adapter = dataAdapter
 
             }
 
