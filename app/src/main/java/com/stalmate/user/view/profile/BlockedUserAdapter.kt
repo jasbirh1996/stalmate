@@ -34,7 +34,8 @@ class BlockedUserAdapter(val viewModel: AppViewModel, val context: Context,val c
 
 
             binding.tvUserName.text= response.first_name+" "+response.last_name
-            ImageLoaderHelperGlide.setGlideCorner(context,binding.ivUserImage,response.img,R.drawable.user_placeholder)
+            Glide.with(context).load(response.img).circleCrop().placeholder(R.drawable.user_placeholder).into(binding.ivUserImage)
+           // ImageLoaderHelperGlide.setGlideCorner(context,binding.ivUserImage,response.img,R.drawable.user_placeholder)
 
 
             binding.imageView7.setOnClickListener {

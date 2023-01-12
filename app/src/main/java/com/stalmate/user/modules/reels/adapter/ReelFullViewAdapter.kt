@@ -273,7 +273,7 @@ class ReelFullViewAdapter(
                             2 -> {//delete
                                 var dialog = CommonConfirmationDialog(
                                     context,
-                                    "Block User",
+                                    "Delete User",
                                     "Are you sure you want to Delete this post? ",
                                     "Delete",
                                     "Cancel",
@@ -402,8 +402,9 @@ class ReelFullViewAdapter(
 
     fun blockUserFromList(position: Int) {
 
-        reelList.removeAt(position)
-        notifyItemRemoved(position)
+     //   reelList.removeAt(position)
+     //   notifyItemRemoved(position)
+        notifyDataSetChanged()
     /*    var listsize=reelList.size
         var deletionCount=0
         for (i in 0 until listsize) {

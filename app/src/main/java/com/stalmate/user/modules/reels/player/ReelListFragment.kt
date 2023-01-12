@@ -229,7 +229,7 @@ class ReelListFragment : BaseFragment(), ReelAdapter.Callback {
                     list.forEach {
                         it.isDataUpdated=false
                     }
-                    adapter.addToList(list)
+                    adapter.setList(list)
                 } else {
 
                     var list = it.results
@@ -328,9 +328,21 @@ class ReelListFragment : BaseFragment(), ReelAdapter.Callback {
         if (resultCode==Activity.RESULT_OK && requestCode==120){
 
 
-            val updatedReelList: ArrayList<ResultFuntime> = data!!.getParcelableArrayListExtra("data")!!
-            Log.d("lakjdasd",Gson().toJson(updatedReelList))
-            adapter.updateList(updatedReelList!!)
+
+            val blocklList: ArrayList<ResultFuntime> = data!!.getParcelableArrayListExtra("blockList")!!
+
+            if (blocklList.size==0){
+                val updatedReelList: ArrayList<ResultFuntime> = data!!.getParcelableArrayListExtra("data")!!
+                Log.d("lakjdasd",Gson().toJson(updatedReelList))
+                adapter.updateList(updatedReelList!!)
+            }else{
+                Log.d("lakjdasd","Gson().toJson(updatedReelList)")
+                isFirstApiHit=true
+                page_count=1
+                callApi()
+            }
+
+
 
         }
     }

@@ -209,15 +209,14 @@ class DialogFragmentComments(
             .into(binding.ivMainUserImage)
 
 
-        binding.tvUserName.text = funtime.first_name
         binding.tvComment.text = funtime.text
 
 
 
-        val text = "<font color=#000000>${funtime.first_name+" "+funtime.last_name+" "}</font> <font color=#0f53b8>${funtime.text} </font>"
-        binding.tvUserName.text= Html.fromHtml(text)
+      /*  val text = "<font color=#000000>${funtime.first_name+" "+funtime.last_name+" "}</font> <font color=#0f53b8>${funtime.text} </font>"
+        binding.tvUserName.text= Html.fromHtml(text)*/
 
-
+        binding.tvUserName.text="${funtime.first_name+" "+funtime.last_name+" "}"
         binding.tvDate.text = funtime.Created_date
 
         binding.etComment.setHint(

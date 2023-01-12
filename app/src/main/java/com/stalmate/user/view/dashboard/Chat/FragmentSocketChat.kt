@@ -21,6 +21,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.nayaeducation.user.model.Message
+import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentSocketChatBinding
@@ -35,7 +36,7 @@ import java.io.FileNotFoundException
 
 
 class FragmentSocketChat(var receiver_id: String) : BaseFragment() {
-    var isSendButtonVisible=false
+    var isSendButtonVisible = false
     var sender_id = ""
     lateinit var binding: FragmentSocketChatBinding
     lateinit var mSocket: io.socket.client.Socket
@@ -55,51 +56,53 @@ class FragmentSocketChat(var receiver_id: String) : BaseFragment() {
         Log.d("akljsdasd", "alds;asd")
         sender_id = PrefManager.getInstance(requireContext())!!.userDetail.results[0].id
         chatAdapter = CustomChatAdapter(requireContext())
-        binding.recyclerview.layoutManager=LinearLayoutManager(requireContext())
-        binding.recyclerview.adapter=chatAdapter
+        binding.recyclerview.layoutManager = LinearLayoutManager(requireContext())
+        binding.recyclerview.adapter = chatAdapter
         getRoomId()
+        binding.ivVideoCall.setOnClickListener {
+            startActivity(IntentHelper.getCallScreen(requireContext()))
+        }
+        Glide.with(requireActivity()).load(R.drawable.user_placeholder).circleCrop()
+            .into(binding.ivUserImage)
 
-        Glide.with(requireActivity()).load(R.drawable.user_placeholder).circleCrop().into(binding.ivUserImage)
-
-        binding.msgEdittext.addTextChangedListener(object :TextWatcher{
+        binding.msgEdittext.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    if (s!=null){
-                        if (!ValidationHelper.isNull(s.toString())){
-                            var jsonObject=JSONObject()
-                            jsonObject.put("typing",true)
-                            jsonObject.put("Room_id",roomId)
-                            mSocket.emit("typing",true,jsonObject)
+                if (s != null) {
+                    if (!ValidationHelper.isNull(s.toString())) {
+                        var jsonObject = JSONObject()
+                        jsonObject.put("typing", true)
+                        jsonObject.put("Room_id", roomId)
+                        mSocket.emit("typing", true, jsonObject)
 
-                            if (!isSendButtonVisible){
-                                isSendButtonVisible=true
-                                val bm = BitmapFactory.decodeResource(
-                                    resources, R.drawable.send_icon
-                                )
-                                changeImageWithAnimation(
-                                    requireContext(),
-                                    binding.ivButtonVoiceRecorder,bm
-                                )
-                            }
-
-
-                        }else{
-                            isSendButtonVisible=false
+                        if (!isSendButtonVisible) {
+                            isSendButtonVisible = true
                             val bm = BitmapFactory.decodeResource(
-                                resources, R.drawable.microphone_button
+                                resources, R.drawable.send_icon
                             )
                             changeImageWithAnimation(
                                 requireContext(),
-                                binding.ivButtonVoiceRecorder,bm
+                                binding.ivButtonVoiceRecorder, bm
                             )
                         }
 
 
-
+                    } else {
+                        isSendButtonVisible = false
+                        val bm = BitmapFactory.decodeResource(
+                            resources, R.drawable.microphone_button
+                        )
+                        changeImageWithAnimation(
+                            requireContext(),
+                            binding.ivButtonVoiceRecorder, bm
+                        )
                     }
+
+
+                }
 
             }
 
@@ -113,22 +116,21 @@ class FragmentSocketChat(var receiver_id: String) : BaseFragment() {
 
     var handler: Handler = Handler(Looper.getMainLooper() /*UI thread*/)
     lateinit var workRunnable: Runnable
-    fun listenTyping(){
-      requireActivity().runOnUiThread {
-          binding.tvOtherUserStatus.text="Typing..."
-      }
-        if (this::workRunnable.isInitialized){
+    fun listenTyping() {
+        requireActivity().runOnUiThread {
+            binding.tvOtherUserStatus.text = "Typing..."
+        }
+        if (this::workRunnable.isInitialized) {
             handler.removeCallbacks(workRunnable)
         }
         workRunnable = Runnable {
-                binding.tvOtherUserStatus.text="Online"
+            binding.tvOtherUserStatus.text = "Online"
         }
         handler.postDelayed(workRunnable, 1000 /*delay*/)
     }
 
 
-
-    fun listeningSocket(roomId:String) {
+    fun listeningSocket(roomId: String) {
         SocketHandler.setSocket()
         SocketHandler.establishConnection()
         mSocket = SocketHandler.getSocket()
@@ -142,14 +144,27 @@ class FragmentSocketChat(var receiver_id: String) : BaseFragment() {
                 var sender_id = data.getString("sender_id");
                 var receiver_id = data.getString("receiver_id");
                 var Room_id = data.getString("Room_id");
-                Log.d("aljdasda","apskdasd")
-                var messageObjsect=Message(System.currentTimeMillis(),receiver_id, sender_id, "", message, "", nickname,"",0,"left","")
+                Log.d("aljdasda", "apskdasd")
+                var messageObjsect = Message(
+                    System.currentTimeMillis(),
+                    receiver_id,
+                    sender_id,
+                    "",
+                    message,
+                    "",
+                    nickname,
+                    "",
+                    0,
+                    "left",
+                    ""
+                )
                 chatAdapter.addMessage(messageObjsect)
                 //adding to database
                 AppDatabase.getAppDatabase(requireContext())!!.messageDao()!!
                     .insert(messageObjsect);
 
-                mSocket.emit("markSeen", roomId,""
+                mSocket.emit(
+                    "markSeen", roomId, ""
                 )
 
                 //  binding.tvReceivingMessage.text = nickname
@@ -157,20 +172,33 @@ class FragmentSocketChat(var receiver_id: String) : BaseFragment() {
         }
         //    senderNickname+" : " +messageContent+" : " +sender_id+" : " +receiver_i
         binding.buttonMain.setOnClickListener {//sending message
-       if (isSendButtonVisible){
-           mSocket.emit("messagedetection",
-               PrefManager.getInstance(requireContext())!!.userDetail.results[0].first_name,
-               binding.msgEdittext.text.toString(),
-               sender_id, receiver_id,roomId
-           )
-           var messageObject=Message(System.currentTimeMillis(),receiver_id, sender_id, "",   binding.msgEdittext.text.toString(), "", PrefManager.getInstance(requireContext())!!.userDetail.results[0].first_name,"",0,"right","sent")
-           chatAdapter.addMessage(messageObject)
-           //adding to database
-           AppDatabase.getAppDatabase(requireContext())!!.messageDao()!!
-               .insert(messageObject);
-           binding.msgEdittext.setText("")
-           binding.recyclerview.smoothScrollToPosition(chatAdapter.list.size-1)
-       }
+            if (isSendButtonVisible) {
+                mSocket.emit(
+                    "messagedetection",
+                    PrefManager.getInstance(requireContext())!!.userDetail.results[0].first_name,
+                    binding.msgEdittext.text.toString(),
+                    sender_id, receiver_id, roomId
+                )
+                var messageObject = Message(
+                    System.currentTimeMillis(),
+                    receiver_id,
+                    sender_id,
+                    "",
+                    binding.msgEdittext.text.toString(),
+                    "",
+                    PrefManager.getInstance(requireContext())!!.userDetail.results[0].first_name,
+                    "",
+                    0,
+                    "right",
+                    "sent"
+                )
+                chatAdapter.addMessage(messageObject)
+                //adding to database
+                AppDatabase.getAppDatabase(requireContext())!!.messageDao()!!
+                    .insert(messageObject);
+                binding.msgEdittext.setText("")
+                binding.recyclerview.smoothScrollToPosition(chatAdapter.list.size - 1)
+            }
         }
 
 
@@ -183,7 +211,7 @@ class FragmentSocketChat(var receiver_id: String) : BaseFragment() {
 
 
         mSocket.on("markSeen") { args ->//listening
-            Log.d("lkajsdasd","aksjdlasd")
+            Log.d("lkajsdasd", "aksjdlasd")
             if (args[0] != null) {
                 chatAdapter.updateMessageStatus("seen")
             }
@@ -192,14 +220,14 @@ class FragmentSocketChat(var receiver_id: String) : BaseFragment() {
         mSocket.on("user_offline") { args ->//listening
 
             if (args[0] != null) {
-               var isOffline= args[0] as Boolean
-                if (isOffline){
+                var isOffline = args[0] as Boolean
+                if (isOffline) {
                     requireActivity().runOnUiThread {
-                        binding.tvOtherUserStatus.text="Offline"
+                        binding.tvOtherUserStatus.text = "Offline"
                     }
-                }else{
+                } else {
                     requireActivity().runOnUiThread {
-                        binding.tvOtherUserStatus.text="Online"
+                        binding.tvOtherUserStatus.text = "Online"
                     }
                 }
 
@@ -207,16 +235,17 @@ class FragmentSocketChat(var receiver_id: String) : BaseFragment() {
         }
 
     }
-    var roomId=""
+
+    var roomId = ""
     private fun getRoomId() {
         var hashmap = HashMap<String, String>()
         hashmap.put("receiver_id", receiver_id)
         networkViewModel.createroomId(hashmap)
         networkViewModel.createRoomIdLiveData.observe(viewLifecycleOwner) {
-                if (it!!.status){
-                    listeningSocket(it.Room_id)
-                    roomId=it.Room_id
-                }
+            if (it!!.status) {
+                listeningSocket(it.Room_id)
+                roomId = it.Room_id
+            }
         }
     }
 
@@ -224,11 +253,12 @@ class FragmentSocketChat(var receiver_id: String) : BaseFragment() {
         super.onPause()
         mSocket.disconnect()
     }
+
     override fun onStart() {
-      if (this::mSocket.isInitialized){
-          Log.d("lakjdasd","paisdpoasd")
-          mSocket.emit("join", roomId);
-      }
+        if (this::mSocket.isInitialized) {
+            Log.d("lakjdasd", "paisdpoasd")
+            mSocket.emit("join", roomId);
+        }
         super.onStart()
     }
 
@@ -257,8 +287,8 @@ class FragmentSocketChat(var receiver_id: String) : BaseFragment() {
         return Base64.encodeToString(b, Base64.DEFAULT)
     }
 
-    fun getAllMessages(){
-     var data=  AppDatabase.getAppDatabase(requireContext())!!.messageDao()!!.all
+    fun getAllMessages() {
+        var data = AppDatabase.getAppDatabase(requireContext())!!.messageDao()!!.all
         chatAdapter.addAllMessage(data)
     }
 
@@ -267,19 +297,28 @@ class FragmentSocketChat(var receiver_id: String) : BaseFragment() {
         val anim_in: Animation = AnimationUtils.loadAnimation(c, android.R.anim.fade_in)
         anim_out.setAnimationListener(object : Animation.AnimationListener {
             override
-            fun onAnimationStart(animation: Animation?) {}
+            fun onAnimationStart(animation: Animation?) {
+            }
+
             override
-            fun onAnimationRepeat(animation: Animation?) {}
+            fun onAnimationRepeat(animation: Animation?) {
+            }
+
             override
             fun onAnimationEnd(animation: Animation?) {
                 v.setImageBitmap(new_image)
                 anim_in.setAnimationListener(object : Animation.AnimationListener {
                     override
-                    fun onAnimationStart(animation: Animation?) {}
+                    fun onAnimationStart(animation: Animation?) {
+                    }
+
                     override
-                    fun onAnimationRepeat(animation: Animation?) {}
+                    fun onAnimationRepeat(animation: Animation?) {
+                    }
+
                     override
-                    fun onAnimationEnd(animation: Animation?) {}
+                    fun onAnimationEnd(animation: Animation?) {
+                    }
                 })
                 v.startAnimation(anim_in)
             }
