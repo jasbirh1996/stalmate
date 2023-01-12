@@ -1,11 +1,10 @@
 package com.stalmate.user.view.dashboard.welcome
 
+import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.graphics.Color
-import android.graphics.drawable.ShapeDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -16,24 +15,15 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager.widget.ViewPager
-
 import com.stalmate.user.Helper.IntentHelper
-
-import com.google.gson.Gson
-
 import com.stalmate.user.R
-import com.stalmate.user.base.App
 import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.databinding.ActivityWelcomeBinding
 import com.stalmate.user.model.Category
 import com.stalmate.user.modules.contactSync.SyncService
-import com.stalmate.user.view.adapter.AdapterCategory
 import com.stalmate.user.utilities.Constants
-import com.stalmate.user.utilities.PrefManager
-import com.stalmate.user.view.dashboard.ActivityDashboard
+import com.stalmate.user.view.adapter.AdapterCategory
 
 
 class ActivityWelcome : BaseActivity(),
@@ -54,6 +44,7 @@ class ActivityWelcome : BaseActivity(),
 
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_welcome)

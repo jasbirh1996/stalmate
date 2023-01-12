@@ -665,6 +665,8 @@
     <string name="people_who_follow_you">People who follow you on Stalmate</string>
     <string name="funtime_posts">Funtime Posts</string>
     <string name="text_verify">Verify</string>
+    <string name="chats">Chats</string>
+    <string name="calls">Calls</string>
     <string-array name="marrage">
         <item><font fgcolor="#B7B7B7">Marital Status</font></item>
         <item><font fgcolor="#B7B7B7">Single</font></item>
@@ -743,7 +745,19 @@
         <item>December</item>
     </string-array>
     <string-array name="monthOfTwentyEight">
+<!--        <item>February</item>-->
+        <item>January</item>
         <item>February</item>
+        <item>March</item>
+        <item>April</item>
+        <item>May</item>
+        <item>June</item>
+        <item>July</item>
+        <item>August</item>
+        <item>September</item>
+        <item>October</item>
+        <item>November</item>
+        <item>December</item>
     </string-array>
 
 

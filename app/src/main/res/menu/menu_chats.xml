@@ -1,0 +1,19 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.user.vaibhavmodules.MainActivity">
+
+    <item  android:id="@+id/active_status"
+        android:title="Active Status"/>
+
+    <item android:id="@+id/new_Group"
+        android:title="New Group"/>
+
+    <item android:id="@+id/chat_settings"
+        android:title="Chat Settings"/>
+    <item android:id="@+id/notification"
+        android:title="Notification"/>
+    <item android:id="@+id/starred_Msg"
+        android:title="Starred message"/>
+
+</menu>

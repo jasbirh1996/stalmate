@@ -21,6 +21,7 @@ import com.stalmate.user.commonadapters.AdapterFeed
 import com.stalmate.user.databinding.FragmentDashboardBinding
 import com.stalmate.user.utilities.Constants
 import com.stalmate.user.view.dashboard.ActivityDashboardNew
+import com.stalmate.user.view.dashboard.Chat.FragmentChatCall
 import com.stalmate.user.view.dashboard.Chat.FragmentChatNCallBase
 import com.stalmate.user.view.dashboard.Chat.FragmentSocketChat
 import com.stalmate.user.view.dashboard.Friend.FragmentFriend
@@ -114,7 +115,7 @@ class FragmentDashboard: BaseFragment(), View.OnClickListener, FragmentHome.Call
 
     val fragmentHome: Fragment = FragmentHome(this)
     val fragmentFuntime: Fragment = FragmentFunTime()
-    val fragmentChat: Fragment = FragmentSocketChat("62eb8ff7578e3c1fcee4a7bd")
+    val fragmentChat: Fragment = FragmentChatCall()
     val fragmentReels: Fragment = FragmentReels()
     val fragmentFriends: Fragment = FragmentFriend(this)
     val fragmentProfile: FragmentProfile = FragmentProfile(this)

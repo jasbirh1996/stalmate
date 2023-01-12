@@ -22,6 +22,7 @@ import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.databinding.ActivityDashboardBinding
 import com.stalmate.user.modules.reels.player.Constants
 import com.stalmate.user.modules.reels.player.VideoPreLoadingService
+import com.stalmate.user.view.dashboard.Chat.FragmentChatCall
 import com.stalmate.user.view.dashboard.Chat.FragmentChatNCallBase
 import com.stalmate.user.view.dashboard.Friend.FragmentFriend
 import com.stalmate.user.view.dashboard.HomeFragment.FragmentHome
@@ -226,7 +227,8 @@ class ActivityDashboard : BaseActivity(), FragmentHome.Callback, FragmentFriend.
 
     val fragment1: Fragment = FragmentHome(this)
     val fragment2: Fragment = FragmentFunTime()
-    val fragment3: Fragment = FragmentChatNCallBase()
+//    val fragment3: Fragment = FragmentChatNCallBase()
+    val fragment3: Fragment = FragmentChatCall()
     val fragment4: Fragment = FragmentReels()
   //  val fragment5: Fragment = FragmentFriend(this)
     val fragment5: Fragment = FragmentProfile(this)

@@ -43,31 +43,34 @@ import okhttp3.RequestBody
 import java.io.File
 import java.util.*
 
-class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, ProfessionListAdapter.Callbackk,
-    AdapterFeed.Callbackk , DialogVerifyNumber.Callbackk{
+class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk,
+    ProfessionListAdapter.Callbackk,
+    AdapterFeed.Callbackk, DialogVerifyNumber.Callbackk {
 
     private lateinit var binding: ActivityProfileEditBinding
     var WRITE_REQUEST_CODE = 100
     private var GANDER: String = ""
     var merriage: String = ""
-    var permissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
+    var permissions =
+        arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
     lateinit var userData: ModelUser
     var imageFile: File? = null
     var isCoverImage = false
     private lateinit var mAccount: Account
-    var isNumberVerify : Boolean = false
+    var isNumberVerify: Boolean = false
     private lateinit var educationAdapter: EducationListAdapter
     private lateinit var professionListAdapter: ProfessionListAdapter
     private lateinit var profilePictureAdapter: ProfileAlbumAdapter
     private lateinit var coverPictureAdapter: ProfileAlbumAdapter
     private lateinit var blockedUserAdapter: BlockedUserAdapter
-    private  var selectedMarriageStatus=""
+    private var selectedMarriageStatus = ""
     lateinit var feedAdapter: AdapterFeed
     var verifyPhoneNumber = ""
 
     override fun onClick(viewId: Int, view: View?) {
     }
-    var currentYear=""
+
+    var currentYear = ""
 
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -80,47 +83,46 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, Prof
         currentYear = (cal.get(Calendar.YEAR) - 13).toString()
 
         binding.buttonSyncContacts.setOnClickListener {
+//            Toast.makeText(this, "sync", Toast.LENGTH_SHORT).show()
             retreiveGoogleContacts()
         }
 
         feedAdapter = AdapterFeed(networkViewModel, this, this)
-        binding.rvFeeds.setNestedScrollingEnabled(false);
+        binding.rvFeeds.isNestedScrollingEnabled = false;
         binding.rvFeeds.adapter = feedAdapter
         val radius = resources.getDimension(R.dimen.dp_10)
-        binding.ivBackground.setShapeAppearanceModel(
-            binding.ivBackground.getShapeAppearanceModel()
-                .toBuilder()
-                .setBottomLeftCorner(CornerFamily.ROUNDED, radius)
-                .setBottomRightCorner(CornerFamily.ROUNDED, radius)
-                .build()
-        );
+        binding.ivBackground.shapeAppearanceModel = binding.ivBackground.shapeAppearanceModel
+            .toBuilder()
+            .setBottomLeftCorner(CornerFamily.ROUNDED, radius)
+            .setBottomRightCorner(CornerFamily.ROUNDED, radius)
+            .build();
 
 
         requestPermissions(permissions, WRITE_REQUEST_CODE)
         binding.layout.rdmale.setOnCheckedChangeListener { compoundButton, ischeck ->
             if (ischeck) {
                 GANDER = "Male"
-                binding.layout.rdmale.setChecked(true)
-                binding.layout.rdFamel.setChecked(false)
-                binding.layout.rdOthers.setChecked(false)
+                binding.layout.rdmale.isChecked = true
+                binding.layout.rdFamel.isChecked = false
+                binding.layout.rdOthers.isChecked = false
             }
         }
 
         binding.layout.rdFamel.setOnCheckedChangeListener { compoundButton, ischeck ->
             if (ischeck) {
                 GANDER = "Female"
-                binding.layout.rdmale.setChecked(false)
-                binding.layout.rdFamel.setChecked(true)
-                binding.layout.rdOthers.setChecked(false)
+                binding.layout.rdmale.isChecked = false
+                binding.layout.rdFamel.isChecked = true
+                binding.layout.rdOthers.isChecked = false
             }
         }
 
         binding.layout.rdOthers.setOnCheckedChangeListener { compoundButton, ischeck ->
             if (ischeck) {
                 GANDER = "Other"
-                binding.layout.rdmale.setChecked(false)
-                binding.layout.rdFamel.setChecked(false)
-                binding.layout.rdOthers.setChecked(true)
+                binding.layout.rdmale.isChecked = false
+                binding.layout.rdFamel.isChecked = false
+                binding.layout.rdOthers.isChecked = true
             }
         }
         clickLister()
@@ -151,18 +153,13 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, Prof
 
             if (ValidationHelper.isNull(selectedMarriageStatus)) {
                 makeToast("Please select marriage Status")
-            }else  if (currentYear < selectedYear) {
+            } else if (currentYear < selectedYear) {
                 makeToast("Your age should be 13 years or more")
-            }
+            } else if (verifyPhoneNumber.isNotEmpty()) {
 
-
-
-
-            else  if (verifyPhoneNumber.isNotEmpty()) {
-
-                if (verifyPhoneNumber == binding.layout.etNumber.text.toString()){
+                if (verifyPhoneNumber == binding.layout.etNumber.text.toString()) {
                     updateProfileApiHit()
-                }else{
+                } else {
                     makeToast("Please verify the mobile number")
                 }
 
@@ -211,35 +208,35 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, Prof
 
         binding.layout.btnverify.setOnClickListener {
 
-           if (binding.layout.etNumber.text.toString().isNotEmpty()) {
+            if (binding.layout.etNumber.text.toString().isNotEmpty()) {
 
-               if (binding.layout.etNumber.text!!.length >= 8){
+                if (binding.layout.etNumber.text!!.length >= 8) {
 
-               val hashMap = HashMap<String, String>()
-               hashMap["number"] = binding.layout.etNumber.text.toString()
-               networkViewModel.numberVerify(hashMap)
-               networkViewModel.numberVerifyData.observe(this) {
+                    val hashMap = HashMap<String, String>()
+                    hashMap["number"] = binding.layout.etNumber.text.toString()
+                    networkViewModel.numberVerify(hashMap)
+                    networkViewModel.numberVerifyData.observe(this) {
 
-                   it.let {
-                       if (it!!.status == true) {
-                           var dialoguenumberVerify = DialogVerifyNumber(
-                               this,
-                               networkViewModel,
-                               binding.layout.etNumber.text.toString(),
-                               this
-                           )
-                           dialoguenumberVerify.show()
-                       } else {
-                           makeToast(it.message)
-                       }
-                   }
-               }
-           }else{
-                   makeToast(getString(R.string.please_enter_mobile_number_more_then))
-               }
-           }else{
-               makeToast(getString(R.string.please_enter_mobile_number))
-           }
+                        it.let {
+                            if (it!!.status == true) {
+                                var dialoguenumberVerify = DialogVerifyNumber(
+                                    this,
+                                    networkViewModel,
+                                    binding.layout.etNumber.text.toString(),
+                                    this
+                                )
+                                dialoguenumberVerify.show()
+                            } else {
+                                makeToast(it.message)
+                            }
+                        }
+                    }
+                } else {
+                    makeToast(getString(R.string.please_enter_mobile_number_more_then))
+                }
+            } else {
+                makeToast(getString(R.string.please_enter_mobile_number))
+            }
 
         }
 
@@ -249,7 +246,8 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, Prof
 
         binding.buttonSeemoreProfile.setOnClickListener {
             startActivity(
-                IntentHelper.getPhotoGalleryAlbumScreen(this)!!.putExtra("viewType", "viewPhotoListing")
+                IntentHelper.getPhotoGalleryAlbumScreen(this)!!
+                    .putExtra("viewType", "viewPhotoListing")
                     .putExtra("albumId", "profile_img")
             )
 
@@ -258,7 +256,8 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, Prof
 
         binding.buttonSeeMoreCover.setOnClickListener {
             startActivity(
-                IntentHelper.getPhotoGalleryAlbumScreen(this)!!.putExtra("viewType", "viewPhotoListing")
+                IntentHelper.getPhotoGalleryAlbumScreen(this)!!
+                    .putExtra("viewType", "viewPhotoListing")
                     .putExtra("albumId", "cover_img")
             )
 
@@ -274,14 +273,15 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, Prof
 
     private fun updateProfileApiHit() {
 
-        fun getRequestBody(str: String?): RequestBody = RequestBody.create("text/plain".toMediaTypeOrNull(), str.toString())
+        fun getRequestBody(str: String?): RequestBody =
+            RequestBody.create("text/plain".toMediaTypeOrNull(), str.toString())
 
         networkViewModel.etsProfileApi(
             getRequestBody(binding.layout.etName.text.toString()),
             getRequestBody(binding.layout.etLastName.text.toString()),
             getRequestBody(binding.layout.bio.text.toString()),
             /*getRequestBody(binding.layout.etNumber.text.toString()),*/
-            getRequestBody(selectedYear +"-" + selectedMonth + "-" + selectedDay),
+            getRequestBody(selectedYear + "-" + selectedMonth + "-" + selectedDay),
             getRequestBody(merriage),
             getRequestBody(binding.layout.etHowTown.text.toString()),
             getRequestBody(binding.layout.etCurrentCity.text.toString()),
@@ -306,7 +306,8 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, Prof
 
     private fun updateProfileImageApiHit() {
 
-        val thumbnailBody: RequestBody = RequestBody.create("image/*".toMediaTypeOrNull(), imageFile!!)
+        val thumbnailBody: RequestBody =
+            RequestBody.create("image/*".toMediaTypeOrNull(), imageFile!!)
 
         val profile_image1: MultipartBody.Part = MultipartBody.Part.Companion.createFormData(
             "cover_img".takeIf { isCoverImage } ?: "profile_img",
@@ -472,7 +473,6 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, Prof
         setUpAboutUI("Photos")
 
 
-
     }
 
 
@@ -518,7 +518,7 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, Prof
     private fun getAlbumPhotosById(id: String) {
         val hashMap = HashMap<String, String>()
         hashMap["album_id"] = id
-        hashMap["limit"]="5"
+        hashMap["limit"] = "5"
         networkViewModel.getAlbumPhotos(hashMap)
         networkViewModel.photoLiveData.observe(this) {
             it.let {
@@ -552,48 +552,49 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, Prof
         }
     }
 
-    var selectedDay="1"
-    var selectedMonth="January"
-    var selectedYear="1996"
+    var selectedDay = "1"
+    var selectedMonth = "January"
+    var selectedYear = "1996"
     lateinit var dataAdapter: ArrayAdapter<String>
 
-    fun fetchDOB(date:String){
-        val calender=Calendar.getInstance()
-        val datee=PriceFormatter.getDateObject(date)
-        calender.time=datee
-        selectedYear= calender.get(Calendar.YEAR).toString()
+    fun fetchDOB(date: String) {
+        val calender = Calendar.getInstance()
+        val datee = PriceFormatter.getDateObject(date)
+        calender.time = datee
+        selectedYear = calender.get(Calendar.YEAR).toString()
         selectedMonth = PriceFormatter.getMonth(date)
         selectedDay = calender.get(Calendar.DATE).toString()
 
-        Log.d("jkabjkcbajb",selectedYear)
-        Log.d("jkabjkcbajb",selectedMonth)
-        Log.d("jkabjkcbajb",selectedDay)
+        Log.d("jkabjkcbajb", selectedYear)
+        Log.d("jkabjkcbajb", selectedMonth)
+        Log.d("jkabjkcbajb", selectedDay)
 
 
         val selectedYearIndex = getResources().getStringArray(R.array.year).indexOf(selectedYear)
         val selectedMonthIndex = getResources().getStringArray(R.array.month).indexOf(selectedMonth)
-        Log.d("asdajhksd",selectedMonthIndex.toString())
+        Log.d("asdajhksd", selectedMonthIndex.toString())
         val selectedDayIndex = getResources().getStringArray(R.array.date).indexOf(selectedDay)
 
         binding.layout.spYear.setSelection(selectedYearIndex)
         binding.layout.spMonth.setSelection(selectedMonthIndex)
         binding.layout.spDate.setSelection(selectedDayIndex)
 
-        if (userData.results.gender  == "Male") {
-            binding.layout.rdmale.isChecked=true
-        } else if (userData.results.gender  == "Female") {
-            binding.layout.rdFamel.isChecked=true
-        } else if (userData.results.gender  == "Other") {
-            binding.layout.rdOthers.isChecked=true
+        if (userData.results.gender == "Male") {
+            binding.layout.rdmale.isChecked = true
+        } else if (userData.results.gender == "Female") {
+            binding.layout.rdFamel.isChecked = true
+        } else if (userData.results.gender == "Other") {
+            binding.layout.rdOthers.isChecked = true
         }
 
-        val selecteMarriegeStatus = resources.getStringArray(R.array.marrage).indexOf(userData.results.profile_data[0].marital_status)
+        val selecteMarriegeStatus = resources.getStringArray(R.array.marrage)
+            .indexOf(userData.results.profile_data[0].marital_status)
         binding.layout.tvmarriage.setSelection(selecteMarriegeStatus)
 
     }
 
 
-    fun setupSpinnerListener(){
+    fun setupSpinnerListener() {
 
         binding.layout.spDate.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
@@ -603,14 +604,14 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, Prof
                 p3: Long
             ) {
                 selectedDay = p0!!.getItemAtPosition(position).toString()
-                dataAdapter= ArrayAdapter(
+                dataAdapter = ArrayAdapter(
                     this@ActivityProfileEdit,
                     android.R.layout.simple_spinner_item,
                     resources.getStringArray(R.array.month)
                 )
 
-                if (selectedDay.toInt() ==31){
-                   dataAdapter= ArrayAdapter(
+                if (selectedDay.toInt() == 31) {
+                    dataAdapter = ArrayAdapter(
                         this@ActivityProfileEdit,
                         android.R.layout.simple_spinner_item,
                         resources.getStringArray(R.array.monthOfthreeOne)
@@ -618,16 +619,16 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, Prof
                 }
 
 
-                if (selectedDay.toInt() ==30){
-                    dataAdapter= ArrayAdapter(
+                if (selectedDay.toInt() == 30) {
+                    dataAdapter = ArrayAdapter(
                         this@ActivityProfileEdit,
                         android.R.layout.simple_spinner_item,
                         resources.getStringArray(R.array.month)
                     )
                 }
 
-                if (selectedDay.toInt() ==28){
-                    dataAdapter= ArrayAdapter(
+                if (selectedDay.toInt() == 28) {
+                    dataAdapter = ArrayAdapter(
                         this@ActivityProfileEdit,
                         android.R.layout.simple_spinner_item,
                         resources.getStringArray(R.array.monthOfTwentyEight)
@@ -702,15 +703,14 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, Prof
 
 
     private fun retreiveGoogleContacts() {
+        mAccount = createSyncAccount(this)
 
-        mAccount= createSyncAccount(this)
-
-        var bundle=Bundle()
-        bundle.putBoolean("force",true)
-        bundle.putBoolean("expedited",true)
+        var bundle = Bundle()
+        bundle.putBoolean("force", true)
+        bundle.putBoolean("expedited", true)
 
 
-        Log.d("asldkjalsda","sync")
+        Log.d("asldkjalsda", "sync")
         ContentResolver.requestSync(mAccount, "com.stalmate.user", bundle)
     }
 
@@ -732,12 +732,12 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, Prof
           * then call context.setIsSyncable(account, AUTHORITY, 1)
           * here.
           */
-            Log.d("asdasd","pppooo")
+            Log.d("asdasd", "pppooo")
             ContentResolver.setIsSyncable(newAccount, "com.android.contacts", 1)
             ContentResolver.setSyncAutomatically(newAccount, "com.android.contacts", true)
             newAccount
         } else {
-            Log.d("asdasd","ppp")
+            Log.d("asdasd", "ppp")
             /*
           * The account exists or some other error occurred. Log this, report it,
           * or handle it internally.
@@ -750,21 +750,27 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, Prof
     fun callForAlbum() {
 
 
-
         binding.albumLayout.tvAlbumPhotoSeeMore.setOnClickListener {
-            if (binding.albumLayout.photoTab.selectedTabPosition ==0){
-                startActivity(IntentHelper.getPhotoGalleryAlbumScreen(this)!!.putExtra("viewType", "viewNormal").putExtra("type", "photos"))
-            }else{
-                startActivity(IntentHelper.getPhotoGalleryAlbumScreen(this)!!.putExtra("viewType", "viewNormal").putExtra("type", "albums"))
+            if (binding.albumLayout.photoTab.selectedTabPosition == 0) {
+                startActivity(
+                    IntentHelper.getPhotoGalleryAlbumScreen(this)!!
+                        .putExtra("viewType", "viewNormal").putExtra("type", "photos")
+                )
+            } else {
+                startActivity(
+                    IntentHelper.getPhotoGalleryAlbumScreen(this)!!
+                        .putExtra("viewType", "viewNormal").putExtra("type", "albums")
+                )
             }
         }
 
-        binding.albumLayout.photoTab.addOnTabSelectedListener(object :TabLayout.OnTabSelectedListener {
+        binding.albumLayout.photoTab.addOnTabSelectedListener(object :
+            TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 val position = tab!!.position
-                if (position == 0){
+                if (position == 0) {
                     setUpAboutUI("Photos")
-                }else if(position == 1){
+                } else if (position == 1) {
                     setUpAboutUI("Albums")
                 }
             }
@@ -785,15 +791,15 @@ class ActivityProfileEdit : BaseActivity(), EducationListAdapter.Callbackk, Prof
     private lateinit var albumImageAdapter: ProfileAlbumImageAdapter
     private lateinit var albumAdapter: SelfProfileAlbumAdapter
 
-    fun setUpAboutUI(tabType : String) {
+    fun setUpAboutUI(tabType: String) {
 
-        if (tabType== "Photos") {
-            albumImageAdapter = ProfileAlbumImageAdapter(networkViewModel,this, "")
+        if (tabType == "Photos") {
+            albumImageAdapter = ProfileAlbumImageAdapter(networkViewModel, this, "")
             binding.albumLayout.rvPhotoAlbumData.adapter = albumImageAdapter
             albumImageAdapter.submitList(userData.results.photos)
-        }else if (tabType== "Albums"){
+        } else if (tabType == "Albums") {
             albumAdapter = SelfProfileAlbumAdapter(networkViewModel, this, "")
-            binding.albumLayout.rvPhotoAlbumData.adapter =albumAdapter
+            binding.albumLayout.rvPhotoAlbumData.adapter = albumAdapter
             albumAdapter.submitList(userData.results.albums)
 
         }
