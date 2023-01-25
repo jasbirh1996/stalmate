@@ -10,8 +10,9 @@
         android:background="@color/white"
         tools:context=".view.profile.ActivityProfileEdit">
 
-        <FrameLayout
-            android:id="@+id/nav_edit_fragment"
+        <fragment
+            android:id="@+id/nav_host_fragment"
+            android:name="androidx.navigation.fragment.NavHostFragment"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:defaultNavHost="true"

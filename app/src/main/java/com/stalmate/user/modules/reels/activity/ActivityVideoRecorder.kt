@@ -1026,7 +1026,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                             val duration: Long =
                                 VideoUtil.getDuration(this, Uri.fromFile(File(path)))
                             //video duration validation
-                            if (duration >= 15*1000) {
+                            if (duration >= 15 * 1000) {
                                 Log.d("Greater", "Greater")
                                 isImage = false
                                 isVideoTaken = true
@@ -1100,9 +1100,9 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                         this,
                         Uri.fromFile(File(getRealPathFromURIVideo(this, data!!.data!!)))
                     )
-                    Log.d("dur",duration.toString())
-                    if (duration>=15*1000){
-                        Log.d("dura","success")
+                    Log.d("dur", duration.toString())
+                    if (duration >= 15 * 1000) {
+                        Log.d("dura", "success")
                         isImage = false
                         isVideoTaken = true
                         // setUPCameraViewsOnCapture(false)
@@ -1123,9 +1123,9 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                         } catch (e: IOException) {
                             e.printStackTrace()
                         }
-                    }else{
+                    } else {
                         makeToast("Video should be grater than or equal to 15 seconds")
-                        Log.d("dura","Fail")
+                        Log.d("dura", "Fail")
                     }
 
 

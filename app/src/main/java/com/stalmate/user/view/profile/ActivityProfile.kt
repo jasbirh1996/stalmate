@@ -25,7 +25,6 @@ import com.stalmate.user.commonadapters.AdapterFeed
 import com.stalmate.user.databinding.ActivityProfileBinding
 import com.stalmate.user.model.AboutProfileLine
 import com.stalmate.user.model.User
-import com.stalmate.user.modules.contactSync.SyncService
 import com.stalmate.user.utilities.Constants
 import com.stalmate.user.utilities.ImageLoaderHelperGlide
 import com.stalmate.user.utilities.PrefManager
@@ -40,15 +39,10 @@ import java.io.File
 
 class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdapter.Callbackk,
     ProfileAboutAdapter.Callbackk {
-    lateinit var syncBroadcastreceiver: SyncBroadcasReceiver
+
     lateinit var binding: ActivityProfileBinding
     lateinit var friendAdapter: ProfileFriendAdapter
-    var permissions = arrayOf(
-        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-        Manifest.permission.CAMERA,
-        Manifest.permission.READ_CONTACTS
-    )
-    var WRITE_REQUEST_CODE = 100
+
     val PICK_IMAGE_PROFILE = 1
     val PICK_IMAGE_COVER = 1
     var imageFile: File? = null
@@ -67,20 +61,6 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_profile)
 
-        val filter = IntentFilter()
-        filter.addAction(Constants.ACTION_SYNC_COMPLETED)
-        syncBroadcastreceiver = SyncBroadcasReceiver()
-        registerReceiver(syncBroadcastreceiver, filter)
-
-        var permissionArray = arrayOf(Manifest.permission.READ_CONTACTS)
-        if (isPermissionGranted(permissionArray)) {
-            Log.d("alskjdasd", ";aosjldsad")
-            startService(
-                Intent(this, SyncService::class.java)
-            )
-        }
-
-        requestPermissions(permissions, WRITE_REQUEST_CODE)
 
         binding.layout.buttonEditProfile.visibility = View.VISIBLE
 
@@ -156,21 +136,6 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
         setupData()
     }
 
-    inner class SyncBroadcasReceiver : BroadcastReceiver() {
-        override fun onReceive(p0: Context?, p1: Intent?) {
-            if (p1!!.action == Constants.ACTION_SYNC_COMPLETED) {
-                Log.d("==========wew", "wwwwwwwwwwww=====121=====wwwwwwwwwwwwww")
-                makeToast("Synced")
-                if (p1.extras!!.getString("contacts") != null) {
-                    Log.d("==========wew", "wwwwwwwwwwwwwwwwwwwwwww11www")
-                    startActivity(
-                        IntentHelper.getSearchScreen(applicationContext)!!
-                            .putExtra("contacts", p1.extras!!.getString("contacts").toString())
-                    )
-                }
-            }
-        }
-    }
 
     override fun onResume() {
         super.onResume()
@@ -205,17 +170,6 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
         return false
     }
 
-
-    private fun retreiveGoogleContacts() {
-
-        mAccount = createSyncAccount(applicationContext)
-        var bundle = Bundle()
-        bundle.putBoolean("force", true)
-        bundle.putBoolean("expedited", true)
-        Log.d("asldkjalsda", "sync")
-        ContentResolver.requestSync(mAccount, "com.stalmate.user", bundle)
-
-    }
 
     fun setupData() {
         binding.layout.layoutFollowers.setOnClickListener {
@@ -438,39 +392,8 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
     }
 
 
-    fun createSyncAccount(context: Context): Account {
-
-        // Create the account type and default account
-        val newAccount = Account(Constants.ACCOUNT_NAME, Constants.ACCOUNT_TYPE)
-        // Get an instance of the Android account manager
-        val accountManager = context.getSystemService(ACCOUNT_SERVICE) as AccountManager
-        /*
-        * Add the account and account type, no password or user data
-        * If successful, return the Account object, otherwise report an error.
-        */
-        return if (accountManager.addAccountExplicitly(newAccount, null, null)) {
-            /*
-            * If you don't set android:syncable="true" in
-            * in your <provider> element in the manifest,
-            * then call context.setIsSyncable(account, AUTHORITY, 1)
-            * here.
-            */
-            Log.d("asdasd", "pppooo")
-            ContentResolver.setIsSyncable(newAccount, "com.android.contacts", 1)
-            ContentResolver.setSyncAutomatically(newAccount, "com.android.contacts", true)
-            newAccount
-        } else {
-            Log.d("asdasd", "ppp")
-            /*
-             * The account exists or some other error occurred. Log this, report it,
-             * or handle it internally.
-            */
-            Account(Constants.ACCOUNT_NAME, Constants.ACCOUNT_TYPE)
-        }
-    }
-
     override fun onDestroy() {
-        unregisterReceiver(syncBroadcastreceiver)
+
         super.onDestroy()
     }
 }

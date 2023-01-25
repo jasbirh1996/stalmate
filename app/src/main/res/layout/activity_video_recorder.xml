@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-    <androidx.constraintlayout.widget.ConstraintLayout
+<layout>
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/black"
@@ -13,22 +13,25 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="fitCenter"
-            android:visibility="visible" >
-
-            <com.otaliastudios.cameraview.CameraView
-                android:id="@+id/cameraView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="visible"
-                app:cameraAudio="on"
-                app:cameraAudioCodec="aac"
-                app:cameraEngine="camera2"
-                app:cameraFacing="front"
-                app:cameraPreview="glSurface"
-                app:cameraPreviewFrameRate="30" />
-        </jp.co.cyberagent.android.gpuimage.GPUImageView>
+            android:visibility="visible" />
 
 
+
+        <com.otaliastudios.cameraview.CameraView
+            android:id="@+id/cameraView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible"
+            app:cameraAudio="on"
+            app:cameraAudioCodec="aac"
+            app:cameraEngine="camera2"
+            app:cameraFacing="front"
+            app:cameraPreview="glSurface"
+            app:cameraPreviewFrameRate="30"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
         <FrameLayout
             android:id="@+id/layout_movie_wrapper"
             android:layout_width="match_parent"

@@ -1,32 +1,35 @@
 package com.stalmate.user.view.dashboard.welcome
 
+import android.Manifest
 import android.accounts.Account
 import android.accounts.AccountManager
-import android.content.BroadcastReceiver
-import android.content.ContentResolver
-import android.content.Context
+import android.content.*
 import android.content.Context.ACCOUNT_SERVICE
-import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
-import android.provider.ContactsContract
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentSyncBinding
+import com.stalmate.user.modules.contactSync.SyncService
 import com.stalmate.user.utilities.Constants
-import com.stalmate.user.view.profile.ActivityProfileEdit
-import com.stalmate.user.view.profile.FragmentProfileEdit
 
 
-class FragmentSync(var callback: Callback) : BaseFragment() {
-
+class FragmentSync : BaseFragment() {
+    var permissions = arrayOf(
+        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        Manifest.permission.CAMERA,
+        Manifest.permission.READ_CONTACTS
+    )
+    var WRITE_REQUEST_CODE = 100
+    lateinit var syncBroadcastreceiver: SyncBroadcasReceiver
     private lateinit var mAccount: Account
     lateinit var binding: FragmentSyncBinding
 
@@ -48,6 +51,19 @@ class FragmentSync(var callback: Callback) : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        var permissionArray = arrayOf(Manifest.permission.READ_CONTACTS)
+        if (isPermissionGranted(permissionArray, requireContext())) {
+            Log.d("alskjdasd", ";aosjldsad")
+            requireActivity().startService(
+                Intent(requireActivity(), SyncService::class.java)
+            )
+        }
+        val filter = IntentFilter()
+        filter.addAction(Constants.ACTION_SYNC_COMPLETED)
+        requireActivity().requestPermissions(permissions, WRITE_REQUEST_CODE)
+
+        syncBroadcastreceiver = SyncBroadcasReceiver()
+        requireActivity().registerReceiver(syncBroadcastreceiver, filter)
         binding.toggleSyncGoogle.isChecked = isAccountAdded()
 
         binding.toggleSyncGoogle.setOnCheckedChangeListener { compoundButton, active ->
@@ -60,9 +76,11 @@ class FragmentSync(var callback: Callback) : BaseFragment() {
 
         binding.btnNext.setOnClickListener {
             //callback.onClickOnNextButtonOnSyncPage()
-            startActivity(
-                IntentHelper.getSearchScreen(requireContext())
-            )
+
+            /*    startActivity(
+                    IntentHelper.getSearchScreen(requireContext())
+                )*/
+            findNavController().popBackStack()
         }
     }
 
@@ -75,6 +93,7 @@ class FragmentSync(var callback: Callback) : BaseFragment() {
 
         if (isAccountAdded()) {
             var acc = Account(Constants.ACCOUNT_NAME, Constants.ACCOUNT_TYPE)
+            ContentResolver.cancelSync(acc, "com.android.contacts");
             accountManager.removeAccountExplicitly(acc)
         }
     }
@@ -95,16 +114,37 @@ class FragmentSync(var callback: Callback) : BaseFragment() {
     private fun retreiveGoogleContacts() {
 
         mAccount = createSyncAccount(requireActivity())
-        var bundle = Bundle()
-        bundle.putBoolean("force", true)
-        bundle.putBoolean("expedited", true)
 
         Log.d("asldkjalsda", "sync")
-        ContentResolver.requestSync(mAccount, "com.stalmate.user", bundle)
+        ContentResolver.cancelSync(mAccount, "com.android.contacts");
+        ContentResolver.cancelSync(mAccount, "com.android.contacts");
+
+        Handler(Looper.getMainLooper()).postDelayed(Runnable {
+
+
+            // Set sync for this account.
+            // Set sync for this account.
+            val extras = Bundle()
+/*        extras.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true)
+        extras.putBoolean(ContentResolver.SYNC_EXTRAS_DO_NOT_RETRY, true)*/
+            extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true)
+            ContentResolver.setIsSyncable(
+                mAccount,
+                "com.android.contacts",
+                1
+            ) // Mandatory since 3.1
+            // ContentResolver.setSyncAutomatically(mAccount, "com.android.contacts", false)
+            ContentResolver.requestSync(mAccount, "com.android.contacts", extras)
+
+            // ContentResolver.addPeriodicSync(mAccount, "com.stalmate.user", extras, POLL_FREQUENCY)
+
+
+        }, 500)
+        showLoader()
     }
 
     fun createSyncAccount(context: Context): Account {
-        showLoader()
+
         // Create the account type and default account
         val newAccount = Account(Constants.ACCOUNT_NAME, Constants.ACCOUNT_TYPE)
         // Get an instance of the Android account manager
@@ -120,10 +160,9 @@ class FragmentSync(var callback: Callback) : BaseFragment() {
            * then call context.setIsSyncable(account, AUTHORITY, 1)
            * here.
            */
-            Log.d("asdasd", "pppooo")
+
             ContentResolver.setIsSyncable(newAccount, "com.android.contacts", 1)
             ContentResolver.setSyncAutomatically(newAccount, "com.android.contacts", true)
-
             newAccount
         } else {
             Log.d("asdasd", "ppp")
@@ -138,4 +177,40 @@ class FragmentSync(var callback: Callback) : BaseFragment() {
     public interface Callback {
         fun onClickOnNextButtonOnSyncPage()
     }
+
+    inner class SyncBroadcasReceiver : BroadcastReceiver() {
+        override fun onReceive(p0: Context?, p1: Intent?) {
+
+            if (p1!!.action == Constants.ACTION_SYNC_COMPLETED) {
+                dismissLoader()
+                Log.d("==========wew", "wwwwwwwwwwww=====121=====wwwwwwwwwwwwww")
+                makeToast("Synced")
+                if (p1.extras!!.getString("contacts") != null) {
+                    Log.d("==========wew", "wwwwwwwwwwwwwwwwwwwwwww11www")
+                    startActivity(
+                        IntentHelper.getSearchScreen(requireContext())!!
+                            .putExtra("contacts", p1.extras!!.getString("contacts").toString())
+                    )
+                }
+            }
+        }
+    }
+
+    override fun onDestroy() {
+      //  requireActivity().unregisterReceiver(syncBroadcastreceiver)
+        super.onDestroy()
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+
+    }
+
+
 }

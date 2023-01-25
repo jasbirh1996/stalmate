@@ -23,6 +23,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
@@ -54,7 +55,7 @@ import okhttp3.RequestBody
 import java.io.File
 import java.util.*
 
-class FragmentProfileEdit(var callback: CAllback) : BaseFragment(), EducationListAdapter.Callbackk,
+class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
     ProfessionListAdapter.Callbackk, AdapterFeed.Callbackk, DialogVerifyNumber.Callbackk {
     private lateinit var _binding: FragmentProfileEditBinding
     private val binding get() = _binding
@@ -91,7 +92,10 @@ class FragmentProfileEdit(var callback: CAllback) : BaseFragment(), EducationLis
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentProfileEditBinding.inflate(inflater, container, false)
+      if (!this::_binding.isInitialized){
+          _binding = FragmentProfileEditBinding.inflate(inflater, container, false)
+        }
+
         val cal = Calendar.getInstance()
         currentYear = (cal.get(Calendar.YEAR) - 13).toString()
         setupSpinnerListener()
@@ -102,8 +106,11 @@ class FragmentProfileEdit(var callback: CAllback) : BaseFragment(), EducationLis
             val fragmentAlertDialogAccessContacts = FragmentAlertDialogAccessContacts(object :
                 FragmentAlertDialogAccessContacts.Callback {
                 override fun onCLickONAccessButton() {
-                    callback.onCLickONSyncContactButton()
+                   // callback.onCLickONSyncContactButton()
                     //retreiveGoogleContacts()
+
+                    findNavController().navigate(R.id.action_fragmentProfileEdit_to_fragmentSync22)
+
                 }
             })
             val bundle = Bundle()
@@ -205,7 +212,7 @@ class FragmentProfileEdit(var callback: CAllback) : BaseFragment(), EducationLis
                             }
 
                             override fun onItemRemove() {
-                                blockList()
+                               getBlockList()
                             }
 
                         })
@@ -216,18 +223,16 @@ class FragmentProfileEdit(var callback: CAllback) : BaseFragment(), EducationLis
                         binding.layoutBlockList.visibility = View.VISIBLE
                         val firstTwoElements: List<User?>
                         blockedUserAdapter.list.clear()
-
-                        if (it.results.size > 2) {
+                   /*     if (it.results.size > 2) {
                             firstTwoElements = it.results.subList(0, 2)
-
                             binding.buttonSeeAllBlockList.visibility = View.VISIBLE
                         } else {
                             firstTwoElements = it.results
-                        }
-                        blockedUserAdapter.submitList(firstTwoElements)
+                        }*/
+                        blockedUserAdapter.submitList(it.results)
                         binding.rvBlockList.adapter = blockedUserAdapter
                         blockedUserAdapter.notifyDataSetChanged()
-                        blockList()
+
 
                     }
                 }
@@ -235,6 +240,16 @@ class FragmentProfileEdit(var callback: CAllback) : BaseFragment(), EducationLis
             }
         }
     }
+
+
+    fun getBlockList(){
+        var hashMap = HashMap<String, String>()
+        hashMap.put("limit", "2")
+        hashMap.put("page", "1")
+        networkViewModel.getBlockList(hashMap)
+        blockList()
+    }
+
 
     var selectedDay = "1"
     var selectedMonth = "January"
@@ -245,7 +260,7 @@ class FragmentProfileEdit(var callback: CAllback) : BaseFragment(), EducationLis
         networkViewModel.getProfileData(hashMap)
         hashMap.put("limit", "5")
         hashMap.put("page", "1")
-        networkViewModel.getBlockList(hashMap)
+       getBlockList()
 
 
         networkViewModel.profileLiveData.observe(requireActivity()) {

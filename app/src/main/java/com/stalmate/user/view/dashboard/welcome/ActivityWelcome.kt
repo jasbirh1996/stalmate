@@ -38,7 +38,6 @@ class ActivityWelcome : BaseActivity(),
     var majorTextTextId = ""
     var cityText = ""
     private var datasss: ArrayList<Category>? = null
-    private var datasssaa: ArrayList<String>? = null
 
     override fun onClick(viewId: Int, view: View?) {
 
@@ -60,11 +59,8 @@ class ActivityWelcome : BaseActivity(),
         viewpagerAdapter.add(FragmentWelcomePage(), "title")
         viewpagerAdapter.add(FragmentInterestSuggestionList(), "title")
         viewpagerAdapter.add(FragmentInformationSuggestions(this),"title")
-        viewpagerAdapter.add(FragmentSync(this), "title")
-        viewpagerAdapter.add(FragmentSync(this), "title")
-       /* viewpagerAdapter.add(FragmentGroupSuggestionList(), "title")
-        viewpagerAdapter.add(FragmentPageSugggestionsList(), "title")
-        viewpagerAdapter.add(FragmentEventSuggestionsList(), "title")*/
+        viewpagerAdapter.add(FragmentSync(), "title")
+        viewpagerAdapter.add(FragmentSync(), "title")
 
 
         binding.viewpager.adapter = viewpagerAdapter

@@ -1,19 +1,21 @@
 package com.stalmate.user.view.profile
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.navigation.NavController
+import androidx.navigation.findNavController
+import com.stalmate.user.R
 import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.databinding.ActivityProfileEditBinding
 import com.stalmate.user.view.dashboard.HomeFragment.FragmentSearchBase
 import com.stalmate.user.view.dashboard.welcome.FragmentSync
 import com.stalmate.user.view.settings.FragmentBlockedContacts
 
-class ActivityProfileEdit : BaseActivity(), FragmentProfileEdit.CAllback,
-    FragmentSync.Callback /*FragmentSync.Callback*/ {
+class ActivityProfileEdit : BaseActivity() /*FragmentSync.Callback*/ {
 
     private lateinit var binding: ActivityProfileEditBinding
     private lateinit var navController: NavController
@@ -26,7 +28,13 @@ class ActivityProfileEdit : BaseActivity(), FragmentProfileEdit.CAllback,
         binding = ActivityProfileEditBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
-        loadFragment(FragmentProfileEdit(this))
+        setUpNavigation()
+  /*      loadFragment(FragmentProfileEdit(this))*/
+
+    }
+
+    private fun setUpNavigation() {
+        navController=findNavController(R.id.nav_host_fragment)
     }
 
 
@@ -34,7 +42,7 @@ class ActivityProfileEdit : BaseActivity(), FragmentProfileEdit.CAllback,
         super.onBackPressed()
     }
 
-
+/*
     private fun loadFragment(fragment: Fragment) {
 
         val backStateName = fragment.javaClass.name
@@ -59,10 +67,13 @@ class ActivityProfileEdit : BaseActivity(), FragmentProfileEdit.CAllback,
     }
 
     override fun onClickBackPress() {
+
+        Log.d("asdkjasd","aiosdjasd")
+
         loadFragment(FragmentProfileEdit(this))
     }
 
     override fun onClickOnNextButtonOnSyncPage() {
         loadFragment(FragmentSearchBase(this))
-    }
+    }*/
 }

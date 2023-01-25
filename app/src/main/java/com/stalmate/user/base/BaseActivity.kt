@@ -152,47 +152,8 @@ abstract class BaseActivity : AppCompatActivity(), View.OnClickListener,
         }
         return true
     }
-    fun syncBroadcasReceiver(){
-
-    }
-    inner class SyncBroadcasReceiver : BroadcastReceiver() {
-        override fun onReceive(p0: Context?, p1: Intent?) {
-            if (p1!!.action == Constants.ACTION_SYNC_COMPLETED) {
-                dismissLoader()
-                Log.d("==========wew", "wwwwwwwwwwww=====121=====wwwwwwwwwwwwww")
-                makeToast("Synced")
-                if (p1.extras!!.getString("contacts") != null) {
-                    Log.d("==========wew", "wwwwwwwwwwwwwwwwwwwwwww11www")
-                    startActivity(
-                        IntentHelper.getSearchScreen(applicationContext)!!
-                            .putExtra("contacts", p1.extras!!.getString("contacts").toString())
-                    )
-                }
-            }
-        }
-    }
-
-/*    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when (requestCode) {
 
 
-
-
-            READ_WRITE_STORAGE -> isPermissionGranted(
-                grantResults[0] == PackageManager.PERMISSION_GRANTED, permissions[0]
-            )
-
-
-
-        }
-    }*/
-
-    fun isPermissionGranted(isGranted: Boolean, permission: String?) {}
 
     companion object {
         const val READ_WRITE_STORAGE = 52

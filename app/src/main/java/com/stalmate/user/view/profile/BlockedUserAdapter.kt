@@ -39,7 +39,7 @@ class BlockedUserAdapter(
 
             binding.imageView7.setOnClickListener {
                 hitBlockApi(
-                    absoluteAdapterPosition,
+                    bindingAdapterPosition,
                     response.id,
                     (binding.root.context as? LifecycleOwner)!!
                 )
@@ -66,20 +66,14 @@ class BlockedUserAdapter(
         viewModel.blockData.observe(owner) {
 
             it.let {
-                if (it!!.status == true) {
-
-                    try {
-                        list.removeAt(position)
-                        notifyItemRemoved(position)
-                        notifyDataSetChanged()
-                        callback.onItemRemove()
-                        if (list.isEmpty()) {
-                            callback.onListEmpty()
-
-                        }
-
-                    } catch (e: Exception) {
-                        Log.d("blockException", e.message.toString())
+                if (it!!.status!!) {
+                    Log.d("a;ksjdasd","alksjdlasd")
+                    list.removeAt(position)
+                    notifyItemRemoved(position)
+                 /*   notifyDataSetChanged()*/
+                    callback.onItemRemove()
+                    if (list.isEmpty()) {
+                        callback.onListEmpty()
                     }
                 }
             }

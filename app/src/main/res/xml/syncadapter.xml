@@ -5,7 +5,7 @@
     android:accountType="com.stalmate.user"
     android:supportsUploading="false"
     android:userVisible="true"
-    android:allowParallelSyncs="true"
-    android:isAlwaysSyncable="true"
+    android:allowParallelSyncs="false"
+    android:isAlwaysSyncable="false"
 
     />

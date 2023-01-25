@@ -30,6 +30,7 @@ class FragmentAlertDialogAccessContacts(var callback: Callback) : DialogFragment
 
     private fun listener() {
         binding?.buttonAllowAccess?.setOnClickListener {
+            dismiss()
             callback.onCLickONAccessButton()
         }
         binding?.buttonDontAllowAccess?.setOnClickListener {
