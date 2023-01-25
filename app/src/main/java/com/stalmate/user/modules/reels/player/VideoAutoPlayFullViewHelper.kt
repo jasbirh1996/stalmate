@@ -1,6 +1,8 @@
 package com.stalmate.user.modules.reels.player
 
 import android.graphics.Rect
+import android.util.Log
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.stalmate.user.modules.reels.adapter.ReelFullViewAdapter
@@ -26,16 +28,21 @@ class VideoAutoPlayFullViewHelper(var recyclerView: RecyclerView) {
         if (pos == -1) {
             /*check if current view is more than MIN_LIMIT_VISIBILITY*/
             if (currentPlayingVideoItemPos != -1) {
-                val viewHolder: RecyclerView.ViewHolder =
-                    recyclerView?.findViewHolderForAdapterPosition(currentPlayingVideoItemPos)!!
+                try {
+                    Log.d("32currentPlayingVideoItemPos", currentPlayingVideoItemPos.toString())
+                    val viewHolder: RecyclerView.ViewHolder =
+                        recyclerView.findViewHolderForAdapterPosition(currentPlayingVideoItemPos)!!
 
-                val currentVisibility = getVisiblePercentage(viewHolder);
-                if (currentVisibility < MIN_LIMIT_VISIBILITY) {
-                    lastPlayerView?.removePlayer()
+                    val currentVisibility = getVisiblePercentage(viewHolder);
+                    if (currentVisibility < MIN_LIMIT_VISIBILITY) {
+                        lastPlayerView?.removePlayer()
+                    }
+                    currentPlayingVideoItemPos = -1;
+                } catch (e: Exception) {
+                    Log.d("Exception_currentPlayingVideoItemPos", e.message.toString())
                 }
-                currentPlayingVideoItemPos = -1;
-            }
 
+            }
 
         } else {
 
@@ -52,9 +59,9 @@ class VideoAutoPlayFullViewHelper(var recyclerView: RecyclerView) {
         val feedViewHolder: ReelViewHolder =
             (recyclerView.findViewHolderForAdapterPosition(pos) as ReelViewHolder?)!!
 
-        if(feedViewHolder is VideoReelFullViewHolder) {
+        if (feedViewHolder is VideoReelFullViewHolder) {
             /** in case its a video**/
-            if (lastPlayerView==null || lastPlayerView != feedViewHolder.customPlayerView) {
+            if (lastPlayerView == null || lastPlayerView != feedViewHolder.customPlayerView) {
                 feedViewHolder.customPlayerView.startPlaying()
                 // stop last player
                 lastPlayerView?.removePlayer();
@@ -77,14 +84,19 @@ class VideoAutoPlayFullViewHelper(var recyclerView: RecyclerView) {
         var maxPercentage = -1;
         var pos = 0;
         for (i in firstVisiblePosition..lastVisiblePosition) {
-            val viewHolder: RecyclerView.ViewHolder =
-                recyclerView.findViewHolderForAdapterPosition(i)!!
+            try {
+                val viewHolder: RecyclerView.ViewHolder =
+                    recyclerView.findViewHolderForAdapterPosition(i)!!
 
-            var currentPercentage = getVisiblePercentage(viewHolder);
-            if (currentPercentage > maxPercentage) {
-                maxPercentage = currentPercentage.toInt();
-                pos = i;
+                var currentPercentage = getVisiblePercentage(viewHolder);
+                if (currentPercentage > maxPercentage) {
+                    maxPercentage = currentPercentage.toInt();
+                    pos = i;
+                }
+            } catch (e: Exception) {
+                Log.d("Exception", e.message.toString())
             }
+
 
         }
 
@@ -152,10 +164,14 @@ class VideoAutoPlayFullViewHelper(var recyclerView: RecyclerView) {
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                if (recyclerView.adapter is ReelFullViewAdapter) {
-                    onScrolled(recyclerView, recyclerView.adapter as ReelFullViewAdapter)
-                } else {
-                    throw IllegalStateException("Adapter should be FeedAdapter or extend FeedAdapter")
+                try {
+                    if (recyclerView.adapter is ReelFullViewAdapter) {
+                        onScrolled(recyclerView, recyclerView.adapter as ReelFullViewAdapter)
+                    } else {
+                        throw IllegalStateException("Adapter should be FeedAdapter or extend FeedAdapter")
+                    }
+                } catch (e: Exception) {
+                    Log.d("170 startObserving", e.message.toString())
                 }
             }
         })

@@ -10,7 +10,7 @@ import com.stalmate.user.databinding.ItemChatUserBinding
 import com.stalmate.user.view.dashboard.Chat.model.ChatModel
 
 class ChatListAdapter(
-    private var ChatList: ArrayList<ChatModel>,var context: Context
+    private var ChatList: ArrayList<ChatModel>, private var context: Context
 ) :
     RecyclerView.Adapter<ChatListAdapter.ViewHolder>() {
 
@@ -46,9 +46,15 @@ class ChatListAdapter(
                 viewBinding.tvLastMsg.text=item.lastMessage
                 viewBinding.tvLastMsgTiming.text=item.lastMsgTiming
 
+                /*Picasso.get()
+                    .load(R.drawable.app_logo)
+                    .placeholder(R.drawable.ic_launcher_background)
+                    .error(R.drawable.ic_launcher_background)
+                    .into(viewBinding.userImage)*/
+
                  Glide.with(context)
-                     .load(R.drawable.app_logo)
-                     .placeholder(R.drawable.ic_processbar_check)
+                     .load(R.drawable.placeholder_filter)
+                     .placeholder(R.drawable.app_logo)
                      .error(R.drawable.app_logo)
                      .into(viewBinding.userImage)
             }

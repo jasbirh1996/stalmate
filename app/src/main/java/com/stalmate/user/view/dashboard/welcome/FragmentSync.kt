@@ -2,9 +2,11 @@ package com.stalmate.user.view.dashboard.welcome
 
 import android.accounts.Account
 import android.accounts.AccountManager
+import android.content.BroadcastReceiver
 import android.content.ContentResolver
 import android.content.Context
 import android.content.Context.ACCOUNT_SERVICE
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.provider.ContactsContract
@@ -14,10 +16,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentSyncBinding
 import com.stalmate.user.utilities.Constants
+import com.stalmate.user.view.profile.ActivityProfileEdit
+import com.stalmate.user.view.profile.FragmentProfileEdit
 
 
 class FragmentSync(var callback: Callback) : BaseFragment() {
@@ -29,6 +34,7 @@ class FragmentSync(var callback: Callback) : BaseFragment() {
         super.onCreate(savedInstanceState)
     }
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -36,6 +42,7 @@ class FragmentSync(var callback: Callback) : BaseFragment() {
         // Inflate the layout for this fragment
         var view = inflater.inflate(R.layout.fragment_sync, container, false)
         binding = DataBindingUtil.bind<FragmentSyncBinding>(view)!!
+        binding.btnNext.text = "Done"
         return binding.root
     }
 
@@ -46,36 +53,39 @@ class FragmentSync(var callback: Callback) : BaseFragment() {
         binding.toggleSyncGoogle.setOnCheckedChangeListener { compoundButton, active ->
             if (active) {
                 retreiveGoogleContacts()
-            }else{
+            } else {
                 removeAccount()
             }
         }
 
         binding.btnNext.setOnClickListener {
-            callback.onClickOnNextButtonOnSyncPage()
+            //callback.onClickOnNextButtonOnSyncPage()
+            startActivity(
+                IntentHelper.getSearchScreen(requireContext())
+            )
         }
     }
 
 
-    fun removeAccount(){
+    fun removeAccount() {
         // Get an instance of the Android account manager
         val accountManager = requireActivity().getSystemService(
             ACCOUNT_SERVICE
         ) as AccountManager
 
-        if (isAccountAdded()){
-            var acc=  Account(Constants.ACCOUNT_NAME, Constants.ACCOUNT_TYPE)
+        if (isAccountAdded()) {
+            var acc = Account(Constants.ACCOUNT_NAME, Constants.ACCOUNT_TYPE)
             accountManager.removeAccountExplicitly(acc)
         }
     }
 
-    fun isAccountAdded():Boolean{
+    fun isAccountAdded(): Boolean {
 
         // Get an instance of the Android account manager
         val accountManager = requireActivity().getSystemService(ACCOUNT_SERVICE) as AccountManager
 
-        for (i in 0 until accountManager.accounts.size){
-            if (accountManager.accounts[i].type==Constants.ACCOUNT_TYPE){
+        for (i in 0 until accountManager.accounts.size) {
+            if (accountManager.accounts[i].type == Constants.ACCOUNT_TYPE) {
                 return true
             }
         }
@@ -84,12 +94,12 @@ class FragmentSync(var callback: Callback) : BaseFragment() {
 
     private fun retreiveGoogleContacts() {
 
-        mAccount= createSyncAccount(requireActivity())
-        var bundle=Bundle()
-        bundle.putBoolean("force",true)
-        bundle.putBoolean("expedited",true)
+        mAccount = createSyncAccount(requireActivity())
+        var bundle = Bundle()
+        bundle.putBoolean("force", true)
+        bundle.putBoolean("expedited", true)
 
-        Log.d("asldkjalsda","sync")
+        Log.d("asldkjalsda", "sync")
         ContentResolver.requestSync(mAccount, "com.stalmate.user", bundle)
     }
 
@@ -104,19 +114,19 @@ class FragmentSync(var callback: Callback) : BaseFragment() {
         * If successful, return the Account object, otherwise report an error.
         */
         return if (accountManager.addAccountExplicitly(newAccount, null, null)) {
-         /*
-        * If you don't set android:syncable="true" in
-        * in your <provider> element in the manifest,
-        * then call context.setIsSyncable(account, AUTHORITY, 1)
-        * here.
-        */
-            Log.d("asdasd","pppooo")
+            /*
+           * If you don't set android:syncable="true" in
+           * in your <provider> element in the manifest,
+           * then call context.setIsSyncable(account, AUTHORITY, 1)
+           * here.
+           */
+            Log.d("asdasd", "pppooo")
             ContentResolver.setIsSyncable(newAccount, "com.android.contacts", 1)
             ContentResolver.setSyncAutomatically(newAccount, "com.android.contacts", true)
 
             newAccount
         } else {
-            Log.d("asdasd","ppp")
+            Log.d("asdasd", "ppp")
             /*
           * The account exists or some other error occurred. Log this, report it,
           * or handle it internally.
@@ -125,7 +135,7 @@ class FragmentSync(var callback: Callback) : BaseFragment() {
         }
     }
 
-    public interface Callback{
+    public interface Callback {
         fun onClickOnNextButtonOnSyncPage()
     }
 }

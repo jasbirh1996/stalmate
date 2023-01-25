@@ -118,7 +118,7 @@ class ActivityVideoEditor : BaseActivity(), OnPhotoEditorListener,
 
 
     private fun hideSystemBars() {
-        window.setStatusBarColor(ContextCompat.getColor(this, R.color.black));
+        window.statusBarColor = ContextCompat.getColor(this, R.color.black);
         val windowInsetsController =
             ViewCompat.getWindowInsetsController(window.decorView) ?: return
         // Configure the behavior of the hidden system bars
@@ -157,11 +157,9 @@ class ActivityVideoEditor : BaseActivity(), OnPhotoEditorListener,
                     var drawable: Drawable
 
                     var view = View(this)
-                    view.setLayoutParams(
-                        ViewGroup.LayoutParams(
-                            displayWidth,
-                            displayHeight
-                        )
+                    view.layoutParams = ViewGroup.LayoutParams(
+                        displayWidth,
+                        displayHeight
                     )
 
                     drawable = BitmapDrawable(resources, loadBitmapFromView(view))
@@ -467,8 +465,10 @@ class ActivityVideoEditor : BaseActivity(), OnPhotoEditorListener,
             R.id.imgTrim -> {
                 if (binding.layoutTrim.visibility == View.VISIBLE) {
                     binding.layoutTrim.visibility = View.GONE
+                    binding.imgDone.visibility = View.VISIBLE
                 } else {
                     binding.layoutTrim.visibility = View.VISIBLE
+                    binding.imgDone.visibility = View.GONE
                 }
             }
 
@@ -585,7 +585,7 @@ class ActivityVideoEditor : BaseActivity(), OnPhotoEditorListener,
             //    addWaterMarkProcess()
             addToWatermark(beforeWatermarkAddedFile)
         } catch (e: Exception) {
-            Log.d("lkajsdlasd", e!!.toString())
+            Log.d("lkajsdlasd", e.toString())
             e.printStackTrace()
         }
     }
@@ -952,11 +952,11 @@ class ActivityVideoEditor : BaseActivity(), OnPhotoEditorListener,
         override fun run() {
             try {
                 Log.d("aksdasda", "ioasjdsa")
-                currentDuration = mediaPlayer!!.getCurrentPosition() / 1000
-                if (!mediaPlayer!!.getPlayWhenReady()) return
+                currentDuration = mediaPlayer!!.currentPosition / 1000
+                if (!mediaPlayer!!.playWhenReady) return
                 if (currentDuration <= lastMaxValue) seekbarController!!.setMinStartValue(
                     currentDuration.toInt().toFloat()
-                ).apply() else mediaPlayer!!.setPlayWhenReady(false)
+                ).apply() else mediaPlayer!!.playWhenReady = false
             } finally {
                 seekHandler!!.postDelayed(this, 1000)
             }
@@ -1007,8 +1007,18 @@ class ActivityVideoEditor : BaseActivity(), OnPhotoEditorListener,
             }
             lastMinValue = minVal
             lastMaxValue = maxVal
-            seekbar.setLeftThumbBitmap(createDrawableFromView(lastMinValue,R.drawable.switch_button_thumb))
-            seekbar.setRightThumbBitmap(createDrawableFromView(lastMaxValue,R.drawable.switch_button_thumb))
+            seekbar.setLeftThumbBitmap(
+                createDrawableFromView(
+                    lastMinValue,
+                    R.drawable.switch_button_thumb
+                )
+            )
+            seekbar.setRightThumbBitmap(
+                createDrawableFromView(
+                    lastMaxValue,
+                    R.drawable.switch_button_thumb
+                )
+            )
 
             Log.d("akjsdasdoo", lastMinValue.toString())
             Log.d("akjsdasdoo", lastMaxValue.toString())
@@ -1019,7 +1029,7 @@ class ActivityVideoEditor : BaseActivity(), OnPhotoEditorListener,
         }
         seekbarController!!.setOnSeekbarFinalValueListener { value ->
             val value1 = value as Long
-            if (value1 < lastMaxValue && value1 > lastMinValue) {
+            if (value1 in (lastMinValue + 1) until lastMaxValue) {
                 seekTo(value1)
                 return@setOnSeekbarFinalValueListener
             }
@@ -1033,26 +1043,24 @@ class ActivityVideoEditor : BaseActivity(), OnPhotoEditorListener,
     }
 
 
-
-
-    fun createDrawableFromView(progress: Long, drawable:Int): Bitmap? {
+    fun createDrawableFromView(progress: Long, drawable: Int): Bitmap? {
         val inflatedFrame: View = (App.getInstance()
             .getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(
             R.layout.view_custom_thumb,
             null
         )
-  /*
-      val ivStar: ImageView = inflatedFrame.findViewById(R.id.ivIcon) as ImageView
+        /*
+            val ivStar: ImageView = inflatedFrame.findViewById(R.id.ivIcon) as ImageView
 
-        ivStar.setImageDrawable(
-            ContextCompat.getDrawable(
-                App.getInstance(),
-                drawable
-            )
-        )
-*/
+              ivStar.setImageDrawable(
+                  ContextCompat.getDrawable(
+                      App.getInstance(),
+                      drawable
+                  )
+              )
+      */
         val tvValue: TextView = inflatedFrame.findViewById(R.id.tvValue) as TextView
-        tvValue.setText(progress.toString()+"s")
+        tvValue.setText(progress.toString() + "s")
         val frameLayout: FrameLayout = inflatedFrame.findViewById(R.id.screen) as FrameLayout
 
 
@@ -1065,9 +1073,6 @@ class ActivityVideoEditor : BaseActivity(), OnPhotoEditorListener,
         frameLayout.buildDrawingCache(true)
         return frameLayout.getDrawingCache()
     }
-
-
-
 
 
     private fun seekTo(sec: Long) {
@@ -1163,6 +1168,7 @@ class ActivityVideoEditor : BaseActivity(), OnPhotoEditorListener,
     }
 
     private fun submitForTrim() {
+        binding.imgDone.visibility = View.VISIBLE
         val wm = WorkManager.getInstance(this)
         val trimmed = File(cacheDir, UUID.randomUUID().toString())
         val data = Data.Builder()

@@ -36,18 +36,13 @@ class FragmentChat : Fragment() {
         storyArrayList.clear()
         for (i in 0 until 5) {
             val storyModel = StoryModel()
-           /* Glide.with(requireContext())
-                .load(R.drawable.app_logo)
-                .placeholder(R.drawable.ic_processbar_check)
-                .error(R.drawable.app_logo)
-                .into()*/
             storyArrayList.add(storyModel)
         }
-        storyListAdapter = StoryListAdapter(storyArrayList, requireContext())
+        storyListAdapter = StoryListAdapter(storyArrayList, requireActivity())
         val linearLayoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        binding.rvUsers.layoutManager = linearLayoutManager
-        binding.rvUsers.adapter = chatListAdapter
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.rvStory.layoutManager = linearLayoutManager
+        binding.rvStory.adapter = storyListAdapter
     }
 
     private fun chatListListener() {
@@ -66,10 +61,13 @@ class FragmentChat : Fragment() {
             chatModel.lastMsgTiming = "10:00 AM"
             chatArrayList.add(chatModel)
         }
-        chatListAdapter = ChatListAdapter(chatArrayList,requireContext())
+
+        chatListAdapter = ChatListAdapter(chatArrayList, requireActivity())
         val linearLayoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         binding.rvUsers.layoutManager = linearLayoutManager
         binding.rvUsers.adapter = chatListAdapter
+
+
     }
 }

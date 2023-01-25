@@ -19,7 +19,5 @@
         android:id="@+id/idFragmentPeopleSearch"
         android:name="com.stalmate.user.view.dashboard.HomeFragment.FragmentPeopleSearch"
         android:label="fragment_people_search"
-        tools:layout="@layout/fragment_search" >
-
-    </fragment>
+        tools:layout="@layout/fragment_search" />
 </navigation>

@@ -2,6 +2,7 @@ package com.stalmate.user.view.dashboard.HomeFragment
 
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -11,18 +12,21 @@ import android.view.inputmethod.InputMethodManager
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.databinding.ActivitySearchBinding
+import com.stalmate.user.view.profile.FragmentProfileEdit
 
 
 class ActivitySearch : BaseActivity() {
     lateinit var navHostFragment: NavHostFragment
     private lateinit var navController: NavController
     lateinit var binding: ActivitySearchBinding
+
     var searchData = ""
     override fun onClick(viewId: Int, view: View?) {
     }
@@ -31,9 +35,10 @@ class ActivitySearch : BaseActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_search)
         navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_container) as NavHostFragment
         navController = navHostFragment.navController
-
+        //syncBroadcastReceiver()
         binding.ivBack.setOnClickListener {
-            onBackPressed()
+            //onBackPressed()
+            finish()
         }
         if (intent.getStringExtra("contacts") != null) {
             val bundle = Bundle()
@@ -66,10 +71,15 @@ class ActivitySearch : BaseActivity() {
         imm.showSoftInput( binding.etSearch, InputMethodManager.SHOW_IMPLICIT)
     }
 
+    override fun onDestroy() {
+        //syncBroadcastReceiver()
+        super.onDestroy()
+    }
+
     private fun getCurrentVisibleFragment(): Fragment? {
         val navHostFragment = supportFragmentManager.primaryNavigationFragment as NavHostFragment?
         val fragmentManager: FragmentManager = navHostFragment!!.childFragmentManager
-        val fragment: Fragment = fragmentManager.getPrimaryNavigationFragment()!!
+        val fragment: Fragment = fragmentManager.primaryNavigationFragment!!
         return if (fragment is Fragment) {
             fragment
         } else null

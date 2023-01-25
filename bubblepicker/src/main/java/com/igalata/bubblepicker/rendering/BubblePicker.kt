@@ -9,7 +9,7 @@ import android.view.MotionEvent
 import androidx.annotation.ColorInt
 import com.igalata.bubblepicker.BubblePickerListener
 import com.igalata.bubblepicker.R
-import com.igalata.bubblepicker.adapter.BubblePickerAdapter
+import com.igalata.bubblepicker.exception.adapter.BubblePickerAdapter
 import com.igalata.bubblepicker.model.Color
 import com.igalata.bubblepicker.model.PickerItem
 

@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_barLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:elevation="0dp">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/topAppBar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/white"
+            app:contentInsetStartWithNavigation="0dp"
+            app:layout_scrollFlags="enterAlways|scroll|snap"
+            app:navigationIcon="@drawable/ic_back"
+            app:title="Privacy"
+            app:titleTextColor="@color/black" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_18sdp"
+                android:fontFamily="@font/poppins_medium"
+                android:text="@string/who_can_see_my_personal_information"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_20sdp"
+                    android:fontFamily="@font/poppins_medium"
+                    android:text="@string/allow_others_to_find_me"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/_20sdp"
+                    android:checked="true"
+                    android:minWidth="@dimen/_30sdp"
+                    android:minHeight="@dimen/_48sdp"
+                    app:thumbTint="@color/obboard_indicator"
+                    app:trackTint="@color/obboard_indicator2"
+                    tools:ignore="SpeakableTextPresentCheck" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:padding="@dimen/_18sdp">
+
+                <Spinner
+                    android:id="@+id/Profile"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="7dp"
+                    android:entries="@array/profile"
+                    android:paddingVertical="8dp"
+                    android:textColor="@color/black"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="3dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="3dp"
+                    android:background="@color/colorNormalGray" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:padding="@dimen/_18sdp">
+
+                <Spinner
+                    android:id="@+id/profilePhoto"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="7dp"
+                    android:entries="@array/profile"
+
+                    android:paddingVertical="8dp"
+                    android:textColor="@color/black" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="3dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="3dp"
+                    android:background="@color/colorNormalGray" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:padding="@dimen/_18sdp">
+
+                <Spinner
+                    android:id="@+id/about"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="7dp"
+                    android:entries="@array/profile"
+
+                    android:paddingVertical="8dp"
+                    android:textColor="@color/black" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="3dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="3dp"
+                    android:background="@color/colorNormalGray" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:background="@color/white"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_20sdp"
+                    android:fontFamily="@font/poppins_medium"
+                    android:text="@string/read_receipts"
+                    android:textColor="@color/black"
+                    android:textSize="18sp" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/_20sdp"
+                    android:checked="true"
+                    android:minWidth="@dimen/_30sdp"
+                    android:minHeight="@dimen/_48sdp"
+                    app:thumbTint="@color/obboard_indicator"
+                    app:trackTint="@color/obboard_indicator2"
+                    tools:ignore="SpeakableTextPresentCheck,VisualLintButtonSize" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:padding="@dimen/_18sdp">
+
+                <Spinner
+                    android:id="@+id/story"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="7dp"
+                    android:entries="@array/profile"
+
+                    android:paddingVertical="8dp"
+                    android:textColor="@color/black" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="3dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="3dp"
+                    android:background="@color/colorNormalGray" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:padding="@dimen/_18sdp">
+
+                <Spinner
+                    android:id="@+id/spinnerGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="7dp"
+                    android:entries="@array/profile"
+
+                    android:paddingVertical="8dp"
+                    android:textColor="@color/black" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="3dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="3dp"
+                    android:background="@color/colorNormalGray" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:padding="@dimen/_18sdp">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Blocked Contacts"
+                    android:textSize="18sp"
+                    android:textColor="@color/black"
+                    android:drawableEnd="@drawable/menu_arrow_icon"
+                    android:drawablePadding="@dimen/_8sdp"/>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvBlockList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/blockListTg"
+                    app:layout_constraintTop_toBottomOf="@+id/blockListTg"
+                    tools:itemCount="5"
+                    tools:listitem="@layout/item_profile_cover" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:padding="@dimen/_18sdp">
+
+                <Spinner
+                    android:id="@+id/spinnerLikeMyPost"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="7dp"
+                    android:entries="@array/profile"
+                    android:paddingVertical="8dp"
+                    android:textColor="@color/black" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="3dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="3dp"
+                    android:background="@color/colorNormalGray" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

@@ -24,9 +24,11 @@ import com.stalmate.user.commonadapters.AdapterFeed
 import com.stalmate.user.databinding.FragmentSearchBaseBinding
 import com.stalmate.user.view.adapter.SuggestedFriendAdapter
 import com.stalmate.user.view.adapter.UserHomeStoryAdapter
+import com.stalmate.user.view.profile.FragmentProfileEdit
 
 
-class FragmentSearchBase : BaseFragment(), FragmentGlobalSearch.Callback {
+class FragmentSearchBase(var callbackProfileEdit: FragmentProfileEdit.CAllback) : BaseFragment(),
+    FragmentGlobalSearch.Callback {
     var searchData = ""
     private lateinit var binding: FragmentSearchBaseBinding
     lateinit var feedAdapter: AdapterFeed
@@ -54,16 +56,17 @@ class FragmentSearchBase : BaseFragment(), FragmentGlobalSearch.Callback {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-      //  loadFragment(FragmentGlobalSearch("", this))
+        //  loadFragment(FragmentGlobalSearch("", this))
 
 
         binding.ivBack.setOnClickListener {
-            onClickOnBackPress()
+            //onClickOnBackPress()
+            callbackProfileEdit.onClickBackPress()
+
         }
 
         binding.etSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -75,10 +78,12 @@ class FragmentSearchBase : BaseFragment(), FragmentGlobalSearch.Callback {
                     )
                     Handler(Looper.myLooper()!!).post {
                         if (childFragmentManager.findFragmentById(binding.frame.id) is FragmentGlobalSearch) {
-                            var fragment = childFragmentManager.findFragmentByTag(backStateName) as FragmentGlobalSearch
+                            var fragment =
+                                childFragmentManager.findFragmentByTag(backStateName) as FragmentGlobalSearch
                             fragment.hitApi(true, searchData)
                         } else if (childFragmentManager.findFragmentById(binding.frame.id) is FragmentPeopleSearch) {
-                            var fragment = childFragmentManager.findFragmentByTag(backStateName) as FragmentPeopleSearch
+                            var fragment =
+                                childFragmentManager.findFragmentByTag(backStateName) as FragmentPeopleSearch
                             fragment.hitApi(true, searchData)
                         }
                     }
@@ -102,7 +107,6 @@ class FragmentSearchBase : BaseFragment(), FragmentGlobalSearch.Callback {
             override fun handleOnBackPressed() {
                 onClickOnBackPress()
 
-
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
@@ -110,7 +114,7 @@ class FragmentSearchBase : BaseFragment(), FragmentGlobalSearch.Callback {
 
     fun onClickOnBackPress() {
         if (childFragmentManager.backStackEntryCount == 1) {
-            requireActivity()!!.finish()
+            requireActivity().finish()
         } else {
             childFragmentManager.popBackStack()
         }
@@ -156,7 +160,7 @@ class FragmentSearchBase : BaseFragment(), FragmentGlobalSearch.Callback {
     }
 
     override fun onClickOnSeeMore(searData: String, type: String) {
-       // loadFragment(FragmentPeopleSearch(searData))
+        // loadFragment(FragmentPeopleSearch(searData))
     }
 
 }

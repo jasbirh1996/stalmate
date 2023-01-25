@@ -62,16 +62,18 @@ import okhttp3.RequestBody
 import java.io.File
 
 
-class FragmentProfile(var callback:Callback) : BaseFragment(), ProfileAboutAdapter.Callbackk, AdapterFeed.Callbackk,
+class FragmentProfile() : BaseFragment(),
+    ProfileAboutAdapter.Callbackk, AdapterFeed.Callbackk,
     ProfileFriendAdapter.Callbackk {
-
-
-
 
     lateinit var syncBroadcastreceiver: SyncBroadcasReceiver
     lateinit var binding: FragmentProfileBinding
     lateinit var friendAdapter: ProfileFriendAdapter
-    var permissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.READ_CONTACTS)
+    var permissions = arrayOf(
+        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        Manifest.permission.CAMERA,
+        Manifest.permission.READ_CONTACTS
+    )
     var WRITE_REQUEST_CODE = 100
     val PICK_IMAGE_PROFILE = 1
     val PICK_IMAGE_COVER = 1
@@ -106,8 +108,9 @@ class FragmentProfile(var callback:Callback) : BaseFragment(), ProfileAboutAdapt
         )!!
         return binding.root
     }
-    var isIncreasingPreviousValue=0
-    var isIncreasingCurrentValue=1
+
+    var isIncreasingPreviousValue = 0
+    var isIncreasingCurrentValue = 1
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -118,7 +121,7 @@ class FragmentProfile(var callback:Callback) : BaseFragment(), ProfileAboutAdapt
         requireContext().registerReceiver(syncBroadcastreceiver, filter)
 
         var permissionArray = arrayOf(Manifest.permission.READ_CONTACTS)
-        if (isPermissionGranted(permissionArray,requireContext())) {
+        if (isPermissionGranted(permissionArray, requireContext())) {
             Log.d("alskjdasd", ";aosjldsad")
             requireContext().startService(
                 Intent(requireContext(), SyncService::class.java)
@@ -126,81 +129,51 @@ class FragmentProfile(var callback:Callback) : BaseFragment(), ProfileAboutAdapt
         }
 
 
-
-        var adapterTabPager= AdapterTabPager(requireActivity())
-        adapterTabPager.addFragment(FragmentProfileActivityLog(),"Activity Log")
-        adapterTabPager.addFragment(FragmentProfileFuntime(),"Funtime")
-        binding.viewpager.adapter=adapterTabPager
+        var adapterTabPager = AdapterTabPager(requireActivity())
+        adapterTabPager.addFragment(FragmentProfileActivityLog(), "Activity Log")
+        adapterTabPager.addFragment(FragmentProfileFuntime(), "Funtime")
+        binding.viewpager.adapter = adapterTabPager
         TabLayoutMediator(binding.tabLayout, binding.viewpager) { tab, position ->
             tab.text = adapterTabPager.getTabTitle(position)
             binding.viewpager.setCurrentItem(tab.position, true)
         }.attach()
 
 
+        binding.nestedScrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+            if (oldScrollY < scrollY) {//increase
 
+                //callback.onScoll(true)
+                Log.d("aklsjdasdasd", "aposkdasd")
+                onScrollToHideTopHeader(true)
+            } else {
 
-
-        binding.nestedScrollView.setOnScrollChangeListener(object :
-            NestedScrollView.OnScrollChangeListener {
-
-            override fun onScrollChange(
-                v: NestedScrollView,
-                scrollX: Int,
-                scrollY: Int,
-                oldScrollX: Int,
-                oldScrollY: Int
-            ) {
-
-             if (oldScrollY < scrollY) {//increase
-
-                    callback.onScoll(true)
-                    Log.d("aklsjdasdasd","aposkdasd")
-                    onScrollToHideTopHeader(true)
-                } else {
-
-                 onScrollToHideTopHeader(false)
-                 Log.d("aklsjdasdasd", "aposkdasdfghfgh")
-             }
-
-
+                onScrollToHideTopHeader(false)
+                Log.d("aklsjdasdasd", "aposkdasdfghfgh")
             }
         })
 
+        /*      binding.viewpager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                  override fun onPageSelected(position: Int) {
+                      super.onPageSelected(position)
+                      val view = // ... get the view
+                          view.post {
+                              val wMeasureSpec = View.MeasureSpec.makeMeasureSpec(view.width, View.MeasureSpec.EXACTLY)
+                              val hMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+                              view.measure(wMeasureSpec, hMeasureSpec)
 
-
-
-
-
-
-
-
-
-
-  /*      binding.viewpager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
-                val view = // ... get the view
-                    view.post {
-                        val wMeasureSpec = View.MeasureSpec.makeMeasureSpec(view.width, View.MeasureSpec.EXACTLY)
-                        val hMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
-                        view.measure(wMeasureSpec, hMeasureSpec)
-
-                        if (binding.viewpager.layoutParams.height != view.measuredHeight) {
-                            // ParentViewGroup is, for example, LinearLayout
-                            // ... or whatever the parent of the ViewPager2 is
-                            binding.viewpager.layoutParams = (binding.viewpager.layoutParams as ViewGroup.LayoutParams)
-                                .also { lp -> lp.height = view.measuredHeight }
-                        }
-                    }
-            }
-        })*/
-
-
-
-
+                              if (binding.viewpager.layoutParams.height != view.measuredHeight) {
+                                  // ParentViewGroup is, for example, LinearLayout
+                                  // ... or whatever the parent of the ViewPager2 is
+                                  binding.viewpager.layoutParams = (binding.viewpager.layoutParams as ViewGroup.LayoutParams)
+                                      .also { lp -> lp.height = view.measuredHeight }
+                              }
+                          }
+                  }
+              })*/
 
         binding.appCompatTextView17.setOnClickListener {
-            retreiveGoogleContacts()
+            startActivity(IntentHelper.getSyncContactsScreen(requireActivity()))
+            // retreiveGoogleContacts()
         }
         requestPermissions(permissions, WRITE_REQUEST_CODE)
         binding.layout.buttonEditProfile.visibility = View.VISIBLE
@@ -209,8 +182,8 @@ class FragmentProfile(var callback:Callback) : BaseFragment(), ProfileAboutAdapt
 
         binding.ivBackground.shapeAppearanceModel = binding.ivBackground.shapeAppearanceModel
             .toBuilder()
-            .setBottomLeftCorner(CornerFamily.ROUNDED,radius)
-            .setBottomRightCorner(CornerFamily.ROUNDED,radius)
+            .setBottomLeftCorner(CornerFamily.ROUNDED, radius)
+            .setBottomRightCorner(CornerFamily.ROUNDED, radius)
             .build()
         getUserProfileData()
 
@@ -234,25 +207,31 @@ class FragmentProfile(var callback:Callback) : BaseFragment(), ProfileAboutAdapt
 
 
 
-        binding.toolbar.tvhead.text="Profile"
+        binding.toolbar.tvhead.text = "Profile"
         binding.toolbar.topAppBar.setNavigationOnClickListener {
             (requireActivity() as ActivityDashboardNew).onBackPressed()
         }
 
         binding.layout.tvAlbumPhotoSeeMore.setOnClickListener {
-            if (binding.layout.photoTab.selectedTabPosition ==0){
-                startActivity(IntentHelper.getPhotoGalleryAlbumScreen(requireContext())!!.putExtra("viewType", "viewNormal").putExtra("type", "photos"))
-            }else{
-                startActivity(IntentHelper.getPhotoGalleryAlbumScreen(requireContext())!!.putExtra("viewType", "viewNormal").putExtra("type", "albums"))
+            if (binding.layout.photoTab.selectedTabPosition == 0) {
+                startActivity(
+                    IntentHelper.getPhotoGalleryAlbumScreen(requireContext())!!
+                        .putExtra("viewType", "viewNormal").putExtra("type", "photos")
+                )
+            } else {
+                startActivity(
+                    IntentHelper.getPhotoGalleryAlbumScreen(requireContext())!!
+                        .putExtra("viewType", "viewNormal").putExtra("type", "albums")
+                )
             }
         }
 
-        binding.layout.photoTab.addOnTabSelectedListener(object :TabLayout.OnTabSelectedListener {
+        binding.layout.photoTab.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 val position = tab!!.position
-                if (position == 0){
+                if (position == 0) {
                     setUpAboutUI("Photos")
-                }else if(position == 1){
+                } else if (position == 1) {
                     setUpAboutUI("Albums")
                 }
             }
@@ -269,25 +248,31 @@ class FragmentProfile(var callback:Callback) : BaseFragment(), ProfileAboutAdapt
 
 
     }
-    var scrollEnable=true
-    fun onScrollToHideTopHeader(toHide:Boolean) {
-        Log.d("klajsdasd",toHide.toString())
+
+    public interface Callbackk{
+        fun onClickONSyncContTACTbUTTON()
+    }
+
+    var scrollEnable = true
+    fun onScrollToHideTopHeader(toHide: Boolean) {
+        Log.d("klajsdasd", toHide.toString())
         if (toHide) {
-            if (scrollEnable){
-                binding.toolbar.root.animate().translationY(-(binding.toolbar.root.getHeight() + 60).toFloat()).setDuration(150)
+            if (scrollEnable) {
+                binding.toolbar.root.animate()
+                    .translationY(-(binding.toolbar.root.getHeight() + 60).toFloat())
+                    .setDuration(150)
                     .setInterpolator(LinearInterpolator()).start()
-                scrollEnable=false
-                Handler(Looper.getMainLooper()).postDelayed(Runnable { scrollEnable=true },150)
+                scrollEnable = false
+                Handler(Looper.getMainLooper()).postDelayed(Runnable { scrollEnable = true }, 150)
             }
 
 
-
-
-        }else{
-            if (scrollEnable){
-                binding.toolbar.root.animate().translationY(0f).setInterpolator(LinearInterpolator()).setDuration(150).start()
-                scrollEnable=false
-                Handler(Looper.getMainLooper()).postDelayed(Runnable {  scrollEnable=true },150)
+        } else {
+            if (scrollEnable) {
+                binding.toolbar.root.animate().translationY(0f)
+                    .setInterpolator(LinearInterpolator()).setDuration(150).start()
+                scrollEnable = false
+                Handler(Looper.getMainLooper()).postDelayed(Runnable { scrollEnable = true }, 150)
             }
 
 
@@ -298,18 +283,18 @@ class FragmentProfile(var callback:Callback) : BaseFragment(), ProfileAboutAdapt
     inner class SyncBroadcasReceiver : BroadcastReceiver() {
         override fun onReceive(p0: Context?, p1: Intent?) {
             if (p1!!.action == Constants.ACTION_SYNC_COMPLETED) {
+                dismissLoader()
                 Log.d("==========wew", "wwwwwwwwwwww=====121=====wwwwwwwwwwwwww")
                 makeToast("Synced")
                 if (p1.extras!!.getString("contacts") != null) {
                     Log.d("==========wew", "wwwwwwwwwwwwwwwwwwwwwww11www")
-                    startActivity(IntentHelper.getSearchScreen(requireContext())!!.putExtra("contacts", p1.extras!!.getString("contacts").toString()))
+                    startActivity(
+                        IntentHelper.getSearchScreen(requireContext())!!
+                            .putExtra("contacts", p1.extras!!.getString("contacts").toString())
+                    )
                 }
             }
         }
-    }
-
-    public interface Callback {
-        fun onScoll(toHide: Boolean)
     }
 
 
@@ -318,27 +303,28 @@ class FragmentProfile(var callback:Callback) : BaseFragment(), ProfileAboutAdapt
         getUserProfileData()
     }
 
-    fun removeAccount(){
+    fun removeAccount() {
         // Get an instance of the Android account manager
         val accountManager = requireContext().getSystemService(
             AppCompatActivity.ACCOUNT_SERVICE
         ) as AccountManager
 
 
-        if (isAccountAdded()){
+        if (isAccountAdded()) {
 
-            var acc=  Account(Constants.ACCOUNT_NAME, Constants.ACCOUNT_TYPE)
+            var acc = Account(Constants.ACCOUNT_NAME, Constants.ACCOUNT_TYPE)
             accountManager.removeAccountExplicitly(acc)
         }
     }
 
-    fun isAccountAdded():Boolean{
+    fun isAccountAdded(): Boolean {
 
         // Get an instance of the Android account manager
-        val accountManager = requireContext().getSystemService(AppCompatActivity.ACCOUNT_SERVICE) as AccountManager
+        val accountManager =
+            requireContext().getSystemService(AppCompatActivity.ACCOUNT_SERVICE) as AccountManager
 
-        for (i in 0 until accountManager.accounts.size){
-            if (accountManager.accounts[i].type==Constants.ACCOUNT_TYPE){
+        for (i in 0 until accountManager.accounts.size) {
+            if (accountManager.accounts[i].type == Constants.ACCOUNT_TYPE) {
                 return true
 
             }
@@ -348,12 +334,12 @@ class FragmentProfile(var callback:Callback) : BaseFragment(), ProfileAboutAdapt
 
 
     private fun retreiveGoogleContacts() {
-
-        mAccount= createSyncAccount(requireContext())
-        var bundle=Bundle()
-        bundle.putBoolean("force",true)
-        bundle.putBoolean("expedited",true)
-        Log.d("asldkjalsda","sync")
+        showLoader()
+        mAccount = createSyncAccount(requireContext())
+        var bundle = Bundle()
+        bundle.putBoolean("force", true)
+        bundle.putBoolean("expedited", true)
+        Log.d("asldkjalsda", "sync")
         ContentResolver.requestSync(mAccount, "com.stalmate.user", bundle)
 
     }
@@ -361,13 +347,15 @@ class FragmentProfile(var callback:Callback) : BaseFragment(), ProfileAboutAdapt
     fun setupData() {
         binding.layout.layoutFollowers.setOnClickListener {
             startActivity(
-                IntentHelper.getFollowersFollowingScreen(requireContext())!!.putExtra("id", userData.id)
+                IntentHelper.getFollowersFollowingScreen(requireContext())!!
+                    .putExtra("id", userData.id)
                     .putExtra("type", Constants.TYPE_USER_TYPE_FOLLOWERS)
             )
         }
         binding.layout.layoutFollowing.setOnClickListener {
             startActivity(
-                IntentHelper.getFollowersFollowingScreen(requireContext())!!.putExtra("id", userData.id)
+                IntentHelper.getFollowersFollowingScreen(requireContext())!!
+                    .putExtra("id", userData.id)
                     .putExtra("type", Constants.TYPE_USER_TYPE_FOLLOWINGS)
             )
         }
@@ -383,7 +371,10 @@ class FragmentProfile(var callback:Callback) : BaseFragment(), ProfileAboutAdapt
         }
 
         binding.layout.btnphoto.setOnClickListener {
-            startActivity(IntentHelper.getPhotoGalleryAlbumScreen(requireContext())!!.putExtra("viewType","viewNormal"))
+            startActivity(
+                IntentHelper.getPhotoGalleryAlbumScreen(requireContext())!!
+                    .putExtra("viewType", "viewNormal")
+            )
         }
 
         binding.layout.buttonEditProfile.setOnClickListener {
@@ -445,11 +436,9 @@ class FragmentProfile(var callback:Callback) : BaseFragment(), ProfileAboutAdapt
     }
 
 
-
-
-
     private fun updateProfileImageApiHit() {
-        val thumbnailBody: RequestBody = RequestBody.create("image/*".toMediaTypeOrNull(), imageFile!!)
+        val thumbnailBody: RequestBody =
+            RequestBody.create("image/*".toMediaTypeOrNull(), imageFile!!)
         val profile_image1: MultipartBody.Part = MultipartBody.Part.Companion.createFormData(
             "cover_img".takeIf { isCoverImage } ?: "profile_img",
             imageFile!!.name,
@@ -480,7 +469,7 @@ class FragmentProfile(var callback:Callback) : BaseFragment(), ProfileAboutAdapt
     }
 
 
-    fun setUpAboutUI(tabType : String) {
+    fun setUpAboutUI(tabType: String) {
 
         Log.d("ajkbcb", tabType)
 
@@ -493,18 +482,28 @@ class FragmentProfile(var callback:Callback) : BaseFragment(), ProfileAboutAdapt
         binding.layout.tvFollowingCount.text = userData.following_count.toString()
         binding.tvUserAbout.text = userData.about
         binding.layout.tvFriendCount.text = userData.friends_count.toString()
-        ImageLoaderHelperGlide.setGlide(requireContext(), binding.ivBackground, userData.cover_img1,R.drawable.user_placeholder)
+        ImageLoaderHelperGlide.setGlide(
+            requireContext(),
+            binding.ivBackground,
+            userData.cover_img1,
+            R.drawable.user_placeholder
+        )
         //   Glide.with(this).load(userData.img_url+userData.profile_img1).into(binding.ivUserThumb)
-        ImageLoaderHelperGlide.setGlide(requireContext(), binding.ivUserThumb, userData.profile_img1,R.drawable.user_placeholder)
+        ImageLoaderHelperGlide.setGlide(
+            requireContext(),
+            binding.ivUserThumb,
+            userData.profile_img1,
+            R.drawable.user_placeholder
+        )
         var aboutArrayList = ArrayList<AboutProfileLine>()
 
-        if (tabType== "Photos") {
+        if (tabType == "Photos") {
             albumImageAdapter = ProfileAlbumImageAdapter(networkViewModel, requireContext(), "")
             binding.layout.rvPhotoAlbumData.adapter = albumImageAdapter
             albumImageAdapter.submitList(userData.photos)
-        }else if (tabType== "Albums"){
+        } else if (tabType == "Albums") {
             albumAdapter = SelfProfileAlbumAdapter(networkViewModel, requireContext(), "")
-            binding.layout.rvPhotoAlbumData.adapter =albumAdapter
+            binding.layout.rvPhotoAlbumData.adapter = albumAdapter
             albumAdapter.submitList(userData.albums)
 
         }
@@ -566,7 +565,8 @@ class FragmentProfile(var callback:Callback) : BaseFragment(), ProfileAboutAdapt
         // Create the account type and default account
         val newAccount = Account(Constants.ACCOUNT_NAME, Constants.ACCOUNT_TYPE)
         // Get an instance of the Android account manager
-        val accountManager = context.getSystemService(AppCompatActivity.ACCOUNT_SERVICE) as AccountManager
+        val accountManager =
+            context.getSystemService(AppCompatActivity.ACCOUNT_SERVICE) as AccountManager
         /*
         * Add the account and account type, no password or user data
         * If successful, return the Account object, otherwise report an error.
@@ -578,12 +578,12 @@ class FragmentProfile(var callback:Callback) : BaseFragment(), ProfileAboutAdapt
             * then call context.setIsSyncable(account, AUTHORITY, 1)
             * here.
             */
-            Log.d("asdasd","pppooo")
+            Log.d("asdasd", "pppooo")
             ContentResolver.setIsSyncable(newAccount, "com.android.contacts", 1)
             ContentResolver.setSyncAutomatically(newAccount, "com.android.contacts", true)
             newAccount
         } else {
-            Log.d("asdasd","ppp")
+            Log.d("asdasd", "ppp")
             /*
              * The account exists or some other error occurred. Log this, report it,
              * or handle it internally.
@@ -591,6 +591,7 @@ class FragmentProfile(var callback:Callback) : BaseFragment(), ProfileAboutAdapt
             Account(Constants.ACCOUNT_NAME, Constants.ACCOUNT_TYPE)
         }
     }
+
     override fun onDestroy() {
         requireContext().unregisterReceiver(syncBroadcastreceiver)
         super.onDestroy()

@@ -238,7 +238,7 @@ class ActivityWelcome : BaseActivity(),
     }
 
 
-    class ViewPagerAdapter(@NonNull fm: FragmentManager?) :
+    class ViewPagerAdapter(@SuppressLint("KotlinNullnessAnnotation") @NonNull fm: FragmentManager?) :
         FragmentPagerAdapter(fm!!) {
         private val fragments: MutableList<Fragment> = ArrayList()
         private val fragmentTitle: MutableList<String> = ArrayList()

@@ -1,4 +1,4 @@
-package com.igalata.bubblepicker.adapter
+package com.igalata.bubblepicker.exception.adapter
 
 import com.igalata.bubblepicker.model.PickerItem
 
