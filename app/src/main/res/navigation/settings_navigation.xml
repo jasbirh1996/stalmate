@@ -28,8 +28,12 @@
             android:id="@+id/fragment_account_setting_to_fragment_blocked_users"
             app:destination="@id/fragment_blocked_users"
             />
-
-
+        <action
+            android:id="@+id/action_fragment_account_setting_to_fragmentPrivacy"
+            app:destination="@id/fragmentPrivacy" />
+        <!--<action
+            android:id="@+id/action_fragment_account_setting_to_fragmentPrivacy2"
+            app:destination="@id/fragmentPrivacy" />-->
 
 
     </fragment>
@@ -42,4 +46,8 @@
         tools:layout="@layout/fragment_blocked_contacts" >
 
     </fragment>
+    <fragment
+        android:id="@+id/fragmentPrivacy"
+        android:name="com.stalmate.user.view.settings.ActivityPrivacy"
+        android:label="FragmentPrivacy" />
 </navigation>

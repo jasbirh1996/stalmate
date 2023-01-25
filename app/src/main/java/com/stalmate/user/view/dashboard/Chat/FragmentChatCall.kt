@@ -1,5 +1,6 @@
 package com.stalmate.user.view.dashboard.Chat
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -20,7 +21,18 @@ class FragmentChatCall : Fragment() {
     ): View {
         _binding = FragmentChatCallBinding.inflate(inflater, container, false)
         viewPagerBinding()
+        listener()
         return binding.root
+    }
+
+    private fun listener() {
+        binding.chatNotification.setOnClickListener {
+            val intent = Intent(requireActivity(), FragmentNotification::class.java)
+            startActivity(intent)
+        }
+        binding.topAppBar.setNavigationOnClickListener {
+            requireActivity().finish()
+        }
     }
 
     private fun viewPagerBinding() {

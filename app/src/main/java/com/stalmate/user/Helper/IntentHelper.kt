@@ -3,7 +3,6 @@ package com.stalmate.user.Helper
 import android.content.Context
 import android.content.Intent
 import com.stalmate.user.view.authentication.FragmentOTPEnter
-import com.stalmate.user.view.dashboard.ActivityDashboard
 import com.stalmate.user.view.dashboard.Friend.ActivityCategoryCreate
 import com.stalmate.user.view.dashboard.HomeFragment.ActivitySearch
 import com.stalmate.user.view.dashboard.welcome.ActivityWelcome
@@ -24,6 +23,11 @@ import com.stalmate.user.view.dashboard.SIdeDrawer.ActivityLeftMenuSavedFuntime
 import com.stalmate.user.view.dashboard.funtime.ActivityFuntimePost
 import com.stalmate.user.view.dashboard.funtime.ActivityReelsByAudio
 import com.stalmate.user.view.dashboard.funtime.ActivityReportUser
+import com.stalmate.user.view.dashboard.welcome.ActivitySync
+import com.stalmate.user.view.dashboard.welcome.FragmentSync
+import com.stalmate.user.view.settings.ActivityBlockContacts
+import com.stalmate.user.view.settings.ActivityPrivacy
+import com.stalmate.user.view.settings.FragmentSettingsAccount
 
 public class IntentHelper {
 
@@ -61,6 +65,10 @@ public class IntentHelper {
 
         fun getSearchScreen(context: Context?): Intent? {
             return Intent(context, ActivitySearch::class.java)
+                .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        }
+        fun getSyncContactsScreen(context: Context?): Intent? {
+            return Intent(context, ActivitySync::class.java)
                 .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
         }
 
@@ -127,6 +135,19 @@ public class IntentHelper {
 
         fun getReportUserScreen(context: Context?): Intent? {
             return Intent(context, ActivityReportUser::class.java)
+                .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        }
+
+        fun getBlockListScreen(context: Context?): Intent? {
+            return Intent(context, ActivityBlockContacts::class.java)
+                .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        }
+        fun getFragmentPrivacyScreen(context: Context?): Intent? {
+            return Intent(context, ActivityPrivacy::class.java)
+                .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        }
+        fun getFragmentSettingsAccount(context: Context?): Intent? {
+            return Intent(context, FragmentSettingsAccount::class.java)
                 .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
         }
 

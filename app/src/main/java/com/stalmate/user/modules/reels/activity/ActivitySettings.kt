@@ -28,7 +28,7 @@ class ActivitySettings : BaseActivity() {
     }
 
 
-    fun setUpNavigation() {
+    private fun setUpNavigation() {
         navController=findNavController(R.id.nav_host_fragment)
     }
 

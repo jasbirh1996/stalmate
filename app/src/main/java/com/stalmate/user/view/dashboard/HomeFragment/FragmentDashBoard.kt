@@ -6,7 +6,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.LinearInterpolator
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
@@ -19,11 +18,8 @@ import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.commonadapters.AdapterFeed
 import com.stalmate.user.databinding.FragmentDashboardBinding
-import com.stalmate.user.utilities.Constants
 import com.stalmate.user.view.dashboard.ActivityDashboardNew
 import com.stalmate.user.view.dashboard.Chat.FragmentChatCall
-import com.stalmate.user.view.dashboard.Chat.FragmentChatNCallBase
-import com.stalmate.user.view.dashboard.Chat.FragmentSocketChat
 import com.stalmate.user.view.dashboard.Friend.FragmentFriend
 import com.stalmate.user.view.dashboard.VideoReels.FragmentReels
 import com.stalmate.user.view.dashboard.funtime.FragmentFunTime
@@ -32,7 +28,7 @@ import com.stalmate.user.view.profile.FragmentProfile
 
 
 class FragmentDashboard: BaseFragment(), View.OnClickListener, FragmentHome.Callback,
-    FragmentFriend.Callbackk, FragmentProfile.Callback {
+    FragmentFriend.Callbackk{
     private lateinit var binding: FragmentDashboardBinding
     lateinit var feedAdapter: AdapterFeed
 
@@ -118,7 +114,7 @@ class FragmentDashboard: BaseFragment(), View.OnClickListener, FragmentHome.Call
     val fragmentChat: Fragment = FragmentChatCall()
     val fragmentReels: Fragment = FragmentReels()
     val fragmentFriends: Fragment = FragmentFriend(this)
-    val fragmentProfile: FragmentProfile = FragmentProfile(this)
+    val fragmentProfile: FragmentProfile = FragmentProfile()
 
 
 

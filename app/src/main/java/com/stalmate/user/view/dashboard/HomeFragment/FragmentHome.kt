@@ -78,34 +78,18 @@ class FragmentHome(var callback: Callback) : BaseFragment(), AdapterFeed.Callbac
             binding.nointernet.visibility = View.VISIBLE
         }
 
-        binding.nestedScrollview.setOnScrollChangeListener(object :
-            NestedScrollView.OnScrollChangeListener {
-
-            override fun onScrollChange(
-                v: NestedScrollView,
-                scrollX: Int,
-                scrollY: Int,
-                oldScrollX: Int,
-                oldScrollY: Int
-            ) {
-
-                if (oldScrollY < scrollY) {//increase
-                    callback.onScoll(true)
-                } else {
-                    callback.onScoll(false)
-                }
-
-
+        binding.nestedScrollview.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+            if (oldScrollY < scrollY) {//increase
+                callback.onScoll(true)
+            } else {
+                callback.onScoll(false)
             }
         })
-
-
     }
-
 
     fun homeSetUp() {
         setupSearchBox()
-        feedAdapter = AdapterFeed(networkViewModel, requireContext(), this)
+        feedAdapter = AdapterFeed(networkViewModel, requireContext(), requireActivity())
         homeStoryAdapter = UserHomeStoryAdapter(networkViewModel, requireContext(), this)
         binding.shimmerViewContainer.startShimmer()
         binding.shimmerLayoutFeeds.startShimmer()
@@ -121,6 +105,7 @@ class FragmentHome(var callback: Callback) : BaseFragment(), AdapterFeed.Callbac
         networkViewModel.getFeedList("", HashMap())
         networkViewModel.feedLiveData.observe(viewLifecycleOwner, Observer {
             Log.d("asdasdasd", "oaspiasddsad")
+            Log.d("asdasdasd", it.toString())
             it.let {
                 feedAdapter.submitList(it!!.results)
                 binding.shimmerLayoutFeeds.stopShimmer()
@@ -244,17 +229,10 @@ class FragmentHome(var callback: Callback) : BaseFragment(), AdapterFeed.Callbac
                 MotionEvent.ACTION_UP -> {
                     binding.toolbar.layoutSearchBox.background =
                         ContextCompat.getDrawable(requireContext(), R.drawable.search_background)
-
-
                     startActivity(IntentHelper.getSearchScreen(requireContext()))
-
                 }
             }
             true
         })
-
-
     }
-
-
 }

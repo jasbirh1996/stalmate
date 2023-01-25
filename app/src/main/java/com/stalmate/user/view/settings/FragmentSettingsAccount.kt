@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.databinding.FragmentSettingListingBinding
 import com.stalmate.user.databinding.FragmentSettingsAccountBinding
@@ -58,7 +59,8 @@ lateinit var binding:FragmentSettingsAccountBinding
         when(settingName){
 
             Constants.SETTING_ACCOUNT_PRIVACY->{
-
+//                findNavController().navigate(R.id.action_fragment_account_setting_to_fragmentPrivacy2)
+                startActivity(IntentHelper.getFragmentPrivacyScreen(requireActivity()))
             }
 
             Constants.SETTING_CHANGE_NUMBER->{
@@ -70,7 +72,8 @@ lateinit var binding:FragmentSettingsAccountBinding
             }
 
             Constants.SETTING_BLOCKED_CONTACTS->{
-                findNavController().navigate(R.id.fragment_account_setting_to_fragment_blocked_users)
+//                findNavController().navigate(R.id.fragment_account_setting_to_fragment_blocked_users)
+                startActivity(IntentHelper.getBlockListScreen(requireActivity()))
             }
 
             Constants.SETTING_DELETEACCOUNT->{

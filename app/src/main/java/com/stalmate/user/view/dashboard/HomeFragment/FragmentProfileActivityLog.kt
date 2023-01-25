@@ -8,17 +8,13 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.commonadapters.AdapterFeed
 import com.stalmate.user.databinding.FragmentProfileActivityLogBinding
-import com.stalmate.user.databinding.FragmentSearchBinding
 import com.stalmate.user.model.User
 import com.stalmate.user.utilities.Constants
-import com.stalmate.user.view.adapter.SearchedUserAdapter
 import com.stalmate.user.view.adapter.SuggestedFriendAdapter
-import com.stalmate.user.view.adapter.UserHomeStoryAdapter
 
 class FragmentProfileActivityLog: BaseFragment(), AdapterFeed.Callbackk,
     SuggestedFriendAdapter.Callbackk {
@@ -45,7 +41,7 @@ class FragmentProfileActivityLog: BaseFragment(), AdapterFeed.Callbackk,
         getActivityLogs()
     }
     fun getActivityLogs() {
-        feedAdapter = AdapterFeed(networkViewModel, requireContext(), this)
+        feedAdapter = AdapterFeed(networkViewModel, requireContext(), requireActivity())
         binding.shimmerLayoutFeeds.startShimmer()
         binding.rvFeeds.adapter = feedAdapter
         binding.rvFeeds.layoutManager = LinearLayoutManager(context)

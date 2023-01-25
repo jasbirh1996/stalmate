@@ -6,10 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.commonadapters.AdapterFeed
@@ -46,7 +43,7 @@ class FragmentCreatePost : BaseFragment(), AdapterFeed.Callbackk, UserHomeStoryA
         super.onViewCreated(view, savedInstanceState)
 
 
-        feedAdapter = AdapterFeed(networkViewModel, requireContext(), this)
+        feedAdapter = AdapterFeed(networkViewModel, requireContext(), requireActivity())
         homeStoryAdapter = UserHomeStoryAdapter(networkViewModel, requireContext(), this)
         suggestedFriendAdapter = SuggestedFriendAdapter(networkViewModel, requireContext(), this)
 
@@ -58,12 +55,6 @@ class FragmentCreatePost : BaseFragment(), AdapterFeed.Callbackk, UserHomeStoryA
                 homeStoryAdapter.submitList(it!!.results)
             }
         })
-
-
-
-
-
-
 
 
     }

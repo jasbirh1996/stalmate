@@ -666,11 +666,38 @@
     <string name="funtime_posts">Funtime Posts</string>
     <string name="text_verify">Verify</string>
     <string name="chats">Chats</string>
+    <string name="recent">Recent</string>
+    <string name="seeMore">See More</string>
     <string name="calls">Calls</string>
+    <string name="today_09_00pm">Today, 09:00PM</string>
+    <string name="_3hrs">3 hours ago</string>
+    <string name="_4">(4)</string>
+    <string name="abhay_kashyap">Abhay Kashyap</string>
+    <string name="bruce_banner_text">"It's Bruce Banner's birthday today. help him a great day!"</string>
+    <string name="who_can_see_my_personal_information">Who can see my personal information</string>
+    <string name="profile">Profile</string>
+    <string name="read_receipts">Read receipts</string>
+    <string name="allow_others_to_find_me">Allow others to find me</string>
+    <string name="back">back</string>
     <string-array name="marrage">
         <item><font fgcolor="#B7B7B7">Marital Status</font></item>
         <item><font fgcolor="#B7B7B7">Single</font></item>
         <item><font fgcolor="#B7B7B7">Marriage</font></item>
+    </string-array>
+    <!--profile-->
+    <string-array name="profile">
+        <item><font fgcolor="#B7B7B7">Profile</font></item>
+        <item><font fgcolor="#B7B7B7">My friends</font></item>
+        <item><font fgcolor="#B7B7B7">Everyone</font></item>
+        <item><font fgcolor="#B7B7B7">Nobody</font></item>
+    </string-array>
+
+    <!--group-->
+    <string-array name="group">
+        <item><font fgcolor="#B7B7B7">Group</font></item>
+        <item><font fgcolor="#B7B7B7">My friends</font></item>
+        <item><font fgcolor="#418CFF">My friends except</font></item>
+        <item><font fgcolor="#B7B7B7">Only share with</font></item>
     </string-array>
 
     <string-array name="date">
@@ -745,7 +772,7 @@
         <item>December</item>
     </string-array>
     <string-array name="monthOfTwentyEight">
-<!--        <item>February</item>-->
+        <!--        <item>February</item>-->
         <item>January</item>
         <item>February</item>
         <item>March</item>

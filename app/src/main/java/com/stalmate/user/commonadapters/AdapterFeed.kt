@@ -2,13 +2,10 @@ package com.stalmate.user.commonadapters
 
 
 
-import android.annotation.SuppressLint
 import android.content.Context
-import android.os.Handler
-import android.util.Log
 import android.view.*
-import android.widget.ImageView
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 /*import com.github.pgreze.reactions.ReactionPopup
 import com.github.pgreze.reactions.ReactionsConfigBuilder
@@ -22,7 +19,7 @@ import com.stalmate.user.viewmodel.AppViewModel
 class AdapterFeed(
     val viewModel: AppViewModel,
     val context: Context,
-    var callback: Callbackk
+    var callback: FragmentActivity
 ) :
     RecyclerView.Adapter<AdapterFeed.FeedViewHolder>() {
     var list = ArrayList<Feed>()
