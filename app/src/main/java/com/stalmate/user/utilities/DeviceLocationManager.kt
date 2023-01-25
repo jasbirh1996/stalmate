@@ -73,6 +73,7 @@ class DeviceLocationManager(var context: Activity, var callbackk: Callbackk) {
     @SuppressLint("MissingPermission")
     fun getCurrentLocationn() {
 
+
        /* if (arePermissionGranted(permissions)) {
             mFusedLocationClient!!.getCurrentLocation(
                 LocationRequest.PRIORITY_HIGH_ACCURACY,
@@ -96,7 +97,6 @@ class DeviceLocationManager(var context: Activity, var callbackk: Callbackk) {
             })
 
         }*/
-
 
     }
 
