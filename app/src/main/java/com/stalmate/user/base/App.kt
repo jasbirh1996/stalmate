@@ -89,8 +89,7 @@ class App :Application(){
     }
 
 
-    override
-    protected fun attachBaseContext(base: Context?) {
+    public override fun attachBaseContext(base: Context?) {
         super.attachBaseContext(base)
         //  MultiDex.install(this);
     }

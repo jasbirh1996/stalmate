@@ -31,7 +31,7 @@ class CommonConfirmationDialog(
         dialog!!.requestWindowFeature(Window.FEATURE_NO_TITLE)
         val view: View = LayoutInflater.from(context).inflate(R.layout.app_common_alter_dialog, null)
         binding = DataBindingUtil.bind(view)
-        dialog!!.setContentView(binding!!.getRoot())
+        dialog!!.setContentView(binding!!.root)
         dialog!!.setCancelable(true)
         if (dialog!!.window != null) {
             dialog!!.window!!.setBackgroundDrawable(null)

@@ -2,23 +2,22 @@ package com.stalmate.user.base
 
 import android.R
 import android.app.Activity
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.util.Log
 import android.view.Gravity
-import android.view.View
-import android.view.WindowManager
-import android.view.inputmethod.InputMethodManager
 import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
+import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.base.callbacks.BaseCallBacks
-import com.stalmate.user.view.dashboard.funtime.FragmentFuntimeTag
+import com.stalmate.user.utilities.Constants
 import com.stalmate.user.viewmodel.AppViewModel
 import java.util.*
 
@@ -94,7 +93,7 @@ open class BaseFragment : Fragment(), BaseCallBacks {
 
     protected fun showSnackbar(message: String) {
         val snack = Snackbar.make(
-            activity!!.findViewById(R.id.content),
+            requireActivity().findViewById(R.id.content),
             message, Snackbar.LENGTH_LONG
         )
         val view = snack.view
@@ -113,7 +112,4 @@ open class BaseFragment : Fragment(), BaseCallBacks {
         context.createConfigurationContext(config)
         context.resources.updateConfiguration(config, context.resources.displayMetrics)
     }
-
-
-
 }

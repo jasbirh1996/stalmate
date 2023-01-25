@@ -1,5 +1,6 @@
 package com.stalmate.user.view.settings
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,13 +10,14 @@ import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.databinding.FragmentSettingListingBinding
 import com.stalmate.user.utilities.Constants
 import com.stalmate.user.utilities.PrefManager
 
 class FragmentSettingListing : Fragment(), MainSettingCategoryAdapter.Callbackk {
-    lateinit var binding:FragmentSettingListingBinding
+    lateinit var binding: com.stalmate.user.databinding.FragmentSettingListingBinding
 
 
 

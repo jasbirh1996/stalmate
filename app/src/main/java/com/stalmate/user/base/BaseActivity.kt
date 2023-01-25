@@ -3,7 +3,9 @@ package com.stalmate.user.base
 import android.R
 import android.app.AlertDialog
 import android.app.ProgressDialog
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.PersistableBundle
@@ -15,7 +17,9 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
+import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.base.callbacks.BaseCallBacks
+import com.stalmate.user.utilities.Constants
 import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.utilities.untilitys
 import com.stalmate.user.viewmodel.AppViewModel
@@ -147,6 +151,25 @@ abstract class BaseActivity : AppCompatActivity(), View.OnClickListener,
             return false
         }
         return true
+    }
+    fun syncBroadcasReceiver(){
+
+    }
+    inner class SyncBroadcasReceiver : BroadcastReceiver() {
+        override fun onReceive(p0: Context?, p1: Intent?) {
+            if (p1!!.action == Constants.ACTION_SYNC_COMPLETED) {
+                dismissLoader()
+                Log.d("==========wew", "wwwwwwwwwwww=====121=====wwwwwwwwwwwwww")
+                makeToast("Synced")
+                if (p1.extras!!.getString("contacts") != null) {
+                    Log.d("==========wew", "wwwwwwwwwwwwwwwwwwwwwww11www")
+                    startActivity(
+                        IntentHelper.getSearchScreen(applicationContext)!!
+                            .putExtra("contacts", p1.extras!!.getString("contacts").toString())
+                    )
+                }
+            }
+        }
     }
 
 /*    override fun onRequestPermissionsResult(

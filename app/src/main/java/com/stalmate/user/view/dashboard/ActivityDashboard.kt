@@ -1,6 +1,6 @@
 package com.stalmate.user.view.dashboard
 
-import android.animation.ValueAnimator
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -8,9 +8,6 @@ import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -20,10 +17,7 @@ import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.databinding.ActivityDashboardBinding
-import com.stalmate.user.modules.reels.player.Constants
-import com.stalmate.user.modules.reels.player.VideoPreLoadingService
 import com.stalmate.user.view.dashboard.Chat.FragmentChatCall
-import com.stalmate.user.view.dashboard.Chat.FragmentChatNCallBase
 import com.stalmate.user.view.dashboard.Friend.FragmentFriend
 import com.stalmate.user.view.dashboard.HomeFragment.FragmentHome
 import com.stalmate.user.view.dashboard.HomeFragment.FragmentMenu
@@ -32,7 +26,7 @@ import com.stalmate.user.view.dashboard.funtime.FragmentFunTime
 import com.stalmate.user.view.profile.FragmentProfile
 
 class ActivityDashboard : BaseActivity(), FragmentHome.Callback, FragmentFriend.Callbackk,
-    FragmentMenu.Callback, FragmentProfile.Callback/*, FragmentFunTime.Callbackk*/ {
+    FragmentMenu.Callback/*, FragmentFunTime.Callbackk*/ {
     private val TIME_INTERVAL = 2000
     var back_pressed: Long = 0
     private lateinit var binding: ActivityDashboardBinding
@@ -66,6 +60,7 @@ class ActivityDashboard : BaseActivity(), FragmentHome.Callback, FragmentFriend.
         private const val ID_ACCOUNT = 4
     }
 
+    @SuppressLint("MissingSuperCall")
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         if (intent!!.getStringExtra("notificationType") != null) {
@@ -231,8 +226,8 @@ class ActivityDashboard : BaseActivity(), FragmentHome.Callback, FragmentFriend.
     val fragment3: Fragment = FragmentChatCall()
     val fragment4: Fragment = FragmentReels()
   //  val fragment5: Fragment = FragmentFriend(this)
-    val fragment5: Fragment = FragmentProfile(this)
-    val fragmentProfile: FragmentProfile = FragmentProfile(this)
+    val fragment5: Fragment = FragmentProfile()
+    val fragmentProfile: FragmentProfile = FragmentProfile()
     val fm: FragmentManager = supportFragmentManager
     var active = fragment1
 

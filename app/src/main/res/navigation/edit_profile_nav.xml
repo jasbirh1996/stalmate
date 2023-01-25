@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/edit_profile_nav"
+    app:startDestination="@id/fragmentProfileEdit">
+
+    <fragment
+        android:id="@+id/fragmentProfileEdit"
+        tools:layout="@layout/fragment_profile_edit"
+        android:name="com.stalmate.user.view.profile.FragmentProfileEdit"
+        android:label="FragmentProfileEdit" >
+        <action
+            android:id="@+id/action_fragmentProfileEdit_to_fragmentBlockedContacts"
+            app:destination="@id/fragmentBlockedContacts" />
+        <action
+            android:id="@+id/action_fragmentProfileEdit_to_fragmentSync22"
+            app:destination="@id/fragmentSync2" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentBlockedContacts"
+        tools:layout="@layout/fragment_blocked_contacts"
+        android:name="com.stalmate.user.view.settings.FragmentBlockedContacts"
+        android:label="FragmentBlockedContacts" />
+    <fragment
+        android:id="@+id/fragmentSync2"
+        tools:layout="@layout/fragment_sync"
+        android:name="com.stalmate.user.view.dashboard.welcome.FragmentSync"
+        android:label="FragmentSync" />
+</navigation>
