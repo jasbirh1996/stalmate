@@ -25,10 +25,6 @@
         android:label="fragmentAccount"
         tools:layout="@layout/fragment_settings_account" >
         <action
-            android:id="@+id/fragment_account_setting_to_fragment_blocked_users"
-            app:destination="@id/fragment_blocked_users"
-            />
-        <action
             android:id="@+id/action_fragment_account_setting_to_fragmentPrivacy"
             app:destination="@id/fragmentPrivacy" />
         <!--<action

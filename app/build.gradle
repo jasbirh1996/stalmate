@@ -67,6 +67,10 @@ android {
             }
         }
     }
+    buildFeatures {
+        viewBinding true
+    }
+
     buildToolsVersion '33.0.0'
     ndkVersion '24.0.8215888'
 }
@@ -75,7 +79,7 @@ dependencies {
 
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.appcompat:appcompat:1.6.0'
-    implementation 'com.google.android.material:material:1.7.0'
+    implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'
     implementation 'androidx.navigation:navigation-ui-ktx:2.5.3'
@@ -87,7 +91,7 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     /*Material Edittext DD*/
-    implementation "com.google.android.material:material:1.8.0-rc01"
+    implementation "com.google.android.material:material:1.9.0-alpha01"
     /*PinView DD*/
     implementation 'io.github.chaosleung:pinview:1.4.4'
     implementation("com.tbuonomo:dotsindicator:4.3")
@@ -108,7 +112,7 @@ dependencies {
     implementation 'jp.co.cyberagent.android:gpuimage:2.1.0'
     implementation project(path: ':photoeditor')
     implementation project(path: ':bubblepicker')
-    implementation project(path: ':custombottomnavigation')
+
     implementation project(path: ':mp4compose')
 
  //  implementation project(path: ':FBReaction-master')
@@ -118,7 +122,7 @@ dependencies {
    implementation 'com.googlecode.mp4parser:isoparser:1.1.22'
     implementation 'info.hoang8f:android-segmented:1.0.6'
     implementation 'androidx.concurrent:concurrent-futures:1.1.0'
-    implementation "com.airbnb.android:lottie:5.0.3"
+    implementation "com.airbnb.android:lottie:5.2.0"
     implementation 'com.tbuonomo:dotsindicator:4.3'
     implementation 'com.github.CanHub:Android-Image-Cropper:4.3.0'
     implementation 'de.hdodenhof:circleimageview:3.1.0'
@@ -143,7 +147,7 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
     implementation 'jp.wasabeef:richeditor-android:2.0.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.google.firebase:firebase-crashlytics:18.3.2'
+    implementation 'com.google.firebase:firebase-crashlytics:18.3.3'
     implementation 'com.github.MasayukiSuda:GPUVideo-android:v0.1.2'
     implementation 'com.arthenica:mobile-ffmpeg-min-gpl:4.4'
     implementation ('io.socket:socket.io-client:2.0.0') {
