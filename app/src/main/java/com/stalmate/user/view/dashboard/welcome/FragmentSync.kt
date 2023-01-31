@@ -76,10 +76,9 @@ class FragmentSync : BaseFragment() {
 
         binding.btnNext.setOnClickListener {
             //callback.onClickOnNextButtonOnSyncPage()
-            /*    startActivity(
+                startActivity(
                     IntentHelper.getSearchScreen(requireContext())
-                )*/
-            findNavController().popBackStack()
+                )
         }
     }
 

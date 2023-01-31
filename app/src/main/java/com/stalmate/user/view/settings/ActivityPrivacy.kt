@@ -9,7 +9,7 @@ import com.stalmate.user.databinding.FragmentProfilePrivacySettingsBinding
 class ActivityPrivacy : BaseActivity() {
     private lateinit var binding: FragmentProfilePrivacySettingsBinding
     private var privacyGroup = ""
-    private val profileList: Array<String> = resources.getStringArray(R.array.profile)
+//    private val profileList: Array<String> = resources.getStringArray(R.array.profile)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
