@@ -151,12 +151,8 @@ class FragmentSongPickerInGroup : BaseFragment(), FriendAdapter.Callbackk,
                 val selectedImageUri = result.data?.data!!
                 // perform your logic with the selected image Uri
                 Log.d("clicked", selectedImageUri.toString())
-                val path = getRealPathFromURI(requireContext(), selectedImageUri)
                 val paths = fileFromContentUri(requireContext(), selectedImageUri)
-                val pathss = FileUtils.getRealPath(requireContext(), selectedImageUri)
-                Log.d("path5432", path.toString())
-               Log.d("paths", paths.toString())
-             //   Log.d("pathss", pathss.toString())
+
             }
         }
 
