@@ -76,7 +76,6 @@ class FragmentSync : BaseFragment() {
 
         binding.btnNext.setOnClickListener {
             //callback.onClickOnNextButtonOnSyncPage()
-
             /*    startActivity(
                     IntentHelper.getSearchScreen(requireContext())
                 )*/
@@ -102,7 +101,6 @@ class FragmentSync : BaseFragment() {
 
         // Get an instance of the Android account manager
         val accountManager = requireActivity().getSystemService(ACCOUNT_SERVICE) as AccountManager
-
         for (i in 0 until accountManager.accounts.size) {
             if (accountManager.accounts[i].type == Constants.ACCOUNT_TYPE) {
                 return true
