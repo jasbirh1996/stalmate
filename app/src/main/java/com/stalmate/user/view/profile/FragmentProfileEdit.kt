@@ -7,20 +7,15 @@ import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.ContentResolver
 import android.content.Context
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.LinearLayout
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.findNavController
@@ -45,7 +40,6 @@ import com.stalmate.user.utilities.Constants
 import com.stalmate.user.utilities.ImageLoaderHelperGlide
 import com.stalmate.user.utilities.PriceFormatter
 import com.stalmate.user.utilities.ValidationHelper
-import com.stalmate.user.view.dialogs.CommonConfirmationDialog
 import com.stalmate.user.view.dialogs.DialogAddEditEducation
 import com.stalmate.user.view.dialogs.DialogAddEditProfession
 import com.stalmate.user.view.dialogs.DialogVerifyNumber
@@ -92,21 +86,32 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-      if (!this::_binding.isInitialized){
-          _binding = FragmentProfileEditBinding.inflate(inflater, container, false)
+        if (!this::_binding.isInitialized) {
+            _binding = FragmentProfileEditBinding.inflate(inflater, container, false)
         }
-
+        setupSpinnerListener()
         val cal = Calendar.getInstance()
         currentYear = (cal.get(Calendar.YEAR) - 13).toString()
-        setupSpinnerListener()
         getUserProfileData()
         blockList()
+        binding.ivBackground.setOnClickListener {
 
+            startActivity(
+                IntentHelper.getFullImageScreen(requireActivity())!!
+                    .putExtra("picture", userData.results.cover_img1)
+            )
+        }
+        binding.ivUserThumb.setOnClickListener {
+            startActivity(
+                IntentHelper.getFullImageScreen(requireActivity())!!
+                    .putExtra("picture", userData.results.profile_img1)
+            )
+        }
         binding.buttonSyncContacts.setOnClickListener {
             val fragmentAlertDialogAccessContacts = FragmentAlertDialogAccessContacts(object :
                 FragmentAlertDialogAccessContacts.Callback {
                 override fun onCLickONAccessButton() {
-                   // callback.onCLickONSyncContactButton()
+                    // callback.onCLickONSyncContactButton()
                     //retreiveGoogleContacts()
 
                     findNavController().navigate(R.id.action_fragmentProfileEdit_to_fragmentSync22)
@@ -116,8 +121,11 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
             val bundle = Bundle()
             bundle.putString("LEAVE_INTENT_TYPE", "LEAVE")
             fragmentAlertDialogAccessContacts.arguments = bundle
-            fragmentAlertDialogAccessContacts.setStyle(DialogFragment.STYLE_NORMAL,R.style.CustomAlertDialog)
-            fragmentAlertDialogAccessContacts.dialog?.window?.setLayout(100,100)
+            fragmentAlertDialogAccessContacts.setStyle(
+                DialogFragment.STYLE_NORMAL,
+                R.style.CustomAlertDialog
+            )
+            fragmentAlertDialogAccessContacts.dialog?.window?.setLayout(100, 100)
             fragmentAlertDialogAccessContacts.show(
                 childFragmentManager,
                 "FragmentAlertDialogAccessContacts"
@@ -212,7 +220,7 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
                             }
 
                             override fun onItemRemove() {
-                               getBlockList()
+                                getBlockList()
                             }
 
                         })
@@ -221,14 +229,15 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
                         binding.layoutBlockList.visibility = View.GONE
                     } else {
                         binding.layoutBlockList.visibility = View.VISIBLE
+                        binding.buttonSeeAllBlockList.visibility = View.VISIBLE
                         val firstTwoElements: List<User?>
                         blockedUserAdapter.list.clear()
-                   /*     if (it.results.size > 2) {
-                            firstTwoElements = it.results.subList(0, 2)
-                            binding.buttonSeeAllBlockList.visibility = View.VISIBLE
-                        } else {
-                            firstTwoElements = it.results
-                        }*/
+                        /*     if (it.results.size > 2) {
+                                 firstTwoElements = it.results.subList(0, 2)
+                                 binding.buttonSeeAllBlockList.visibility = View.VISIBLE
+                             } else {
+                                 firstTwoElements = it.results
+                             }*/
                         blockedUserAdapter.submitList(it.results)
                         binding.rvBlockList.adapter = blockedUserAdapter
                         blockedUserAdapter.notifyDataSetChanged()
@@ -242,7 +251,7 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
     }
 
 
-    fun getBlockList(){
+    fun getBlockList() {
         var hashMap = HashMap<String, String>()
         hashMap.put("limit", "2")
         hashMap.put("page", "1")
@@ -260,7 +269,7 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
         networkViewModel.getProfileData(hashMap)
         hashMap.put("limit", "5")
         hashMap.put("page", "1")
-       getBlockList()
+        getBlockList()
 
 
         networkViewModel.profileLiveData.observe(requireActivity()) {
@@ -292,7 +301,7 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
 
         getAlbumPhotosById("profile_img")
         getAlbumPhotosById("cover_img")
-        fetchDOB(userData.results.dob!!)
+
         binding.layout.etName.setText(userData.results.first_name)
         binding.layout.etLastName.setText(userData.results.last_name)
         binding.layout.bio.setText(userData.results.about)
@@ -341,15 +350,34 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
         }
 
         setUpAboutUI("Photos")
-
+        fetchDOB(userData.results.dob!!)
 
     }
 
     fun fetchDOB(date: String) {
+
         val calender = Calendar.getInstance()
         val datee = PriceFormatter.getDateObject(date)
         calender.time = datee
         selectedYear = calender.get(Calendar.YEAR).toString()
+        //selectedMonth = PriceFormatter.getMonth(date)
+        /*val date = when(date){
+            "0" -> "January"
+            "1" -> "February"
+            "2" -> "March"
+            "3" -> "April"
+            "4" -> "May"
+            "5" -> "June"
+            "6" -> "July"
+            "7" -> "August"
+            "8" -> "September"
+            "9" -> "October"
+            "10" -> "November"
+            "11" -> "December"
+            else -> {
+                "January"
+            }
+        }*/
         selectedMonth = PriceFormatter.getMonth(date)
         selectedDay = calender.get(Calendar.DATE).toString()
 
@@ -364,6 +392,26 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
         val selectedDayIndex = resources.getStringArray(R.array.date).indexOf(selectedDay)
 
         binding.layout.spYear.setSelection(selectedYearIndex)
+
+        val selectedMonthIndexs = when (selectedMonthIndex) {
+            0 -> "January"
+            1 -> "February"
+            2 -> "March"
+            3 -> "April"
+            4 -> "May"
+            5 -> "June"
+            6 -> "July"
+            7 -> "August"
+            8 -> "September"
+            9 -> "October"
+            10 -> "November"
+            11 -> "December"
+            else -> {
+                "January"
+            }
+        }
+
+
         binding.layout.spMonth.setSelection(selectedMonthIndex)
         binding.layout.spDate.setSelection(selectedDayIndex)
 
@@ -378,6 +426,7 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
         val selecteMarriegeStatus = resources.getStringArray(R.array.marrage)
             .indexOf(userData.results.profile_data[0].marital_status)
         binding.layout.tvmarriage.setSelection(selecteMarriegeStatus)
+
 
     }
 
@@ -437,7 +486,12 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
 
     }
 
-    private fun setupSpinnerListener() {
+    fun setupSpinnerListener() {
+        dataAdapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_item,
+            resources.getStringArray(R.array.month)
+        )
 
         binding.layout.spDate.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
@@ -446,41 +500,44 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
                 position: Int,
                 p3: Long
             ) {
-                try {
-                    selectedDay = p0!!.getItemAtPosition(position).toString()
+                selectedDay = p0!!.getItemAtPosition(position).toString()
+                dataAdapter = ArrayAdapter(
+                    requireContext(),
+                    android.R.layout.simple_spinner_item,
+                    resources.getStringArray(R.array.month)
+                )
+
+                if (selectedDay.toInt() == 31) {
                     dataAdapter = ArrayAdapter(
-                        requireActivity(),
+                        requireContext(),
                         android.R.layout.simple_spinner_item,
-                        resources.getStringArray(R.array.month)
+                        resources.getStringArray(R.array.monthOfthreeOne)
                     )
-
-                    if (selectedDay.toInt() == 31) {
-                        dataAdapter = ArrayAdapter(
-                            requireActivity(),
-                            android.R.layout.simple_spinner_item,
-                            resources.getStringArray(R.array.monthOfthreeOne)
-                        )
-                    }
-
-
-                    if (selectedDay.toInt() == 30) {
-                        dataAdapter = ArrayAdapter(
-                            requireActivity(),
-                            android.R.layout.simple_spinner_item,
-                            resources.getStringArray(R.array.month)
-                        )
-                    }
-
-                    if (selectedDay.toInt() == 28) {
-                        dataAdapter = ArrayAdapter(
-                            requireActivity(),
-                            android.R.layout.simple_spinner_item,
-                            resources.getStringArray(R.array.monthOfTwentyEight)
-                        )
-                    }
-                } catch (e: NullPointerException) {
-                    Log.d("417exception", e.message.toString())
                 }
+
+
+                if (selectedDay.toInt() == 30) {
+                    dataAdapter = ArrayAdapter(
+                        requireContext(),
+                        android.R.layout.simple_spinner_item,
+                        resources.getStringArray(R.array.monthOfThirty)
+                    )
+                }
+
+                if (selectedDay.toInt() == 28) {
+                    dataAdapter = ArrayAdapter(
+                        requireContext(),
+                        android.R.layout.simple_spinner_item,
+                        resources.getStringArray(R.array.monthOfTwentyEight)
+                    )
+                }
+
+
+                // Drop down layout style - list view with radio button
+                dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+                // attaching data adapter to spinner
+                binding.layout.spMonth.adapter = dataAdapter
 
             }
 
@@ -497,12 +554,8 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
                     position: Int,
                     p3: Long
                 ) {
-                    try {
-                        selectedMonth = p0!!.getItemAtPosition(position).toString()
-                        Log.d("jcaujc", selectedMonth)
-                    } catch (e: NullPointerException) {
-                        Log.d("434exception", e.message.toString())
-                    }
+                    selectedMonth = p0!!.getItemAtPosition(position).toString()
+                    Log.d("jcaujc", selectedMonth)
                 }
 
                 override fun onNothingSelected(p0: AdapterView<*>?) {
@@ -519,12 +572,8 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
                 position: Int,
                 p3: Long
             ) {
-                try {
-                    selectedYear = p0!!.getItemAtPosition(position).toString()
-                    Log.d("jcaujc", selectedYear)
-                } catch (e: NullPointerException) {
-                    Log.d("457exception", e.message.toString())
-                }
+                selectedYear = p0!!.getItemAtPosition(position).toString()
+                Log.d("jcaujc", selectedYear)
             }
 
             override fun onNothingSelected(p0: AdapterView<*>?) {

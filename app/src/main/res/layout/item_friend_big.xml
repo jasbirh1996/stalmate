@@ -161,14 +161,16 @@
               <Button
                   android:id="@+id/buttonFollow"
                   style="@style/customButtonStyle"
-                  android:layout_width="0dp"
+                  android:layout_width="120dp"
                   android:layout_height="wrap_content"
                   android:minHeight="0dp"
                   android:text="Following"
                   android:textSize="10sp"
+                  android:visibility="visible"
                   app:backgroundTint="@null"
                   app:layout_constraintEnd_toStartOf="@+id/buttonFriend"
                   app:layout_constraintHorizontal_bias="0.5"
+                  app:layout_constraintHorizontal_chainStyle="spread"
                   app:layout_constraintStart_toStartOf="parent"
                   app:layout_constraintTop_toTopOf="parent" />
 
@@ -177,7 +179,7 @@
                   style="@style/customButtonStyle"
                   android:layout_width="0dp"
                   android:layout_height="wrap_content"
-                  android:layout_marginStart="5dp"
+                  android:layout_marginStart="10dp"
                   android:maxLines="1"
                   android:minHeight="0dp"
                   android:text="Friends"

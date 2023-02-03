@@ -76,9 +76,10 @@ class FragmentSync : BaseFragment() {
 
         binding.btnNext.setOnClickListener {
             //callback.onClickOnNextButtonOnSyncPage()
-                startActivity(
-                    IntentHelper.getSearchScreen(requireContext())
-                )
+            //findNavController().popBackStack()
+            startActivity(
+                IntentHelper.getSearchScreen(requireContext())
+            )
         }
     }
 
@@ -194,7 +195,7 @@ class FragmentSync : BaseFragment() {
     }
 
     override fun onDestroy() {
-      //  requireActivity().unregisterReceiver(syncBroadcastreceiver)
+        //  requireActivity().unregisterReceiver(syncBroadcastreceiver)
         super.onDestroy()
     }
 
