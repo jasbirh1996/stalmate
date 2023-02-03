@@ -2,15 +2,15 @@ package com.stalmate.user.view.authentication
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.FragmentManager
 import androidx.navigation.fragment.findNavController
 import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
@@ -27,11 +27,26 @@ import com.stalmate.user.utilities.ValidationHelper.isValidEmail
 class FragmentLogin : BaseFragment() {
 
     private lateinit var binding: FragmentLoginBinding
+    private var exit = false
+    /*override fun onBackPressed() {
+        if (exit) {
+            requireActivity().finish() // finish activity
+        } else {
+            Toast.makeText(
+                requireActivity(), "Press Back again to Exit.",
+                Toast.LENGTH_SHORT
+            ).show()
+            exit = true
+            Handler().postDelayed(Runnable { exit = false }, 3 * 1000)
+        }
+    }*/
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
     }
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -94,6 +109,8 @@ class FragmentLogin : BaseFragment() {
         CustumEditText.setup(binding.filledTextEmail,binding.etEmail)
         CustumEditText.setup(binding.filledTextPassword,binding.etPassword)
     }
+
+
 
 
     private fun hitLoginApi() {

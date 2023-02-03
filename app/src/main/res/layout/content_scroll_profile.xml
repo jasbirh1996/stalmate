@@ -307,7 +307,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-            <androidx.appcompat.widget.AppCompatEditText
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/etSearchFriend"
                 android:layout_width="195dp"
                 android:layout_height="wrap_content"

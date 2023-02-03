@@ -1,6 +1,7 @@
 package com.stalmate.user.view.adapter
 
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
@@ -48,6 +49,7 @@ class ProfileAboutAdapter(
 
     inner class FeedViewHolder(var binding: ItemProfileAboutDataBinding) :
         RecyclerView.ViewHolder(binding.root) {
+        @SuppressLint("ResourceAsColor")
         fun bind(about: AboutProfileLine) {
 
                 if (ValidationHelper.isNull(about.key) && ValidationHelper.isNull(about.middle) && ValidationHelper.isNull(about.value)){
@@ -63,6 +65,7 @@ class ProfileAboutAdapter(
                 binding.tvValue.text = about.value
                 binding.tvKey.visibility = View.GONE
             } else if (!ValidationHelper.isNull(about.key) && ValidationHelper.isNull(about.middle)) {
+                /*binding.tvValue.setTextColor(R.color.grey_dark)*/
                 binding.tvValue.text = " " + about.value
                 binding.tvKey.text = about.key
                 binding.tvKey.visibility = View.VISIBLE

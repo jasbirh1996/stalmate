@@ -58,11 +58,12 @@ class FragmentFriend(var callback: Callbackk) : BaseFragment(), FriendAdapter.Ca
         super.onViewCreated(view, savedInstanceState)
 
 
-        binding.tabLayout.addTab(  binding.tabLayout.newTab().setText("Friend Requests"));
-        binding.tabLayout.addTab(  binding.tabLayout.newTab().setText("Suggestions"));
-        binding.tabLayout.addTab(  binding.tabLayout.newTab().setText("My Friends"));
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Friend Requests"));
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Suggestions"));
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("My Friends"));
 
-        navHostFragment = childFragmentManager.findFragmentById(R.id.nav_host_container) as NavHostFragment
+        navHostFragment =
+            childFragmentManager.findFragmentById(R.id.nav_host_container) as NavHostFragment
         navController = navHostFragment.navController
         binding.btnCreateCategory.setOnClickListener {
             startActivity(IntentHelper.getCategoryCreateScreen(context))
@@ -75,15 +76,15 @@ class FragmentFriend(var callback: Callbackk) : BaseFragment(), FriendAdapter.Ca
             callback.onClickBack()
         }
 
-        navController.navigate(R.id.idFragmentCategory,bundlex)
+        navController.navigate(R.id.idFragmentCategory, bundlex)
         binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 var bundle = Bundle()
 
                 when (tab!!.position) {
 
                     0 -> {
-
                         binding.btnCreateCategory.visibility = View.VISIBLE
                         bundle.putString("categoryType", Constants.TYPE_FRIEND_REQUEST)
                         navController.navigate(
@@ -93,7 +94,6 @@ class FragmentFriend(var callback: Callbackk) : BaseFragment(), FriendAdapter.Ca
                         )
                     }
                     1 -> {
-
                         binding.btnCreateCategory.visibility = View.GONE
                         bundle.putString("categoryType", Constants.TYPE_FRIEND_SUGGESTIONS)
                         navController.navigate(
@@ -103,7 +103,6 @@ class FragmentFriend(var callback: Callbackk) : BaseFragment(), FriendAdapter.Ca
                         )
                     }
                     2 -> {
-
                         binding.btnCreateCategory.visibility = View.GONE
                         bundle.putString("categoryType", Constants.TYPE_MY_FRIENDS)
                         navController.navigate(
@@ -112,18 +111,16 @@ class FragmentFriend(var callback: Callbackk) : BaseFragment(), FriendAdapter.Ca
                                 .build()
                         )
                     }
-
-
                 }
-
 
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {
-                binding.tabLayout.setTabTextColors(context?.let {
+                binding.tabLayout.tabTextColors = context?.let {
                     ContextCompat.getColorStateList(
-                        it, R.color.grey_dark)
-                });
+                        it, R.color.grey_dark
+                    )
+                };
             }
 
             override fun onTabReselected(tab: TabLayout.Tab?) {
@@ -133,9 +130,6 @@ class FragmentFriend(var callback: Callbackk) : BaseFragment(), FriendAdapter.Ca
         })
 
     }
-
-
-
 
 
     override fun onClickOnUpdateFriendRequest(friend: User, status: String) {

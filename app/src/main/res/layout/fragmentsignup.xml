@@ -169,7 +169,9 @@
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:weightSum="3">
+                        android:weightSum="3"
+                        android:layout_marginStart="@dimen/_5sdp"
+                        android:layout_marginEnd="@dimen/_7sdp">
 
                         <RadioButton
                             android:id="@+id/rdmale"

@@ -37,7 +37,6 @@ class ActivitySearch : BaseActivity() {
         navController = navHostFragment.navController
         //syncBroadcastReceiver()
         binding.ivBack.setOnClickListener {
-            //onBackPressed()
             finish()
         }
         if (intent.getStringExtra("contacts") != null) {

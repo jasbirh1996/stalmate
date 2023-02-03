@@ -4,23 +4,19 @@ package com.stalmate.user.view.profile
 import android.Manifest
 import android.accounts.Account
 import android.accounts.AccountManager
-import android.annotation.SuppressLint
 import android.app.ActivityOptions
-import android.content.*
-import android.database.Cursor
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.provider.ContactsContract
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AccelerateInterpolator
 import android.view.animation.LinearInterpolator
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat.registerReceiver
 import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -28,8 +24,6 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.viewpager2.widget.ViewPager2
-import com.bumptech.glide.Glide
 import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.CropImageView
 import com.canhub.cropper.options
@@ -38,18 +32,13 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
-import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.commonadapters.AdapterFeed
 import com.stalmate.user.commonadapters.AdapterTabPager
-import com.stalmate.user.databinding.ActivityProfileBinding
 import com.stalmate.user.databinding.FragmentProfileBinding
 import com.stalmate.user.model.AboutProfileLine
 import com.stalmate.user.model.User
-import com.stalmate.user.utilities.Constants
-import com.stalmate.user.utilities.ImageLoaderHelperGlide
-import com.stalmate.user.utilities.PrefManager
-import com.stalmate.user.utilities.ValidationHelper
+import com.stalmate.user.utilities.*
 import com.stalmate.user.view.adapter.ProfileAboutAdapter
 import com.stalmate.user.view.adapter.ProfileFriendAdapter
 import com.stalmate.user.view.dashboard.ActivityDashboardNew
@@ -58,6 +47,7 @@ import com.stalmate.user.view.dashboard.HomeFragment.FragmentProfileFuntime
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import java.io.ByteArrayOutputStream
 import java.io.File
 
 
@@ -112,9 +102,6 @@ class FragmentProfile() : BaseFragment(),
         super.onViewCreated(view, savedInstanceState)
 
 
-
-
-
         var adapterTabPager = AdapterTabPager(requireActivity())
         adapterTabPager.addFragment(FragmentProfileActivityLog(), "Activity Log")
         adapterTabPager.addFragment(FragmentProfileFuntime(), "Funtime")
@@ -161,6 +148,9 @@ class FragmentProfile() : BaseFragment(),
             startActivity(IntentHelper.getSyncContactsScreen(requireActivity()))
             // retreiveGoogleContacts()
         }
+        binding.layout.etSearchFriend.setOnClickListener {
+            startActivity(IntentHelper.getSearchScreen(requireContext()))
+        }
         requestPermissions(permissions, WRITE_REQUEST_CODE)
         binding.layout.buttonEditProfile.visibility = View.VISIBLE
 
@@ -172,6 +162,15 @@ class FragmentProfile() : BaseFragment(),
             .setBottomRightCorner(CornerFamily.ROUNDED, radius)
             .build()
         getUserProfileData()
+        binding.ivBackground.setOnClickListener {
+
+            startActivity(IntentHelper.getFullImageScreen(requireActivity())!!
+                .putExtra("picture", userData.cover_img1))
+        }
+        binding.ivUserThumb.setOnClickListener {
+            startActivity(IntentHelper.getFullImageScreen(requireActivity())!!
+                .putExtra("picture", userData.profile_img1))
+        }
 
         friendAdapter = ProfileFriendAdapter(networkViewModel, requireContext(), this)
         binding.layout.rvFriends.adapter = friendAdapter
@@ -179,11 +178,11 @@ class FragmentProfile() : BaseFragment(),
         binding.layout.rvFriends.layoutManager = GridLayoutManager(requireContext(), 3)
 
         var hashmap = HashMap<String, String>()
-        hashmap.put("type", Constants.TYPE_PROFILE_FRIENDS)
-        hashmap.put("sub_type", "")
-        hashmap.put("search", "")
-        hashmap.put("page", "1")
-        hashmap.put("limit", "6")
+        hashmap["type"] = Constants.TYPE_PROFILE_FRIENDS
+        hashmap["sub_type"] = ""
+        hashmap["search"] = ""
+        hashmap["page"] = "1"
+        hashmap["limit"] = "6"
         networkViewModel.getFriendList(hashmap)
         networkViewModel.friendLiveData.observe(viewLifecycleOwner, Observer {
             it.let {
@@ -235,9 +234,10 @@ class FragmentProfile() : BaseFragment(),
 
     }
 
-    public interface Callbackk{
+    public interface Callbackk {
         fun onClickONSyncContTACTbUTTON()
     }
+
 
     var scrollEnable = true
     fun onScrollToHideTopHeader(toHide: Boolean) {
@@ -265,8 +265,6 @@ class FragmentProfile() : BaseFragment(),
             //   binding.navigationBar.root.setVisibility(View.VISIBLE)
         }
     }
-
-
 
 
     override fun onResume() {
@@ -302,8 +300,6 @@ class FragmentProfile() : BaseFragment(),
         }
         return false
     }
-
-
 
 
     fun setupData() {
@@ -457,6 +453,7 @@ class FragmentProfile() : BaseFragment(),
             userData.profile_img1,
             R.drawable.user_placeholder
         )
+
         var aboutArrayList = ArrayList<AboutProfileLine>()
 
         if (tabType == "Photos") {

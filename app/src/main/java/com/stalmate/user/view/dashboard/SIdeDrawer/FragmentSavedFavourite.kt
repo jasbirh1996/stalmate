@@ -88,15 +88,12 @@ lateinit var musicAdapter: SavedGridMusicAdapter
                     Glide.with(requireActivity()).load(it.results[0].image).into(binding.ivAudioOne)
                     Glide.with(requireActivity()).load(it.results[1].image).into(binding.ivAudioTwo)
 
-                    binding.layoutForTwoAudio.setOnTouchListener(object : View.OnTouchListener {
-                        override
-                        fun onTouch(v: View?, event: MotionEvent): Boolean {
-                            Log.d("asdasda","asdasd")
-                            if (event.action==MotionEvent.ACTION_UP)
-                                onClickOnMusic()
-                            return false
-                        }
-                    })
+                    binding.layoutForTwoAudio.setOnTouchListener { v, event ->
+                        Log.d("asdasda", "asdasd")
+                        if (event.action == MotionEvent.ACTION_UP)
+                            onClickOnMusic()
+                        false
+                    }
 
 
                     binding.layoutForTwoAudio.setOnClickListener {
@@ -120,15 +117,12 @@ lateinit var musicAdapter: SavedGridMusicAdapter
 
 
 
-                binding.rvMusicList.setOnTouchListener(object : View.OnTouchListener {
-                    override
-                    fun onTouch(v: View?, event: MotionEvent): Boolean {
-                        Log.d("asdasda","asdasd")
-                        if (event.action==MotionEvent.ACTION_UP)
+                binding.rvMusicList.setOnTouchListener { v, event ->
+                    Log.d("asdasda", "asdasd")
+                    if (event.action == MotionEvent.ACTION_UP)
                         onClickOnMusic()
-                        return false
-                    }
-                })
+                    false
+                }
 
 
                 binding.layoutForTwoVideo.setOnClickListener {

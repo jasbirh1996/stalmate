@@ -659,6 +659,8 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
 
     var recorded = 0.toLong()
     private fun startRecording() {
+        binding.buttonRecord.setOnClickListener(null)
+        binding.buttonRecord.setOnLongClickListener(null)
         recorded = mModel!!.recorded()
         if (recorded >= TimeUnit.SECONDS.toMillis(imageVideoDuration.toLong())) {
             Toast.makeText(
@@ -666,11 +668,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                 R.string.recorder_error_maxed_out,
                 Toast.LENGTH_SHORT
             ).show()
-        } else if (recorded < 15 * 1000) {
-            makeToast("Recorded video should be grater than or equal to 15 seconds")
-        } else if (recorded > 90 * 1000) {
-            makeToast("Recorded video should be less than or equal to 90 seconds")
-        } else {
+        }else {
             mModel!!.video = File(cacheDir, UUID.randomUUID().toString())
             binding.cameraView.takeVideoSnapshot(
                 mModel!!.video!!,

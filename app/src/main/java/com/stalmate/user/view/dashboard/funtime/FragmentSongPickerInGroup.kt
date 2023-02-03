@@ -92,33 +92,9 @@ class FragmentSongPickerInGroup : BaseFragment(), FriendAdapter.Callbackk,
         }
         binding.toolbar.toolBarEndText.setOnClickListener {
             songPick()
-            //songPick1()
         }
-
     }
 
-    /*private fun songPick1() {
-        val pictureIntent = Intent(
-            MediaStore.ACTION_IMAGE_CAPTURE
-        )
-        if (pictureIntent.resolveActivity(requireActivity().packageManager) != null) {
-            var photoFile: File? = null
-            try {
-                photoFile = createImageFile()
-            } catch (ex: Exception) {
-            }
-            if (photoFile != null) {
-                *//*  Uri photoURI = FileProvider.getUriForFile(getActivity(), getPackageName()+".fileprovider", photoFile);
-                pictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);*//*
-                val photoURI: Uri = FileProvider.getUriForFile(
-                    requireContext().applicationContext,
-                    BuildConfig.APPLICATION_ID + ".fileprovider", photoFile
-                )
-                pictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-                resultCallbackForCamera.launch(pictureIntent)
-            }
-        }
-    }*/
 
     override fun onClickOnUpdateFriendRequest(friend: User, status: String) {
 
@@ -151,7 +127,12 @@ class FragmentSongPickerInGroup : BaseFragment(), FriendAdapter.Callbackk,
                 val selectedImageUri = result.data?.data!!
                 // perform your logic with the selected image Uri
                 Log.d("clicked", selectedImageUri.toString())
-                val paths = fileFromContentUri(requireContext(), selectedImageUri)
+                val file = fileFromContentUri(requireContext(), selectedImageUri)
+                var song = Song()
+                song.title = file.name
+                song.id = "1"
+                song.audio = file.absolutePath
+                closeWithSelection(song, Uri.fromFile(file))
 
             }
         }

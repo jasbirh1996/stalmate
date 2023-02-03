@@ -16,6 +16,7 @@ import com.stalmate.user.modules.reels.activity.ActivityFullViewReels
 import com.stalmate.user.modules.reels.activity.ActivitySettings
 import com.stalmate.user.modules.reels.activity.ActivitySongPicker
 import com.stalmate.user.modules.reels.activity.ActivityVideoRecorder
+import com.stalmate.user.utilities.CommonImageActivity
 import com.stalmate.user.view.dashboard.ActivityDashboardNew
 import com.stalmate.user.view.dashboard.Chat.ActivityCall
 import com.stalmate.user.view.dashboard.Chat.ActivityChat
@@ -69,6 +70,10 @@ public class IntentHelper {
         }
         fun getSyncContactsScreen(context: Context?): Intent? {
             return Intent(context, ActivitySync::class.java)
+                .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        }
+        fun getFullImageScreen(context: Context?): Intent? {
+            return Intent(context, CommonImageActivity::class.java)
                 .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
         }
 
