@@ -1,15 +1,18 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-    id 'com.google.gms.google-services'
+    id 'kotlin-kapt'
+    id 'kotlin-android'
     id 'kotlin-parcelize'
     id 'com.google.firebase.crashlytics'
-
+    id 'com.google.gms.google-services'
 }
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
+
 android {
     compileSdk 33
+    ndkVersion '24.0.8215888'
+    buildToolsVersion '33.0.0'
+
     defaultConfig {
         applicationId "com.stalmate.user"
         minSdk 24
@@ -19,19 +22,17 @@ android {
         resConfigs "en"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-
     buildTypes {
         debug {
-          ndk {
+            ndk {
                 abiFilters "arm64-v8a", "armeabi-v7a"
             }
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-
         release {
-           ndk {
+            ndk {
                 abiFilters "arm64-v8a", "armeabi-v7a"
             }
             minifyEnabled true
@@ -39,44 +40,25 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
     }
-
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_11.toString()
     }
     buildFeatures {
+        viewBinding true
         dataBinding true
     }
-    buildFeatures {
-        viewBinding true
-    }
-    sourceSets{
-        main{
-            jniLibs.srcDirs =['libs']
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
         }
     }
-
-    android{
-        buildFeatures{
-            dataBinding{
-                enabled true
-            }
-        }
-    }
-    buildFeatures {
-        viewBinding true
-    }
-
-    buildToolsVersion '33.0.0'
-    ndkVersion '24.0.8215888'
 }
 
 dependencies {
-
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.appcompat:appcompat:1.6.0'
     implementation 'com.google.android.material:material:1.8.0'
@@ -115,11 +97,11 @@ dependencies {
 
     implementation project(path: ':mp4compose')
 
- //  implementation project(path: ':FBReaction-master')
+    //  implementation project(path: ':FBReaction-master')
     implementation 'com.otaliastudios.opengl:egloo:0.6.1' //to create custum filter
     implementation 'com.github.TOrnelas:SegmentedProgressBar:0.0.3'
     implementation 'androidx.work:work-runtime:2.7.1'
-   implementation 'com.googlecode.mp4parser:isoparser:1.1.22'
+    implementation 'com.googlecode.mp4parser:isoparser:1.1.22'
     implementation 'info.hoang8f:android-segmented:1.0.6'
     implementation 'androidx.concurrent:concurrent-futures:1.1.0'
     implementation "com.airbnb.android:lottie:5.2.0"
@@ -150,7 +132,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-crashlytics:18.3.3'
     implementation 'com.github.MasayukiSuda:GPUVideo-android:v0.1.2'
     implementation 'com.arthenica:mobile-ffmpeg-min-gpl:4.4'
-    implementation ('io.socket:socket.io-client:2.0.0') {
+    implementation('io.socket:socket.io-client:2.0.0') {
         exclude group: 'org.json', module: 'json'
     }
 // Room
