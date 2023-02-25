@@ -26,15 +26,16 @@ import com.stalmate.user.model.Category
 import com.stalmate.user.view.adapter.AdapterCategory
 
 
-class FragmentPlaceAutoComplete(var type:TypeFilter) : BaseFragment(), AdapterCategory.Callbackk,
+class FragmentPlaceAutoComplete(var type: TypeFilter) : BaseFragment(), AdapterCategory.Callbackk,
     PlacesAutoCompleteAdapter.ClickListener, AddressCallbacks {
-    lateinit var addressManager:AddressManager
+    lateinit var addressManager: AddressManager
     lateinit var binding: FragmentAutoPlaceCompleteBinding
     var datass = ""
     var list = ArrayList<Category>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -53,7 +54,7 @@ class FragmentPlaceAutoComplete(var type:TypeFilter) : BaseFragment(), AdapterCa
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        addressManager= AddressManager()
+        addressManager = AddressManager()
         addressManager.setCallbacks(this)
         Places.initialize(
             requireActivity(),
@@ -70,56 +71,41 @@ class FragmentPlaceAutoComplete(var type:TypeFilter) : BaseFragment(), AdapterCa
         datass = data.toString()
 
     }
-    var mAutoCompleteAdapter: PlacesAutoCompleteAdapter? = null
+
+    private var mAutoCompleteAdapter: PlacesAutoCompleteAdapter? = null
     private fun autoComplete() {
-        mAutoCompleteAdapter = PlacesAutoCompleteAdapter(requireContext(),type)
+        mAutoCompleteAdapter = PlacesAutoCompleteAdapter(requireContext(), type)
         mAutoCompleteAdapter!!.setClickListener(this)
-        binding.rvList.setLayoutManager(
-            LinearLayoutManager(
-                requireContext()
-            )
+        binding.rvList.layoutManager = LinearLayoutManager(
+            requireContext()
         )
-        binding.rvList.setAdapter(mAutoCompleteAdapter)
+        binding.rvList.adapter = mAutoCompleteAdapter
         mAutoCompleteAdapter!!.notifyDataSetChanged()
     }
 
 
-
-
-
-
-
     override fun clickPlaces(place: Place?, v: View?) {
-
-
-      //  addressManager.findAddress(place!!.latLng,true)
-
-        val geocoder: Geocoder
         val addresses: List<Address>
-        geocoder = App.Companion.getInstance().getGeoCoder()!!
-
+        val geocoder: Geocoder = App.Companion.getInstance().getGeoCoder()!!
         addresses = geocoder.getFromLocation(
-            place!!.latLng.latitude,
-            place!!.latLng.longitude,
+            (place?.latLng?.latitude ?: 0.0),
+            (place?.latLng?.longitude ?: 0.0),
             1
         )!! // Here 1 represent max location result to returned, by documents it recommended 1 to 5
-
-
         val address =
             addresses[0].getAddressLine(0) // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-
         val city = addresses[0].locality
         val state = addresses[0].adminArea
         val country = addresses[0].countryName
 
-        var bundle= Intent()
+        var bundle = Intent()
 
-        Log.d("alkjdsad",city)
-        Log.d("alkjdsad",state)
-        Log.d("alkjdsad",country)
-       bundle.putExtra("city",city)
-        bundle.putExtra("country",country)
-        requireActivity().setResult(Activity.RESULT_OK,bundle)
+        Log.d("alkjdsad", city)
+        Log.d("alkjdsad", state)
+        Log.d("alkjdsad", country)
+        bundle.putExtra("city", city)
+        bundle.putExtra("country", country)
+        requireActivity().setResult(Activity.RESULT_OK, bundle)
         requireActivity().finish()
 
 
@@ -134,26 +120,25 @@ class FragmentPlaceAutoComplete(var type:TypeFilter) : BaseFragment(), AdapterCa
     }
 
     override fun onPlaceFoundByAddressManager(address: Address?) {
-        var bundle= Intent()
-        Log.d("alkjdsad",Gson().toJson(address))
-        Log.d("alkjdsad",address!!.adminArea)
-        Log.d("alkjdsad",address!!.subAdminArea)
-        Log.d("alkjdsad",address!!.locality)
-        Log.d("alkjdsad",address!!.subLocality)
-        bundle.putExtra("city",address!!.subAdminArea)
-        bundle.putExtra("country",address.countryName)
-        requireActivity().setResult(Activity.RESULT_OK,bundle)
+        var bundle = Intent()
+        Log.d("alkjdsad", Gson().toJson(address))
+        Log.d("alkjdsad", address!!.adminArea)
+        Log.d("alkjdsad", address!!.subAdminArea)
+        Log.d("alkjdsad", address!!.locality)
+        Log.d("alkjdsad", address!!.subLocality)
+        bundle.putExtra("city", address!!.subAdminArea)
+        bundle.putExtra("country", address.countryName)
+        requireActivity().setResult(Activity.RESULT_OK, bundle)
         requireActivity().finish()
     }
 
-    fun search(searchData:String){
+    fun search(searchData: String) {
         if (searchData != "") {
             mAutoCompleteAdapter!!.getFilter().filter(searchData.toString())
 
         } else {
         }
     }
-
 
 
 }

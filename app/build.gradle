@@ -9,7 +9,7 @@ plugins {
 }
 
 android {
-    compileSdk 33
+    compileSdk 32
     ndkVersion '24.0.8215888'
     buildToolsVersion '33.0.0'
 
@@ -144,4 +144,8 @@ dependencies {
 
     //View full image
     implementation 'com.github.chathuralakmal:AndroidImagePopup:1.2.2'
+
+
+    implementation 'com.makeramen:roundedimageview:2.3.0'
+
 }

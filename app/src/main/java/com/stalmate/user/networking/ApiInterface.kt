@@ -48,18 +48,12 @@ interface ApiInterface {
     fun createroomId(@Body map: HashMap<String, String>): Call<ModelRoom>
 
 
-
-
     @POST(Constants.URLMY_FUNTIME_LIST)
     fun getMyFuntimeList(@Body map: HashMap<String, String>): Call<ModelFuntimeResponse>
 
 
-
-
-
     @POST(Constants.URLFUNTIME_DETAIL_LIST)
     fun getFuntimeDetailListList(@Body map: HashMap<String, String>): Call<ModelFuntimeResponse>
-
 
 
     @PATCH(Constants.URL_FUNTIME_LIKE_UNLIKE)
@@ -81,7 +75,6 @@ interface ApiInterface {
     fun saveUnsaveMusic(@Body map: HashMap<String, String>): Call<CommonModelResponse>
 
 
-
     @POST(Constants.URL_FUNTIME_MUSIC_LIST)
     fun getFuntimeMusicList(@Body map: HashMap<String, String>): Call<ModelMusicListResponse>
 
@@ -91,15 +84,11 @@ interface ApiInterface {
     @POST(Constants.URL_FUNTIME_LIST_BY_AUDIO)
     fun get_song_funtime_list(@Body map: HashMap<String, String>): Call<ModelFuntimeResponse>
 
-
-
     @POST(Constants.URL_PHOTO_ALBUM_PHOTO)
     fun getPhotoList(@Body map: HashMap<String, String>): Call<ModelPhotoResponse>
 
-
     @POST(Constants.URL_PHOTO_INDEX)
     fun getPhotoIndexList(@Body map: HashMap<String, String>): Call<ModelPhotoIndexDataResponse>
-
 
     @GET(Constants.url_language_list)
     fun getFeedList(): Call<ModelFeed>
@@ -110,19 +99,11 @@ interface ApiInterface {
     @POST(Constants.URL_FUNTIME_UPDATE)
     fun funtimeUpdate(@Body map: HashMap<String, String>): Call<ModelSuccess>
 
-
-
-
     @POST(Constants.URL_SIGN_UP)
     fun setSignupDetails(@Body map: HashMap<String, String>): Call<ModelLoginResponse>
 
-
     @POST(Constants.URL_EMAIL_CHECK)
     fun checkIfOldEmail(@Body map: HashMap<String, String>): Call<ModelSuccess>
-
-
-
-
 
     @PATCH(Constants.URL_OTP)
     fun setOtpVerify(@Body map: HashMap<String, String>): Call<CommonModelResponse>
@@ -130,10 +111,8 @@ interface ApiInterface {
     @POST(Constants.URL_BLOCKED_LIST)
     fun getBlockedList(@Body map: HashMap<String, String>): Call<ModelBlockedUser>
 
-
     @POST(Constants.URL_LOGIN)
     fun setLoginDetails(@Body map: HashMap<String, String>): Call<ModelLoginResponse>
-
 
     @POST(Constants.URL_NUMBER_VERIFY_UPDATE)
     fun setOtpNumberVerify(@Body map: HashMap<String, String>): Call<CommonModelResponse>
@@ -141,10 +120,8 @@ interface ApiInterface {
     @PATCH(Constants.URL_UPDATE_ABOUT)
     fun setUpdateAbout(@Body map: HashMap<String, String>): Call<CommonModelResponse>
 
-
     @POST(Constants.URL_EDUCATION_ADD)
     fun setEducationAddDetails(@Body map: HashMap<String, String>): Call<ModelCommonAddEducationAndProfessionResponse>
-
 
     @POST(Constants.URL_UPDATE_FRIEND_CATEGORY)
     fun setUpdateFriendCategoryDetails(@Body map: HashMap<String, String>): Call<AddCategoryModel>
@@ -155,14 +132,11 @@ interface ApiInterface {
     @POST(Constants.URL_PHOTO_ALBUM_NAME)
     fun setCreateAlbumDetails(@Body map: HashMap<String, String>): Call<ModelAlbumCreateResponse>
 
-
     @POST(Constants.url_send_friend_request)
     fun sendFriendRequest(@Body map: HashMap<String, String>): Call<ModelSuccess>
 
-
     @PUT(Constants.url_update_friend_request)
     fun updateFriendRequest(@Body map: HashMap<String, String>): Call<CommonModelResponse>
-
 
     @POST(Constants.url_remove_user_from_suggestions)
     fun removeUserFromSuggestions(@Body map: HashMap<String, String>): Call<CommonModelResponse>
@@ -170,12 +144,8 @@ interface ApiInterface {
     @POST(Constants.URL_SHARE_FUNTIME_WITH_FRIEND)
     fun shareWithFriend(@Body map: HashMap<String, String>): Call<CommonModelResponse>
 
-
-
-
     @POST(Constants.url_send_follower_request)
     fun requestBeFollower(@Body map: HashMap<String, String>): Call<ModelSuccess>
-
 
     @GET(Constants.GET_PROFILE_API)
     fun setProfileDetails(): Call<ModelUser>
@@ -204,11 +174,8 @@ interface ApiInterface {
     fun getGlobalSearch(@Body map: HashMap<String, String>): Call<ModelGlobalSearch>
 
 
-
-
     @POST(Constants.URL_COMMENT_LIST)
     fun getCommentList(@Body map: HashMap<String, String>): Call<ModelGetComment>
-
 
 
     @POST(Constants.URL_REPLY_LIST)
@@ -219,8 +186,6 @@ interface ApiInterface {
 
     @PATCH(Constants.URL_LIKE_COMMENT)
     fun likeComment(@Body map: HashMap<String, String>): Call<ModelSuccess>
-
-
 
 
     @Multipart

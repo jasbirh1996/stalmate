@@ -29,8 +29,6 @@ class BlockedUserAdapter(
 
         @SuppressLint("SetTextI18n")
         fun bind(response: User) {
-
-
             binding.tvUserName.text = response.first_name + " " + response.last_name
             Glide.with(context).load(response.img).circleCrop()
                 .placeholder(R.drawable.user_placeholder).into(binding.ivUserImage)
@@ -53,12 +51,8 @@ class BlockedUserAdapter(
         fun onListEmpty()
         fun onItemRemove()
     }
-
-
     @SuppressLint("NotifyDataSetChanged")
     private fun hitBlockApi(position: Int, id: String, owner: LifecycleOwner) {
-
-
         val hashMap = HashMap<String, String>()
         hashMap["id_user"] = id
 

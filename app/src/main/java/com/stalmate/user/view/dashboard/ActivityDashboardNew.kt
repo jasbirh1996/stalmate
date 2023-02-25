@@ -26,6 +26,7 @@ import com.stalmate.user.view.dashboard.funtime.FragmentFunTime
 
 class ActivityDashboardNew : BaseActivity(), FragmentMenu.Callback {
     lateinit var binding:ActivityDashboardNewBinding
+
     override fun onClick(viewId: Int, view: View?) {
 
     }
@@ -36,7 +37,6 @@ class ActivityDashboardNew : BaseActivity(), FragmentMenu.Callback {
         drawerLayout= findViewById(R.id.drawerLayout)
         loadFragment(fragmentDashboard)
     //    onNewIntent(intent)
-
     }
 
     private fun loadFragment(fragment: Fragment) {

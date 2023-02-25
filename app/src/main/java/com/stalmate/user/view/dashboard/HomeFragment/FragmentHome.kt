@@ -49,9 +49,9 @@ class FragmentHome(var callback: Callback) : BaseFragment(), AdapterFeed.Callbac
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
-        var view = inflater.inflate(R.layout.fragment_home, container, false)
+        val view = inflater.inflate(R.layout.fragment_home, container, false)
         binding = DataBindingUtil.bind<FragmentHomeBinding>(view)!!
         return binding.root
     }

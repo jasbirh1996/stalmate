@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.About.AboutActivity">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvAbout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_12sdp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/poppins_medium"
+        android:text="About"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:drawableStartCompat="@drawable/ic_back"
+        app:layout_constraintEnd_toStartOf="@+id/ivNotyfy"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:textAllCaps="false" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/ivNotyfy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:src="@drawable/header_notification_icon"
+        app:civ_border_width="1dp"
+        app:layout_constraintBottom_toBottomOf="@+id/tvAbout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tvAbout"
+        app:riv_border_color="@color/white"
+        app:riv_border_width="2dp"
+        app:riv_corner_radius="100dp" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/ivAbout_logo"
+        android:layout_width="107dp"
+        android:layout_height="107dp"
+        android:layout_marginStart="@dimen/_12sdp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/app_logo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvAbout" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/poppins_medium"
+        android:text="Stalmate"
+        android:textAllCaps="false"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        app:layout_constraintStart_toEndOf="@+id/ivAbout_logo"
+        app:layout_constraintTop_toTopOf="@+id/ivAbout_logo" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/tvheart"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:src="@drawable/heart_filled"
+        app:layout_constraintStart_toStartOf="@+id/tvName"
+        app:layout_constraintTop_toBottomOf="@+id/tvName" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvWishCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="7dp"
+        android:fontFamily="@font/poppins"
+        android:text="13.2 k"
+        android:textAllCaps="false"
+        android:textColor="#55A9ED"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/tvheart"
+        app:layout_constraintStart_toEndOf="@+id/tvheart"
+        app:layout_constraintTop_toTopOf="@+id/tvheart" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="7dp"
+        android:layout_marginTop="3dp"
+        android:fontFamily="@font/poppins"
+        android:text="stalmate@gmail.com"
+        android:textAllCaps="false"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@+id/tvheart"
+        app:layout_constraintTop_toBottomOf="@+id/tvheart" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvFeedback"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="7dp"
+        android:layout_marginTop="3dp"
+        android:fontFamily="@font/poppins"
+        android:text="@string/_95_4_positive_feedback"
+        android:textAllCaps="false"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@+id/tvheart"
+        app:layout_constraintTop_toBottomOf="@+id/tvEmail" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvWelcome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:fontFamily="@font/poppins_medium"
+        android:text="Welcome to Stalmate"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@+id/ivAbout_logo"
+        app:layout_constraintTop_toBottomOf="@+id/ivAbout_logo" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvDescrp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="7dp"
+        android:fontFamily="@font/poppins"
+        android:text="We sell a range of products dealing in electronics gadgets etc. Duis aute irure dolor reprehenderit voluptate velit esse cillum dolore eu fugiat nulla pariatur."
+        android:textColor="#999999"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/ivAbout_logo"
+        app:layout_constraintTop_toBottomOf="@+id/tvWelcome" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvRating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="17dp"
+        android:fontFamily="@font/poppins_medium"
+        android:text="5 Rating"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@+id/tvDescrp"
+        app:layout_constraintTop_toBottomOf="@+id/tvDescrp" />
+
+    <androidx.appcompat.widget.AppCompatRatingBar
+        android:id="@+id/rBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:isIndicator="false"
+        android:numStars="5"
+        android:progressTint="@color/yellow_color_picker"
+        android:rating="3"
+        android:secondaryProgressTint="@color/yellow_color_picker"
+        app:layout_constraintStart_toStartOf="@+id/tvRating"
+        app:layout_constraintTop_toBottomOf="@+id/tvRating" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvfaqs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_12sdp"
+        android:layout_marginTop="20dp"
+        android:drawableStart="@drawable/menu_notificationsetting_icon"
+        android:drawableEnd="@drawable/menu_arrow_icon"
+        android:drawablePadding="32dp"
+        android:text="FAQS"
+        android:textColor="@color/black"
+        android:textSize="17sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rBar" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="#3C3C434D"
+        app:layout_constraintEnd_toEndOf="@+id/tvfaqs"
+        app:layout_constraintStart_toStartOf="@+id/tvfaqs"
+        app:layout_constraintTop_toBottomOf="@+id/tvfaqs"
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvContUs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_12sdp"
+        android:layout_marginTop="20dp"
+        android:drawableStart="@drawable/menu_chatsetting_icon"
+        android:drawableEnd="@drawable/menu_arrow_icon"
+        android:drawablePadding="32dp"
+        android:text="Contact Us"
+        android:textColor="@color/black"
+        android:textSize="17sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvfaqs" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

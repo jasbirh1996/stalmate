@@ -75,7 +75,6 @@ class FragmentBlockedContacts : BaseFragment() {
                     if (it.results.isEmpty()) {
                         binding.tvNoData.visibility = View.VISIBLE
                     }
-
                     blockedUserAdapter.submitList(it.results as ArrayList<User>)
 
                 }

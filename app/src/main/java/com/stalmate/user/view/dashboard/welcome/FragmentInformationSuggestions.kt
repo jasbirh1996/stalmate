@@ -19,7 +19,7 @@ import com.stalmate.user.view.singlesearch.FragmentSingleSearch
 
 class FragmentInformationSuggestions(var callback: Callback) : BaseFragment() {
 
-    private lateinit var binding : FragmentInformationSuggestionsBinding
+    private lateinit var binding: FragmentInformationSuggestionsBinding
 
 
     var name = ""
@@ -38,30 +38,30 @@ class FragmentInformationSuggestions(var callback: Callback) : BaseFragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        var view =   inflater.inflate(R.layout.fragment_information_suggestions, container, false)
+        var view = inflater.inflate(R.layout.fragment_information_suggestions, container, false)
         binding = DataBindingUtil.bind<FragmentInformationSuggestionsBinding>(view)!!
 
-        var intentt=Intent(requireContext(),ActivitySingleSearch::class.java)
+        var intentt = Intent(requireContext(), ActivitySingleSearch::class.java)
         binding.filledTextGraduation.setOnClickListener {
-            intentt.putExtra("type","graduation")
-            startActivityForResult(intentt,120)
-       }
+            intentt.putExtra("type", "graduation")
+            startActivityForResult(intentt, 120)
+        }
 
         binding.filledTextMajor.setOnClickListener {
-            intentt.putExtra("type","major")
-            startActivityForResult(intentt,120)
+            intentt.putExtra("type", "major")
+            startActivityForResult(intentt, 120)
         }
 
 
 
 
         binding.filledTextCountry.setOnClickListener {
-            intentt.putExtra("type","autoCompleteCountries")
-            startActivityForResult(intentt,121)
+            intentt.putExtra("type", "autoCompleteCountries")
+            startActivityForResult(intentt, 121)
         }
         binding.filledTextCity.setOnClickListener {
-            intentt.putExtra("type","autoCompleteCities")
-            startActivityForResult(intentt,121)
+            intentt.putExtra("type", "autoCompleteCities")
+            startActivityForResult(intentt, 121)
         }
 
         return binding.root
@@ -70,12 +70,13 @@ class FragmentInformationSuggestions(var callback: Callback) : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
     }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode==Activity.RESULT_OK && requestCode==120){
+        if (resultCode == Activity.RESULT_OK && requestCode == 120) {
 
-           name = data!!.getSerializableExtra("name").toString()
-           type = data.getSerializableExtra("type").toString()
+            name = data!!.getSerializableExtra("name").toString()
+            type = data.getSerializableExtra("type").toString()
 
             Log.d("anjcnkan", type)
             Log.d("anjcnkan", name)
@@ -83,15 +84,15 @@ class FragmentInformationSuggestions(var callback: Callback) : BaseFragment() {
             if (type == "graduation") {
                 binding.filledTextGraduation.text = name
                 graduationId = data!!.getSerializableExtra("id").toString()
-            }else if (type == "major"){
+            } else if (type == "major") {
                 binding.filledTextMajor.text = name
                 majorTextId = data!!.getSerializableExtra("id").toString()
             }
         }
 
-        if (resultCode==Activity.RESULT_OK && requestCode==121){
-            city=data!!.getSerializableExtra("city").toString()
-            country=data.getSerializableExtra("country").toString()
+        if (resultCode == Activity.RESULT_OK && requestCode == 121) {
+            city = data!!.getSerializableExtra("city").toString()
+            country = data.getSerializableExtra("country").toString()
             binding.filledTextCountry.setText(country)
             binding.filledTextCity.setText(city)
         }
@@ -102,22 +103,21 @@ class FragmentInformationSuggestions(var callback: Callback) : BaseFragment() {
     }
 
 
+    fun isValid(): Boolean {
 
-    fun isValid() : Boolean{
-
-            if (ValidationHelper.isNull(binding.filledTextGraduation.text.toString())) {
-                makeToast("Please Enter Graduation Field")
-                return false
-            } else if (ValidationHelper.isNull(binding.filledTextMajor.text.toString())) {
-                makeToast("Please Enter Major")
-                return false
-            } else if (ValidationHelper.isNull(binding.filledTextCountry.text.toString())) {
-                makeToast("Please Select Country ")
-                return false
-            }  else if (ValidationHelper.isNull(binding.filledTextCity.text.toString())) {
-                makeToast("Please Select City ")
-                return false
-            }
+        if (ValidationHelper.isNull(binding.filledTextGraduation.text.toString())) {
+            makeToast("Please Enter Graduation Field")
+            return false
+        } else if (ValidationHelper.isNull(binding.filledTextMajor.text.toString())) {
+            makeToast("Please Enter Major")
+            return false
+        } else if (ValidationHelper.isNull(binding.filledTextCountry.text.toString())) {
+            makeToast("Please Select Country ")
+            return false
+        } else if (ValidationHelper.isNull(binding.filledTextCity.text.toString())) {
+            makeToast("Please Select City ")
+            return false
+        }
 
         callback.onCallBackData(
             binding.filledTextGraduation.text.toString(),
@@ -134,9 +134,17 @@ class FragmentInformationSuggestions(var callback: Callback) : BaseFragment() {
     }
 
 
+    public interface Callback {
+        fun onCallBackData(
+            graducation: String,
+            graducationId: String,
+            major: String,
+            majorId: String,
+            country: String,
+            state: String,
+            city: String
+        )
 
-    public interface Callback{
-        fun onCallBackData(graducation : String, graducationId: String , major : String, majorId : String, country : String , state : String, city : String )
         fun onClickOnNextButtonOnSuggestionPage()
     }
 

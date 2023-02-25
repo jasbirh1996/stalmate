@@ -260,7 +260,6 @@ class ActivityWelcome : BaseActivity(),
 
 
     override fun onBackPressed() {
-
         if (count != 0) {
             count--
             binding.viewpager.setCurrentItem(count, true)

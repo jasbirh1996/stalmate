@@ -41,10 +41,14 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
+        <activity
+            android:name=".AboutActivity"
+            android:exported="false" />
 
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+
         <activity
             android:name=".view.dashboard.Chat.ActivityCall"
             android:exported="false">
@@ -76,7 +80,13 @@
         </activity>
         <activity
             android:name=".view.dashboard.ActivityDashboardNew"
-            android:exported="false">
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -183,11 +193,9 @@
         <activity
             android:name=".view.settings.ActivityBlockContacts"
             android:exported="false" />
-
         <activity
             android:name=".view.dashboard.welcome.ActivitySync"
             android:exported="false" />
-
         <activity
             android:name=".modules.reels.activity.ActivityVideoRecorder"
             android:exported="true"
@@ -196,11 +204,14 @@
             android:name=".view.Splash.ActivitySplash"
             android:exported="true"
             android:theme="@style/SplashTheme">
+
+            <!--
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            -->
         </activity>
         <activity
             android:name=".view.profile.ActivityProfile"
@@ -213,9 +224,9 @@
             </intent-filter>
             -->
         </activity>
-
-        <activity android:name=".view.dashboard.Chat.FragmentNotification"
-            android:exported="true"/>
+        <activity
+            android:name=".view.dashboard.Chat.FragmentNotification"
+            android:exported="true" />
         <activity
             android:name=".utilities.CommonImageActivity"
             android:exported="false" />

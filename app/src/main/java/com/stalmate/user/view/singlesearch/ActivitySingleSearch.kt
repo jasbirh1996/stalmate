@@ -52,11 +52,9 @@ class ActivitySingleSearch : AppCompatActivity() {
 
 
         if (intent.getStringExtra("type").toString() == "graduation") {
-
             loadFragment(FragmentSingleSearch(intent.getStringExtra("type").toString()))
         } else if (intent.getStringExtra("type").toString() == "major") {
             loadFragment(FragmentSingleSearch(intent.getStringExtra("type").toString()))
-
         } else if (intent.getStringExtra("type").toString() == "autoCompleteCountries") {
             loadFragment(FragmentPlaceAutoComplete(TypeFilter.REGIONS))
         } else if (intent.getStringExtra("type").toString() == "autoCompleteCities") {
@@ -65,12 +63,10 @@ class ActivitySingleSearch : AppCompatActivity() {
 
         binding.etSearch.requestFocus()
         val imm: InputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.showSoftInput( binding.etSearch, InputMethodManager.SHOW_IMPLICIT)
+        imm.showSoftInput(binding.etSearch, InputMethodManager.SHOW_IMPLICIT)
     }
 
-
     private fun loadFragment(fragment: Fragment) {
-
         val backStateName = fragment.javaClass.name
         val fragmentTag = backStateName
         val manager: FragmentManager = supportFragmentManager

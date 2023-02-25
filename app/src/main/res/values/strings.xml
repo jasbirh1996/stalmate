@@ -679,6 +679,7 @@
     <string name="read_receipts">Read receipts</string>
     <string name="allow_others_to_find_me">Allow others to find me</string>
     <string name="back">back</string>
+    <string name="_95_4_positive_feedback"><font color='#55A9ED'>95.4% </font>Positive feedback</string>
     <string-array name="marrage">
         <item><font fgcolor="#B7B7B7">Marital Status</font></item>
         <item><font fgcolor="#B7B7B7">Single</font></item>
