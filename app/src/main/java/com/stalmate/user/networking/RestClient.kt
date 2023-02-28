@@ -40,14 +40,14 @@ class RestClient private constructor() {
             .create()
        // val gson = GsonBuilder().excludeFieldsWithoutExposeAnnotation().create() //now we can use our own variable apart from respones
 
-        if (PrefManager.getInstance(App.getInstance())!!.keyIsLoggedIn){
+        client = if (PrefManager.getInstance(App.getInstance())!!.keyIsLoggedIn){
             Log.d("tokenn",PrefManager.getInstance(App.getInstance())!!.userDetail.results[0].token)
-            client =  (builder.addInterceptor { chain ->
+            (builder.addInterceptor { chain ->
                 val request = chain.request().newBuilder().addHeader("Authorization", "Bearer ${PrefManager.getInstance(App.getInstance())!!.userDetail.results[0].token}").build()
                 chain.proceed(request)
             }.build())
         }else{
-            client =  builder.build()
+            builder.build()
         }
 
         retrofit = Retrofit.Builder()
