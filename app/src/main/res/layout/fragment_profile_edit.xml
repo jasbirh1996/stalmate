@@ -36,7 +36,6 @@
                         android:id="@+id/iv_background"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:scaleType="centerCrop"
                         android:src="@drawable/user_placeholder" />
 
                 </androidx.cardview.widget.CardView>

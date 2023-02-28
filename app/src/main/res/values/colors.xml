@@ -19,8 +19,6 @@
     <color name="colorBackItemView">#F9F9F9</color>
 
 
-
-    <!--GREY-->
     <color name="grey_light">#F3EFEF</color>
 
     <color name="colorNormalGray">#D2D2D2</color>
@@ -50,12 +48,10 @@
     <color name="text_add_more">#00A21B</color>
 
 
-//by Vaibhav
     <color name="colorPrimary">#0F52BA</color>
     <color name="colorSecondary">#418CFF</color>
     <color name="colorPrimaryLight">#DDE1ED</color>
     <color name="colorSecondaryLight">#9E9E9E</color>
-
 
 
     <color name="colorOrange">#FF5722</color>
@@ -86,9 +82,7 @@
     <color name="pinklight">#FFEFF1</color>
     <color name="redlight">#C41026</color>
 
-    //////////////////////
 
-    /////photo Editing /////
     <color name="semi_black_transparent">#99000000</color>
     <color name="blue_color_picker">#0066FF</color>
     <color name="brown_color_picker">#AF593E</color>
@@ -101,7 +95,6 @@
     <color name="yellow_color_picker">#FBE870</color>
     <color name="yellow_green_color_picker">#C5E17A</color>
     <color name="tool_bg">#151414</color>
-    /////////////////////////////
 
 
     <color name="progress_primary">@color/white</color>
@@ -115,10 +108,10 @@
     <color name="colorWhatsappEditbox">#1F2C34</color>
     <color name="black_trasp">#99000000</color>
     <string-array name="color">
-    <item>#f64c73</item>
-    <item>#20d2bb</item>
-    <item>#3395ff</item>
-    <item>#c873f4</item>
-</string-array>
+        <item>#f64c73</item>
+        <item>#20d2bb</item>
+        <item>#3395ff</item>
+        <item>#c873f4</item>
+    </string-array>
 
 </resources>
