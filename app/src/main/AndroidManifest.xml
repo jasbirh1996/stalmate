@@ -42,26 +42,33 @@
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
         <activity
-            android:name=".AboutActivity"
-            android:exported="false" />
+            android:name=".view.About.AboutActivity"
+            android:exported="true" >
 
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-
+        </activity>
         <activity
             android:name=".view.dashboard.Chat.ActivityCall"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
+
         </activity>
         <activity
             android:name=".modules.reels.activity.ActivitySettings"
-            android:exported="false">
+            android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
         </activity>
         <activity
             android:name=".view.dashboard.SIdeDrawer.ActivityLeftMenuSavedFuntime"
@@ -199,11 +206,13 @@
             android:exported="true"
             android:theme="@style/SplashTheme">
 
+<!--
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+-->
         </activity>
         <activity
             android:name=".view.profile.ActivityProfile"

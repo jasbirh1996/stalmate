@@ -160,44 +160,15 @@
         app:layout_constraintStart_toStartOf="@+id/tvRating"
         app:layout_constraintTop_toBottomOf="@+id/tvRating" />
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tvfaqs"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_AboutSetting"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/_12sdp"
-        android:layout_marginTop="20dp"
-        android:drawableStart="@drawable/menu_notificationsetting_icon"
-        android:drawableEnd="@drawable/menu_arrow_icon"
-        android:drawablePadding="32dp"
-        android:text="FAQS"
-        android:textColor="@color/black"
-        android:textSize="17sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rBar"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rBar" />
-
-    <View
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:background="#3C3C434D"
-        app:layout_constraintEnd_toEndOf="@+id/tvfaqs"
-        app:layout_constraintStart_toStartOf="@+id/tvfaqs"
-        app:layout_constraintTop_toBottomOf="@+id/tvfaqs"/>
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tvContUs"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/_12sdp"
-        android:layout_marginTop="20dp"
-        android:drawableStart="@drawable/menu_chatsetting_icon"
-        android:drawableEnd="@drawable/menu_arrow_icon"
-        android:drawablePadding="32dp"
-        android:text="Contact Us"
-        android:textColor="@color/black"
-        android:textSize="17sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvfaqs" />
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -15,6 +15,15 @@
             android:id="@+id/fragment_setting_main_to_fragment_account_setting"
             app:destination="@id/fragment_account_setting"
             />
+        <action
+            android:id="@+id/action_fragment_setting_main_to_appSettingFragment"
+            app:destination="@id/appSettingFragment" />
+        <action
+            android:id="@+id/action_fragment_setting_main_to_notificationFragment"
+            app:destination="@id/notificationFragment" />
+        <action
+            android:id="@+id/action_fragment_setting_main_to_legalFragment"
+            app:destination="@id/legalFragment" />
     </fragment>
 
 
@@ -46,4 +55,19 @@
         android:id="@+id/fragmentPrivacy"
         android:name="com.stalmate.user.view.settings.ActivityPrivacy"
         android:label="FragmentPrivacy" />
+    <fragment
+        android:id="@+id/appSettingFragment"
+        android:name="com.stalmate.user.view.settings.AppSettingFragment"
+        android:label="fragment_app_setting"
+        tools:layout="@layout/fragment_app_setting" />
+    <fragment
+        android:id="@+id/notificationFragment"
+        android:name="com.stalmate.user.view.settings.NotificationFragment"
+        android:label="fragment_notification2"
+        tools:layout="@layout/fragment_notification2" />
+    <fragment
+        android:id="@+id/legalFragment"
+        android:name="com.stalmate.user.view.settings.LegalFragment"
+        android:label="fragment_legal"
+        tools:layout="@layout/fragment_legal" />
 </navigation>

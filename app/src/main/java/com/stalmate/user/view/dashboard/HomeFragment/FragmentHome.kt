@@ -74,7 +74,6 @@ class FragmentHome(var callback: Callback) : BaseFragment(), AdapterFeed.Callbac
             getUserProfileData()
             homeSetUp()
         } else {
-
             binding.nointernet.visibility = View.VISIBLE
         }
 

@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,6 +16,7 @@ import com.stalmate.user.R
 import com.stalmate.user.databinding.FragmentSettingListingBinding
 import com.stalmate.user.utilities.Constants
 import com.stalmate.user.utilities.PrefManager
+import com.stalmate.user.view.About.AboutActivity
 
 class FragmentSettingListing : Fragment(), MainSettingCategoryAdapter.Callbackk {
     lateinit var binding: com.stalmate.user.databinding.FragmentSettingListingBinding
@@ -46,6 +48,7 @@ class FragmentSettingListing : Fragment(), MainSettingCategoryAdapter.Callbackk 
 
         var settingCategoryAdapter=MainSettingCategoryAdapter(requireContext(),this)
         binding.rvList.adapter=settingCategoryAdapter
+
         Glide.with(requireActivity()).load(PrefManager.getInstance(requireContext())!!.userProfileDetail.results.profile_img1).placeholder(R.drawable.user_placeholder).circleCrop().into(binding.userProfileImage)
         binding.tvUserName.setText(PrefManager.getInstance(requireContext())!!.userProfileDetail.results.first_name)
         binding.tvAbout.setText(PrefManager.getInstance(requireContext())!!.userProfileDetail.results.city)
@@ -72,26 +75,27 @@ class FragmentSettingListing : Fragment(), MainSettingCategoryAdapter.Callbackk 
             }
 
             Constants.SETTING_TYPE_CHAT->{
+                Toast.makeText(requireContext(), "Chat Clicked", Toast.LENGTH_SHORT).show()
 
             }
 
             Constants.SETTING_TYPE_APP->{
 
+                findNavController().navigate(R.id.action_fragment_setting_main_to_appSettingFragment)
             }
 
             Constants.SETTING_TYPE_NOTIFICATION->{
-
+                Toast.makeText(requireContext(), "Notification Setting Clicked", Toast.LENGTH_SHORT).show()
+                findNavController().navigate(R.id.action_fragment_setting_main_to_notificationFragment)
             }
 
             Constants.SETTING_TYPE_ABOUT_US->{
-
+                startActivity(Intent(requireContext(),AboutActivity::class.java))
             }
 
             Constants.SETTING_TYPE_LEGAL->{
-
+                Toast.makeText(requireContext(), "Legal Clicked", Toast.LENGTH_SHORT).show()
             }
-
-
 
         }
 
