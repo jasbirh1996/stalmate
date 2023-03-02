@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.settings.QuiteModeFragment">
+
+
+    <ImageView
+        android:id="@+id/back_quiteMode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:padding="@dimen/_10sdp"
+        android:src="@drawable/ic_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:fontFamily="@font/poppins_medium"
+        android:text="Quite Mode"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/back_quiteMode"
+        app:layout_constraintStart_toEndOf="@+id/back_quiteMode"
+        app:layout_constraintTop_toTopOf="@+id/back_quiteMode" />
+
+    <ImageView
+        android:id="@+id/ivQuite"
+        android:layout_width="wrap_content"
+        android:layout_height="350dp"
+        android:layout_marginTop="2dp"
+        android:src="@drawable/image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/back_quiteMode" />
+
+    <TextView
+        android:id="@+id/tvQuitHeading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:fontFamily="@font/poppins_semibold"
+        android:text="Quite Mode"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ivQuite" />
+
+    <TextView
+        android:id="@+id/quiteMode_SubHeading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_15sdp"
+        android:layout_marginTop="5dp"
+        android:fontFamily="@font/poppins"
+        android:text="@string/the"
+        android:textColor="@color/black"
+        android:textSize="15sp"
+        app:layout_constraintTop_toBottomOf="@+id/tvQuitHeading" />
+
+    <ImageView
+        android:id="@+id/ivDarkMode"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/ic_search_message"
+        app:layout_constraintStart_toStartOf="@+id/quiteMode_SubHeading"
+        app:layout_constraintTop_toBottomOf="@+id/quiteMode_SubHeading" />
+
+    <TextView
+        android:id="@+id/tvDarkMode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:fontFamily="@font/poppins_semibold"
+        android:text="Quite Mode"
+        android:textColor="#141414"
+        android:textSize="15sp"
+        app:layout_constraintStart_toEndOf="@+id/ivDarkMode"
+        app:layout_constraintTop_toTopOf="@+id/ivDarkMode" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/tvDarkMode"
+        app:layout_constraintStart_toStartOf="@+id/tvDarkMode"
+        android:layout_marginTop="2dp"
+        android:text="Off"
+        android:textColor="#8A8A8A"
+        android:fontFamily="@font/poppins_medium"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/ivDarkMode"
+        android:layout_marginTop="@dimen/_20sdp"
+        app:layout_constraintStart_toStartOf="@+id/ivDarkMode"
+          android:text="Schedule Quite Mode"
+        android:textColor="#141414"
+        android:textSize="15sp"
+        android:fontFamily="@font/poppins_semibold"
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>

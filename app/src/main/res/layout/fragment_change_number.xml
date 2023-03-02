@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.settings.ChangeNumberFragment">
+
+    <ImageView
+        android:id="@+id/back_changeNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:padding="@dimen/_10sdp"
+        android:src="@drawable/ic_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:fontFamily="@font/poppins_medium"
+        android:text="Change Number"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/back_changeNumber"
+        app:layout_constraintStart_toEndOf="@+id/back_changeNumber"
+        app:layout_constraintTop_toTopOf="@+id/back_changeNumber" />
+
+    <TextView
+        android:id="@+id/changeNumber_tittle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_40sdp"
+        android:layout_marginTop="@dimen/_50sdp"
+        android:fontFamily="@font/poppins"
+        android:gravity="center"
+        android:text="Please enter your old mobile number and new mobile number"
+        android:textSize="14sp"
+        app:layout_constraintTop_toBottomOf="@+id/back_changeNumber" />
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/OldMobileNumberLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_24sdp"
+        android:layout_marginTop="@dimen/_25sdp"
+        app:layout_constraintTop_toBottomOf="@+id/changeNumber_tittle"
+        tools:layout_editor_absoluteX="24dp">
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/OldMobileNumber"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:fontFamily="@font/poppins"
+            android:hint="Old Mobile Number"
+            android:inputType="number"
+            android:maxLength="12"
+            android:paddingVertical="15dp"
+            android:textColor="@color/black"
+            android:textColorHint="#B7B7B7"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/OldNumberogin"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.hbb20.CountryCodePicker
+            android:id="@+id/OldNumberogin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:ccp_contentColor="#B7B7B7"
+            app:ccp_defaultPhoneCode="51"
+            app:ccp_showFlag="false"
+            app:ccp_showNameCode="false"
+            app:ccp_showPhoneCode="true"
+            app:ccp_textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:background="#B7B7B7"
+            app:layout_constraintTop_toBottomOf="@+id/OldNumberogin" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/NewMobileNumberLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_24sdp"
+        android:layout_marginTop="@dimen/_25sdp"
+        app:layout_constraintTop_toBottomOf="@+id/OldMobileNumberLayout"
+        tools:layout_editor_absoluteX="24dp">
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/NewMobileNumber"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:fontFamily="@font/poppins"
+            android:hint="New Mobile Number"
+            android:inputType="number"
+            android:maxLength="12"
+            android:paddingVertical="15dp"
+            android:textColor="@color/black"
+            android:textColorHint="#B7B7B7"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/mCCPNewNumber"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.hbb20.CountryCodePicker
+            android:id="@+id/mCCPNewNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:ccp_contentColor="#B7B7B7"
+            app:ccp_defaultPhoneCode="51"
+            app:ccp_showFlag="false"
+            app:ccp_showNameCode="false"
+            app:ccp_showPhoneCode="true"
+            app:ccp_textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:background="#B7B7B7"
+            app:layout_constraintTop_toBottomOf="@+id/mCCPNewNumber" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <TextView
+        android:id="@+id/btn_ChangeNumber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+       app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginHorizontal="@dimen/_50sdp"
+
+        android:layout_marginBottom="@dimen/_50sdp"
+        android:textSize="15sp"
+        android:text="Proceed"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:paddingVertical="12dp"
+        android:paddingHorizontal="@dimen/_50sdp"
+        android:fontFamily="@font/poppins_medium"
+        android:background="@drawable/bg_btn"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

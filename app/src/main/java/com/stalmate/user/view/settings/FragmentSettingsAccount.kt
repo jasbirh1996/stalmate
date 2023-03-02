@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -64,20 +65,23 @@ lateinit var binding:FragmentSettingsAccountBinding
             }
 
             Constants.SETTING_CHANGE_NUMBER->{
-
+                findNavController().navigate(R.id.action_fragment_account_setting_to_changeNumberFragment)
             }
 
             Constants.SETTING_CHANGE_PASSWORD->{
-
+             //  Toast.makeText(requireContext(), "CHANGE_PASSWORD clicked", Toast.LENGTH_SHORT).show()
+                findNavController().navigate(R.id.action_fragment_account_setting_to_changePasswordFragment)
             }
 
             Constants.SETTING_BLOCKED_CONTACTS->{
 //                findNavController().navigate(R.id.fragment_account_setting_to_fragment_blocked_users)
                 startActivity(IntentHelper.getBlockListScreen(requireActivity()))
+
             }
 
             Constants.SETTING_DELETEACCOUNT->{
 
+                findNavController().navigate(R.id.action_fragment_account_setting_to_deleteMyAccountFragment)
             }
 
 

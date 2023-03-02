@@ -41,6 +41,7 @@
         app:layout_constraintStart_toStartOf="@+id/about_us_setting"
         app:layout_constraintTop_toBottomOf="@+id/about_us_setting"
         android:layout_marginTop="@dimen/_5sdp"
+        android:background="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         />
 </androidx.constraintlayout.widget.ConstraintLayout>

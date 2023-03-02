@@ -94,7 +94,7 @@ class FragmentSettingListing : Fragment(), MainSettingCategoryAdapter.Callbackk 
             }
 
             Constants.SETTING_TYPE_LEGAL->{
-                Toast.makeText(requireContext(), "Legal Clicked", Toast.LENGTH_SHORT).show()
+                findNavController().navigate(R.id.action_fragment_setting_main_to_legalFragment)
             }
 
         }

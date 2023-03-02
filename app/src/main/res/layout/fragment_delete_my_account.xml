@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".view.settings.DeleteMyAccountFragment">
+
+    <ImageView
+        android:id="@+id/back_DeleteAccount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:padding="@dimen/_10sdp"
+        android:src="@drawable/ic_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:fontFamily="@font/poppins_medium"
+        android:text="Delete My Account"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/back_DeleteAccount"
+        app:layout_constraintStart_toEndOf="@+id/back_DeleteAccount"
+        app:layout_constraintTop_toTopOf="@+id/back_DeleteAccount" />
+
+
+    <TextView
+        android:id="@+id/tvHeading"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/back_DeleteAccount"
+        android:layout_marginTop="@dimen/_40sdp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textColor="#707070"
+        android:textSize="@dimen/_20sdp"
+        android:fontFamily="@font/poppins"
+        android:layout_marginHorizontal="@dimen/_30sdp"
+        android:text="@string/lorem_ipsum_dolor_sit_amet_consectetur_adipiscing_elit_sed_do_eiusmod_tempor_incididunt_ut"
+        />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/ChangeNumberLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_24sdp"
+        android:layout_marginTop="@dimen/_25sdp"
+        app:layout_constraintTop_toBottomOf="@+id/tvHeading"
+        tools:layout_editor_absoluteX="24dp">
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/tvChangeNumber"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:fontFamily="@font/poppins"
+            android:hint="Enter Mobile Number"
+            android:inputType="number"
+            android:maxLength="12"
+            android:paddingVertical="15dp"
+            android:textColor="@color/black"
+            android:textColorHint="#B7B7B7"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/ChangeCCp"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.hbb20.CountryCodePicker
+            android:id="@+id/ChangeCCp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:ccp_contentColor="#B7B7B7"
+            app:ccp_defaultPhoneCode="51"
+            app:ccp_showFlag="false"
+            app:ccp_showNameCode="false"
+            app:ccp_showPhoneCode="true"
+            app:ccp_textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:background="#B7B7B7"
+            app:layout_constraintTop_toBottomOf="@+id/ChangeCCp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/ChangeCountry"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_24sdp"
+        android:layout_marginTop="@dimen/_25sdp"
+        app:layout_constraintTop_toBottomOf="@+id/ChangeNumberLayout"
+        tools:layout_editor_absoluteX="24dp">
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/tvChangeFlage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:fontFamily="@font/poppins"
+            android:hint="India"
+            android:paddingStart="10dp"
+            android:inputType="number"
+            android:maxLength="12"
+            android:paddingVertical="15dp"
+            android:textColor="@color/black"
+            android:textColorHint="#B7B7B7"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/ChangeCountryName"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.hbb20.CountryCodePicker
+            android:id="@+id/ChangeCountryName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:ccp_contentColor="#B7B7B7"
+            app:ccp_defaultPhoneCode="51"
+            app:ccp_showFlag="true"
+            app:ccp_showNameCode="false"
+            app:ccp_showPhoneCode="false"
+            app:ccp_textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:background="#B7B7B7"
+            app:layout_constraintTop_toBottomOf="@+id/ChangeCountry" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/etEmail"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:fontFamily="@font/poppins"
+        android:hint="India"
+        android:paddingStart="10dp"
+        android:inputType="number"
+        android:maxLength="12"
+        android:layout_marginHorizontal="@dimen/_24sdp"
+        android:paddingVertical="15dp"
+        android:textColor="@color/black"
+        android:textColorHint="#B7B7B7"
+        android:textSize="14sp"
+        android:layout_marginTop="@dimen/_25sdp"
+        app:layout_constraintTop_toBottomOf="@+id/ChangeCountry"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+
+    <View
+        android:id="@+id/view20"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginHorizontal="@dimen/_24sdp"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:background="#B7B7B7"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/etEmail"
+        app:layout_constraintTop_toBottomOf="@+id/etEmail" />
+
+    <TextView
+        android:id="@+id/btn_DeleteMyAccount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_50sdp"
+        android:layout_marginBottom="@dimen/_50sdp"
+        android:background="@drawable/bg_btn"
+        android:fontFamily="@font/poppins_medium"
+        android:gravity="center"
+        android:paddingHorizontal="@dimen/_50sdp"
+        android:paddingVertical="12dp"
+        android:text="Proceed"
+        android:layout_marginTop="@dimen/_90sdp"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view20" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

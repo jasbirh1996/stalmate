@@ -36,6 +36,15 @@
         <action
             android:id="@+id/action_fragment_account_setting_to_fragmentPrivacy"
             app:destination="@id/fragmentPrivacy" />
+        <action
+            android:id="@+id/action_fragment_account_setting_to_changeNumberFragment"
+            app:destination="@id/changeNumberFragment" />
+        <action
+            android:id="@+id/action_fragment_account_setting_to_deleteMyAccountFragment"
+            app:destination="@id/deleteMyAccountFragment" />
+        <action
+            android:id="@+id/action_fragment_account_setting_to_changePasswordFragment"
+            app:destination="@id/changePasswordFragment" />
         <!--<action
             android:id="@+id/action_fragment_account_setting_to_fragmentPrivacy2"
             app:destination="@id/fragmentPrivacy" />-->
@@ -70,4 +79,19 @@
         android:name="com.stalmate.user.view.settings.LegalFragment"
         android:label="fragment_legal"
         tools:layout="@layout/fragment_legal" />
+    <fragment
+        android:id="@+id/changeNumberFragment"
+        android:name="com.stalmate.user.view.settings.ChangeNumberFragment"
+        android:label="fragment_change_number"
+        tools:layout="@layout/fragment_change_number" />
+    <fragment
+        android:id="@+id/deleteMyAccountFragment"
+        android:name="com.stalmate.user.view.settings.DeleteMyAccountFragment"
+        android:label="fragment_delete_my_account"
+        tools:layout="@layout/fragment_delete_my_account" />
+    <fragment
+        android:id="@+id/changePasswordFragment"
+        android:name="com.stalmate.user.view.settings.ChangePasswordFragment"
+        android:label="fragment_change_password"
+        tools:layout="@layout/fragment_change_password" />
 </navigation>

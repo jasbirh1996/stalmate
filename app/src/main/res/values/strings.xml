@@ -680,6 +680,8 @@
     <string name="allow_others_to_find_me">Allow others to find me</string>
     <string name="back">back</string>
     <string name="_95_4_positive_feedback"><font color='#55A9ED'>95.4% </font>Positive feedback</string>
+    <string name="lorem_ipsum_dolor_sit_amet_consectetur_adipiscing_elit_sed_do_eiusmod_tempor_incididunt_ut">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut</string>
+    <string name="the">The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from</string>
     <string-array name="marrage">
         <item><font fgcolor="#B7B7B7">Marital Status</font></item>
         <item><font fgcolor="#B7B7B7">Single</font></item>
