@@ -43,11 +43,10 @@
         tools:replace="android:allowBackup">
         <activity
             android:name=".view.About.AboutActivity"
-            android:exported="true" >
-
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
+            android:exported="true">
+            <meta-data
+                android:name="com.google.android.gms.version"
+                android:value="@integer/google_play_services_version" />
         </activity>
         <activity
             android:name=".view.dashboard.Chat.ActivityCall"
@@ -201,14 +200,12 @@
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".view.profile.ActivityProfile"
-            android:exported="false">
-        </activity>
+            android:exported="false" />
         <activity
             android:name=".view.dashboard.Chat.FragmentNotification"
             android:exported="true" />

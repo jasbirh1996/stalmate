@@ -24,6 +24,7 @@ import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.utilities.untilitys
 import com.stalmate.user.viewmodel.AppViewModel
 import java.util.*
+import java.util.concurrent.CopyOnWriteArrayList
 import kotlin.collections.ArrayList
 
 abstract class BaseActivity : AppCompatActivity(), View.OnClickListener,
@@ -42,7 +43,6 @@ abstract class BaseActivity : AppCompatActivity(), View.OnClickListener,
     private lateinit var context: Context
     abstract fun onClick(viewId: Int, view: View?)
     override fun onCreate(savedInstanceState: Bundle?) {
-
         Thread.setDefaultUncaughtExceptionHandler { p0, p1 -> makeToast(p1.message) }
         super.onCreate(savedInstanceState)
         progressDialog = com.stalmate.user.view.dialogs.ProgressDialog(this)
