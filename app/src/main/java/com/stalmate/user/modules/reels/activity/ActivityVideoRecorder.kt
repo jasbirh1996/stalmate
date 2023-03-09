@@ -668,7 +668,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                 R.string.recorder_error_maxed_out,
                 Toast.LENGTH_SHORT
             ).show()
-        }else {
+        } else {
             mModel!!.video = File(cacheDir, UUID.randomUUID().toString())
             binding.cameraView.takeVideoSnapshot(
                 mModel!!.video!!,
@@ -2423,7 +2423,6 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
 
 }
 
-
 class CenterZoomLayoutManager : LinearLayoutManager {
     private val mShrinkAmount = 0.15f
     private val mShrinkDistance = 0.9f
@@ -2496,7 +2495,6 @@ class CenterZoomLayoutManager : LinearLayoutManager {
 
 
 }
-
 
 /**
  * A LinearSnapHelper that ignores item decorations to determine a view's center
@@ -2652,7 +2650,6 @@ class CenterSnapHelper : LinearSnapHelper() {
         return horizontalHelper!!
     }
 }
-
 
 class CenterDecoration(@Px private val spacing: Int) : RecyclerView.ItemDecoration() {
 

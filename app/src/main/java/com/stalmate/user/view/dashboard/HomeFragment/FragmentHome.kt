@@ -96,24 +96,13 @@ class FragmentHome(var callback: Callback) : BaseFragment(), AdapterFeed.Callbac
         binding.rvFeeds.adapter = feedAdapter
         binding.rvStory.adapter = homeStoryAdapter
 
-        binding.rvFeeds.layoutManager = LinearLayoutManager(context)
-        binding.rvStory.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-
-
         networkViewModel.getFeedList("", HashMap())
         networkViewModel.feedLiveData.observe(viewLifecycleOwner, Observer {
-            Log.d("asdasdasd", "oaspiasddsad")
-            Log.d("asdasdasd", it.toString())
             it.let {
                 feedAdapter.submitList(it!!.results)
                 binding.shimmerLayoutFeeds.stopShimmer()
                 binding.rvFeeds.visibility = View.VISIBLE
-            }
-        })
 
-        networkViewModel.feedLiveData.observe(viewLifecycleOwner, Observer {
-            it.let {
                 binding.shimmerViewContainer.stopShimmer()
                 binding.storyView.visibility = View.VISIBLE
                 homeStoryAdapter.submitList(it!!.results)
@@ -145,8 +134,8 @@ class FragmentHome(var callback: Callback) : BaseFragment(), AdapterFeed.Callbac
     }
 
 
-    fun getUserProfileData() {
-        var hashMap = HashMap<String, String>()
+    private fun getUserProfileData() {
+        val hashMap = HashMap<String, String>()
         networkViewModel.getProfileData(hashMap)
         networkViewModel.profileLiveData.observe(requireActivity(), Observer {
             it.let {
@@ -154,10 +143,11 @@ class FragmentHome(var callback: Callback) : BaseFragment(), AdapterFeed.Callbac
                     PrefManager.getInstance(requireContext())!!.userProfileDetail = it
                 }
                 Glide.with(requireContext())
-                    .load(PrefManager.getInstance(requireContext())!!.userProfileDetail.results.profile_img1)
+                    .load(PrefManager.getInstance(requireContext())?.userProfileDetail?.results?.profile_img1)
                     .placeholder(R.drawable.profileplaceholder).circleCrop()
                     .into(binding.postContant.userImage)
-
+                binding.postContant.appCompatEditText.hint =
+                    "${PrefManager.getInstance(requireContext())?.userProfileDetail?.results?.first_name}, What's in your mind?"
             }
         })
     }
@@ -200,12 +190,8 @@ class FragmentHome(var callback: Callback) : BaseFragment(), AdapterFeed.Callbac
         networkViewModel.getFriendList(hashmap)
         networkViewModel.friendLiveData.observe(viewLifecycleOwner, Observer {
             it.let {
-                Log.d("asdasdasd", "asdasdasdasd")
-
                 suggestedFriendAdapter =
                     SuggestedFriendAdapter(networkViewModel, requireContext(), this)
-                binding.rvSuggestedFriends.layoutManager =
-                    LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
                 binding.rvSuggestedFriends.adapter = suggestedFriendAdapter
                 suggestedFriendAdapter.submitList(it!!.results)
             }

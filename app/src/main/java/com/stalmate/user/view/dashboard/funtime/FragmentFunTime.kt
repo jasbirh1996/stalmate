@@ -29,7 +29,7 @@ import fr.castorflex.android.verticalviewpager.VerticalViewPager
 
 class FragmentFunTime() : BaseFragment(), FragmentCallBack {
     var handler: Handler? = null
-        var isPlusButtonActive=false
+    var isPlusButtonActive = false
     lateinit var binding: FragmentFunTimeBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +41,13 @@ class FragmentFunTime() : BaseFragment(), FragmentCallBack {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = DataBindingUtil.bind<FragmentFunTimeBinding>(inflater.inflate(R.layout.fragment_fun_time, container, false))!!
+        binding = DataBindingUtil.bind<FragmentFunTimeBinding>(
+            inflater.inflate(
+                R.layout.fragment_fun_time,
+                container,
+                false
+            )
+        )!!
         return binding.root
     }
 
@@ -52,29 +58,27 @@ class FragmentFunTime() : BaseFragment(), FragmentCallBack {
         }
 
         binding.ivAddButton.setOnClickListener {
-            startActivity(IntentHelper.getCreateReelsScreen(requireActivity())!!.putExtra("type","image"))
+            startActivity(
+                IntentHelper.getCreateReelsScreen(requireActivity())?.apply {
+                    putExtra("type", "image")
+                }
+            )
         }
-
         loadFragment(ReelListFragment())
-
-
-
     }
 
 
-    fun toggleButton(){
-        if (isPlusButtonActive){
-            isPlusButtonActive=false
+    fun toggleButton() {
+        if (isPlusButtonActive) {
+            isPlusButtonActive = false
             binding.layoutImagenVideo.animate().alpha(0f).setDuration(500).start()
-        }else{
-            isPlusButtonActive=true
+        } else {
+            isPlusButtonActive = true
             binding.layoutImagenVideo.animate().alpha(1f).setDuration(500).start()
         }
     }
 
 
-
-  
     private fun loadFragment(fragment: Fragment) {
 
         val backStateName = fragment.javaClass.name
@@ -90,24 +94,18 @@ class FragmentFunTime() : BaseFragment(), FragmentCallBack {
     }
 
     override fun onResponce(bundle: Bundle?) {
-        
+
     }
 
-    fun pauseMusic(){
-          var fragment=  childFragmentManager.findFragmentById(binding.frame.id) as ReelListFragment
+    fun pauseMusic() {
+        var fragment = childFragmentManager.findFragmentById(binding.frame.id) as ReelListFragment
         fragment.onPause()
     }
-    fun resumeMusic(){
-        var fragment=  childFragmentManager.findFragmentById(binding.frame.id) as ReelListFragment
+
+    fun resumeMusic() {
+        var fragment = childFragmentManager.findFragmentById(binding.frame.id) as ReelListFragment
         fragment.onStart()
     }
-
-
-
-
-
-
-
 
 
 }
