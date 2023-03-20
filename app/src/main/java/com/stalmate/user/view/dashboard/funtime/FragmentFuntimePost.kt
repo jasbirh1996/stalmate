@@ -2,16 +2,7 @@ package com.stalmate.user.view.dashboard.funtime
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Typeface
-import android.media.ThumbnailUtils
 import android.os.Bundle
-import android.provider.MediaStore
-import android.text.Editable
-import android.text.Spannable
-import android.text.TextWatcher
-import android.text.style.StrikethroughSpan
-import android.text.style.StyleSpan
-import android.text.style.UnderlineSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -82,7 +73,8 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.d("asdasdgkn", "xxxxxx")
-        tagPeopleViewModel = ViewModelProvider(requireActivity()).get(TagPeopleViewModel::class.java)
+        tagPeopleViewModel =
+            ViewModelProvider(requireActivity()).get(TagPeopleViewModel::class.java)
 
         if (requireActivity().intent.getStringExtra(ActivityFilter.EXTRA_VIDEO) != null) {
             mVideo = requireActivity().intent.getStringExtra(ActivityFilter.EXTRA_VIDEO)!!
@@ -93,9 +85,9 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
             var funtime = (requireActivity() as ActivityFuntimePost).funtime
             Log.d("aklsjdasd", funtime.tag_user.size.toString())
             mVideo = funtime.file
-            binding.editor.html=funtime.text
+            binding.editor.html = funtime.text
 
-            binding.buttonPost.text="Ok"
+            binding.buttonPost.text = "Ok"
 
         }
 
@@ -129,13 +121,13 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
 
         binding.buttonPost.setOnClickListener {
 
-                if ( (requireContext() as ActivityFuntimePost).isEdit){
-                  editPost()
-                }else{
-                    apiPostReel(File(mVideo))
-                }
+            if ((requireContext() as ActivityFuntimePost).isEdit) {
+                editPost()
+            } else {
+                apiPostReel(File(mVideo))
+            }
 
-             }
+        }
 
         tagPeopleViewModel.tagModelLiveData.observe(viewLifecycleOwner) {
             if (it.taggedPeopleList.isNotEmpty()) {
@@ -237,6 +229,7 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
 
         fun getRequestBody(str: String?): RequestBody =
             RequestBody.create("text/plain".toMediaTypeOrNull(), str.toString())
+
         val thumbnailBody: RequestBody = RequestBody.create("video/*".toMediaTypeOrNull(), file)
         val profile_image1: MultipartBody.Part = MultipartBody.Part.Companion.createFormData(
             "file",
@@ -247,19 +240,18 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
         if (!ValidationHelper.isNull(binding.editor.html)) {
             data = binding.editor.html.toString()
         }
-        Log.d(";lasjd;asd", selectedPrivacy)
         networkViewModel.postReel(
-            profile_image1,
-            getRequestBody(".mp4"),
-            getRequestBody(data),
-            getRequestBody(commaSeparatedStr),
-            getRequestBody(requireActivity().intent.getStringExtra(EXTRA_SONG_ID).toString()),
-            getRequestBody(city + ", " + country),
-            getRequestBody(selectedPrivacy),
-            getRequestBody(""),
-            getRequestBody(""),
-            getRequestBody("")
-
+            file = profile_image1,
+            cover_image = null,
+            file_type = getRequestBody(".mp4"),
+            text = getRequestBody(data),
+            tag_id = getRequestBody(commaSeparatedStr),
+            sound_id = getRequestBody(requireActivity().intent.getStringExtra(EXTRA_SONG_ID).toString()),
+            location = getRequestBody(city + ", " + country),
+            privacy = getRequestBody(selectedPrivacy),
+            privacy_data = getRequestBody(""),
+            deviceId = getRequestBody(""),
+            deviceToken = getRequestBody("")
         )
         networkViewModel.postReelLiveData.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             it.let {
@@ -349,8 +341,7 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
     }
 
 
-
-    fun editPost(){
+    fun editPost() {
 
         var hashmap = HashMap<String, String>()
         hashmap.put("id", (requireActivity() as ActivityFuntimePost).funtime.id)
@@ -367,7 +358,6 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
             it.let {
 
 
-
                 if (it!!.status) {
                     val intent = Intent(context, ActivityDashboardNew::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
@@ -378,7 +368,6 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
             }
         })
     }
-
 
 
 }

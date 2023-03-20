@@ -6,6 +6,51 @@ plugins {
     id 'kotlin-parcelize'
     id 'com.google.firebase.crashlytics'
     id 'com.google.gms.google-services'
+
+    id("ly.img.android.sdk").version("10.5.0")
+}
+
+imglyConfig {
+    pesdk {
+        enabled(true)
+        licensePath(null)
+    }
+    vesdk {
+        enabled(true)
+        licensePath(null)
+    }
+    modules {
+        include("ui:core")
+        include("ui:text")
+        include("ui:focus")
+        include("ui:frame")
+        include("ui:brush")
+        include("ui:filter")
+        include("ui:sticker")
+        include("ui:overlay")
+        include("ui:transform")
+        include("ui:adjustment")
+        include("ui:text-design")
+
+        include("ui:video-trim")
+        include("ui:video-library")
+        include("ui:video-composition")
+        include("ui:audio-composition")
+        include("ui:giphy-sticker")
+
+        include("backend:serializer")
+        include("backend:headless")
+        include("backend:background-removal")
+        include("backend:sticker-smart")
+        include("backend:sticker-animated")
+
+        include("assets:font-basic")
+        include("assets:frame-basic")
+        include("assets:filter-basic")
+        include("assets:overlay-basic")
+        include("assets:sticker-shapes")
+        include("assets:sticker-emoticons")
+    }
 }
 
 android {
@@ -59,6 +104,17 @@ android {
 }
 
 dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation(name: 'deepar', ext: 'aar')
+
+    def camerax_version = "1.1.0"//1.2.1
+    implementation "androidx.camera:camera-core:$camerax_version"
+    implementation "androidx.camera:camera-camera2:$camerax_version"
+    implementation "androidx.camera:camera-lifecycle:$camerax_version"
+    implementation "androidx.camera:camera-view:$camerax_version"
+    implementation 'com.otaliastudios:cameraview:2.7.2'
+    implementation 'com.otaliastudios.opengl:egloo:0.6.1' //to create custum filter
+
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.appcompat:appcompat:1.6.0'
     implementation 'com.google.android.material:material:1.8.0'
@@ -90,15 +146,8 @@ dependencies {
     implementation 'com.facebook.stetho:stetho-okhttp3:1.5.1'
     implementation 'com.github.bumptech.glide:glide:4.13.2'
     implementation 'com.android.support:multidex:1.0.3'
-    implementation 'com.otaliastudios:cameraview:2.7.2'
     implementation 'jp.co.cyberagent.android:gpuimage:2.1.0'
-    implementation project(path: ':photoeditor')
-    implementation project(path: ':bubblepicker')
 
-    implementation project(path: ':mp4compose')
-
-    //  implementation project(path: ':FBReaction-master')
-    implementation 'com.otaliastudios.opengl:egloo:0.6.1' //to create custum filter
     implementation 'com.github.TOrnelas:SegmentedProgressBar:0.0.3'
     implementation 'androidx.work:work-runtime:2.7.1'
     implementation 'com.googlecode.mp4parser:isoparser:1.1.22'
@@ -123,15 +172,11 @@ dependencies {
     implementation 'com.google.android.libraries.places:places:3.0.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4'
     implementation 'com.github.Dimezis:BlurView:version-2.0.2'
-    implementation 'com.google.android.exoplayer:exoplayer:2.18.2'
-    implementation 'com.github.MasayukiSuda:ImageToVideoAndroid:v0.1.0'
     implementation 'com.github.castorflex.verticalviewpager:library:19.0.1'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
     implementation 'jp.wasabeef:richeditor-android:2.0.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.google.firebase:firebase-crashlytics:18.3.3'
-    implementation 'com.github.MasayukiSuda:GPUVideo-android:v0.1.2'
-    implementation 'com.arthenica:mobile-ffmpeg-min-gpl:4.4'
     implementation('io.socket:socket.io-client:2.0.0') {
         exclude group: 'org.json', module: 'json'
     }
@@ -150,4 +195,15 @@ dependencies {
 // For Country Pecker
     implementation 'com.hbb20:ccp:2.5.0'
 
+    implementation 'com.burhanrashid52:photoeditor:3.0.0'
+    implementation 'com.github.igalata:Bubble-Picker:v0.2.4'
+    implementation 'com.github.MasayukiSuda:Mp4Composer-android:v0.4.1'
+    implementation 'com.github.MasayukiSuda:ImageToVideoAndroid:v0.1.0'
+    implementation 'com.github.MasayukiSuda:GPUVideo-android:v0.1.2'
+    implementation 'com.github.MasayukiSuda:ExoPlayerFilter:v0.2.6'
+    implementation 'com.google.android.exoplayer:exoplayer:2.18.4'
+
+//    implementation 'com.arthenica:mobile-ffmpeg-min-gpl:4.4'
+    implementation 'com.arthenica:mobile-ffmpeg-full:4.4'
+//    implementation 'com.github.SimformSolutionsPvtLtd:SSffmpegVideoOperation:1.0.8'
 }

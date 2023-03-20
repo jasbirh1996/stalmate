@@ -452,12 +452,15 @@ open class AppViewModel : ViewModel() {
         @Part("report_reason") report_reason: RequestBody,
         @Part("detailed_reason") detailed_reason: RequestBody,
 
-    ): LiveData<CommonModelResponse?> {
+        ): LiveData<CommonModelResponse?> {
         val temp = MutableLiveData<CommonModelResponse?>()
         var reportFuntimeLiveData: LiveData<CommonModelResponse?> =
             MutableLiveData<CommonModelResponse?>()
         reportFuntimeLiveData = temp
-        getResult(temp, apiInterface.reportFuntime(file,funtimeId,category,report_reason,detailed_reason))
+        getResult(
+            temp,
+            apiInterface.reportFuntime(file, funtimeId, category, report_reason, detailed_reason)
+        )
         return reportFuntimeLiveData
     }
 
@@ -541,7 +544,8 @@ open class AppViewModel : ViewModel() {
 
     var postReelLiveData: LiveData<CommonModelResponse?> = MutableLiveData<CommonModelResponse?>()
     fun postReel(
-        @Part album_image: MultipartBody.Part? = null,
+        @Part file: MultipartBody.Part? = null,
+        @Part cover_image: MultipartBody.Part? = null,
         @Part("file_type") file_type: RequestBody,
         @Part("text") text: RequestBody,
         @Part("tag_id") tag_id: RequestBody,
@@ -557,63 +561,51 @@ open class AppViewModel : ViewModel() {
         getResult(
             temp,
             apiInterface.postReel(
-                album_image!!,
-                file_type,
-                text,
-                tag_id,
-                sound_id,
-                location,
-                privacy,
-                privacy_data,
-                deviceId,
-                deviceToken
+                file = file!!,
+                cover_image = cover_image,
+                file_type = file_type,
+                text = text,
+                tag_id = tag_id,
+                sound_id = sound_id,
+                location = location,
+                privacy = privacy,
+                privacy_data = privacy_data,
+                deviceId = deviceId,
+                deviceToken = deviceToken
             )
         )
     }
 
+    fun saveAsDraft(
+        @Part file: MultipartBody.Part? = null,
+        @Part cover_image: MultipartBody.Part? = null,
+        @Part("file_type") file_type: RequestBody,
+        @Part("text") text: RequestBody,
+        @Part("tag_id") tag_id: RequestBody,
+        @Part("sound_id") sound_id: RequestBody,
+        @Part("location") location: RequestBody,
+        @Part("privacy") privacy: RequestBody,
+        @Part("privacy_data") privacy_data: RequestBody,
+        @Part("deviceId") deviceId: RequestBody,
+        @Part("deviceToken") deviceToken: RequestBody,
+    ) {
+        val temp = MutableLiveData<CommonModelResponse?>()
+        postReelLiveData = temp
+        getResult(
+            temp,
+            apiInterface.saveAsDraft(
+                file = file!!,
+                cover_image = cover_image,
+                file_type = file_type,
+                text = text,
+                tag_id = tag_id,
+                sound_id = sound_id,
+                location = location,
+                privacy = privacy,
+                privacy_data = privacy_data,
+                deviceId = deviceId,
+                deviceToken = deviceToken
+            )
+        )
+    }
 }
-
-
-/* open fun etProfileApi(
-   first_name: String?,
-   last_name: String?,
-   email: String?,
-   dob: String?,
-   about: String?,
-   home_town: String?,
-   city: String?,
-   number: String?,
-   marital_status: String?,
-   url: String?,
-   company: String?,
-   gender: String?,
-   file_Profile_Image : File,
-   file_Cover_image :  File ,
-   callback: Callback<CommonModelResponse>?
-) {
-   val firstname = RequestBody.create("text/plain".toMediaTypeOrNull(), first_name!!)
-   val lastname = RequestBody.create("text/plain".toMediaTypeOrNull(), last_name!!)
-   val dobs = RequestBody.create("text/plain".toMediaTypeOrNull(), dob!!)
-   val about = RequestBody.create("text/plain".toMediaTypeOrNull(), about!!)
-   val homeTown = RequestBody.create("text/plain".toMediaTypeOrNull(), home_town!!)
-   val citys = RequestBody.create("text/plain".toMediaTypeOrNull(), city!!)
-   val numbers = RequestBody.create("text/plain".toMediaTypeOrNull(), number!!)
-   val marriageStatus = RequestBody.create("text/plain".toMediaTypeOrNull(), marital_status!!)
-   val urls = RequestBody.create("text/plain".toMediaTypeOrNull(), url!!)
-   val companys = RequestBody.create("text/plain".toMediaTypeOrNull(), company!!)
-   val genders = RequestBody.create("text/plain".toMediaTypeOrNull(), gender!!)
-   val thumbnailBody: RequestBody = RequestBody.create("image/*".toMediaTypeOrNull(), file_Profile_Image)
-   val thumbnailBody1: RequestBody = RequestBody.create("image/*".toMediaTypeOrNull(), file_Cover_image)
-   val profile_image1: MultipartBody.Part? = createFormData("image", file_Profile_Image.getName(), thumbnailBody)
-   val cover_image1: MultipartBody.Part? = createFormData("image", file_Cover_image.getName(), thumbnailBody1)
-   val temp = MutableLiveData<CommonModelResponse?>()
-   UpdateProfileLiveData = temp
-   val call: Call<CommonModelResponse> =  apiInterface.updateUserProfile(
-       firstname, lastname, about, numbers, dobs, marriageStatus, urls, companys, genders,
-       citys, homeTown,profile_image1,cover_image1)
-   call.enqueue(callback)
-}*/
-
-}
-
- */

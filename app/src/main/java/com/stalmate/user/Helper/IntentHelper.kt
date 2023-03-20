@@ -16,6 +16,7 @@ import com.stalmate.user.modules.reels.activity.ActivityFullViewReels
 import com.stalmate.user.modules.reels.activity.ActivitySettings
 import com.stalmate.user.modules.reels.activity.ActivitySongPicker
 import com.stalmate.user.modules.reels.activity.ActivityVideoRecorder
+import com.stalmate.user.modules.reels.activity.createFun.CreateFunActivity
 import com.stalmate.user.utilities.CommonImageActivity
 import com.stalmate.user.view.dashboard.ActivityDashboardNew
 import com.stalmate.user.view.dashboard.Chat.ActivityCall
@@ -82,8 +83,8 @@ public class IntentHelper {
                 .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
         }
         fun getCreateReelsScreen(context: Context?): Intent? {
-            return Intent(context, ActivityVideoRecorder::class.java)
-                .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+//            return Intent(context, ActivityVideoRecorder::class.java).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            return Intent(context, CreateFunActivity::class.java).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
         }
 
         fun getFollowersFollowingScreen(context: Context?): Intent? {

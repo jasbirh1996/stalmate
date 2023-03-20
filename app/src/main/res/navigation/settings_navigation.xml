@@ -10,11 +10,10 @@
         android:id="@+id/fragment_setting_main"
         android:name="com.stalmate.user.view.settings.FragmentSettingListing"
         android:label="fragmentSettingListing"
-        tools:layout="@layout/fragment_setting_listing" >
+        tools:layout="@layout/fragment_setting_listing">
         <action
             android:id="@+id/fragment_setting_main_to_fragment_account_setting"
-            app:destination="@id/fragment_account_setting"
-            />
+            app:destination="@id/fragment_account_setting" />
         <action
             android:id="@+id/action_fragment_setting_main_to_appSettingFragment"
             app:destination="@id/appSettingFragment" />
@@ -24,15 +23,17 @@
         <action
             android:id="@+id/action_fragment_setting_main_to_legalFragment"
             app:destination="@id/legalFragment" />
+        <action
+            android:id="@+id/action_fragment_setting_main_to_profileFragment"
+            app:destination="@id/fragmentProfile" />
     </fragment>
-
 
 
     <fragment
         android:id="@+id/fragment_account_setting"
         android:name="com.stalmate.user.view.settings.FragmentSettingsAccount"
         android:label="fragmentAccount"
-        tools:layout="@layout/fragment_settings_account" >
+        tools:layout="@layout/fragment_settings_account">
         <action
             android:id="@+id/action_fragment_account_setting_to_fragmentPrivacy"
             app:destination="@id/fragmentPrivacy" />
@@ -57,7 +58,7 @@
         android:id="@+id/fragment_blocked_users"
         android:name="com.stalmate.user.view.settings.FragmentBlockedContacts"
         android:label="fragmentBlocked"
-        tools:layout="@layout/fragment_blocked_contacts" >
+        tools:layout="@layout/fragment_blocked_contacts">
 
     </fragment>
     <fragment
@@ -94,4 +95,9 @@
         android:name="com.stalmate.user.view.settings.ChangePasswordFragment"
         android:label="fragment_change_password"
         tools:layout="@layout/fragment_change_password" />
+    <fragment
+        android:id="@+id/fragmentProfile"
+        android:name="com.stalmate.user.view.profile.FragmentProfile"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
 </navigation>

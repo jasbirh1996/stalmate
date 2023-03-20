@@ -134,6 +134,33 @@ object Common {
         return dest.absolutePath
     }
 
+    fun getFile(context: Context, fileExtension: String) : File {
+        val dir = File(context.getExternalFilesDir(Common.OUT_PUT_DIR).toString())
+        if (!dir.exists()) {
+            dir.mkdirs()
+        }
+        var extension:String? = null
+        when {
+            TextUtils.equals(fileExtension, IMAGE) -> {
+                extension = ".jpg"
+            }
+            TextUtils.equals(fileExtension, VIDEO) -> {
+                extension = ".mp4"
+            }
+            TextUtils.equals(fileExtension, AVI) -> {
+                extension = ".avi"
+            }
+            TextUtils.equals(fileExtension, GIF) -> {
+                extension = ".gif"
+            }
+            TextUtils.equals(fileExtension, MP3) -> {
+                extension = ".mp3"
+            }
+        }
+        val dest = File(dir.path + File.separator + Common.OUT_PUT_DIR + System.currentTimeMillis().div(1000L) + extension)
+        return dest
+    }
+
     @Throws(IOException::class)
     fun getFileFromAssets(context: Context, fileName: String): File =
         File(context.cacheDir, fileName).also {

@@ -47,8 +47,7 @@ class FragmentHome(var callback: Callback) : BaseFragment(), AdapterFeed.Callbac
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_home, container, false)
@@ -62,7 +61,6 @@ class FragmentHome(var callback: Callback) : BaseFragment(), AdapterFeed.Callbac
         binding.refreshLayout.setOnRefreshListener {
             binding.refreshLayout.isRefreshing = false
             if (isNetworkAvailable()) {
-
                 homeSetUp()
             } else {
 
@@ -116,21 +114,16 @@ class FragmentHome(var callback: Callback) : BaseFragment(), AdapterFeed.Callbac
 
         }
 
-
         binding.layoutNewUser.setOnClickListener {
             startActivity(IntentHelper.getActivityWelcomeScreen(requireContext()))
         }
 
-
-
         binding.toolbar.ivButtonMenu.setOnClickListener {
 //            startActivity(Intent(requireContext(), ActivitySideDawer::class.java))
-
             callback.onCLickOnMenuButton()
         }
 
         binding.nointernet.visibility = View.GONE
-
     }
 
 
@@ -168,24 +161,20 @@ class FragmentHome(var callback: Callback) : BaseFragment(), AdapterFeed.Callbac
         startActivity(
             IntentHelper.getOtherUserProfileScreen(requireContext())!!.putExtra("id", friend.id)
         )
-
     }
 
-    fun isNetworkAvailable(): Boolean {
-
+    private fun isNetworkAvailable(): Boolean {
         return NetworkUtils.isNetworkAvailable()
     }
 
-
     private fun getFriendSuggestionListing() {
-
-        var hashmap = HashMap<String, String>()
-        hashmap.put("id_user", "")
-        hashmap.put("type", Constants.TYPE_FRIEND_SUGGESTIONS)
-        hashmap.put("sub_type", "")
-        hashmap.put("search", "")
-        hashmap.put("page", "1")
-        hashmap.put("limit", "6")
+        val hashmap = HashMap<String, String>()
+        hashmap["id_user"] = ""
+        hashmap["type"] = Constants.TYPE_FRIEND_SUGGESTIONS
+        hashmap["sub_type"] = ""
+        hashmap["search"] = ""
+        hashmap["page"] = "1"
+        hashmap["limit"] = "6"
 
         networkViewModel.getFriendList(hashmap)
         networkViewModel.friendLiveData.observe(viewLifecycleOwner, Observer {
@@ -206,8 +195,7 @@ class FragmentHome(var callback: Callback) : BaseFragment(), AdapterFeed.Callbac
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
                     binding.toolbar.layoutSearchBox.background = ContextCompat.getDrawable(
-                        requireContext(),
-                        R.drawable.tapped_search_background
+                        requireContext(), R.drawable.tapped_search_background
                     )
                 }
                 MotionEvent.ACTION_MOVE -> Log.i("TAG", "moving: ($x, $y)")

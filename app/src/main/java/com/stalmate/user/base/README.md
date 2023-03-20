@@ -4,7 +4,8 @@ https://img.ly/
 ****M8**** All Settings
 Kaveri
 1-> Profile -> Get And Edit, Screen no 37-40
-2-> Account -> Privacy, Change Number, Change Password, Blocked contacts, Delete my accounts, Screen no 345
+2-> Account -> Privacy, Change Number, Change Password, Blocked contacts, Delete my accounts, Screen
+no 345
 3-> Chat -> Screen no 319
 4-> App General Setting -> Screen no 359
 5-> Notification Setting -> Screen no 321
@@ -14,9 +15,10 @@ Kaveri
 9-> Saved/Favourite -> Screen no 68
 Localisation in Arabic only
 //----------
-@Aman Kumar Singh @Yogesh  for M8 we need to work on below points
+@Aman Kumar Singh @Yogesh for M8 we need to work on below points
 Profile:-Edit profile
-Account setting:- In Privacy we need to do all points except (Story, Groups, Read Receipts, Last seen)
+Account setting:- In Privacy we need to do all points except (Story, Groups, Read Receipts, Last
+seen)
 App Setting:-Do all points except Rate App
 Notification Setting:- Only do funtime part
 About us

@@ -11,11 +11,8 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/SSffmpegVideoOperation" />
             <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/bubblepicker" />
-            <option value="$PROJECT_DIR$/mp4compose" />
-            <option value="$PROJECT_DIR$/photoeditor" />
+            <option value="$PROJECT_DIR$/deepar" />
           </set>
         </option>
       </GradleProjectSettings>

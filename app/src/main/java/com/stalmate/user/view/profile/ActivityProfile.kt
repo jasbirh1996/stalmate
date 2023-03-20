@@ -281,14 +281,12 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
         networkViewModel.UpdateProfileLiveData.observe(this, Observer {
             it.let {
                 makeToast(it!!.message)
-                var hashMap = HashMap<String, String>()
-                networkViewModel.getProfileData(hashMap)
                 getUserProfileData()
             }
         })
     }
 
-    fun getUserProfileData() {
+    private fun getUserProfileData() {
         val hashMap = HashMap<String, String>()
         networkViewModel.getProfileData(hashMap)
         networkViewModel.profileLiveData.observe(this, Observer {

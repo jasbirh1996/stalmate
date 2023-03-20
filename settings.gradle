@@ -5,6 +5,11 @@ pluginManagement {
         mavenCentral()
         jcenter()
         maven { url "https://jitpack.io" }
+        maven { url "https://artifactory.img.ly/artifactory/imgly" }
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        flatDir {
+            dirs './deepar'
+        }
     }
 }
 dependencyResolutionManagement {
@@ -14,8 +19,12 @@ dependencyResolutionManagement {
         mavenCentral()
         jcenter()
         maven { url 'https://jitpack.io' }
-
+        maven { url 'https://artifactory.img.ly/artifactory/imgly' }
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        flatDir {
+            dirs './deepar'
+        }
     }
 }
 rootProject.name = "Slatmate"
-include ':app',':photoeditor',':SSffmpegVideoOperation',':bubblepicker',':mp4compose'
+include ':app', ':deepar'

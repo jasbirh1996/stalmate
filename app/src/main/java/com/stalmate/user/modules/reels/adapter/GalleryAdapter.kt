@@ -22,7 +22,7 @@ class GalleryAdapter(
     var callback: Callbackk,
 ) :
     RecyclerView.Adapter<GalleryAdapter.FeedViewHolder>() {
-    var old_postion=-1
+    var old_postion = -1
     var list = ArrayList<GalleryItem>()
 
     override fun onCreateViewHolder(
@@ -47,29 +47,29 @@ class GalleryAdapter(
         fun bind(item: GalleryItem) {
 
             Glide.with(context).load(item.image).into(binding.imageView)
-            Log.d("asdasda",item.uri.toString())
-            if (item.mediaType==1){
-                binding.ivmediaType.visibility= View.GONE
-            }else{
-                binding.ivmediaType.visibility= View.VISIBLE
+            Log.d("asdasda", item.uri.toString())
+            if (item.mediaType == 1) {
+                binding.ivmediaType.visibility = View.GONE
+            } else {
+                binding.ivmediaType.visibility = View.VISIBLE
             }
 
             binding.root.setOnClickListener {
 
-callback.onItemSelected(item)
-         /*       old_postion=absoluteAdapterPosition
-                notifyItemChanged(old_postion)
-*/
+                callback.onItemSelected(item)
+                /*       old_postion=absoluteAdapterPosition
+                       notifyItemChanged(old_postion)
+       */
             }
 
-       /*     if(old_postion==absoluteAdapterPosition){
-                binding.mainlayout.background=ContextCompat.getDrawable(context,R.drawable.white_small_corner_border)
-            }
-            else
-            {
+            /*     if(old_postion==absoluteAdapterPosition){
+                     binding.mainlayout.background=ContextCompat.getDrawable(context,R.drawable.white_small_corner_border)
+                 }
+                 else
+                 {
 
-                binding.mainlayout.background=ContextCompat.getDrawable(context,R.drawable.primary_small_corner_border)
-            }*/
+                     binding.mainlayout.background=ContextCompat.getDrawable(context,R.drawable.primary_small_corner_border)
+                 }*/
 
 
         }
@@ -94,9 +94,7 @@ callback.onItemSelected(item)
     }
 
 
-
-
 }
 
 
-data class GalleryItem(val image: Bitmap?, val mediaType: Int,val uri:String)
+data class GalleryItem(val image: Bitmap?, val mediaType: Int, val uri: String)

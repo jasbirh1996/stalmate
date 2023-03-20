@@ -196,19 +196,18 @@ class FragmentFuntimePostEdit : BaseFragment(), FriendAdapter.Callbackk {
         if (!ValidationHelper.isNull(binding.editor.html)) {
             data = binding.editor.html.toString()
         }
-        Log.d(";lasjd;asd", selectedPrivacy)
         networkViewModel.postReel(
-            profile_image1,
-            getRequestBody(".mp4"),
-            getRequestBody(data),
-            getRequestBody(commaSeparatedStr),
-            getRequestBody(requireActivity().intent.getStringExtra(EXTRA_SONG_ID).toString()),
-            getRequestBody(city + ", " + country),
-            getRequestBody(selectedPrivacy),
-            getRequestBody(""),
-            getRequestBody(""),
-            getRequestBody("")
-
+            file = profile_image1,
+            cover_image = null,
+            file_type = getRequestBody(".mp4"),
+            text = getRequestBody(data),
+            tag_id = getRequestBody(commaSeparatedStr),
+            sound_id = getRequestBody(requireActivity().intent.getStringExtra(EXTRA_SONG_ID).toString()),
+            location = getRequestBody(city + ", " + country),
+            privacy = getRequestBody(selectedPrivacy),
+            privacy_data = getRequestBody(""),
+            deviceId = getRequestBody(""),
+            deviceToken = getRequestBody("")
         )
         networkViewModel.postReelLiveData.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             it.let {

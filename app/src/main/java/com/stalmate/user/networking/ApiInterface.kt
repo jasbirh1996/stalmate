@@ -1,10 +1,10 @@
 package com.stalmate.user.networking
 
 import android.content.Context
+import android.database.Observable
+import com.slatmate.user.model.*
 import com.stalmate.user.model.*
 import com.stalmate.user.utilities.Constants
-
-import com.slatmate.user.model.*
 import com.stalmate.user.view.dashboard.Friend.categorymodel.AddCategoryModel
 import com.stalmate.user.view.dashboard.Friend.categorymodel.ModelCategoryResponse
 import com.stalmate.user.view.dashboard.funtime.ModelFuntimeLikeResponse
@@ -16,7 +16,6 @@ import com.stalmate.user.view.photoalbum.imageshowindex.ModelPhotoIndexDataRespo
 import com.stalmate.user.view.singlesearch.ModelSearch
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -159,8 +158,7 @@ interface ApiInterface {
 
     @GET(Constants.URL_OTP_REGISTRATION)
     fun setOtpVerifyRegistration(
-        @Query("email") email: String,
-        @Query("otp") otp: String
+        @Query("email") email: String, @Query("otp") otp: String
     ): Call<CommonModelResponse>
 
     @GET(Constants.URL_SEARCH_UNIVERCITY)
@@ -235,7 +233,8 @@ interface ApiInterface {
     @Multipart
     @POST(Constants.ADD_REEL)
     fun postReel(
-        @Part cover_img: MultipartBody.Part,
+        @Part file: MultipartBody.Part?,
+        @Part cover_image: MultipartBody.Part?,
         @Part("file_type") file_type: RequestBody,
         @Part("text") text: RequestBody,
         @Part("tag_id") tag_id: RequestBody,
@@ -244,15 +243,130 @@ interface ApiInterface {
         @Part("privacy") privacy: RequestBody,
         @Part("privacy_data") privacy_data: RequestBody,
         @Part("deviceId") deviceId: RequestBody,
-        @Part("deviceToken") deviceToken: RequestBody,
+        @Part("deviceToken") deviceToken: RequestBody
     ): Call<CommonModelResponse>
 
+    //M8
+    @FormUrlEncoded
+    @POST(Constants.changeNumberApi)
+    fun changeNumberApi(
+        @Header("access_token") access_token: StrictMath,
+        @Field("number_old") number_old: String,
+        @Field("number_new") number_new: String,
+        @Field("notify_contact") notify_contact: Boolean,
+        @Field("number_c_code") number_c_code: String
+    )
 
-/*
-    @HTTP(method = "DELETE", path = "delete_post" ,hasBody = true)
-    fun deletePost(@Header("accessToken") header: String ,@Body map: HashMap<String, String>) : Call<CommonResponse>
+    @FormUrlEncoded
+    @POST(Constants.changePasswordApi)
+    fun changePasswordApi(
+        @Header("access_token") access_token: StrictMath,
+        @Field("password_old") password_old: String,
+        @Field("password_new") password_new: String,
+        @Field("password_confirm") password_confirm: String
+    ): Observable<ChangePasswordResponse>
 
-*/
+    @GET(Constants.blockUserList)
+    fun blockUserList(@Header("access_token") access_token: String): Observable<BlockUserListResponse>
 
+    @GET(Constants.accountSettings)
+    fun accountSettingsGet(@Header("access_token") access_token: String)
 
+    @PUT(Constants.accountSettingsUpdate)
+    fun accountSettingsUpdate(
+        @Header("access_token") access_token: String, @Body requestBody: AccountSettingUpdateRequest
+    )
+
+    @FormUrlEncoded
+    @POST(Constants.deleteMyAccount)
+    fun deleteMyAccount(
+        @Header("access_token") access_token: String,
+        @Field("number") number: String,
+        @Field("email") email: String,
+        @Field("number_c_code") number_c_code: String,
+        @Field("otp") otp: String,
+        @Field("notify_contact") notify_contact: Boolean
+    )
+
+    @FormUrlEncoded
+    @POST(Constants.contactUs)
+    fun contactUs(
+        @Header("access_token") access_token: String,
+        @Field("category") category: String,
+        @Field("topic") topic: String,
+        @Field("message") message: String,
+    )
+
+    @FormUrlEncoded
+    @POST(Constants.commentDisable)
+    fun commentDisable(
+        @Header("access_token") access_token: String, @Field("funtime_id") funtime_id: String
+    )
+
+    @Multipart
+    @POST(Constants.saveAsDraft)
+    fun saveAsDraft(
+        @Part file: MultipartBody.Part?,
+        @Part cover_image: MultipartBody.Part?,
+        @Part("file_type") file_type: RequestBody,
+        @Part("text") text: RequestBody,
+        @Part("tag_id") tag_id: RequestBody,
+        @Part("sound_id") sound_id: RequestBody,
+        @Part("location") location: RequestBody,
+        @Part("privacy") privacy: RequestBody,
+        @Part("privacy_data") privacy_data: RequestBody,
+        @Part("deviceId") deviceId: RequestBody,
+        @Part("deviceToken") deviceToken: RequestBody
+    ): Call<CommonModelResponse>
+}
+
+data class AccountSettingUpdateRequest(
+    val call: Call,
+    val chat: Chat,
+    val funtime: Funtime,
+    val games: Games,
+    val groups: Groups,
+    val jobs: Jobs,
+    val page: Page,
+    val post: Post,
+    val setting: Setting
+) {
+    data class Call(
+        val light: String, val notification_tones: String, val popup_tones: Boolean
+    )
+
+    data class Chat(
+        val conversion_tones: Boolean, val light: String, val popup_tones: Boolean
+    )
+
+    data class Funtime(
+        val light: String, val notification_tones: String, val popup_tones: Boolean
+    )
+
+    data class Games(
+        val light: String, val notification_tones: String, val popup_tones: Boolean
+    )
+
+    data class Groups(
+        val broadcast_tones: Boolean,
+        val light: String,
+        val notification_tones: String,
+        val popup_tones: Boolean
+    )
+
+    data class Jobs(
+        val light: String, val notification_tones: String, val popup_tones: Boolean
+    )
+
+    data class Page(
+        val light: String, val notification_tones: String, val popup_tones: Boolean
+    )
+
+    data class Post(
+        val light: String, val notification_tones: String, val popup_tones: Boolean
+    )
+
+    data class Setting(
+        val conversion_tones: Boolean, val light: String, val notification_tones: String
+    )
 }

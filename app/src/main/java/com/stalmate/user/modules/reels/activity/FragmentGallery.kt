@@ -60,10 +60,9 @@ class FragmentGallery(
         val gridLayoutManager = GridLayoutManager(activity, 3)
         binding.rvList.layoutManager = gridLayoutManager
         val emojiAdapter = GalleryAdapter(requireContext(), this)
-        var data = ArrayList<GalleryItem>()
+        val data = ArrayList<GalleryItem>()
         for (i in list.indices) {
-
-            var galleryItem = GalleryItem(image = list[i], typeMedia[i], arrPath[i]!!)
+            val galleryItem = GalleryItem(image = list[i], typeMedia[i], arrPath[i]!!)
             data.add(galleryItem)
         }
         emojiAdapter.submitList(data)
@@ -78,7 +77,7 @@ class FragmentGallery(
 
 
     override fun onItemSelected(item: GalleryItem) {
-        galleryPickerListener!!.onItemPicked(item)
+        galleryPickerListener?.onItemPicked(item)
         dismiss()
     }
 }

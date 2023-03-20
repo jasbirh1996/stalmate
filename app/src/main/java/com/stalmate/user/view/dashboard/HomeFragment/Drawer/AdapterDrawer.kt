@@ -77,7 +77,6 @@ class DrawerAdapter(
 
                     13 -> {
                         PrefManager.getInstance(context)!!.keyIsLoggedIn = false
-
                         context.startActivity(
                             Intent(
                                 context,

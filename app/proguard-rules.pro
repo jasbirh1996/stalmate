@@ -24,3 +24,8 @@
 -dontwarn com.coremedia.iso.boxes.*
 -dontwarn com.googlecode.mp4parser.authoring.tracks.mjpeg.**
 -dontwarn com.googlecode.mp4parser.authoring.tracks.ttml.**
+
+#DeepAR
+-keepclassmembers class ai.deepar.ar.DeepAR { *; }
+-keepclassmembers class ai.deepar.ar.core.videotexture.VideoTextureAndroidJava { *; }
+-keep class ai.deepar.ar.core.videotexture.VideoTextureAndroidJava

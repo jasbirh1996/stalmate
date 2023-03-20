@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.navigation.fragment.NavHostFragment
+import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.commonadapters.AdapterFeed
@@ -276,6 +277,7 @@ class FragmentDashboard: BaseFragment(), View.OnClickListener, FragmentHome.Call
     }
 
     override fun onCLickOnProfileButton() {
+//        startActivity(IntentHelper.getProfileScreen(this.requireActivity()))
             loadFragment(fragmentProfile)
     }
 

@@ -38,6 +38,7 @@ import com.stalmate.user.commonadapters.AdapterTabPager
 import com.stalmate.user.databinding.FragmentProfileBinding
 import com.stalmate.user.model.AboutProfileLine
 import com.stalmate.user.model.User
+import com.stalmate.user.modules.reels.activity.ActivitySettings
 import com.stalmate.user.utilities.*
 import com.stalmate.user.view.adapter.ProfileAboutAdapter
 import com.stalmate.user.view.adapter.ProfileFriendAdapter
@@ -164,12 +165,16 @@ class FragmentProfile() : BaseFragment(),
         getUserProfileData()
         binding.ivBackground.setOnClickListener {
 
-            startActivity(IntentHelper.getFullImageScreen(requireActivity())!!
-                .putExtra("picture", userData.cover_img1))
+            startActivity(
+                IntentHelper.getFullImageScreen(requireActivity())!!
+                    .putExtra("picture", userData.cover_img1)
+            )
         }
         binding.ivUserThumb.setOnClickListener {
-            startActivity(IntentHelper.getFullImageScreen(requireActivity())!!
-                .putExtra("picture", userData.profile_img1))
+            startActivity(
+                IntentHelper.getFullImageScreen(requireActivity())!!
+                    .putExtra("picture", userData.profile_img1)
+            )
         }
 
         friendAdapter = ProfileFriendAdapter(networkViewModel, requireContext(), this)
@@ -194,7 +199,11 @@ class FragmentProfile() : BaseFragment(),
 
         binding.toolbar.tvhead.text = "Profile"
         binding.toolbar.topAppBar.setNavigationOnClickListener {
-            (requireActivity() as ActivityDashboardNew).onBackPressed()
+            try {
+                (requireActivity() as ActivityDashboardNew).onBackPressed()
+            } catch (e: ClassCastException) {
+                (requireActivity() as ActivitySettings).onBackPressed()
+            }
         }
 
         binding.layout.tvAlbumPhotoSeeMore.setOnClickListener {
@@ -230,14 +239,11 @@ class FragmentProfile() : BaseFragment(),
             }
         })
         setupData()
-
-
     }
 
     public interface Callbackk {
         fun onClickONSyncContTACTbUTTON()
     }
-
 
     var scrollEnable = true
     fun onScrollToHideTopHeader(toHide: Boolean) {

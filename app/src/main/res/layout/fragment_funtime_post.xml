@@ -12,7 +12,6 @@
             android:id="@+id/toolbar"
             layout="@layout/app_toolbar" />
 
-
         <View
             android:id="@+id/view9"
             android:layout_width="match_parent"

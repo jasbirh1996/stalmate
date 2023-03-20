@@ -48,8 +48,11 @@ abstract class BaseActivity : AppCompatActivity(), View.OnClickListener,
         progressDialog = com.stalmate.user.view.dialogs.ProgressDialog(this)
         context = this
         try {
-          debugPrint("tokenn", PrefManager.getInstance(App.getInstance())!!.userDetail.results[0].token)
-        }catch (e:Exception){
+            debugPrint(
+                "tokenn",
+                PrefManager.getInstance(App.getInstance())!!.userDetail.results[0].token
+            )
+        } catch (e: Exception) {
 
         }
 
@@ -62,7 +65,6 @@ abstract class BaseActivity : AppCompatActivity(), View.OnClickListener,
             untilitys.setAppLocale(this, Common.getString("LANG"))
         }*/
     }
-
 
 
     fun makeToast(message: String?) {
@@ -84,7 +86,7 @@ abstract class BaseActivity : AppCompatActivity(), View.OnClickListener,
     fun showLoader() {
         Log.d("asdsadsd", "asdsadsd")
         try {
-            if (!isFinishing && !progressDialog!!.isShowing) progressDialog!!.showDialog(com.stalmate.user.view.dialogs.ProgressDialog.DIALOG_CENTERED)
+            if (!isFinishing && (progressDialog?.isShowing == false)) progressDialog?.showDialog(com.stalmate.user.view.dialogs.ProgressDialog.DIALOG_CENTERED)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -92,7 +94,7 @@ abstract class BaseActivity : AppCompatActivity(), View.OnClickListener,
 
     override
     fun dismissLoader() {
-        if (!isFinishing && progressDialog!!.isShowing) progressDialog!!.dismiss()
+        if (!isFinishing && (progressDialog?.isShowing == true)) progressDialog?.dismiss()
     }
 
     protected fun showLoading(message: String) {
@@ -154,7 +156,6 @@ abstract class BaseActivity : AppCompatActivity(), View.OnClickListener,
     }
 
 
-
     companion object {
         const val READ_WRITE_STORAGE = 52
         const val MULTIPLE_PERMISSIONS = 10
@@ -172,7 +173,7 @@ abstract class BaseActivity : AppCompatActivity(), View.OnClickListener,
         context.resources.updateConfiguration(config, context.resources.displayMetrics)
     }
 
-    fun debugPrint(key:String,data:String){
-        Log.d(key,data)
+    fun debugPrint(key: String, data: String) {
+        Log.d(key, data)
     }
 }

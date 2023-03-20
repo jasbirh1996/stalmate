@@ -11,35 +11,25 @@ import android.graphics.*
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.net.Uri
-import android.os.AsyncTask
-import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
+import android.os.*
 import android.provider.MediaStore
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.MimeTypeMap
-import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
-import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.Px
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.loader.content.CursorLoader
 import androidx.recyclerview.widget.*
-import androidx.work.Data
-import androidx.work.OneTimeWorkRequest
-import androidx.work.WorkInfo
-import androidx.work.WorkManager
 import com.arthenica.mobileffmpeg.FFmpeg
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
@@ -57,40 +47,37 @@ import com.otaliastudios.cameraview.CameraOptions
 import com.otaliastudios.cameraview.FileCallback
 import com.otaliastudios.cameraview.PictureResult
 import com.otaliastudios.cameraview.controls.Engine
-import com.otaliastudios.cameraview.filter.Filters
-import com.otaliastudios.cameraview.filters.BrightnessFilter
-import com.otaliastudios.cameraview.filters.GammaFilter
-import com.otaliastudios.cameraview.filters.SharpnessFilter
+import com.otaliastudios.cameraview.controls.Facing
+import com.otaliastudios.cameraview.controls.Flash
 import com.otaliastudios.cameraview.gesture.Gesture
 import com.otaliastudios.cameraview.gesture.GestureAction
 import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.databinding.ActivityVideoRecorderBinding
-import com.stalmate.user.modules.reels.adapter.FilterAdapterNew
 import com.stalmate.user.modules.reels.adapter.GalleryItem
 import com.stalmate.user.modules.reels.filters.*
 import com.stalmate.user.modules.reels.filters.epf.EPlayerView
 import com.stalmate.user.modules.reels.filters.epf.filter.*
-import com.stalmate.user.modules.reels.photo_editing.RangeBSFragmnet
+import com.stalmate.user.modules.reels.photo_editing.Counter
 import com.stalmate.user.modules.reels.utils.VideoFilter
 import com.stalmate.user.modules.reels.utils.VideoUtil
-import com.stalmate.user.modules.reels.workers.VideoFilterWorker
 import com.stalmate.user.utilities.Common
-import com.stalmate.user.utilities.ImageLoaderHelperGlide
 import com.stalmate.user.utilities.PathUtil
-import com.stalmate.user.utilities.PriceFormatter
 import com.stalmate.user.view.dialogs.CommonConfirmationDialog
-import jp.co.cyberagent.android.gpuimage.GPUImage
 import jp.co.cyberagent.android.gpuimage.filter.*
+import ly.img.android.pesdk.PhotoEditorSettingsList
+import ly.img.android.pesdk.VideoEditorSettingsList
+import ly.img.android.pesdk.backend.model.EditorSDKResult
+import ly.img.android.pesdk.backend.model.state.LoadSettings
+import ly.img.android.pesdk.ui.activity.PhotoEditorActivityResultContract
+import ly.img.android.pesdk.ui.activity.VideoEditorActivityResultContract
 import java.io.*
-import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 
 
-class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListener,
-    FilterAdapterNew.OnFilterSelectListener, RangeBSFragmnet.RangeSelectedListener {
+class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListener {
 
     private val TAG = "RecorderActivity"
     private var imageVideoDuration = 15
@@ -100,7 +87,6 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
     private var isImage = true
     private var isImageTakenByCamera = false
     private var isVideoTaken = false
-    private var isMusicSelected = false
     private var isFilterApplied = false
     private var mMediaPlayer: MediaPlayer? = null
     val PICK_FILE = 99
@@ -110,19 +96,8 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
 
     }
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        hideSystemBars()
-        super.onCreate(savedInstanceState)
-        binding = ActivityVideoRecorderBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        mPlayer = ExoPlayer.Builder(this).build()
-        getGalleryData()
-        rangeFragment = RangeBSFragmnet(imageVideoDuration)
-        rangeFragment.setEmojiListener(this)
-        binding.cameraView.engine = Engine.CAMERA2
-        mModel = ViewModelProvider(this)[RecorderActivityViewModel::class.java]
-        isPermissionGranted(
+    fun isPermissionGranted(): Boolean {
+        return isPermissionGranted(
             arrayOf(
                 android.Manifest.permission.READ_EXTERNAL_STORAGE,
                 android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -130,53 +105,60 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                 android.Manifest.permission.RECORD_AUDIO,
             )
         )
+    }
 
+    var countdownTimerDuration = 0
+    override fun onCreate(savedInstanceState: Bundle?) {
+        hideSystemBars()
+        super.onCreate(savedInstanceState)
+        binding = ActivityVideoRecorderBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        if (!isPermissionGranted()) isPermissionGranted()
+        mModel = ViewModelProvider(this)[RecorderActivityViewModel::class.java]
+        binding.cameraView.engine = Engine.CAMERA2
+        //Fetch Image
+        getGalleryData()
+        //Media Player
         mMediaPlayer = MediaPlayer()
-        mMediaPlayer!!.setAudioAttributes(
-            AudioAttributes.Builder()
-                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                .setUsage(AudioAttributes.USAGE_MEDIA)
-                .build()
+        mMediaPlayer?.setAudioAttributes(
+            AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                .setUsage(AudioAttributes.USAGE_MEDIA).build()
         )
+        //Set Counter
+        counter = Counter(onCaptureAfterNthSeconds = { type: String, duration: Int ->
+            isImage = (type != "video")
+            uiWhenCountdownActive()
+            countdownTimerDuration = duration
+            captureTimerHandler.removeCallbacks(runnableForTimer)
+            captureTimerHandler.post(runnableForTimer)
+        }, onRangeDialogDismiss = {
+            binding.layoutBottomControll.visibility = View.VISIBLE
+        })
 
-        // getGalleryData()
 
-        binding.selectedPhoto.setScaleType(GPUImage.ScaleType.CENTER_INSIDE)
+//        binding.selectedPhoto.setScaleType(GPUImage.ScaleType.CENTER_INSIDE)
         binding.cameraView.mapGesture(Gesture.PINCH, GestureAction.ZOOM);
         binding.cameraView.mapGesture(Gesture.TAP, GestureAction.AUTO_FOCUS);
         binding.cameraView.clearGesture(Gesture.LONG_TAP)
         binding.cameraView.useDeviceOrientation = false
         binding.cameraView.addCameraListener(object : CameraListener() {
-
-
             override fun onPictureTaken(result: PictureResult) {
                 isImageTakenByCamera = true
                 result.toFile(File(cacheDir, UUID.randomUUID().toString()), FileCallback {
-
-
-                    mModel!!.video = it
-
-
+                    mModel?.video = it
                     result.toBitmap {
-                        binding.selectedPhoto.visibility = View.VISIBLE
-                        binding.selectedPhoto.setImage(it);
-
+//                        binding.selectedPhoto.visibility = View.VISIBLE
+//                        binding.selectedPhoto.setImage(it)
                         setupProgressBarWithDuration()
                         setUPCameraViewsOnCapture(false)
-
-                        isFilterActive = false
                         updateColorButtons()
                     }
-
                 })
                 super.onPictureTaken(result)
-
             }
 
             override fun onZoomChanged(
-                newValue: Float,
-                bounds: FloatArray,
-                fingers: Array<PointF?>?
+                newValue: Float, bounds: FloatArray, fingers: Array<PointF?>?
             ) {
                 // newValue: the new zoom value
                 // bounds: this is always [0, 1]
@@ -185,7 +167,6 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
 
             override fun onCameraOpened(options: CameraOptions) {
                 super.onCameraOpened(options)
-                setUpFilterAdapter()
             }
 
             override fun onVideoRecordingEnd() {
@@ -199,7 +180,6 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
             }
 
             override fun onVideoRecordingStart() {
-                isFilterActive = false
                 updateColorButtons()
                 mMediaPlayer!!.start()
                 binding.buttonRecord.isSelected = true
@@ -226,29 +206,12 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                 Log.d("aplskdasd", "recordingStarted")
             }
         })
-        if (intent.getStringExtra(EXTRA_SONG_ID) != null) {
-            Log.d("ajkhdkasd", intent.getStringExtra(EXTRA_SONG_ID).toString())
-            Log.d("ajkhdkasd", intent.getStringExtra(EXTRA_SONG_FILE).toString())
-            songId = intent.getStringExtra(EXTRA_SONG_ID).toString()
-            binding.tvMusicName.text = intent.getStringExtra(EXTRA_SONG_NAME).toString()
-            binding.layoutSelectedMusic.visibility = View.VISIBLE
-            mModel!!.audio = Uri.parse(intent.getStringExtra(EXTRA_SONG_FILE).toString())
-            ImageLoaderHelperGlide.setGlideCorner(
-                this,
-                binding.ivMusicImage,
-                intent.getStringExtra(EXTRA_SONG_COVER).toString(),
-                R.drawable.user_placeholder
-            )
-        }
-        setupFiltersRV()
         setUPViews()
         setUPCameraViewsOnCapture(true)
     }
 
     override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
+        requestCode: Int, permissions: Array<String>, grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == BaseActivity.MULTIPLE_PERMISSIONS) {
@@ -283,108 +246,88 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
         binding.tvCountDownValue.visibility = View.GONE
         if (isImage) {
             if (isDefault) {
-                binding.buttonSpeed.visibility = View.VISIBLE
-                binding.buttonDone.visibility = View.GONE
-                binding.buttonMusic.visibility = View.VISIBLE
-                binding.buttonCaptureCounter.visibility = View.VISIBLE
-                binding.buttonColorFilterIcon.visibility = View.VISIBLE
                 binding.segmentedProgressbar.visibility = View.GONE
-                binding.buttonPickData.visibility = View.VISIBLE
-                binding.selectedPhoto.visibility = View.GONE
-                binding.cameraView.visibility = View.VISIBLE
-                binding.layoutBottomControll.visibility = View.VISIBLE
-                //  binding.buttonFlash.visibility = View.GONE
-                runOnUiThread {
-                    binding.cameraView.open()
-                }
-                binding.buttonDurationTimer.visibility = View.GONE
 
+                binding.buttonSpeed.visibility = View.VISIBLE
+                binding.buttonDurationTimer.visibility = View.VISIBLE
+                binding.buttonCaptureCounter.visibility = View.VISIBLE
+                binding.buttonFlash1.visibility = View.GONE
+                binding.buttonReverse.visibility = View.GONE
+
+                binding.buttonPickData.visibility = View.VISIBLE
+                binding.layoutBottomControll.visibility = View.VISIBLE
+                binding.buttonDone.visibility = View.GONE
+
+//                binding.selectedPhoto.visibility = View.GONE
+                binding.cameraView.visibility = View.VISIBLE
+
+                runOnUiThread { binding.cameraView.open() }
             } else {
-                if (isFilterApplied) {
-                    binding.buttonColorFilterIcon.visibility = View.GONE
-                } else {
-                    binding.buttonColorFilterIcon.visibility = View.VISIBLE
-                }
-                binding.buttonCaptureCounter.visibility = View.GONE
-                binding.buttonDone.visibility = View.VISIBLE
-                binding.layoutBottomControll.visibility = View.GONE
-                binding.selectedPhoto.visibility = View.VISIBLE
-                //  binding.buttonFlash.visibility = View.GONE
+                binding.segmentedProgressbar.visibility = View.GONE
+
                 binding.buttonSpeed.visibility = View.GONE
+                binding.buttonDurationTimer.visibility = View.GONE
+                binding.buttonCaptureCounter.visibility = View.GONE
+                binding.buttonFlash1.visibility = View.GONE
+                binding.buttonReverse.visibility = View.GONE
+
+                binding.buttonPickData.visibility = View.GONE
+                binding.layoutBottomControll.visibility = View.INVISIBLE
+                binding.buttonDone.visibility = View.VISIBLE
+
+//                binding.selectedPhoto.visibility = View.VISIBLE
                 binding.cameraView.visibility = View.GONE
-                binding.rvFilters.visibility = View.GONE
+
                 binding.cameraView.close()
                 binding.cameraView.invalidate()
             }
-            if (isMusicSelected) {
-                binding.segmentedProgressbar.visibility = View.VISIBLE
-            } else {
-                binding.segmentedProgressbar.visibility = View.GONE
-                binding.buttonMusic.visibility = View.VISIBLE
-                binding.buttonDurationTimer.visibility = View.VISIBLE
-            }
             binding.stopIConView.setImageDrawable(
                 ContextCompat.getDrawable(
-                    this,
-                    R.drawable.circle_camerabackground
+                    this, R.drawable.circle_camerabackground
                 )
             )
         } else {
             if (isDefault) {
-                binding.buttonMusic.visibility = View.VISIBLE
-                binding.buttonSpeed.visibility = View.VISIBLE
-                //  binding.buttonFlash.visibility = View.VISIBLE
-                binding.buttonColorFilterIcon.visibility = View.VISIBLE
-                binding.cameraView.visibility = View.VISIBLE
-                binding.buttonCaptureCounter.visibility = View.VISIBLE
                 binding.segmentedProgressbar.visibility = View.GONE
+
+                binding.buttonSpeed.visibility = View.VISIBLE
+                binding.buttonDurationTimer.visibility = View.VISIBLE
+                binding.buttonCaptureCounter.visibility = View.VISIBLE
+                binding.buttonFlash1.visibility = View.VISIBLE
+                binding.buttonReverse.visibility = View.VISIBLE
+
                 binding.buttonPickData.visibility = View.VISIBLE
-                //  binding.buttonFlash.visibility = View.GONE
-                binding.layoutMovieWrapper.visibility = View.GONE
-                binding.buttonDurationTimer.visibility = View.GONE
                 binding.layoutBottomControll.visibility = View.VISIBLE
+                binding.buttonDone.visibility = View.GONE
 
+//                binding.selectedPhoto.visibility = View.GONE
+                binding.cameraView.visibility = View.VISIBLE
 
+                binding.layoutMovieWrapper.visibility = View.GONE
             } else {
-                if (isMusicSelected) {
-                    binding.segmentedProgressbar.visibility = View.VISIBLE
-                } else {
-                    binding.segmentedProgressbar.visibility = View.VISIBLE
-                    binding.buttonMusic.visibility = View.VISIBLE
-                }
-                if (isFilterApplied) {
-                    binding.buttonColorFilterIcon.visibility = View.GONE
-                } else {
-                    binding.buttonColorFilterIcon.visibility = View.VISIBLE
-                }
+                //binding.segmentedProgressbar.visibility = View.GONE
+
+                binding.buttonSpeed.visibility = View.VISIBLE
+                binding.buttonDurationTimer.visibility = View.GONE
+                binding.buttonCaptureCounter.visibility = View.GONE
+                binding.buttonFlash1.visibility = View.GONE
+                binding.buttonReverse.visibility = View.VISIBLE
+
+                binding.buttonPickData.visibility = View.GONE
+                binding.layoutBottomControll.visibility = View.INVISIBLE
+                binding.buttonDone.visibility = View.VISIBLE
+
                 runOnUiThread {
                     binding.cameraView.close()
                     binding.cameraView.visibility = View.GONE
-
                 }
-                binding.buttonCaptureCounter.visibility = View.GONE
-                binding.buttonMusic.visibility = View.VISIBLE
-                binding.buttonDone.visibility = View.VISIBLE
-                binding.layoutBottomControll.visibility = View.VISIBLE
-                binding.buttonPickData.visibility = View.GONE
-                //  binding.buttonFlash.visibility = View.GONE
-                binding.buttonDurationTimer.visibility = View.GONE
-                binding.buttonSpeed.visibility = View.VISIBLE
-                binding.rvFilters.visibility = View.GONE
-                binding.layoutBottomControll.visibility = View.GONE
-
             }
-
             binding.stopIConView.setImageDrawable(
                 ContextCompat.getDrawable(
-                    this,
-                    R.drawable.record
+                    this, R.drawable.record
                 )
             )
-
-
         }
-
     }
 
 
@@ -438,225 +381,6 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
         }
     }
 
-
-    private val snapHelper = CenterSnapHelper()
-    fun setUpFilterAdapter() {
-    }
-
-    lateinit var filterAdapter: FilterAdapterNew
-    fun setupFiltersRV() {
-        filterAdapter =
-            FilterAdapterNew(
-                this@ActivityVideoRecorder,
-                binding.cameraView,
-                true
-            )
-        filterAdapter.setListener(this)
-
-        /*          val snapHelper = LinearSnapHelper()
-                       snapHelper.attachToRecyclerView(  binding.rvFilters)
-*/
-
-        binding.rvFilters.isNestedScrollingEnabled = false
-        binding.rvFilters.setHasFixedSize(true)
-        binding.rvFilters.adapter = filterAdapter
-        //      binding.rvFilters.addItemDecoration(OffsetItemDecoration(this@ActivityVideoRecorder))
-        //  binding.rvFilters.layoutManager=CenterZoomLayoutManager(this@ActivityVideoRecorder, LinearLayoutManager.HORIZONTAL, false)
-        binding.rvFilters.addItemDecoration(CenterDecoration(0))
-        snapHelper.attachToRecyclerView(binding.rvFilters)
-
-
-        binding.rvFilters.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-
-            override fun onScrollStateChanged(
-                recyclerView: RecyclerView,
-                newState: Int
-            ) {
-                super.onScrollStateChanged(recyclerView, newState)
-                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    val centerView =
-                        snapHelper.findSnapView(binding.rvFilters.layoutManager)
-                    val pos =
-                        (binding.rvFilters.layoutManager as LinearLayoutManager).getPosition(
-                            centerView!!
-                        )
-                    filterAdapter.setCenterColor(pos)
-                    when (pos) {
-                        0 -> {
-
-                            applyPreviewFilter(VideoFilter.NONE)
-                        }
-                        1 -> {
-                            applyPreviewFilter(VideoFilter.BRIGHTNESS)
-                        }
-                        2 -> {
-                            applyPreviewFilter(VideoFilter.EXPOSURE)
-                        }
-                        3 -> {
-                            applyPreviewFilter(VideoFilter.GAMMA)
-                        }
-                        4 -> {
-                            applyPreviewFilter(VideoFilter.GRAYSCALE)
-                        }
-                        5 -> {
-                            applyPreviewFilter(VideoFilter.HAZE)
-                        }
-                        6 -> {
-                            applyPreviewFilter(VideoFilter.INVERT)
-                        }
-                        7 -> {
-                            applyPreviewFilter(VideoFilter.MONOCHROME)
-                        }
-                        8 -> {
-                            applyPreviewFilter(VideoFilter.PIXELATED)
-                        }
-                        9 -> {
-                            applyPreviewFilter(VideoFilter.POSTERIZE)
-                        }
-                        10 -> {
-                            applyPreviewFilter(VideoFilter.SEPIA)
-                        }
-                        11 -> {
-                            applyPreviewFilter(VideoFilter.SHARP)
-                        }
-                        12 -> {
-                            applyPreviewFilter(VideoFilter.SOLARIZE)
-                        }
-                        13 -> {
-                            applyPreviewFilter(VideoFilter.VIGNETTE)
-                        }
-
-
-                    }
-                }
-
-            }
-        })
-
-
-    }
-
-
-    private fun applyPreviewFilter(filter: VideoFilter) {
-        activeFilter = filter
-        isFilterApplied = true
-        if (isImage) {
-            when (filter) {
-                VideoFilter.BRIGHTNESS -> {
-                    val glf = GPUImageBrightnessFilter()
-                    glf.setBrightness(0.2f)
-                    binding.selectedPhoto.setFilter(glf)
-                }
-                VideoFilter.EXPOSURE -> binding.selectedPhoto.setFilter(GPUImageExposureFilter())
-                VideoFilter.GAMMA -> {
-                    val glf = GPUImageGammaFilter()
-                    glf.setGamma(2f)
-                    binding.selectedPhoto.setFilter(glf)
-                }
-                VideoFilter.GRAYSCALE -> binding.selectedPhoto.setFilter(GPUImageGrayscaleFilter())
-                VideoFilter.HAZE -> {
-                    val glf = GPUImageHazeFilter()
-                    glf.setSlope(-0.5f)
-                    binding.selectedPhoto.setFilter(glf)
-                }
-                VideoFilter.INVERT -> binding.selectedPhoto.setFilter(GPUImageColorInvertFilter())
-                VideoFilter.MONOCHROME -> binding.selectedPhoto.setFilter(GPUImageMonochromeFilter())
-                VideoFilter.PIXELATED -> {
-                    val glf = GPUImagePixelationFilter()
-                    glf.setPixel(5f)
-                    binding.selectedPhoto.setFilter(glf)
-                }
-                VideoFilter.POSTERIZE -> binding.selectedPhoto.setFilter(GPUImagePosterizeFilter())
-                VideoFilter.SEPIA -> binding.selectedPhoto.setFilter(GPUImageSepiaToneFilter())
-                VideoFilter.SHARP -> {
-                    val glf = GPUImageSharpenFilter()
-                    glf.setSharpness(1f)
-                    binding.selectedPhoto.setFilter(glf)
-                }
-                VideoFilter.SOLARIZE -> binding.selectedPhoto.setFilter(GPUImageSolarizeFilter())
-                VideoFilter.VIGNETTE -> binding.selectedPhoto.setFilter(GPUImageVignetteFilter())
-                else -> {
-                    Log.d("klasjdasd", "alskdjasd")
-                    isFilterApplied = false
-                    binding.selectedPhoto.setFilter(GPUImageFilter())
-                }
-            }
-        }
-        when (filter) {
-            VideoFilter.BRIGHTNESS -> {
-                val glf = Filters.BRIGHTNESS.newInstance() as BrightnessFilter
-                glf.brightness = 1.2f
-                binding.cameraView.setFilter(glf)
-                playerzview.setGlFilter(GlBrightnessFilter())
-
-
-            }
-            VideoFilter.EXPOSURE -> {
-                binding.cameraView.setFilter(ExposureFilter())
-                playerzview.setGlFilter(GlExposureFilter())
-            }
-            VideoFilter.GAMMA -> {
-                val glf = Filters.GAMMA.newInstance() as GammaFilter
-                glf.gamma = 2f
-                binding.cameraView.setFilter(glf)
-                playerzview.setGlFilter(GlGammaFilter())
-            }
-            VideoFilter.GRAYSCALE -> {
-                binding.cameraView.setFilter(Filters.GRAYSCALE.newInstance())
-                playerzview.setGlFilter(GlGrayScaleFilter())
-            }
-            VideoFilter.HAZE -> {
-                val glf = HazeFilter()
-                glf.setSlope(-0.5f)
-                binding.cameraView.setFilter(glf)
-                playerzview.setGlFilter(GlHazeFilter())
-            }
-
-            VideoFilter.INVERT -> {
-                binding.cameraView.setFilter(Filters.INVERT_COLORS.newInstance())
-                playerzview.setGlFilter(GlInvertFilter())
-            }
-            VideoFilter.MONOCHROME -> {
-                binding.cameraView.setFilter(MonochromeFilter())
-                playerzview.setGlFilter(GlMonochromeFilter())
-            }
-            VideoFilter.PIXELATED -> {
-                val glf = PixelatedFilter()
-                glf.setPixel(5.0f)
-                binding.cameraView.setFilter(glf)
-                playerzview.setGlFilter(GlPixelationFilter())
-            }
-            VideoFilter.POSTERIZE -> {
-                binding.cameraView.setFilter(Filters.POSTERIZE.newInstance())
-                playerzview.setGlFilter(GlPosterizeFilter())
-            }
-            VideoFilter.SEPIA -> {
-                binding.cameraView.setFilter(Filters.SEPIA.newInstance())
-                playerzview.setGlFilter(GlSepiaFilter())
-            }
-            VideoFilter.SHARP -> {
-                val glf = Filters.SHARPNESS.newInstance() as SharpnessFilter
-                glf.sharpness = 0.25f
-                binding.cameraView.setFilter(glf)
-                playerzview.setGlFilter(GlSharpenFilter())
-            }
-            VideoFilter.SOLARIZE -> {
-                binding.cameraView.setFilter(SolarizeFilter())
-                playerzview.setGlFilter(GlSolarizeFilter())
-            }
-            VideoFilter.VIGNETTE -> {
-                binding.cameraView.setFilter(Filters.VIGNETTE.newInstance())
-                playerzview.setGlFilter(GlVignetteFilter())
-            }
-            else -> {
-                binding.cameraView.setFilter(Filters.NONE.newInstance())
-                playerzview.setGlFilter(GlFilter())
-            }
-        }
-
-
-    }
-
     var recorded = 0.toLong()
     private fun startRecording() {
         binding.buttonRecord.setOnClickListener(null)
@@ -664,9 +388,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
         recorded = mModel!!.recorded()
         if (recorded >= TimeUnit.SECONDS.toMillis(imageVideoDuration.toLong())) {
             Toast.makeText(
-                this@ActivityVideoRecorder,
-                R.string.recorder_error_maxed_out,
-                Toast.LENGTH_SHORT
+                this@ActivityVideoRecorder, R.string.recorder_error_maxed_out, Toast.LENGTH_SHORT
             ).show()
         } else {
             mModel!!.video = File(cacheDir, UUID.randomUUID().toString())
@@ -674,7 +396,6 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                 mModel!!.video!!,
                 ((TimeUnit.SECONDS.toMillis(imageVideoDuration.toLong()) - recorded + 10).toInt())
             )
-
         }
     }
 
@@ -687,32 +408,34 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
     private fun commitRecordings() {
         showLoader()
         val videos: MutableList<String> = ArrayList()
-        for (segment in mModel!!.segments) {
-            videos.add(segment.file!!.absolutePath)
+        for (segment in mModel?.segments!!) {
+            segment.file?.absolutePath?.let { videos.add(it) }
         }
 
-        if (mModel!!.speed != 1f) {
+        if (mModel?.speed != 1f) {
             val outputPath = Common.getFilePath(this, Common.VIDEO)
             showLoader()
             val options: BitmapFactory.Options = BitmapFactory.Options()
             options.inJustDecodeBounds = true
             val asyncTask =
-                FFmpegAsyncTask("-i ${mModel!!.segments[0].file!!.absolutePath} -vf setpts=PTS/${mModel!!.speed.toString()}  -crf 23 -preset ultrafast -vcodec libx264 -c:a aac  $outputPath",
+                FFmpegAsyncTask("-i ${mModel?.segments?.get(0)?.file?.absolutePath} " +
+                        "-vf setpts=PTS/${mModel?.speed.toString()}  -crf 23 -preset ultrafast " +
+                        "-vcodec libx264 -c:a aac  $outputPath",
                     object : FFmpegAsyncTask.OnTaskCompleted {
                         override fun onTaskCompleted(isSuccess: Boolean) {
-                            Log.d("lkajsdadasd", "ioasoiduasd")
                             finishVideoWithFilter(File(outputPath))
                         }
                     })
             asyncTask.execute()
-
         } else {
             val outputPath = Common.getFilePath(this, Common.VIDEO)
             showLoader()
             val options: BitmapFactory.Options = BitmapFactory.Options()
             options.inJustDecodeBounds = true
             val asyncTask =
-                FFmpegAsyncTask("-f concat -safe 0 -i ${generateVideoListFile(videos)}   -crf 23 -preset ultrafast -vcodec libx264 -c:a aac $outputPath",
+                FFmpegAsyncTask(
+                    "-f concat -safe 0 -i ${generateVideoListFile(videos)}  " +
+                            " -crf 23 -preset ultrafast -vcodec libx264 -c:a aac $outputPath",
                     object : FFmpegAsyncTask.OnTaskCompleted {
                         override fun onTaskCompleted(isSuccess: Boolean) {
                             finishVideoWithFilter(File(outputPath))
@@ -720,113 +443,18 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                     })
             asyncTask.execute()
         }
-
-
     }
 
 
     private fun finishVideoWithFilter(file: File) {
-        mPlayer!!.setPlayWhenReady(false)
-        val wm = WorkManager.getInstance(this)
-        val outputPath = Common.getFilePath(this, Common.VIDEO)
-        val data = Data.Builder()
-            .putString(VideoFilterWorker.KEY_FILTER, activeFilter.toString())
-            .putString(VideoFilterWorker.KEY_INPUT, file.absolutePath)
-            .putString(VideoFilterWorker.KEY_OUTPUT, outputPath)
-            .build()
-        val request = OneTimeWorkRequest.Builder(VideoFilterWorker::class.java)
-            .setInputData(data)
-            .build()
-        wm.enqueue(request)
-        wm.getWorkInfoByIdLiveData(request.id)
-            .observe(this) { info: WorkInfo ->
-                val ended = (info.state == WorkInfo.State.CANCELLED
-                        || info.state == WorkInfo.State.FAILED)
-                if (info.state == WorkInfo.State.SUCCEEDED) {
-
-                    dismissLoader()
-                    closeFinally(File(outputPath))
-                    if (!isImage) {
-                        isVideoTaken = true
-                        binding.buttonDone.visibility = View.VISIBLE
-                    }
-                } else if (ended) {
-
-                }
-            }
-    }
-
-
-    fun applyFilterUsingFFMPEG(filer: VideoFilter) {
-
-        var filterString = ""
-
-        when (filer) {
-            VideoFilter.BRIGHTNESS -> {
-
-            }
-            VideoFilter.EXPOSURE -> {
-
-            }
-            VideoFilter.GAMMA -> {
-
-            }
-            VideoFilter.GRAYSCALE -> {
-
-            }
-            VideoFilter.HAZE -> {
-
-            }
-
-            VideoFilter.INVERT -> {
-
-            }
-            VideoFilter.MONOCHROME -> {
-
-            }
-            VideoFilter.PIXELATED -> {
-
-            }
-            VideoFilter.POSTERIZE -> {
-
-            }
-            VideoFilter.SEPIA -> {
-
-            }
-            VideoFilter.SHARP -> {
-
-            }
-            VideoFilter.SOLARIZE -> {
-
-            }
-            VideoFilter.VIGNETTE -> {
-                filterString = "vignette"
-            }
-            else -> {
-
-            }
+        if (!isImage) {
+            isVideoTaken = true
+            binding.buttonDone.visibility = View.VISIBLE
         }
-
-
-        val outputPath = Common.getFilePath(this, Common.VIDEO)
-        showLoader()
-        val options: BitmapFactory.Options = BitmapFactory.Options()
-        options.inJustDecodeBounds = true
-        val asyncTask =
-            FFmpegAsyncTask("-i ${mModel!!.segments[0].file!!.absolutePath} -vf $filterString -preset ultrafast -vcodec libx264 -c:a aac $outputPath",
-                object : FFmpegAsyncTask.OnTaskCompleted {
-                    override fun onTaskCompleted(isSuccess: Boolean) {
-                        dismissLoader()
-                        if (!isImage) {
-                            isVideoTaken = true
-                            binding.buttonDone.visibility = View.VISIBLE
-                        }
-                        closeFinally(File(outputPath))
-                    }
-                })
-        asyncTask.execute()
+        mPlayer?.playWhenReady = false
+        dismissLoader()
+        closeFinally(file)
     }
-
 
     private class FFmpegAsyncTask(var command: String, var callback: OnTaskCompleted) :
         AsyncTask<Void?, Void?, Void?>() {
@@ -836,7 +464,6 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
         }
 
         protected override fun doInBackground(vararg nc: Void?): Void? {
-
             FFmpeg.execute(command);
             return null
         }
@@ -889,8 +516,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
      * @return File path
      */
     private fun generateIMagesListFile(
-        inputs: MutableList<String>,
-        perIMageDuration: Int
+        inputs: MutableList<String>, perIMageDuration: Int
     ): String? {
         val list: File
         var writer: Writer? = null
@@ -918,16 +544,8 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
 
     private fun processCurrentRecording() {
         showLoader()
-        val duration: Long = VideoUtil.getDuration(this, Uri.fromFile(mModel!!.video))
-
-
-
-
-
-
-        applyVideoSpeed(mModel!!.video!!, mModel!!.speed, duration)
-/*        mModel!!.speed = 1f
-        mModel!!.video = null*/
+        val duration: Long = VideoUtil.getDuration(this, Uri.fromFile(mModel?.video))
+        applyVideoSpeed(mModel?.video!!, mModel?.speed!!, duration)
     }
 
     private fun applyVideoSpeed(file: File, speed: Float, duration: Long) {
@@ -935,32 +553,113 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
     }
 
     private fun closeFinally(file: File) {
-
         binding.cameraView.close()
         //  binding.cameraView.destroy()
-        val intent = Intent(this, ActivityVideoEditor::class.java)
-
-        if (mModel!!.audio != null) {
-            intent.putExtra(ActivityFilter.EXTRA_SONG, File(mModel!!.audio!!.path!!).absolutePath)
+        /*val intent = Intent(this, ActivityVideoEditor::class.java)
+        mModel?.audio?.path?.let {
+            intent.putExtra(
+                ActivityFilter.EXTRA_SONG, File(it).absolutePath
+            )
         }
-
         intent.putExtra(EXTRA_SONG_DURATION, imageVideoDuration.toString())
         intent.putExtra(ActivityFilter.EXTRA_VIDEO, file.absolutePath)
-
-
-
         intent.putExtra("isImage", isImage)
         intent.putExtra(EXTRA_SONG_ID, songId)
-        try {
-            Log.d("asdasdasdxx", songId)
-
-        } catch (e: java.lang.Exception) {
-            Log.d("asdasdasdxx", "lasjda")
-        }
-
         pauseProgress()
-        startActivity(intent)
+        startActivity(intent)*/
 
+        //Start Video & Image SDKs from here
+        if (isImage) {
+            // In this example, we do not need access to the Uri(s) after the editor is closed
+            // so we pass false in the constructor
+            val settingsList = PhotoEditorSettingsList(false)
+                .configure<LoadSettings> {
+                    // Set the source as the Uri of the image to be loaded
+                    it.source = file.absolutePath.toUri()
+                }
+            photoEditorResult.launch(settingsList)
+            // Release the SettingsList once done
+            settingsList.release()
+        } else {
+            // In this example, we do not need access to the Uri(s) after the editor is closed
+            // so we pass false in the constructor
+            val settingsList = VideoEditorSettingsList(false)
+                .configure<LoadSettings> {
+                    // Set the source as the Uri of the video to be loaded
+                    it.source = file.absolutePath.toUri()
+                }
+            videoEditorResult.launch(settingsList)
+            // Release the SettingsList once done
+            settingsList.release()
+        }
+    }
+
+    private val photoEditorResult = registerForActivityResult(PhotoEditorActivityResultContract()) {
+        when (it.resultStatus) {
+            EditorSDKResult.Status.CANCELED -> showToast("Editor cancelled")
+            EditorSDKResult.Status.EXPORT_DONE -> {
+                startActivity(
+                    IntentHelper.getCreateFuntimePostScreen(this)!!
+                        .putExtra(ActivityFilter.EXTRA_VIDEO, it.resultUri)
+                        .putExtra(EXTRA_SONG_ID, songId)
+                )
+                showToast("Result saved at ${it.resultUri}")
+            }
+            else -> {
+            }
+        }
+    }
+
+    private val videoEditorResult = registerForActivityResult(VideoEditorActivityResultContract()) {
+        when (it.resultStatus) {
+            EditorSDKResult.Status.CANCELED -> showToast("Editor cancelled")
+            EditorSDKResult.Status.EXPORT_DONE -> {
+                startActivity(
+                    IntentHelper.getCreateFuntimePostScreen(this)!!
+                        .putExtra(ActivityFilter.EXTRA_VIDEO, it.resultUri)
+                        .putExtra(EXTRA_SONG_ID, songId)
+                )
+                showToast("Result saved at ${it.resultUri}")
+            }
+            else -> {
+            }
+        }
+    }
+
+    /**
+     * Command for reversing segmented videos
+     */
+    /*private fun reverseVideoCommand() {
+        val moviesDir = Environment.getExternalStoragePublicDirectory(
+            Environment.DIRECTORY_MOVIES
+        )
+        val srcDir = File(moviesDir, ".VideoSplit")
+        val files = srcDir.listFiles()
+        val filePrefix = "reverse_video"
+        val fileExtn = ".mp4"
+        val destDir = File(moviesDir, ".VideoPartsReverse")
+        if (destDir.exists()) videoeditor.bhuvnesh.com.ffmpegvideoeditor.activity.MainActivity.deleteDir(
+            destDir
+        )
+        destDir.mkdir()
+        for (i in files.indices) {
+            val dest = File(destDir, filePrefix + i + fileExtn)
+            val command = arrayOf(
+                "-i",
+                files[i].absolutePath,
+                "-vf",
+                "reverse",
+                "-af",
+                "areverse",
+                dest.absolutePath
+            )
+            if (i == files.size - 1) lastReverseCommand = command
+            execFFmpegBinary(command)
+        }
+    }*/
+
+    fun showToast(msg: String) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
     }
 
     class RecorderActivityViewModel : ViewModel() {
@@ -992,12 +691,10 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
         launchActivityForImagePick.launch(i)
     }
 
-    var imageCountname = 1
     var launchActivityForImagePick = registerForActivityResult<Intent, ActivityResult>(
         ActivityResultContracts.StartActivityForResult()
     ) { result: ActivityResult ->
-        if (result.resultCode == RESULT_OK
-        ) {
+        if (result.resultCode == RESULT_OK) {
 
             var data: Intent = result.data!!
             var pathList = ArrayList<String>()
@@ -1060,8 +757,6 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                                         pauseProgress()
                                         processCurrentRecording()
                                     }
-
-
                                 } catch (e: IOException) {
                                     e.printStackTrace()
                                 }
@@ -1102,14 +797,12 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                     Log.d(";lasda", "video")
 
                     val duration: Long = VideoUtil.getDuration(
-                        this,
-                        Uri.fromFile(File(getRealPathFromURIVideo(this, data!!.data!!)))
+                        this, Uri.fromFile(File(getRealPathFromURIVideo(this, data!!.data!!)))
                     )
                     Log.d("dur", duration.toString())
                     if (duration < 15 * 1000) {
                         makeToast("Video should be grater than or equal to 15 seconds")
                         Log.d("dura", "Fail")
-
                     } else if (duration > 90 * 1000) {
                         makeToast("Video should be less than or equal to 90 seconds")
                         Log.d("duraMore", "Fail")
@@ -1178,14 +871,10 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
     var launchActivityForVideoPick = registerForActivityResult<Intent, ActivityResult>(
         ActivityResultContracts.StartActivityForResult()
     ) { result: ActivityResult ->
-        if (result.resultCode
-            == RESULT_OK
-        ) {
+        if (result.resultCode == RESULT_OK) {
             var data: Intent = result.data!!
             // do your operation from here....
-            if (data != null
-                && data.data != null
-            ) {
+            if (data != null && data.data != null) {
                 val selectedVideo = data.data
                 val selectedImageBitmap: Bitmap
                 /*       try {
@@ -1269,40 +958,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
         }
     }
 
-
-    var resultCallbackOfSelectedMusicTrack: ActivityResultLauncher<Intent> =
-        registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()
-        ) { result ->
-            if (result!!.resultCode == RESULT_OK) {
-                val data: Intent = result.getData()!!
-                songId = data.getStringExtra(EXTRA_SONG_ID).toString()
-                val name = data.getStringExtra(EXTRA_SONG_NAME)
-                val audio = data.getParcelableExtra<Uri>(EXTRA_SONG_FILE)
-                isMusicSelected = true
-                binding.buttonDurationTimer.visibility = View.GONE
-                ImageLoaderHelperGlide.setGlideCorner(
-                    this,
-                    binding.ivMusicImage,
-                    data.getStringExtra(EXTRA_SONG_COVER).toString(),
-                    R.drawable.user_placeholder
-                )
-                Log.d("klajsdasd", audio!!.path.toString())
-                binding.tvMusicName.text = name
-                binding.layoutSelectedMusic.visibility = View.VISIBLE
-                mModel!!.audio = audio
-                playMusic(audio.path.toString())
-                isMusicActive = true
-                updateColorButtons()
-
-                binding.segmentedProgressbar.progress = 0
-                setupProgressBarWithDuration()
-                resumeProgress()
-            }
-        }
-
-
-    fun setupRecordDurationRecclerview() {
+    private fun setupRecordDurationRecclerview() {
         binding.tabbarduration.animate().translationX(-1000f).setDuration(0).start()
         binding.tabbarduration.addTab(binding.tabbarduration.newTab().setText("15 Sec"))
         binding.tabbarduration.addTab(binding.tabbarduration.newTab().setText("30 Sec"))
@@ -1312,53 +968,46 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
         binding.tabbarduration.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 binding.tvTimer.setTextColor(resources.getColor(R.color.colorYellow, null))
-                when (tab!!.position) {
+                when (tab?.position) {
                     0 -> {
                         imageVideoDuration = 15
+                        binding.segmentedProgressbar.max = imageVideoDuration
+                        hideDurationBar(show = false)
                         binding.ivTimer.setImageDrawable(
                             ContextCompat.getDrawable(
-                                this@ActivityVideoRecorder,
-                                R.drawable.ic_crtpost_timer_one_active
+                                this@ActivityVideoRecorder, R.drawable.ic_crtpost_timer_one_active
                             )
                         )
-                        hideDurationBar(show = false)
-                        setupProgressBarWithDuration()
-
-
                     }
                     1 -> {
                         imageVideoDuration = 30
+                        binding.segmentedProgressbar.max = imageVideoDuration
+                        hideDurationBar(show = false)
                         binding.ivTimer.setImageDrawable(
                             ContextCompat.getDrawable(
-                                this@ActivityVideoRecorder,
-                                R.drawable.ic_crtpost_timer_two_active
+                                this@ActivityVideoRecorder, R.drawable.ic_crtpost_timer_two_active
                             )
                         )
-                        hideDurationBar(show = false)
-                        setupProgressBarWithDuration()
-
                     }
                     2 -> {
                         imageVideoDuration = 60
+                        binding.segmentedProgressbar.max = imageVideoDuration
+                        hideDurationBar(show = false)
                         binding.ivTimer.setImageDrawable(
                             ContextCompat.getDrawable(
-                                this@ActivityVideoRecorder,
-                                R.drawable.ic_crtpost_timer_three_active
+                                this@ActivityVideoRecorder, R.drawable.ic_crtpost_timer_three_active
                             )
                         )
-                        hideDurationBar(show = false)
-
                     }
                     3 -> {
                         imageVideoDuration = 90
+                        binding.segmentedProgressbar.max = imageVideoDuration
+                        hideDurationBar(show = false)
                         binding.ivTimer.setImageDrawable(
                             ContextCompat.getDrawable(
-                                this@ActivityVideoRecorder,
-                                R.drawable.ic_crtpost_timer_three_active
+                                this@ActivityVideoRecorder, R.drawable.ic_crtpost_timer_four_active
                             )
                         )
-                        hideDurationBar(show = false)
-
                     }
                 }
             }
@@ -1373,7 +1022,6 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
         })
     }
 
-
     fun hideDurationBar(show: Boolean) {
 
         if (show) {
@@ -1385,8 +1033,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
         }
     }
 
-
-    fun setuptabSpeedRecclerview() {
+    private fun setuptabSpeedRecclerview() {
         var speed = 1f
         binding.tabbarspeed.animate().translationX(-1000f).setDuration(0).start()
         binding.tabbarspeed.addTab(binding.tabbarspeed.newTab().setText("0.5x"))
@@ -1413,22 +1060,17 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                         hideSpeedBar(show = false)
                     }
                 }
-                mModel!!.speed = speed
+                mModel?.speed = speed
                 if (isVideoTaken) {
-
                     Handler(Looper.getMainLooper()).post {
                         runOnUiThread {
-
                             setUpPlayer()
                         }
                     }
-
-
                 }
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {
-
             }
 
             override fun onTabReselected(tab: TabLayout.Tab?) {
@@ -1438,7 +1080,6 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
     }
 
     fun hideSpeedBar(show: Boolean) {
-
         if (show) {
             binding.tabbarspeed.animate().translationX(0f).setDuration(500).start()
         } else {
@@ -1448,7 +1089,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
         }
     }
 
-    private lateinit var rangeFragment: RangeBSFragmnet
+    private lateinit var counter: Counter
     fun setUPViews() {
         setupProgressBarWithDuration()
         binding.buttonRecord.setOnClickListener {
@@ -1500,20 +1141,18 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
 
         binding.buttonCaptureCounter.setOnClickListener {
             binding.layoutBottomControll.visibility = View.GONE
-            if (rangeFragment.isAdded) {
+            if (counter.isAdded) {
                 return@setOnClickListener
             }
-            rangeFragment!!.show(
-                supportFragmentManager,
-                rangeFragment!!.tag
+            counter.show(
+                supportFragmentManager, counter.tag
             )
         }
 
 
         binding.buttonDone.setOnClickListener { view: View? ->
             if (isImage) {
-
-                createDirectoryAndSaveFile(binding.selectedPhoto.capture())
+//                createDirectoryAndSaveFile(binding.selectedPhoto.capture())
                 /*     binding.selectedPhoto.saveToPictures("yoo", System.currentTimeMillis().toString() + ".jpg",700,700,object :GPUImageView.OnPictureSavedListener{
                          override fun onPictureSaved(uri: Uri?) {
 
@@ -1531,61 +1170,25 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                 }
             }
         }
-        binding.buttonMusic.setOnClickListener { view: View? ->
-
-
-            if (isImage) {
-                if (binding.cameraView.isTakingPicture) {
-                    Toast.makeText(this, R.string.recorder_error_in_progress, Toast.LENGTH_SHORT)
-                        .show()
-                } else {
-                    /*val intent = Intent(
-                        this@ActivityVideoRecorder,
-                        ActivitySongPicker::class.java
-                    )
-                    startActivityForResult(intent, SharedConstants.REQUEST_CODE_PICK_SONG)*/
-                    resultCallbackOfSelectedMusicTrack.launch(
-                        IntentHelper.getSongPickerActivity(
-                            this
-                        )
-                    )
-                }
-
-            } else {
-                if (binding.cameraView.isTakingVideo()) {
-                    Toast.makeText(this, R.string.recorder_error_in_progress, Toast.LENGTH_SHORT)
-                        .show()
-                } else {
-
-                    resultCallbackOfSelectedMusicTrack.launch(
-                        IntentHelper.getSongPickerActivity(
-                            this
-                        )
-                    )
-                }
-            }
-
-
-        }
-
-
-
 
         binding.buttonPickData.setOnClickListener {
+            /*if (galleryFragment == null) {
+                galleryFragment = FragmentGallery(list = thumbnails, typeMedia = typeMedia, arrPath = arrPath)
+            }
+            galleryFragment?.show(supportFragmentManager, galleryFragment?.tag)*/
             imageChooser()
         }
 
         binding.buttonCameraChanger.setOnClickListener { view: View? ->
-            if (binding.cameraView.isTakingVideo()) {
-                Toast.makeText(this, R.string.recorder_error_in_progress, Toast.LENGTH_SHORT)
-                    .show()
+            if (binding.cameraView.isTakingVideo) {
+                Toast.makeText(this, R.string.recorder_error_in_progress, Toast.LENGTH_SHORT).show()
             } else {
                 binding.cameraView.toggleFacing()
-                /*    if (binding.cameraView.facing == Facing.FRONT) {
-                        binding.buttonFlash.visibility = View.GONE
-                    } else {
-                        binding.buttonFlash.visibility = View.VISIBLE
-                    }*/
+                if (binding.cameraView.facing == Facing.FRONT) {
+                    binding.buttonFlash1.visibility = View.GONE
+                } else {
+                    binding.buttonFlash1.visibility = View.VISIBLE
+                }
             }
         }
 
@@ -1594,8 +1197,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
 
         binding.buttonSpeed.setOnClickListener { view: View? ->
             if (binding.cameraView.isTakingVideo) {
-                Toast.makeText(this, R.string.recorder_error_in_progress, Toast.LENGTH_SHORT)
-                    .show()
+                Toast.makeText(this, R.string.recorder_error_in_progress, Toast.LENGTH_SHORT).show()
             } else {
                 if (isSpeedActive) {
                     isSpeedActive = false
@@ -1607,76 +1209,17 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                 updateColorButtons()
             }
         }
-        binding.buttonColorFilterIcon.setOnClickListener { view: View? ->
+        binding.buttonFlash.setOnClickListener { view: View? ->
             if (binding.cameraView.isTakingVideo) {
-                Toast.makeText(this, R.string.recorder_error_in_progress, Toast.LENGTH_SHORT)
-                    .show()
+                Toast.makeText(this, R.string.recorder_error_in_progress, Toast.LENGTH_SHORT).show()
             } else {
-                binding.rvFilters.visibility =
-                    if (binding.rvFilters.visibility == View.VISIBLE) View.GONE else View.VISIBLE
-
-                isFilterActive = binding.rvFilters.visibility == View.VISIBLE
-
-
-                if (isImage && isFilterActive) {
-                    binding.layoutBottomControll.visibility = View.GONE
-                    binding.rvFilters.visibility = View.VISIBLE
-
-
-                } else if (isImage && !isFilterActive) {
-
-                    if (isImageTakenByCamera) {
-                        binding.rvFilters.visibility = View.GONE
-                    } else {
-                        binding.layoutBottomControll.visibility = View.VISIBLE
-                        binding.rvFilters.visibility = View.GONE
-                    }
-
-                }
-
-
-
+                binding.cameraView.flash =
+                    if (binding.cameraView.flash === Flash.OFF) Flash.TORCH else Flash.OFF
+                isFlashActive = !isFlashActive
                 updateColorButtons()
             }
         }
-        /*    binding.buttonFlash.setOnClickListener { view: View? ->
-                if (binding.cameraView.isTakingVideo) {
-                    Toast.makeText(this, R.string.recorder_error_in_progress, Toast.LENGTH_SHORT).show()
-                } else {
-                    binding.cameraView.setFlash(if (binding.cameraView.getFlash() === Flash.OFF) Flash.TORCH else Flash.OFF)
-                    isFlashActive = !isFlashActive
-                    updateColorButtons()
-                }
-            }*/
-        binding.speeds.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { group: RadioGroup?, checked: Int ->
-            var speed = 1f
-            if (checked != R.id.speed05x) {
-                binding.speed05x.setChecked(false)
-            } else {
-                speed = .5f
-            }
-            if (checked != R.id.speed075x) {
-                binding.speed075x.setChecked(false)
-            } else {
-                speed = .75f
-            }
-            if (checked != R.id.speed1x) {
-                binding.speed1x.setChecked(false)
-            }
-            if (checked != R.id.speed15x) {
-                binding.speed15x.setChecked(false)
-            } else {
-                speed = 1.5f
-            }
-            if (checked != R.id.speed2x) {
-                binding.speed2x.setChecked(false)
-            } else {
-                speed = 2f
-            }
-            mModel!!.speed = speed
-        })
         binding.buttonDurationTimer.setOnClickListener {
-
             if (isCaptureDurationActive) {
                 isCaptureDurationActive = false
                 hideDurationBar(show = false)
@@ -1686,7 +1229,16 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                 hideDurationBar(show = true)
                 updateColorButtons()
             }
-
+        }
+        binding.buttonReverse.setOnClickListener {
+            if (isReverseActive) {
+                isReverseActive = false
+                updateColorButtons()
+            } else {
+                isReverseActive = true
+                updateColorButtons()
+//                reverseVideoCommand()
+            }
         }
         binding.ivClose.setOnClickListener {
             onBackPressed()
@@ -1697,10 +1249,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
     }
 
     override fun onBackPressed() {
-
-
-        var commonConfirmationDialog = CommonConfirmationDialog(
-            this,
+        var commonConfirmationDialog = CommonConfirmationDialog(this,
             "Save as Draft",
             "Drafts let you save your edits, so you can come back later.",
             "Yes",
@@ -1710,10 +1259,8 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                     isVideoTaken = false
                     isImageTakenByCamera = false
                     isFilterApplied = false
-                    isMusicSelected = false
+                    isReverseActive = false
                     isCowntDownActive = false
-                    isMusicActive = false
-                    isFilterActive = false
                     isSpeedActive = false
                     isFlashActive = false
                     isCowntDownActive = false
@@ -1744,17 +1291,15 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
     }
 
     private fun createDirectoryAndSaveFile(imageToSave: Bitmap) {
-        val file = File(cacheDir, UUID.randomUUID().toString())
-        if (file.exists()) {
-            file.delete()
-        }
+//        val file = File(cacheDir, "IMG_${System.currentTimeMillis()}" + ".jpg")
+        val file = Common.getFile(this, Common.IMAGE)
         try {
             val out = FileOutputStream(file)
             imageToSave.compress(Bitmap.CompressFormat.JPEG, 100, out)
             out.flush()
             out.close()
-            mModel!!.video = File(file.absolutePath)
-            closeFinally(mModel!!.video!!)
+            mModel?.video = file
+            closeFinally(mModel?.video!!)
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
         }
@@ -1762,30 +1307,24 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
 
 
     fun uiWhenRecording() {
-        binding.buttonMusic.visibility = View.GONE
         binding.buttonDurationTimer.visibility = View.GONE
         binding.buttonSpeed.visibility = View.GONE
-        binding.buttonColorFilterIcon.visibility = View.GONE
         binding.buttonSpeed.visibility = View.GONE
         binding.layoutBottomControll.visibility = View.VISIBLE
         binding.buttonPickData.visibility = View.GONE
         binding.buttonDone.visibility = View.GONE
-        binding.rvFilters.visibility = View.GONE
         binding.buttonCaptureCounter.visibility = View.GONE
         binding.segmentedProgressbar.visibility = View.VISIBLE
     }
 
 
     fun uiWhenCountdownActive() {
-        binding.buttonMusic.visibility = View.GONE
         binding.buttonDurationTimer.visibility = View.GONE
         binding.buttonSpeed.visibility = View.GONE
-        binding.buttonColorFilterIcon.visibility = View.GONE
         binding.buttonSpeed.visibility = View.GONE
-        binding.layoutBottomControll.visibility = View.GONE
+        binding.layoutBottomControll.visibility = View.INVISIBLE
         binding.buttonPickData.visibility = View.GONE
         binding.buttonDone.visibility = View.GONE
-        binding.rvFilters.visibility = View.GONE
         binding.buttonCaptureCounter.visibility = View.GONE
         binding.segmentedProgressbar.visibility = View.GONE
     }
@@ -1825,60 +1364,52 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
         isImage = false
         setUPCameraViewsOnCapture(false)
         val outputPath = Common.getFilePath(this, Common.VIDEO)
-        val asyncTask =
-            FFmpegAsyncTask("-f concat -safe 0 -i ${
-                generateIMagesListFile(
-                    pathList,
-                    persond
-                )
-            } -c:v libx264 -r 15 -pix_fmt yuv420p -crf 23 -t ${pathList.size * persond} -vf scale=w=${width}:h=${height}:force_original_aspect_ratio=1,pad=${width}:${height}:(ow-iw)/2:(oh-ih)/2 -preset ultrafast -vcodec libx264 -c:a aac $outputPath",
-                object : FFmpegAsyncTask.OnTaskCompleted {
-                    override fun onTaskCompleted(isSuccess: Boolean) {
-                        var recordSegment = RecordSegment()
-                        recordSegment.duration = (pathList.size * persond).toLong()
-                        recordSegment.file = File(outputPath)
-                        mModel!!.segments.clear()
-                        mModel!!.segments.add(recordSegment)
-                        setUPCameraViewsOnCapture(false)
-                        if (!isImage) {
-                            isVideoTaken = true
-                            binding.selectedPhoto.visibility = View.GONE
-                            binding.cameraView.visibility = View.GONE
-                            binding.layoutMovieWrapper.visibility = View.VISIBLE
-                            resumeProgress()
-                            setUpPlayer()
-                        }
-
-
-                        dismissLoader()
-
+        val asyncTask = FFmpegAsyncTask("-f concat -safe 0 -i ${
+            generateIMagesListFile(
+                pathList, persond
+            )
+        } -c:v libx264 -r 15 -pix_fmt yuv420p -crf 23 -t ${pathList.size * persond} -vf scale=w=${width}:h=${height}:force_original_aspect_ratio=1,pad=${width}:${height}:(ow-iw)/2:(oh-ih)/2 -preset ultrafast -vcodec libx264 -c:a aac $outputPath",
+            object : FFmpegAsyncTask.OnTaskCompleted {
+                override fun onTaskCompleted(isSuccess: Boolean) {
+                    var recordSegment = RecordSegment()
+                    recordSegment.duration = (pathList.size * persond).toLong()
+                    recordSegment.file = File(outputPath)
+                    mModel!!.segments.clear()
+                    mModel!!.segments.add(recordSegment)
+                    setUPCameraViewsOnCapture(false)
+                    if (!isImage) {
+                        isVideoTaken = true
+//                        binding.selectedPhoto.visibility = View.GONE
+                        binding.cameraView.visibility = View.GONE
+                        binding.layoutMovieWrapper.visibility = View.VISIBLE
+                        resumeProgress()
+                        setUpPlayer()
                     }
-                })
+                    dismissLoader()
+                }
+            })
         asyncTask.execute()
-
-
     }
 
     private lateinit var playerzview: EPlayerView
     private var mPlayer: ExoPlayer? = null
     private fun setUpPlayer() {
+        mPlayer = ExoPlayer.Builder(this).build()
         playerzview = EPlayerView(this)
         mPlayer!!.repeatMode = ExoPlayer.REPEAT_MODE_OFF
         val factory = DefaultDataSourceFactory(this, getString(R.string.app_name))
         val mediaItem: MediaItem = MediaItem.fromUri(Uri.fromFile(mModel!!.segments[0].file))
         val source: ProgressiveMediaSource =
             ProgressiveMediaSource.Factory(factory).createMediaSource(mediaItem)
-        mPlayer!!.setPlaybackSpeed(mModel!!.speed)
+        mPlayer!!.setPlaybackSpeed(mModel?.speed ?: 1f)
         mPlayer!!.prepare(source);
         mPlayer!!.playWhenReady = true;
         playerzview.visibility = View.VISIBLE
-        applyPreviewFilter(activeFilter)
         Handler(Looper.getMainLooper()).postDelayed(Runnable {
             runOnUiThread {
                 playerzview.setSimpleExoPlayer(mPlayer)
                 playerzview.layoutParams = ViewGroup.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT
+                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
                 )
                 // add ePlayerView to WrapperView
                 // add ePlayerView to WrapperView
@@ -1931,7 +1462,6 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                     }
                 })
         asyncTask.execute()
-
     }
 
     fun formatSeconds(timeInSeconds: Int): String? {
@@ -1950,7 +1480,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
         val options: BitmapFactory.Options = BitmapFactory.Options()
         options.inJustDecodeBounds = true
         val asyncTask =
-            FFmpegAsyncTask("-i \"${file.absolutePath}\" -vf setpts=PTS/${mModel!!.speed.toString()}  -ss 00:00:00 -to ${
+            FFmpegAsyncTask("-i \"${file.absolutePath}\" -vf setpts=PTS/${mModel?.speed.toString()}  -ss 00:00:00 -to ${
                 formatSeconds(
                     imageVideoDuration.toInt()
                 )
@@ -1958,11 +1488,8 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                 object : FFmpegAsyncTask.OnTaskCompleted {
                     override fun onTaskCompleted(isSuccess: Boolean) {
                         dismissLoader()
-                        Log.d("lkasjldasd", "asdasdasd")
-                        Log.d("kashdkhasd", outputPath)
                         val duration: Long = VideoUtil.getDuration(
-                            this@ActivityVideoRecorder,
-                            Uri.fromFile(File(outputPath))
+                            this@ActivityVideoRecorder, Uri.fromFile(File(outputPath))
                         )
                         val segment = RecordSegment()
                         segment.file = File(outputPath)
@@ -2001,40 +1528,18 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
         windowInsetsController.hide(WindowInsetsCompat.Type.statusBars())
     }
 
-    var isMusicActive = false
-    var isFilterActive = false
     var isSpeedActive = false
     var isFlashActive = false
     var isCowntDownActive = false
     var isCaptureDurationActive = false
+    var isReverseActive = false
 
 
     fun updateColorButtons() {
-
-
-        if (isMusicActive) {
-            binding.ivMusic.setImageDrawable(
-                ContextCompat.getDrawable(
-                    this,
-                    R.drawable.ic_crtpost_top_music_active
-                )
-            )
-            binding.tvMusic.setTextColor(resources.getColor(R.color.colorYellow, null))
-        } else {
-            binding.tvMusic.setTextColor(resources.getColor(R.color.white, null))
-            binding.ivMusic.setImageDrawable(
-                ContextCompat.getDrawable(
-                    this,
-                    R.drawable.ic_crtpost_top_music
-                )
-            )
-        }
-
         if (isSpeedActive) {
             binding.ivSpeed.setImageDrawable(
                 ContextCompat.getDrawable(
-                    this,
-                    R.drawable.ic_crtpost_speed_active
+                    this, R.drawable.ic_crtpost_speed_active
                 )
             )
             binding.tvSped.setTextColor(resources.getColor(R.color.colorYellow, null))
@@ -2042,60 +1547,46 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
             binding.tvSped.setTextColor(resources.getColor(R.color.white, null))
             binding.ivSpeed.setImageDrawable(
                 ContextCompat.getDrawable(
-                    this,
-                    R.drawable.ic_crtpost_speed
+                    this, R.drawable.ic_crtpost_speed
                 )
             )
         }
-
-
-        if (isFilterActive) {
-
-
-            binding.ivFilter.setImageDrawable(
-                ContextCompat.getDrawable(
-                    this,
-                    R.drawable.ic_crtpost_magic_stick_active
-                )
-            )
-            binding.tvFilter.setTextColor(resources.getColor(R.color.colorYellow, null))
-        } else {
-
-            binding.tvFilter.setTextColor(resources.getColor(R.color.white, null))
-            binding.ivFilter.setImageDrawable(
-                ContextCompat.getDrawable(
-                    this,
-                    R.drawable.ic_crtpost_magic_stick
-                )
-            )
-        }
-
         if (isFlashActive) {
             binding.buttonFlash.setImageDrawable(
                 ContextCompat.getDrawable(
-                    this,
-                    R.drawable.ic_crtpost_speed_active
+                    this, R.drawable.ic_crtpost_speed_active
                 )
             )
         } else {
             binding.buttonFlash.setImageDrawable(
                 ContextCompat.getDrawable(
-                    this,
-                    R.drawable.ic_live_flash
+                    this, R.drawable.ic_live_flash
                 )
             )
         }
-
-
+        if (isReverseActive) {
+            binding.ivreverse.setImageDrawable(
+                ContextCompat.getDrawable(
+                    this, R.drawable.round_play_circle_24_active
+                )
+            )
+        } else {
+            binding.ivreverse.setImageDrawable(
+                ContextCompat.getDrawable(
+                    this, R.drawable.round_play_circle_24
+                )
+            )
+        }
     }
 
 
+    private var galleryFragment: FragmentGallery? = null
     private var count = 0
     private lateinit var thumbnails: Array<Bitmap?>
     private lateinit var thumbnailsselection: BooleanArray
     private lateinit var arrPath: Array<String?>
     private lateinit var typeMedia: IntArray
-    fun getGalleryData() {
+    private fun getGalleryData() {
         // Get relevant columns for use later.
         // Get relevant columns for use later.
         val projection = arrayOf(
@@ -2106,24 +1597,14 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
             MediaStore.Files.FileColumns.MIME_TYPE,
             MediaStore.Files.FileColumns.TITLE
         )
-
-        val selection = (MediaStore.Files.FileColumns.MEDIA_TYPE + "="
-                + MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE)
-
-
+        val selection =
+            (MediaStore.Files.FileColumns.MEDIA_TYPE + "=" + MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE)
         val queryUri = MediaStore.Files.getContentUri("external")
-
         val cursorLoader = CursorLoader(
-            this,
-            queryUri,
-            projection,
-            selection,
-            null,  // Selection args (none).
+            this, queryUri, projection, selection, null,  // Selection args (none).
             MediaStore.Files.FileColumns.DATE_ADDED + " DESC" // Sort order.
         )
-
         val cursor: Cursor = cursorLoader.loadInBackground()!!
-
         val image_column_index: Int = cursor.getColumnIndex(MediaStore.Files.FileColumns._ID)
         this.count = cursor.count
         this.thumbnails = arrayOfNulls<Bitmap>(this.count)
@@ -2141,36 +1622,28 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
             val t: Int = cursor.getInt(type)
             try {
                 if (t == 1) thumbnails[i] = MediaStore.Images.Thumbnails.getThumbnail(
-                    contentResolver, id.toLong(),
-                    MediaStore.Images.Thumbnails.MINI_KIND, bmOptions
-
-
+                    contentResolver, id.toLong(), MediaStore.Images.Thumbnails.MINI_KIND, bmOptions
                 ) else if (t == 3) thumbnails[i] = MediaStore.Video.Thumbnails.getThumbnail(
-                    contentResolver, id.toLong(),
-                    MediaStore.Video.Thumbnails.MINI_KIND, bmOptions
+                    contentResolver, id.toLong(), MediaStore.Video.Thumbnails.MINI_KIND, bmOptions
                 )
                 arrPath[i] = cursor.getString(dataColumnIndex)
                 typeMedia[i] = cursor.getInt(type)
-
-
-                Glide.with(this).load(arrPath[0]!!).transform(CenterCrop(), RoundedCorners(5))
-                    .into(binding.buttonPickData)
-
-
+                Glide.with(this).load(arrPath[0]!!).transform(CenterCrop(), RoundedCorners(5)).into(binding.buttonPickData)
             } catch (e: Exception) {
             }
 
             break
         }
-
     }
 
     @SuppressLint("Range")
     fun getImageContentUri(context: Context, filePath: String): Uri? {
-
         val cursor = context.contentResolver.query(
-            MediaStore.Images.Media.EXTERNAL_CONTENT_URI, arrayOf(MediaStore.Images.Media._ID),
-            MediaStore.Images.Media.DATA + "=? ", arrayOf(filePath), null
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+            arrayOf(MediaStore.Images.Media._ID),
+            MediaStore.Images.Media.DATA + "=? ",
+            arrayOf(filePath),
+            null
         )
         return if (cursor != null && cursor.moveToFirst()) {
             val id = cursor.getInt(cursor.getColumnIndex(MediaStore.MediaColumns._ID))
@@ -2186,8 +1659,11 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
     fun getVideoContentUri(context: Context, filePath: String): Uri? {
         Log.d("alksjdasd", filePath)
         val cursor = context.contentResolver.query(
-            MediaStore.Video.Media.EXTERNAL_CONTENT_URI, arrayOf(MediaStore.Video.Media._ID),
-            MediaStore.Video.Media.DATA + "=? ", arrayOf(filePath), null
+            MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+            arrayOf(MediaStore.Video.Media._ID),
+            MediaStore.Video.Media.DATA + "=? ",
+            arrayOf(filePath),
+            null
         )
         return if (cursor != null && cursor.moveToFirst()) {
             val id = cursor.getInt(cursor.getColumnIndex(MediaStore.MediaColumns._ID))
@@ -2200,42 +1676,31 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
 
 
     override fun onItemPicked(item: GalleryItem) {
-
-        var uri: Uri
+        val uri: Uri
         if (item.mediaType == 1) {
             uri = getImageContentUri(this, item.uri)!!
             isImageTakenByCamera = true
             isImage = true
             startCrop(uri)
-
-
         } else if (item.mediaType == 3 || item.mediaType == 2) {
             uri = getVideoContentUri(this, item.uri)!!
-            Log.d(";lasda", "video")
             isImage = false
             setUPCameraViewsOnCapture(false)
             val selectedVideo = uri
             val selectedImageBitmap: Bitmap
             try {
-                Log.d("a;lskdasdhhhhhh", "data.data!!.path!!")
-                Log.d("a;lskdasdkjjjjjj", uri.path!!)
                 mModel!!.video = File(uri.path!!)
                 processCurrentRecording()
-                Log.d(";alsjkdasd", "alskjdasd")
             } catch (e: IOException) {
                 e.printStackTrace()
             }
-
             mModel!!.video = File(getRealPathFromURI(this, uri))
             Handler(Looper.getMainLooper()).post {
-
                 runOnUiThread {
                     //   processCurrentRecording()
                 }
             }
         }
-
-
     }
 
     private val cropImage = registerForActivityResult(CropImageContract()) { result ->
@@ -2243,30 +1708,21 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
             // use the returned uri
             val uriContent = result.uriContent
             val uriFilePath = result.getUriFilePath(this) // optional usage
-
             val selectedImageUri = result.uriContent
             val selectedImageBitmap: Bitmap
-
-
-
-
-
-
-
             try {
                 selectedImageBitmap = MediaStore.Images.Media.getBitmap(
-                    this.contentResolver,
-                    selectedImageUri
+                    this.contentResolver, selectedImageUri
                 )
                 binding.buttonCaptureCounter.visibility = View.GONE
                 binding.buttonSpeed.visibility = View.GONE
-                binding.selectedPhoto.visibility = View.VISIBLE
-                binding.selectedPhoto.gpuImage.deleteImage()
-                binding.selectedPhoto.setImage(selectedImageBitmap);
+//                binding.selectedPhoto.visibility = View.VISIBLE
+//                binding.selectedPhoto.gpuImage.deleteImage()
+//                binding.selectedPhoto.setImage(selectedImageBitmap);
                 binding.cameraView.visibility = View.GONE
                 //  createVideo(it!!.absolutePath, result.size)
                 binding.buttonDone.visibility = View.VISIBLE
-                binding.layoutBottomControll.visibility = View.GONE
+                binding.layoutBottomControll.visibility = View.INVISIBLE
                 // closeFinally(mModel!!.video!!)
                 Log.d(";alsjkdasd", "alskjdasd")
             } catch (e: IOException) {
@@ -2283,12 +1739,10 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
 
     private fun startCrop(uri: Uri) {
         // start cropping activity for pre-acquired image saved on the device and customize settings
-        cropImage.launch(
-            options(uri = uri) {
-                setGuidelines(CropImageView.Guidelines.ON)
-                setOutputCompressFormat(Bitmap.CompressFormat.PNG)
-            }
-        )
+        cropImage.launch(options(uri = uri) {
+            setGuidelines(CropImageView.Guidelines.ON)
+            setOutputCompressFormat(Bitmap.CompressFormat.PNG)
+        })
     }
 
 
@@ -2301,7 +1755,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
 
     fun resumeProgress() {
         progressHandler.removeCallbacks(runnable)
-        if (isMusicSelected && isImage) {
+        if (isImage) {
             progressHandler.post(runnable)
         } else if (!isImage && isVideoTaken) {
             progressHandler.post(runnable)
@@ -2313,7 +1767,6 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
     //
     var runnable: Runnable = object : Runnable {
         override fun run() {
-
             prolength = binding.segmentedProgressbar.progress + 1
             binding.segmentedProgressbar.progress = prolength
             //100,1000runnable
@@ -2333,9 +1786,8 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
     }
 
 
-    var runnableForTimer: Runnable = object : Runnable {
+    private var runnableForTimer: Runnable = object : Runnable {
         override fun run() {
-
             if (countdownTimerDuration == 0) {
                 binding.tvCountDownValue.visibility = View.GONE
                 captureTimerHandler.removeCallbacks(this)
@@ -2344,7 +1796,6 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                 } else {
                     binding.buttonRecord.performLongClick()
                 }
-
             } else {
                 countdownTimerDuration--
                 runOnUiThread {
@@ -2357,339 +1808,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
     }
 
     fun setupProgressBarWithDuration() {
-        if (isImage) {
-            if (isMusicSelected) {
-                binding.segmentedProgressbar.visibility = View.VISIBLE
-            } else {
-                binding.segmentedProgressbar.visibility = View.GONE
-            }
-        } else {
-            binding.segmentedProgressbar.visibility = View.VISIBLE
-        }
+        binding.segmentedProgressbar.visibility = View.VISIBLE
         binding.segmentedProgressbar.max = imageVideoDuration
-    }
-
-    override fun onSelectFilter(
-        filter: VideoFilter?,
-        position: Int,
-        isAllShowing: Boolean, isLongClick: Boolean
-    ) {
-        applyPreviewFilter(
-            filter!!
-        )
-        /*  filterAdapter.showAllFilters(isAllShowing)
-          binding.rvFilters.getLayoutManager()!!.scrollToPosition(position);*/
-
-        if (isLongClick) {
-            isImage = false
-            if (!isVideoTaken) {
-                uiWhenRecording()
-                binding.segmentedProgressbar.progress = 0
-                mMediaPlayer!!.reset()
-                startRecording()
-                binding.recordAnimationView.visibility = View.VISIBLE
-                binding.stopIConView.visibility = View.GONE
-                binding.buttonRecord.setOnLongClickListener(null)
-            }
-        } else {
-            if (isImageTakenByCamera) {
-                binding.buttonRecord.performClick()//it is image
-            }
-
-        }
-
-
-    }
-
-
-    fun setUPRangeBar() {
-
-    }
-
-    var countdownTimerDuration = 0
-    override fun onCaptureAfternSeconds(type: String, seconds: Int) {
-
-        isImage = type != "video"
-
-        uiWhenCountdownActive()
-        countdownTimerDuration = seconds
-        captureTimerHandler.removeCallbacks(runnableForTimer)
-        captureTimerHandler.post(runnableForTimer)
-    }
-
-    override fun onRangeDialogDismiss() {
-        binding.layoutBottomControll.visibility = View.VISIBLE
-    }
-
-}
-
-class CenterZoomLayoutManager : LinearLayoutManager {
-    private val mShrinkAmount = 0.15f
-    private val mShrinkDistance = 0.9f
-
-    constructor(context: Context?) : super(context) {}
-    constructor(context: Context?, orientation: Int, reverseLayout: Boolean) : super(
-        context,
-        orientation,
-        reverseLayout
-    ) {
-    }
-
-    override fun scrollVerticallyBy(
-        dy: Int,
-        recycler: RecyclerView.Recycler,
-        state: RecyclerView.State
-    ): Int {
-        val orientation = orientation
-        return if (orientation == VERTICAL) {
-            val scrolled = super.scrollVerticallyBy(dy, recycler, state)
-            val midpoint = height / 2f
-            val d0 = 0f
-            val d1 = mShrinkDistance * midpoint
-            val s0 = 1f
-            val s1 = 1f - mShrinkAmount
-            for (i in 0 until childCount) {
-                val child = getChildAt(i)
-                val childMidpoint = (getDecoratedBottom(child!!) + getDecoratedTop(
-                    child
-                )) / 2f
-                val d = Math.min(d1, Math.abs(midpoint - childMidpoint))
-                val scale = s0 + (s1 - s0) * (d - d0) / (d1 - d0)
-                child.scaleX = scale
-                child.scaleY = scale
-            }
-            scrolled
-        } else {
-            0
-        }
-    }
-
-    override fun scrollHorizontallyBy(
-        dx: Int,
-        recycler: RecyclerView.Recycler,
-        state: RecyclerView.State
-    ): Int {
-        val orientation = orientation
-        return if (orientation == HORIZONTAL) {
-            val scrolled = super.scrollHorizontallyBy(dx, recycler, state)
-            val midpoint = width / 2f
-            val d0 = 0f
-            val d1 = mShrinkDistance * midpoint
-            val s0 = 1f
-            val s1 = 1f - mShrinkAmount
-            for (i in 0 until childCount) {
-                val child = getChildAt(i)
-                val childMidpoint = (getDecoratedRight(child!!) + getDecoratedLeft(
-                    child
-                )) / 2f
-                val d = Math.min(d1, Math.abs(midpoint - childMidpoint))
-                val scale = s0 + (s1 - s0) * (d - d0) / (d1 - d0)
-                child.scaleX = scale
-                child.scaleY = scale
-            }
-            scrolled
-        } else {
-            0
-        }
-    }
-
-
-}
-
-/**
- * A LinearSnapHelper that ignores item decorations to determine a view's center
- */
-class CenterSnapHelper : LinearSnapHelper() {
-
-    private var verticalHelper: OrientationHelper? = null
-    private var horizontalHelper: OrientationHelper? = null
-    private var scrolled = false
-    private var recyclerView: RecyclerView? = null
-    private val scrollListener = object : RecyclerView.OnScrollListener() {
-        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-            super.onScrollStateChanged(recyclerView, newState)
-            if (newState == RecyclerView.SCROLL_STATE_IDLE && scrolled) {
-                if (recyclerView.layoutManager != null) {
-                    val view = findSnapView(recyclerView.layoutManager)
-                    if (view != null) {
-                        val out = calculateDistanceToFinalSnap(recyclerView.layoutManager!!, view)
-                        if (out != null) {
-                            recyclerView.smoothScrollBy(out[0], out[1])
-                        }
-                    }
-                }
-                scrolled = false
-            } else {
-                scrolled = true
-            }
-        }
-    }
-
-    fun scrollTo(position: Int, smooth: Boolean) {
-        if (recyclerView?.layoutManager != null) {
-            val viewHolder = recyclerView!!.findViewHolderForAdapterPosition(position)
-            if (viewHolder != null) {
-                val distances = calculateDistanceToFinalSnap(
-                    recyclerView!!.layoutManager!!,
-                    viewHolder.itemView
-                )
-                if (smooth) {
-                    recyclerView!!.smoothScrollBy(distances!![0], distances[1])
-                } else {
-                    recyclerView!!.scrollBy(distances!![0], distances[1])
-                }
-            } else {
-                if (smooth) {
-                    recyclerView!!.smoothScrollToPosition(position)
-                } else {
-                    recyclerView!!.scrollToPosition(position)
-                }
-            }
-        }
-    }
-
-    override fun findSnapView(layoutManager: RecyclerView.LayoutManager?): View? {
-        if (layoutManager == null) {
-            return null
-        }
-        if (layoutManager.canScrollVertically()) {
-            return findCenterView(layoutManager, getVerticalHelper(layoutManager))
-        } else if (layoutManager.canScrollHorizontally()) {
-            return findCenterView(layoutManager, getHorizontalHelper(layoutManager))
-        }
-        return null
-    }
-
-    override fun attachToRecyclerView(recyclerView: RecyclerView?) {
-        this.recyclerView = recyclerView
-        recyclerView?.addOnScrollListener(scrollListener)
-    }
-
-    override fun calculateDistanceToFinalSnap(
-        layoutManager: RecyclerView.LayoutManager,
-        targetView: View
-    ): IntArray? {
-        val out = IntArray(2)
-        if (layoutManager.canScrollHorizontally()) {
-            out[0] = distanceToCenter(layoutManager, targetView, getHorizontalHelper(layoutManager))
-        } else {
-            out[0] = 0
-        }
-        if (layoutManager.canScrollVertically()) {
-            out[1] = distanceToCenter(layoutManager, targetView, getVerticalHelper(layoutManager))
-        } else {
-            out[1] = 0
-        }
-        return out
-    }
-
-    private fun findCenterView(
-        layoutManager: RecyclerView.LayoutManager,
-        helper: OrientationHelper
-    ): View? {
-        val childCount = layoutManager.childCount
-        if (childCount == 0) {
-            return null
-        }
-        var closestChild: View? = null
-        val center: Int = if (layoutManager.clipToPadding) {
-            helper.startAfterPadding + helper.totalSpace / 2
-        } else {
-            helper.end / 2
-        }
-        var absClosest = Integer.MAX_VALUE
-
-        for (i in 0 until childCount) {
-            val child = layoutManager.getChildAt(i)
-            val childCenter = if (helper == horizontalHelper) {
-                (child!!.x + child.width / 2).toInt()
-            } else {
-                (child!!.y + child.height / 2).toInt()
-            }
-            val absDistance = Math.abs(childCenter - center)
-
-            if (absDistance < absClosest) {
-                absClosest = absDistance
-                closestChild = child
-            }
-        }
-        return closestChild
-    }
-
-    private fun distanceToCenter(
-        layoutManager: RecyclerView.LayoutManager,
-        targetView: View,
-        helper: OrientationHelper
-    ): Int {
-        val childCenter = if (helper == horizontalHelper) {
-            (targetView.x + targetView.width / 2).toInt()
-        } else {
-            (targetView.y + targetView.height / 2).toInt()
-        }
-        val containerCenter = if (layoutManager.clipToPadding) {
-            helper.startAfterPadding + helper.totalSpace / 2
-        } else {
-            helper.end / 2
-        }
-        return childCenter - containerCenter
-    }
-
-    private fun getVerticalHelper(layoutManager: RecyclerView.LayoutManager): OrientationHelper {
-        if (verticalHelper == null || verticalHelper!!.layoutManager !== layoutManager) {
-            verticalHelper = OrientationHelper.createVerticalHelper(layoutManager)
-        }
-        return verticalHelper!!
-    }
-
-    private fun getHorizontalHelper(
-        layoutManager: RecyclerView.LayoutManager
-    ): OrientationHelper {
-        if (horizontalHelper == null || horizontalHelper!!.layoutManager !== layoutManager) {
-            horizontalHelper = OrientationHelper.createHorizontalHelper(layoutManager)
-        }
-        return horizontalHelper!!
-    }
-}
-
-class CenterDecoration(@Px private val spacing: Int) : RecyclerView.ItemDecoration() {
-
-    private var firstViewWidth = -1
-    private var lastViewWidth = -1
-
-    override fun getItemOffsets(
-        outRect: Rect,
-        view: View,
-        parent: RecyclerView,
-        state: RecyclerView.State
-    ) {
-        super.getItemOffsets(outRect, view, parent, state)
-        val adapterPosition = (view.layoutParams as RecyclerView.LayoutParams).viewAdapterPosition
-        val lm = parent.layoutManager as LinearLayoutManager
-        if (adapterPosition == 0) {
-            // Invalidate decorations when this view width has changed
-            if (view.width != firstViewWidth) {
-                view.doOnPreDraw { parent.invalidateItemDecorations() }
-            }
-            firstViewWidth = view.width
-            outRect.left = parent.width / 2 - view.width / 2
-            // If we have more items, use the spacing provided
-            if (lm.itemCount > 1) {
-                outRect.right = spacing / 2
-            } else {
-                // Otherwise, make sure this to fill the whole width with the decoration
-                outRect.right = outRect.left
-            }
-        } else if (adapterPosition == lm.itemCount - 1) {
-            // Invalidate decorations when this view width has changed
-            if (view.width != lastViewWidth) {
-                view.doOnPreDraw { parent.invalidateItemDecorations() }
-            }
-            lastViewWidth = view.width
-            outRect.right = parent.width / 2 - view.width / 2
-            outRect.left = spacing / 2
-        } else {
-            outRect.left = spacing / 2
-            outRect.right = spacing / 2
-        }
     }
 }

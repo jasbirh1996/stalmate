@@ -40,7 +40,6 @@ class ActivityDashboardNew : BaseActivity(), FragmentMenu.Callback {
     }
 
     private fun loadFragment(fragment: Fragment) {
-
         val backStateName = fragment.javaClass.name
         val fragmentTag = backStateName
         val manager: FragmentManager = supportFragmentManager
@@ -120,7 +119,6 @@ class ActivityDashboardNew : BaseActivity(), FragmentMenu.Callback {
 
     lateinit var drawerLayout: DrawerLayout
     public fun toggleDrawer() {
-
         if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
             drawerLayout.closeDrawer(GravityCompat.END)
         } else {
@@ -129,7 +127,6 @@ class ActivityDashboardNew : BaseActivity(), FragmentMenu.Callback {
         }
     }
     private fun loadDrawerFragment(fragment: Fragment) {
-
         val backStateName = fragment.javaClass.name
         val fragmentTag = backStateName
         val manager: FragmentManager = supportFragmentManager
@@ -146,5 +143,4 @@ class ActivityDashboardNew : BaseActivity(), FragmentMenu.Callback {
     override fun onCLickBackButton() {
         onBackPressed()
     }
-
 }

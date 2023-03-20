@@ -22,7 +22,8 @@ import java.util.*
 
 open class BaseFragment : Fragment(), BaseCallBacks {
     private var callBacks: BaseCallBacks? = null
-//    abstract fun onBackPressed()
+
+    //    abstract fun onBackPressed()
     val networkViewModel: AppViewModel by lazy {
         ViewModelProvider(this)[AppViewModel::class.java]
     }
@@ -74,8 +75,7 @@ open class BaseFragment : Fragment(), BaseCallBacks {
     }*/
 
 
-
-    fun isPermissionGranted(permissions: Array<String>,context: Context): Boolean {
+    fun isPermissionGranted(permissions: Array<String>, context: Context): Boolean {
         var result: Int
         val listPermissionsNeeded: MutableList<String> = ArrayList()
         for (p in permissions) {
