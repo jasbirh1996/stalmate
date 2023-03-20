@@ -265,6 +265,7 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
         masks!!.add("slash")
         masks!!.add("twistedface")
         masks!!.add("grumpycat")
+
         effects = ArrayList()
         effects!!.add("none")
         effects!!.add("viking_helmet.deepar")
@@ -289,6 +290,7 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
         effects!!.add("rain")
         effects!!.add("heart")
         effects!!.add("blizzard")
+
         filters = ArrayList()
         filters!!.add("none")
         filters!!.add("filmcolorperfection")
@@ -315,6 +317,13 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
     }
 
     private fun initalizeViews() {
+        //Set ArView
+        val arView = findViewById<SurfaceView>(R.id.surface)
+        arView.holder.addCallback(this)
+        // Surface might already be initialized, so we force the call to onSurfaceChanged
+        arView.visibility = View.GONE
+        arView.visibility = View.VISIBLE
+
         segmented_progressbar = findViewById<LinearProgressIndicator>(R.id.segmented_progressbar)
         tabbarduration = findViewById<TabLayout>(R.id.tabbarduration)
         findViewById<ImageView>(R.id.ivClose).setOnClickListener { onBackPressed() }
@@ -704,18 +713,10 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
     //DeepAr Code Below
 
     private fun initializeDeepAR() {
-        if (deepAR == null) {
-            deepAR = DeepAR(this)
-            deepAR!!.setLicenseKey("a8934255341d56543840fc370805931902372ed78dc6def033a9f6c38ea8ec102617d6ed4da7fc17")
-            deepAR!!.initialize(this, this)
-            setupCamera()
-            //Set ArView
-            val arView = findViewById<SurfaceView>(R.id.surface)
-            arView.holder.addCallback(this)
-            // Surface might already be initialized, so we force the call to onSurfaceChanged
-            arView.visibility = View.GONE
-            arView.visibility = View.VISIBLE
-        }
+        deepAR = DeepAR(this)
+        deepAR!!.setLicenseKey("a8934255341d56543840fc370805931902372ed78dc6def033a9f6c38ea8ec102617d6ed4da7fc17")
+        deepAR!!.initialize(this, this)
+        setupCamera()
     }
 
     private fun setupCamera() {
