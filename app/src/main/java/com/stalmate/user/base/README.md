@@ -41,7 +41,7 @@ length shoulr be between 15 sec to 90 sec)
 10:- By using this feature, User can change or modify your video into reverse order, flash order and
 also in slow motion.
 
-//----------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------------------------------------
 https://api.postman.com/collections/10964628-49cbee9a-f1d4-4360-8fda-6d529567eae5?access_key=PMAT-01GTEAKGQ0WB67CD0DD3R7W71K
 
 1:- Thumbnail Image Property (Add new thumbnail UI and Funtionality for video)

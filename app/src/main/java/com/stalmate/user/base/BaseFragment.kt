@@ -9,30 +9,32 @@ import android.util.Log
 import android.view.Gravity
 import android.widget.FrameLayout
 import android.widget.Toast
-import androidx.activity.addCallback
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import com.stalmate.user.base.callbacks.BaseCallBacks
+import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.viewmodel.AppViewModel
 import java.util.*
 
 
 open class BaseFragment : Fragment(), BaseCallBacks {
+
     private var callBacks: BaseCallBacks? = null
 
-    //    abstract fun onBackPressed()
     val networkViewModel: AppViewModel by lazy {
         ViewModelProvider(this)[AppViewModel::class.java]
     }
 
+    val prefManager by lazy {
+        PrefManager.getInstance(App.getInstance())?.userDetail?.results?.get(0)
+    }
+    //PrefManager.getInstance(App.getInstance())?.userDetail?.results?.get(0)?.access_token ?: ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        /*requireActivity().onBackPressedDispatcher.addCallback(this) {
-            onBackPressed()
-        }*/
     }
 
     override fun onAttach(context: Context) {

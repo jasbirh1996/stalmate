@@ -28,6 +28,7 @@ import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
@@ -43,8 +44,12 @@ import com.jaiselrahman.filepicker.activity.FilePickerActivity
 import com.jaiselrahman.filepicker.config.Configurations
 import com.jaiselrahman.filepicker.model.MediaFile
 import com.makeramen.roundedimageview.RoundedImageView
+import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
+import com.stalmate.user.modules.reels.activity.ActivityFilter
+import com.stalmate.user.modules.reels.activity.EXTRA_SONG_ID
 import com.stalmate.user.modules.reels.activity.FragmentGallery
+import com.stalmate.user.modules.reels.photo_editing.Counter
 import ly.img.android.pesdk.PhotoEditorSettingsList
 import ly.img.android.pesdk.backend.model.EditorSDKResult
 import ly.img.android.pesdk.backend.model.state.LoadSettings
@@ -184,6 +189,37 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
     lateinit var segmented_progressbar: LinearProgressIndicator
     lateinit var tabbarduration: TabLayout
 
+    private lateinit var counter: Counter
+    var countdownTimerDuration = 0
+    var captureTimerHandler = Handler()
+    private var runnableForTimer: Runnable = object : Runnable {
+        override fun run() {
+            if (countdownTimerDuration == 0) {
+                isCountDownActive = false
+                isCounterSelected()
+                findViewById<ImageButton>(R.id.recordButton).visibility = View.GONE
+                findViewById<TextView>(R.id.tvCountDownValue).visibility = View.GONE
+                captureTimerHandler.removeCallbacks(this)
+                if (isImage) {
+                    findViewById<ImageButton>(R.id.recordButton).performClick()
+                } else {
+                    findViewById<ImageButton>(R.id.recordButton).performLongClick()
+                }
+            } else {
+                countdownTimerDuration--
+                runOnUiThread {
+                    isCountDownActive = true
+                    isCounterSelected()
+                    findViewById<ImageButton>(R.id.recordButton).visibility = View.VISIBLE
+                    findViewById<TextView>(R.id.tvCountDownValue).visibility = View.VISIBLE
+                    findViewById<TextView>(R.id.tvCountDownValue).text =
+                        countdownTimerDuration.toString()
+                }
+                captureTimerHandler.postDelayed(this, 1000)
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.setFlags(
@@ -238,10 +274,10 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
     }
 
     private fun initialize() {
-        initializeDeepAR()
         initializeFilters()
-        initalizeViews()
         getGalleryData()
+        initializeDeepAR()
+        initalizeViews()
     }
 
     private fun initializeFilters() {
@@ -388,16 +424,49 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
             radioEffects.isChecked = false
             radioFilters.isChecked = false
             activeFilterType = 0
+            if (masks!![currentMask] == "none") {
+                findViewById<TextView>(R.id.tvEffectName).visibility = View.GONE
+            } else {
+                findViewById<TextView>(R.id.tvEffectName).visibility = View.VISIBLE
+                findViewById<TextView>(R.id.tvEffectName).text =
+                    (masks!![currentMask][0].toUpperCase()
+                        .toString() + masks!![currentMask].substring(
+                        1,
+                        masks!![currentMask].lastIndex + 1
+                    ).replace(".deepar", "")).replace("_", " ")
+            }
         }
         radioEffects.setOnClickListener {
             radioMasks.isChecked = false
             radioFilters.isChecked = false
             activeFilterType = 1
+            if (effects!![currentEffect] == "none") {
+                findViewById<TextView>(R.id.tvEffectName).visibility = View.GONE
+            } else {
+                findViewById<TextView>(R.id.tvEffectName).visibility = View.VISIBLE
+                findViewById<TextView>(R.id.tvEffectName).text =
+                    (effects!![currentEffect][0].toUpperCase()
+                        .toString() + effects!![currentEffect].substring(
+                        1,
+                        effects!![currentEffect].lastIndex + 1
+                    ).replace(".deepar", "")).replace("_", " ")
+            }
         }
         radioFilters.setOnClickListener {
             radioEffects.isChecked = false
             radioMasks.isChecked = false
             activeFilterType = 2
+            if (filters!![currentFilter] == "none") {
+                findViewById<TextView>(R.id.tvEffectName).visibility = View.GONE
+            } else {
+                findViewById<TextView>(R.id.tvEffectName).visibility = View.VISIBLE
+                findViewById<TextView>(R.id.tvEffectName).text =
+                    (filters!![currentFilter][0].toUpperCase()
+                        .toString() + filters!![currentFilter].substring(
+                        1,
+                        filters!![currentFilter].lastIndex + 1
+                    ).replace(".deepar", "")).replace("_", " ")
+            }
         }
 
         //Change Video DUration
@@ -410,6 +479,31 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
                 isCaptureDurationActive = true
                 hideDurationBar(show = true)
             }
+        }
+
+        //Set Counter
+        counter = Counter(onCaptureAfterNthSeconds = { type: String, duration: Int ->
+            isImage = (type != "video")
+            isCountDownActive = true
+            isCounterSelected()
+            countdownTimerDuration = duration
+            captureTimerHandler.removeCallbacks(runnableForTimer)
+            captureTimerHandler.post(runnableForTimer)
+        }, onRangeDialogDismiss = {
+            isCountDownActive = false
+            isCounterSelected()
+            screenshotBtn.visibility = View.VISIBLE
+        })
+
+        val buttonCaptureCounter = findViewById<ConstraintLayout>(R.id.buttonCaptureCounter)
+        buttonCaptureCounter.setOnClickListener {
+            if (counter.isAdded) {
+                return@setOnClickListener
+            }
+            isCountDownActive = true
+            isCounterSelected()
+            screenshotBtn.visibility = View.GONE
+            counter.show(supportFragmentManager, counter.tag)
         }
 
         //Set Progress max and video durations tabs
@@ -446,20 +540,23 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
         result.data?.getParcelableArrayListExtra<MediaFile>(FilePickerActivity.MEDIA_FILES)?.let {
             if (!it.isNullOrEmpty()) {
                 val item = it[0]
-                if (item.mediaType == 1) {
-                    videoFileName = File(item.uri.toString())
-                    startPhotoEditorImgLy(it[0].uri)
+                if (item.mediaType == MediaFile.TYPE_IMAGE) {
+                    videoFileName = File(item.path.toString())
+                    if (videoFileName?.exists() == true)
+                        videoFileName?.toUri()?.let { it1 -> startPhotoEditorImgLy(it1) }
                 }
-                if (item.mediaType == 3) {
+                if (item.mediaType == MediaFile.TYPE_VIDEO) {
                     if (item.duration < 15000) {
                         showToast("Video should be grater than or equal to 15 seconds")
                     } else if (item.duration > 90000) {
                         showToast("Video should be less than or equal to 90 seconds")
                     } else {
-                        videoFileName = File(item.uri.toString())
-                        imageVideoDuration = (item.duration / 1000).toInt()
-                        setupProgressBarWithDuration()
-                        startVideoEditor(item.uri.toString())
+                        videoFileName = File(item.path.toString())
+                        if (videoFileName?.exists() == true) {
+                            imageVideoDuration = (item.duration / 1000).toInt()
+                            setupProgressBarWithDuration()
+                            startVideoEditor(videoFileName?.absolutePath.toString())
+                        }
                     }
                 }
             }
@@ -623,6 +720,26 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
             Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "" + id)
         } else {
             null
+        }
+    }
+
+    fun isCounterSelected() {
+        val ivCounterx = findViewById<ImageView>(R.id.ivCounterx)
+        val tvCounter = findViewById<TextView>(R.id.tvCounter)
+        if (isCountDownActive) {
+            tvCounter.setTextColor(resources.getColor(R.color.colorYellow, null))
+            ivCounterx.setImageDrawable(
+                ContextCompat.getDrawable(
+                    this@CreateFunActivity, R.drawable.ic_crtpost_countdown_active
+                )
+            )
+        } else {
+            tvCounter.setTextColor(resources.getColor(R.color.white, null))
+            ivCounterx.setImageDrawable(
+                ContextCompat.getDrawable(
+                    this@CreateFunActivity, R.drawable.ic_crtpost_countdown
+                )
+            )
         }
     }
 
@@ -856,28 +973,102 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
     }
 
     private fun gotoNext() {
-        if (activeFilterType == 0) {
-            currentMask = (currentMask + 1) % masks!!.size
-            deepAR!!.switchEffect("mask", getFilterPath(masks!![currentMask]))
-        } else if (activeFilterType == 1) {
-            currentEffect = (currentEffect + 1) % effects!!.size
-            deepAR!!.switchEffect("effect", getFilterPath(effects!![currentEffect]))
-        } else if (activeFilterType == 2) {
-            currentFilter = (currentFilter + 1) % filters!!.size
-            deepAR!!.switchEffect("filter", getFilterPath(filters!![currentFilter]))
+        when (activeFilterType) {
+            0 -> {
+                currentMask = (currentMask + 1) % masks!!.size
+                if (masks!![currentMask] == "none") {
+                    findViewById<TextView>(R.id.tvEffectName).visibility = View.GONE
+                } else {
+                    findViewById<TextView>(R.id.tvEffectName).visibility = View.VISIBLE
+                    findViewById<TextView>(R.id.tvEffectName).text =
+                        (masks!![currentMask][0].toUpperCase()
+                            .toString() + masks!![currentMask].substring(
+                            1,
+                            masks!![currentMask].lastIndex + 1
+                        ).replace(".deepar", "")).replace("_", " ")
+                }
+                deepAR!!.switchEffect("mask", getFilterPath(masks!![currentMask]))
+            }
+            1 -> {
+                currentEffect = (currentEffect + 1) % effects!!.size
+                if (effects!![currentEffect] == "none") {
+                    findViewById<TextView>(R.id.tvEffectName).visibility = View.GONE
+                } else {
+                    findViewById<TextView>(R.id.tvEffectName).visibility = View.VISIBLE
+                    findViewById<TextView>(R.id.tvEffectName).text =
+                        (effects!![currentEffect][0].toUpperCase()
+                            .toString() + effects!![currentEffect].substring(
+                            1,
+                            effects!![currentEffect].lastIndex + 1
+                        ).replace(".deepar", "")).replace("_", " ")
+                }
+                deepAR!!.switchEffect("effect", getFilterPath(effects!![currentEffect]))
+            }
+            2 -> {
+                currentFilter = (currentFilter + 1) % filters!!.size
+                if (filters!![currentFilter] == "none") {
+                    findViewById<TextView>(R.id.tvEffectName).visibility = View.GONE
+                } else {
+                    findViewById<TextView>(R.id.tvEffectName).visibility = View.VISIBLE
+                    findViewById<TextView>(R.id.tvEffectName).text =
+                        (filters!![currentFilter][0].toUpperCase()
+                            .toString() + filters!![currentFilter].substring(
+                            1,
+                            filters!![currentFilter].lastIndex + 1
+                        ).replace(".deepar", "")).replace("_", " ")
+                }
+                deepAR!!.switchEffect("filter", getFilterPath(filters!![currentFilter]))
+            }
         }
     }
 
     private fun gotoPrevious() {
-        if (activeFilterType == 0) {
-            currentMask = (currentMask - 1 + masks!!.size) % masks!!.size
-            deepAR!!.switchEffect("mask", getFilterPath(masks!![currentMask]))
-        } else if (activeFilterType == 1) {
-            currentEffect = (currentEffect - 1 + effects!!.size) % effects!!.size
-            deepAR!!.switchEffect("effect", getFilterPath(effects!![currentEffect]))
-        } else if (activeFilterType == 2) {
-            currentFilter = (currentFilter - 1 + filters!!.size) % filters!!.size
-            deepAR!!.switchEffect("filter", getFilterPath(filters!![currentFilter]))
+        when (activeFilterType) {
+            0 -> {
+                currentMask = (currentMask - 1 + masks!!.size) % masks!!.size
+                if (masks!![currentMask] == "none") {
+                    findViewById<TextView>(R.id.tvEffectName).visibility = View.GONE
+                } else {
+                    findViewById<TextView>(R.id.tvEffectName).visibility = View.VISIBLE
+                    findViewById<TextView>(R.id.tvEffectName).text =
+                        (masks!![currentMask][0].toUpperCase()
+                            .toString() + masks!![currentMask].substring(
+                            1,
+                            masks!![currentMask].lastIndex + 1
+                        ).replace(".deepar", "")).replace("_", " ")
+                }
+                deepAR!!.switchEffect("mask", getFilterPath(masks!![currentMask]))
+            }
+            1 -> {
+                currentEffect = (currentEffect - 1 + effects!!.size) % effects!!.size
+                if (effects!![currentEffect] == "none") {
+                    findViewById<TextView>(R.id.tvEffectName).visibility = View.GONE
+                } else {
+                    findViewById<TextView>(R.id.tvEffectName).visibility = View.VISIBLE
+                    findViewById<TextView>(R.id.tvEffectName).text =
+                        (effects!![currentEffect][0].toUpperCase()
+                            .toString() + effects!![currentEffect].substring(
+                            1,
+                            effects!![currentEffect].lastIndex + 1
+                        ).replace(".deepar", "")).replace("_", " ")
+                }
+                deepAR!!.switchEffect("effect", getFilterPath(effects!![currentEffect]))
+            }
+            2 -> {
+                currentFilter = (currentFilter - 1 + filters!!.size) % filters!!.size
+                if (filters!![currentFilter] == "none") {
+                    findViewById<TextView>(R.id.tvEffectName).visibility = View.GONE
+                } else {
+                    findViewById<TextView>(R.id.tvEffectName).visibility = View.VISIBLE
+                    findViewById<TextView>(R.id.tvEffectName).text =
+                        (filters!![currentFilter][0].toUpperCase()
+                            .toString() + filters!![currentFilter].substring(
+                            1,
+                            filters!![currentFilter].lastIndex + 1
+                        ).replace(".deepar", "")).replace("_", " ")
+                }
+                deepAR!!.switchEffect("filter", getFilterPath(filters!![currentFilter]))
+            }
         }
     }
 
@@ -932,11 +1123,11 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
     override fun screenshotTaken(bitmap: Bitmap) {
         val now = DateFormat.format("yyyy_MM_dd_hh_mm_ss", Date())
         try {
-            val imageFile =
-                File(
-                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS + "/Stalmate"),
-                    "image_$now.jpg"
-                )
+            val file =
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS + "/Stalmate")
+            if (!file.exists())
+                file.mkdir()
+            val imageFile = File(file, "image_$now.jpg")
             val outputStream = FileOutputStream(imageFile)
             val quality = 100
             bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream)
@@ -968,16 +1159,20 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
                 // Set the source as the Uri of the image to be loaded
                 it.source = imageFile
             }
-        photoEditorResult.launch(settingsList)
-        // Release the SettingsList once done
-        settingsList.release()
+        Handler(Looper.getMainLooper()).postDelayed({
+            photoEditorResult.launch(settingsList)
+            // Release the SettingsList once done
+            settingsList.release()
+        }, 1000)
     }
 
     private fun startVideoEditor(videoUri: String) {
-        startActivity(Intent(this, SpeedReverseActivity::class.java).apply {
-            putExtra("videoUri", videoUri)
-            putExtra("imageVideoDuration", imageVideoDuration)
-        })
+        Handler(Looper.getMainLooper()).postDelayed({
+            startActivity(Intent(this, SpeedReverseActivity::class.java).apply {
+                putExtra("videoUri", videoUri)
+                putExtra("imageVideoDuration", imageVideoDuration)
+            })
+        }, 1000)
     }
 
     override fun videoRecordingStarted() {
@@ -1023,12 +1218,12 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
         when (it.resultStatus) {
             EditorSDKResult.Status.CANCELED -> showToast("Editor cancelled")
             EditorSDKResult.Status.EXPORT_DONE -> {
-                /*startActivity(
+                startActivity(
                     IntentHelper.getCreateFuntimePostScreen(this)!!
-                        .putExtra(ActivityFilter.EXTRA_VIDEO, it.resultUri)
-                        .putExtra(EXTRA_SONG_ID, songId)
-                )*/
-                showToast("Result saved at ${it.resultUri}")
+                        .putExtra(ActivityFilter.EXTRA_VIDEO, it.resultUri.toString())
+                        .putExtra(EXTRA_SONG_ID, "")
+                )
+                showToast("${it.resultUri}")
             }
             else -> {
             }

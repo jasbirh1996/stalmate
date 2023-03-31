@@ -21,7 +21,7 @@ import com.stalmate.user.view.dashboard.ActivityDashboardNew
 
 class ActivitySplash : BaseActivity() {
     val SPLASH_DURATION: Long = 1000
-    private lateinit var prefManager: PrefManager
+    private lateinit var prefManager1: PrefManager
     private lateinit var context: ActivitySplash
     override fun onClick(viewId: Int, view: View?) {
 
@@ -35,13 +35,13 @@ class ActivitySplash : BaseActivity() {
         );
         setContentView(R.layout.activity_splash)
         context = this
-        prefManager = PrefManager(context)
+        prefManager1 = PrefManager(context)
         Handler(Looper.getMainLooper()).postDelayed({
-            if (prefManager.keyIsLoggedIn) {
+            if (prefManager1.keyIsLoggedIn) {
                 startActivity(Intent(applicationContext, ActivityDashboardNew::class.java))
                 finish()
             } else {
-                if (prefManager.keyIsOldusere) {
+                if (prefManager1.keyIsOldusere) {
                     startActivity(
                         Intent(
                             context,

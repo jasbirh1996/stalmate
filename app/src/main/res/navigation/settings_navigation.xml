@@ -69,7 +69,11 @@
         android:id="@+id/appSettingFragment"
         android:name="com.stalmate.user.view.settings.AppSettingFragment"
         android:label="fragment_app_setting"
-        tools:layout="@layout/fragment_app_setting" />
+        tools:layout="@layout/fragment_app_setting">
+        <action
+            android:id="@+id/action_appSettingFragment_to_deleteMyAccountFragment"
+            app:destination="@id/deleteMyAccountFragment" />
+    </fragment>
     <fragment
         android:id="@+id/notificationFragment"
         android:name="com.stalmate.user.view.settings.NotificationFragment"

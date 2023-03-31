@@ -3,9 +3,7 @@ package com.stalmate.user.base
 import android.R
 import android.app.AlertDialog
 import android.app.ProgressDialog
-import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.PersistableBundle
@@ -17,14 +15,10 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
-import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.base.callbacks.BaseCallBacks
-import com.stalmate.user.utilities.Constants
 import com.stalmate.user.utilities.PrefManager
-import com.stalmate.user.utilities.untilitys
 import com.stalmate.user.viewmodel.AppViewModel
 import java.util.*
-import java.util.concurrent.CopyOnWriteArrayList
 import kotlin.collections.ArrayList
 
 abstract class BaseActivity : AppCompatActivity(), View.OnClickListener,
@@ -33,6 +27,11 @@ abstract class BaseActivity : AppCompatActivity(), View.OnClickListener,
     val networkViewModel: AppViewModel by lazy {
         ViewModelProvider(this)[AppViewModel::class.java]
     }
+
+    val prefManager by lazy {
+        PrefManager.getInstance(App.getInstance())?.userDetail?.results?.get(0)
+    }
+    //PrefManager.getInstance(App.getInstance())?.userDetail?.results?.get(0)?.access_token ?: ""
 
 
     var isGPSAvailable = false
@@ -47,16 +46,6 @@ abstract class BaseActivity : AppCompatActivity(), View.OnClickListener,
         super.onCreate(savedInstanceState)
         progressDialog = com.stalmate.user.view.dialogs.ProgressDialog(this)
         context = this
-        try {
-            debugPrint(
-                "tokenn",
-                PrefManager.getInstance(App.getInstance())!!.userDetail.results[0].token
-            )
-        } catch (e: Exception) {
-
-        }
-
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {

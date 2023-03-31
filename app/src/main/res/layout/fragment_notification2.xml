@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".view.settings.NotificationFragment">
 
     <include
@@ -14,14 +14,14 @@
         android:id="@+id/tvFunTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Funtime"
-        app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="@dimen/_20sdp"
-        app:layout_constraintTop_toBottomOf="@+id/NotificationHeader"
         android:layout_marginTop="@dimen/_10sdp"
         android:fontFamily="@font/poppins_semibold"
-        android:textSize="15sp"
+        android:text="Funtime"
         android:textColor="@color/black"
+        android:textSize="15sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/NotificationHeader"
 
         />
 
@@ -29,23 +29,24 @@
         android:id="@+id/constNotificationTone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
         android:layout_marginTop="@dimen/_10sdp"
+        android:background="@color/white"
         app:layout_constraintTop_toBottomOf="@+id/tvFunTime">
+
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_NotificationTone"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="10dp"
+            android:layout_marginBottom="@dimen/_20sdp"
             android:fontFamily="@font/poppins"
             android:text="Notification Tone"
             android:textColor="@color/black"
             android:textSize="16sp"
-            android:layout_marginBottom="@dimen/_20sdp"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/icon_Font"
@@ -63,13 +64,12 @@
             android:id="@+id/subTittle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/poppins"
-            android:textColor="#656565"
-            android:text="Default (Sweet)"
-            app:layout_constraintStart_toStartOf="@+id/tv_NotificationTone"
-            app:layout_constraintTop_toBottomOf="@+id/tv_NotificationTone"
             android:layout_marginTop="@dimen/_5sdp"
-            />
+            android:fontFamily="@font/poppins"
+            android:text="Default (Sweet)"
+            android:textColor="#656565"
+            app:layout_constraintStart_toStartOf="@+id/tv_NotificationTone"
+            app:layout_constraintTop_toBottomOf="@+id/tv_NotificationTone" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -77,51 +77,50 @@
         android:id="@+id/constPopUpNotification"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
         android:layout_marginTop="@dimen/_20sdp"
+        android:background="@color/white"
         app:layout_constraintTop_toBottomOf="@+id/constNotificationTone">
+
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_NotificationPopUp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="10dp"
+            android:layout_marginBottom="@dimen/_20sdp"
             android:fontFamily="@font/poppins"
             android:text="Popup Notifications"
             android:textColor="@color/black"
             android:textSize="16sp"
-            android:layout_marginBottom="@dimen/_20sdp"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
 
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/btnToggle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""
-            android:textSize="15sp"
-            android:textColor="@color/black"
-            android:fontFamily="@font/poppins"
             android:layout_marginEnd="@dimen/_10sdp"
+            android:fontFamily="@font/poppins"
+            android:text=""
+            android:textColor="@color/black"
+            android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="@+id/tv_NotificationPopUp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tv_NotificationPopUp"
-            app:track="@drawable/toggle_button_thumb_state"
-            />
+            app:track="@drawable/toggle_button_thumb_state" />
 
         <TextView
             android:id="@+id/subTittle_NotificationPopup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/poppins"
-            android:textColor="#656565"
-            android:text="Always show popup"
-            app:layout_constraintStart_toStartOf="@+id/tv_NotificationPopUp"
-            app:layout_constraintTop_toBottomOf="@+id/tv_NotificationPopUp"
             android:layout_marginTop="@dimen/_5sdp"
-            />
+            android:fontFamily="@font/poppins"
+            android:text="Always show popup"
+            android:textColor="#656565"
+            app:layout_constraintStart_toStartOf="@+id/tv_NotificationPopUp"
+            app:layout_constraintTop_toBottomOf="@+id/tv_NotificationPopUp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -129,23 +128,24 @@
         android:id="@+id/constLight"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
         android:layout_marginTop="@dimen/_20sdp"
+        android:background="@color/white"
         app:layout_constraintTop_toBottomOf="@+id/constPopUpNotification">
+
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_Light"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="10dp"
+            android:layout_marginBottom="@dimen/_20sdp"
             android:fontFamily="@font/poppins"
             android:text="Lights    "
             android:textColor="@color/black"
             android:textSize="16sp"
-            android:layout_marginBottom="@dimen/_20sdp"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/icon_Lights"
@@ -163,13 +163,12 @@
             android:id="@+id/subTittle_Light"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/poppins"
-            android:textColor="#656565"
-            android:text="Default (White)"
-            app:layout_constraintStart_toStartOf="@+id/tv_Light"
-            app:layout_constraintTop_toBottomOf="@+id/tv_Light"
             android:layout_marginTop="@dimen/_5sdp"
-            />
+            android:fontFamily="@font/poppins"
+            android:text="Default (White)"
+            android:textColor="#656565"
+            app:layout_constraintStart_toStartOf="@+id/tv_Light"
+            app:layout_constraintTop_toBottomOf="@+id/tv_Light" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

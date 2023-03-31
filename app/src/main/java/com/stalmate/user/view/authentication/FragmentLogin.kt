@@ -2,14 +2,12 @@ package com.stalmate.user.view.authentication
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import com.stalmate.user.Helper.IntentHelper
@@ -134,10 +132,6 @@ class FragmentLogin : BaseFragment() {
                     PrefManager.getInstance(requireContext())!!.userDetail = it
                     App.getInstance().setupApis()
                     binding.progressBar.visibility = View.GONE
-                    Log.d(
-                        "token=======",
-                        PrefManager.getInstance(App.getInstance())!!.userDetail.results[0].token
-                    )
                     startActivity(IntentHelper.getDashboardScreen(context))
                     requireActivity().finish()
                     makeToast(message)

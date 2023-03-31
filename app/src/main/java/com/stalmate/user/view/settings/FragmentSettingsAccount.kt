@@ -44,9 +44,9 @@ lateinit var binding:FragmentSettingsAccountBinding
         }
 
 
-        var list=ArrayList<SettingMenuModel>()
+        val list=ArrayList<SettingMenuModel>()
         list.add(SettingMenuModel(R.drawable.account_privacy_icon, Constants.SETTING_ACCOUNT_PRIVACY))
-        list.add(SettingMenuModel(R.drawable.account_change_number_icon, Constants.SETTING_CHANGE_NUMBER))
+//        list.add(SettingMenuModel(R.drawable.account_change_number_icon, Constants.SETTING_CHANGE_NUMBER))
         list.add(SettingMenuModel(R.drawable.account_changepassword_icon, Constants.SETTING_CHANGE_PASSWORD))
         list.add(SettingMenuModel(R.drawable.account_blocked_contact_icon, Constants.SETTING_BLOCKED_CONTACTS))
         list.add(SettingMenuModel(R.drawable.account_delete_account_icon, Constants.SETTING_DELETEACCOUNT))

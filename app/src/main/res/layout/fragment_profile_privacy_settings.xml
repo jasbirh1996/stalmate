@@ -52,19 +52,19 @@
                 <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/_20sdp"
+                    android:layout_marginHorizontal="@dimen/_20sdp"
+                    android:layout_marginVertical="@dimen/_10sdp"
                     android:fontFamily="@font/poppins_medium"
                     android:text="@string/allow_others_to_find_me"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
 
                 <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/toggleFindMe"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/_20sdp"
                     android:checked="true"
-                    android:minWidth="@dimen/_30sdp"
-                    android:minHeight="@dimen/_48sdp"
                     app:thumbTint="@color/obboard_indicator"
                     app:trackTint="@color/obboard_indicator2"
                     tools:ignore="SpeakableTextPresentCheck" />
@@ -76,42 +76,24 @@
                 android:layout_marginTop="@dimen/_20sdp"
                 android:background="@color/white"
                 android:orientation="vertical"
-                android:padding="@dimen/_18sdp">
+                android:paddingHorizontal="@dimen/_15sdp"
+                android:paddingVertical="@dimen/_15sdp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_7sdp"
+                    android:fontFamily="@font/poppins"
+                    android:includeFontPadding="false"
+                    android:text="Profile"
+                    android:textColor="@color/black"
+                    android:textSize="17sp" />
 
                 <Spinner
-                    android:id="@+id/Profile"
+                    android:id="@+id/spinnerProfile"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawablePadding="7dp"
                     android:entries="@array/profile"
-                    android:paddingVertical="8dp"
-                    android:textColor="@color/black"/>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="3dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginEnd="3dp"
-                    android:background="@color/colorNormalGray" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_20sdp"
-                android:background="@color/white"
-                android:orientation="vertical"
-                android:padding="@dimen/_18sdp">
-
-                <Spinner
-                    android:id="@+id/profilePhoto"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:drawablePadding="7dp"
-                    android:entries="@array/profile"
-
-                    android:paddingVertical="8dp"
                     android:textColor="@color/black" />
 
                 <View
@@ -129,16 +111,24 @@
                 android:layout_marginTop="@dimen/_20sdp"
                 android:background="@color/white"
                 android:orientation="vertical"
-                android:padding="@dimen/_18sdp">
+                android:paddingHorizontal="@dimen/_15sdp"
+                android:paddingVertical="@dimen/_15sdp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_7sdp"
+                    android:fontFamily="@font/poppins"
+                    android:includeFontPadding="false"
+                    android:text="Last seen"
+                    android:textColor="@color/black"
+                    android:textSize="17sp" />
 
                 <Spinner
-                    android:id="@+id/about"
+                    android:id="@+id/spinnerLastSeen"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawablePadding="7dp"
                     android:entries="@array/profile"
-
-                    android:paddingVertical="8dp"
                     android:textColor="@color/black" />
 
                 <View
@@ -149,6 +139,77 @@
                     android:layout_marginEnd="3dp"
                     android:background="@color/colorNormalGray" />
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:paddingHorizontal="@dimen/_15sdp"
+                android:paddingVertical="@dimen/_15sdp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_7sdp"
+                    android:fontFamily="@font/poppins"
+                    android:includeFontPadding="false"
+                    android:text="Profile Photo"
+                    android:textColor="@color/black"
+                    android:textSize="17sp" />
+
+                <Spinner
+                    android:id="@+id/spinnerProfilePhoto"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:entries="@array/profile"
+                    android:textColor="@color/black" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="3dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="3dp"
+                    android:background="@color/colorNormalGray" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:paddingHorizontal="@dimen/_15sdp"
+                android:paddingVertical="@dimen/_15sdp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_7sdp"
+                    android:fontFamily="@font/poppins"
+                    android:includeFontPadding="false"
+                    android:text="About"
+                    android:textColor="@color/black"
+                    android:textSize="17sp" />
+
+                <Spinner
+                    android:id="@+id/spinnerAbout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:entries="@array/profile"
+                    android:textColor="@color/black" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="3dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="3dp"
+                    android:background="@color/colorNormalGray" />
+            </LinearLayout>
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -161,19 +222,19 @@
                 <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/_20sdp"
+                    android:layout_marginHorizontal="@dimen/_20sdp"
+                    android:layout_marginVertical="@dimen/_10sdp"
                     android:fontFamily="@font/poppins_medium"
                     android:text="@string/read_receipts"
                     android:textColor="@color/black"
                     android:textSize="18sp" />
 
                 <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/toggleReadReceipts"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/_20sdp"
                     android:checked="true"
-                    android:minWidth="@dimen/_30sdp"
-                    android:minHeight="@dimen/_48sdp"
                     app:thumbTint="@color/obboard_indicator"
                     app:trackTint="@color/obboard_indicator2"
                     tools:ignore="SpeakableTextPresentCheck,VisualLintButtonSize" />
@@ -185,17 +246,34 @@
                 android:layout_marginTop="@dimen/_20sdp"
                 android:background="@color/white"
                 android:orientation="vertical"
-                android:padding="@dimen/_18sdp">
+                android:paddingHorizontal="@dimen/_15sdp"
+                android:paddingVertical="@dimen/_15sdp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_7sdp"
+                    android:fontFamily="@font/poppins"
+                    android:includeFontPadding="false"
+                    android:text="Story"
+                    android:textColor="@color/black"
+                    android:textSize="17sp" />
 
                 <Spinner
-                    android:id="@+id/story"
+                    android:id="@+id/spinnerStory"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawablePadding="7dp"
                     android:entries="@array/profile"
-
-                    android:paddingVertical="8dp"
                     android:textColor="@color/black" />
+
+                <EditText
+                    android:id="@+id/tvStoryEx"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_7sdp"
+                    android:background="@null"
+                    android:hint="add exception"
+                    android:textSize="13sp" />
 
                 <View
                     android:layout_width="match_parent"
@@ -212,17 +290,34 @@
                 android:layout_marginTop="@dimen/_20sdp"
                 android:background="@color/white"
                 android:orientation="vertical"
-                android:padding="@dimen/_18sdp">
+                android:paddingHorizontal="@dimen/_15sdp"
+                android:paddingVertical="@dimen/_15sdp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_7sdp"
+                    android:fontFamily="@font/poppins"
+                    android:includeFontPadding="false"
+                    android:text="Groups"
+                    android:textColor="@color/black"
+                    android:textSize="17sp" />
 
                 <Spinner
                     android:id="@+id/spinnerGroup"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawablePadding="7dp"
                     android:entries="@array/profile"
-
-                    android:paddingVertical="8dp"
                     android:textColor="@color/black" />
+
+                <EditText
+                    android:id="@+id/tvGroupEx"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_7sdp"
+                    android:background="@null"
+                    android:hint="add exception"
+                    android:textSize="13sp" />
 
                 <View
                     android:layout_width="match_parent"
@@ -234,6 +329,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/llBlockList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_20sdp"
@@ -245,10 +341,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Blocked Contacts"
-                    android:textSize="18sp"
                     android:textColor="@color/black"
-                    android:drawableEnd="@drawable/menu_arrow_icon"
-                    android:drawablePadding="@dimen/_8sdp"/>
+                    android:textSize="18sp" />
+
+                <!--
+                android:drawableEnd="@drawable/menu_arrow_icon"
+                    android:drawablePadding="@dimen/_8sdp"
+                -->
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvBlockList"
                     android:layout_width="match_parent"
@@ -259,8 +359,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/blockListTg"
                     app:layout_constraintTop_toBottomOf="@+id/blockListTg"
-                    tools:itemCount="5"
-                    tools:listitem="@layout/item_profile_cover" />
+                    tools:listitem="@layout/item_blocked_user" />
 
             </LinearLayout>
 
@@ -270,15 +369,24 @@
                 android:layout_marginTop="@dimen/_20sdp"
                 android:background="@color/white"
                 android:orientation="vertical"
-                android:padding="@dimen/_18sdp">
+                android:paddingHorizontal="@dimen/_15sdp"
+                android:paddingVertical="@dimen/_15sdp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_7sdp"
+                    android:fontFamily="@font/poppins"
+                    android:includeFontPadding="false"
+                    android:text="Who can like my posts"
+                    android:textColor="@color/black"
+                    android:textSize="17sp" />
 
                 <Spinner
-                    android:id="@+id/spinnerLikeMyPost"
+                    android:id="@+id/spinnerLikePost"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawablePadding="7dp"
                     android:entries="@array/profile"
-                    android:paddingVertical="8dp"
                     android:textColor="@color/black" />
 
                 <View
@@ -289,6 +397,252 @@
                     android:layout_marginEnd="3dp"
                     android:background="@color/colorNormalGray" />
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:paddingHorizontal="@dimen/_15sdp"
+                android:paddingVertical="@dimen/_15sdp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_7sdp"
+                    android:fontFamily="@font/poppins"
+                    android:includeFontPadding="false"
+                    android:text="Who can post comment"
+                    android:textColor="@color/black"
+                    android:textSize="17sp" />
+
+                <Spinner
+                    android:id="@+id/spinnerPostComments"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:entries="@array/profile"
+                    android:textColor="@color/black" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="3dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="3dp"
+                    android:background="@color/colorNormalGray" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:paddingHorizontal="@dimen/_15sdp"
+                android:paddingVertical="@dimen/_15sdp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_7sdp"
+                    android:fontFamily="@font/poppins"
+                    android:includeFontPadding="false"
+                    android:text="Who can send me message"
+                    android:textColor="@color/black"
+                    android:textSize="17sp" />
+
+                <Spinner
+                    android:id="@+id/spinnerSendMeMessage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:entries="@array/profile"
+                    android:textColor="@color/black" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="3dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="3dp"
+                    android:background="@color/colorNormalGray" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:paddingHorizontal="@dimen/_15sdp"
+                android:paddingVertical="@dimen/_15sdp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_7sdp"
+                    android:fontFamily="@font/poppins"
+                    android:includeFontPadding="false"
+                    android:text="Who can see my future post"
+                    android:textColor="@color/black"
+                    android:textSize="17sp" />
+
+                <Spinner
+                    android:id="@+id/spinnerSeeMyFuturePost"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:entries="@array/profile"
+                    android:textColor="@color/black" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="3dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="3dp"
+                    android:background="@color/colorNormalGray" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:paddingHorizontal="@dimen/_15sdp"
+                android:paddingVertical="@dimen/_15sdp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_7sdp"
+                    android:fontFamily="@font/poppins"
+                    android:includeFontPadding="false"
+                    android:text="Who can see people, pages, list you follow"
+                    android:textColor="@color/black"
+                    android:textSize="17sp" />
+
+                <Spinner
+                    android:id="@+id/spinnerSeePeoplePageList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:entries="@array/profile"
+                    android:textColor="@color/black" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="3dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="3dp"
+                    android:background="@color/colorNormalGray" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:paddingHorizontal="@dimen/_15sdp"
+                android:paddingVertical="@dimen/_15sdp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_7sdp"
+                    android:fontFamily="@font/poppins"
+                    android:includeFontPadding="false"
+                    android:text="Who can send you friend request"
+                    android:textColor="@color/black"
+                    android:textSize="17sp" />
+
+                <Spinner
+                    android:id="@+id/spinnerSendMeFriendRequest"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:entries="@array/profile"
+                    android:textColor="@color/black" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="3dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="3dp"
+                    android:background="@color/colorNormalGray" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:paddingHorizontal="@dimen/_15sdp"
+                android:paddingVertical="@dimen/_15sdp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_7sdp"
+                    android:fontFamily="@font/poppins"
+                    android:includeFontPadding="false"
+                    android:text="Who can look up email address you provided"
+                    android:textColor="@color/black"
+                    android:textSize="17sp" />
+
+                <Spinner
+                    android:id="@+id/spinnerLookUpEmailAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:entries="@array/profile"
+                    android:textColor="@color/black" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="3dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="3dp"
+                    android:background="@color/colorNormalGray" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:paddingHorizontal="@dimen/_15sdp"
+                android:paddingVertical="@dimen/_15sdp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_7sdp"
+                    android:fontFamily="@font/poppins"
+                    android:includeFontPadding="false"
+                    android:text="Who can look up the phone number you provided"
+                    android:textColor="@color/black"
+                    android:textSize="17sp" />
+
+                <Spinner
+                    android:id="@+id/spinnerLookUpPhoneNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:entries="@array/profile"
+                    android:textColor="@color/black" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="3dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="3dp"
+                    android:background="@color/colorNormalGray" />
+            </LinearLayout>
+
 
         </LinearLayout>
 

@@ -1,6 +1,5 @@
 package com.stalmate.user.networking
 
-import android.util.Log
 import com.google.gson.GsonBuilder
 import com.stalmate.user.base.App
 import com.stalmate.user.utilities.PrefManager
@@ -15,7 +14,7 @@ import java.util.concurrent.TimeUnit
 class RestClient private constructor() {
     var client: OkHttpClient? = null
     var retrofit: Retrofit? = null
-     var mRestService: ApiInterface? = null
+    var mRestService: ApiInterface? = null
 
     /**
      * Here is the setup call for http service for this app. setup is done once in MyApplication class.
@@ -26,27 +25,29 @@ class RestClient private constructor() {
      */
     fun setup() {
         val builder: OkHttpClient.Builder = OkHttpClient.Builder()
-            .connectTimeout(5, TimeUnit.MINUTES)
-            .readTimeout(5, TimeUnit.MINUTES)
-            .writeTimeout(5, TimeUnit.MINUTES)
+            .connectTimeout(60, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(60, TimeUnit.SECONDS)
         // Should be used only in Debug Mode.
         if (true) {
             val interceptor = HttpLoggingInterceptor()
-            interceptor.setLevel(if (true) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE)
+            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
             builder.addInterceptor(interceptor)
         }
-      val gson = GsonBuilder()
+        val gson = GsonBuilder()
             .setLenient()
             .create()
-       // val gson = GsonBuilder().excludeFieldsWithoutExposeAnnotation().create() //now we can use our own variable apart from respones
+        // val gson = GsonBuilder().excludeFieldsWithoutExposeAnnotation().create() //now we can use our own variable apart from respones
 
-        client = if (PrefManager.getInstance(App.getInstance())!!.keyIsLoggedIn){
-            Log.d("tokenn",PrefManager.getInstance(App.getInstance())!!.userDetail.results[0].token)
+        client = if (PrefManager.getInstance(App.getInstance())!!.keyIsLoggedIn) {
             (builder.addInterceptor { chain ->
-                val request = chain.request().newBuilder().addHeader("Authorization", "Bearer ${PrefManager.getInstance(App.getInstance())!!.userDetail.results[0].token}").build()
+                val request = chain.request().newBuilder().addHeader(
+                    "Authorization",
+                    "Bearer ${PrefManager.getInstance(App.getInstance())!!.userDetail.results[0].access_token}"
+                ).build()
                 chain.proceed(request)
             }.build())
-        }else{
+        } else {
             builder.build()
         }
 

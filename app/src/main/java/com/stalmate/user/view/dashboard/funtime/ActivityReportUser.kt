@@ -44,7 +44,7 @@ class ActivityReportUser : BaseActivity(), DialogFilePicker.Callback {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_report_user)
 
 
-        var category = ModelCustumSpinner(id = "0", name = "Select the category")
+        val category = ModelCustumSpinner(id = "0", name = "Select the category")
         categoryList.add(category)
         categoryList.add(ModelCustumSpinner(id = "0", name = "I just don't like it."))
         categoryList.add(ModelCustumSpinner(id = "0", name = "It's spam."))
@@ -189,8 +189,6 @@ class ActivityReportUser : BaseActivity(), DialogFilePicker.Callback {
                 if (it!!.status!!) {
                     makeToast(it.message)
                     finish()
-
-
                 }
             }
         })

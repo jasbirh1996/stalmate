@@ -33,8 +33,6 @@ class BlockedUserAdapter(
             Glide.with(context).load(response.img).circleCrop()
                 .placeholder(R.drawable.user_placeholder).into(binding.ivUserImage)
             // ImageLoaderHelperGlide.setGlideCorner(context,binding.ivUserImage,response.img,R.drawable.user_placeholder)
-
-
             binding.imageView7.setOnClickListener {
                 hitBlockApi(
                     bindingAdapterPosition,

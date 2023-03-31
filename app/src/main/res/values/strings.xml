@@ -682,6 +682,12 @@
     <string name="_95_4_positive_feedback"><font color='#55A9ED'>95.4% </font>Positive feedback</string>
     <string name="lorem_ipsum_dolor_sit_amet_consectetur_adipiscing_elit_sed_do_eiusmod_tempor_incididunt_ut">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut</string>
     <string name="the">The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from</string>
+
+    <string-array name="font_size">
+        <item><font fgcolor="#B7B7B7">Small</font></item>
+        <item><font fgcolor="#B7B7B7">Medium</font></item>
+        <item><font fgcolor="#B7B7B7">Large</font></item>
+    </string-array>
     <string-array name="marrage">
         <item><font fgcolor="#B7B7B7">Marital Status</font></item>
         <item><font fgcolor="#B7B7B7">Single</font></item>
@@ -689,18 +695,15 @@
     </string-array>
     <!--profile-->
     <string-array name="profile">
-        <item><font fgcolor="#B7B7B7">Profile</font></item>
-        <item><font fgcolor="#B7B7B7">My friends</font></item>
+        <item><font fgcolor="#B7B7B7">Only me</font></item>
         <item><font fgcolor="#B7B7B7">Everyone</font></item>
-        <item><font fgcolor="#B7B7B7">Nobody</font></item>
-    </string-array>
-
-    <!--group-->
-    <string-array name="group">
-        <item><font fgcolor="#B7B7B7">Group</font></item>
         <item><font fgcolor="#B7B7B7">My friends</font></item>
-        <item><font fgcolor="#418CFF">My friends except</font></item>
+        <item><font fgcolor="#B7B7B7">Friends of Friends</font></item>
+        <item><font fgcolor="#B7B7B7">My friends excepts</font></item>
         <item><font fgcolor="#B7B7B7">Only share with</font></item>
+        <item><font fgcolor="#B7B7B7">Group</font></item>
+        <item><font fgcolor="#B7B7B7">Nobody</font></item>
+        <item><font fgcolor="#B7B7B7">Turn this off</font></item>
     </string-array>
 
     <string-array name="date">

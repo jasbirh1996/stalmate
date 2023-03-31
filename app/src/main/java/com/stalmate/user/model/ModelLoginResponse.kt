@@ -12,5 +12,5 @@ data class Results(
     val gender: String,
     val id: String,
     val last_name: String,
-    val token: String
+    val access_token: String
 )

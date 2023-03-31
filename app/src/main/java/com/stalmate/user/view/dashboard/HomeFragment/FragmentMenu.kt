@@ -67,15 +67,20 @@ class FragmentMenu(var callback : Callback) : BaseFragment(),  DrawerAdapter.Cal
         data.add(ModelDrawer(R.drawable.ic_menu_logout, "Logout"))
 
 
+        /*Glide.with(requireActivity())
+            .load(PrefManager.getInstance(requireContext())!!.userProfileDetail.results.profile_img1)
+            .placeholder(R.drawable.user_placeholder).circleCrop().into(binding.userProfileImage)*/
         binding.tvUserName.text = PrefManager.getInstance(App.getInstance())!!.userDetail.results[0].first_name + " " +  PrefManager.getInstance(App.getInstance())!!.userDetail.results[0].last_name
 
         drawerAdapter = DrawerAdapter(networkViewModel, requireContext(),this )
 
         binding.rvMenu.adapter = drawerAdapter
         drawerAdapter.submitList(data)
+    }
 
+    override fun onResume() {
+        super.onResume()
         getUserProfileData()
-
     }
 
     public interface Callback{

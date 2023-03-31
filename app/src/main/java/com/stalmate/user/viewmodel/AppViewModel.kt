@@ -23,6 +23,8 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Response
+import retrofit2.http.Field
+import retrofit2.http.Header
 import retrofit2.http.Part
 
 open class AppViewModel : ViewModel() {
@@ -32,10 +34,7 @@ open class AppViewModel : ViewModel() {
     fun <T : Any> getResult(data: MutableLiveData<T?>, call: Call<T>) {
         call.enqueue(object : retrofit2.Callback<T?> {
             override fun onResponse(call: Call<T?>, response: Response<T?>) {
-                Log.d("asdasdas", "spfoksdf")
                 data.value = response.body()
-                Log.d("akjsdasd", Gson().toJson(response.body()))
-
             }
 
             override fun onFailure(call: Call<T?>, t: Throwable) {
@@ -605,6 +604,78 @@ open class AppViewModel : ViewModel() {
                 privacy_data = privacy_data,
                 deviceId = deviceId,
                 deviceToken = deviceToken
+            )
+        )
+    }
+
+    var privacyGetResponse = MutableLiveData<PrivacyUpdateResponse?>()
+    fun getPrivacyResponse(access_token: String) {
+        getResult(
+            data = privacyGetResponse,
+            call = apiInterface.privacyGet(access_token = access_token)
+        )
+    }
+
+    var privacyUpdateResponse = MutableLiveData<PrivacyUpdateResponse?>()
+    fun updatePrivacyResponse(
+        access_token: String,
+        allow_others_to_find_me: Boolean,
+        profile: Int,
+        last_seen: Int,
+        prfile_photo: Int,
+        about: Int,
+        read_receipts: Boolean,
+        story: Int,
+        groups: Int,
+        block_contact: String,
+        who_can_like_my_post: Int,
+        who_can_post_comment: Int,
+        who_can_send_me_message: Int,
+        who_can_see_my_future_post: Int,
+        who_can_see_people_page_list: Int,
+        who_can_send_you_friend_request: Int,
+        who_can_see_email_address: Int,
+        who_can_see_phone_number: Int
+    ) {
+        getResult(
+            data = privacyUpdateResponse, call = apiInterface.privacyUpdate(
+                access_token = access_token,
+                allow_others_to_find_me = allow_others_to_find_me,
+                profile = profile,
+                last_seen = last_seen,
+                prfile_photo = prfile_photo,
+                about = about,
+                read_receipts = read_receipts,
+                story = story,
+                groups = groups,
+                block_contact = block_contact,
+                who_can_like_my_post = who_can_like_my_post,
+                who_can_post_comment = who_can_post_comment,
+                who_can_send_me_message = who_can_send_me_message,
+                who_can_see_my_future_post = who_can_see_my_future_post,
+                who_can_see_people_page_list = who_can_see_people_page_list,
+                who_can_send_you_friend_request = who_can_send_you_friend_request,
+                who_can_see_email_address = who_can_see_email_address,
+                who_can_see_phone_number = who_can_see_phone_number
+            )
+        )
+    }
+
+    var accountSettingGet = MutableLiveData<AccountSettingGetAndPut?>()
+    fun accountSettingGet(access_token: String) {
+        getResult(
+            accountSettingGet,
+            apiInterface.accountSettingsGet(access_token = access_token)
+        )
+    }
+
+    var accountSettingPut = MutableLiveData<AccountSettingGetAndPut?>()
+    fun accountSettingPut(access_token: String, requestBody: AccountSettingGetAndPut.Reponse) {
+        getResult(
+            accountSettingPut,
+            apiInterface.accountSettingsUpdate(
+                access_token = access_token,
+                requestBody = requestBody
             )
         )
     }

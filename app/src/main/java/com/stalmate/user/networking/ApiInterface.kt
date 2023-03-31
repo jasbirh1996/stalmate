@@ -199,7 +199,7 @@ interface ApiInterface {
         @Part("company") company: RequestBody,
         @Part("gender") gender: RequestBody,
         @Part("city") city: RequestBody,
-        @Part("home_town") home_town: RequestBody,
+        @Part("home_town") home_town: RequestBody
     ): Call<CommonModelResponse>
 
     @Multipart
@@ -247,15 +247,15 @@ interface ApiInterface {
     ): Call<CommonModelResponse>
 
     //M8
-    @FormUrlEncoded
-    @POST(Constants.changeNumberApi)
-    fun changeNumberApi(
-        @Header("access_token") access_token: StrictMath,
-        @Field("number_old") number_old: String,
-        @Field("number_new") number_new: String,
-        @Field("notify_contact") notify_contact: Boolean,
-        @Field("number_c_code") number_c_code: String
-    )
+//    @FormUrlEncoded
+//    @POST(Constants.changeNumberApi)
+//    fun changeNumberApi(
+//        @Header("access_token") access_token: StrictMath,
+//        @Field("number_old") number_old: String,
+//        @Field("number_new") number_new: String,
+//        @Field("notify_contact") notify_contact: Boolean,
+//        @Field("number_c_code") number_c_code: String
+//    )
 
     @FormUrlEncoded
     @POST(Constants.changePasswordApi)
@@ -266,16 +266,43 @@ interface ApiInterface {
         @Field("password_confirm") password_confirm: String
     ): Observable<ChangePasswordResponse>
 
-    @GET(Constants.blockUserList)
-    fun blockUserList(@Header("access_token") access_token: String): Observable<BlockUserListResponse>
+//    @GET(Constants.blockUserList)
+//    fun blockUserList(@Header("access_token") access_token: String): Observable<BlockUserListResponse>
 
     @GET(Constants.accountSettings)
-    fun accountSettingsGet(@Header("access_token") access_token: String)
+    fun accountSettingsGet(@Header("access_token") access_token: String): Call<AccountSettingGetAndPut>
 
     @PUT(Constants.accountSettingsUpdate)
     fun accountSettingsUpdate(
-        @Header("access_token") access_token: String, @Body requestBody: AccountSettingUpdateRequest
-    )
+        @Header("access_token") access_token: String,
+        @Body requestBody: AccountSettingGetAndPut.Reponse
+    ): Call<AccountSettingGetAndPut>
+
+    @GET(Constants.GetPrivacy)
+    fun privacyGet(@Header("access_token") access_token: String): Call<PrivacyUpdateResponse>
+
+    @FormUrlEncoded
+    @POST(Constants.UpdatePrivacy)
+    fun privacyUpdate(
+        @Header("access_token") access_token: String,
+        @Field("allow_others_to_find_me") allow_others_to_find_me: Boolean,
+        @Field("profile") profile: Int,
+        @Field("last_seen") last_seen: Int,
+        @Field("prfile_photo") prfile_photo: Int,
+        @Field("about") about: Int,
+        @Field("read_receipts") read_receipts: Boolean,
+        @Field("story") story: Int,
+        @Field("groups") groups: Int,
+        @Field("block_contact") block_contact: String,
+        @Field("who_can_like_my_post") who_can_like_my_post: Int,
+        @Field("who_can_post_comment") who_can_post_comment: Int,
+        @Field("who_can_send_me_message") who_can_send_me_message: Int,
+        @Field("who_can_see_my_future_post") who_can_see_my_future_post: Int,
+        @Field("who_can_see_people_page_list") who_can_see_people_page_list: Int,
+        @Field("who_can_send_you_friend_request") who_can_send_you_friend_request: Int,
+        @Field("who_can_see_email_address") who_can_see_email_address: Int,
+        @Field("who_can_see_phone_number") who_can_see_phone_number: Int
+    ): Call<PrivacyUpdateResponse>
 
     @FormUrlEncoded
     @POST(Constants.deleteMyAccount)
@@ -318,55 +345,4 @@ interface ApiInterface {
         @Part("deviceId") deviceId: RequestBody,
         @Part("deviceToken") deviceToken: RequestBody
     ): Call<CommonModelResponse>
-}
-
-data class AccountSettingUpdateRequest(
-    val call: Call,
-    val chat: Chat,
-    val funtime: Funtime,
-    val games: Games,
-    val groups: Groups,
-    val jobs: Jobs,
-    val page: Page,
-    val post: Post,
-    val setting: Setting
-) {
-    data class Call(
-        val light: String, val notification_tones: String, val popup_tones: Boolean
-    )
-
-    data class Chat(
-        val conversion_tones: Boolean, val light: String, val popup_tones: Boolean
-    )
-
-    data class Funtime(
-        val light: String, val notification_tones: String, val popup_tones: Boolean
-    )
-
-    data class Games(
-        val light: String, val notification_tones: String, val popup_tones: Boolean
-    )
-
-    data class Groups(
-        val broadcast_tones: Boolean,
-        val light: String,
-        val notification_tones: String,
-        val popup_tones: Boolean
-    )
-
-    data class Jobs(
-        val light: String, val notification_tones: String, val popup_tones: Boolean
-    )
-
-    data class Page(
-        val light: String, val notification_tones: String, val popup_tones: Boolean
-    )
-
-    data class Post(
-        val light: String, val notification_tones: String, val popup_tones: Boolean
-    )
-
-    data class Setting(
-        val conversion_tones: Boolean, val light: String, val notification_tones: String
-    )
 }

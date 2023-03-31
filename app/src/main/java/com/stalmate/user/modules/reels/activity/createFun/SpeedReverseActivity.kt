@@ -1,10 +1,7 @@
 package com.stalmate.user.modules.reels.activity.createFun
 
 import android.net.Uri
-import android.os.Bundle
-import android.os.CountDownTimer
-import android.os.Handler
-import android.os.Looper
+import android.os.*
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
+import com.arthenica.mobileffmpeg.FFmpeg
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.SimpleExoPlayer
@@ -24,7 +22,10 @@ import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.google.android.material.tabs.TabLayout
+import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
+import com.stalmate.user.modules.reels.activity.ActivityFilter
+import com.stalmate.user.modules.reels.activity.EXTRA_SONG_ID
 import com.stalmate.user.modules.reels.filters.epf.EPlayerView
 import ly.img.android.pesdk.VideoEditorSettingsList
 import ly.img.android.pesdk.backend.model.EditorSDKResult
@@ -35,8 +36,7 @@ class SpeedReverseActivity : AppCompatActivity() {
 
     private var countDownTimer: CountDownTimer? = null
     lateinit var segmented_progressbar: LinearProgressIndicator
-    private val videoUri: Uri
-        get() = intent.getStringExtra("videoUri").toString().toUri()
+    private lateinit var videoUri: Uri
     private val imageVideoDuration: Int
         get() = intent.getIntExtra("imageVideoDuration", -0)
     lateinit var tabbarspeed: TabLayout
@@ -54,6 +54,7 @@ class SpeedReverseActivity : AppCompatActivity() {
             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
         )
         setContentView(R.layout.activity_speed_reverse)
+        videoUri = intent.getStringExtra("videoUri").toString().toUri()
         initViews()
     }
 
@@ -89,8 +90,21 @@ class SpeedReverseActivity : AppCompatActivity() {
 
         val buttonDone = findViewById<TextView>(R.id.buttonDone)
         buttonDone.setOnClickListener {
-            // In this example, we do not need access to the Uri(s) after the editor is closed
-            // so we pass false in the constructor
+            /*val outputPath = Common.getFilePath(this, Common.VIDEO)
+            findViewById<ProgressBar>(R.id.progressBar).visibility = View.VISIBLE
+            val options: BitmapFactory.Options = BitmapFactory.Options()
+            options.inJustDecodeBounds = true
+            val asyncTask = FFmpegAsyncTask("-i $videoUri " +
+                    "-vf setpts=PTS/${speed}  -crf 23 -preset ultrafast " +
+                    "-vcodec libx264 -c:a aac  $outputPath",
+                object : FFmpegAsyncTask.OnTaskCompleted {
+                    override fun onTaskCompleted(isSuccess: Boolean) {
+                        // In this example, we do not need access to the Uri(s) after the editor is closed
+                        // so we pass false in the constructor
+                        findViewById<ProgressBar>(R.id.progressBar).visibility = View.GONE
+                    }
+                })
+            asyncTask.execute()*/
             val settingsList = VideoEditorSettingsList(false)
                 .configure<LoadSettings> {
                     // Set the source as the Uri of the video to be loaded
@@ -112,6 +126,29 @@ class SpeedReverseActivity : AppCompatActivity() {
         setUpPlayer()
     }
 
+    private class FFmpegAsyncTask(var command: String, var callback: OnTaskCompleted) :
+        AsyncTask<Void?, Void?, Void?>() {
+        protected override fun onPreExecute() {
+            super.onPreExecute()
+
+        }
+
+        protected override fun doInBackground(vararg nc: Void?): Void? {
+            FFmpeg.execute(command);
+            return null
+        }
+
+        protected override fun onPostExecute(v: Void?) {
+            callback.onTaskCompleted(true)
+            super.onPostExecute(v)
+        }
+
+
+        public interface OnTaskCompleted {
+            fun onTaskCompleted(isSuccess: Boolean);
+        }
+    }
+
     private fun setuptabSpeedRecclerview() {
         tabbarspeed = findViewById(R.id.tabbarspeed)
         tabbarspeed.animate().translationX(-1000f).setDuration(0).start()
@@ -124,18 +161,25 @@ class SpeedReverseActivity : AppCompatActivity() {
                 when (tab?.position) {
                     0 -> {
                         speed = 0.5f
+                        createTimer((imageVideoDuration + (imageVideoDuration / 2)))
+                        segmented_progressbar.max = (imageVideoDuration + (imageVideoDuration / 2))
                         hideSpeedBar(show = false)
                     }
                     1 -> {
                         speed = 1f
+                        setupProgressBarWithDuration()
                         hideSpeedBar(show = false)
                     }
                     2 -> {
                         speed = 2f
+                        createTimer((imageVideoDuration - (imageVideoDuration / 2)))
+                        segmented_progressbar.max = (imageVideoDuration - (imageVideoDuration / 2))
                         hideSpeedBar(show = false)
                     }
                     3 -> {
                         speed = 3f
+                        createTimer((imageVideoDuration - (imageVideoDuration / 3)))
+                        segmented_progressbar.max = (imageVideoDuration - (imageVideoDuration / 3))
                         hideSpeedBar(show = false)
                     }
                 }
@@ -210,14 +254,14 @@ class SpeedReverseActivity : AppCompatActivity() {
                 Toast.LENGTH_LONG
             ).show()
             EditorSDKResult.Status.EXPORT_DONE -> {
-                /*startActivity(
+                startActivity(
                     IntentHelper.getCreateFuntimePostScreen(this)!!
-                        .putExtra(ActivityFilter.EXTRA_VIDEO, it.resultUri)
-                        .putExtra(EXTRA_SONG_ID, songId)
-                )*/
+                        .putExtra(ActivityFilter.EXTRA_VIDEO, it.resultUri.toString())
+                        .putExtra(EXTRA_SONG_ID, "")
+                )
                 Toast.makeText(
                     applicationContext,
-                    "Result saved at ${it.resultUri}",
+                    "${it.resultUri}",
                     Toast.LENGTH_LONG
                 ).show()
             }
@@ -261,7 +305,6 @@ class SpeedReverseActivity : AppCompatActivity() {
                 layoutMovieWrapper.addView(playerzview)
                 playerzview.onResume()
             }
-
         }, 500)
         Log.d("aklsjdlasd", "fourth")
     }

@@ -390,12 +390,16 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
 
     private fun createAccountApiCall() {
         var gander_name: String = ""
-        if (GANDER == "1") {
-            gander_name = "Male"
-        } else if (GANDER == "2") {
-            gander_name = "Female"
-        } else if (GANDER == "3") {
-            gander_name = "Others"
+        when (GANDER) {
+            "1" -> {
+                gander_name = "Male"
+            }
+            "2" -> {
+                gander_name = "Female"
+            }
+            "3" -> {
+                gander_name = "Others"
+            }
         }
 
 
@@ -406,7 +410,7 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
         bundle.putString("last_name", binding.etLastName.text.toString())
         bundle.putString("gender", gander_name)
 //        bundle.putString("schoolandcollege", binding.etschoolcollege.text.toString())
-        bundle.putString("dob", selectedYear + "-" + selectedMonth + "-" + selectedDay)
+        bundle.putString("dob", "$selectedYear-$selectedMonth-$selectedDay")
         bundle.putString("year", selectedYear)
         bundle.putString("month", selectedMonth)
         bundle.putString("date", selectedDay)

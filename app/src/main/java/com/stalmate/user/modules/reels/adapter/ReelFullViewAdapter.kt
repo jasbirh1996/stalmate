@@ -290,7 +290,7 @@ class ReelFullViewAdapter(
                                 context.startActivity(IntentHelper.getReportUserScreen(context)!!.putExtra("id",reelList[position].id))
                             }
                             4 -> {
-                                var dialog = CommonConfirmationDialog(
+                                val dialog = CommonConfirmationDialog(
                                     context,
                                     "Block User",
                                     "Are you sure you want to block this user? In future you will not be able to see post or Funtime post of this user.",
