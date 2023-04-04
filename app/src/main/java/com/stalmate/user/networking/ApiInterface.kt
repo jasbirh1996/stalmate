@@ -260,11 +260,11 @@ interface ApiInterface {
     @FormUrlEncoded
     @POST(Constants.changePasswordApi)
     fun changePasswordApi(
-        @Header("access_token") access_token: StrictMath,
+        @Header("access_token") access_token: String,
         @Field("password_old") password_old: String,
         @Field("password_new") password_new: String,
         @Field("password_confirm") password_confirm: String
-    ): Observable<ChangePasswordResponse>
+    ): Call<ChangePasswordResponse>
 
 //    @GET(Constants.blockUserList)
 //    fun blockUserList(@Header("access_token") access_token: String): Observable<BlockUserListResponse>
@@ -313,7 +313,10 @@ interface ApiInterface {
         @Field("number_c_code") number_c_code: String,
         @Field("otp") otp: String,
         @Field("notify_contact") notify_contact: Boolean
-    )
+    ):Call<ChangePasswordResponse>
+
+    @POST(Constants.SendOtp)
+    fun sendOtp(@Header("access_token") access_token: String): Call<OtpReceiveResponse>
 
     @FormUrlEncoded
     @POST(Constants.contactUs)

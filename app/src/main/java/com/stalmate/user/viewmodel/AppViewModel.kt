@@ -679,4 +679,48 @@ open class AppViewModel : ViewModel() {
             )
         )
     }
+
+    var changePasswordResponse = MutableLiveData<ChangePasswordResponse?>()
+    fun changePassword(
+        access_token: String,
+        password_old: String,
+        password_new: String,
+        password_confirm: String
+    ) {
+        getResult(
+            changePasswordResponse, apiInterface.changePasswordApi(
+                access_token = access_token,
+                password_old = password_old,
+                password_new = password_new,
+                password_confirm = password_confirm
+            )
+        )
+    }
+
+    var deleteMyAccountResponse = MutableLiveData<ChangePasswordResponse?>()
+    var sendOtpResponse = MutableLiveData<OtpReceiveResponse?>()
+
+    fun deleteMyAccount(
+        access_token: String,
+        number: String,
+        email: String,
+        number_c_code: String,
+        otp: String,
+        notify_contact: Boolean
+    ) {
+        getResult(
+            deleteMyAccountResponse, apiInterface.deleteMyAccount(
+                access_token = access_token,
+                number = number,
+                email = email,
+                number_c_code = number_c_code,
+                otp = otp,
+                notify_contact = notify_contact
+            )
+        )
+    }
+
+    fun sendOtp(access_token: String) {
+        getResult(sendOtpResponse, apiInterface.sendOtp(access_token = access_token))
+    }
 }

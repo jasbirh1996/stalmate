@@ -136,13 +136,14 @@ object Constants {
     //M8
 //    const val changeNumberApi = "setting_api/change_number"
     const val changePasswordApi = "setting_api/change_password"
-//    const val blockUserList = "setting_api/block_user_get"
+
+    //    const val blockUserList = "setting_api/block_user_get"
     const val accountSettings = "setting_api/myaccount_setting_get"
     const val accountSettingsUpdate = "setting_api/myaccount_setting_update"
     const val deleteMyAccount = "setting_api/myaccount_delete"
     const val contactUs = "setting_api/contact_us"
-    const val SendOtp = "setting_api/send_otp"
-    const val VerifyOTP = "setting_api/verify_otp"
+    const val SendOtp = "auth_api/send_otp"
+    const val VerifyOTP = "auth_api/verify_otp"
     const val UpdatePrivacy = "setting_api/privacy"
     const val GetPrivacy = "setting_api/privacy_get"
 

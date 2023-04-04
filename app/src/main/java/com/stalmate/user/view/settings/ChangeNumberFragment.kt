@@ -6,9 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.stalmate.user.R
+import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentChangeNumberBinding
 
-class ChangeNumberFragment : Fragment() {
+class ChangeNumberFragment : BaseFragment() {
     private var _binding: FragmentChangeNumberBinding? = null
     private val binding get() = _binding!!
 
@@ -27,4 +28,7 @@ class ChangeNumberFragment : Fragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+    }
 }
