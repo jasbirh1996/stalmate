@@ -147,7 +147,7 @@ class ActivityFullViewReels : BaseActivity(), ReelFullViewAdapter.Callback {
                     var list = it.results
 
                     list.forEach {
-                        it.isDataUpdated=false
+                        it.isDataUpdated = false
 
                     }
 
@@ -158,7 +158,7 @@ class ActivityFullViewReels : BaseActivity(), ReelFullViewAdapter.Callback {
                     var list = it.results
 
                     list.forEach {
-                        it.isDataUpdated=false
+                        it.isDataUpdated = false
                     }
 
 
@@ -207,16 +207,15 @@ class ActivityFullViewReels : BaseActivity(), ReelFullViewAdapter.Callback {
     }
 
 
-
     override fun finish() {
         val returnIntent = Intent()
         var updatedList = ArrayList<ResultFuntime>()
         adapter.reelList.forEach {
-            if (it.isDataUpdated!=null) {
-             if (it.isDataUpdated!!){
-                 Log.d("alsjdasdddsddmm",it.isDataUpdated.toString())
-                 updatedList.add(it)
-             }
+            if (it.isDataUpdated != null) {
+                if (it.isDataUpdated!!) {
+                    Log.d("alsjdasdddsddmm", it.isDataUpdated.toString())
+                    updatedList.add(it)
+                }
             }
         }
         returnIntent.putParcelableArrayListExtra("data", updatedList);
@@ -232,40 +231,38 @@ class ActivityFullViewReels : BaseActivity(), ReelFullViewAdapter.Callback {
     private fun hitBlockApi(funtime: ResultFuntime) {
 
         showLoader()
-        val hashMap = HashMap<String, String>()
+        /*val hashMap = HashMap<String, String>()
         hashMap["id_user"] = funtime.user_id!!
-
-        networkViewModel.block(hashMap)
+        networkViewModel.block(hashMap)*/
+        networkViewModel.block(
+            access_token = prefManager?.access_token.toString(),
+            _id = funtime.user_id.toString()
+        )
         networkViewModel.blockData.observe(this, Observer {
-
+            dismissLoader()
             it.let {
-                if (it!!.status == true) {
-                    dismissLoader()
-                var position = adapter.reelList.indexOfFirst { it.id == funtime.id }
-                    Log.d("a;lksdasd", position.toString())
-                    binding.recyclerView.smoothScrollToPosition(position + 1)
-                    Handler(Looper.getMainLooper()).postDelayed(
-                        Runnable {
-
-                            var selectedList=ArrayList<ResultFuntime>()
-                            adapter.reelList.forEach {
-                                if (it.user_id==funtime.user_id){
-                                    selectedList.add(it)
-                                }
+                val position = adapter.reelList.indexOfFirst { it.id == funtime.id }
+                binding.recyclerView.smoothScrollToPosition(position + 1)
+                Handler(Looper.getMainLooper()).postDelayed(
+                    Runnable {
+                        val selectedList = ArrayList<ResultFuntime>()
+                        adapter.reelList.forEach {
+                            if (it.user_id == funtime.user_id) {
+                                selectedList.add(it)
                             }
+                        }
 
-                            selectedList.forEach {
-                                 adapter.reelList.remove(it)
-                            }
+                        selectedList.forEach {
+                            adapter.reelList.remove(it)
+                        }
 
 
 
-                            adapter.blockUserFromList(position) },
-                        500
-                    )
-                }
+                        adapter.blockUserFromList(position)
+                    },
+                    500
+                )
             }
-
         })
 
 
@@ -321,7 +318,7 @@ class ActivityFullViewReels : BaseActivity(), ReelFullViewAdapter.Callback {
         hitBlockApi(resultFuntime)
     }
 
-    var blockLisuUser=ArrayList<ResultFuntime>()
+    var blockLisuUser = ArrayList<ResultFuntime>()
 
 
 }

@@ -21,7 +21,7 @@ import com.stalmate.user.view.dashboard.HomeFragment.Drawer.DrawerAdapter
 import com.stalmate.user.view.dashboard.HomeFragment.Drawer.ModelDrawer
 
 
-class FragmentMenu(var callback : Callback) : BaseFragment(),  DrawerAdapter.Callbackk {
+class FragmentMenu(var callback: Callback) : BaseFragment(), DrawerAdapter.Callbackk {
 
     lateinit var drawerAdapter: DrawerAdapter
     val data = ArrayList<ModelDrawer>()
@@ -38,14 +38,20 @@ class FragmentMenu(var callback : Callback) : BaseFragment(),  DrawerAdapter.Cal
     ): View? {
 
         // Inflate the layout for this fragment
-        binding = DataBindingUtil.bind<FragmentMenuBinding>(inflater.inflate(R.layout.fragment_menu, container, false))!!
+        binding = DataBindingUtil.bind<FragmentMenuBinding>(
+            inflater.inflate(
+                R.layout.fragment_menu,
+                container,
+                false
+            )
+        )!!
         return binding.root
     }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        drawerAdapter = DrawerAdapter(networkViewModel, requireContext(),this)
+        drawerAdapter = DrawerAdapter(networkViewModel, requireContext(), this)
 
         binding.btnBack.setOnClickListener {
             callback.onCLickBackButton()
@@ -70,9 +76,12 @@ class FragmentMenu(var callback : Callback) : BaseFragment(),  DrawerAdapter.Cal
         /*Glide.with(requireActivity())
             .load(PrefManager.getInstance(requireContext())!!.userProfileDetail.results.profile_img1)
             .placeholder(R.drawable.user_placeholder).circleCrop().into(binding.userProfileImage)*/
-        binding.tvUserName.text = PrefManager.getInstance(App.getInstance())!!.userDetail.results[0].first_name + " " +  PrefManager.getInstance(App.getInstance())!!.userDetail.results[0].last_name
+        binding.tvUserName.text =
+            PrefManager.getInstance(App.getInstance())!!.userDetail.results[0].first_name + " " + PrefManager.getInstance(
+                App.getInstance()
+            )!!.userDetail.results[0].last_name
 
-        drawerAdapter = DrawerAdapter(networkViewModel, requireContext(),this )
+        drawerAdapter = DrawerAdapter(networkViewModel, requireContext(), this)
 
         binding.rvMenu.adapter = drawerAdapter
         drawerAdapter.submitList(data)
@@ -83,13 +92,11 @@ class FragmentMenu(var callback : Callback) : BaseFragment(),  DrawerAdapter.Cal
         getUserProfileData()
     }
 
-    public interface Callback{
+    public interface Callback {
         fun onCLickBackButton()
     }
 
     override fun onClickDrawerItem(postId: String) {
-
-
 
 
     }
@@ -109,13 +116,11 @@ class FragmentMenu(var callback : Callback) : BaseFragment(),  DrawerAdapter.Cal
     }
 
     fun setUpAboutUI() {
-
-        binding.tvUserName.text = userData.first_name+ " " +userData.last_name
-
-        if (userData.profile_data[0].profession.isNotEmpty()){
+        binding.tvUserName.text = userData.first_name + " " + userData.last_name
+        if (!userData.profile_data.isNullOrEmpty()) {
             binding.workStatus.visibility = View.VISIBLE
         }
-        if (userData.profile_data[0].location.isNotEmpty()){
+        if (!userData.profile_data.isNullOrEmpty()) {
             binding.locationStatus.visibility = View.VISIBLE
         }
         Glide.with(requireContext()).load(userData.cover_img1)

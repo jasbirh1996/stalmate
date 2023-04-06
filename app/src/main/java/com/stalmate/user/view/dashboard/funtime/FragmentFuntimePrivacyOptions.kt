@@ -141,7 +141,6 @@ class FragmentFuntimePrivacyOptions : BaseFragment() {
             childFragmentManager,
             multiUserSelectFragment!!.tag
         )
-
     }
     
 

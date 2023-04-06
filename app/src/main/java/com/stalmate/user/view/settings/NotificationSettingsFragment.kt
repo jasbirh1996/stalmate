@@ -1,18 +1,15 @@
 package com.stalmate.user.view.settings
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
-import com.stalmate.user.databinding.FragmentAppSettingBinding
 import com.stalmate.user.databinding.FragmentNotification2Binding
 import com.stalmate.user.model.AccountSettingGetAndPut
 import com.stalmate.user.modules.reels.activity.ActivitySettings
 
-class NotificationFragment : BaseFragment() {
+class NotificationSettingsFragment : BaseFragment() {
 
     private var accountSettingGetAndPut = AccountSettingGetAndPut()
     private var _binding: FragmentNotification2Binding? = null

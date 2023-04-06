@@ -5,8 +5,9 @@ import java.util.*
 
 
 object UrlFactory {
-    private const val URL_DEV = "http://157.241.38.111:3000/"/*"https://api-gateway.suzero.co/"*/ // Development
-    private const val URL_PROD = "http://157.241.38.111:3000/"/*"https://api-gateway.suzero.co/"*/ // Live
+    //"https://3089-125-63-93-60.in.ngrok.io/"
+    private const val URL_DEV = "https://webservice.kulluu.com/"//"http://157.241.38.111:3000/"/*"https://api-gateway.suzero.co/"*/ // Development
+    private const val URL_PROD = "https://webservice.kulluu.com/"//"http://157.241.38.111:3000/"/*"https://api-gateway.suzero.co/"*/ // Live
     private const val API_VERSION = "api/v0/"
     const val isModeDevelopment = true
 

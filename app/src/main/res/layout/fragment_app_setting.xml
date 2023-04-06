@@ -162,22 +162,17 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constLanguage"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="80dp"
             android:background="@color/white"
             app:layout_constraintTop_toBottomOf="@+id/constCountry">
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_languauge_appSeting"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="@dimen/_20sdp"
-                android:fontFamily="@font/poppins"
-                android:text="Language"
-                android:textColor="#B7B7B7"
-                android:textSize="16sp"
+            <Spinner
+                android:id="@+id/spinnerLanguage"
+                style="@style/SpinnerTheme1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@color/black"
+                android:paddingStart="15dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -189,9 +184,9 @@
                 android:layout_marginEnd="16dp"
                 android:rotation="180"
                 android:src="@drawable/ic_back_arrow"
-                app:layout_constraintBottom_toBottomOf="@+id/tv_languauge_appSeting"
+                app:layout_constraintBottom_toBottomOf="@+id/spinnerLanguage"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/tv_languauge_appSeting"
+                app:layout_constraintTop_toTopOf="@+id/spinnerLanguage"
                 app:tint="@color/colorGray" />
 
             <View
@@ -200,7 +195,7 @@
                 android:background="@color/colorGray"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/tv_languauge_appSeting" />
+                app:layout_constraintStart_toStartOf="@+id/spinnerLanguage" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

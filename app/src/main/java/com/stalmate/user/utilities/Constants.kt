@@ -13,7 +13,6 @@ object Constants {
     const val URL_OTP = "/auth_api/update_password"
     const val URL_OTP_REGISTRATION = "/auth_api/otp_register_process"
     const val URL_NUMBER_VERIFY_UPDATE = "/auth_api/update_number"
-    const val URL_BLOCKED_LIST = "/friend_api/get_block_user_list"
     const val URL_CATEGORY_LIST = "/friend_api/friend_category_list"
     const val URLFUNTIME_LIST = "/funtime_api/get_funtime_list"
     const val URL_CREATE_ROOM = "/friend_api/group_create"
@@ -65,7 +64,6 @@ object Constants {
     const val UPDATE_PROFILE_API_FILE = "/auth_api/profile_update_file"
     const val UPLOADE_ALBUM_IMAGE_API_FILE = "/auth_api/add_albums_img"
     const val URL_REPORT_FUNTIME = "/funtime_api/funtime_report"
-    const val BLOCK_API = "/friend_api/block_user"
     const val URL_GLOBAL_SEARCH = "/friend_api/search_list"
     const val START_DATE = "01"
     const val ADD_REEL = "/funtime_api/add_funtime"
@@ -133,11 +131,16 @@ object Constants {
     const val SETTING_BLOCKED_CONTACTS: String = "Blocked Contacts"
     const val SETTING_DELETEACCOUNT: String = "Delete my account"
 
+    const val BLOCK_API = "/friend_api/block_user"
+    const val URL_BLOCKED_LIST = "/friend_api/get_block_user_list"
+
     //M8
-//    const val changeNumberApi = "setting_api/change_number"
+    //const val changeNumberApi = "setting_api/change_number"
     const val changePasswordApi = "setting_api/change_password"
 
-    //    const val blockUserList = "setting_api/block_user_get"
+    const val blockUserList = "setting_api/block_user_get"
+    const val BLOCK_API_M8 = "setting_api/block_user_stalmate"
+
     const val accountSettings = "setting_api/myaccount_setting_get"
     const val accountSettingsUpdate = "setting_api/myaccount_setting_update"
     const val deleteMyAccount = "setting_api/myaccount_delete"
@@ -146,6 +149,7 @@ object Constants {
     const val VerifyOTP = "auth_api/verify_otp"
     const val UpdatePrivacy = "setting_api/privacy"
     const val GetPrivacy = "setting_api/privacy_get"
+    const val UpdateLanguageAndCountry = "setting_api/general_setting"
 
     //Feedbacks
     const val saveAsDraft = "funtime_api/add_draft"

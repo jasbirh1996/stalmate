@@ -41,11 +41,13 @@ class ActivityOtherUserProfile : BaseActivity(),
         }
         getUserProfileData()
         val radius = resources.getDimension(R.dimen.dp_10)
-        binding.ivBackground.setShapeAppearanceModel(binding.ivBackground.getShapeAppearanceModel()
-            .toBuilder()
-            .setBottomLeftCorner(CornerFamily.ROUNDED,radius)
-            .setBottomRightCorner(CornerFamily.ROUNDED,radius)
-            .build());
+        binding.ivBackground.setShapeAppearanceModel(
+            binding.ivBackground.getShapeAppearanceModel()
+                .toBuilder()
+                .setBottomLeftCorner(CornerFamily.ROUNDED, radius)
+                .setBottomRightCorner(CornerFamily.ROUNDED, radius)
+                .build()
+        );
 
 
         friendAdapter = ProfileFriendAdapter(networkViewModel, this, this)
@@ -70,7 +72,7 @@ class ActivityOtherUserProfile : BaseActivity(),
 
 
         binding.buttonChat.setOnClickListener {
-            startActivity(IntentHelper.getChatScreen(this)!!.putExtra("id",userData.results.id))
+            startActivity(IntentHelper.getChatScreen(this)!!.putExtra("id", userData.results.id))
         }
 
         setupData()
@@ -159,28 +161,21 @@ class ActivityOtherUserProfile : BaseActivity(),
     private fun hitBlockApi() {
 
         showLoader()
-        val hashMap = HashMap<String, String>()
+        /*val hashMap = HashMap<String, String>()
         hashMap["id_user"] = userId
-
-        networkViewModel.block(hashMap)
+        networkViewModel.block(hashMap)*/
+        networkViewModel.block(access_token = prefManager?.access_token.toString(), _id = userId)
         networkViewModel.blockData.observe(this, Observer {
-
+            dismissLoader()
             it.let {
-                if (it!!.status == true) {
-                    dismissLoader()
-
-                    if (userData.results.isBlocked == 0) {
-                        userData.results.isBlocked = 1
-                    } else {
-                        userData.results.isBlocked = 0
-                    }
-                    networkViewModel.otherUserProfileLiveData.postValue(userData)
+                if (userData.results.isBlocked == 0) {
+                    userData.results.isBlocked = 1
+                } else {
+                    userData.results.isBlocked = 0
                 }
+                networkViewModel.otherUserProfileLiveData.postValue(userData)
             }
-
         })
-
-
     }
 
     override fun onDestroy() {
@@ -274,18 +269,42 @@ class ActivityOtherUserProfile : BaseActivity(),
         binding.layout.tvFollowingCount.text = userData.results.following_count.toString()
         binding.tvUserAbout.text = userData.results.about
         binding.layout.tvFriendCount.text = userData.results.friends_count.toString()
-        ImageLoaderHelperGlide.setGlide(this, binding.ivBackground, userData.results.cover_img1,R.drawable.user_placeholder)
-        ImageLoaderHelperGlide.setGlide(this, binding.ivUserThumb, userData.results.profile_img1,R.drawable.user_placeholder)
+        ImageLoaderHelperGlide.setGlide(
+            this,
+            binding.ivBackground,
+            userData.results.cover_img1,
+            R.drawable.user_placeholder
+        )
+        ImageLoaderHelperGlide.setGlide(
+            this,
+            binding.ivUserThumb,
+            userData.results.profile_img1,
+            R.drawable.user_placeholder
+        )
         var aboutArrayList = ArrayList<AboutProfileLine>()
-      if (userData.results.profile_data[0].profession.isNotEmpty()){
-          aboutArrayList.add(AboutProfileLine(R.drawable.ic_profile_designation_icon, userData.results.profile_data[0].profession[0].designation, userData.results.profile_data[0].profession[0].company_name, "at"))
-      }
-
-        if (userData.results.profile_data[0].education.isNotEmpty()){
-            aboutArrayList.add(AboutProfileLine(R.drawable.ic_profile_graduation, "Student", userData.results.profile_data[0].education[0].sehool, "at"))
+        if (userData.results.profile_data[0].profession.isNotEmpty()) {
+            aboutArrayList.add(
+                AboutProfileLine(
+                    R.drawable.ic_profile_designation_icon,
+                    userData.results.profile_data[0].profession[0].designation,
+                    userData.results.profile_data[0].profession[0].company_name,
+                    "at"
+                )
+            )
         }
 
-        if ( userData.results.profile_data[0].home_town.isNotEmpty()) {
+        if (userData.results.profile_data[0].education.isNotEmpty()) {
+            aboutArrayList.add(
+                AboutProfileLine(
+                    R.drawable.ic_profile_graduation,
+                    "Student",
+                    userData.results.profile_data[0].education[0].sehool,
+                    "at"
+                )
+            )
+        }
+
+        if (userData.results.profile_data[0].home_town.isNotEmpty()) {
 
             aboutArrayList.add(
                 AboutProfileLine(
@@ -308,7 +327,7 @@ class ActivityOtherUserProfile : BaseActivity(),
             )
         }
 
-        if (userData.results.profile_data[0].marital_status.isNotEmpty()){
+        if (userData.results.profile_data[0].marital_status.isNotEmpty()) {
             aboutArrayList.add(
                 AboutProfileLine(
                     R.drawable.ic_profile_heart_icon,
@@ -324,9 +343,9 @@ class ActivityOtherUserProfile : BaseActivity(),
         profileAboutAdapter.submitList(aboutArrayList)
         binding.layout.rvAbout.adapter = profileAboutAdapter
 
-        if (!ValidationHelper.isNull(userData.results.company)){
-            binding.layout.tvWebsite.text=userData.results.company
-            binding.layout.layoutWebsite.visibility=View.VISIBLE
+        if (!ValidationHelper.isNull(userData.results.company)) {
+            binding.layout.tvWebsite.text = userData.results.company
+            binding.layout.layoutWebsite.visibility = View.VISIBLE
         }
 
 

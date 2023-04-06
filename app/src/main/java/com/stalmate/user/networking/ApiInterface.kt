@@ -149,9 +149,15 @@ interface ApiInterface {
     @GET(Constants.GET_PROFILE_API)
     fun setProfileDetails(): Call<ModelUser>
 
-    @POST(Constants.BLOCK_API)
-    fun setBlock(@Body map: HashMap<String, String>): Call<CommonModelResponse>
+//    @POST(Constants.BLOCK_API)
+//    fun setBlock(@Body map: HashMap<String, String>): Call<CommonModelResponse>
 
+    @FormUrlEncoded
+    @POST(Constants.BLOCK_API_M8)
+    fun setBlock(
+        @Header("access_token") access_token: String,
+        @Field("_id") _id: String
+    ): Call<CommonModelResponse>
 
     @GET(Constants.GET_OTHER_USER_PROFILE_API)
     fun getOtherUserProfileDetails(@Query("id_user") id_user: String): Call<ModelUser>
@@ -192,7 +198,8 @@ interface ApiInterface {
         @Part("first_name") firstName: RequestBody,
         @Part("last_name") lastName: RequestBody,
         @Part("about") about: RequestBody,
-        /* @Part("number") number: RequestBody,*/
+        @Part("countrycode") countrycode: RequestBody,
+        @Part("number") number: RequestBody,
         @Part("dob") dob: RequestBody,
         @Part("marital_status") maritalStatus: RequestBody,
         @Part("url") url: RequestBody,
@@ -313,7 +320,7 @@ interface ApiInterface {
         @Field("number_c_code") number_c_code: String,
         @Field("otp") otp: String,
         @Field("notify_contact") notify_contact: Boolean
-    ):Call<ChangePasswordResponse>
+    ): Call<ChangePasswordResponse>
 
     @POST(Constants.SendOtp)
     fun sendOtp(@Header("access_token") access_token: String): Call<OtpReceiveResponse>
@@ -332,6 +339,14 @@ interface ApiInterface {
     fun commentDisable(
         @Header("access_token") access_token: String, @Field("funtime_id") funtime_id: String
     )
+
+    @FormUrlEncoded
+    @POST(Constants.UpdateLanguageAndCountry)
+    fun updateLanguageAndCountry(
+        @Header("access_token") access_token: String,
+        @Field("country") country: String,
+        @Field("language") language: String
+    ): Call<CommonModelResponse>
 
     @Multipart
     @POST(Constants.saveAsDraft)

@@ -6,9 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.google.android.material.snackbar.Snackbar
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentChangePasswordBinding
 import com.stalmate.user.modules.reels.activity.ActivitySettings
+import com.stalmate.user.utilities.ErrorUtil
 
 
 class ChangePasswordFragment : BaseFragment() {
@@ -39,7 +41,12 @@ class ChangePasswordFragment : BaseFragment() {
             ).show()
             (requireActivity() as ActivitySettings).onBackPressed()
         }
-
+        networkViewModel.mThrowable.observe(this.viewLifecycleOwner) {
+            it?.let { it1 ->
+                dismissLoader()
+                Snackbar.make(binding.btnSavePassword, it, Snackbar.LENGTH_SHORT).show()
+            }
+        }
         binding.btnSavePassword.setOnClickListener {
             if (binding.OldPassword.text.toString().trim().isNullOrEmpty()) {
                 Toast.makeText(

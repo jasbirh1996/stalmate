@@ -39,6 +39,7 @@ import com.stalmate.user.model.User
 import com.stalmate.user.utilities.Constants
 import com.stalmate.user.utilities.ImageLoaderHelperGlide
 import com.stalmate.user.utilities.PriceFormatter
+import com.stalmate.user.utilities.SpinnerUtil.setSpinner
 import com.stalmate.user.utilities.ValidationHelper
 import com.stalmate.user.view.dialogs.DialogAddEditEducation
 import com.stalmate.user.view.dialogs.DialogAddEditProfession
@@ -68,7 +69,6 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
     private lateinit var profilePictureAdapter: ProfileAlbumAdapter
     private lateinit var coverPictureAdapter: ProfileAlbumAdapter
     private lateinit var blockedUserAdapter: BlockedUserAdapter
-    private var selectedMarriageStatus = ""
     private lateinit var feedAdapter: AdapterFeed
     var verifyPhoneNumber = ""
     var currentYear = ""
@@ -89,9 +89,6 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
         if (!this::_binding.isInitialized) {
             _binding = FragmentProfileEditBinding.inflate(inflater, container, false)
         }
-        setupSpinnerListener()
-        val cal = Calendar.getInstance()
-        currentYear = (cal.get(Calendar.YEAR) - 13).toString()
         getUserProfileData()
         blockList()
         binding.ivBackground.setOnClickListener {
@@ -223,7 +220,8 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
                                 getBlockList()
                             }
 
-                        })
+                        }, prefManager?.access_token.toString()
+                    )
 
                     if (it.results.isEmpty()) {
                         binding.layoutBlockList.visibility = View.GONE
@@ -252,7 +250,7 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
 
 
     fun getBlockList() {
-        var hashMap = HashMap<String, String>()
+        val hashMap = HashMap<String, String>()
         hashMap.put("limit", "2")
         hashMap.put("page", "1")
         networkViewModel.getBlockList(hashMap)
@@ -260,23 +258,19 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
     }
 
 
-    var selectedDay = "1"
-    var selectedMonth = "January"
-    var selectedYear = "1996"
-    lateinit var dataAdapter: ArrayAdapter<String>
+    var selectedDay = ""
+    var selectedMonth = ""
+    var selectedYear = ""
     fun getUserProfileData() {
-        var hashMap = HashMap<String, String>()
+        val hashMap = HashMap<String, String>()
         networkViewModel.getProfileData(hashMap)
         hashMap.put("limit", "5")
         hashMap.put("page", "1")
         getBlockList()
-
-
         networkViewModel.profileLiveData.observe(requireActivity()) {
             it.let {
                 userData = it!!
                 setUpAboutUI()
-
                 if (it.results.profile_data[0].education.isNotEmpty()) {
                     binding.layout.rvEducation.visibility = View.VISIBLE
                 }
@@ -284,10 +278,9 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
                 if (it.results.profile_data[0].profession.isNotEmpty()) {
                     binding.layout.rvProfession.visibility = View.VISIBLE
                 }
-                /*if (it.results.number.isNotEmpty()){
+                if (!it.results.number.isNullOrEmpty()) {
                     isNumberVerify = true
-                }*/
-
+                }
             }
         }
 
@@ -298,7 +291,6 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
     private lateinit var albumAdapter: SelfProfileAlbumAdapter
 
     fun setUpAboutUI() {
-
         getAlbumPhotosById("profile_img")
         getAlbumPhotosById("cover_img")
 
@@ -306,9 +298,8 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
         binding.layout.etLastName.setText(userData.results.last_name)
         binding.layout.bio.setText(userData.results.about)
         binding.layout.filledTextEmail.text = userData.results.email
-        verifyPhoneNumber = userData.results.number!!
+        verifyPhoneNumber = userData.results.number.toString()
         binding.layout.etNumber.setText(userData.results.number)
-
         binding.layout.etHowTown.setText(userData.results.profile_data[0].home_town)
         binding.layout.etCurrentCity.setText(userData.results.city)
 
@@ -350,84 +341,62 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
         }
 
         setUpAboutUI("Photos")
-        fetchDOB(userData.results.dob!!)
-
+        fetchDOB(userData.results.dob.toString())
     }
 
     fun fetchDOB(date: String) {
-
-        val calender = Calendar.getInstance()
-        val datee = PriceFormatter.getDateObject(date)
-        calender.time = datee
-        selectedYear = calender.get(Calendar.YEAR).toString()
-        //selectedMonth = PriceFormatter.getMonth(date)
-        /*val date = when(date){
-            "0" -> "January"
-            "1" -> "February"
-            "2" -> "March"
-            "3" -> "April"
-            "4" -> "May"
-            "5" -> "June"
-            "6" -> "July"
-            "7" -> "August"
-            "8" -> "September"
-            "9" -> "October"
-            "10" -> "November"
-            "11" -> "December"
-            else -> {
-                "January"
+        GANDER = userData.results.gender.toString()
+        when (userData.results.gender) {
+            "Male" -> {
+                binding.layout.rdmale.isChecked = true
             }
-        }*/
-        selectedMonth = PriceFormatter.getMonth(date)
-        selectedDay = calender.get(Calendar.DATE).toString()
-
-        Log.d("jkabjkcbajb", selectedYear)
-        Log.d("jkabjkcbajb", selectedMonth)
-        Log.d("jkabjkcbajb", selectedDay)
-
-
-        val selectedYearIndex = resources.getStringArray(R.array.year).indexOf(selectedYear)
-        val selectedMonthIndex = resources.getStringArray(R.array.month).indexOf(selectedMonth)
-        Log.d("asdajhksd", selectedMonthIndex.toString())
-        val selectedDayIndex = resources.getStringArray(R.array.date).indexOf(selectedDay)
-
-        binding.layout.spYear.setSelection(selectedYearIndex)
-
-        val selectedMonthIndexs = when (selectedMonthIndex) {
-            0 -> "January"
-            1 -> "February"
-            2 -> "March"
-            3 -> "April"
-            4 -> "May"
-            5 -> "June"
-            6 -> "July"
-            7 -> "August"
-            8 -> "September"
-            9 -> "October"
-            10 -> "November"
-            11 -> "December"
-            else -> {
-                "January"
+            "Female" -> {
+                binding.layout.rdFamel.isChecked = true
+            }
+            "Other" -> {
+                binding.layout.rdOthers.isChecked = true
             }
         }
 
+        try {
+            merriage = userData.results.profile_data[0].marital_status
+            binding.layout.tvmarriage.setSpinner(
+                listFromResources = R.array.marrage,
+                setSelection = resources.getStringArray(R.array.marrage)
+                    .indexOf(userData.results.profile_data[0].marital_status),
+                onItemSelectedListener = {
+                    merriage = binding.layout.tvmarriage.selectedItem.toString()
+                }
+            )
 
-        binding.layout.spMonth.setSelection(selectedMonthIndex)
-        binding.layout.spDate.setSelection(selectedDayIndex)
+            selectedDay = date.replace("/", "").split("-")[2]
+            selectedMonth = date.replace("/", "").split("-")[1]
+            selectedYear = date.replace("/", "").split("-")[0]
 
-        if (userData.results.gender == "Male") {
-            binding.layout.rdmale.isChecked = true
-        } else if (userData.results.gender == "Female") {
-            binding.layout.rdFamel.isChecked = true
-        } else if (userData.results.gender == "Other") {
-            binding.layout.rdOthers.isChecked = true
+            binding.layout.spDate.setSpinner(
+                listFromResources = R.array.date,
+                setSelection = resources.getStringArray(R.array.date).indexOf(selectedDay) + 1,
+                onItemSelectedListener = {
+                    selectedDay = binding.layout.spDate.selectedItem.toString()
+                }
+            )
+            binding.layout.spMonth.setSpinner(
+                listFromResources = R.array.month,
+                setSelection = resources.getStringArray(R.array.month).indexOf(selectedMonth) + 1,
+                onItemSelectedListener = {
+                    selectedMonth = binding.layout.spMonth.selectedItem.toString()
+                }
+            )
+            binding.layout.spYear.setSpinner(
+                listFromResources = R.array.year,
+                setSelection = resources.getStringArray(R.array.year).indexOf(selectedYear) + 1,
+                onItemSelectedListener = {
+                    selectedYear = binding.layout.spYear.selectedItem.toString()
+                }
+            )
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
         }
-
-        val selecteMarriegeStatus = resources.getStringArray(R.array.marrage)
-            .indexOf(userData.results.profile_data[0].marital_status)
-        binding.layout.tvmarriage.setSelection(selecteMarriegeStatus)
-
-
     }
 
     private fun getAlbumPhotosById(id: String) {
@@ -482,123 +451,6 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
             binding.albumLayout.rvPhotoAlbumData.adapter = albumAdapter
             albumAdapter.submitList(userData.results.albums)
 
-        }
-
-    }
-
-    fun setupSpinnerListener() {
-        dataAdapter = ArrayAdapter(
-            requireContext(),
-            android.R.layout.simple_spinner_item,
-            resources.getStringArray(R.array.month)
-        )
-
-        binding.layout.spDate.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                p0: AdapterView<*>?,
-                p1: View?,
-                position: Int,
-                p3: Long
-            ) {
-                selectedDay = p0!!.getItemAtPosition(position).toString()
-                dataAdapter = ArrayAdapter(
-                    requireContext(),
-                    android.R.layout.simple_spinner_item,
-                    resources.getStringArray(R.array.month)
-                )
-
-                if (selectedDay.toInt() == 31) {
-                    dataAdapter = ArrayAdapter(
-                        requireContext(),
-                        android.R.layout.simple_spinner_item,
-                        resources.getStringArray(R.array.monthOfthreeOne)
-                    )
-                }
-
-
-                if (selectedDay.toInt() == 30) {
-                    dataAdapter = ArrayAdapter(
-                        requireContext(),
-                        android.R.layout.simple_spinner_item,
-                        resources.getStringArray(R.array.monthOfThirty)
-                    )
-                }
-
-                if (selectedDay.toInt() == 28) {
-                    dataAdapter = ArrayAdapter(
-                        requireContext(),
-                        android.R.layout.simple_spinner_item,
-                        resources.getStringArray(R.array.monthOfTwentyEight)
-                    )
-                }
-
-
-                // Drop down layout style - list view with radio button
-                dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-                // attaching data adapter to spinner
-                binding.layout.spMonth.adapter = dataAdapter
-
-            }
-
-            override fun onNothingSelected(p0: AdapterView<*>?) {
-
-            }
-        }
-
-        binding.layout.spMonth.onItemSelectedListener =
-            object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    p0: AdapterView<*>?,
-                    p1: View?,
-                    position: Int,
-                    p3: Long
-                ) {
-                    selectedMonth = p0!!.getItemAtPosition(position).toString()
-                    Log.d("jcaujc", selectedMonth)
-                }
-
-                override fun onNothingSelected(p0: AdapterView<*>?) {
-
-                }
-
-            }
-
-
-        binding.layout.spYear.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                p0: AdapterView<*>?,
-                p1: View?,
-                position: Int,
-                p3: Long
-            ) {
-                selectedYear = p0!!.getItemAtPosition(position).toString()
-                Log.d("jcaujc", selectedYear)
-            }
-
-            override fun onNothingSelected(p0: AdapterView<*>?) {
-
-            }
-        }
-
-        binding.layout.tvmarriage.onItemSelectedListener = object :
-            AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View,
-                position: Int,
-                id: Long
-            ) {
-                try {
-                    selectedMarriageStatus = parent!!.getItemAtPosition(position).toString()
-                    merriage = selectedMarriageStatus
-                } catch (e: NullPointerException) {
-                    Log.d("478exception", e.message.toString())
-                }
-
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
     }
@@ -658,19 +510,16 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
 
 
         binding.btnCrateAccount.setOnClickListener {
-
-            if (ValidationHelper.isNull(selectedMarriageStatus)) {
+            if (ValidationHelper.isNull(merriage)) {
                 makeToast("Please select marriage Status")
-            } else if (currentYear < selectedYear) {
+            } else if (Calendar.getInstance()[Calendar.YEAR] < selectedYear.toInt()) {
                 makeToast("Your age should be 13 years or more")
             } else if (verifyPhoneNumber.isNotEmpty()) {
-
                 if (verifyPhoneNumber == binding.layout.etNumber.text.toString()) {
                     updateProfileApiHit()
                 } else {
                     makeToast("Please verify the mobile number")
                 }
-
             } else {
                 makeToast("Please verify the mobile number")
             }
@@ -714,18 +563,13 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
             dialogAddEditProfession.show()
         }
 
-
         binding.layout.btnverify.setOnClickListener {
-
             if (binding.layout.etNumber.text.toString().isNotEmpty()) {
-
                 if (binding.layout.etNumber.text!!.length >= 8) {
-
                     val hashMap = HashMap<String, String>()
                     hashMap["number"] = binding.layout.etNumber.text.toString()
                     networkViewModel.numberVerify(hashMap)
                     networkViewModel.numberVerifyData.observe(requireActivity()) {
-
                         it.let {
                             if (it!!.status == true) {
                                 var dialoguenumberVerify = DialogVerifyNumber(
@@ -746,43 +590,38 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
             } else {
                 makeToast(getString(R.string.please_enter_mobile_number))
             }
-
         }
-
     }
 
     private fun updateProfileApiHit() {
-
         fun getRequestBody(str: String?): RequestBody =
             RequestBody.create("text/plain".toMediaTypeOrNull(), str.toString())
 
-        networkViewModel.etsProfileApi(
-            getRequestBody(binding.layout.etName.text.toString()),
-            getRequestBody(binding.layout.etLastName.text.toString()),
-            getRequestBody(binding.layout.bio.text.toString()),
-            /*getRequestBody(binding.layout.etNumber.text.toString()),*/
-            getRequestBody(selectedYear + "-" + selectedMonth + "-" + selectedDay),
-            getRequestBody(merriage),
-            getRequestBody(binding.layout.etHowTown.text.toString()),
-            getRequestBody(binding.layout.etCurrentCity.text.toString()),
-            getRequestBody(""),
-            getRequestBody(binding.etWebsite.text.toString()),
-            getRequestBody(GANDER),
+        networkViewModel.etsProfileApi1(
+            first_name = getRequestBody(binding.layout.etName.text.toString()),
+            last_name = getRequestBody(binding.layout.etLastName.text.toString()),
+            about = getRequestBody(binding.layout.bio.text.toString()),
+            countrycode = getRequestBody(binding.layout.ccpMObile.selectedCountryCode.toString()),
+            number = getRequestBody(binding.layout.etNumber.text.toString()),
+            dob = getRequestBody("$selectedDay-$selectedMonth-$selectedYear"),
+            marital_status = getRequestBody(merriage),
+            home_town = getRequestBody(binding.layout.etHowTown.text.toString()),
+            city = getRequestBody(binding.layout.etCurrentCity.text.toString()),
+            url = getRequestBody(binding.etWebsite.text.toString()),
+            company = getRequestBody(prefManager?.country.toString()),
+            gender = getRequestBody(GANDER)
         )
 
         networkViewModel.UpdateProfileLiveData.observe(requireActivity()) {
-
             it.let {
-//                makeToast(it!!.message)
+//              makeToast(it!!.message)
                 var hashMap = HashMap<String, String>()
                 networkViewModel.getProfileData(hashMap)
                 // onBackPressed()
                 makeToast(it!!.message)
-
             }
         }
     }
-
 
     private fun startCrop() {
         // start picker to get image for cropping and then use the image in cropping activity

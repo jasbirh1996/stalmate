@@ -21,13 +21,12 @@ import com.stalmate.user.networking.RestClient
 import okhttp3.CacheControl
 import java.io.File
 
-class App :Application(){
+class App : Application() {
 
     var simpleAppCache: SimpleCache? = null
 
 
     companion object {
-        private var appContext: Context? = null
         private var gson: Gson? = null
         private var geocoder: Geocoder? = null
         private var applicationInstance: App? = null
@@ -35,6 +34,7 @@ class App :Application(){
             return applicationInstance!!
         }
     }
+
     private val TAG = "appp"
     var firebaseToken: String? = null
 
@@ -42,21 +42,7 @@ class App :Application(){
     fun onCreate() {
         super.onCreate()
         applicationInstance = this
-        appContext = this
-
         setUpForPreCaching()
-
-
-
-
-
-
-
-
-
-
-
-
 
         RestClient.inst.setup()
         gson = Gson()
@@ -66,7 +52,7 @@ class App :Application(){
         /*      FacebookSdk.sdkInitialize(getApplicationContext());
               AppEventsLogger.activateApp(this);
    */
-        FirebaseMessaging.getInstance().getToken()
+        FirebaseMessaging.getInstance().token
             .addOnCompleteListener(OnCompleteListener<String?> { task ->
                 if (!task.isSuccessful) {
                     Log.w(TAG, "Fetching FCM registration token failed", task.exception)
@@ -80,7 +66,6 @@ class App :Application(){
                 Log.d(TAG, token!!)
             })
     }
-
 
 
     @JvmName("getFirebaseToken1")
@@ -115,7 +100,7 @@ class App :Application(){
         }
     }*/
 
-    fun setupApis(){
+    fun setupApis() {
         RestClient.inst.setup()
     }
 
@@ -172,11 +157,12 @@ class App :Application(){
             if (!cache.exists()) {
                 cache.mkdirs()
             }
-          Handler(Looper.myLooper()!!).post {
-              simpleCache = SimpleCache(cache, leastRecentlyUsedCacheEvictor, exoDatabaseProvider!!)
-              simpleAppCache= simpleCache
-          }
-        }else{
+            Handler(Looper.myLooper()!!).post {
+                simpleCache =
+                    SimpleCache(cache, leastRecentlyUsedCacheEvictor, exoDatabaseProvider!!)
+                simpleAppCache = simpleCache
+            }
+        } else {
             if (simpleCache!!.cacheSpace >= 400207768) {
                 freeMemory()
             }

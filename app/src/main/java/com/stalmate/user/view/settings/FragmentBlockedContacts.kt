@@ -37,7 +37,7 @@ class FragmentBlockedContacts : BaseFragment() {
         binding.toolbar.tvhead.text = "Blocked Contacts"
 
         binding.toolbar.topAppBar.setNavigationOnClickListener {
-         requireActivity().supportFragmentManager.popBackStack()
+            requireActivity().supportFragmentManager.popBackStack()
 
         }
         getBlockLIst()
@@ -68,7 +68,8 @@ class FragmentBlockedContacts : BaseFragment() {
                             override fun onItemRemove() {
                                 getBlockLIst()
                             }
-                        })
+                        }, prefManager?.access_token.toString()
+                    )
                     binding.rvList.layoutManager = LinearLayoutManager(requireContext())
                     binding.rvList.adapter = blockedUserAdapter
 

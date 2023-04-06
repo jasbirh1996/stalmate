@@ -2,14 +2,18 @@ package com.stalmate.user.viewmodel
 
 
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.slatmate.user.model.CommonModelResponse
 import com.stalmate.user.base.App
 import com.stalmate.user.model.*
 import com.stalmate.user.networking.ApiInterface
+import com.stalmate.user.utilities.ErrorBean
+import com.stalmate.user.utilities.ErrorUtil
 import com.stalmate.user.view.dashboard.Friend.categorymodel.AddCategoryModel
 import com.stalmate.user.view.dashboard.Friend.categorymodel.ModelCategoryResponse
 import com.stalmate.user.view.dashboard.funtime.ModelFuntimeLikeResponse
@@ -19,6 +23,7 @@ import com.stalmate.user.view.photoalbum.ModelAlbumCreateResponse
 import com.stalmate.user.view.photoalbum.ModelPhotoResponse
 import com.stalmate.user.view.photoalbum.imageshowindex.ModelPhotoIndexDataResponse
 import com.stalmate.user.view.singlesearch.ModelSearch
+import okhttp3.Callback
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
@@ -30,19 +35,26 @@ import retrofit2.http.Part
 open class AppViewModel : ViewModel() {
 
     var apiInterface = ApiInterface.init(App.getInstance())
-
+    val mThrowable = MutableLiveData<String?>()
     fun <T : Any> getResult(data: MutableLiveData<T?>, call: Call<T>) {
         call.enqueue(object : retrofit2.Callback<T?> {
             override fun onResponse(call: Call<T?>, response: Response<T?>) {
-                data.value = response.body()
+                if (response.code() in 200..299) {
+                    data.value = response.body()
+                } else {
+
+                    mThrowable.value = Gson().fromJson(
+                        response.errorBody()?.string(),
+                        ErrorBean::class.java
+                    ).message
+                }
             }
 
             override fun onFailure(call: Call<T?>, t: Throwable) {
-                data.value = null
+
             }
         })
     }
-
 
     var feedLiveData: LiveData<ModelFeed?> = MutableLiveData<ModelFeed?>()
     fun getFeedList(token: String, map: HashMap<String, String>) {
@@ -50,7 +62,6 @@ open class AppViewModel : ViewModel() {
         feedLiveData = temp
         getResult(temp, apiInterface.getFeedList())
     }
-
 
     var languageLiveData: LiveData<ModelLanguageResponse?> =
         MutableLiveData<ModelLanguageResponse?>()
@@ -467,11 +478,12 @@ open class AppViewModel : ViewModel() {
     var UpdateProfileLiveData: LiveData<CommonModelResponse?> =
         MutableLiveData<CommonModelResponse?>()
 
-    fun etsProfileApi(
+    fun etsProfileApi1(
         @Part("first_name") first_name: RequestBody,
         @Part("last_name") last_name: RequestBody,
         @Part("about") about: RequestBody,
-        /* @Part("number") number: RequestBody,*/
+        @Part("countrycode") countrycode: RequestBody,
+        @Part("number") number: RequestBody,
         @Part("dob") dob: RequestBody,
         @Part("marital_status") marital_status: RequestBody,
         @Part("home_town") home_town: RequestBody,
@@ -479,25 +491,24 @@ open class AppViewModel : ViewModel() {
         @Part("url") url: RequestBody,
         @Part("company") company: RequestBody,
         @Part("gender") gender: RequestBody,
-
-
-        ) {
+    ) {
         val temp = MutableLiveData<CommonModelResponse?>()
         UpdateProfileLiveData = temp
 
         getResult(
             temp, apiInterface.updateUserProfile(
-                first_name,
-                last_name,
-                about,
-                /*number,*/
-                dob,
-                marital_status,
-                url,
-                company,
-                gender,
-                city,
-                home_town,
+                firstName = first_name,
+                lastName = last_name,
+                about = about,
+                countrycode = countrycode,
+                number = number,
+                dob = dob,
+                maritalStatus = marital_status,
+                url = url,
+                company = company,
+                gender = gender,
+                city = city,
+                home_town = home_town,
             )
         )
 
@@ -525,12 +536,20 @@ open class AppViewModel : ViewModel() {
 
 
     var blockData: LiveData<CommonModelResponse?> = MutableLiveData<CommonModelResponse?>()
-    fun block(map: HashMap<String, String>) {
+    /*fun block(map: HashMap<String, String>) {
         val temp = MutableLiveData<CommonModelResponse?>()
         blockData = temp
         getResult(temp, apiInterface.setBlock(map))
-    }
+    }*/
 
+    fun block(
+        access_token: String,
+        _id: String
+    ) {
+        val temp = MutableLiveData<CommonModelResponse?>()
+        blockData = temp
+        getResult(temp, apiInterface.setBlock(access_token = access_token, _id = _id))
+    }
 
     var albumLiveData: LiveData<ModelAlbumsResponse?> = MutableLiveData<ModelAlbumsResponse?>()
 
@@ -722,5 +741,20 @@ open class AppViewModel : ViewModel() {
 
     fun sendOtp(access_token: String) {
         getResult(sendOtpResponse, apiInterface.sendOtp(access_token = access_token))
+    }
+
+    var updateLanguageAndCountryResponse = MutableLiveData<CommonModelResponse?>()
+    fun updateLanguageAndCountry(
+        access_token: String,
+        country: String,
+        language: String
+    ) {
+        getResult(
+            updateLanguageAndCountryResponse, apiInterface.updateLanguageAndCountry(
+                access_token = access_token,
+                country = country,
+                language = language
+            )
+        )
     }
 }

@@ -10,11 +10,14 @@ import com.stalmate.user.databinding.ItemAppSettingBinding
 import kotlinx.android.parcel.Parcelize
 import java.io.Serializable
 
-class AppSettingAdapter(var appSettingList: ArrayList<AppSettingMenuModel>) :
+class AppSettingAdapter(
+    var appSettingList: ArrayList<AppSettingMenuModel>,
+    val onClickSetting: (name: String) -> Unit
+) :
     RecyclerView.Adapter<AppSettingAdapter.ViewHolder>() {
     class ViewHolder(var binding: ItemAppSettingBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(appsetting: AppSettingMenuModel) {
-           binding.tvUserNameAppSetting.text=appsetting.name
+            binding.tvUserNameAppSetting.text = appsetting.name
         }
     }
 
@@ -31,6 +34,9 @@ class AppSettingAdapter(var appSettingList: ArrayList<AppSettingMenuModel>) :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(appSettingList[position])
+        holder.itemView.setOnClickListener {
+            onClickSetting(appSettingList[position].name)
+        }
     }
 
     override fun getItemCount(): Int {
@@ -38,4 +44,5 @@ class AppSettingAdapter(var appSettingList: ArrayList<AppSettingMenuModel>) :
     }
 
 }
+
 data class AppSettingMenuModel(var name: String)

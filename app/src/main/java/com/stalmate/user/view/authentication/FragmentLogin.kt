@@ -45,7 +45,6 @@ class FragmentLogin : BaseFragment() {
     }
 
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -104,11 +103,9 @@ class FragmentLogin : BaseFragment() {
             }
         }
 
-        CustumEditText.setup(binding.filledTextEmail,binding.etEmail)
-        CustumEditText.setup(binding.filledTextPassword,binding.etPassword)
+        CustumEditText.setup(binding.filledTextEmail, binding.etEmail)
+        CustumEditText.setup(binding.filledTextPassword, binding.etPassword)
     }
-
-
 
 
     private fun hitLoginApi() {
@@ -123,13 +120,21 @@ class FragmentLogin : BaseFragment() {
         binding.progressBar.visibility = View.VISIBLE
         networkViewModel.login(hashMap)
         networkViewModel.loginData.observe(requireActivity()) {
-
             it?.let {
                 val message = it.message
-
                 if (it.status) {
                     PrefManager.getInstance(requireContext())!!.keyIsLoggedIn = true
                     PrefManager.getInstance(requireContext())!!.userDetail = it
+                    PrefManager.getInstance(App.getInstance())
+                        ?.setStringValue(
+                            key = "language",
+                            value = if (!it.results?.get(0)?.language.isNullOrEmpty()) it.results?.get(0)?.language else "English"
+                        )
+                    PrefManager.getInstance(App.getInstance())
+                        ?.setStringValue(
+                            key = "country",
+                            value = if (!it.results?.get(0)?.country.isNullOrEmpty()) it.results?.get(0)?.country else "IN"
+                        )
                     App.getInstance().setupApis()
                     binding.progressBar.visibility = View.GONE
                     startActivity(IntentHelper.getDashboardScreen(context))
@@ -159,8 +164,6 @@ class FragmentLogin : BaseFragment() {
         }
         return true
     }
-
-
 
 
 }

@@ -9,15 +9,16 @@ import com.stalmate.user.databinding.ItemAboutSettingBinding
 import com.stalmate.user.databinding.ItemAppSettingBinding
 
 
-class AboutSettingAdapter(var context: Context,var aboutUsSettingList: ArrayList<AboutUsSettingMenuModel>) :
+class AboutSettingAdapter(
+    var context: Context,
+    var aboutUsSettingList: ArrayList<AboutUsSettingMenuModel>,
+    val onCLick: (name: String) -> Unit
+) :
     RecyclerView.Adapter<AboutSettingAdapter.ViewHolder>() {
     class ViewHolder(var binding: ItemAboutSettingBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(aboutussetting: AboutUsSettingMenuModel, context: Context) {
-            binding.aboutUsSetting.text=aboutussetting.name
+            binding.aboutUsSetting.text = aboutussetting.name
             Glide.with(context).load(aboutussetting.image).into(binding.ivAbout)
-
-
-
         }
     }
 
@@ -33,7 +34,10 @@ class AboutSettingAdapter(var context: Context,var aboutUsSettingList: ArrayList
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(aboutUsSettingList[position],context)
+        holder.bind(aboutUsSettingList[position], context)
+        holder.itemView.setOnClickListener {
+            onCLick(aboutUsSettingList[position].name)
+        }
     }
 
     override fun getItemCount(): Int {
@@ -41,4 +45,5 @@ class AboutSettingAdapter(var context: Context,var aboutUsSettingList: ArrayList
     }
 
 }
-data class AboutUsSettingMenuModel(var name: String,var image:Int)
+
+data class AboutUsSettingMenuModel(var name: String, var image: Int)

@@ -12,5 +12,7 @@ data class Results(
     val gender: String,
     val id: String,
     val last_name: String,
-    val access_token: String
+    val access_token: String,
+    var language: String = "English",
+    var country: String = "IN"
 )

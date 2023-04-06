@@ -53,7 +53,7 @@ class ActivityBlockContacts : BaseActivity() {
                             override fun onItemRemove() {
 
                             }
-                        })
+                        }, accessToken = prefManager?.access_token.toString())
                     binding.rvList.layoutManager = LinearLayoutManager(this)
                     binding.rvList.adapter = blockedUserAdapter
 

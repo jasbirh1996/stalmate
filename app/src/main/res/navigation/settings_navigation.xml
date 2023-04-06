@@ -76,7 +76,7 @@
     </fragment>
     <fragment
         android:id="@+id/notificationFragment"
-        android:name="com.stalmate.user.view.settings.NotificationFragment"
+        android:name="com.stalmate.user.view.settings.NotificationSettingsFragment"
         android:label="fragment_notification2"
         tools:layout="@layout/fragment_notification2" />
     <fragment

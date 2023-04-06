@@ -2,7 +2,7 @@ package com.stalmate.user.model
 
 data class ModelLanguageResponse(
     val message: String,
-    val results: List<Result>,
+    val results: ArrayList<Result>,
     val status: Boolean
 )
 

@@ -7,10 +7,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.c2m.storyviewer.utils.showToast
+import com.google.android.material.snackbar.Snackbar
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentDeleteMyAccountBinding
 import com.stalmate.user.modules.reels.activity.ActivitySettings
+import com.stalmate.user.utilities.ErrorUtil
 import com.stalmate.user.view.authentication.ActivityAuthentication
 
 
@@ -41,6 +43,12 @@ class DeleteMyAccountFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        networkViewModel.mThrowable.observe(this.viewLifecycleOwner) {
+            it?.let { it1 ->
+                dismissLoader()
+                Snackbar.make(binding.btnDeleteMyAccount, it, Snackbar.LENGTH_SHORT).show()
+            }
+        }
         networkViewModel.sendOtpResponse.observe(this.viewLifecycleOwner) {
             if (it?.reponse != null) {
                 otp = it.reponse.otp.toString()
@@ -50,7 +58,12 @@ class DeleteMyAccountFragment : BaseFragment() {
             dismissLoader()
             if (it?.message?.contains("Invlid", true) == false) {
                 requireActivity().showToast("Your account has been deleted successfully.")
-                startActivity(Intent(this.requireActivity(), ActivityAuthentication::class.java))
+                startActivity(
+                    Intent(
+                        this.requireActivity(),
+                        ActivityAuthentication::class.java
+                    )
+                )
                 requireActivity().finishAffinity()
             }
         }

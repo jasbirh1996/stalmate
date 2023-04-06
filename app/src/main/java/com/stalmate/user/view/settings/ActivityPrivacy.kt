@@ -3,6 +3,7 @@ package com.stalmate.user.view.settings
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseActivity
@@ -10,6 +11,7 @@ import com.stalmate.user.databinding.FragmentProfilePrivacySettingsBinding
 import com.stalmate.user.model.PrivacyUpdateResponse
 import com.stalmate.user.model.User
 import com.stalmate.user.modules.reels.activity.ActivitySettings
+import com.stalmate.user.utilities.ErrorUtil
 import com.stalmate.user.utilities.SpinnerUtil.setSpinner
 import com.stalmate.user.view.profile.BlockedUserAdapter
 
@@ -27,6 +29,7 @@ class ActivityPrivacy : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
+        showLoader()
         networkViewModel.getPrivacyResponse(prefManager?.access_token.toString())
     }
 
@@ -34,11 +37,19 @@ class ActivityPrivacy : BaseActivity() {
         binding.topAppBar.setNavigationOnClickListener {
             onBackPressed()
         }
+        networkViewModel.mThrowable.observe(this) {
+            it?.let { it1 ->
+                dismissLoader()
+                Snackbar.make(binding.llPrivacy, it, Snackbar.LENGTH_SHORT).show()
+            }
+            setPrivacy()
+        }
         networkViewModel.privacyGetResponse.observe(this) {
+            dismissLoader()
             if (it?.reponse != null) {
                 privacyUpdateResponse?.reponse = it.reponse
-                setPrivacy()
             }
+            setPrivacy()
         }
         networkViewModel.privacyUpdateResponse.observe(this) {
             Toast.makeText(this, "Updated!", Toast.LENGTH_SHORT).show()
@@ -65,7 +76,7 @@ class ActivityPrivacy : BaseActivity() {
 
                 rvBlockList.adapter = BlockedUserAdapter(
                     networkViewModel,
-                    applicationContext,
+                    this@ActivityPrivacy,
                     object : BlockedUserAdapter.Callback {
                         override fun onListEmpty() {
                             llBlockList.visibility = View.GONE
@@ -74,7 +85,8 @@ class ActivityPrivacy : BaseActivity() {
                         override fun onItemRemove() {
 
                         }
-                    })
+                    }, prefManager?.access_token.toString()
+                )
                 if (it.block_contact.isNullOrEmpty()) {
                     llBlockList.visibility = View.GONE
                 } else {
@@ -93,79 +105,100 @@ class ActivityPrivacy : BaseActivity() {
                 }
                 (rvBlockList.adapter as BlockedUserAdapter).submitList(blockUserList)
 
-                spinnerProfile.setSpinner(R.array.profile, it.profile) { position ->
+                spinnerProfile.setSpinner(
+                    listFromResources = R.array.profile,
+                    setSelection = it.profile
+                ) { position ->
                     it.profile = position
                     updatePrivacyResponse()
                 }
-                spinnerLastSeen.setSpinner(R.array.profile, it.last_seen) { position ->
+                spinnerLastSeen.setSpinner(
+                    listFromResources = R.array.profile,
+                    setSelection = it.last_seen
+                ) { position ->
                     it.last_seen = position
                     updatePrivacyResponse()
                 }
-                spinnerProfilePhoto.setSpinner(R.array.profile, it.prfile_photo) { position ->
+                spinnerProfilePhoto.setSpinner(
+                    listFromResources = R.array.profile,
+                    setSelection = it.prfile_photo
+                ) { position ->
                     it.prfile_photo = position
                     updatePrivacyResponse()
                 }
-                spinnerAbout.setSpinner(R.array.profile, it.about) { position ->
+                spinnerAbout.setSpinner(
+                    listFromResources = R.array.profile,
+                    setSelection = it.about
+                ) { position ->
                     it.about = position
                     updatePrivacyResponse()
                 }
-                spinnerStory.setSpinner(R.array.profile, it.story) { position ->
+                spinnerStory.setSpinner(
+                    listFromResources = R.array.profile,
+                    setSelection = it.story
+                ) { position ->
                     it.story = position
                     updatePrivacyResponse()
                 }
-                spinnerGroup.setSpinner(R.array.profile, it.groups) { position ->
+                spinnerGroup.setSpinner(
+                    listFromResources = R.array.profile,
+                    setSelection = it.groups
+                ) { position ->
                     it.groups = position
                     updatePrivacyResponse()
                 }
-                spinnerLikePost.setSpinner(R.array.profile, it.who_can_like_my_post) { position ->
+                spinnerLikePost.setSpinner(
+                    listFromResources = R.array.profile,
+                    setSelection = it.who_can_like_my_post
+                ) { position ->
                     it.who_can_like_my_post = position
                     updatePrivacyResponse()
                 }
                 spinnerPostComments.setSpinner(
-                    R.array.profile,
-                    it.who_can_post_comment
+                    listFromResources = R.array.profile,
+                    setSelection = it.who_can_post_comment
                 ) { position ->
                     it.who_can_post_comment = position
                     updatePrivacyResponse()
                 }
                 spinnerSendMeMessage.setSpinner(
-                    R.array.profile,
-                    it.who_can_send_me_message
+                    listFromResources = R.array.profile,
+                    setSelection = it.who_can_send_me_message
                 ) { position ->
                     it.who_can_send_me_message = position
                     updatePrivacyResponse()
                 }
                 spinnerSeeMyFuturePost.setSpinner(
-                    R.array.profile,
-                    it.who_can_see_my_future_post
+                    listFromResources = R.array.profile,
+                    setSelection = it.who_can_see_my_future_post
                 ) { position ->
                     it.who_can_see_my_future_post = position
                     updatePrivacyResponse()
                 }
                 spinnerSeePeoplePageList.setSpinner(
-                    R.array.profile,
-                    it.who_can_see_people_page_list
+                    listFromResources = R.array.profile,
+                    setSelection = it.who_can_see_people_page_list
                 ) { position ->
                     it.who_can_see_people_page_list = position
                     updatePrivacyResponse()
                 }
                 spinnerSendMeFriendRequest.setSpinner(
-                    R.array.profile,
-                    it.who_can_send_you_friend_request
+                    listFromResources = R.array.profile,
+                    setSelection = it.who_can_send_you_friend_request
                 ) { position ->
                     it.who_can_send_you_friend_request = position
                     updatePrivacyResponse()
                 }
                 spinnerLookUpEmailAddress.setSpinner(
-                    R.array.profile,
-                    it.who_can_see_email_address
+                    listFromResources = R.array.profile,
+                    setSelection = it.who_can_see_email_address
                 ) { position ->
                     it.who_can_see_email_address = position
                     updatePrivacyResponse()
                 }
                 spinnerLookUpPhoneNumber.setSpinner(
-                    R.array.profile,
-                    it.who_can_see_phone_number
+                    listFromResources = R.array.profile,
+                    setSelection = it.who_can_see_phone_number
                 ) { position ->
                     it.who_can_see_phone_number = position
                     updatePrivacyResponse()

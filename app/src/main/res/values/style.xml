@@ -53,7 +53,17 @@
         <item name="android:background">@drawable/style_spinner</item>
     </style>
 
+    <style name="SpinnerTheme1" parent="android:Widget.Spinner">
+        <item name="android:background">@drawable/style_spinner1</item>
+    </style>
 
+    <style name="MyBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/MYBottomSheetStyle</item>
+    </style>
+
+    <style name="MYBottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@android:color/transparent</item>
+    </style>
 
 
 
@@ -161,7 +171,5 @@
     <style name="ChatBackground" parent="AppTheme">
         <item name="android:windowBackground">@drawable/whatsapp_dark_background</item>
     </style>
-
-
 
 </resources>

@@ -11,14 +11,17 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.stalmate.user.R
+import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.databinding.ItemBlockedUserBinding
 import com.stalmate.user.model.User
+import com.stalmate.user.view.settings.ActivityBlockContacts
 import com.stalmate.user.viewmodel.AppViewModel
 
 class BlockedUserAdapter(
     val viewModel: AppViewModel,
     val context: Context,
-    val callback: Callback
+    val callback: Callback,
+    val accessToken: String
 ) : RecyclerView.Adapter<BlockedUserAdapter.AlbumViewHolder>() {
 
     var list = ArrayList<User>()
@@ -26,7 +29,6 @@ class BlockedUserAdapter(
 
     inner class AlbumViewHolder(var binding: ItemBlockedUserBinding) :
         RecyclerView.ViewHolder(binding.root) {
-
         @SuppressLint("SetTextI18n")
         fun bind(response: User) {
             binding.tvUserName.text = response.first_name + " " + response.last_name
@@ -41,32 +43,31 @@ class BlockedUserAdapter(
                 )
             }
         }
-
-
     }
 
     interface Callback {
         fun onListEmpty()
         fun onItemRemove()
     }
+
     @SuppressLint("NotifyDataSetChanged")
     private fun hitBlockApi(position: Int, id: String, owner: LifecycleOwner) {
-        val hashMap = HashMap<String, String>()
+        /*val hashMap = HashMap<String, String>()
         hashMap["id_user"] = id
+        viewModel.block(hashMap)*/
 
-        viewModel.block(hashMap)
+        viewModel.block(
+            access_token = accessToken,
+            _id = id
+        )
         viewModel.blockData.observe(owner) {
-
             it.let {
-                if (it!!.status!!) {
-                    Log.d("a;ksjdasd","alksjdlasd")
-                    list.removeAt(position)
-                    notifyItemRemoved(position)
-                 /*   notifyDataSetChanged()*/
-                    callback.onItemRemove()
-                    if (list.isEmpty()) {
-                        callback.onListEmpty()
-                    }
+                list.removeAt(position)
+                notifyItemRemoved(position)
+                /*   notifyDataSetChanged()*/
+                callback.onItemRemove()
+                if (list.isEmpty()) {
+                    callback.onListEmpty()
                 }
             }
         }

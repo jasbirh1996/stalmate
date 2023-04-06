@@ -43,7 +43,6 @@ class ActivityReportUser : BaseActivity(), DialogFilePicker.Callback {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_report_user)
 
-
         val category = ModelCustumSpinner(id = "0", name = "Select the category")
         categoryList.add(category)
         categoryList.add(ModelCustumSpinner(id = "0", name = "I just don't like it."))
@@ -72,7 +71,7 @@ class ActivityReportUser : BaseActivity(), DialogFilePicker.Callback {
 
         binding.layoutPick.setOnClickListener {
 
-            var dialog = DialogFilePicker(this )
+            var dialog = DialogFilePicker(this)
             val manager: FragmentManager = getSupportFragmentManager()
             dialog.show(manager, "asdasd")
 
@@ -96,7 +95,7 @@ class ActivityReportUser : BaseActivity(), DialogFilePicker.Callback {
             if (this::file.isInitialized) {
 
                 report()
-            }else{
+            } else {
                 makeToast("Please Upload a File First...")
             }
 
@@ -115,7 +114,7 @@ class ActivityReportUser : BaseActivity(), DialogFilePicker.Callback {
             val uriContent = result.uriContent
             var uriFilePath = result.getUriFilePath(this) // optional usage
 
-            file=File(uriFilePath)
+            file = File(uriFilePath)
 
 
         } else {
@@ -146,10 +145,12 @@ class ActivityReportUser : BaseActivity(), DialogFilePicker.Callback {
 
         if (requestCode == 10) {
 
-            file=File(com.stalmate.user.modules.reels.audioVideoTrimmer.utils.FileUtils.getPath(
-                this,
-                data!!.data
-            ))
+            file = File(
+                com.stalmate.user.modules.reels.audioVideoTrimmer.utils.FileUtils.getPath(
+                    this,
+                    data!!.data
+                )
+            )
 
         }
 
@@ -195,9 +196,9 @@ class ActivityReportUser : BaseActivity(), DialogFilePicker.Callback {
     }
 
     override fun onClickOnFilePicker(isFilePicker: Boolean) {
-        if (isFilePicker){
+        if (isFilePicker) {
             pickFile()
-        }else{
+        } else {
             startCrop()
         }
     }

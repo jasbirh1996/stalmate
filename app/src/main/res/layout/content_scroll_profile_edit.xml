@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -250,15 +250,15 @@
                 android:id="@+id/radio_group"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:layout_marginTop="10dp"
+                android:orientation="horizontal"
                 app:layout_constraintTop_toBottomOf="@+id/gender">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
-                    android:layout_height="match_parent"
                     android:weightSum="3">
 
                     <RadioButton
@@ -338,38 +338,49 @@
                 android:background="@color/grey1"
                 app:layout_constraintTop_toBottomOf="@+id/filledTextEmail" />
 
-
-            <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/etNumber"
-                style="@style/customEditbox"
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/llMObile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@null"
-                android:drawableStart="@drawable/ic_profile_mobile_icon"
-                android:drawablePadding="8dp"
-                android:hint="@string/mobile_number"
-                android:inputType="number"
-                android:maxLength="16"
-                android:maxLines="1"
-                android:paddingTop="10dp"
-                android:textColor="@color/black"
-                android:textSize="14sp"
+                android:gravity="center"
+                android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="@+id/radio_group"
                 app:layout_constraintStart_toStartOf="@+id/radio_group"
-                app:layout_constraintTop_toBottomOf="@+id/view7" />
+                app:layout_constraintTop_toBottomOf="@+id/view7">
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/btnverify"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:fontFamily="@font/poppins"
-                android:text="Verify"
-                android:textSize="12sp"
-                app:layout_constraintBottom_toBottomOf="@+id/etNumber"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/etNumber" />
+                <com.hbb20.CountryCodePicker
+                    android:id="@+id/ccpMObile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:ccp_showFlag="false"
+                    app:ccp_showNameCode="false" />
 
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/etNumber"
+                    style="@style/customEditbox"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:drawableStart="@drawable/ic_profile_mobile_icon"
+                    android:drawablePadding="8dp"
+                    android:hint="@string/mobile_number"
+                    android:inputType="number"
+                    android:maxLength="16"
+                    android:maxLines="1"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/btnverify"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="8dp"
+                    android:fontFamily="@font/poppins"
+                    android:gravity="center"
+                    android:text="Verify"
+                    android:textSize="12sp" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
             <View
                 android:id="@+id/view6"
@@ -377,7 +388,7 @@
                 android:layout_height="1dp"
                 android:layout_marginTop="5dp"
                 android:background="@color/grey1"
-                app:layout_constraintTop_toBottomOf="@+id/etNumber" />
+                app:layout_constraintTop_toBottomOf="@+id/llMObile" />
 
             <!--   <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/filledTextProfedession"
@@ -557,7 +568,6 @@
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 
     </ScrollView>
