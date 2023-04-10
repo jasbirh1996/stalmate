@@ -93,7 +93,16 @@
         android:id="@+id/deleteMyAccountFragment"
         android:name="com.stalmate.user.view.settings.DeleteMyAccountFragment"
         android:label="fragment_delete_my_account"
-        tools:layout="@layout/fragment_delete_my_account" />
+        tools:layout="@layout/fragment_delete_my_account">
+        <action
+            android:id="@+id/action_deleteMyAccountFragment_to_otpAccountDelete"
+            app:destination="@id/otpAccountDelete" />
+    </fragment>
+    <fragment
+        android:id="@+id/otpAccountDelete"
+        android:name="com.stalmate.user.view.settings.DeleteAccountOtpFragment"
+        android:label="fragment_o_t_p_enter_delete_account"
+        tools:layout="@layout/fragment_o_t_p_enter_delete_account" />
     <fragment
         android:id="@+id/changePasswordFragment"
         android:name="com.stalmate.user.view.settings.ChangePasswordFragment"

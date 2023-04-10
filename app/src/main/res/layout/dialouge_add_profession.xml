@@ -169,15 +169,16 @@
                 </LinearLayout>
 
 
-                <androidx.appcompat.widget.AppCompatRadioButton
+                <androidx.appcompat.widget.AppCompatCheckBox
                     android:id="@+id/radioButtonCurrentWork"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="-5dp"
                     android:layout_marginTop="16dp"
-                    android:buttonTint="@color/grey1"
+                    android:button="@drawable/radio_button_drawable1"
                     android:text="@string/currently_working_here"
                     android:textColor="@color/grey1"
+                    android:checked="true"
+                    android:paddingStart="@dimen/_10sdp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/workPeriod" />

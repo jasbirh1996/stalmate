@@ -6,6 +6,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.navigation.fragment.findNavController
 import com.c2m.storyviewer.utils.showToast
 import com.google.android.material.snackbar.Snackbar
 import com.stalmate.user.R
@@ -46,7 +48,7 @@ class DeleteMyAccountFragment : BaseFragment() {
         networkViewModel.mThrowable.observe(this.viewLifecycleOwner) {
             it?.let { it1 ->
                 dismissLoader()
-                Snackbar.make(binding.btnDeleteMyAccount, it, Snackbar.LENGTH_SHORT).show()
+                Toast.makeText(this.requireContext(), it, Toast.LENGTH_SHORT).show()
             }
         }
         networkViewModel.sendOtpResponse.observe(this.viewLifecycleOwner) {
@@ -57,15 +59,11 @@ class DeleteMyAccountFragment : BaseFragment() {
         networkViewModel.deleteMyAccountResponse.observe(this.viewLifecycleOwner) {
             dismissLoader()
             if (it?.message?.contains("Invlid", true) == false) {
-                requireActivity().showToast("Your account has been deleted successfully.")
-                startActivity(
-                    Intent(
-                        this.requireActivity(),
-                        ActivityAuthentication::class.java
-                    )
-                )
-                requireActivity().finishAffinity()
+                findNavController().navigate(R.id.action_deleteMyAccountFragment_to_otpAccountDelete)
             }
+        }
+        binding.backDeleteAccount.setOnClickListener {
+            findNavController().popBackStack()
         }
         binding.ChangeCountryName.setOnCountryChangeListener {
             binding.tvChangeFlage.setText(binding.ChangeCountryName.selectedCountryEnglishName.toString())

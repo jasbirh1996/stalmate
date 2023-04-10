@@ -119,6 +119,7 @@
                 android:id="@+id/layoutDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingVertical="@dimen/_5sdp"
                 app:layout_constraintTop_toBottomOf="@+id/bio">
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -176,7 +177,7 @@
                         android:id="@+id/spMonth"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-
+                        android:layout_marginStart="@dimen/_15sdp"
                         android:background="@null"
                         android:entries="@array/month"
                         android:padding="0dp"
@@ -207,6 +208,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@null"
+                        android:layout_marginStart="@dimen/_15sdp"
                         android:entries="@array/year"
                         android:padding="0dp"
                         app:layout_constraintStart_toStartOf="parent"
@@ -454,20 +456,19 @@
                 android:id="@+id/appCompatImageView19"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
                 android:src="@drawable/ic_profile_heart_icon"
                 app:layout_constraintBottom_toBottomOf="@+id/tvmarriage"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/etNumber" />
+                app:layout_constraintTop_toTopOf="@+id/tvmarriage" />
 
             <Spinner
                 android:id="@+id/tvmarriage"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
                 android:drawablePadding="7dp"
-                android:entries="@array/marrage"
                 android:paddingVertical="8dp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginStart="@dimen/_10sdp"
                 android:textColor="@color/black"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/appCompatImageView19"
@@ -477,8 +478,8 @@
                 android:id="@+id/view_mar"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginTop="10dp"
                 android:background="#B7B7B7"
+                android:layout_marginTop="@dimen/_5sdp"
                 app:layout_constraintTop_toBottomOf="@+id/tvmarriage" />
 
 

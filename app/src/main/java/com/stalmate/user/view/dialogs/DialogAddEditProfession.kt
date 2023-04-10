@@ -32,7 +32,7 @@ class DialogAddEditProfession(
     private val context: Context,
     var profession: Profession,
     var viewModel: AppViewModel,
-    var isEdit:Boolean,
+    var isEdit: Boolean,
     var callbackk: Callbackk
 ) {
     private var dialog: Dialog? = null
@@ -43,9 +43,6 @@ class DialogAddEditProfession(
     var endYear = ""
     var startMonth = ""
     var endMonth = ""
-    var radioButtonWorking = false
-
-
     var isDialogShowing = false
         private set
 
@@ -54,7 +51,7 @@ class DialogAddEditProfession(
         dialog = Dialog(context)
         dialog!!.requestWindowFeature(Window.FEATURE_NO_TITLE)
         val view = LayoutInflater.from(context).inflate(R.layout.dialouge_add_profession, null)
-        binding= DataBindingUtil.bind(view)!!;
+        binding = DataBindingUtil.bind(view)!!;
         dialog!!.setContentView(binding.root);
         dialog!!.setCancelable(false)
         dialog!!.show()
@@ -68,23 +65,27 @@ class DialogAddEditProfession(
 
             dialog!!.window!!.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
             dialog!!.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            dialog!!.window!!.setLayout(DialogAddEditProfession.getWidth(context) / 100 * 90, LinearLayout.LayoutParams.WRAP_CONTENT)
+            dialog!!.window!!.setLayout(
+                DialogAddEditProfession.getWidth(context) / 100 * 90,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
 
             dialog!!.window!!.setDimAmount(0.5f)
             //dialog.getWindow().setLayout(ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT);
         }
 
         // Display Selected date in textbox
-        val dateSetListener = DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-            startCal.set(Calendar.YEAR, year)
-            startCal.set(Calendar.MONTH, monthOfYear)
-            startCal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+        val dateSetListener =
+            DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+                startCal.set(Calendar.YEAR, year)
+                startCal.set(Calendar.MONTH, monthOfYear)
+                startCal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
 
                 val myFormat = "dd-MM-yyyy" // mention the format you need
                 val sdf = SimpleDateFormat(myFormat, Locale.US)
 
-                   startYear = year.toString()
-                   startMonth = monthOfYear.toString()
+                startYear = year.toString()
+                startMonth = monthOfYear.toString()
 
                 binding.tvCdFrom.text = sdf.format(startCal.time)
             }
@@ -99,16 +100,17 @@ class DialogAddEditProfession(
         }
 
         // Display Selected End date in textbox
-        val dateEndSetListener = DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-            endCal.set(Calendar.YEAR, year)
-            endCal.set(Calendar.MONTH, monthOfYear)
-            endCal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+        val dateEndSetListener =
+            DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+                endCal.set(Calendar.YEAR, year)
+                endCal.set(Calendar.MONTH, monthOfYear)
+                endCal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
 
                 val myFormat = "dd-MM-yyyy" // mention the format you need
                 val sdf = SimpleDateFormat(myFormat, Locale.US)
 
-            endYear = year.toString()
-            endMonth = monthOfYear.toString()
+                endYear = year.toString()
+                endMonth = monthOfYear.toString()
                 binding.tvCdTo.text = sdf.format(endCal.time)
             }
 
@@ -122,45 +124,44 @@ class DialogAddEditProfession(
         }
 
         binding.btnSave.setOnClickListener {
-            if (isValid()){
+            if (isValid()) {
 
 
-                if (isValidDates(binding.tvCdFrom.text.toString(),binding.tvCdTo.text.toString())){
+                if (isValidDates(
+                        binding.tvCdFrom.text.toString(),
+                        binding.tvCdTo.text.toString()
+                    )
+                ) {
                     hitAddEditApi()
-                }else{
+                } else {
                     makeToast("End Date Must be greater than start date")
                 }
 
-              //
+                //
                 Log.d("=================================", startYear)
                 Log.d("=================================", endYear)
                 Log.d("=================================", startMonth)
                 Log.d("=================================", endMonth)
 
-             /*   if (startYear < endYear){
-                    hitAddEditApi()
-                }
+                /*   if (startYear < endYear){
+                       hitAddEditApi()
+                   }
 
-                if(startYear == endYear){
-                    if (startMonth < endMonth){
-                        hitAddEditApi()
-                    }else {
-                        makeToast("End working date should be grater")
-                    }
-                }*/
+                   if(startYear == endYear){
+                       if (startMonth < endMonth){
+                           hitAddEditApi()
+                       }else {
+                           makeToast("End working date should be grater")
+                       }
+                   }*/
             }
         }
 
-        binding.radioButtonCurrentWork.setOnClickListener {
-            if (!radioButtonWorking){
-                radioButtonWorking = true
-                binding.radioButtonCurrentWork.isChecked=true
-                binding.tvCdTo.isClickable = false
-                binding.viewTo.visibility= View.VISIBLE
-            }else{
-                radioButtonWorking = false
-                binding.radioButtonCurrentWork.isChecked=false
-                binding.viewTo.visibility= View.GONE
+        binding.radioButtonCurrentWork.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                binding.viewTo.visibility = View.VISIBLE
+            } else {
+                binding.viewTo.visibility = View.GONE
             }
         }
 
@@ -168,19 +169,12 @@ class DialogAddEditProfession(
             dismiss()
         }
 
-        if (isEdit){
+        if (isEdit) {
             binding.etCompany.setText(profession.company_name)
-
-          if (profession.currently_working_here=="Yes"){
-              binding.radioButtonCurrentWork.isChecked=true
-              binding.tvCdTo.isClickable = false
-              radioButtonWorking = true
-          }
-
+            binding.radioButtonCurrentWork.isChecked = (profession.currently_working_here == "Yes")
             binding.tvCdTo.setText(profession.to)
             binding.tvCdFrom.setText(profession.from)
             binding.etDesignation.setText(profession.designation)
-
         }
     }
 
@@ -188,7 +182,6 @@ class DialogAddEditProfession(
         isDialogShowing = false
         dialog!!.dismiss()
     }
-
 
 
     companion object {
@@ -200,54 +193,56 @@ class DialogAddEditProfession(
         }
     }
 
-     interface  Callbackk{
+    interface Callbackk {
         fun onSuccessfullyEditedProfession(profession: Profession)
     }
 
-    fun hitAddEditApi(){
+    fun hitAddEditApi() {
 
 
         val hashMap = HashMap<String, String>()
 
-        if (isEdit){
-            hashMap["id"] =profession._id
+        if (isEdit) {
+            hashMap["id"] = profession._id
         }
 
-        profession.to=binding.tvCdTo.text.toString()
-        profession.from=binding.tvCdFrom.text.toString()
-        profession.company_name=binding.etCompany.text.toString()
-        profession.designation=binding.etDesignation.text.toString()
-        profession.currently_working_here=if (binding.radioButtonCurrentWork.isChecked) "Yes" else "No"
+        profession.to = binding.tvCdTo.text.toString()
+        profession.from = binding.tvCdFrom.text.toString()
+        profession.company_name = binding.etCompany.text.toString()
+        profession.designation = binding.etDesignation.text.toString()
+        profession.currently_working_here =
+            if (binding.radioButtonCurrentWork.isChecked) "Yes" else "No"
 
 
-        hashMap["company_name"] =profession.company_name
-        hashMap["currently_working_here"] =profession.currently_working_here
-        hashMap["to"] =profession.to
+        hashMap["company_name"] = profession.company_name
+        hashMap["currently_working_here"] = profession.currently_working_here
+        hashMap["to"] = profession.to
         hashMap["from"] = profession.from
         hashMap["designation"] = profession.designation
 
         viewModel.addUpdateProfessionData(hashMap)
-        viewModel.addUpdateProfessionLiveData.observe( (binding.root.context as? LifecycleOwner)!!){
+        viewModel.addUpdateProfessionLiveData.observe((binding.root.context as? LifecycleOwner)!!) {
             it?.let {
-                if (it.status){
-                   callbackk.onSuccessfullyEditedProfession(profession)
+                if (it.status) {
+                    callbackk.onSuccessfullyEditedProfession(profession)
                     dismiss()
                 }
             }
         }
     }
-    fun isValid():Boolean{
-        if (binding.etCompany.text.isEmpty()){
+
+    fun isValid(): Boolean {
+        if (binding.etCompany.text.isEmpty()) {
             makeToast("Please Enter Company Name")
             return false
-        }else if (binding.etDesignation.text.isEmpty()){
+        } else if (binding.etDesignation.text.isEmpty()) {
             makeToast("Please Enter Desigantion")
             return false
-        }else if (binding.tvCdFrom.text.isEmpty()){
+        } else if (binding.tvCdFrom.text.isEmpty()) {
             makeToast("Please Enter Starting Date")
             return false
-        }else if (!binding.radioButtonCurrentWork.isChecked){
-            if (binding.tvCdTo.text.isEmpty()){
+        } else if (!binding.radioButtonCurrentWork.isChecked) {
+            if (binding.tvCdTo.text.isEmpty()) {
                 makeToast("Please Enter End Date")
                 return false
             }
@@ -256,13 +251,12 @@ class DialogAddEditProfession(
         return true
     }
 
-    fun makeToast(message:String){
-        Toast.makeText(context,message,Toast.LENGTH_SHORT).show()
+    fun makeToast(message: String) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 
-    fun isValidDates(startDate:String,endDate:String): Boolean {
-        Log.d("klajsdlasd",binding.radioButtonCurrentWork.isChecked.toString())
-        if (!binding.radioButtonCurrentWork.isChecked){
+    fun isValidDates(startDate: String, endDate: String): Boolean {
+        if (!binding.radioButtonCurrentWork.isChecked) {
             val dateFormat = SimpleDateFormat(
                 "dd-MM-yyyy"
             )
@@ -271,12 +265,11 @@ class DialogAddEditProfession(
             convertedDate = dateFormat.parse(startDate)
             convertedDate2 = dateFormat.parse(endDate)
 
-            Log.d("klajsdlasd",convertedDate2.after(convertedDate).toString())
+            Log.d("klajsdlasd", convertedDate2.after(convertedDate).toString())
 
             return convertedDate2.after(convertedDate)
         }
         return true
-
 
 
     }

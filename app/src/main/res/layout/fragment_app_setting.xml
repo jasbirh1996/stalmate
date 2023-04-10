@@ -88,8 +88,8 @@
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/icon_mute_chat"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
                 android:layout_marginEnd="16dp"
                 android:rotation="180"
                 android:src="@drawable/ic_back_arrow"
@@ -138,8 +138,8 @@
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/icon_country"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
                 android:layout_marginEnd="16dp"
                 android:rotation="180"
                 android:src="@drawable/ic_back_arrow"
@@ -179,8 +179,8 @@
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/icon_language"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
                 android:layout_marginEnd="16dp"
                 android:rotation="180"
                 android:src="@drawable/ic_back_arrow"
@@ -218,6 +218,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
+            android:paddingBottom="@dimen/_10sdp"
             app:layout_constraintTop_toBottomOf="@+id/rvListAppSeting">
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -227,12 +228,10 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="10dp"
-                android:layout_marginBottom="@dimen/_20sdp"
                 android:fontFamily="@font/poppins"
                 android:text="Font Size"
                 android:textColor="@color/black"
                 android:textSize="16sp"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -254,11 +253,24 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_10sdp"
                 android:layout_marginEnd="@dimen/_5sdp"
+                style="@style/SpinnerTheme1"
                 android:entries="@array/font_size"
                 android:textColor="#B7B7B7"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_Font_appSeting" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/icon_language1"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_marginEnd="16dp"
+                android:rotation="180"
+                android:src="@drawable/ic_back_arrow"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_Font_appSeting"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/tv_Font_appSeting"
+                app:tint="@color/colorGray" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -303,8 +315,8 @@
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/icon_Logout"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
                 android:layout_marginEnd="16dp"
                 android:rotation="180"
                 android:src="@drawable/ic_back_arrow"

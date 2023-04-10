@@ -1,5 +1,6 @@
 package com.stalmate.user.view.settings
 
+import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
@@ -19,8 +20,10 @@ import com.stalmate.user.R
 import com.stalmate.user.base.App
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentAppSettingBinding
+import com.stalmate.user.modules.reels.activity.ActivitySettings
 import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.utilities.SpinnerUtil.setSpinner
+import com.stalmate.user.view.authentication.ActivityAuthentication
 import com.stalmate.user.view.dashboard.Chat.FragmentNotification
 import com.stalmate.user.view.dashboard.funtime.ActivityReportUser
 import ly.img.android.pesdk.kotlin_extension.IntentHelper
@@ -54,6 +57,21 @@ class AppSettingFragment : BaseFragment() {
     }
 
     private fun initControl() {
+        binding.toolbar.topAppBar.setOnClickListener {
+            findNavController().popBackStack()
+        }
+        binding.toolbar.tvhead.text = "General Settings"
+        binding.constLogout.setOnClickListener {
+            PrefManager.getInstance(this.requireContext())?.keyIsLoggedIn = false
+            requireActivity().startActivity(
+                Intent(
+                    context,
+                    ActivityAuthentication::class.java
+                ).putExtra("screen", "login")
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            )
+            (context as ActivitySettings).finishAffinity()
+        }
         networkViewModel.languageLiveData(HashMap())
         networkViewModel.languageLiveData.observe(requireActivity()) {
             it.let {

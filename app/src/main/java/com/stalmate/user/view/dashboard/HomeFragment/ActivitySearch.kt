@@ -30,10 +30,12 @@ class ActivitySearch : BaseActivity() {
     var searchData = ""
     override fun onClick(viewId: Int, view: View?) {
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_search)
-        navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_container) as NavHostFragment
+        navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_container) as NavHostFragment
         navController = navHostFragment.navController
         //syncBroadcastReceiver()
         binding.ivBack.setOnClickListener {
@@ -47,7 +49,6 @@ class ActivitySearch : BaseActivity() {
         binding.etSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
-
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 if (p0 != null) {
                     searchData = p0.toString()
@@ -60,14 +61,14 @@ class ActivitySearch : BaseActivity() {
                     }
                 }
             }
-
             override fun afterTextChanged(p0: Editable?) {
 
             }
         })
         binding.etSearch.requestFocus()
-        val imm: InputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.showSoftInput( binding.etSearch, InputMethodManager.SHOW_IMPLICIT)
+        val imm: InputMethodManager =
+            getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInput(binding.etSearch, InputMethodManager.SHOW_IMPLICIT)
     }
 
     override fun onDestroy() {

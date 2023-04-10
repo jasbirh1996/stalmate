@@ -15,6 +15,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
@@ -29,6 +30,7 @@ import com.google.android.material.shape.CornerFamily
 import com.google.android.material.tabs.TabLayout
 import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
+import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.commonadapters.AdapterFeed
 import com.stalmate.user.databinding.FragmentProfileEditBinding
@@ -365,31 +367,41 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
                 setSelection = resources.getStringArray(R.array.marrage)
                     .indexOf(userData.results.profile_data[0].marital_status),
                 onItemSelectedListener = {
-                    merriage = binding.layout.tvmarriage.selectedItem.toString()
+                    merriage =
+                        if ("Marital Status" != binding.layout.tvmarriage.selectedItem.toString())
+                            binding.layout.tvmarriage.selectedItem.toString()
+                        else {
+                            Toast.makeText(
+                                this.requireContext(),
+                                "Select marital status",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            ""
+                        }
                 }
             )
 
-            selectedDay = date.replace("/", "").split("-")[2]
-            selectedMonth = date.replace("/", "").split("-")[1]
-            selectedYear = date.replace("/", "").split("-")[0]
+            selectedDay = date.split("-")[0]
+            selectedMonth = date.split("-")[1]
+            selectedYear = date.split("-")[2]
 
             binding.layout.spDate.setSpinner(
                 listFromResources = R.array.date,
-                setSelection = resources.getStringArray(R.array.date).indexOf(selectedDay) + 1,
+                setSelection = resources.getStringArray(R.array.date).indexOf(selectedDay),
                 onItemSelectedListener = {
                     selectedDay = binding.layout.spDate.selectedItem.toString()
                 }
             )
             binding.layout.spMonth.setSpinner(
                 listFromResources = R.array.month,
-                setSelection = resources.getStringArray(R.array.month).indexOf(selectedMonth) + 1,
+                setSelection = resources.getStringArray(R.array.month).indexOf(selectedMonth),
                 onItemSelectedListener = {
                     selectedMonth = binding.layout.spMonth.selectedItem.toString()
                 }
             )
             binding.layout.spYear.setSpinner(
                 listFromResources = R.array.year,
-                setSelection = resources.getStringArray(R.array.year).indexOf(selectedYear) + 1,
+                setSelection = resources.getStringArray(R.array.year).indexOf(selectedYear),
                 onItemSelectedListener = {
                     selectedYear = binding.layout.spYear.selectedItem.toString()
                 }
@@ -615,11 +627,10 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
         networkViewModel.UpdateProfileLiveData.observe(requireActivity()) {
             it.let {
 //              makeToast(it!!.message)
-                var hashMap = HashMap<String, String>()
-                networkViewModel.getProfileData(hashMap)
-                // onBackPressed()
+                val hashMap = HashMap<String, String>()
                 makeToast(it!!.message)
             }
+            (context as BaseActivity).onBackPressed()
         }
     }
 
@@ -682,8 +693,8 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
             it.let {
                 makeToast(it!!.message)
                 var hashMap = HashMap<String, String>()
-                networkViewModel.getProfileData(hashMap)
             }
+            (context as BaseActivity).onBackPressed()
         }
     }
 

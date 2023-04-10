@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentChangePasswordBinding
@@ -24,8 +25,7 @@ class ChangePasswordFragment : BaseFragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-
+    ): View {
         _binding = FragmentChangePasswordBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -44,26 +44,41 @@ class ChangePasswordFragment : BaseFragment() {
         networkViewModel.mThrowable.observe(this.viewLifecycleOwner) {
             it?.let { it1 ->
                 dismissLoader()
-                Snackbar.make(binding.btnSavePassword, it, Snackbar.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this.requireContext(),
+                    it,
+                    Toast.LENGTH_SHORT
+                ).show()
             }
+        }
+        binding.backChangePassword.setOnClickListener {
+            findNavController().popBackStack()
         }
         binding.btnSavePassword.setOnClickListener {
             if (binding.OldPassword.text.toString().trim().isNullOrEmpty()) {
                 Toast.makeText(
                     this.requireContext(),
-                    "Please enter old password",
+                    "Please enter old password.",
                     Toast.LENGTH_SHORT
                 ).show()
             } else if (binding.NewPassword.text.toString().trim().isNullOrEmpty()) {
                 Toast.makeText(
                     this.requireContext(),
-                    "Please enter new password",
+                    "Please enter new password.",
                     Toast.LENGTH_SHORT
                 ).show()
             } else if (binding.ConfirmPassword.text.toString().trim().isNullOrEmpty()) {
                 Toast.makeText(
                     this.requireContext(),
-                    "Please enter confirm new password",
+                    "Please enter confirm new password.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else if (binding.NewPassword.text.toString()
+                    .trim() != binding.ConfirmPassword.text.toString().trim()
+            ) {
+                Toast.makeText(
+                    this.requireContext(),
+                    "Password and confirm password does not match.",
                     Toast.LENGTH_SHORT
                 ).show()
             } else {

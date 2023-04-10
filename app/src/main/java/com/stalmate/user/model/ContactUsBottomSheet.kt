@@ -59,14 +59,14 @@ class ContactUsBottomSheet(
             //resources.getStringArray(R.array.month).indexOf(selectedMonth) + 1
             binding.spinnerCategory.setSpinner(
                 listFromResources = R.array.contact_us_category,
-                setSelection = 1,
+                setSelection = 0,
                 onItemSelectedListener = {
                     category = binding.spinnerCategory.selectedItem.toString()
                 }
             )
             binding.spinnerTopic.setSpinner(
                 listFromResources = R.array.contact_us_topic,
-                setSelection = 1,
+                setSelection = 0,
                 onItemSelectedListener = {
                     topic = binding.spinnerTopic.selectedItem.toString()
                 }
