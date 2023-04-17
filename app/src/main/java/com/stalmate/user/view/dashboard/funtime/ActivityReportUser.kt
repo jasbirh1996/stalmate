@@ -71,7 +71,7 @@ class ActivityReportUser : BaseActivity(), DialogFilePicker.Callback {
 
         binding.layoutPick.setOnClickListener {
 
-            var dialog = DialogFilePicker(this)
+            var dialog = DialogFilePicker(this, isFile = false)
             val manager: FragmentManager = getSupportFragmentManager()
             dialog.show(manager, "asdasd")
 
@@ -112,11 +112,13 @@ class ActivityReportUser : BaseActivity(), DialogFilePicker.Callback {
         if (result.isSuccessful) {
             // use the returned uri
             val uriContent = result.uriContent
-            var uriFilePath = result.getUriFilePath(this) // optional usage
-
+            val uriFilePath = result.getUriFilePath(this) // optional usage
             file = File(uriFilePath)
-
-
+            try {
+                Glide.with(this).load(result.getBitmap(this)).into(binding.ivReport)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         } else {
             // an error occurred
             val exception = result.error
@@ -142,25 +144,36 @@ class ActivityReportUser : BaseActivity(), DialogFilePicker.Callback {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-
         if (requestCode == 10) {
-
             file = File(
                 com.stalmate.user.modules.reels.audioVideoTrimmer.utils.FileUtils.getPath(
                     this,
                     data!!.data
                 )
             )
-
+            try {
+                Glide.with(this).load(file).into(binding.ivReport)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
-
     }
-
 
     lateinit var file: File
 
-
     private fun report() {
+        val successDialog = SuccessDialog(
+            context = this,
+            heading = "Success",
+            message = "Your report has been successfully submitted\n\nWe will get back to you Shortly",
+            buttonPrimary = "Okay",
+            callback = object : SuccessDialog.Callback {
+                override fun onDialogResult(isPermissionGranted: Boolean) {
+                    finish()
+                }
+            },
+            icon = R.drawable.baseline_check_circle_24
+        )
         showLoader()
         fun getRequestBody(str: String?): RequestBody =
             RequestBody.create("text/plain".toMediaTypeOrNull(), str.toString())
@@ -168,31 +181,41 @@ class ActivityReportUser : BaseActivity(), DialogFilePicker.Callback {
         val thumbnailBody: RequestBody =
             RequestBody.create("image/*".toMediaTypeOrNull(), file)
 
-        val profile_image1: MultipartBody.Part = MultipartBody.Part.Companion.createFormData(
-            "file",
-            file.name,
-            thumbnailBody
-        ) //image[] for multiple image
+        if (intent.getStringExtra("id").isNullOrEmpty()) {
+            val report_image: MultipartBody.Part = MultipartBody.Part.Companion.createFormData(
+                "report_image",
+                file.name,
+                thumbnailBody
+            ) //image[] for multiple image
 
-        Log.d("kgfjuy", intent.getStringExtra("id").toString())
-        networkViewModel.reportFuntime(
-            profile_image1,
-            getRequestBody(intent.getStringExtra("id")),
-            getRequestBody(selectedCategory!!.name),
-            getRequestBody(binding.spinnerReportReason.text.toString()),
-            getRequestBody(binding.etDetailedReason.text.toString())
-        ).observe(this, Observer {
+            networkViewModel.reportProblem(
+                access_token = prefManager?.access_token.toString(),
+                report_image = report_image,
+                report_category = getRequestBody(selectedCategory?.name),
+                report_reason = getRequestBody(binding.spinnerReportReason.text.toString()),
+                detailed_reason = getRequestBody(binding.etDetailedReason.text.toString())
+            ).observe(this, Observer {
+                dismissLoader()
+                successDialog.show()
+            })
+        } else {
+            val profile_image1: MultipartBody.Part = MultipartBody.Part.Companion.createFormData(
+                "file",
+                file.name,
+                thumbnailBody
+            ) //image[] for multiple image
 
-            dismissLoader()
-
-            it.let {
-
-                if (it!!.status!!) {
-                    makeToast(it.message)
-                    finish()
-                }
-            }
-        })
+            networkViewModel.reportFuntime(
+                profile_image1,
+                getRequestBody(intent.getStringExtra("id")),
+                getRequestBody(selectedCategory?.name),
+                getRequestBody(binding.spinnerReportReason.text.toString()),
+                getRequestBody(binding.etDetailedReason.text.toString())
+            ).observe(this, Observer {
+                dismissLoader()
+                successDialog.show()
+            })
+        }
     }
 
     override fun onClickOnFilePicker(isFilePicker: Boolean) {
@@ -202,7 +225,6 @@ class ActivityReportUser : BaseActivity(), DialogFilePicker.Callback {
             startCrop()
         }
     }
-
 }
 
 

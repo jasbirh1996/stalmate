@@ -17,12 +17,20 @@ import com.stalmate.user.viewmodel.AppViewModel
 import java.util.*
 import kotlin.collections.ArrayList
 
-class EducationListAdapter(val viewModel: AppViewModel, val context: Context, var callback: Callbackk) : RecyclerView.Adapter<EducationListAdapter.AlbumViewHolder>() {
+class EducationListAdapter(
+    val viewModel: AppViewModel,
+    val context: Context,
+    var callback: Callbackk
+) : RecyclerView.Adapter<EducationListAdapter.AlbumViewHolder>() {
 
-    var list = ArrayList<Education>()
+    val list = ArrayList<Education>()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EducationListAdapter.AlbumViewHolder {
-        var view = LayoutInflater.from(parent.context).inflate(R.layout.item_educationprofile, parent, false)
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): EducationListAdapter.AlbumViewHolder {
+        var view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_educationprofile, parent, false)
         return AlbumViewHolder(DataBindingUtil.bind<ItemEducationprofileBinding>(view)!!)
     }
 
@@ -33,35 +41,32 @@ class EducationListAdapter(val viewModel: AppViewModel, val context: Context, va
     override fun getItemCount(): Int {
         return list.size
     }
+
     fun submitList(albumList: ArrayList<Education>) {
         list.clear()
         list.addAll(albumList)
         notifyDataSetChanged()
     }
 
-    fun addToList(feedList: Education) {
-        val size = list.size
-        list.add(feedList)
-        val sizeNew = list.size
-        notifyItemRangeChanged(size, sizeNew)
-        notifyDataSetChanged()
-    }
-
-
     public interface Callbackk {
         fun onClickItemEdit(position: Education, index: Int)
 
     }
 
-    inner class AlbumViewHolder(var binding: ItemEducationprofileBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class AlbumViewHolder(var binding: ItemEducationprofileBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(response : Education){
-            binding.tveducation.text =response.sehool
+        fun bind(response: Education) {
+            binding.tveducation.text = response.sehool
             binding.tvcource.text = response.course
-            binding.tvcourcetype.text =response.branch
+            binding.tvcourcetype.text = response.branch
 
             binding.ivDelete.setOnClickListener {
-                onClickItemDelete(response._id, bindingAdapterPosition, (binding.root.context as? LifecycleOwner)!!)
+                onClickItemDelete(
+                    response._id,
+                    bindingAdapterPosition,
+                    (binding.root.context as? LifecycleOwner)!!
+                )
             }
 
             binding.ivedit.setOnClickListener {
@@ -78,12 +83,11 @@ class EducationListAdapter(val viewModel: AppViewModel, val context: Context, va
         hashMap["is_delete"] = "1"
 
         viewModel.educationData(hashMap)
-        viewModel.educationData.observe(lifecycleObserver){
+        viewModel.educationData.observe(lifecycleObserver) {
             it?.let {
-                if (it.status){
+                if (it.status) {
                     list.removeAt(position)
                     notifyItemRemoved(position)
-
                 }
             }
         }

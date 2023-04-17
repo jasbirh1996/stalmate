@@ -171,8 +171,8 @@
                 style="@style/SpinnerTheme1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:textColor="@color/black"
                 android:paddingStart="15dp"
+                android:textColor="@color/black"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -219,6 +219,7 @@
             android:layout_height="wrap_content"
             android:background="@color/white"
             android:paddingBottom="@dimen/_10sdp"
+            android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@+id/rvListAppSeting">
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -249,11 +250,11 @@
 
             <Spinner
                 android:id="@+id/fontSize_small"
+                style="@style/SpinnerTheme1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_10sdp"
                 android:layout_marginEnd="@dimen/_5sdp"
-                style="@style/SpinnerTheme1"
                 android:entries="@array/font_size"
                 android:textColor="#B7B7B7"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -312,19 +313,6 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/icon_Logout_btn"
                 app:layout_constraintTop_toTopOf="parent" />
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/icon_Logout"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_marginEnd="16dp"
-                android:rotation="180"
-                android:src="@drawable/ic_back_arrow"
-                app:layout_constraintBottom_toBottomOf="@+id/tv_Logout_appSeting"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/tv_Logout_appSeting"
-                app:tint="@color/colorGray" />
-
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

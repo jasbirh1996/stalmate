@@ -23,7 +23,8 @@ import com.stalmate.user.databinding.FragmentBottomDialogReelsMenuBinding
 import com.stalmate.user.viewmodel.AppViewModel
 
 
-class DialogFilePicker(var callback:Callback) : BottomSheetDialogFragment() {
+class DialogFilePicker(var callback: Callback, var isFile: Boolean = false) :
+    BottomSheetDialogFragment() {
     lateinit var binding: DialogFilePickerBinding
     private val mBottomSheetBehaviorCallback: BottomSheetBehavior.BottomSheetCallback =
         object : BottomSheetBehavior.BottomSheetCallback() {
@@ -48,11 +49,12 @@ class DialogFilePicker(var callback:Callback) : BottomSheetDialogFragment() {
             behavior.setBottomSheetCallback(mBottomSheetBehaviorCallback)
         }
         (contentView.parent as View).setBackgroundColor(resources.getColor(android.R.color.transparent))
-
+        if (isFile == false) {
+            binding.buttonFile.visibility = View.GONE
+        }
         binding.buttonFile.setOnClickListener {
             callback.onClickOnFilePicker(true)
             dismiss()
-
         }
 
         binding.buttonCamera.setOnClickListener {
@@ -68,13 +70,9 @@ class DialogFilePicker(var callback:Callback) : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
     }
 
-    public interface Callback{
-        fun onClickOnFilePicker(isFilePicker:Boolean)
+    public interface Callback {
+        fun onClickOnFilePicker(isFilePicker: Boolean)
     }
-
-
-
-
 
 
 }

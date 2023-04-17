@@ -57,9 +57,10 @@ class ReelListFragment : BaseFragment(), ReelAdapter.Callback {
         /* Set adapter (items are being used inside adapter, you can setup in your own way*/
 
 
-        if (isNetworkAvailable()){
-            adapter = ReelAdapter(requireContext(),this)
-            binding.recyclerView.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+        if (isNetworkAvailable()) {
+            adapter = ReelAdapter(requireContext(), this)
+            binding.recyclerView.layoutManager =
+                LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
             val snapHelper: SnapHelper = PagerSnapHelper()
             snapHelper.attachToRecyclerView(binding.recyclerView)
             binding.recyclerView.adapter = adapter
@@ -105,7 +106,7 @@ class ReelListFragment : BaseFragment(), ReelAdapter.Callback {
 
     }
 
-    fun isNetworkAvailable() : Boolean{
+    fun isNetworkAvailable(): Boolean {
 
         return NetworkUtils.isNetworkAvailable()
     }
@@ -210,7 +211,7 @@ class ReelListFragment : BaseFragment(), ReelAdapter.Callback {
         var hashmap = HashMap<String, String>()
         hashmap.put("page", page_count.toString())
         if (isSelfVideos) {
-            hashmap.put("id_user", adapter.reelList[0].user_id!!)
+            hashmap.put("id_user", adapter.reelList[0].user_id.toString())
         } else {
             hashmap.put("id_user", "")
         }
@@ -227,7 +228,7 @@ class ReelListFragment : BaseFragment(), ReelAdapter.Callback {
                     var list = it.results
 
                     list.forEach {
-                        it.isDataUpdated=false
+                        it.isDataUpdated = false
                     }
                     adapter.setList(list)
                 } else {
@@ -235,7 +236,7 @@ class ReelListFragment : BaseFragment(), ReelAdapter.Callback {
                     var list = it.results
 
                     list.forEach {
-                        it.isDataUpdated=false
+                        it.isDataUpdated = false
                     }
                     adapter.addToList(list)
                 }
@@ -245,34 +246,33 @@ class ReelListFragment : BaseFragment(), ReelAdapter.Callback {
     }
 
 
-
-
     override fun onStart() {
-            if (videoAutoPlayHelper!=null){
-                var viewholder =
-                    binding.recyclerView.findViewHolderForAdapterPosition(videoAutoPlayHelper!!.currentPlayingVideoItemPos);
-                if (viewholder!=null){
-                    val viewMainHolder = (viewholder as VideoReelViewHolder)
+        if (videoAutoPlayHelper != null) {
+            var viewholder =
+                binding.recyclerView.findViewHolderForAdapterPosition(videoAutoPlayHelper!!.currentPlayingVideoItemPos);
+            if (viewholder != null) {
+                val viewMainHolder = (viewholder as VideoReelViewHolder)
 
-                  /*  if ((requireActivity()  as ActivityDashboard).active is FragmentFunTime){
-                        viewMainHolder.customPlayerView.startPlaying()
-                    }*/
+                /*  if ((requireActivity()  as ActivityDashboard).active is FragmentFunTime){
+                      viewMainHolder.customPlayerView.startPlaying()
+                  }*/
 
 
-                }
             }
+        }
         super.onStart()
     }
 
 
     override fun onPause() {
-       try {
-           var viewholder = binding.recyclerView.findViewHolderForAdapterPosition(videoAutoPlayHelper!!.currentPlayingVideoItemPos);
-           val viewMainHolder = (viewholder as VideoReelViewHolder)
-           viewMainHolder.customPlayerView.removePlayer()
-       }catch (e:Exception){
+        try {
+            var viewholder =
+                binding.recyclerView.findViewHolderForAdapterPosition(videoAutoPlayHelper!!.currentPlayingVideoItemPos);
+            val viewMainHolder = (viewholder as VideoReelViewHolder)
+            viewMainHolder.customPlayerView.removePlayer()
+        } catch (e: Exception) {
 
-       }
+        }
         super.onPause()
     }
 
@@ -283,8 +283,6 @@ class ReelListFragment : BaseFragment(), ReelAdapter.Callback {
     override fun onClickOnLikeButtonReel(resultFuntime: ResultFuntime) {
 
         likeApiHit(resultFuntime)
-
-
 
 
     }
@@ -313,9 +311,11 @@ class ReelListFragment : BaseFragment(), ReelAdapter.Callback {
     }
 
     override fun onClickOnFullView(resultFuntime: ResultFuntime) {
-        startActivityForResult(IntentHelper.getFullViewReelActivity(context)!!.putExtra("data",resultFuntime),120)
+        startActivityForResult(
+            IntentHelper.getFullViewReelActivity(context)!!.putExtra("data", resultFuntime), 120
+        )
 
-      //  startForResultReels.launch(IntentHelper.getFullViewReelActivity(requireContext()))
+        //  startForResultReels.launch(IntentHelper.getFullViewReelActivity(requireContext()))
     }
 
     override fun onClickOnShareReel(resultFuntime: ResultFuntime) {
@@ -325,41 +325,40 @@ class ReelListFragment : BaseFragment(), ReelAdapter.Callback {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode==Activity.RESULT_OK && requestCode==120){
+        if (resultCode == Activity.RESULT_OK && requestCode == 120) {
 
 
+            val blocklList: ArrayList<ResultFuntime> =
+                data!!.getParcelableArrayListExtra("blockList")!!
 
-            val blocklList: ArrayList<ResultFuntime> = data!!.getParcelableArrayListExtra("blockList")!!
-
-            if (blocklList.size==0){
-                val updatedReelList: ArrayList<ResultFuntime> = data!!.getParcelableArrayListExtra("data")!!
-                Log.d("lakjdasd",Gson().toJson(updatedReelList))
+            if (blocklList.size == 0) {
+                val updatedReelList: ArrayList<ResultFuntime> =
+                    data!!.getParcelableArrayListExtra("data")!!
+                Log.d("lakjdasd", Gson().toJson(updatedReelList))
                 adapter.updateList(updatedReelList!!)
-            }else{
-                Log.d("lakjdasd","Gson().toJson(updatedReelList)")
-                isFirstApiHit=true
-                page_count=1
+            } else {
+                Log.d("lakjdasd", "Gson().toJson(updatedReelList)")
+                isFirstApiHit = true
+                page_count = 1
                 callApi()
             }
 
 
-
         }
     }
 
-    val startForResultReels = registerForActivityResult(ActivityResultContracts.StartActivityForResult())
-    { result: ActivityResult ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            //  you will get result here in result.data
-            Log.d(";laskdasd",";alksdasd")
+    val startForResultReels =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult())
+        { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                //  you will get result here in result.data
+                Log.d(";laskdasd", ";alksdasd")
 
 
-            adapter
+                adapter
+            }
+
         }
-
-    }
-
-
 
 
 }

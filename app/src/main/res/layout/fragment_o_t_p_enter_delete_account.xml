@@ -24,12 +24,13 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:background="@color/white">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/cltop"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/_200sdp"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_20sdp"
                     android:background="@color/white"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -44,7 +45,7 @@
                         android:layout_marginTop="@dimen/_20sdp"
                         android:fontFamily="@font/poppins"
                         android:gravity="center"
-                        android:text="Enter the OTP sent to your registered mobile number"
+                        android:text="Enter the OTP sent to your registered Email Address"
                         android:textColor="@color/colorGray"
                         android:textSize="14sp"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -54,31 +55,18 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_40sdp"
                         android:layout_marginBottom="@dimen/_10sdp"
                         android:background="@color/white"
                         android:gravity="center"
                         android:orientation="horizontal"
-                        app:layout_constraintBottom_toBottomOf="parent">
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/appCompatTextView">
 
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="@dimen/_20sdp"
-                            android:layout_marginVertical="@dimen/_10sdp"
-                            android:fontFamily="@font/poppins_medium"
-                            android:text="Notify Contacts"
-                            android:textColor="@color/black"
-                            android:textSize="16sp" />
-
-                        <androidx.appcompat.widget.SwitchCompat
-                            android:id="@+id/toggleFindMe"
+                        <ImageView
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="@dimen/_20sdp"
-                            android:checked="true"
-                            app:thumbTint="@color/obboard_indicator"
-                            app:trackTint="@color/obboard_indicator2"
-                            tools:ignore="SpeakableTextPresentCheck" />
+                            android:layout_height="@dimen/_200sdp"
+                            android:src="@drawable/forgot_otp_illustration" />
                     </LinearLayout>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -120,14 +108,13 @@
                     app:layout_constraintStart_toStartOf="@+id/pin_view"
                     app:layout_constraintTop_toBottomOf="@+id/pin_view" />
 
-
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/otp_count_down"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
                     android:fontFamily="@font/poppins_medium"
-                    android:text="Resend 25 Sec"
+                    android:text="Resend"
                     android:textColor="@color/colorPrimary"
                     android:textSize="14sp"
                     android:visibility="visible"

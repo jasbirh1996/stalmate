@@ -83,14 +83,8 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        if (!this::_binding.isInitialized) {
-            _binding = FragmentProfileEditBinding.inflate(inflater, container, false)
-        }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         getUserProfileData()
         blockList()
         binding.ivBackground.setOnClickListener {
@@ -202,6 +196,17 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
         }
         clickLister()
         callForAlbum()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        if (!this::_binding.isInitialized) {
+            _binding = FragmentProfileEditBinding.inflate(inflater, container, false)
+        }
         return binding.root
     }
 
@@ -276,7 +281,6 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
                 if (it.results.profile_data[0].education.isNotEmpty()) {
                     binding.layout.rvEducation.visibility = View.VISIBLE
                 }
-
                 if (it.results.profile_data[0].profession.isNotEmpty()) {
                     binding.layout.rvProfession.visibility = View.VISIBLE
                 }
@@ -285,8 +289,6 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
                 }
             }
         }
-
-
     }
 
     private lateinit var albumImageAdapter: ProfileAlbumImageAdapter
@@ -324,7 +326,6 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
         binding.layout.rvEducation.adapter = educationAdapter
         binding.layout.rvEducation.layoutManager = LinearLayoutManager(requireContext())
         educationAdapter.submitList(userData.results.profile_data[0].education)
-
         educationAdapter.notifyDataSetChanged()
         professionListAdapter = ProfessionListAdapter(networkViewModel, requireContext(), this)
         binding.layout.rvProfession.adapter = professionListAdapter
@@ -365,7 +366,7 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
             binding.layout.tvmarriage.setSpinner(
                 listFromResources = R.array.marrage,
                 setSelection = resources.getStringArray(R.array.marrage)
-                    .indexOf(userData.results.profile_data[0].marital_status),
+                    .indexOf(merriage),
                 onItemSelectedListener = {
                     merriage =
                         if ("Marital Status" != binding.layout.tvmarriage.selectedItem.toString())
@@ -538,7 +539,7 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
         }
 
         binding.layout.tvAddMore.setOnClickListener {
-            var dialogAddEditEducation = DialogAddEditEducation(
+            val dialogAddEditEducation = DialogAddEditEducation(
                 requireActivity(),
                 Education("", "", 0, "", "", "", "", "", "", ""),
                 networkViewModel,
@@ -547,19 +548,15 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
                     @SuppressLint("NotifyDataSetChanged")
                     override fun onSuccessfullyEditedEducation(education: Education) {
                         userData.results.profile_data[0].education.add(education)
-                        educationAdapter.addToList(education)
-                        networkViewModel.profileLiveData.postValue(userData)
-                        professionListAdapter.notifyDataSetChanged()
-                        educationAdapter.notifyDataSetChanged()
-                        getUserProfileData()
+                        (binding.layout.rvEducation.adapter as EducationListAdapter).list.add(education)
+                        (binding.layout.rvEducation.adapter as EducationListAdapter).notifyDataSetChanged()
                     }
                 })
             dialogAddEditEducation.show()
         }
 
         binding.layout.tvaddMoreProfession.setOnClickListener {
-
-            var dialogAddEditProfession = DialogAddEditProfession(
+            val dialogAddEditProfession = DialogAddEditProfession(
                 requireContext(),
                 Profession("", "", 0, "", "", "", "", "", "", "", "", ""),
                 networkViewModel,
@@ -567,9 +564,8 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
                 object : DialogAddEditProfession.Callbackk {
                     override fun onSuccessfullyEditedProfession(profession: Profession) {
                         userData.results.profile_data[0].profession.add(profession)
-                        professionListAdapter.addToList(profession)
-                        networkViewModel.profileLiveData.postValue(userData)
-                        getUserProfileData()
+                        (binding.layout.rvProfession.adapter as ProfessionListAdapter).list.add(profession)
+                        (binding.layout.rvProfession.adapter as ProfessionListAdapter).notifyDataSetChanged()
                     }
                 })
             dialogAddEditProfession.show()
@@ -735,7 +731,7 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
     }
 
     override fun onSuccessFullyAddNumber() {
-        getUserProfileData()
+        //getUserProfileData()
     }
 
     override fun onClickItemEdit(position: Education, index: Int) {

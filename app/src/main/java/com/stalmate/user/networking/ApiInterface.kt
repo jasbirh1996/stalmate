@@ -232,6 +232,16 @@ interface ApiInterface {
         @Part("detailed_reason") detailed_reason: RequestBody,
     ): Call<CommonModelResponse>
 
+    @Multipart
+    @POST(Constants.ReportProblem)
+    fun reportProblem(
+        @Header("access_token") access_token: String,
+        @Part report_image: MultipartBody.Part? = null,
+        @Part("report_category") report_category: RequestBody,
+        @Part("report_reason") report_reason: RequestBody,
+        @Part("detailed_reason") detailed_reason: RequestBody,
+    ): Call<CommonModelResponse>
+
 
     @GET(Constants.URL_PHOTO_ALBUM)
     fun getAlbumList(): Call<ModelAlbumsResponse>
@@ -315,9 +325,7 @@ interface ApiInterface {
     @POST(Constants.deleteMyAccount)
     fun deleteMyAccount(
         @Header("access_token") access_token: String,
-        @Field("number") number: String,
         @Field("email") email: String,
-        @Field("number_c_code") number_c_code: String,
         @Field("otp") otp: String,
         @Field("notify_contact") notify_contact: Boolean
     ): Call<ChangePasswordResponse>

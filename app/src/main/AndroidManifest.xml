@@ -53,6 +53,9 @@
             android:name="libOpenCL-pixel.so"
             android:required="false" />-->
         <activity
+            android:name=".view.settings.TermsAndConditionsAndPrivacyPolicyAndFaqs"
+            android:exported="false" />
+        <activity
             android:name=".modules.reels.activity.createFun.CreateFunActivity"
             android:exported="false" />
         <activity

@@ -52,9 +52,8 @@ class FragmentProfileFuntime :BaseFragment(), ReelVideosByAudioAdapter.Callback 
     private fun getReelsListApiByMusic() {
         var hashMap=HashMap<String,String>()
         hashMap.put("page", "1")
-
         hashMap.put("limit", "5")
-        hashMap.put("id_user", PrefManager.getInstance(requireContext())!!.userProfileDetail.results.id)
+        hashMap.put("id_user", prefManager?.id.toString())
         hashMap.put("fun_id", "")
 
 

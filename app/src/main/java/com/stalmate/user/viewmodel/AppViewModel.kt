@@ -455,21 +455,43 @@ open class AppViewModel : ViewModel() {
         return saveLiveDAta
     }
 
+    var reportFuntimeLiveData: LiveData<CommonModelResponse?> =
+        MutableLiveData<CommonModelResponse?>()
+
     fun reportFuntime(
         @Part file: MultipartBody.Part? = null,
         @Part("funtime_id") funtimeId: RequestBody,
         @Part("category") category: RequestBody,
         @Part("report_reason") report_reason: RequestBody,
-        @Part("detailed_reason") detailed_reason: RequestBody,
-
-        ): LiveData<CommonModelResponse?> {
+        @Part("detailed_reason") detailed_reason: RequestBody
+    ): LiveData<CommonModelResponse?> {
         val temp = MutableLiveData<CommonModelResponse?>()
-        var reportFuntimeLiveData: LiveData<CommonModelResponse?> =
-            MutableLiveData<CommonModelResponse?>()
         reportFuntimeLiveData = temp
         getResult(
             temp,
             apiInterface.reportFuntime(file, funtimeId, category, report_reason, detailed_reason)
+        )
+        return reportFuntimeLiveData
+    }
+
+    fun reportProblem(
+        access_token: String,
+        @Part report_image: MultipartBody.Part? = null,
+        @Part("report_category") report_category: RequestBody,
+        @Part("report_reason") report_reason: RequestBody,
+        @Part("detailed_reason") detailed_reason: RequestBody
+    ): LiveData<CommonModelResponse?> {
+        val temp = MutableLiveData<CommonModelResponse?>()
+        reportFuntimeLiveData = temp
+        getResult(
+            temp,
+            apiInterface.reportProblem(
+                access_token = access_token,
+                report_image = report_image,
+                report_category = report_category,
+                report_reason = report_reason,
+                detailed_reason = detailed_reason
+            )
         )
         return reportFuntimeLiveData
     }
@@ -721,18 +743,14 @@ open class AppViewModel : ViewModel() {
 
     fun deleteMyAccount(
         access_token: String,
-        number: String,
         email: String,
-        number_c_code: String,
         otp: String,
         notify_contact: Boolean
     ) {
         getResult(
             deleteMyAccountResponse, apiInterface.deleteMyAccount(
                 access_token = access_token,
-                number = number,
                 email = email,
-                number_c_code = number_c_code,
                 otp = otp,
                 notify_contact = notify_contact
             )

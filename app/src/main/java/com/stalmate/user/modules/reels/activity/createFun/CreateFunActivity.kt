@@ -400,8 +400,8 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
             //unbind immediately to avoid mirrored frame.
             var cameraProvider: ProcessCameraProvider? = null
             try {
-                cameraProvider = cameraProviderFuture!!.get()
-                cameraProvider.unbindAll()
+                cameraProvider = cameraProviderFuture?.get()
+                cameraProvider?.unbindAll()
             } catch (e: ExecutionException) {
                 e.printStackTrace()
             } catch (e: InterruptedException) {
@@ -838,10 +838,10 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
 
     private fun setupCamera() {
         cameraProviderFuture = ProcessCameraProvider.getInstance(this)
-        cameraProviderFuture!!.addListener({
+        cameraProviderFuture?.addListener({
             try {
-                val cameraProvider = cameraProviderFuture!!.get()
-                bindImageAnalysis(cameraProvider)
+                val cameraProvider = cameraProviderFuture?.get()
+                cameraProvider?.let { bindImageAnalysis(it) }
             } catch (e: ExecutionException) {
                 e.printStackTrace()
             } catch (e: InterruptedException) {
@@ -1075,18 +1075,18 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
     override fun onStop() {
         var cameraProvider: ProcessCameraProvider? = null
         try {
-            cameraProvider = cameraProviderFuture!!.get()
-            cameraProvider.unbindAll()
+            cameraProvider = cameraProviderFuture?.get()
+            cameraProvider?.unbindAll()
         } catch (e: ExecutionException) {
             e.printStackTrace()
         } catch (e: InterruptedException) {
             e.printStackTrace()
         }
         if (surfaceProvider != null) {
-            surfaceProvider!!.stop()
+            surfaceProvider?.stop()
             surfaceProvider = null
         }
-        deepAR!!.release()
+        deepAR?.release()
         deepAR = null
         super.onStop()
     }

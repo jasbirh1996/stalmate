@@ -4,14 +4,12 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.LayoutInflater
 import com.c2m.storyviewer.utils.showToast
 import com.stalmate.user.BuildConfig
 import com.stalmate.user.R
 import com.stalmate.user.databinding.ActivityAboutBinding
 import com.stalmate.user.model.ContactUsBottomSheet
-import com.stalmate.user.view.settings.AboutSettingAdapter
-import com.stalmate.user.view.settings.AboutUsSettingMenuModel
+import com.stalmate.user.view.settings.TermsAndConditionsAndPrivacyPolicyAndFaqs
 
 
 class AboutActivity : AppCompatActivity() {
@@ -31,6 +29,15 @@ class AboutActivity : AppCompatActivity() {
     private fun initViews() {
         val counter = ContactUsBottomSheet() { category: String, topic: String, details: String ->
             showToast("Request sent successfully.")
+        }
+        binding.clFaq.setOnClickListener {
+            startActivity(
+                Intent(
+                    this,
+                    TermsAndConditionsAndPrivacyPolicyAndFaqs::class.java
+                ).apply {
+                    putExtra("comingFor", "2")
+                })
         }
         binding.clContact.setOnClickListener {
             if (counter.isAdded) {

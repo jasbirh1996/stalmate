@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import com.stalmate.user.Helper.IntentHelper
@@ -119,7 +120,12 @@ class FragmentLogin : BaseFragment() {
 
         binding.progressBar.visibility = View.VISIBLE
         networkViewModel.login(hashMap)
+        networkViewModel.mThrowable.observe(requireActivity()) {
+            binding.progressBar.visibility = View.GONE
+            Toast.makeText(this.requireContext(), it, Toast.LENGTH_SHORT).show()
+        }
         networkViewModel.loginData.observe(requireActivity()) {
+            binding.progressBar.visibility = View.GONE
             it?.let {
                 val message = it.message
                 if (it.status) {
@@ -136,15 +142,11 @@ class FragmentLogin : BaseFragment() {
                             value = if (!it.results?.get(0)?.country.isNullOrEmpty()) it.results?.get(0)?.country else "IN"
                         )
                     App.getInstance().setupApis()
-                    binding.progressBar.visibility = View.GONE
                     startActivity(IntentHelper.getDashboardScreen(context))
                     requireActivity().finish()
                     makeToast(message)
                 } else {
-
-                    binding.progressBar.visibility = View.GONE
                     makeToast(message)
-
                 }
             }
         }

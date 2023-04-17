@@ -128,7 +128,7 @@ class ActivityFullViewReels : BaseActivity(), ReelFullViewAdapter.Callback {
         var hashmap = HashMap<String, String>()
         hashmap.put("page", page_count.toString())
         if (isSelfVideos) {
-            hashmap.put("id_user", adapter.reelList[0].user_id!!)
+            hashmap.put("id_user", adapter.reelList[0].user_id.toString())
         } else {
             hashmap.put("id_user", "")
         }

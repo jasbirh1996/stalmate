@@ -30,17 +30,13 @@ class FragmentSettingsAccount : Fragment(), MainSettingCategoryAdapter.Callbackk
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
-        var settingCategoryAdapter = MainSettingCategoryAdapter(requireContext(), this)
+        val settingCategoryAdapter = MainSettingCategoryAdapter(requireContext(), this)
         binding.rvList.adapter = settingCategoryAdapter
-
 
         binding.toolbar.tvhead.text = "Account"
         binding.toolbar.topAppBar.setNavigationOnClickListener {
             findNavController().popBackStack()
         }
-
 
         val list = ArrayList<SettingMenuModel>()
         list.add(

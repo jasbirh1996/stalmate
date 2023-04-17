@@ -31,8 +31,8 @@ class FragmentGlobalSearch : BaseFragment(),
     }
 
 
-    public interface Callback{
-        fun onClickOnSeeMore(searData:String,type:String)
+    public interface Callback {
+        fun onClickOnSeeMore(searData: String, type: String)
     }
 
     override fun onCreateView(
@@ -58,26 +58,25 @@ class FragmentGlobalSearch : BaseFragment(),
         hitApi(true, searchData)
 
         binding.buttonSeeMoreGroups.setOnClickListener {
-          //  callback.onClickOnSeeMore(searchData,"groups")
+            //  callback.onClickOnSeeMore(searchData,"groups")
             findNavController().navigate(R.id.action_fragmentGlobalToFragmentPeopleSearch)
         }
         binding.buttonSeeMoreUsers.setOnClickListener {
-          //  callback.onClickOnSeeMore(searchData,"users")
+            //  callback.onClickOnSeeMore(searchData,"users")
             val bundle = Bundle()
-            bundle.putString("dataSearch",searchData)
-            findNavController().navigate(R.id.action_fragmentGlobalToFragmentPeopleSearch,bundle)
+            bundle.putString("dataSearch", searchData)
+            findNavController().navigate(R.id.action_fragmentGlobalToFragmentPeopleSearch, bundle)
         }
         binding.buttonSeeMoreEvents.setOnClickListener {
-          //  callback.onClickOnSeeMore(searchData,"events")
+            //  callback.onClickOnSeeMore(searchData,"events")
             findNavController().navigate(R.id.action_fragmentGlobalToFragmentPeopleSearch)
         }
-
 
 
     }
 
     fun hitApi(isFresh: Boolean, searchData: String) {
-        this.searchData=searchData
+        this.searchData = searchData
         if (isFresh) {
             currentPage = 1
         }
@@ -96,7 +95,8 @@ class FragmentGlobalSearch : BaseFragment(),
 
                     val divider = DividerItemDecoration(
                         context,
-                        DividerItemDecoration.VERTICAL)
+                        DividerItemDecoration.VERTICAL
+                    )
 
                     divider.setDrawable(ShapeDrawable().apply {
                         intrinsicHeight = resources.getDimensionPixelOffset(R.dimen.dp_1)
@@ -128,25 +128,25 @@ class FragmentGlobalSearch : BaseFragment(),
                     binding.layoutGroups.visibility = View.GONE*/
 
                     if (isFresh) {
-                        if (it.user_list.size>4){
-                            userAdapter.submitList(it.user_list.subList(0,4))
-                        }else{
+                        if (it.user_list.size > 4) {
+                            userAdapter.submitList(it.user_list.subList(0, 4))
+                        } else {
                             userAdapter.submitList(it.user_list)
                         }
                     } else {
                         userAdapter.addToList(it.user_list)
                     }
 
-                    if (it.user_list.size>4){
-                        binding.buttonSeeMoreEvents.visibility=View.VISIBLE
-                        binding.buttonSeeMoreGroups.visibility=View.VISIBLE
-                        binding.buttonSeeMoreUsers.visibility=View.VISIBLE
-                    }else{
-                        binding.buttonSeeMoreEvents.visibility=View.GONE
-                        binding.buttonSeeMoreGroups.visibility=View.GONE
-                        binding.buttonSeeMoreUsers.visibility=View.GONE
+                    if (it.user_list.size > 4) {
+                        binding.buttonSeeMoreEvents.visibility = View.VISIBLE
+                        binding.buttonSeeMoreGroups.visibility = View.VISIBLE
+                        binding.buttonSeeMoreUsers.visibility = View.VISIBLE
+                    } else {
+                        binding.buttonSeeMoreEvents.visibility = View.GONE
+                        binding.buttonSeeMoreGroups.visibility = View.GONE
+                        binding.buttonSeeMoreUsers.visibility = View.GONE
                     }
-                }else{
+                } else {
                     binding.layoutUsers.visibility = View.GONE
                     binding.noDataFound.visibility = View.VISIBLE
                     binding.layoutEvents.visibility = View.GONE
@@ -172,7 +172,8 @@ class FragmentGlobalSearch : BaseFragment(),
     override fun onClickOnProfile(friend: User) {
 
 
-        startActivity(IntentHelper.getOtherUserProfileScreen(requireContext())!!.putExtra("id", friend.id)
+        startActivity(
+            IntentHelper.getOtherUserProfileScreen(requireContext())!!.putExtra("id", friend.id)
         )
     }
 

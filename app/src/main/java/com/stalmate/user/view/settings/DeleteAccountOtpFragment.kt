@@ -1,7 +1,10 @@
 package com.stalmate.user.view.settings
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +15,9 @@ import com.c2m.storyviewer.utils.showToast
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentOTPEnterDeleteAccountBinding
+import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.view.authentication.ActivityAuthentication
+import com.stalmate.user.view.dialogs.SuccessDialog
 
 class DeleteAccountOtpFragment : BaseFragment() {
 
@@ -38,6 +43,13 @@ class DeleteAccountOtpFragment : BaseFragment() {
             findNavController().popBackStack()
         }
 
+        binding.otpCountDown.setOnClickListener {
+            Toast.makeText(
+                this.requireContext(),
+                "Otp sent to your registered email successfully",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
         binding.btnProcess.setOnClickListener {
             if (binding.pinView.text.toString().trim().isNullOrEmpty()) {
                 Toast.makeText(this.requireContext(), "Please enter otp", Toast.LENGTH_SHORT).show()
@@ -48,14 +60,41 @@ class DeleteAccountOtpFragment : BaseFragment() {
                     Toast.LENGTH_SHORT
                 ).show()
             } else {
-                requireActivity().showToast("Your account has been deleted successfully.")
-                startActivity(
-                    Intent(
-                        this.requireActivity(),
-                        ActivityAuthentication::class.java
-                    )
+                val d = SuccessDialog(
+                    context = this@DeleteAccountOtpFragment.requireContext(),
+                    heading = "Success",
+                    message = "Your stalemate account has been deleted successfully",
+                    buttonPrimary = "",
+                    callback = object : SuccessDialog.Callback {
+                        override fun onDialogResult(isPermissionGranted: Boolean) {
+                            PrefManager.getInstance(this@DeleteAccountOtpFragment.requireContext())?.keyIsLoggedIn =
+                                false
+                            startActivity(
+                                Intent(
+                                    context,
+                                    ActivityAuthentication::class.java
+                                ).putExtra("screen", "login")
+                                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                            )
+                            requireActivity().finishAffinity()
+                        }
+                    },
+                    icon = R.drawable.baseline_check_circle_24, isAutoDismiss = true
                 )
-                requireActivity().finishAffinity()
+                d.show()
+
+                Handler(Looper.getMainLooper()).postDelayed({
+                    d.dismiss()
+                    PrefManager.getInstance(this.requireContext())?.keyIsLoggedIn = false
+                    startActivity(
+                        Intent(
+                            context,
+                            ActivityAuthentication::class.java
+                        ).putExtra("screen", "login")
+                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                    )
+                    requireActivity().finishAffinity()
+                }, 1000)
             }
         }
     }

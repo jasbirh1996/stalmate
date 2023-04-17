@@ -151,6 +151,8 @@ object Constants {
     const val GetPrivacy = "setting_api/privacy_get"
     const val UpdateLanguageAndCountry = "setting_api/general_setting"
 
+    const val ReportProblem = "/setting_api/file_report"
+
     //Feedbacks
     const val saveAsDraft = "funtime_api/add_draft"
     const val commentDisable = "funtime_api/add_comment_disable"

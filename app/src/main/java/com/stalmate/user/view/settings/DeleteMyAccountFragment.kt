@@ -22,7 +22,7 @@ class DeleteMyAccountFragment : BaseFragment() {
 
     private var _binding: FragmentDeleteMyAccountBinding? = null
     private val binding get() = _binding!!
-    private var otp: String = ""
+    private var otp: String = "1234"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,7 +53,7 @@ class DeleteMyAccountFragment : BaseFragment() {
         }
         networkViewModel.sendOtpResponse.observe(this.viewLifecycleOwner) {
             if (it?.reponse != null) {
-                otp = it.reponse.otp.toString()
+                //otp = it.reponse.otp.toString()
             }
         }
         networkViewModel.deleteMyAccountResponse.observe(this.viewLifecycleOwner) {
@@ -65,28 +65,16 @@ class DeleteMyAccountFragment : BaseFragment() {
         binding.backDeleteAccount.setOnClickListener {
             findNavController().popBackStack()
         }
-        binding.ChangeCountryName.setOnCountryChangeListener {
-            binding.tvChangeFlage.setText(binding.ChangeCountryName.selectedCountryEnglishName.toString())
-        }
-        binding.tvChangeFlage.setOnClickListener {
-            binding.ChangeCountryName.launchCountrySelectionDialog()
-        }
         binding.btnDeleteMyAccount.setOnClickListener {
             if (otp.isNullOrEmpty()) {
                 requireActivity().showToast("Please wait for otp!")
-            } else if (binding.tvChangeNumber.text.toString().isNullOrEmpty()) {
-                requireActivity().showToast("Please enter your registered mobile number.")
             } else if (binding.etEmail.text.toString().isNullOrEmpty()) {
                 requireActivity().showToast("Please enter your email.")
-            } else if (binding.tvChangeFlage.text.toString().trim().isNullOrEmpty()) {
-                requireActivity().showToast("Please select your country.")
             } else {
                 showLoader()
                 networkViewModel.deleteMyAccount(
                     access_token = prefManager?.access_token.toString(),
-                    number = binding.tvChangeNumber.text.toString().trim(),
                     email = binding.etEmail.text.toString(),
-                    number_c_code = binding.ChangeCCp.selectedCountryCode,
                     otp = otp,
                     notify_contact = true
                 )

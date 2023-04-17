@@ -212,29 +212,29 @@ class ActivityPrivacy : BaseActivity() {
             access_token = prefManager?.access_token.toString(),
             allow_others_to_find_me = (privacyUpdateResponse?.reponse?.allow_others_to_find_me
                 ?: false),
-            profile = (privacyUpdateResponse?.reponse?.profile ?: 0),
-            last_seen = (privacyUpdateResponse?.reponse?.last_seen ?: 0),
-            prfile_photo = (privacyUpdateResponse?.reponse?.prfile_photo ?: 0),
-            about = (privacyUpdateResponse?.reponse?.about ?: 0),
+            profile = (privacyUpdateResponse?.reponse?.profile ?: 1),
+            last_seen = (privacyUpdateResponse?.reponse?.last_seen ?: 1),
+            prfile_photo = (privacyUpdateResponse?.reponse?.prfile_photo ?: 1),
+            about = (privacyUpdateResponse?.reponse?.about ?: 1),
             read_receipts = (privacyUpdateResponse?.reponse?.read_receipts ?: false),
-            story = (privacyUpdateResponse?.reponse?.story ?: 0),
-            groups = (privacyUpdateResponse?.reponse?.groups ?: 0),
+            story = (privacyUpdateResponse?.reponse?.story ?: 1),
+            groups = (privacyUpdateResponse?.reponse?.groups ?: 1),
             block_contact = Gson().toJson((privacyUpdateResponse?.reponse?.block_contact?.map { it._id }
                 ?: arrayListOf<String>())),
-            who_can_like_my_post = (privacyUpdateResponse?.reponse?.who_can_like_my_post ?: 0),
-            who_can_post_comment = (privacyUpdateResponse?.reponse?.who_can_post_comment ?: 0),
+            who_can_like_my_post = (privacyUpdateResponse?.reponse?.who_can_like_my_post ?: 1),
+            who_can_post_comment = (privacyUpdateResponse?.reponse?.who_can_post_comment ?: 1),
             who_can_send_me_message = (privacyUpdateResponse?.reponse?.who_can_send_me_message
-                ?: 0),
+                ?: 1),
             who_can_see_my_future_post = (privacyUpdateResponse?.reponse?.who_can_see_my_future_post
-                ?: 0),
+                ?: 1),
             who_can_see_people_page_list = (privacyUpdateResponse?.reponse?.who_can_see_people_page_list
-                ?: 0),
+                ?: 1),
             who_can_send_you_friend_request = (privacyUpdateResponse?.reponse?.who_can_send_you_friend_request
-                ?: 0),
+                ?: 1),
             who_can_see_email_address = (privacyUpdateResponse?.reponse?.who_can_see_email_address
-                ?: 0),
+                ?: 1),
             who_can_see_phone_number = (privacyUpdateResponse?.reponse?.who_can_see_phone_number
-                ?: 0)
+                ?: 1)
         )
     }
 

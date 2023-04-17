@@ -17,21 +17,27 @@ import com.stalmate.user.databinding.AppCommonSuccessDialogBinding
 
 
 class SuccessDialog(
-    private val context: Context, var heading:String, var message:String, var buttonPrimary:String,
+    private val context: Context,
+    var heading: String,
+    var message: String,
+    var buttonPrimary: String,
     private val callback: Callback,
-)  {
-    var isResultFetched=false;
+    var icon: Int = -1,
+    var isAutoDismiss: Boolean = false
+) {
     var binding: AppCommonSuccessDialogBinding? = null
     private var dialog: Dialog? = null
     var isDialogShowing = false
         private set
+
     fun show() {
         dialog = Dialog(context)
         dialog!!.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        val view: View = LayoutInflater.from(context).inflate(R.layout.app_common_success_dialog, null)
+        val view: View =
+            LayoutInflater.from(context).inflate(R.layout.app_common_success_dialog, null)
         binding = DataBindingUtil.bind(view)
         dialog!!.setContentView(binding!!.getRoot())
-        dialog!!.setCancelable(true)
+        dialog!!.setCancelable(false)
         if (dialog!!.window != null) {
             dialog!!.window!!.setBackgroundDrawable(null)
 
@@ -44,25 +50,41 @@ class SuccessDialog(
                           .setLayout( LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)*/
 
         }
+        if (icon != -1) {
+            binding!!.ivImage.setImageResource(icon)
+        }
+        if (buttonPrimary.isNullOrEmpty()) {
+            binding!!.buttonProceed.visibility = View.GONE
+        }
         binding!!.buttonProceed.setText(buttonPrimary)
         binding!!.tvHead.setText(heading)
         binding!!.tvMessage.setText(message)
-        binding!!.buttonProceed.setOnClickListener {
-            callback.onDialogResult(isPermissionGranted = true)
-            dismiss()
-        }
+        if (!isAutoDismiss)
+            binding!!.cvCard.setOnClickListener {
+                callback.onDialogResult(isPermissionGranted = true)
+                dismiss()
+            }
+        if (!isAutoDismiss)
+            binding!!.buttonProceed.setOnClickListener {
+                callback.onDialogResult(isPermissionGranted = true)
+                dismiss()
+            }
+        if (!isAutoDismiss)
+            dialog?.setOnDismissListener {
+                callback.onDialogResult(isPermissionGranted = true)
+            }
 
-        dialog!!.show()
+        dialog?.show()
         isDialogShowing = true
     }
 
     fun dismiss() {
         isDialogShowing = false
-        dialog!!.dismiss()
+        dialog?.dismiss()
     }
 
     interface Callback {
-        fun onDialogResult(isPermissionGranted:Boolean)
+        fun onDialogResult(isPermissionGranted: Boolean)
     }
 
     companion object {
@@ -73,9 +95,4 @@ class SuccessDialog(
             return displayMetrics.widthPixels
         }
     }
-
-
-
-
-
 }

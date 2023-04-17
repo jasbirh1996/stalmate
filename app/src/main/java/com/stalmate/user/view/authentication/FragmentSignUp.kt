@@ -312,9 +312,6 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
         binding.btnCrateAccount.setOnClickListener {
             if (isValid()) {
 
-                Log.d("ajncjnan", currentYear)
-                Log.d("ajncjnan", selectedYear)
-
                 if (currentYear < selectedYear) {
                     makeToast("Your age should be 13 years or more")
                 } else {
@@ -335,7 +332,6 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
     var isUsedEmail = false
 
     fun isValid(): Boolean {
-
         lateinit var successdialogBuilder: AlertDialog
         if (ValidationHelper.isNull(binding.etName.text.toString())) {
             makeToast(getString(R.string.first_name_toast))
@@ -360,12 +356,10 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
                 successdialogBuilder =
                     AlertDialog.Builder(requireContext(), R.style.CustomAlertDialog).create()
                 val view = layoutInflater.inflate(R.layout.password_validation_error_popup, null)
-
                 successdialogBuilder.setView(view)
                 successdialogBuilder.setCanceledOnTouchOutside(true)
                 successdialogBuilder.show()
             }, SPLASH_DURATION)
-
             return false
         } else if (!binding.tmcheckbox.isChecked) {
             makeToast(getString(R.string.accept_tnc))
@@ -378,12 +372,10 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
         return !TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches()
     }
 
-    fun isValidPassword(password: String?): Boolean {
-        val pattern: Pattern
-        val matcher: Matcher
-        val PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{4,}$"
-        pattern = Pattern.compile(PASSWORD_PATTERN)
-        matcher = pattern.matcher(password)
+    private fun isValidPassword(password: String?): Boolean {
+        val pattern: Pattern =
+            Pattern.compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{4,}$")
+        val matcher: Matcher = pattern.matcher(password)
         return matcher.matches()
     }
 
@@ -410,7 +402,7 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
         bundle.putString("last_name", binding.etLastName.text.toString())
         bundle.putString("gender", gander_name)
 //        bundle.putString("schoolandcollege", binding.etschoolcollege.text.toString())
-        bundle.putString("dob", "$selectedYear-$selectedMonth-$selectedDay")
+        bundle.putString("dob", "$selectedDay-$selectedMonth-$selectedYear")
         bundle.putString("year", selectedYear)
         bundle.putString("month", selectedMonth)
         bundle.putString("date", selectedDay)
