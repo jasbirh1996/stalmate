@@ -63,7 +63,7 @@ class DeleteAccountOtpFragment : BaseFragment() {
                 val d = SuccessDialog(
                     context = this@DeleteAccountOtpFragment.requireContext(),
                     heading = "Success",
-                    message = "Your stalemate account has been deleted successfully",
+                    message = "Your stalemate account has been temporary deleted.\n\nYour account will be deleted permanently after 30 days but if you want to continue, login again within 30 days any time.",
                     buttonPrimary = "",
                     callback = object : SuccessDialog.Callback {
                         override fun onDialogResult(isPermissionGranted: Boolean) {
@@ -94,7 +94,7 @@ class DeleteAccountOtpFragment : BaseFragment() {
                             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                     )
                     requireActivity().finishAffinity()
-                }, 1000)
+                }, 3000)
             }
         }
     }

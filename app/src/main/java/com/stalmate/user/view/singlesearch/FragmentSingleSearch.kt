@@ -120,17 +120,10 @@ class FragmentSingleSearch(var Type:String) : BaseFragment(), SingleSearchAdapte
             binding.rvList.visibility=View.VISIBLE
             binding.itemView.visibility=View.GONE
         }else{
-            binding.tvValue.text ="You Want Add"+ " "+searchData
+            binding.tvValue.text = "You Want Add $searchData"
             binding.itemView.visibility=View.VISIBLE
             binding.rvList.visibility=View.GONE
             Log.d("asdasdasd","empty")
         }
     }
-
-
-
-
-
-
-
 }

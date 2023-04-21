@@ -23,6 +23,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.stalmate.user.R
 
 import com.stalmate.user.databinding.ItemFriendBinding
+import com.stalmate.user.model.ModelGlobalSearch
 import com.stalmate.user.model.User
 import com.stalmate.user.utilities.Constants
 import com.stalmate.user.utilities.Constants.TYPE_ALL_FOLLOWERS_FOLLOWING
@@ -39,7 +40,7 @@ class SearchedUserAdapter(
     var callback: Callbackk,
 ) :
     RecyclerView.Adapter<SearchedUserAdapter.FeedViewHolder>() {
-    var list = ArrayList<User>()
+    var list : ArrayList<ModelGlobalSearch.Reponse?>? = arrayListOf()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -51,35 +52,36 @@ class SearchedUserAdapter(
     }
 
     override fun onBindViewHolder(holder: SearchedUserAdapter.FeedViewHolder, position: Int) {
-        holder.bind(list.get(position))
+        holder.bind(list?.get(position))
     }
 
     override fun getItemCount(): Int {
-        return list.size
+        return (list?.size?:0)
     }
 
     inner class FeedViewHolder(var binding: ItemFriendBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(friend: User) {
+        fun bind(friend: ModelGlobalSearch.Reponse?) {
             setupViewsForAdapter(binding, friend, bindingAdapterPosition)
         }
     }
 
-    fun addToList(users: List<User>) {
-        val size = list.size
-        list.addAll(users)
-        val sizeNew = list.size
-        notifyItemRangeChanged(size, sizeNew)
+    fun addToList(users: ArrayList<ModelGlobalSearch.Reponse?>?) {
+        if (users != null) {
+            list?.addAll(users)
+        }
+        notifyDataSetChanged()
     }
-    fun submitList(users: List<User>) {
-        list.clear()
-        list.addAll(users)
+
+    fun submitList(users: ArrayList<ModelGlobalSearch.Reponse?>?) {
+        list?.clear()
+        list?.addAll(users!!)
         notifyDataSetChanged()
     }
 
     public interface Callbackk {
         fun onClickOnUpdateFriendRequest(friend: User, status: String)
-        fun onClickOnProfile(friend: User)
+        fun onClickOnProfile(friend: ModelGlobalSearch.Reponse?)
     }
 
 
@@ -96,17 +98,16 @@ class SearchedUserAdapter(
             viewModel.sendFriendRequest("", hashMap)
             viewModel.sendFriendRequestLiveData.observe(lifecycleOwner, Observer {
                 it.let {
-                    if (list[position].isFriend == 0) {
-                        if (!ValidationHelper.isNull(list[position].request_status)) {
-                            if (list[position].request_status == Constants.FRIEND_CONNECTION_STATUS_PENDING) {
-                                list[position].request_status = ""
+                    if (list?.get(position)?.isFriend == 0) {
+                        if (!ValidationHelper.isNull(list!![position]?.request_status)) {
+                            if (list!![position]?.request_status == Constants.FRIEND_CONNECTION_STATUS_PENDING) {
+                                list!![position]?.request_status = ""
                             }
                         } else {
-                            list[position].request_status =
-                                Constants.FRIEND_CONNECTION_STATUS_PENDING
+                            list!![position]?.request_status = Constants.FRIEND_CONNECTION_STATUS_PENDING
                         }
                     } else {
-                        list[position].isFriend = 1
+                        list?.get(position)?.isFriend = 1
                     }
 
                     notifyItemChanged(position)
@@ -115,19 +116,17 @@ class SearchedUserAdapter(
         }
 
 
-
-
     }
 
 
     fun setupViewsForAdapter(
         binding: ItemFriendBinding,
-        friend: User,
+        friend: ModelGlobalSearch.Reponse?,
         bindingAdapterPosition: Int
     ) {
 
 
-        if (friend.isFriend == 1) {
+        if (friend?.isFriend == 1) {
             binding.ivFriend.setImageDrawable(
                 ContextCompat.getDrawable(
                     context,
@@ -136,7 +135,7 @@ class SearchedUserAdapter(
             )
         } else {
 
-            if (friend.request_status == "Pending") {
+            if (friend?.request_status == "Pending") {
                 binding.ivFriend.setImageDrawable(
                     ContextCompat.getDrawable(
                         context,
@@ -155,10 +154,10 @@ class SearchedUserAdapter(
 
         binding.ivFriend.setOnClickListener {
 
-            if (friend.isFriend==0){
+            if (friend?.isFriend == 0) {
                 updateFriendStatus(
                     TYPE_USER_ACTION_ADD_FRIEND,
-                    friend.id,
+                    friend.id.toString(),
                     (binding.root.context as? LifecycleOwner)!!,
                     binding,
                     bindingAdapterPosition
@@ -175,16 +174,15 @@ class SearchedUserAdapter(
         ImageLoaderHelperGlide.setGlideCorner(
             context,
             binding.ivUserImage,
-            friend.img,
+            friend?.img,
             R.drawable.user_placeholder
         )
-        binding.tvUserName.text = friend.first_name+ " " +friend.last_name
-
-        if (friend.profile_data[0].profession.isNotEmpty()){
-            binding.tvLineOne.text = friend.profile_data[0].profession[0].designation
+        binding.tvUserName.text = friend?.first_name + " " + friend?.last_name
+        if (friend?.profile_data?.get(0)?.profession?.isNotEmpty() == true) {
+            binding.tvLineOne.text = friend?.profile_data[0]?.profession?.get(0)?.designation
             binding.tvLineOne.visibility = View.VISIBLE
-        }else  if (friend.profile_data[0].education.isNotEmpty()){
-            binding.tvLineOne.text = friend.profile_data[0].education[0].sehool
+        } else if (friend?.profile_data?.get(0)?.education?.isNotEmpty() == true) {
+            binding.tvLineOne.text = friend?.profile_data[0]?.education?.get(0)?.sehool
             binding.tvLineOne.visibility = View.VISIBLE
         }
 
@@ -193,8 +191,8 @@ class SearchedUserAdapter(
             binding.tvMutualFirnds.visibility = View.VISIBLE
         }*/
 
-        if (!ValidationHelper.isNull(friend.profile_data[0].home_town)){
-            binding.tvLineTwo.text = friend.profile_data[0].home_town
+        if (!ValidationHelper.isNull(friend?.profile_data?.get(0)?.home_town)) {
+            binding.tvLineTwo.text = friend?.profile_data?.get(0)?.home_town
             binding.tvLineTwo.visibility = View.VISIBLE
 
         }

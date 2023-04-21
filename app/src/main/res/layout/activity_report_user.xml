@@ -156,10 +156,8 @@
                     android:id="@+id/layuotReportReason"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
                     android:layout_marginTop="20dp"
-                    app:layout_constraintTop_toBottomOf="@+id/layuotReportCategory"
-                    tools:layout_editor_absoluteX="20dp">
+                    app:layout_constraintTop_toBottomOf="@+id/layuotReportCategory">
 
                     <TextView
                         android:id="@+id/textView24"
@@ -172,19 +170,31 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="(Max 100 Characters)"
+                        android:textSize="@dimen/_12sdp"
+                        android:id="@+id/tvReasonCount"
+                        app:layout_constraintBottom_toBottomOf="@id/textView24"
+                        app:layout_constraintStart_toEndOf="@id/textView24"
+                        app:layout_constraintTop_toTopOf="@id/textView24" />
+
                     <EditText
                         android:id="@+id/spinnerReportReason"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/small_spinner_border"
-                        android:hint="Enter the Report Reason"
+                        android:gravity="start"
+                        android:hint="Enter the Report Reason\nFor example:-XYZ title"
                         android:imeOptions="actionNext"
                         android:inputType="text"
+                        android:maxLength="100"
                         android:lines="1"
                         android:maxLines="1"
+                        android:minHeight="@dimen/_70sdp"
                         android:minLines="1"
-                        android:paddingStart="@dimen/_10sdp"
-                        android:paddingEnd="@dimen/_10sdp"
+                        android:padding="@dimen/_10sdp"
                         android:textSize="12sp"
                         android:visibility="visible"
                         app:layout_constraintTop_toBottomOf="@+id/textView24" />
@@ -206,25 +216,38 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins"
-
+                        android:gravity="center"
+                        android:includeFontPadding="false"
                         android:text="Detailed Reason"
                         android:textColor="@color/colorTextGray"
                         android:textSize="@dimen/_16sdp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="(Max 500 Characters)"
+                        android:textSize="@dimen/_12sdp"
+                        android:id="@+id/tvReasonDetailsCount"
+                        app:layout_constraintBottom_toBottomOf="@id/textView25"
+                        app:layout_constraintStart_toEndOf="@id/textView25"
+                        app:layout_constraintTop_toTopOf="@id/textView25" />
+
                     <EditText
                         android:id="@+id/etDetailedReason"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/small_spinner_border"
-                        android:hint="Enter the Detailed Reason"
+                        android:gravity="start"
+                        android:hint="Enter the Detailed Reason\nFor example:-XYZ description"
                         android:imeOptions="actionDone"
                         android:inputType="text"
                         android:maxLines="1"
+                        android:maxLength="500"
+                        android:minHeight="@dimen/_100sdp"
                         android:minLines="1"
-                        android:paddingStart="@dimen/_10sdp"
-                        android:paddingEnd="@dimen/_10sdp"
+                        android:padding="@dimen/_10sdp"
                         android:textSize="12sp"
                         android:visibility="visible"
                         app:layout_constraintTop_toBottomOf="@+id/textView25" />

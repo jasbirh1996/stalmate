@@ -9,13 +9,10 @@ data class ModelUser(
 )
 
 data class User(
-    val img: String? = null,
-    var isFriend: Int=0,
-    var isFollowed: Int=0,
-    var hasFriendRequest: Int=0,
-    var request_status: String? = null,
-    var friendRequestsent: Int=0,
-    var isFriendRemovedFromSuggestion: Int? = null,
+    var isFriend: Int = 0,
+    var isFollowed: Int = 0,
+    var hasFriendRequest: Int = 0,
+    var friendRequestsent: Int = 0,
     var isBlocked: Int? = null,
     val friends_count: Int? = null,
     val about: String? = null,
@@ -24,26 +21,37 @@ data class User(
     val cover_img: List<Photo> = ArrayList<Photo>(),
     val cover_img1: String? = null,
     val dob: String? = null,
-    var follower_count: Int=0,
-    var following_count: Int=0,
+    var follower_count: Int = 0,
+    var following_count: Int = 0,
     val email: String? = null,
-    val first_name: String="",
-    val last_name: String="",
+    val first_name: String = "",
+    val last_name: String = "",
     val mutual_friend: String? = null,
     val id: String,
     val img_url: String? = null,
-    val gender:String? = null,
+    val gender: String? = null,
     val number: String? = null,
     val profile_data: ArrayList<ProfileData> = ArrayList<ProfileData>(),
     val profile_img: List<Photo> = ArrayList<Photo>(),
-    val profile_img1: String="",
+    val profile_img1: String = "",
     val schoolandcollege: String? = null,
     val schoolandcollegename: String? = null,
-    val photos: ArrayList<AlbumImage> = ArrayList<AlbumImage>(),
     val albums: ArrayList<Albums> = ArrayList<Albums>(),
     val url: String? = null,
-    val mes:String? = null,
-    var isSelected:Boolean=false,
+
+
+    //Not coming for new users
+    val mes: String? = null,
+    var isSelected: Boolean = false,
+    val photos: ArrayList<AlbumImage> = ArrayList<AlbumImage>(),
+    val img: String? = null,
+    var request_status: String? = null,
+    var isFriendRemovedFromSuggestion: Int? = null,
+
+
+    //From M8 work
+    val connected_since: String? = "",
+    val privacy_setting: PrivacySetting? = null,
 ) : Serializable
 
 data class Photo(
@@ -55,15 +63,13 @@ data class Photo(
 ) : Serializable
 
 
-
 data class ProfileData(
     val education: ArrayList<Education>,
     val home_town: String,
     val location: String,
     val marital_status: String,
     val profession: ArrayList<Profession>,
-
-):Serializable
+) : Serializable
 
 
 data class Education(
@@ -112,3 +118,25 @@ data class Albums(
     val name: String,
     val img: String
 ) : Serializable
+
+data class PrivacySetting(
+    val _id: String? = "", // 643955d84d8ac204ccd95141
+    val about: Int? = 0, // 2
+    val allow_others_to_find_me: Boolean? = false, // true
+    val block_contact: ArrayList<Any?>? = arrayListOf(),
+    val groups: Int? = 0, // 1
+    val last_seen: Int? = 0, // 1
+    val prfile_photo: Int? = 0, // 1
+    val profile: Int? = 0, // 2
+    val read_receipts: Boolean? = false, // true
+    val story: Int? = 0, // 1
+    val user_id: String? = "", // 643955be4d8ac204ccd950cd
+    val who_can_like_my_post: Int? = 0, // 1
+    val who_can_post_comment: Int? = 0, // 1
+    val who_can_see_email_address: Int? = 0, // 1
+    val who_can_see_my_future_post: Int? = 0, // 1
+    val who_can_see_people_page_list: Int? = 0, // 1
+    val who_can_see_phone_number: Int? = 0, // 1
+    val who_can_send_me_message: Int? = 0, // 1
+    val who_can_send_you_friend_request: Int? = 0 // 1
+)

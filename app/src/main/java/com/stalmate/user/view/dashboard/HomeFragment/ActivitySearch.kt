@@ -21,7 +21,6 @@ import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.databinding.ActivitySearchBinding
 import com.stalmate.user.view.profile.FragmentProfileEdit
 
-
 class ActivitySearch : BaseActivity() {
     lateinit var navHostFragment: NavHostFragment
     private lateinit var navController: NavController

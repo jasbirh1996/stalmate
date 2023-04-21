@@ -218,7 +218,7 @@ class ReelListFragment : BaseFragment(), ReelAdapter.Callback {
 
         hashmap.put("fun_id", "")
         hashmap.put("limit", "5")
-        networkViewModel.funtimeLiveData(hashmap)
+        networkViewModel.funtimeLiveData(prefManager?.access_token.toString(),hashmap)
         networkViewModel.funtimeLiveData.observe(viewLifecycleOwner) {
             isApiRuning = false
             //  binding.shimmerLayout.visibility =  View.GONE

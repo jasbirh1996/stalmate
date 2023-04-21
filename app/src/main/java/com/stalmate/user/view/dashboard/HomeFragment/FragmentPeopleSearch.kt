@@ -15,7 +15,9 @@ import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentSearchBinding
+import com.stalmate.user.model.ModelGlobalSearch
 import com.stalmate.user.model.User
+import com.stalmate.user.networking.ApiInterface
 import com.stalmate.user.view.adapter.SearchedUserAdapter
 
 class FragmentPeopleSearch : BaseFragment(), SearchedUserAdapter.Callbackk {
@@ -106,7 +108,7 @@ class FragmentPeopleSearch : BaseFragment(), SearchedUserAdapter.Callbackk {
     private fun loadMoreItems() {
         isLoading = true
         currentPage++
-        hitApi(false,searchData)
+        hitApi(false, searchData)
     }
 
 
@@ -115,49 +117,42 @@ class FragmentPeopleSearch : BaseFragment(), SearchedUserAdapter.Callbackk {
         if (isFresh) {
             currentPage = 1
         }
-        var hashmap = HashMap<String, String>()
-        hashmap.put("search", this.searchData)
-        hashmap.put("number_array", contactString)
-        hashmap.put("page", currentPage.toString())
-        hashmap.put("limit", "20")
 
-        networkViewModel.getGlobalSearch(hashmap)
+        val hashmap = ApiInterface.SearchRequest(
+            page = currentPage,
+            limit = 20,
+            search = this.searchData,
+            number_array = contactString
+        )
+
+        networkViewModel.getGlobalSearch(prefManager?.access_token.toString(), hashmap)
         networkViewModel.globalSearchLiveData.observe(viewLifecycleOwner, Observer {
             it.let {
-                if (it!!.user_list.isNotEmpty()) {
-
+                if (it?.reponse?.isNotEmpty() == true) {
                     if (isFresh) {
-                        userAdapter.submitList(it!!.user_list as java.util.ArrayList<User>)
+                        userAdapter.submitList(it!!.reponse)
                     } else {
-                        userAdapter.addToList(it!!.user_list as java.util.ArrayList<User>)
+                        userAdapter.addToList(it!!.reponse)
                     }
-
-
                     isLastPage = false
-                    if (it!!.user_list.size < 6) {
+                    if ((it!!.reponse?.size ?: 0) < 6) {
                         binding.progressLoading.visibility = View.GONE
                     } else {
                         binding.progressLoading.visibility = View.VISIBLE
                     }
-
-
                 } else {
                     isLastPage = true
                     binding.progressLoading.visibility = View.GONE
                     if (isFresh) {
-                        userAdapter.submitList(it!!.user_list as java.util.ArrayList<User>)
+                        userAdapter.submitList(it!!.reponse)
                     }
                     binding.layoutNoData.visibility = View.VISIBLE
-
                 }
-
-                if (userAdapter.list.isEmpty()) {
+                if (userAdapter.list?.isEmpty() == true) {
                     binding.layoutNoData.visibility = View.VISIBLE
                 } else {
                     binding.layoutNoData.visibility = View.GONE
                 }
-
-
             }
         })
     }
@@ -169,11 +164,12 @@ class FragmentPeopleSearch : BaseFragment(), SearchedUserAdapter.Callbackk {
     }
 
 
-    override fun onClickOnProfile(friend: User) {
-
-
+    override fun onClickOnProfile(friend: ModelGlobalSearch.Reponse?) {
         startActivity(
-            IntentHelper.getOtherUserProfileScreen(requireContext())!!.putExtra("id", friend.id)
+            IntentHelper.getOtherUserProfileScreen(requireContext())?.apply {
+                putExtra("id", friend?.id)
+                putExtra("userData", friend)
+            }
         )
     }
 

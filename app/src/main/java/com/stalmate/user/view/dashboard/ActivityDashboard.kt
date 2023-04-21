@@ -93,7 +93,7 @@ class ActivityDashboard : BaseActivity(), FragmentHome.Callback, FragmentFriend.
         hashmap.put("limit", "5")
         hashmap.put("id_user", "")
         hashmap.put("fun_id", id)
-        networkViewModel.funtimeLiveData(hashmap)
+        networkViewModel.funtimeLiveData(prefManager?.access_token.toString(),hashmap)
         networkViewModel.funtimeLiveData.observe(this) {
             isApiRuning = false
             //  binding.shimmerLayout.visibility =  View.GONE

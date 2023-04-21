@@ -41,7 +41,10 @@ interface ApiInterface {
     fun getLanguageList(): Call<ModelLanguageResponse>
 
     @POST(Constants.URLFUNTIME_LIST)
-    fun getFuntimeList(@Body map: HashMap<String, String>): Call<ModelFuntimeResponse>
+    fun getFuntimeList(
+        @Header("access_token") access_token: String,
+        @Body map: HashMap<String, String>
+    ): Call<ModelFuntimeResponse>
 
     @POST(Constants.URL_CREATE_ROOM)
     fun createroomId(@Body map: HashMap<String, String>): Call<ModelRoom>
@@ -175,7 +178,17 @@ interface ApiInterface {
 
 
     @POST(Constants.URL_GLOBAL_SEARCH)
-    fun getGlobalSearch(@Body map: HashMap<String, String>): Call<ModelGlobalSearch>
+    fun getGlobalSearch(
+        @Header("access_token") access_token: String,
+        @Body map: SearchRequest
+    ): Call<ModelGlobalSearch>
+
+    data class SearchRequest(
+        var page: Int = 0,
+        var limit: Int = 0,
+        var search: String = "",
+        var number_array: String = "",
+    )
 
 
     @POST(Constants.URL_COMMENT_LIST)
@@ -242,6 +255,10 @@ interface ApiInterface {
         @Part("detailed_reason") detailed_reason: RequestBody,
     ): Call<CommonModelResponse>
 
+    @GET(Constants.getFileReport)
+    fun getReportProblemList(
+        @Header("access_token") access_token: String
+    ): Call<ReportsListingResponse>
 
     @GET(Constants.URL_PHOTO_ALBUM)
     fun getAlbumList(): Call<ModelAlbumsResponse>

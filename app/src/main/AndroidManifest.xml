@@ -113,6 +113,12 @@
                 android:value="" />
         </activity>
         <activity
+            android:name=".view.dashboard.funtime.ActivityReportListing"
+            android:exported="false" />
+        <activity
+            android:name=".view.dashboard.funtime.ActivityReportDetails"
+            android:exported="false" />
+        <activity
             android:name=".view.dashboard.funtime.ActivityReelsByAudio"
             android:exported="false" />
         <activity

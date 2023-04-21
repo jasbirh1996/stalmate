@@ -2,6 +2,8 @@ package com.stalmate.user.view.dashboard.funtime
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.widget.AdapterView
 import androidx.appcompat.app.AppCompatActivity
@@ -104,7 +106,42 @@ class ActivityReportUser : BaseActivity(), DialogFilePicker.Callback {
         binding.toolbar.topAppBar.setNavigationOnClickListener {
             finish()
         }
+        binding.spinnerReportReason.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val count = if (s.toString().isNullOrEmpty()) {
+                    0
+                } else {
+                    s.toString().length
+                }
+                binding.tvReasonCount.text = "(Max ${100 - count} Characters)"
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+        })
+        binding.etDetailedReason.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val count = if (s.toString().isNullOrEmpty()) {
+                    0
+                } else {
+                    s.toString().length
+                }
+                binding.tvReasonDetailsCount.text = "(Max ${500 - count} Characters)"
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+        })
     }
 
     /*Cover Image Picker */

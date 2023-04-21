@@ -58,7 +58,7 @@ class FragmentProfileFuntime :BaseFragment(), ReelVideosByAudioAdapter.Callback 
 
 
 
-        networkViewModel.funtimeLiveData(hashMap)
+        networkViewModel.funtimeLiveData(prefManager?.access_token.toString(),hashMap)
         networkViewModel.funtimeLiveData.observe(viewLifecycleOwner) {
             it.let {
                 adapter.addToList(it!!.results)

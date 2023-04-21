@@ -44,8 +44,11 @@ object Constants {
     const val URL_PHOTO_ALBUM_NAME = "/auth_api/add_update_albums"
     const val URL_PHOTO_ALBUM_PHOTO = "/auth_api/get_albums_img"
     const val URL_PHOTO_INDEX = "/auth_api/get_profile_image_list"
+
     const val URL_SEARCH_UNIVERCITY = "/auth_api/university_list"
     const val URL_SEARCH_BRACNCHLIST = "/auth_api/branch_list"
+    const val URL_GLOBAL_SEARCH = "/friend_api/stalmate_search"//"/friend_api/search_list"
+
     const val URL_EDUCATION_ADD = "/auth_api/add_update_usereducation"
     const val URL_PROFESSION_ADD = "/auth_api/add_update_userwork"
     const val URL_UPDATE_FRIEND_CATEGORY = "/friend_api/add_update_friend_category"
@@ -64,7 +67,6 @@ object Constants {
     const val UPDATE_PROFILE_API_FILE = "/auth_api/profile_update_file"
     const val UPLOADE_ALBUM_IMAGE_API_FILE = "/auth_api/add_albums_img"
     const val URL_REPORT_FUNTIME = "/funtime_api/funtime_report"
-    const val URL_GLOBAL_SEARCH = "/friend_api/search_list"
     const val START_DATE = "01"
     const val ADD_REEL = "/funtime_api/add_funtime"
 
@@ -152,6 +154,7 @@ object Constants {
     const val UpdateLanguageAndCountry = "setting_api/general_setting"
 
     const val ReportProblem = "/setting_api/file_report"
+    const val getFileReport = "setting_api/get_file_report"
 
     //Feedbacks
     const val saveAsDraft = "funtime_api/add_draft"

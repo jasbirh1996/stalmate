@@ -74,10 +74,10 @@ open class AppViewModel : ViewModel() {
 
     var funtimeLiveData: LiveData<ModelFuntimeResponse?> = MutableLiveData<ModelFuntimeResponse?>()
 
-    fun funtimeLiveData(map: HashMap<String, String>) {
+    fun funtimeLiveData(access_token: String, map: HashMap<String, String>) {
         val temp = MutableLiveData<ModelFuntimeResponse?>()
         funtimeLiveData = temp
-        getResult(temp, apiInterface.getFuntimeList(map))
+        getResult(temp, apiInterface.getFuntimeList(access_token, map))
     }
 
     var myfuntimeLiveData: LiveData<ModelFuntimeResponse?> =
@@ -423,10 +423,10 @@ open class AppViewModel : ViewModel() {
     var globalSearchLiveData: MutableLiveData<ModelGlobalSearch?> =
         MutableLiveData<ModelGlobalSearch?>()
 
-    fun getGlobalSearch(map: HashMap<String, String>) {
+    fun getGlobalSearch(access_token: String, map: ApiInterface.SearchRequest) {
         val temp = MutableLiveData<ModelGlobalSearch?>()
         globalSearchLiveData = temp
-        getResult(temp, apiInterface.getGlobalSearch(map))
+        getResult(temp, apiInterface.getGlobalSearch(access_token, map))
     }
 
 
@@ -494,6 +494,15 @@ open class AppViewModel : ViewModel() {
             )
         )
         return reportFuntimeLiveData
+    }
+
+    var getReportListLiveData = MutableLiveData<ReportsListingResponse?>()
+
+    fun getReportList(access_token: String) {
+        getResult(
+            getReportListLiveData,
+            apiInterface.getReportProblemList(access_token = access_token)
+        )
     }
 
 

@@ -548,7 +548,9 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
                     @SuppressLint("NotifyDataSetChanged")
                     override fun onSuccessfullyEditedEducation(education: Education) {
                         userData.results.profile_data[0].education.add(education)
-                        (binding.layout.rvEducation.adapter as EducationListAdapter).list.add(education)
+                        (binding.layout.rvEducation.adapter as EducationListAdapter).list.add(
+                            education
+                        )
                         (binding.layout.rvEducation.adapter as EducationListAdapter).notifyDataSetChanged()
                     }
                 })
@@ -564,7 +566,9 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
                 object : DialogAddEditProfession.Callbackk {
                     override fun onSuccessfullyEditedProfession(profession: Profession) {
                         userData.results.profile_data[0].profession.add(profession)
-                        (binding.layout.rvProfession.adapter as ProfessionListAdapter).list.add(profession)
+                        (binding.layout.rvProfession.adapter as ProfessionListAdapter).list.add(
+                            profession
+                        )
                         (binding.layout.rvProfession.adapter as ProfessionListAdapter).notifyDataSetChanged()
                     }
                 })
@@ -578,6 +582,7 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
                     hashMap["number"] = binding.layout.etNumber.text.toString()
                     networkViewModel.numberVerify(hashMap)
                     networkViewModel.numberVerifyData.observe(requireActivity()) {
+                        verifyPhoneNumber = binding.layout.etNumber.text.toString()
                         it.let {
                             if (it!!.status == true) {
                                 var dialoguenumberVerify = DialogVerifyNumber(

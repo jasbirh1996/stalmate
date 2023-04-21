@@ -16,7 +16,9 @@ import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentGlobalSearchBinding
+import com.stalmate.user.model.ModelGlobalSearch
 import com.stalmate.user.model.User
+import com.stalmate.user.networking.ApiInterface
 import com.stalmate.user.view.adapter.SearchedUserAdapter
 
 class FragmentGlobalSearch : BaseFragment(),
@@ -58,7 +60,6 @@ class FragmentGlobalSearch : BaseFragment(),
         hitApi(true, searchData)
 
         binding.buttonSeeMoreGroups.setOnClickListener {
-            //  callback.onClickOnSeeMore(searchData,"groups")
             findNavController().navigate(R.id.action_fragmentGlobalToFragmentPeopleSearch)
         }
         binding.buttonSeeMoreUsers.setOnClickListener {
@@ -68,11 +69,8 @@ class FragmentGlobalSearch : BaseFragment(),
             findNavController().navigate(R.id.action_fragmentGlobalToFragmentPeopleSearch, bundle)
         }
         binding.buttonSeeMoreEvents.setOnClickListener {
-            //  callback.onClickOnSeeMore(searchData,"events")
             findNavController().navigate(R.id.action_fragmentGlobalToFragmentPeopleSearch)
         }
-
-
     }
 
     fun hitApi(isFresh: Boolean, searchData: String) {
@@ -81,23 +79,25 @@ class FragmentGlobalSearch : BaseFragment(),
             currentPage = 1
         }
 
-        var hashmap = HashMap<String, String>()
-        hashmap.put("search", this.searchData)
-        hashmap.put("page", currentPage.toString())
-        hashmap.put("limit", "5")
-
-        networkViewModel.getGlobalSearch(hashmap)
+        val hashmap = ApiInterface.SearchRequest(
+            page = currentPage,
+            limit = 5,
+            search = this.searchData,
+            number_array = ""
+        )
+        networkViewModel.getGlobalSearch(prefManager?.access_token.toString(), hashmap)
         networkViewModel.globalSearchLiveData.observe(viewLifecycleOwner, Observer {
             it.let {
-
-                if (it!!.user_list.isNotEmpty()) {
+                if (it!!.reponse?.isNotEmpty() == true) {
                     binding.noDataFound.visibility = View.GONE
+                    binding.layoutUsers.visibility = View.VISIBLE
+                    binding.layoutEvents.visibility = View.GONE
+                    binding.layoutGroups.visibility = View.GONE
 
                     val divider = DividerItemDecoration(
                         context,
                         DividerItemDecoration.VERTICAL
                     )
-
                     divider.setDrawable(ShapeDrawable().apply {
                         intrinsicHeight = resources.getDimensionPixelOffset(R.dimen.dp_1)
                         paint.color = Color.GRAY // Note:
@@ -123,71 +123,51 @@ class FragmentGlobalSearch : BaseFragment(),
                     binding.rvGroups.adapter = userAdapter
                     binding.rvUsers.adapter = userAdapter
 
-                    binding.layoutUsers.visibility = View.VISIBLE
-/*                    binding.layoutEvents.visibility = View.GONE
-                    binding.layoutGroups.visibility = View.GONE*/
-
                     if (isFresh) {
-                        if (it.user_list.size > 4) {
-                            userAdapter.submitList(it.user_list.subList(0, 4))
+                        if ((it.reponse?.size ?: 0) > 4) {
+                            val list: ArrayList<ModelGlobalSearch.Reponse?> = arrayListOf()
+                            repeat(4) { pos ->
+                                list.add(it.reponse?.get(pos))
+                            }
+                            userAdapter.submitList(list)
                         } else {
-                            userAdapter.submitList(it.user_list)
+                            userAdapter.submitList(it.reponse)
                         }
                     } else {
-                        userAdapter.addToList(it.user_list)
-                    }
-
-                    if (it.user_list.size > 4) {
-                        binding.buttonSeeMoreEvents.visibility = View.VISIBLE
-                        binding.buttonSeeMoreGroups.visibility = View.VISIBLE
-                        binding.buttonSeeMoreUsers.visibility = View.VISIBLE
-                    } else {
-                        binding.buttonSeeMoreEvents.visibility = View.GONE
-                        binding.buttonSeeMoreGroups.visibility = View.GONE
-                        binding.buttonSeeMoreUsers.visibility = View.GONE
+                        userAdapter.addToList(it.reponse)
                     }
                 } else {
-                    binding.layoutUsers.visibility = View.GONE
                     binding.noDataFound.visibility = View.VISIBLE
+                    binding.layoutUsers.visibility = View.GONE
                     binding.layoutEvents.visibility = View.GONE
                     binding.layoutGroups.visibility = View.GONE
                 }
-
             }
         })
     }
 
-
     override fun onClickOnUpdateFriendRequest(friend: User, status: String) {
-
-        var hashmap = HashMap<String, String>()
+        val hashmap = HashMap<String, String>()
         hashmap.put("type", "")
         hashmap.put("search", "")
         hashmap.put("page", "1")
-
-
     }
 
 
-    override fun onClickOnProfile(friend: User) {
-
-
+    override fun onClickOnProfile(friend: ModelGlobalSearch.Reponse?) {
         startActivity(
-            IntentHelper.getOtherUserProfileScreen(requireContext())!!.putExtra("id", friend.id)
+            IntentHelper.getOtherUserProfileScreen(requireContext())?.apply {
+                putExtra("id", friend?.id)
+                putExtra("userData", friend)
+            }
         )
     }
 
-
     fun showMenuFilter(v: View) {
-
-
         val popup = PopupMenu(requireContext(), v)
         val inflater: MenuInflater = popup.menuInflater
         inflater.inflate(R.menu.user_filter_menu, popup.menu)
         popup.setOnMenuItemClickListener { menuItem ->
-
-            Log.d("klasjdlsad", ";lasjd;a")
-
             when (menuItem.itemId) {
                 R.id.actionSortByAZ -> {
                     sortBy = "ascending"

@@ -25,6 +25,7 @@ import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.utilities.SpinnerUtil.setSpinner
 import com.stalmate.user.view.authentication.ActivityAuthentication
 import com.stalmate.user.view.dashboard.Chat.FragmentNotification
+import com.stalmate.user.view.dashboard.funtime.ActivityReportListing
 import com.stalmate.user.view.dashboard.funtime.ActivityReportUser
 import ly.img.android.pesdk.kotlin_extension.IntentHelper
 import ly.img.android.pesdk.ui.utils.IntentUtils
@@ -150,7 +151,7 @@ class AppSettingFragment : BaseFragment() {
                     rateApp(this.requireContext())
                 }
                 "Report Problem" -> {
-                    startActivity(Intent(this.requireContext(), ActivityReportUser::class.java))
+                    startActivity(Intent(this.requireContext(), ActivityReportListing::class.java))
                 }
                 "Notification" -> {
                     startActivity(Intent(requireActivity(), FragmentNotification::class.java))
