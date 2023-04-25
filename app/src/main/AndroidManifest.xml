@@ -3,7 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.stalmate.user">
 
-    <permission android:name="android.permission.QUERY_ALL_PACKAGES" />
+    <permission
+        android:name="android.permission.QUERY_ALL_PACKAGES"
+        tools:ignore="ReservedSystemPermission" />
 
     <queries>
         <intent>
@@ -11,41 +13,54 @@
         </intent>
     </queries>
 
-    <uses-feature android:name="android.hardware.camera.autofocus" />
 
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.FLASHLIGHT" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
+
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
     <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
+
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+
+    <!-- Required only if your app needs to access images or photos
+     that other apps created. -->
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <!-- Required only if your app needs to access videos
+         that other apps created. -->
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+    <!-- Required only if your app needs to access audio files
+         that other apps created. -->
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+    <!-- Required to maintain app compatibility. -->
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE" /><!--android:maxSdkVersion="32"-->
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name="com.stalmate.user.base.App"
         android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:hardwareAccelerated="true"
-        android:icon="@drawable/app_logo"
+        android:icon="@drawable/ic_signup_top_logo"
         android:label="@string/app_name"
-        android:largeHeap="true"
         android:networkSecurityConfig="@xml/network_security_config"
         android:requestLegacyExternalStorage="true"
-        android:roundIcon="@drawable/app_logo"
-        android:supportsRtl="true"
+        android:roundIcon="@drawable/ic_signup_top_logo"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
+
         <!--<uses-native-library
             android:name="libOpenCL.so"
             android:required="false" />

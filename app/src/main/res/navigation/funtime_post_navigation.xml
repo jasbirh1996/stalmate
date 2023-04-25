@@ -9,36 +9,40 @@
         android:id="@+id/fragmentFuntimePost"
         android:name="com.stalmate.user.view.dashboard.funtime.FragmentFuntimePost"
         android:label="fragmentFuntime"
-        tools:layout="@layout/fragment_funtime_post" >
+        tools:layout="@layout/fragment_funtime_post">
         <action
             android:id="@+id/action_fragmentFuntimePost_to_fragmentFuntimeTag"
-            app:destination="@id/fragmentFuntimeTag"
-            />
+            app:destination="@id/fragmentFuntimeTag" />
         <action
             android:id="@+id/action_fragmentFuntimePost_to_FragmentFuntimePrivacyOptions"
-            app:destination="@id/FragmentFuntimePrivacyOptions"
-            />
-
-
-
+            app:destination="@id/FragmentFuntimePrivacyOptions" />
+        <action
+            android:id="@+id/action_fragmentFuntimePost_to_fragmentSelectThumbnail"
+            app:destination="@id/fragmentSelectThumbnail" />
     </fragment>
 
     <fragment
         android:id="@+id/fragmentFuntimeTag"
         android:name="com.stalmate.user.view.dashboard.funtime.FragmentFuntimeTag"
         android:label="fragmentTag"
-        tools:layout="@layout/fragment_funtime_tag" >
+        tools:layout="@layout/fragment_funtime_tag">
         <action
             android:id="@+id/action_fragmentFuntimeTag_to_fragmentSingleUserSelector"
-            app:destination="@id/fragmentSingleUserSelector"
-            />
+            app:destination="@id/fragmentSingleUserSelector" />
     </fragment>
+
+
+    <fragment
+        android:id="@+id/fragmentSelectThumbnail"
+        android:name="com.stalmate.user.view.dashboard.funtime.SelectThumbnailFragment"
+        android:label="fragmentThumbnail"
+        tools:layout="@layout/fragment_select_thumbnail" />
 
     <fragment
         android:id="@+id/fragmentSingleUserSelector"
         android:name="com.stalmate.user.view.dashboard.funtime.FragmentSingleUserSelector"
         android:label="fragmentSingleSelector"
-        tools:layout="@layout/fragment_single_user_selector" >
+        tools:layout="@layout/fragment_single_user_selector">
 
     </fragment>
 
@@ -46,7 +50,7 @@
         android:id="@+id/FragmentFuntimePrivacyOptions"
         android:name="com.stalmate.user.view.dashboard.funtime.FragmentFuntimePrivacyOptions"
         android:label="fragmentPrivacy"
-        tools:layout="@layout/fragment_funtime_privacy_options" >
+        tools:layout="@layout/fragment_funtime_privacy_options">
 
     </fragment>
 
@@ -55,7 +59,7 @@
         android:id="@+id/FragmentFuntimePostEdit"
         android:name="com.stalmate.user.view.dashboard.funtime.FragmentFuntimePostEdit"
         android:label="fragmentpostedit"
-        tools:layout="@layout/fragment_funtime_post_edit" >
+        tools:layout="@layout/fragment_funtime_post_edit">
 
     </fragment>
 </navigation>

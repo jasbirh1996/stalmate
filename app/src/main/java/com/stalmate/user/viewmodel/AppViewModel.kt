@@ -593,24 +593,26 @@ open class AppViewModel : ViewModel() {
 
     var postReelLiveData: LiveData<CommonModelResponse?> = MutableLiveData<CommonModelResponse?>()
     fun postReel(
-        @Part file: MultipartBody.Part? = null,
-        @Part cover_image: MultipartBody.Part? = null,
-        @Part("file_type") file_type: RequestBody,
-        @Part("text") text: RequestBody,
-        @Part("tag_id") tag_id: RequestBody,
-        @Part("sound_id") sound_id: RequestBody,
-        @Part("location") location: RequestBody,
-        @Part("privacy") privacy: RequestBody,
-        @Part("privacy_data") privacy_data: RequestBody,
-        @Part("deviceId") deviceId: RequestBody,
-        @Part("deviceToken") deviceToken: RequestBody,
+        access_token: String,
+        file: MultipartBody.Part? = null,
+        cover_image: MultipartBody.Part? = null,
+        file_type: RequestBody,
+        text: RequestBody,
+        tag_id: RequestBody,
+        sound_id: RequestBody,
+        location: RequestBody,
+        privacy: RequestBody,
+        privacy_data: RequestBody,
+        deviceId: RequestBody,
+        deviceToken: RequestBody,
     ) {
         val temp = MutableLiveData<CommonModelResponse?>()
         postReelLiveData = temp
         getResult(
             temp,
             apiInterface.postReel(
-                file = file!!,
+                access_token = access_token,
+                file = file,
                 cover_image = cover_image,
                 file_type = file_type,
                 text = text,

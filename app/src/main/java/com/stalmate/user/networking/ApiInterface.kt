@@ -267,6 +267,7 @@ interface ApiInterface {
     @Multipart
     @POST(Constants.ADD_REEL)
     fun postReel(
+        @Header("access_token") access_token: String,
         @Part file: MultipartBody.Part?,
         @Part cover_image: MultipartBody.Part?,
         @Part("file_type") file_type: RequestBody,

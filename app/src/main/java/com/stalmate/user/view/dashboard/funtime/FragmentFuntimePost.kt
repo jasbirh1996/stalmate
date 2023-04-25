@@ -3,7 +3,6 @@ package com.stalmate.user.view.dashboard.funtime
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,7 +25,7 @@ import com.stalmate.user.view.adapter.FriendAdapter
 import com.stalmate.user.view.dashboard.ActivityDashboardNew
 import com.stalmate.user.view.dashboard.funtime.viewmodel.TagPeopleViewModel
 import com.stalmate.user.view.singlesearch.ActivitySingleSearch
-import ly.img.android.pesdk.ui.model.state.UiConfigAudio
+import jp.wasabeef.richeditor.RichEditor
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -39,6 +38,8 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
     var taggedPeople = ArrayList<User>()
     lateinit var tagPeopleViewModel: TagPeopleViewModel
     var mVideo = ""
+    private var isImage: Boolean = false
+    private var isEdit: Boolean = false
     var city = ""
     var selectedPrivacy = "Public"
     var country = ""
@@ -50,9 +51,8 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
-
         if (!::binding.isInitialized) {
             binding = DataBindingUtil.bind<FragmentFuntimePostBinding>(
                 inflater.inflate(
@@ -62,73 +62,62 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
                 )
             )!!
         }
-
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("asdasdgkn", "xxxxxx")
-        tagPeopleViewModel =
-            ViewModelProvider(requireActivity()).get(TagPeopleViewModel::class.java)
-
+        tagPeopleViewModel = ViewModelProvider(requireActivity()).get(TagPeopleViewModel::class.java)
+        isEdit = (requireActivity() as ActivityFuntimePost).isEdit
+        isImage = (requireActivity() as ActivityFuntimePost).isImage
         mVideo = (requireActivity() as ActivityFuntimePost).videoUri.toString()
 
-        if ((requireActivity() as ActivityFuntimePost).isEdit) {
-            Log.d("aklsjdasd", "oooooo")
-            var funtime = (requireActivity() as ActivityFuntimePost).funtime
-            Log.d("aklsjdasd", funtime.tag_user.size.toString())
+        binding.editor.setOnTextChangeListener {
+            if (it.isNullOrEmpty()) {
+                binding.llHint.visibility = View.VISIBLE
+            } else {
+                binding.llHint.visibility = View.GONE
+            }
+        }
+
+        setUpEditorbuttons()
+        updateButtons()
+
+        if (isImage)
+            binding.llSelectCover.visibility = View.GONE
+        else {
+            binding.llSelectCover.visibility = View.VISIBLE
+            binding.llSelectCover.setOnClickListener {
+                findNavController().navigate(R.id.action_fragmentFuntimePost_to_fragmentSelectThumbnail)
+            }
+        }
+
+        if (isEdit) {
+            val funtime = (requireActivity() as ActivityFuntimePost).funtime
             mVideo = funtime.file
             binding.editor.html = funtime.text
             binding.buttonPost.text = "Ok"
         }
 
-
-
-        binding.toolbar.tvhead.text = ""
+        binding.toolbar.tvhead.text = "Create Funtime Post"
         binding.toolbar.topAppBar.setNavigationOnClickListener {
-            requireActivity().finish()
-
+            findNavController().popBackStack()
         }
-        setUpEditorbuttons()
-        updateButtons()
-        try {
-            Log.d("asdasdasd", "hjkjh")
-            Log.d("asdasdasd", requireActivity().intent.getStringExtra(EXTRA_SONG_ID).toString())
-        } catch (e: java.lang.Exception) {
 
-        }
         binding.layoutTagPeople.setOnClickListener { findNavController().navigate(R.id.action_fragmentFuntimePost_to_fragmentFuntimeTag) }
-/*
-        val bitmap = ThumbnailUtils.createVideoThumbnail(mVideo, MediaStore.Video.Thumbnails.MICRO_KIND)
-        Glide.with(requireActivity()).load(bitmap).into(binding.thumbnail)
-*/
 
-        if (mVideo.endsWith("jpg", true) || mVideo.endsWith("jpeg", true) || mVideo.endsWith(
-                "png",
-                true
-            )
-        ) {
-            Glide.with(requireContext())
-                .load(File(mVideo))
-                .placeholder(R.drawable.profileplaceholder)
-                .error(R.drawable.profileplaceholder)
-                .into(binding.thumbnail);
-        } else {
-            Glide.with(requireContext())
-                .load(mVideo)
-                .thumbnail(Glide.with(requireContext()).load(mVideo))
-                .placeholder(R.drawable.profileplaceholder)
-                .error(R.drawable.profileplaceholder)
-                .into(binding.thumbnail);
-        }
+        Glide.with(requireContext())
+            .load(mVideo)
+            .thumbnail(Glide.with(requireContext()).load(mVideo))
+            .placeholder(R.drawable.profileplaceholder)
+            .error(R.drawable.profileplaceholder)
+            .into(binding.thumbnail)
 
         binding.buttonPost.setOnClickListener {
-            if ((requireContext() as ActivityFuntimePost).isEdit) {
+            if (isEdit) {
                 editPost()
             } else {
-                apiPostReel(File(mVideo))
+                apiPostReel()
             }
         }
 
@@ -140,14 +129,11 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
             } else {
                 binding.tvPeopleCount.visibility = View.GONE
             }
-
             setPolicyOnUi(it.policy)
-
-
         }
 
         binding.layoutAddLocation.setOnClickListener {
-            var intentt = Intent(requireContext(), ActivitySingleSearch::class.java)
+            val intentt = Intent(requireContext(), ActivitySingleSearch::class.java)
             intentt.putExtra("type", "autoCompleteCountries")
             startActivityForResult(intentt, 121)
         }
@@ -157,8 +143,6 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
                 clearFragmentResultListener(requestKey = SELECT_PRIVACY)
                 selectedPrivacy = bundle.getString(SELECT_PRIVACY) as String
                 setPolicyOnUi(selectedPrivacy)
-
-
             }
             findNavController().navigate(R.id.action_fragmentFuntimePost_to_FragmentFuntimePrivacyOptions)
         }
@@ -212,8 +196,25 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
         mPlayer = null
     }*/
 
+    private fun String.getRequestBody(): RequestBody = RequestBody.create("text/plain".toMediaTypeOrNull(), this)
 
-    private fun apiPostReel(file: File) {
+    private fun File.getMultipartBody(
+        keyName: String,
+        type: String
+    ): MultipartBody.Part? {
+        return try {
+            MultipartBody.Part.createFormData(
+                keyName,
+                this.name,
+                this.asRequestBody(type.toMediaTypeOrNull())
+            )
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+
+    private fun apiPostReel() {
         showLoader()
         var commaSeparatedStr = ""
         if (taggedPeople.isNotEmpty()) {
@@ -225,37 +226,52 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
                 .collect(Collectors.joining(","))
         }
 
-        fun getRequestBody(str: String?): RequestBody =
-            RequestBody.create("text/plain".toMediaTypeOrNull(), str.toString())
+        val mediaFile = try {
+//            File(mVideo).getMultipartBody(
+//                keyName = "file",
+//                type = if (isImage) "image/*" else "video/*"
+//            )
+            null
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
 
-        val thumbnailBody: RequestBody = file.asRequestBody("video/*".toMediaTypeOrNull())
-        val profile_image1: MultipartBody.Part = MultipartBody.Part.Companion.createFormData(
-            "file",
-            file.name,
-            thumbnailBody
-        ) //image[] for multiple image
+        val mediaFileCover =
+            try {
+//                File(if (isImage) mVideo else (requireActivity() as ActivityFuntimePost).mVideoCover).getMultipartBody(
+//                    keyName = "cover_image",
+//                    type = "image/*"
+//                )
+                null
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
+
         var data = ""
         if (!ValidationHelper.isNull(binding.editor.html)) {
             data = binding.editor.html.toString()
         }
+
         networkViewModel.postReel(
-            file = profile_image1,
-            cover_image = null,
-            file_type = getRequestBody(".mp4"),
-            text = getRequestBody(data),
-            tag_id = getRequestBody(commaSeparatedStr),
-            sound_id = getRequestBody(
-                requireActivity().intent.getStringExtra(EXTRA_SONG_ID).toString()
-            ),
-            location = getRequestBody("$city, $country"),
-            privacy = getRequestBody(selectedPrivacy),
-            privacy_data = getRequestBody(""),
-            deviceId = getRequestBody(""),
-            deviceToken = getRequestBody("")
+            access_token = prefManager?.access_token.toString(),
+            file = mediaFile,
+            cover_image = mediaFileCover,
+            file_type = (if (isImage) "image" else "video").getRequestBody(),
+            text = data.getRequestBody(),
+            tag_id = commaSeparatedStr.getRequestBody(),
+            sound_id = "none".getRequestBody(),
+            location = "$city, $country".getRequestBody(),
+            privacy = selectedPrivacy.getRequestBody(),
+            privacy_data = "none".getRequestBody(),
+            deviceId = "12345".getRequestBody(),
+            deviceToken = "54321".getRequestBody()
         )
+
         networkViewModel.postReelLiveData.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            dismissLoader()
             it.let {
-                dismissLoader()
                 if (it?.status == true) {
                     val intent = Intent(context, ActivityDashboardNew::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
@@ -288,8 +304,7 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
         }
     }
 
-    fun updateButtons() {
-
+    private fun updateButtons() {
         if (isBoldActive) {
             binding.ivBold.setImageDrawable(
                 ContextCompat.getDrawable(
@@ -343,13 +358,13 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
 
     private fun editPost() {
         val hashmap = HashMap<String, String>()
-        hashmap.put("id", (requireActivity() as ActivityFuntimePost).funtime.id)
-        hashmap.put("is_delete", "0")
+        hashmap["id"] = (requireActivity() as ActivityFuntimePost).funtime.id
+        hashmap["is_delete"] = "0"
         var data = ""
         if (!ValidationHelper.isNull(binding.editor.html)) {
             data = binding.editor.html.toString()
         }
-        hashmap.put("text", data)
+        hashmap["text"] = data
         networkViewModel.funtimUpdate(hashmap)
         networkViewModel.funtimeUpdateLiveData.observe(viewLifecycleOwner, Observer {
             it.let {

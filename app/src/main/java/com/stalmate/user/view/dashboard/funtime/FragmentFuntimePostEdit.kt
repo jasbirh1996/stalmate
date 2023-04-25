@@ -128,13 +128,11 @@ class FragmentFuntimePostEdit : BaseFragment(), FriendAdapter.Callbackk {
             .into(binding.thumbnail);
 
         binding.buttonPost.setOnClickListener {
-
             if ( (requireContext() as ActivityFuntimePost).isEdit){
                 editPost()
             }else{
                 apiPostReel(File(mVideo))
             }
-
         }
 
         tagPeopleViewModel.tagModelLiveData.observe(viewLifecycleOwner) {
@@ -179,11 +177,6 @@ class FragmentFuntimePostEdit : BaseFragment(), FriendAdapter.Callbackk {
                 .collect(Collectors.joining(","))
         }
 
-
-
-
-
-
         fun getRequestBody(str: String?): RequestBody =
             RequestBody.create("text/plain".toMediaTypeOrNull(), str.toString())
         val thumbnailBody: RequestBody = RequestBody.create("video/*".toMediaTypeOrNull(), file)
@@ -197,6 +190,7 @@ class FragmentFuntimePostEdit : BaseFragment(), FriendAdapter.Callbackk {
             data = binding.editor.html.toString()
         }
         networkViewModel.postReel(
+            access_token = prefManager?.access_token.toString(),
             file = profile_image1,
             cover_image = null,
             file_type = getRequestBody(".mp4"),

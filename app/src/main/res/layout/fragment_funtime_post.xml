@@ -68,18 +68,36 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <ImageView
+        <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/thumbnail"
             android:layout_width="@dimen/_100sdp"
             android:layout_height="120dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="20dp"
-            android:background="@color/black"
             android:scaleType="centerCrop"
             android:src="@drawable/profileplaceholder"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+            app:layout_constraintTop_toBottomOf="@+id/toolbar"
+            app:riv_corner_radius="@dimen/_5sdp" />
 
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/llSelectCover"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_select_cover"
+            app:layout_constraintBottom_toBottomOf="@id/thumbnail"
+            app:layout_constraintEnd_toEndOf="@id/thumbnail"
+            app:layout_constraintStart_toStartOf="@id/thumbnail">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fontFamily="@font/poppins_medium"
+                android:gravity="center"
+                android:paddingVertical="@dimen/_3sdp"
+                android:text="Select Cover"
+                android:textColor="@color/white" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
         <jp.wasabeef.richeditor.RichEditor
             android:id="@+id/editor"
@@ -98,6 +116,16 @@
             app:layout_constraintStart_toEndOf="@+id/thumbnail"
             app:layout_constraintTop_toTopOf="@+id/thumbnail" />
 
+        <TextView
+            android:id="@+id/llHint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins"
+            app:layout_constraintTop_toTopOf="@id/editor"
+            app:layout_constraintStart_toStartOf="@id/editor"
+            android:text="@string/whats_on_your_mind"
+            android:textSize="14sp" />
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layoutBottomControlls"
             android:layout_width="0dp"
@@ -111,7 +139,7 @@
             <ImageView
                 android:id="@+id/ivBold"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:padding="@dimen/_10sdp"
                 android:src="@drawable/ic_post_bold"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -121,7 +149,7 @@
             <ImageView
                 android:id="@+id/ivItalic"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:padding="@dimen/_10sdp"
                 android:src="@drawable/ic_post_ittalic_blue"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -252,7 +280,7 @@
                 android:layout_marginStart="10dp"
                 android:text="@string/everyone_can_reply"
                 android:textColor="@color/colorSecondary"
-                android:textSize="@dimen/_11sdp"
+                android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="@+id/imageView8"
                 app:layout_constraintStart_toEndOf="@+id/imageView8"
                 app:layout_constraintTop_toTopOf="@+id/imageView8" />

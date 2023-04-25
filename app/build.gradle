@@ -7,7 +7,7 @@ plugins {
     id 'com.google.firebase.crashlytics'
     id 'com.google.gms.google-services'
 
-    id("ly.img.android.sdk").version("10.5.0")
+    id("ly.img.android.sdk").version("10.7.0")
 }
 
 imglyConfig {
@@ -55,7 +55,7 @@ imglyConfig {
 
 android {
     compileSdk 33
-    ndkVersion '24.0.8215888'
+    //ndkVersion '24.0.8215888'
     buildToolsVersion '33.0.0'
 
     defaultConfig {
@@ -69,36 +69,69 @@ android {
     }
     buildTypes {
         debug {
-            ndk {
+            /*ndk {
                 abiFilters "arm64-v8a", "armeabi-v7a"
-            }
+            }*/
+            // Enables code shrinking, obfuscation, and optimization for only
+            // your project's release build type.
             minifyEnabled true
+
+            // Enables resource shrinking, which is performed by the
+            // Android Gradle plugin.
             shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            // Includes the default ProGuard rules files that are packaged with
+            // the Android Gradle plugin. To learn more, go to the section about
+            // R8 configuration files.
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
         release {
-            ndk {
+            /*ndk {
                 abiFilters "arm64-v8a", "armeabi-v7a"
-            }
+            }*/
+            // Enables code shrinking, obfuscation, and optimization for only
+            // your project's release build type.
             minifyEnabled true
+
+            // Enables resource shrinking, which is performed by the
+            // Android Gradle plugin.
             shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            // Includes the default ProGuard rules files that are packaged with
+            // the Android Gradle plugin. To learn more, go to the section about
+            // R8 configuration files.
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_1_8.toString()
+        targetCompatibility JavaVersion.VERSION_1_8.toString()
     }
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
     buildFeatures {
-        viewBinding true
         dataBinding true
+        viewBinding true
     }
     sourceSets {
         main {
             jniLibs.srcDirs = ['libs']
+        }
+    }
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            def date = new Date()
+            def formattedDate = date.format('dd_MMM_yyyy_hh_mm_a')
+            outputFileName = "stalmate"
+            outputFileName += "_vn" + versionName.replace(".0", "")
+            outputFileName += "_vc" + versionCode
+            outputFileName += "_" + formattedDate
+            if (variant.buildType.name == "release") {
+                outputFileName += "_release.apk"
+            } else {
+                outputFileName += "_debug.apk"
+            }
         }
     }
 }
@@ -107,7 +140,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation(name: 'deepar', ext: 'aar')
 
-    def camerax_version = "1.1.0"//1.2.1
+    def camerax_version = "1.2.2"//1.2.1//1.1.0
     implementation "androidx.camera:camera-core:$camerax_version"
     implementation "androidx.camera:camera-camera2:$camerax_version"
     implementation "androidx.camera:camera-lifecycle:$camerax_version"
@@ -115,21 +148,21 @@ dependencies {
     implementation 'com.otaliastudios:cameraview:2.7.2'
     implementation 'com.otaliastudios.opengl:egloo:0.6.1' //to create custum filter
 
-    implementation 'androidx.core:core-ktx:1.9.0'
-    implementation 'androidx.appcompat:appcompat:1.6.0'
+    implementation 'androidx.core:core-ktx:1.10.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'
     implementation 'androidx.navigation:navigation-ui-ktx:2.5.3'
     implementation 'com.google.android.gms:play-services-location:21.0.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.1'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.1'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-    /*Material Edittext DD*/
-    implementation "com.google.android.material:material:1.9.0-alpha01"
+    /*Material Edittext DD 1.9.0-alpha01 */
+    /*implementation "com.google.android.material:material:1.10.0-alpha01"*/
     /*PinView DD*/
     implementation 'io.github.chaosleung:pinview:1.4.4'
     implementation("com.tbuonomo:dotsindicator:4.3")
@@ -161,7 +194,7 @@ dependencies {
     implementation 'com.github.Dimezis:BlurView:version-2.0.2'
     implementation 'com.github.baoyachi:StepView:1.9'
 
-    implementation 'androidx.core:core-splashscreen:1.0.0'
+    implementation 'androidx.core:core-splashscreen:1.0.1'
     implementation 'com.github.irfaan008:IRBottomNavigationView:1.0.1'
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
     implementation 'com.github.badoualy:stepper-indicator:1.0.7'
@@ -193,7 +226,7 @@ dependencies {
 
     implementation 'com.makeramen:roundedimageview:2.3.0'
 // For Country Pecker
-    implementation 'com.hbb20:ccp:2.5.0'
+    implementation 'com.hbb20:ccp:2.6.0'
 
     implementation 'com.burhanrashid52:photoeditor:3.0.0'
     implementation 'com.github.igalata:Bubble-Picker:v0.2.4'

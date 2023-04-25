@@ -246,26 +246,71 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
     }
 
     override fun onStart() {
-        if (ContextCompat.checkSelfPermission(
+        val readImagePermission =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+                Manifest.permission.READ_MEDIA_IMAGES
+            else
+                Manifest.permission.READ_EXTERNAL_STORAGE
+        val readVideoPermission =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+                Manifest.permission.READ_MEDIA_VIDEO
+            else
+                Manifest.permission.READ_EXTERNAL_STORAGE
+        val readAudioPermission =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+                Manifest.permission.READ_MEDIA_AUDIO
+            else
+                Manifest.permission.READ_EXTERNAL_STORAGE
+
+        if (
+            ContextCompat.checkSelfPermission(
+                this,
+                readImagePermission
+            ) != PackageManager.PERMISSION_GRANTED ||
+            ContextCompat.checkSelfPermission(
+                this,
+                readVideoPermission
+            ) != PackageManager.PERMISSION_GRANTED ||
+            ContextCompat.checkSelfPermission(
+                this,
+                readAudioPermission
+            ) != PackageManager.PERMISSION_GRANTED ||
+            ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.CAMERA
-            ) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(
+            ) != PackageManager.PERMISSION_GRANTED ||
+            ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.RECORD_AUDIO
-            ) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(
-                    Manifest.permission.CAMERA,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    Manifest.permission.RECORD_AUDIO
-                ),
-                1
-            )
+            //permission not granted
+            if (Build.VERSION.SDK_INT <= 29) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(
+                        Manifest.permission.CAMERA,
+                        Manifest.permission.RECORD_AUDIO,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        readImagePermission,
+                        readAudioPermission,
+                        readVideoPermission,
+                    ),
+                    1
+                )
+            } else {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(
+                        Manifest.permission.CAMERA,
+                        Manifest.permission.RECORD_AUDIO,
+                        readImagePermission,
+                        readAudioPermission,
+                        readVideoPermission
+                    ),
+                    1
+                )
+            }
         } else {
             // Permission has already been granted
             initialize()
@@ -347,7 +392,7 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
                 isTakingVideo = false
                 segmented_progressbar.visibility = View.INVISIBLE
                 findViewById<ImageButton>(R.id.recordButton).visibility = View.VISIBLE
-                deepAR!!.stopVideoRecording()
+                deepAR?.stopVideoRecording()
             }
         }
     }
@@ -375,7 +420,7 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
         screenshotBtn.setOnClickListener {
             isImage = true
             isTakingVideo = false
-            deepAR!!.takeScreenshot()
+            deepAR?.takeScreenshot()
         }
         screenshotBtn.setOnLongClickListener {
             val now = DateFormat.format("yyyy_MM_dd_hh_mm_ss", Date())
@@ -387,7 +432,7 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
             isTakingVideo = true
             segmented_progressbar.visibility = View.VISIBLE
             screenshotBtn.visibility = View.GONE
-            deepAR!!.startVideoRecording(videoFileName.toString(), width / 2, height / 2)
+            deepAR?.startVideoRecording(videoFileName.toString(), width / 2, height / 2)
             countDownTimer?.start()
             true
         }
@@ -546,10 +591,8 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
                         videoFileName?.toUri()?.let { it1 -> startPhotoEditorImgLy(it1) }
                 }
                 if (item.mediaType == MediaFile.TYPE_VIDEO) {
-                    if (item.duration < 15000) {
-                        showToast("Video should be grater than or equal to 15 seconds")
-                    } else if (item.duration > 90000) {
-                        showToast("Video should be less than or equal to 90 seconds")
+                    if (item.duration > 900000) {
+                        showToast("Video should be less than or equal to 15 minutes")
                     } else {
                         videoFileName = File(item.path.toString())
                         if (videoFileName?.exists() == true) {
@@ -831,8 +874,8 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
 
     private fun initializeDeepAR() {
         deepAR = DeepAR(this)
-        deepAR!!.setLicenseKey("a8934255341d56543840fc370805931902372ed78dc6def033a9f6c38ea8ec102617d6ed4da7fc17")
-        deepAR!!.initialize(this, this)
+        deepAR?.setLicenseKey("a8934255341d56543840fc370805931902372ed78dc6def033a9f6c38ea8ec102617d6ed4da7fc17")
+        deepAR?.initialize(this, this)
         setupCamera()
     }
 
@@ -871,7 +914,7 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
             cameraProvider.unbindAll()
             cameraProvider.bindToLifecycle((this as LifecycleOwner), cameraSelector, preview)
             if (surfaceProvider == null) {
-                deepAR!!.let { surfaceProvider = ARSurfaceProvider(this, it) }
+                deepAR?.let { surfaceProvider = ARSurfaceProvider(this, it) }
             }
             preview.setSurfaceProvider(surfaceProvider)
             surfaceProvider?.setMirror((lensFacing == CameraSelector.LENS_FACING_FRONT))
@@ -953,7 +996,7 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
         buffers[currentBuffer]!!.put(byteData)
         buffers[currentBuffer]!!.position(0)
         if (deepAR != null) {
-            deepAR!!.receiveFrame(
+            deepAR?.receiveFrame(
                 buffers[currentBuffer],
                 image.width, image.height,
                 image.imageInfo.rotationDegrees,
@@ -987,7 +1030,7 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
                             masks!![currentMask].lastIndex + 1
                         ).replace(".deepar", "")).replace("_", " ")
                 }
-                deepAR!!.switchEffect("mask", getFilterPath(masks!![currentMask]))
+                deepAR?.switchEffect("mask", getFilterPath(masks!![currentMask]))
             }
             1 -> {
                 currentEffect = (currentEffect + 1) % effects!!.size
@@ -1002,7 +1045,7 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
                             effects!![currentEffect].lastIndex + 1
                         ).replace(".deepar", "")).replace("_", " ")
                 }
-                deepAR!!.switchEffect("effect", getFilterPath(effects!![currentEffect]))
+                deepAR?.switchEffect("effect", getFilterPath(effects!![currentEffect]))
             }
             2 -> {
                 currentFilter = (currentFilter + 1) % filters!!.size
@@ -1017,7 +1060,7 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
                             filters!![currentFilter].lastIndex + 1
                         ).replace(".deepar", "")).replace("_", " ")
                 }
-                deepAR!!.switchEffect("filter", getFilterPath(filters!![currentFilter]))
+                deepAR?.switchEffect("filter", getFilterPath(filters!![currentFilter]))
             }
         }
     }
@@ -1025,7 +1068,7 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
     private fun gotoPrevious() {
         when (activeFilterType) {
             0 -> {
-                currentMask = (currentMask - 1 + masks!!.size) % masks!!.size
+                currentMask = (currentMask - 1 + masks!!.size) % (masks?.size ?: 0)
                 if (masks!![currentMask] == "none") {
                     findViewById<TextView>(R.id.tvEffectName).visibility = View.GONE
                 } else {
@@ -1037,7 +1080,7 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
                             masks!![currentMask].lastIndex + 1
                         ).replace(".deepar", "")).replace("_", " ")
                 }
-                deepAR!!.switchEffect("mask", getFilterPath(masks!![currentMask]))
+                deepAR?.switchEffect("mask", getFilterPath(masks!![currentMask]))
             }
             1 -> {
                 currentEffect = (currentEffect - 1 + effects!!.size) % effects!!.size
@@ -1052,7 +1095,7 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
                             effects!![currentEffect].lastIndex + 1
                         ).replace(".deepar", "")).replace("_", " ")
                 }
-                deepAR!!.switchEffect("effect", getFilterPath(effects!![currentEffect]))
+                deepAR?.switchEffect("effect", getFilterPath(effects!![currentEffect]))
             }
             2 -> {
                 currentFilter = (currentFilter - 1 + filters!!.size) % filters!!.size
@@ -1067,7 +1110,7 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
                             filters!![currentFilter].lastIndex + 1
                         ).replace(".deepar", "")).replace("_", " ")
                 }
-                deepAR!!.switchEffect("filter", getFilterPath(filters!![currentFilter]))
+                deepAR?.switchEffect("filter", getFilterPath(filters!![currentFilter]))
             }
         }
     }
@@ -1099,8 +1142,8 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
         if (deepAR == null) {
             return
         }
-        deepAR!!.setAREventListener(null)
-        deepAR!!.release()
+        deepAR?.setAREventListener(null)
+        deepAR?.release()
         deepAR = null
     }
 
@@ -1109,13 +1152,13 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
         // If we are using on screen rendering we have to set surface view where DeepAR will render
         if (deepAR != null) {
-            deepAR!!.setRenderSurface(holder.surface, width, height)
+            deepAR?.setRenderSurface(holder.surface, width, height)
         }
     }
 
     override fun surfaceDestroyed(holder: SurfaceHolder) {
         if (deepAR != null) {
-            deepAR!!.setRenderSurface(null, 0, 0)
+            deepAR?.setRenderSurface(null, 0, 0)
         }
     }
 
@@ -1200,7 +1243,7 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
     override fun shutdownFinished() {}
     override fun initialized() {
         // Restore effect state after deepar release
-        deepAR!!.switchEffect("effect", getFilterPath(effects!![currentEffect]))
+        deepAR?.switchEffect("effect", getFilterPath(effects!![currentEffect]))
     }
 
     override fun faceVisibilityChanged(b: Boolean) {}
@@ -1221,7 +1264,7 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
                 startActivity(
                     IntentHelper.getCreateFuntimePostScreen(this)!!
                         .putExtra(ActivityFilter.EXTRA_VIDEO, it.resultUri.toString())
-                        .putExtra(EXTRA_SONG_ID, "")
+                        .putExtra("isImage", true)
                 )
                 showToast("${it.resultUri}")
             }

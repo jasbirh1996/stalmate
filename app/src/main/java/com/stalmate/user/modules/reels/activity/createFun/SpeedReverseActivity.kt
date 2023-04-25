@@ -257,7 +257,7 @@ class SpeedReverseActivity : AppCompatActivity() {
                 startActivity(
                     IntentHelper.getCreateFuntimePostScreen(this)!!
                         .putExtra(ActivityFilter.EXTRA_VIDEO, it.resultUri.toString())
-                        .putExtra(EXTRA_SONG_ID, "")
+                        .putExtra("isImage", false)
                 )
                 Toast.makeText(
                     applicationContext,

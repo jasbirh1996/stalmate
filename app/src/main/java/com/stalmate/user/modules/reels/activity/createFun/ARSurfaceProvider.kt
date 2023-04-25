@@ -7,7 +7,7 @@ import android.opengl.EGL14
 import android.util.Log
 import android.view.Surface
 import androidx.annotation.OptIn
-import androidx.camera.core.ExperimentalAnalyzer
+import androidx.camera.core.ExperimentalUseCaseApi
 //import androidx.camera.core.ExperimentalUseCaseApi
 import androidx.camera.core.Preview.SurfaceProvider
 import androidx.camera.core.SurfaceRequest
@@ -19,7 +19,7 @@ import java.util.*
  * Surface provider used for CameraX preview use-case that provides DeepAR's external GL texture
  * wrapped in SurfaceTexture.
  */
-@OptIn(markerClass = arrayOf(ExperimentalAnalyzer::class))
+@OptIn(markerClass = arrayOf(ExperimentalUseCaseApi::class))
 class ARSurfaceProvider internal constructor(
     private val context: Context,
     private val deepAR: DeepAR
