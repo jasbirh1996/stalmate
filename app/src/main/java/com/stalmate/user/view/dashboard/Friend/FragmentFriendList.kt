@@ -140,7 +140,7 @@ class FragmentFriendList(var type: String, var subtype: String,var userId:String
         hashmap.put("sortBy",sortBy)
         hashmap.put("filter",filter)
 
-        networkViewModel.getFriendList(hashmap)
+        networkViewModel.getFriendList(prefManager?.access_token.toString(),hashmap)
         networkViewModel.friendLiveData.observe(viewLifecycleOwner, Observer {
             it.let {
 

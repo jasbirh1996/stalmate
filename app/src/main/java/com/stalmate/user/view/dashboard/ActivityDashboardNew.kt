@@ -25,7 +25,7 @@ import com.stalmate.user.view.dashboard.HomeFragment.FragmentMenu
 import com.stalmate.user.view.dashboard.funtime.FragmentFunTime
 
 class ActivityDashboardNew : BaseActivity(), FragmentMenu.Callback {
-    lateinit var binding:ActivityDashboardNewBinding
+    lateinit var binding: ActivityDashboardNewBinding
 
     override fun onClick(viewId: Int, view: View?) {
 
@@ -33,10 +33,10 @@ class ActivityDashboardNew : BaseActivity(), FragmentMenu.Callback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-       binding=DataBindingUtil. setContentView(this,R.layout.activity_dashboard_new)
-        drawerLayout= findViewById(R.id.drawerLayout)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_dashboard_new)
+        drawerLayout = findViewById(R.id.drawerLayout)
         loadFragment(fragmentDashboard)
-    //    onNewIntent(intent)
+        //    onNewIntent(intent)
     }
 
     private fun loadFragment(fragment: Fragment) {
@@ -46,7 +46,7 @@ class ActivityDashboardNew : BaseActivity(), FragmentMenu.Callback {
         val fragmentPopped = manager.popBackStackImmediate(backStateName, 1)
         if (!fragmentPopped && manager.findFragmentByTag(fragmentTag) == null) {
             //fragment not in back stack, create it.
-            Log.d("laksdasd","alsjdasd")
+            Log.d("laksdasd", "alsjdasd")
             val ft = manager.beginTransaction()
             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
             ft.add(binding.frame.id, fragment, fragmentTag)
@@ -56,18 +56,19 @@ class ActivityDashboardNew : BaseActivity(), FragmentMenu.Callback {
         }
     }
 
-    fun onClickOnFuntime(){
+    fun onClickOnFuntime() {
         loadFragment(fragmentFuntime)
     }
+
     val fragmentFuntime: Fragment = FragmentFunTime()
     val fragmentDashboard: Fragment = FragmentDashboard()
 
 
     override fun onBackPressed() {
-     var currentVisibleFragment=  supportFragmentManager.findFragmentById(binding.frame.id)
-        if (currentVisibleFragment !is FragmentDashboard){
+        var currentVisibleFragment = supportFragmentManager.findFragmentById(binding.frame.id)
+        if (currentVisibleFragment !is FragmentDashboard) {
             supportFragmentManager.popBackStack()
-        }else{
+        } else {
             super.onBackPressed()
         }
     }
@@ -104,7 +105,7 @@ class ActivityDashboardNew : BaseActivity(), FragmentMenu.Callback {
         hashmap.put("limit", "5")
         hashmap.put("id_user", "")
         hashmap.put("fun_id", id)
-        networkViewModel.funtimeLiveData(prefManager?.access_token.toString(),hashmap)
+        networkViewModel.funtimeLiveData(prefManager?.access_token.toString(), hashmap)
         networkViewModel.funtimeLiveData.observe(this) {
             isApiRuning = false
             //  binding.shimmerLayout.visibility =  View.GONE
@@ -126,6 +127,7 @@ class ActivityDashboardNew : BaseActivity(), FragmentMenu.Callback {
             drawerLayout.openDrawer(GravityCompat.END)
         }
     }
+
     private fun loadDrawerFragment(fragment: Fragment) {
         val backStateName = fragment.javaClass.name
         val fragmentTag = backStateName

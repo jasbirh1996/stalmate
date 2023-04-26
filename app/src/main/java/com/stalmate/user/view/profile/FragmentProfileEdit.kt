@@ -270,7 +270,7 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
     var selectedYear = ""
     fun getUserProfileData() {
         val hashMap = HashMap<String, String>()
-        networkViewModel.getProfileData(hashMap)
+        networkViewModel.getProfileData(hashMap,prefManager?.access_token.toString())
         hashMap.put("limit", "5")
         hashMap.put("page", "1")
         getBlockList()
@@ -336,7 +336,7 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
         professionListAdapter.notifyDataSetChanged()
         binding.rvFeeds.layoutManager = LinearLayoutManager(requireContext())
 
-        networkViewModel.getFeedList("", HashMap())
+        networkViewModel.getFeedList(prefManager?.access_token.toString(), HashMap())
         networkViewModel.feedLiveData.observe(requireActivity()) {
             it.let {
                 feedAdapter.submitList(it!!.results)

@@ -94,16 +94,22 @@ class FragmentHome(var callback: Callback) : BaseFragment(), AdapterFeed.Callbac
         binding.rvFeeds.adapter = feedAdapter
         binding.rvStory.adapter = homeStoryAdapter
 
-        networkViewModel.getFeedList("", HashMap())
+        networkViewModel.getFeedList(prefManager?.access_token.toString(), HashMap())
         networkViewModel.feedLiveData.observe(viewLifecycleOwner, Observer {
             it.let {
-                feedAdapter.submitList(it!!.results)
+                if (!it?.results.isNullOrEmpty())
+                    it?.results?.let { it1 -> feedAdapter.submitList(it1) }
+                else
+                    it?.reponse?.let { it1 -> feedAdapter.submitList(it1) }
                 binding.shimmerLayoutFeeds.stopShimmer()
                 binding.rvFeeds.visibility = View.VISIBLE
 
                 binding.shimmerViewContainer.stopShimmer()
                 binding.storyView.visibility = View.VISIBLE
-                homeStoryAdapter.submitList(it!!.results)
+                if (!it?.results.isNullOrEmpty())
+                    it?.results?.let { it1 -> homeStoryAdapter.submitList(it1) }
+                else
+                    it?.reponse?.let { it1 -> homeStoryAdapter.submitList(it1) }
             }
         })
 
@@ -111,7 +117,6 @@ class FragmentHome(var callback: Callback) : BaseFragment(), AdapterFeed.Callbac
 
         binding.postContant.userImage.setOnClickListener {
             callback.onCLickOnProfileButton()
-
         }
 
         binding.layoutNewUser.setOnClickListener {
@@ -129,7 +134,7 @@ class FragmentHome(var callback: Callback) : BaseFragment(), AdapterFeed.Callbac
 
     private fun getUserProfileData() {
         val hashMap = HashMap<String, String>()
-        networkViewModel.getProfileData(hashMap)
+        networkViewModel.getProfileData(hashMap, prefManager?.access_token.toString())
         networkViewModel.profileLiveData.observe(requireActivity(), Observer {
             it.let {
                 if (it != null) {
@@ -176,7 +181,7 @@ class FragmentHome(var callback: Callback) : BaseFragment(), AdapterFeed.Callbac
         hashmap["page"] = "1"
         hashmap["limit"] = "6"
 
-        networkViewModel.getFriendList(hashmap)
+        networkViewModel.getFriendList(prefManager?.access_token.toString(), hashmap)
         networkViewModel.friendLiveData.observe(viewLifecycleOwner, Observer {
             it.let {
                 suggestedFriendAdapter =

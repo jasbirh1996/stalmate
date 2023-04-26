@@ -104,7 +104,7 @@ class FragmentMenu(var callback: Callback) : BaseFragment(), DrawerAdapter.Callb
 
     fun getUserProfileData() {
         var hashMap = HashMap<String, String>()
-        networkViewModel.getProfileData(hashMap)
+        networkViewModel.getProfileData(hashMap,prefManager?.access_token.toString())
         networkViewModel.profileLiveData.observe(requireActivity(), Observer {
             it.let {
                 userData = it!!.results

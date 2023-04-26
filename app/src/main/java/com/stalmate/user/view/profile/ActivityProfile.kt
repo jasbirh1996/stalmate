@@ -85,7 +85,7 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
         hashmap.put("search", "")
         hashmap.put("page", "1")
         hashmap.put("limit", "6")
-        networkViewModel.getFriendList(hashmap)
+        networkViewModel.getFriendList(prefManager?.access_token.toString(), hashmap)
         networkViewModel.friendLiveData.observe(this, Observer {
             it.let {
                 friendAdapter.submitList(it!!.results)
@@ -288,7 +288,7 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
 
     private fun getUserProfileData() {
         val hashMap = HashMap<String, String>()
-        networkViewModel.getProfileData(hashMap)
+        networkViewModel.getProfileData(hashMap, prefManager?.access_token.toString())
         networkViewModel.profileLiveData.observe(this, Observer {
             it.let {
                 userData = it!!.results

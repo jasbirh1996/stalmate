@@ -60,16 +60,16 @@ open class AppViewModel : ViewModel() {
     fun getFeedList(token: String, map: HashMap<String, String>) {
         val temp = MutableLiveData<ModelFeed?>()
         feedLiveData = temp
-        getResult(temp, apiInterface.getFeedList())
+        getResult(temp, apiInterface.getFeedList(access_token = token))
     }
 
     var languageLiveData: LiveData<ModelLanguageResponse?> =
         MutableLiveData<ModelLanguageResponse?>()
 
-    fun languageLiveData(map: HashMap<String, String>) {
+    fun languageLiveData(map: HashMap<String, String>, access_token: String) {
         val temp = MutableLiveData<ModelLanguageResponse?>()
         languageLiveData = temp
-        getResult(temp, apiInterface.getLanguageList())
+        getResult(temp, apiInterface.getLanguageList(access_token = access_token))
     }
 
     var funtimeLiveData: LiveData<ModelFuntimeResponse?> = MutableLiveData<ModelFuntimeResponse?>()
@@ -210,10 +210,10 @@ open class AppViewModel : ViewModel() {
 
 
     var friendLiveData: MutableLiveData<ModelFriend?> = MutableLiveData<ModelFriend?>()
-    fun getFriendList(map: HashMap<String, String>) {
+    fun getFriendList(access_token: String, map: HashMap<String, String>) {
         val temp = MutableLiveData<ModelFriend?>()
         friendLiveData = temp
-        getResult(temp, apiInterface.getFriendList(map))
+        getResult(temp, apiInterface.getFriendList(access_token = access_token,map))
     }
 
     var funtimeUpdateLiveData: MutableLiveData<ModelSuccess?> = MutableLiveData<ModelSuccess?>()
@@ -405,10 +405,10 @@ open class AppViewModel : ViewModel() {
     }
 
     var profileLiveData: MutableLiveData<ModelUser?> = MutableLiveData<ModelUser?>()
-    fun getProfileData(map: HashMap<String, String>) {
+    fun getProfileData(map: HashMap<String, String>, access_token: String) {
         val temp = MutableLiveData<ModelUser?>()
         profileLiveData = temp
-        getResult(temp, apiInterface.setProfileDetails())
+        getResult(temp, apiInterface.setProfileDetails(access_token = access_token))
     }
 
 

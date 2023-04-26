@@ -119,7 +119,7 @@ class FragmentAlbumPhotoIdListing : BaseFragment(),  PhotoAdapter.Callback {
            /*     makeToast(it!!.message)*/
             if (it!!.status!!){
            /*     var hashMap = java.util.HashMap<String, String>()
-                networkViewModel.getProfileData(hashMap)*/
+                networkViewModel.getProfileData(hashMap,prefManager?.access_token.toString())*/
                 getAlbumImagelist()
             }
             }

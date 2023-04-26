@@ -38,7 +38,9 @@ interface ApiInterface {
     fun getCategorList(): Call<ModelCategory>
 
     @GET(Constants.url_language_list)
-    fun getLanguageList(): Call<ModelLanguageResponse>
+    fun getLanguageList(
+        @Header("access_token") access_token: String
+    ): Call<ModelLanguageResponse>
 
     @POST(Constants.URLFUNTIME_LIST)
     fun getFuntimeList(
@@ -93,10 +95,15 @@ interface ApiInterface {
     fun getPhotoIndexList(@Body map: HashMap<String, String>): Call<ModelPhotoIndexDataResponse>
 
     @GET(Constants.url_language_list)
-    fun getFeedList(): Call<ModelFeed>
+    fun getFeedList(
+        @Header("access_token") access_token: String
+    ): Call<ModelFeed>
 
     @POST(Constants.url_friend_list)
-    fun getFriendList(@Body map: HashMap<String, String>): Call<ModelFriend>
+    fun getFriendList(
+        @Header("access_token") access_token: String,
+        @Body map: HashMap<String, String>
+    ): Call<ModelFriend>
 
     @POST(Constants.URL_FUNTIME_UPDATE)
     fun funtimeUpdate(@Body map: HashMap<String, String>): Call<ModelSuccess>
@@ -150,7 +157,9 @@ interface ApiInterface {
     fun requestBeFollower(@Body map: HashMap<String, String>): Call<ModelSuccess>
 
     @GET(Constants.GET_PROFILE_API)
-    fun setProfileDetails(): Call<ModelUser>
+    fun setProfileDetails(
+        @Header("access_token") access_token: String
+    ): Call<ModelUser>
 
 //    @POST(Constants.BLOCK_API)
 //    fun setBlock(@Body map: HashMap<String, String>): Call<CommonModelResponse>

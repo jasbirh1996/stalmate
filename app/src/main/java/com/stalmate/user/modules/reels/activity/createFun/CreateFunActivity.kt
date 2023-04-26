@@ -11,6 +11,7 @@ import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.Image
+import android.media.MediaMetadataRetriever
 import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.*
@@ -20,6 +21,7 @@ import android.util.DisplayMetrics
 import android.util.Log
 import android.util.Size
 import android.view.*
+import android.webkit.MimeTypeMap
 import android.widget.*
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -42,18 +44,20 @@ import com.google.android.material.tabs.TabLayout
 import com.google.common.util.concurrent.ListenableFuture
 import com.jaiselrahman.filepicker.activity.FilePickerActivity
 import com.jaiselrahman.filepicker.config.Configurations
-import com.jaiselrahman.filepicker.model.MediaFile
 import com.makeramen.roundedimageview.RoundedImageView
 import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.modules.reels.activity.ActivityFilter
-import com.stalmate.user.modules.reels.activity.EXTRA_SONG_ID
 import com.stalmate.user.modules.reels.activity.FragmentGallery
 import com.stalmate.user.modules.reels.photo_editing.Counter
+import com.stalmate.user.modules.reels.utils.RealPathUtil
 import ly.img.android.pesdk.PhotoEditorSettingsList
 import ly.img.android.pesdk.backend.model.EditorSDKResult
+import ly.img.android.pesdk.backend.model.state.AudioOverlaySettings
 import ly.img.android.pesdk.backend.model.state.LoadSettings
 import ly.img.android.pesdk.ui.activity.PhotoEditorActivityResultContract
+import ly.img.android.pesdk.ui.model.state.UiConfigAudio
+import ly.img.android.pesdk.ui.panels.AudioGalleryToolPanel
 import java.io.File
 import java.io.FileOutputStream
 import java.nio.ByteBuffer
@@ -245,84 +249,12 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
         }
     }
 
-    override fun onStart() {
-        val readImagePermission =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-                Manifest.permission.READ_MEDIA_IMAGES
-            else
-                Manifest.permission.READ_EXTERNAL_STORAGE
-        val readVideoPermission =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-                Manifest.permission.READ_MEDIA_VIDEO
-            else
-                Manifest.permission.READ_EXTERNAL_STORAGE
-        val readAudioPermission =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-                Manifest.permission.READ_MEDIA_AUDIO
-            else
-                Manifest.permission.READ_EXTERNAL_STORAGE
-
-        if (
-            ContextCompat.checkSelfPermission(
-                this,
-                readImagePermission
-            ) != PackageManager.PERMISSION_GRANTED ||
-            ContextCompat.checkSelfPermission(
-                this,
-                readVideoPermission
-            ) != PackageManager.PERMISSION_GRANTED ||
-            ContextCompat.checkSelfPermission(
-                this,
-                readAudioPermission
-            ) != PackageManager.PERMISSION_GRANTED ||
-            ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.CAMERA
-            ) != PackageManager.PERMISSION_GRANTED ||
-            ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.RECORD_AUDIO
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            //permission not granted
-            if (Build.VERSION.SDK_INT <= 29) {
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(
-                        Manifest.permission.CAMERA,
-                        Manifest.permission.RECORD_AUDIO,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        readImagePermission,
-                        readAudioPermission,
-                        readVideoPermission,
-                    ),
-                    1
-                )
-            } else {
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(
-                        Manifest.permission.CAMERA,
-                        Manifest.permission.RECORD_AUDIO,
-                        readImagePermission,
-                        readAudioPermission,
-                        readVideoPermission
-                    ),
-                    1
-                )
-            }
-        } else {
-            // Permission has already been granted
-            initialize()
-        }
-        super.onStart()
-    }
-
     private fun initialize() {
         initializeFilters()
         getGalleryData()
         initializeDeepAR()
         initalizeViews()
+        restoreDeepArState()
     }
 
     private fun initializeFilters() {
@@ -469,49 +401,61 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
             radioEffects.isChecked = false
             radioFilters.isChecked = false
             activeFilterType = 0
-            if (masks!![currentMask] == "none") {
+            if (masks?.get(currentMask) == "none") {
                 findViewById<TextView>(R.id.tvEffectName).visibility = View.GONE
             } else {
                 findViewById<TextView>(R.id.tvEffectName).visibility = View.VISIBLE
                 findViewById<TextView>(R.id.tvEffectName).text =
-                    (masks!![currentMask][0].toUpperCase()
-                        .toString() + masks!![currentMask].substring(
+                    (masks?.get(currentMask)?.get(0)?.toUpperCase()
+                        .toString() + masks?.get(currentMask)?.substring(
                         1,
-                        masks!![currentMask].lastIndex + 1
-                    ).replace(".deepar", "")).replace("_", " ")
+                        (masks?.get(currentMask)?.lastIndex ?: 0) + 1
+                    )?.replace(".deepar", "")).replace("_", " ")
             }
+            deepAR?.switchEffect(
+                "mask",
+                getFilterPath(masks?.get(currentMask).toString())
+            )
         }
         radioEffects.setOnClickListener {
             radioMasks.isChecked = false
             radioFilters.isChecked = false
             activeFilterType = 1
-            if (effects!![currentEffect] == "none") {
+            if (effects?.get(currentEffect) == "none") {
                 findViewById<TextView>(R.id.tvEffectName).visibility = View.GONE
             } else {
                 findViewById<TextView>(R.id.tvEffectName).visibility = View.VISIBLE
                 findViewById<TextView>(R.id.tvEffectName).text =
-                    (effects!![currentEffect][0].toUpperCase()
-                        .toString() + effects!![currentEffect].substring(
+                    (effects?.get(currentEffect)?.get(0)?.toUpperCase()
+                        .toString() + effects?.get(currentEffect)?.substring(
                         1,
-                        effects!![currentEffect].lastIndex + 1
-                    ).replace(".deepar", "")).replace("_", " ")
+                        (effects?.get(currentEffect)?.lastIndex ?: 0) + 1
+                    )?.replace(".deepar", "")).replace("_", " ")
             }
+            deepAR?.switchEffect(
+                "effect",
+                getFilterPath(effects?.get(currentEffect).toString())
+            )
         }
         radioFilters.setOnClickListener {
             radioEffects.isChecked = false
             radioMasks.isChecked = false
             activeFilterType = 2
-            if (filters!![currentFilter] == "none") {
+            if (filters?.get(currentFilter) == "none") {
                 findViewById<TextView>(R.id.tvEffectName).visibility = View.GONE
             } else {
                 findViewById<TextView>(R.id.tvEffectName).visibility = View.VISIBLE
                 findViewById<TextView>(R.id.tvEffectName).text =
-                    (filters!![currentFilter][0].toUpperCase()
-                        .toString() + filters!![currentFilter].substring(
+                    (filters?.get(currentFilter)?.get(0)?.toUpperCase()
+                        .toString() + filters?.get(currentFilter)?.substring(
                         1,
-                        filters!![currentFilter].lastIndex + 1
-                    ).replace(".deepar", "")).replace("_", " ")
+                        (filters?.get(currentFilter)?.lastIndex ?: 0) + 1
+                    )?.replace(".deepar", "")).replace("_", " ")
             }
+            deepAR?.switchEffect(
+                "filter",
+                getFilterPath(filters?.get(currentFilter).toString())
+            )
         }
 
         //Change Video DUration
@@ -556,11 +500,138 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
         setupRecordDurationRecclerview()
     }
 
+    override fun onResume() {
+        super.onResume()
+        val readImagePermission =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+                Manifest.permission.READ_MEDIA_IMAGES
+            else
+                Manifest.permission.READ_EXTERNAL_STORAGE
+        val readVideoPermission =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+                Manifest.permission.READ_MEDIA_VIDEO
+            else
+                Manifest.permission.READ_EXTERNAL_STORAGE
+        val readAudioPermission =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+                Manifest.permission.READ_MEDIA_AUDIO
+            else
+                Manifest.permission.READ_EXTERNAL_STORAGE
+
+        if (
+            ContextCompat.checkSelfPermission(
+                this,
+                readImagePermission
+            ) != PackageManager.PERMISSION_GRANTED ||
+            ContextCompat.checkSelfPermission(
+                this,
+                readVideoPermission
+            ) != PackageManager.PERMISSION_GRANTED ||
+            ContextCompat.checkSelfPermission(
+                this,
+                readAudioPermission
+            ) != PackageManager.PERMISSION_GRANTED ||
+            ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.CAMERA
+            ) != PackageManager.PERMISSION_GRANTED ||
+            ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.RECORD_AUDIO
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            //permission not granted
+            if (Build.VERSION.SDK_INT <= 29) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(
+                        Manifest.permission.CAMERA,
+                        Manifest.permission.RECORD_AUDIO,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        readImagePermission,
+                        readAudioPermission,
+                        readVideoPermission,
+                    ),
+                    1
+                )
+            } else {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(
+                        Manifest.permission.CAMERA,
+                        Manifest.permission.RECORD_AUDIO,
+                        readImagePermission,
+                        readAudioPermission,
+                        readVideoPermission
+                    ),
+                    1
+                )
+            }
+        } else {
+            // Permission has already been granted
+            initialize()
+        }
+    }
+
+    private fun restoreDeepArState() {
+        try {
+            if (masks?.get(currentMask) == "none") {
+                findViewById<TextView>(R.id.tvEffectName).visibility = View.GONE
+            } else {
+                findViewById<TextView>(R.id.tvEffectName).visibility = View.VISIBLE
+                findViewById<TextView>(R.id.tvEffectName).text =
+                    (masks?.get(currentMask)?.get(0)?.toUpperCase()
+                        .toString() + masks?.get(currentMask)?.substring(
+                        1,
+                        (masks?.get(currentMask)?.lastIndex ?: 0) + 1
+                    )?.replace(".deepar", "")).replace("_", " ")
+            }
+            deepAR?.switchEffect(
+                "mask",
+                getFilterPath(masks?.get(currentMask).toString())
+            )
+            //----------------------------------------------------------------
+            if (effects?.get(currentEffect) == "none") {
+                findViewById<TextView>(R.id.tvEffectName).visibility = View.GONE
+            } else {
+                findViewById<TextView>(R.id.tvEffectName).visibility = View.VISIBLE
+                findViewById<TextView>(R.id.tvEffectName).text =
+                    (effects?.get(currentEffect)?.get(0)?.toUpperCase()
+                        .toString() + effects?.get(currentEffect)?.substring(
+                        1,
+                        (effects?.get(currentEffect)?.lastIndex ?: 0) + 1
+                    )?.replace(".deepar", "")).replace("_", " ")
+            }
+            deepAR?.switchEffect(
+                "effect",
+                getFilterPath(effects?.get(currentEffect).toString())
+            )
+            //-----------------------------------------------------------------
+            if (filters?.get(currentFilter) == "none") {
+                findViewById<TextView>(R.id.tvEffectName).visibility = View.GONE
+            } else {
+                findViewById<TextView>(R.id.tvEffectName).visibility = View.VISIBLE
+                findViewById<TextView>(R.id.tvEffectName).text =
+                    (filters?.get(currentFilter)?.get(0)?.toUpperCase()
+                        .toString() + filters?.get(currentFilter)?.substring(
+                        1,
+                        (filters?.get(currentFilter)?.lastIndex ?: 0) + 1
+                    )?.replace(".deepar", "")).replace("_", " ")
+            }
+            deepAR?.switchEffect(
+                "filter",
+                getFilterPath(filters?.get(currentFilter).toString())
+            )
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
     private fun imageChooser() {
         val intent = Intent(this, FilePickerActivity::class.java)
         intent.putExtra(
             FilePickerActivity.CONFIGS, Configurations.Builder()
-                .setCheckPermission(true)
+//                .setCheckPermission(true)
                 .setShowImages(true)
                 .setShowVideos(true)
                 .enableImageCapture(true)
@@ -572,31 +643,47 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
                 .setPortraitSpanCount(4)
                 .build()
         )
-//        val i = Intent()
-//        i.type = "image/* video/*"
-//        i.action = Intent.ACTION_GET_CONTENT
-//        i.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-        launchActivityForImagePick.launch(intent)
+
+        val pickerIntent = Intent(Intent.ACTION_PICK)
+        pickerIntent.type = "video/*, image/*"
+        pickerIntent.putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("image/*", "video/*"))
+        pickerIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false)
+        launchActivityForImagePick.launch(pickerIntent)
     }
 
-    var launchActivityForImagePick = registerForActivityResult<Intent, ActivityResult>(
+    private var launchActivityForImagePick = registerForActivityResult<Intent, ActivityResult>(
         ActivityResultContracts.StartActivityForResult()
     ) { result: ActivityResult ->
-        result.data?.getParcelableArrayListExtra<MediaFile>(FilePickerActivity.MEDIA_FILES)?.let {
-            if (!it.isNullOrEmpty()) {
-                val item = it[0]
-                if (item.mediaType == MediaFile.TYPE_IMAGE) {
-                    videoFileName = File(item.path.toString())
+//        result.data?.getParcelableArrayListExtra<MediaFile>(FilePickerActivity.MEDIA_FILES)?.let {
+        result.data?.data?.let {
+            if (!it.toString().isNullOrEmpty()) {
+                val extension: String = MimeTypeMap.getSingleton()
+                    .getExtensionFromMimeType(this.contentResolver.getType(it)).toString()
+                val mimeType: String =
+                    MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension).toString()
+                        .split("/")[0].toString()
+
+                if (mimeType == "image") {
+                    videoFileName = File(RealPathUtil.getRealPath(this, it))
                     if (videoFileName?.exists() == true)
                         videoFileName?.toUri()?.let { it1 -> startPhotoEditorImgLy(it1) }
                 }
-                if (item.mediaType == MediaFile.TYPE_VIDEO) {
-                    if (item.duration > 900000) {
+                if (mimeType == "video") {
+                    videoFileName = File(RealPathUtil.getRealPath(this, it))
+
+                    val retriever = MediaMetadataRetriever()
+                    //use one of overloaded setDataSource() functions to set your data source
+                    retriever.setDataSource(this, Uri.fromFile(videoFileName))
+                    val time =
+                        (retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
+                            ?.toLongOrNull() ?: 0L)
+                    retriever.release()
+
+                    if (time > 900000L) {
                         showToast("Video should be less than or equal to 15 minutes")
                     } else {
-                        videoFileName = File(item.path.toString())
                         if (videoFileName?.exists() == true) {
-                            imageVideoDuration = (item.duration / 1000).toInt()
+                            imageVideoDuration = (time / 1000L).toInt()
                             setupProgressBarWithDuration()
                             startVideoEditor(videoFileName?.absolutePath.toString())
                         }
@@ -914,7 +1001,10 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
             cameraProvider.unbindAll()
             cameraProvider.bindToLifecycle((this as LifecycleOwner), cameraSelector, preview)
             if (surfaceProvider == null) {
-                deepAR?.let { surfaceProvider = ARSurfaceProvider(this, it) }
+                deepAR?.let {
+                    if (surfaceProvider == null)
+                        surfaceProvider = ARSurfaceProvider(this, it)
+                }
             }
             preview.setSurfaceProvider(surfaceProvider)
             surfaceProvider?.setMirror((lensFacing == CameraSelector.LENS_FACING_FRONT))
@@ -1018,49 +1108,58 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
     private fun gotoNext() {
         when (activeFilterType) {
             0 -> {
-                currentMask = (currentMask + 1) % masks!!.size
-                if (masks!![currentMask] == "none") {
+                currentMask = (currentMask + 1) % (masks?.size ?: 0)
+                if (masks?.get(currentMask) == "none") {
                     findViewById<TextView>(R.id.tvEffectName).visibility = View.GONE
                 } else {
                     findViewById<TextView>(R.id.tvEffectName).visibility = View.VISIBLE
                     findViewById<TextView>(R.id.tvEffectName).text =
-                        (masks!![currentMask][0].toUpperCase()
-                            .toString() + masks!![currentMask].substring(
+                        (masks?.get(currentMask)?.get(0)?.toUpperCase()
+                            .toString() + masks?.get(currentMask)?.substring(
                             1,
-                            masks!![currentMask].lastIndex + 1
-                        ).replace(".deepar", "")).replace("_", " ")
+                            (masks?.get(currentMask)?.lastIndex ?: 0) + 1
+                        )?.replace(".deepar", "")).replace("_", " ")
                 }
-                deepAR?.switchEffect("mask", getFilterPath(masks!![currentMask]))
+                deepAR?.switchEffect(
+                    "mask",
+                    getFilterPath(masks?.get(currentMask).toString())
+                )
             }
             1 -> {
-                currentEffect = (currentEffect + 1) % effects!!.size
-                if (effects!![currentEffect] == "none") {
+                currentEffect = (currentEffect + 1) % (effects?.size ?: 0)
+                if (effects?.get(currentEffect) == "none") {
                     findViewById<TextView>(R.id.tvEffectName).visibility = View.GONE
                 } else {
                     findViewById<TextView>(R.id.tvEffectName).visibility = View.VISIBLE
                     findViewById<TextView>(R.id.tvEffectName).text =
-                        (effects!![currentEffect][0].toUpperCase()
-                            .toString() + effects!![currentEffect].substring(
+                        (effects?.get(currentEffect)?.get(0)?.toUpperCase()
+                            .toString() + effects?.get(currentEffect)?.substring(
                             1,
-                            effects!![currentEffect].lastIndex + 1
-                        ).replace(".deepar", "")).replace("_", " ")
+                            (effects?.get(currentEffect)?.lastIndex ?: 0) + 1
+                        )?.replace(".deepar", "")).replace("_", " ")
                 }
-                deepAR?.switchEffect("effect", getFilterPath(effects!![currentEffect]))
+                deepAR?.switchEffect(
+                    "effect",
+                    getFilterPath(effects?.get(currentEffect).toString())
+                )
             }
             2 -> {
-                currentFilter = (currentFilter + 1) % filters!!.size
-                if (filters!![currentFilter] == "none") {
+                currentFilter = (currentFilter + 1) % (filters?.size ?: 0)
+                if (filters?.get(currentFilter) == "none") {
                     findViewById<TextView>(R.id.tvEffectName).visibility = View.GONE
                 } else {
                     findViewById<TextView>(R.id.tvEffectName).visibility = View.VISIBLE
                     findViewById<TextView>(R.id.tvEffectName).text =
-                        (filters!![currentFilter][0].toUpperCase()
-                            .toString() + filters!![currentFilter].substring(
+                        (filters?.get(currentFilter)?.get(0)?.toUpperCase()
+                            .toString() + filters?.get(currentFilter)?.substring(
                             1,
-                            filters!![currentFilter].lastIndex + 1
-                        ).replace(".deepar", "")).replace("_", " ")
+                            (filters?.get(currentFilter)?.lastIndex ?: 0) + 1
+                        )?.replace(".deepar", "")).replace("_", " ")
                 }
-                deepAR?.switchEffect("filter", getFilterPath(filters!![currentFilter]))
+                deepAR?.switchEffect(
+                    "filter",
+                    getFilterPath(filters?.get(currentFilter).toString())
+                )
             }
         }
     }
@@ -1068,49 +1167,58 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
     private fun gotoPrevious() {
         when (activeFilterType) {
             0 -> {
-                currentMask = (currentMask - 1 + masks!!.size) % (masks?.size ?: 0)
-                if (masks!![currentMask] == "none") {
+                currentMask = (currentMask - 1 + (masks?.size ?: 0)) % (masks?.size ?: 0)
+                if (masks?.get(currentMask) == "none") {
                     findViewById<TextView>(R.id.tvEffectName).visibility = View.GONE
                 } else {
                     findViewById<TextView>(R.id.tvEffectName).visibility = View.VISIBLE
                     findViewById<TextView>(R.id.tvEffectName).text =
-                        (masks!![currentMask][0].toUpperCase()
-                            .toString() + masks!![currentMask].substring(
+                        (masks?.get(currentMask)?.get(0)?.toUpperCase()
+                            .toString() + masks?.get(currentMask)?.substring(
                             1,
-                            masks!![currentMask].lastIndex + 1
-                        ).replace(".deepar", "")).replace("_", " ")
+                            (masks?.get(currentMask)?.lastIndex ?: 0) + 1
+                        )?.replace(".deepar", "")).replace("_", " ")
                 }
-                deepAR?.switchEffect("mask", getFilterPath(masks!![currentMask]))
+                deepAR?.switchEffect(
+                    "mask",
+                    getFilterPath(masks?.get(currentMask).toString())
+                )
             }
             1 -> {
-                currentEffect = (currentEffect - 1 + effects!!.size) % effects!!.size
-                if (effects!![currentEffect] == "none") {
+                currentEffect = (currentEffect - 1 + (effects?.size ?: 0)) % (effects?.size ?: 0)
+                if (effects?.get(currentEffect) == "none") {
                     findViewById<TextView>(R.id.tvEffectName).visibility = View.GONE
                 } else {
                     findViewById<TextView>(R.id.tvEffectName).visibility = View.VISIBLE
                     findViewById<TextView>(R.id.tvEffectName).text =
-                        (effects!![currentEffect][0].toUpperCase()
-                            .toString() + effects!![currentEffect].substring(
+                        (effects?.get(currentEffect)?.get(0)?.toUpperCase()
+                            .toString() + effects?.get(currentEffect)?.substring(
                             1,
-                            effects!![currentEffect].lastIndex + 1
-                        ).replace(".deepar", "")).replace("_", " ")
+                            (effects?.get(currentEffect)?.lastIndex ?: 0) + 1
+                        )?.replace(".deepar", "")).replace("_", " ")
                 }
-                deepAR?.switchEffect("effect", getFilterPath(effects!![currentEffect]))
+                deepAR?.switchEffect(
+                    "effect",
+                    getFilterPath(effects?.get(currentEffect).toString())
+                )
             }
             2 -> {
-                currentFilter = (currentFilter - 1 + filters!!.size) % filters!!.size
-                if (filters!![currentFilter] == "none") {
+                currentFilter = (currentFilter - 1 + (filters?.size ?: 0)) % (filters?.size ?: 0)
+                if (filters?.get(currentFilter) == "none") {
                     findViewById<TextView>(R.id.tvEffectName).visibility = View.GONE
                 } else {
                     findViewById<TextView>(R.id.tvEffectName).visibility = View.VISIBLE
                     findViewById<TextView>(R.id.tvEffectName).text =
-                        (filters!![currentFilter][0].toUpperCase()
-                            .toString() + filters!![currentFilter].substring(
+                        (filters?.get(currentFilter)?.get(0)?.toUpperCase()
+                            .toString() + filters?.get(currentFilter)?.substring(
                             1,
-                            filters!![currentFilter].lastIndex + 1
-                        ).replace(".deepar", "")).replace("_", " ")
+                            (filters?.get(currentFilter)?.lastIndex ?: 0) + 1
+                        )?.replace(".deepar", "")).replace("_", " ")
                 }
-                deepAR?.switchEffect("filter", getFilterPath(filters!![currentFilter]))
+                deepAR?.switchEffect(
+                    "filter",
+                    getFilterPath(filters?.get(currentFilter).toString())
+                )
             }
         }
     }

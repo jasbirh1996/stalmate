@@ -40,7 +40,7 @@ class FragmentCallUserList : BaseFragment(), FriendAdapter.Callbackk {
 
         binding.rvUsers.adapter=friendAdapter
         binding.rvUsers.layoutManager= LinearLayoutManager(context)
-        networkViewModel.getFriendList( HashMap())
+        networkViewModel.getFriendList(prefManager?.access_token.toString(), HashMap())
         networkViewModel.friendLiveData.observe(viewLifecycleOwner, Observer {
             it.let {
                 friendAdapter.submitList(it!!.results)

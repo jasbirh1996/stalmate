@@ -73,7 +73,7 @@ class AppSettingFragment : BaseFragment() {
             )
             (context as ActivitySettings).finishAffinity()
         }
-        networkViewModel.languageLiveData(HashMap())
+        networkViewModel.languageLiveData(HashMap(), prefManager?.access_token.toString())
         networkViewModel.languageLiveData.observe(requireActivity()) {
             it.let {
                 binding.spinnerLanguage.setSpinner(

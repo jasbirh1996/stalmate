@@ -146,7 +146,7 @@ class FragmentSingleUserSelector : BaseFragment(), FriendAdapter.Callbackk,
         hashmap.put("sortBy", "")
         hashmap.put("filter", "")
 
-        networkViewModel.getFriendList(hashmap)
+        networkViewModel.getFriendList(prefManager?.access_token.toString(),hashmap)
         networkViewModel.friendLiveData.observe(viewLifecycleOwner, Observer {
             it.let {
 

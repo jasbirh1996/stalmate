@@ -18,18 +18,24 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.stalmate.user.R
+import com.stalmate.user.base.App
 import com.stalmate.user.commonadapters.ShareWithFriendAdapter
 import com.stalmate.user.databinding.FragmentShareWithFriendsBinding
 import com.stalmate.user.model.User
 import com.stalmate.user.utilities.Constants
+import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.viewmodel.AppViewModel
 
-class DialogFragmentShareWithFriends(var networkViewModel: AppViewModel,var  funtime:ResultFuntime,var callback:CAllback) : BottomSheetDialogFragment(),
+class DialogFragmentShareWithFriends(
+    var networkViewModel: AppViewModel,
+    var funtime: ResultFuntime,
+    var callback: CAllback
+) : BottomSheetDialogFragment(),
     ShareWithFriendAdapter.Callback {
     lateinit var friendAdapter: ShareWithFriendAdapter
     lateinit var binding: FragmentShareWithFriendsBinding
     var searchData = ""
-    var currentPage=1
+    var currentPage = 1
     var isLastPage = false
     var isLoading = false
 
@@ -57,13 +63,7 @@ class DialogFragmentShareWithFriends(var networkViewModel: AppViewModel,var  fun
         (contentView.parent as View).setBackgroundColor(resources.getColor(android.R.color.transparent))
 
 
-
     }
-
-
-
-
-
 
 
     override fun onCreateView(
@@ -71,31 +71,33 @@ class DialogFragmentShareWithFriends(var networkViewModel: AppViewModel,var  fun
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        var v=  inflater.inflate(R.layout.fragment_share_with_friends,null,false)
+        var v = inflater.inflate(R.layout.fragment_share_with_friends, null, false)
         binding = DataBindingUtil.bind<FragmentShareWithFriendsBinding>(v)!!
         return binding.root
     }
 
-    private val mBottomSheetBehaviorCallback: BottomSheetBehavior.BottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
-        override fun onStateChanged(bottomSheet: View, newState: Int) {
-            if (newState == BottomSheetBehavior.STATE_HIDDEN) {
-                
+    private val mBottomSheetBehaviorCallback: BottomSheetBehavior.BottomSheetCallback =
+        object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                if (newState == BottomSheetBehavior.STATE_HIDDEN) {
 
-                dismiss()
+
+                    dismiss()
+                }
             }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
         }
-        override fun onSlide(bottomSheet: View, slideOffset: Float) {}
-    }
 
 
-    public interface CAllback{
-        fun onTotalShareCountFromDialog(count:Int)
+    public interface CAllback {
+        fun onTotalShareCountFromDialog(count: Int)
     }
 
     override fun onDestroy() {
-        var count=0
+        var count = 0
         friendAdapter.list.forEach {
-            if (it.isSelected){
+            if (it.isSelected) {
                 count++
             }
         }
@@ -111,7 +113,7 @@ class DialogFragmentShareWithFriends(var networkViewModel: AppViewModel,var  fun
 
 
 
-        friendAdapter = ShareWithFriendAdapter( requireContext(),this)
+        friendAdapter = ShareWithFriendAdapter(requireContext(), this)
         binding.etSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
@@ -125,6 +127,7 @@ class DialogFragmentShareWithFriends(var networkViewModel: AppViewModel,var  fun
                     }
                 }
             }
+
             override fun afterTextChanged(p0: Editable?) {
             }
         })
@@ -140,7 +143,7 @@ class DialogFragmentShareWithFriends(var networkViewModel: AppViewModel,var  fun
         binding.rvFriends.adapter = friendAdapter
         binding.rvFriends.layoutManager = LinearLayoutManager(context)
 
-        hitApi(true,searchData)
+        hitApi(true, searchData)
 
         binding.nestedScrollView.getViewTreeObserver()
             .addOnScrollChangedListener(ViewTreeObserver.OnScrollChangedListener {
@@ -163,14 +166,14 @@ class DialogFragmentShareWithFriends(var networkViewModel: AppViewModel,var  fun
     private fun loadMoreItems() {
         isLoading = true
         currentPage++
-        hitApi(false,searchData)
+        hitApi(false, searchData)
     }
 
 
-    fun hitApi(isFresh:Boolean, dataSearch: String){
+    fun hitApi(isFresh: Boolean, dataSearch: String) {
         this.searchData = dataSearch
-        if (isFresh){
-            currentPage=1
+        if (isFresh) {
+            currentPage = 1
         }
 
         var hashmap = HashMap<String, String>()
@@ -180,40 +183,35 @@ class DialogFragmentShareWithFriends(var networkViewModel: AppViewModel,var  fun
         hashmap.put("search", this.searchData)
         hashmap.put("page", currentPage.toString())
         hashmap.put("limit", "20")
-        hashmap.put("sortBy","")
-        hashmap.put("filter","")
-
-        networkViewModel.getFriendList(hashmap)
+        hashmap.put("sortBy", "")
+        hashmap.put("filter", "")
+        networkViewModel.getFriendList(
+            PrefManager.getInstance(App.getInstance())?.userDetail?.results?.get(0)?.access_token.toString(),
+            hashmap
+        )
         networkViewModel.friendLiveData.observe(viewLifecycleOwner, Observer {
             it.let {
-
-
-                if (it!!.results.isNotEmpty()){
-
-                    if (isFresh){
+                if (it!!.results.isNotEmpty()) {
+                    if (isFresh) {
                         friendAdapter.addToList(it.results as ArrayList<User>)
-
-
-                    }else{
+                    } else {
                         friendAdapter.addToList(it.results as ArrayList<User>)
                     }
 
-                    isLastPage=false
-                    if (it.results.size<6){
+                    isLastPage = false
+                    if (it.results.size < 6) {
                         binding.progressLoading.visibility = View.GONE
-                    }else{
-
-
+                    } else {
                         binding.progressLoading.visibility = View.VISIBLE
                     }
-                    binding.layoutNoData.visibility=View.GONE
-                }else{
-                    if (isFresh){
+                    binding.layoutNoData.visibility = View.GONE
+                } else {
+                    if (isFresh) {
                         friendAdapter.submitList(it.results as ArrayList<User>)
-                        binding.layoutNoData.visibility=View.VISIBLE
+                        binding.layoutNoData.visibility = View.VISIBLE
                     }
 
-                    isLastPage=true
+                    isLastPage = true
                     binding.progressLoading.visibility = View.GONE
 
 
@@ -229,16 +227,16 @@ class DialogFragmentShareWithFriends(var networkViewModel: AppViewModel,var  fun
     }
 
 
-    fun shareWithFriend(user:User){
+    fun shareWithFriend(user: User) {
         var hashmap = HashMap<String, String>()
         hashmap.put("funtime_id", funtime.id)
         hashmap.put("user_id", user.id)
         networkViewModel.shareWithFriend(hashmap)
         networkViewModel.shareWithFriendLiveData.observe(viewLifecycleOwner, Observer {
             it.let {
-               if (it!!.status!!){
+                if (it!!.status!!) {
 
-               }
+                }
             }
         })
     }

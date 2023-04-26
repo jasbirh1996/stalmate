@@ -41,13 +41,15 @@ class FragmentFunTime() : BaseFragment(), FragmentCallBack {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = DataBindingUtil.bind<FragmentFunTimeBinding>(
-            inflater.inflate(
-                R.layout.fragment_fun_time,
-                container,
-                false
-            )
-        )!!
+        if (!this::binding.isInitialized) {
+            binding = DataBindingUtil.bind<FragmentFunTimeBinding>(
+                inflater.inflate(
+                    R.layout.fragment_fun_time,
+                    container,
+                    false
+                )
+            )!!
+        }
         return binding.root
     }
 

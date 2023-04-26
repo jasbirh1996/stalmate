@@ -63,7 +63,7 @@ class ActivityOtherUserProfile : BaseActivity(),
         hashmap.put("search", "")
         hashmap.put("page", "1")
         hashmap.put("limit", "6")
-        networkViewModel.getFriendList(hashmap)
+        networkViewModel.getFriendList(prefManager?.access_token.toString(),hashmap)
         networkViewModel.friendLiveData.observe(this, Observer {
             it.let {
                 friendAdapter.submitList(it!!.results)

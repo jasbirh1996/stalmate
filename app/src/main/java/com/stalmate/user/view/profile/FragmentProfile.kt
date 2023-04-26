@@ -188,7 +188,7 @@ class FragmentProfile() : BaseFragment(),
         hashmap["search"] = ""
         hashmap["page"] = "1"
         hashmap["limit"] = "6"
-        networkViewModel.getFriendList(hashmap)
+        networkViewModel.getFriendList(prefManager?.access_token.toString(), hashmap)
         networkViewModel.friendLiveData.observe(viewLifecycleOwner, Observer {
             it.let {
                 friendAdapter.submitList(it!!.results)
@@ -414,7 +414,7 @@ class FragmentProfile() : BaseFragment(),
             it.let {
                 makeToast(it!!.message)
                 var hashMap = HashMap<String, String>()
-                networkViewModel.getProfileData(hashMap)
+                networkViewModel.getProfileData(hashMap, prefManager?.access_token.toString())
                 getUserProfileData()
             }
         })
@@ -422,7 +422,7 @@ class FragmentProfile() : BaseFragment(),
 
     fun getUserProfileData() {
         val hashMap = HashMap<String, String>()
-        networkViewModel.getProfileData(hashMap)
+        networkViewModel.getProfileData(hashMap, prefManager?.access_token.toString())
         networkViewModel.profileLiveData.observe(viewLifecycleOwner, Observer {
             it.let {
                 userData = it!!.results

@@ -22,7 +22,7 @@ import java.util.*
 @OptIn(markerClass = arrayOf(ExperimentalUseCaseApi::class))
 class ARSurfaceProvider internal constructor(
     private val context: Context,
-    private val deepAR: DeepAR
+    private var deepAR: DeepAR?
 ) : SurfaceProvider {
     private fun printEglState() {
         Log.d(
@@ -37,9 +37,16 @@ class ARSurfaceProvider internal constructor(
 
         // request the external gl texture from deepar
         if (nativeGLTextureHandle == 0) {
-            nativeGLTextureHandle = deepAR.externalGlTexture
+            deepAR?.let {
+                try {
+                    nativeGLTextureHandle = (it.externalGlTexture ?: 0)
+                } catch (e: IllegalStateException) {
+                    e.printStackTrace()
+                }
+                printEglState()
+            }
             Log.d(tag, "request new external GL texture")
-            printEglState()
+
         }
 
         // if external gl texture could not be provided
@@ -53,13 +60,13 @@ class ARSurfaceProvider internal constructor(
         val resolution = request.resolution
         if (surfaceTexture == null) {
             surfaceTexture = SurfaceTexture(nativeGLTextureHandle)
-            surfaceTexture!!.setOnFrameAvailableListener { _: SurfaceTexture? ->
+            surfaceTexture?.setOnFrameAvailableListener { _: SurfaceTexture? ->
                 if (stop) {
                     return@setOnFrameAvailableListener
                 }
-                surfaceTexture!!.updateTexImage()
+                surfaceTexture?.updateTexImage()
                 if (isNotifyDeepar) {
-                    deepAR.receiveFrameExternalTexture(
+                    deepAR?.receiveFrameExternalTexture(
                         resolution.width,
                         resolution.height,
                         orientation,
@@ -69,7 +76,7 @@ class ARSurfaceProvider internal constructor(
                 }
             }
         }
-        surfaceTexture!!.setDefaultBufferSize(resolution.width, resolution.height)
+        surfaceTexture?.setDefaultBufferSize(resolution.width, resolution.height)
         if (surface == null) {
             surface = Surface(surfaceTexture)
         }

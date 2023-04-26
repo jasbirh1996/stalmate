@@ -43,7 +43,7 @@ class FragmentLanguage : BaseFragment(), AdapterLanguage.Callbackk {
         binding.rvLanguage.adapter=languageAdapter
         binding.rvLanguage.layoutManager= GridLayoutManager(requireContext(), 3 )
 
-        networkViewModel.languageLiveData(HashMap())
+        networkViewModel.languageLiveData(HashMap(),prefManager?.access_token.toString())
         networkViewModel.languageLiveData.observe(requireActivity()) {
             it.let {
                 languageAdapter.submitList(it!!.results)

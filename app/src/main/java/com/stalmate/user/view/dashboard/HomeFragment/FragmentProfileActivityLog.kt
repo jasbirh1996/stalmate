@@ -16,11 +16,11 @@ import com.stalmate.user.model.User
 import com.stalmate.user.utilities.Constants
 import com.stalmate.user.view.adapter.SuggestedFriendAdapter
 
-class FragmentProfileActivityLog: BaseFragment(), AdapterFeed.Callbackk,
+class FragmentProfileActivityLog : BaseFragment(), AdapterFeed.Callbackk,
     SuggestedFriendAdapter.Callbackk {
     lateinit var feedAdapter: AdapterFeed
     lateinit var suggestedFriendAdapter: SuggestedFriendAdapter
-    lateinit var binding:FragmentProfileActivityLogBinding
+    lateinit var binding: FragmentProfileActivityLogBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -40,12 +40,13 @@ class FragmentProfileActivityLog: BaseFragment(), AdapterFeed.Callbackk,
         super.onViewCreated(view, savedInstanceState)
         getActivityLogs()
     }
+
     fun getActivityLogs() {
         feedAdapter = AdapterFeed(networkViewModel, requireContext(), requireActivity())
         binding.shimmerLayoutFeeds.startShimmer()
         binding.rvFeeds.adapter = feedAdapter
         binding.rvFeeds.layoutManager = LinearLayoutManager(context)
-        networkViewModel.getFeedList("", HashMap())
+        networkViewModel.getFeedList(prefManager?.access_token.toString(), HashMap())
         networkViewModel.feedLiveData.observe(viewLifecycleOwner, Observer {
             Log.d("asdasdasd", "oaspiasddsad")
             it.let {
@@ -70,7 +71,7 @@ class FragmentProfileActivityLog: BaseFragment(), AdapterFeed.Callbackk,
         hashmap.put("page", "1")
         hashmap.put("limit", "6")
 
-        networkViewModel.getFriendList(hashmap)
+        networkViewModel.getFriendList(prefManager?.access_token.toString(), hashmap)
         networkViewModel.friendLiveData.observe(viewLifecycleOwner, Observer {
             it.let {
                 Log.d("asdasdasd", "asdasdasdasd")

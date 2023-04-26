@@ -49,7 +49,7 @@ class FragmentBlockedContacts : BaseFragment() {
 
     private fun getBlockLIst() {
         var hashMap = HashMap<String, String>()
-        networkViewModel.getProfileData(hashMap)
+        networkViewModel.getProfileData(hashMap,prefManager?.access_token.toString())
         hashMap["limit"] = "5"
         hashMap["page"] = "1"
         networkViewModel.getBlockList(hashMap)

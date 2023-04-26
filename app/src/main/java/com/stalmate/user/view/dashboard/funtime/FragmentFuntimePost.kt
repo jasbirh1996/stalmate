@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.clearFragmentResultListener
 import androidx.fragment.app.setFragmentResultListener
@@ -18,14 +19,13 @@ import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentFuntimePostBinding
 import com.stalmate.user.model.User
-import com.stalmate.user.modules.reels.activity.EXTRA_SONG_ID
+import com.stalmate.user.modules.reels.utils.RealPathUtil
 import com.stalmate.user.utilities.Constants
 import com.stalmate.user.utilities.ValidationHelper
 import com.stalmate.user.view.adapter.FriendAdapter
 import com.stalmate.user.view.dashboard.ActivityDashboardNew
 import com.stalmate.user.view.dashboard.funtime.viewmodel.TagPeopleViewModel
 import com.stalmate.user.view.singlesearch.ActivitySingleSearch
-import jp.wasabeef.richeditor.RichEditor
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -37,7 +37,7 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
     lateinit var binding: FragmentFuntimePostBinding
     var taggedPeople = ArrayList<User>()
     lateinit var tagPeopleViewModel: TagPeopleViewModel
-    var mVideo = ""
+    var mediaUri = ""
     private var isImage: Boolean = false
     private var isEdit: Boolean = false
     var city = ""
@@ -67,10 +67,11 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        tagPeopleViewModel = ViewModelProvider(requireActivity()).get(TagPeopleViewModel::class.java)
+        tagPeopleViewModel =
+            ViewModelProvider(requireActivity()).get(TagPeopleViewModel::class.java)
         isEdit = (requireActivity() as ActivityFuntimePost).isEdit
         isImage = (requireActivity() as ActivityFuntimePost).isImage
-        mVideo = (requireActivity() as ActivityFuntimePost).videoUri.toString()
+        mediaUri = (requireActivity() as ActivityFuntimePost).videoUri.toString()
 
         binding.editor.setOnTextChangeListener {
             if (it.isNullOrEmpty()) {
@@ -94,7 +95,7 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
 
         if (isEdit) {
             val funtime = (requireActivity() as ActivityFuntimePost).funtime
-            mVideo = funtime.file
+            mediaUri = funtime.file
             binding.editor.html = funtime.text
             binding.buttonPost.text = "Ok"
         }
@@ -107,8 +108,8 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
         binding.layoutTagPeople.setOnClickListener { findNavController().navigate(R.id.action_fragmentFuntimePost_to_fragmentFuntimeTag) }
 
         Glide.with(requireContext())
-            .load(mVideo)
-            .thumbnail(Glide.with(requireContext()).load(mVideo))
+            .load(mediaUri)
+            .thumbnail(Glide.with(requireContext()).load(mediaUri))
             .placeholder(R.drawable.profileplaceholder)
             .error(R.drawable.profileplaceholder)
             .into(binding.thumbnail)
@@ -196,7 +197,8 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
         mPlayer = null
     }*/
 
-    private fun String.getRequestBody(): RequestBody = RequestBody.create("text/plain".toMediaTypeOrNull(), this)
+    private fun String.getRequestBody(): RequestBody =
+        RequestBody.create("text/plain".toMediaTypeOrNull(), this)
 
     private fun File.getMultipartBody(
         keyName: String,
@@ -227,11 +229,10 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
         }
 
         val mediaFile = try {
-//            File(mVideo).getMultipartBody(
-//                keyName = "file",
-//                type = if (isImage) "image/*" else "video/*"
-//            )
-            null
+            File(RealPathUtil.getRealPath(this.requireContext(),mediaUri.toUri()).toString()).getMultipartBody(
+                keyName = "file",
+                type = if (isImage) "image/*" else "video/*"
+            )
         } catch (e: Exception) {
             e.printStackTrace()
             null
@@ -239,11 +240,15 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
 
         val mediaFileCover =
             try {
-//                File(if (isImage) mVideo else (requireActivity() as ActivityFuntimePost).mVideoCover).getMultipartBody(
-//                    keyName = "cover_image",
-//                    type = "image/*"
-//                )
-                null
+                File(
+                    if (isImage)
+                        RealPathUtil.getRealPath(this.requireContext(),mediaUri.toUri()).toString()
+                    else
+                        RealPathUtil.getRealPath(this.requireContext(),(requireActivity() as ActivityFuntimePost).mVideoCover.toUri()).toString()
+                ).getMultipartBody(
+                    keyName = "cover_image",
+                    type = "image/*"
+                )
             } catch (e: Exception) {
                 e.printStackTrace()
                 null

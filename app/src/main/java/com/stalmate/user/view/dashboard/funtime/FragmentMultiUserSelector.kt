@@ -18,12 +18,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.stalmate.user.R
+import com.stalmate.user.base.App
 import com.stalmate.user.commonadapters.MultiUserSelectorAdapter
 import com.stalmate.user.commonadapters.TaggedUsersAdapter
 import com.stalmate.user.databinding.FragmentMultiUserSelectorBinding
 
 import com.stalmate.user.model.User
 import com.stalmate.user.utilities.Constants
+import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.view.adapter.FriendAdapter
 import com.stalmate.user.view.dashboard.funtime.viewmodel.TagPeopleViewModel
 import com.stalmate.user.viewmodel.AppViewModel
@@ -34,18 +36,17 @@ class FragmentMultiUserSelector(
     var networkViewModel: AppViewModel,
     tagPeopleViewModel: TagPeopleViewModel
 ) : BottomSheetDialogFragment(), FriendAdapter.Callbackk,
-    TaggedUsersAdapter.Callback{
+    TaggedUsersAdapter.Callback {
     lateinit var tagPeopleViewModel: TagPeopleViewModel
     lateinit var friendAdapter: MultiUserSelectorAdapter
     lateinit var binding: FragmentMultiUserSelectorBinding
     var searchData = ""
-    var currentPage=1
+    var currentPage = 1
     var isLastPage = false
     var isLoading = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
-
 
 
     @SuppressLint("RestrictedApi")
@@ -71,31 +72,31 @@ class FragmentMultiUserSelector(
         savedInstanceState: Bundle?
     ): View? {
 
-          var v=  inflater.inflate(R.layout.fragment_multi_user_selector,null,false)
+        var v = inflater.inflate(R.layout.fragment_multi_user_selector, null, false)
         binding = DataBindingUtil.bind<FragmentMultiUserSelectorBinding>(v)!!
         return binding.root
 
 
-
     }
 
 
-
-    private val mBottomSheetBehaviorCallback: BottomSheetBehavior.BottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
-        override fun onStateChanged(bottomSheet: View, newState: Int) {
-            if (newState == BottomSheetBehavior.STATE_HIDDEN) {
-                dismiss()
+    private val mBottomSheetBehaviorCallback: BottomSheetBehavior.BottomSheetCallback =
+        object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                    dismiss()
+                }
             }
-        }
 
-        override fun onSlide(bottomSheet: View, slideOffset: Float) {}
-    }
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+        }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        tagPeopleViewModel= ViewModelProvider(requireActivity()).get(TagPeopleViewModel::class.java)
+        tagPeopleViewModel =
+            ViewModelProvider(requireActivity()).get(TagPeopleViewModel::class.java)
 
         friendAdapter = MultiUserSelectorAdapter(requireContext())
         binding.etSearch.addTextChangedListener(object : TextWatcher {
@@ -138,16 +139,15 @@ class FragmentMultiUserSelector(
             tagPeopleViewModel.setPolicy(Constants.PRIVACY_TYPE_SPECIFIC)
 
 
-
-            var sizeofselectedUsers=0
+            var sizeofselectedUsers = 0
             friendAdapter.list.forEach {
-              if (it.isSelected){
-                  sizeofselectedUsers++
-                  tagPeopleViewModel.addToSpecificList(it)
-              }
+                if (it.isSelected) {
+                    sizeofselectedUsers++
+                    tagPeopleViewModel.addToSpecificList(it)
+                }
             }
 
-            if (sizeofselectedUsers==0){
+            if (sizeofselectedUsers == 0) {
                 tagPeopleViewModel.clearSpecificFriendList()
             }
 
@@ -158,7 +158,7 @@ class FragmentMultiUserSelector(
         binding.rvFriends.adapter = friendAdapter
         binding.rvFriends.layoutManager = LinearLayoutManager(context)
 
-        hitApi(true,searchData)
+        hitApi(true, searchData)
 
         binding.nestedScrollView.getViewTreeObserver()
             .addOnScrollChangedListener(ViewTreeObserver.OnScrollChangedListener {
@@ -181,14 +181,14 @@ class FragmentMultiUserSelector(
     private fun loadMoreItems() {
         isLoading = true
         currentPage++
-        hitApi(false,searchData)
+        hitApi(false, searchData)
     }
 
 
-    fun hitApi(isFresh:Boolean, dataSearch: String){
+    fun hitApi(isFresh: Boolean, dataSearch: String) {
         this.searchData = dataSearch
-        if (isFresh){
-            currentPage=1
+        if (isFresh) {
+            currentPage = 1
         }
 
         var hashmap = HashMap<String, String>()
@@ -198,48 +198,50 @@ class FragmentMultiUserSelector(
         hashmap.put("search", this.searchData)
         hashmap.put("page", currentPage.toString())
         hashmap.put("limit", "20")
-        hashmap.put("sortBy","")
-        hashmap.put("filter","")
+        hashmap.put("sortBy", "")
+        hashmap.put("filter", "")
 
-        networkViewModel.getFriendList(hashmap)
+        networkViewModel.getFriendList(
+            PrefManager.getInstance(App.getInstance())?.userDetail?.results?.get(
+                0
+            )?.access_token.toString(), hashmap
+        )
         networkViewModel.friendLiveData.observe(viewLifecycleOwner, Observer {
             it.let {
 
 
-                if (it!!.results.isNotEmpty()){
-                    tagPeopleViewModel.taggedModelObject.specifFriendsList.forEach { userdata->
+                if (it!!.results.isNotEmpty()) {
+                    tagPeopleViewModel.taggedModelObject.specifFriendsList.forEach { userdata ->
                         run {
-                       try {
-                           it.results.find { it.id == userdata.id }!!.isSelected = true
-                       }catch (e:java.lang.Exception){}
+                            try {
+                                it.results.find { it.id == userdata.id }!!.isSelected = true
+                            } catch (e: java.lang.Exception) {
+                            }
                         }
                     }
 
 
-                    if (isFresh){
-
+                    if (isFresh) {
 
 
                         friendAdapter.submitList(it.results as ArrayList<User>)
-                    }else{
+                    } else {
                         friendAdapter.addToList(it.results as ArrayList<User>)
                     }
 
-                    isLastPage=false
-                    if (it.results.size<6){
+                    isLastPage = false
+                    if (it.results.size < 6) {
                         binding.progressLoading.visibility = View.GONE
-                    }else{
+                    } else {
                         binding.progressLoading.visibility = View.VISIBLE
                     }
-                }else{
+                } else {
 
 
-
-
-                    if (isFresh){
+                    if (isFresh) {
                         friendAdapter.submitList(it.results as ArrayList<User>)
                     }
-                    isLastPage=true
+                    isLastPage = true
                     binding.progressLoading.visibility = View.GONE
 
                 }
@@ -262,8 +264,6 @@ class FragmentMultiUserSelector(
     override fun onUserSelected(user: User) {
 
 
-
-
         /*     var bundle=Bundle()
              bundle.putSerializable(SELECT_USER,user)
              setFragmentResult(
@@ -271,8 +271,6 @@ class FragmentMultiUserSelector(
              )*/
         findNavController().popBackStack()
     }
-
-
 
 
 }
