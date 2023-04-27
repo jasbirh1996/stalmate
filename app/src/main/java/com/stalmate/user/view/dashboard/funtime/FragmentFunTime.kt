@@ -60,11 +60,7 @@ class FragmentFunTime() : BaseFragment(), FragmentCallBack {
         }
 
         binding.ivAddButton.setOnClickListener {
-            startActivity(
-                IntentHelper.getCreateReelsScreen(requireActivity())?.apply {
-                    putExtra("type", "image")
-                }
-            )
+            startActivity(IntentHelper.getCreateReelsScreen(requireActivity()))
         }
         loadFragment(ReelListFragment())
     }

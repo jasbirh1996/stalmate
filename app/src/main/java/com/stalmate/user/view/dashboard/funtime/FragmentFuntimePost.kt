@@ -2,11 +2,16 @@ package com.stalmate.user.view.dashboard.funtime
 
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.databinding.DataBindingUtil
@@ -16,9 +21,13 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
+import com.canhub.cropper.CropImageContract
+import com.canhub.cropper.CropImageView
+import com.canhub.cropper.options
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentFuntimePostBinding
+import com.stalmate.user.model.SelecteThumbnailBottomSheet
 import com.stalmate.user.model.User
 import com.stalmate.user.modules.reels.utils.RealPathUtil
 import com.stalmate.user.utilities.Constants
@@ -66,6 +75,52 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
         return binding.root
     }
 
+    private var launchActivityForImagePickFromGalleryAndCamera =
+        registerForActivityResult<Intent, ActivityResult>(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result: ActivityResult ->
+            result.data?.data?.let {
+                val l = result.data?.extras?.get("data")
+                if (!it.toString().isNullOrEmpty()) {
+                    File(
+                        RealPathUtil.getRealPath((requireActivity() as ActivityFuntimePost), it)
+                    ).let { file ->
+                        if (file.exists()) {
+                            // start picker to get image for cropping and then use the image in cropping activity
+                            cropImage.launch(
+                                options(uri = it, builder = {
+                                    this.setGuidelines(CropImageView.Guidelines.ON)
+                                })
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
+    /*Cover Image Picker */
+    private val cropImage = registerForActivityResult(CropImageContract()) { result ->
+        if (result.isSuccessful) {
+            // use the returned uri
+            val uriContent = result.uriContent
+            val uriFilePath = result.getUriFilePath(requireContext()) // optional usage
+            val imageFile = File(result.getUriFilePath(requireContext(), true)!!)
+            Log.d("imageUrl======", uriContent.toString())
+            Log.d("imageUrl======", uriFilePath.toString())
+
+            (requireActivity() as ActivityFuntimePost).mVideoCover = Uri.fromFile(imageFile).toString()
+            Glide.with(requireContext())
+                .load((requireActivity() as ActivityFuntimePost).mVideoCover)
+                .thumbnail(Glide.with(requireContext()).load((requireActivity() as ActivityFuntimePost).mVideoCover))
+                .placeholder(R.drawable.profileplaceholder)
+                .error(R.drawable.profileplaceholder)
+                .into(binding.thumbnail)
+        } else {
+            // an error occurred
+            val exception = result.error
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         tagPeopleViewModel =
@@ -85,18 +140,40 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
         setUpEditorbuttons()
         updateButtons()
 
+        val thumbnailDialog = SelecteThumbnailBottomSheet(
+            fromCamera = {
+                val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                launchActivityForImagePickFromGalleryAndCamera.launch(cameraIntent)
+            },
+            fromGallery = {
+                val pickerIntent = Intent(Intent.ACTION_PICK)
+                pickerIntent.type = "image/*"
+                pickerIntent.putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("image/*"))
+                pickerIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false)
+                launchActivityForImagePickFromGalleryAndCamera.launch(pickerIntent)
+            },
+            fromVideo = { findNavController().navigate(R.id.action_fragmentFuntimePost_to_fragmentSelectThumbnail) },
+            fromDismiss = {}
+        )
+
         if (isImage)
             binding.llSelectCover.visibility = View.GONE
         else {
             binding.llSelectCover.visibility = View.VISIBLE
             binding.llSelectCover.setOnClickListener {
-                findNavController().navigate(R.id.action_fragmentFuntimePost_to_fragmentSelectThumbnail)
+                if (thumbnailDialog.isAdded) {
+                    return@setOnClickListener
+                }
+                thumbnailDialog.show(
+                    (requireActivity() as ActivityFuntimePost).supportFragmentManager,
+                    thumbnailDialog.tag
+                )
             }
         }
 
         if (isEdit) {
             val funtime = (requireActivity() as ActivityFuntimePost).funtime
-            mediaUri = funtime.file
+            mediaUri = funtime.file.toString()
             binding.editor.html = funtime.text
             binding.buttonPost.text = "Ok"
         }
@@ -245,6 +322,25 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
             null
         }
 
+        val mediaFileThumIcon =
+            try {
+                File(
+                    if (isImage)
+                        mediaUriRealPath
+                    else
+                        RealPathUtil.getRealPath(
+                            this.requireContext(),
+                            (requireActivity() as ActivityFuntimePost).mVideoCover.toUri()
+                        ).toString()
+                ).getMultipartBody(
+                    keyName = "thum_icon",
+                    type = "image/*"
+                )
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
+
         val mediaFileCover =
             try {
                 File(
@@ -272,7 +368,7 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
         networkViewModel.postReel(
             access_token = prefManager?.access_token.toString(),
             file = mediaFile,
-            thum_icon = mediaFileCover,
+            thum_icon = mediaFileThumIcon,
             cover_image = mediaFileCover,
             file_type = (requireActivity() as ActivityFuntimePost).mimeType.getRequestBody(),
             text = data.getRequestBody(),
@@ -377,7 +473,7 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
 
     private fun editPost() {
         val hashmap = HashMap<String, String>()
-        hashmap["id"] = (requireActivity() as ActivityFuntimePost).funtime.id
+        hashmap["id"] = (requireActivity() as ActivityFuntimePost).funtime.id.toString()
         hashmap["is_delete"] = "0"
         var data = ""
         if (!ValidationHelper.isNull(binding.editor.html)) {

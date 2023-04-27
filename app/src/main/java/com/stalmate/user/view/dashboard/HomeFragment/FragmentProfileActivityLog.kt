@@ -50,7 +50,11 @@ class FragmentProfileActivityLog : BaseFragment(), AdapterFeed.Callbackk,
         networkViewModel.feedLiveData.observe(viewLifecycleOwner, Observer {
             Log.d("asdasdasd", "oaspiasddsad")
             it.let {
-                feedAdapter.submitList(it!!.results)
+                if (!it?.results.isNullOrEmpty()) {
+                    it?.results?.let { it1 -> feedAdapter.submitList(it1) }
+                } else {
+                    it?.reponse?.let { it1 -> feedAdapter.submitList(it1) }
+                }
                 binding.shimmerLayoutFeeds.stopShimmer()
                 binding.rvFeeds.visibility = View.VISIBLE
             }

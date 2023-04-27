@@ -133,36 +133,36 @@ class ActivityFullViewReels : BaseActivity(), ReelFullViewAdapter.Callback {
             hashmap.put("id_user", "")
         }
 
-        hashmap.put("fun_id", adapter.reelList[0].id)
+        hashmap.put("fun_id", adapter.reelList[0].id.toString())
         hashmap.put("limit", "5")
         networkViewModel.funtimeLiveData(prefManager?.access_token.toString(),hashmap)
         networkViewModel.funtimeLiveData.observe(this) {
             isApiRuning = false
             //  binding.shimmerLayout.visibility =  View.GONE
             Log.d("========", "empty")
-            if (it!!.results.isNotEmpty()) {
+            if (!it?.results.isNullOrEmpty()) {
                 Log.d("========", "full")
                 if (isFirstApiHit) {
 
-                    var list = it.results
+                    var list = it?.results
 
-                    list.forEach {
+                    list?.forEach {
                         it.isDataUpdated = false
 
                     }
 
-                    list.removeAt(0)
-                    adapter.addToList(list)
+                    list?.removeAt(0)
+                    list?.let { it1 -> adapter.addToList(it1) }
                 } else {
 
-                    var list = it.results
+                    var list = it?.results
 
-                    list.forEach {
+                    list?.forEach {
                         it.isDataUpdated = false
                     }
 
 
-                    adapter.addToList(list)
+                    list?.let { it1 -> adapter.addToList(it1) }
                 }
                 isFirstApiHit = false
             }
@@ -194,13 +194,13 @@ class ActivityFullViewReels : BaseActivity(), ReelFullViewAdapter.Callback {
 
     private fun likeApiHit(funtime: ResultFuntime) {
         var hashmap = HashMap<String, String>()
-        hashmap.put("funtime_id", funtime.id)
+        hashmap.put("funtime_id", funtime.id.toString())
         networkViewModel.funtimeLiveLikeUnlikeData(hashmap)
         networkViewModel.funtimeLiveLikeUnlikeData.observe(this) {
 
             it.let {
                 if (it!!.status) {
-                    adapter.likeReelById(funtime.id)
+                    adapter.likeReelById(funtime.id.toString())
                 }
             }
         }
@@ -272,7 +272,7 @@ class ActivityFullViewReels : BaseActivity(), ReelFullViewAdapter.Callback {
     fun deleteReel(funtime: ResultFuntime) {
 
         var hashmap = HashMap<String, String>()
-        hashmap.put("id", funtime.id)
+        hashmap.put("id", funtime.id.toString())
         hashmap.put("is_delete", "1")
         hashmap.put("text", "")
         networkViewModel.funtimUpdate(hashmap)
@@ -285,7 +285,7 @@ class ActivityFullViewReels : BaseActivity(), ReelFullViewAdapter.Callback {
                     Log.d("a;lksdasd", position.toString())
                     binding.recyclerView.smoothScrollToPosition(position + 1)
                     Handler(Looper.getMainLooper()).postDelayed(
-                        Runnable { adapter.removeReelById(funtime.id) },
+                        Runnable { adapter.removeReelById(funtime.id.toString()) },
                         500
                     )
                 }

@@ -125,13 +125,13 @@ class ReelAdapter(val context: Context, var callback: Callback) :
 
         val requestOptions = RequestOptions()
         Glide.with(context)
-            .load(reelList[position].file)
+            .load(reelList[position].thum_icon)
             .apply(requestOptions)
-            .thumbnail(Glide.with(context).load(reelList[position].file))
+            .thumbnail(Glide.with(context).load(reelList[position].thum_icon))
             .into(holder.videoThumbnail)
         holder.tvUserName.text =
             reelList[position]!!.first_name + " " + reelList[position]!!.last_name
-        Glide.with(context).load(reelList[position]!!.profile_img)
+        Glide.with(context).load(reelList[position].profile_img)
             .placeholder(R.drawable.profileplaceholder).into(holder.imgUserProfile)
 
         holder.likeCount.text = reelList[position]!!.like_count.toString()
@@ -171,7 +171,7 @@ class ReelAdapter(val context: Context, var callback: Callback) :
 
             } else {
                 reelList[position].isLiked = "Yes"
-                reelList[position].like_count++
+                reelList[position].like_count += 1
                 holder.likeIcon.setImageDrawable(
                     ContextCompat.getDrawable(
                         context,

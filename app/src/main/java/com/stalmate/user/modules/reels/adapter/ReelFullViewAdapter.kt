@@ -150,15 +150,17 @@ class ReelFullViewAdapter(
         holder.likeCount.text = reelList[position].like_count.toString()
         holder.commentCount.text = reelList[position].comment_count.toString()
         holder.shareCount.text = reelList[position].share_count.toString()
-        if (reelList[position].tag_user.size > 0) {
+        if ((reelList[position].tag_user?.size?:0) > 0) {
             holder.layoutTagged.visibility = View.VISIBLE
             holder.tvTaggedPeopleCount.text =
-                reelList[position].tag_user.size.toString() + " People Tagged"
+                (reelList[position].tag_user?.size?:0).toString() + " People Tagged"
             holder.tvTaggedPeopleCount.setOnClickListener {
 
 
-                var dialogFragmen = FragmentBSTaggedUsers(reelList[position].tag_user)
-                dialogFragmen.show((context as AppCompatActivity).supportFragmentManager, "")
+                reelList[position].tag_user?.let {
+                    var dialogFragmen = FragmentBSTaggedUsers(it)
+                    dialogFragmen.show((context as AppCompatActivity).supportFragmentManager, "")
+                }
                 reelList[position].isDataUpdated=true
             }
         }

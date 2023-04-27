@@ -48,7 +48,7 @@ class ContactUsBottomSheet(
         super.setupDialog(dialog, style)
         val contentView = View.inflate(context, R.layout.fragment_bottomsheet_contact_us, null)
         binding = DataBindingUtil.bind<FragmentBottomsheetContactUsBinding>(contentView)!!
-        dialog.getWindow()!!.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+        //dialog.getWindow()!!.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
         dialog.setContentView(contentView)
         val params = (contentView.parent as View).layoutParams as CoordinatorLayout.LayoutParams
         val behavior = params.behavior

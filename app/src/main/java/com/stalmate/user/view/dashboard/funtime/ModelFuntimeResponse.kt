@@ -6,50 +6,53 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 import java.io.Serializable
 
+@Parcelize
 data class ModelFuntimeResponse(
-    val message: String,
-    val results: ArrayList<ResultFuntime>,
-    val status: Boolean
-)
+    var message: String = "", // List successfully
+    var results: ArrayList<ResultFuntime> = arrayListOf(),
+    var status: Boolean = false // true
+) : Parcelable
 
 @Parcelize
 data class ResultFuntime(
-    val Created_date: String,
-    var comment_count: Int,
-    val file: String,
-    val file_type: String,
-    val first_name: String,
-    val hastag: String,
-    val id: String,
-    val last_name: String,
-    var like_count: Int,
-    val location: String,
-    val profile_img: String,
-    var share_count: Int,
-    val sound_file: String,
-    val sound_name: String,
-    val sound_image: String? = null,
-    val artist_name: String,
-    val tag_id: String,
-    var isLiked: String? = null,
-    val text: String,
-    val sound_id: String?,
-    val is_my: String?,
-    val url: String,
-    val user_id: String? = null,
-    var isSave: String? = null,
-    var isFollowing: String? = null,
+    var Created_date: String = "", // 3 Min ago ..
+    var app_logo: String = "", // http://newastrology.teknikoglobal.com/images/i/app_logo.png
+    var artist_name: String = "",
+    var comment_count: Int = 0, // 0
+    var comment_status: String = "", // on
+    var `file`: String = "", // https://stalematebucket.s3.me-south-1.amazonaws.com/file_1682598160028.jpg
+    var file_type: String = "", // image/jpeg
+    var first_name: String = "", // loop
+    var hastag: String = "",
+    var id: String = "", // 644a6910371bafdb0030b0dd
+    var isFollowing: String = "", // No
+    var isLiked: String = "", // No
+    var isSave: String = "", // No
+    var is_my: String = "", // YES
+    var last_name: String = "", // two
+    var like_count: Int = 0, // 0
+    var location: String = "", // ,
+    var profile_img: String = "", // https://webservice.kulluu.com/images/user_img/profile_img_1682071578425.jpg
+    var share_count: Int = 0, // 0
+    var sound_file: String = "",
+    var sound_id: String = "", // none
+    var sound_image: String = "",
+    var sound_name: String = "",
+    var tag_id: String = "",
+    var tag_user: ArrayList<TaggedUser> = arrayListOf(),
+    var text: String = "", // Hi
+    var thum_icon: String = "",
+    var url: String = "", // https://webservice.kulluu.com
+    var user_id: String = "", // 643955be4d8ac204ccd950cd
     @SerializedName("isDataUpdated")
-    var isDataUpdated: Boolean? = false,
-    var tag_user: ArrayList<TaggedUser>
+    var isDataUpdated: Boolean = false,
 ) : Parcelable
-
 
 @Parcelize
 data class TaggedUser(
-    val _id: String,
-    val first_name: String,
-    val last_name: String,
+    var _id: String,
+    var first_name: String,
+    var last_name: String,
     @SerializedName("profile_img_1")
-    val profile_img_1: String?=""
+    var profile_img_1: String = ""
 ) : Parcelable

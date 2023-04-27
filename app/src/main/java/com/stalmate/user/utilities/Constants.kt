@@ -15,6 +15,7 @@ object Constants {
     const val URL_NUMBER_VERIFY_UPDATE = "/auth_api/update_number"
     const val URL_CATEGORY_LIST = "/friend_api/friend_category_list"
     const val URLFUNTIME_LIST = "/funtime_api/get_funtime_list"
+
     const val URL_CREATE_ROOM = "/friend_api/group_create"
 
 

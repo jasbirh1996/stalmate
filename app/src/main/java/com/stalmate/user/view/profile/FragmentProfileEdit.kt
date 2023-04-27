@@ -339,7 +339,11 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
         networkViewModel.getFeedList(prefManager?.access_token.toString(), HashMap())
         networkViewModel.feedLiveData.observe(requireActivity()) {
             it.let {
-                feedAdapter.submitList(it!!.results)
+                if (!it?.results.isNullOrEmpty()) {
+                    it?.results?.let { it1 -> feedAdapter.submitList(it1) }
+                } else {
+                    it?.reponse?.let { it1 -> feedAdapter.submitList(it1) }
+                }
             }
         }
 
@@ -672,7 +676,6 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
                 Glide.with(this).load(uriContent).into(binding.ivUserThumb)
             }
             updateProfileImageApiHit()
-
         } else {
             // an error occurred
             val exception = result.error

@@ -48,12 +48,12 @@ class ActivityFuntimePost : BaseActivity() {
         tagPeopleViewModel = ViewModelProvider(this)[TagPeopleViewModel::class.java]
         if (isEdit) {
             funtime = intent.getParcelableExtra<ResultFuntime>("data") as ResultFuntime
-            funtime.tag_user.forEach {
+            funtime.tag_user?.forEach {
                 val user = User(
-                    first_name = it.first_name,
-                    last_name = it.last_name,
-                    id = it._id,
-                    profile_img1 = it.profile_img_1!!
+                    first_name = it?.first_name.toString(),
+                    last_name = it?.last_name.toString(),
+                    id = it?._id.toString(),
+                    profile_img1 = it?.profile_img_1.toString()
                 )
                 tagPeopleViewModel.addToList(user)
             }

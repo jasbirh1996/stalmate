@@ -25,12 +25,6 @@ import com.stalmate.user.databinding.ItemFriendBinding
 import com.stalmate.user.databinding.ItemSquarePhotoBinding
 import com.stalmate.user.model.User
 import com.stalmate.user.utilities.Constants
-import com.stalmate.user.utilities.Constants.TYPE_ALL_FOLLOWERS_FOLLOWING
-import com.stalmate.user.utilities.Constants.TYPE_MY_FRIENDS
-import com.stalmate.user.utilities.Constants.TYPE_USER_ACTION_ADD_FRIEND
-import com.stalmate.user.utilities.Constants.TYPE_USER_ACTION_FOLLOW
-import com.stalmate.user.utilities.ImageLoaderHelperGlide
-import com.stalmate.user.utilities.ValidationHelper
 import com.stalmate.user.view.dashboard.funtime.ResultMusic
 import com.stalmate.user.viewmodel.AppViewModel
 

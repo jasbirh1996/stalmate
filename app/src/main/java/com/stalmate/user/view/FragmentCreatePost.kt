@@ -52,7 +52,11 @@ class FragmentCreatePost : BaseFragment(), AdapterFeed.Callbackk, UserHomeStoryA
         networkViewModel.feedLiveData.observe(viewLifecycleOwner, Observer {
             Log.d("asdasdasd","oaspiasddsad")
             it.let {
-                homeStoryAdapter.submitList(it!!.results)
+                if (!it?.results.isNullOrEmpty()) {
+                    it?.results?.let { it1 -> homeStoryAdapter.submitList(it1) }
+                } else {
+                    it?.reponse?.let { it1 -> homeStoryAdapter.submitList(it1) }
+                }
             }
         })
 

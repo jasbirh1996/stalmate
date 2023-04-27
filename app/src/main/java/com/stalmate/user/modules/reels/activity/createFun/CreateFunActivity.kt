@@ -53,11 +53,8 @@ import com.stalmate.user.modules.reels.photo_editing.Counter
 import com.stalmate.user.modules.reels.utils.RealPathUtil
 import ly.img.android.pesdk.PhotoEditorSettingsList
 import ly.img.android.pesdk.backend.model.EditorSDKResult
-import ly.img.android.pesdk.backend.model.state.AudioOverlaySettings
 import ly.img.android.pesdk.backend.model.state.LoadSettings
 import ly.img.android.pesdk.ui.activity.PhotoEditorActivityResultContract
-import ly.img.android.pesdk.ui.model.state.UiConfigAudio
-import ly.img.android.pesdk.ui.panels.AudioGalleryToolPanel
 import java.io.File
 import java.io.FileOutputStream
 import java.nio.ByteBuffer
@@ -120,7 +117,6 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
                     .into(findViewById<RoundedImageView>(R.id.buttonPickData))
             } catch (e: Exception) {
             }
-
             break
         }
     }
@@ -1295,11 +1291,10 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
                 Toast.LENGTH_SHORT
             ).show()
 
-            val extension: String = MimeTypeMap.getSingleton()
-                .getExtensionFromMimeType(this.contentResolver.getType(imageFile.toUri()))
-                .toString()
-            mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension).toString()
-
+            /*val extension: String =
+                MimeTypeMap.getSingleton().getExtensionFromMimeType(this@CreateFunActivity.contentResolver.getType(Uri.fromFile(imageFile))).toString()
+            mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension).toString()*/
+            mimeType = "image/jpeg"
             startPhotoEditorImgLy(imageFile.toUri())
         } catch (e: Throwable) {
             e.printStackTrace()
@@ -1344,12 +1339,13 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
         ).show()
         //Send to change speed and to do reverse
         videoFileName?.let {
-            val extension: String = MimeTypeMap.getSingleton().getExtensionFromMimeType(
+            /*val extension: String = MimeTypeMap.getSingleton().getExtensionFromMimeType(
                 this.contentResolver.getType(
-                    it.absolutePath.toString().toUri()
+                    Uri.fromFile(it)
                 )
             ).toString()
-            mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension).toString()
+            mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension).toString()*/
+            mimeType = "video/mp4"
             startVideoEditor(it.absolutePath.toString())
         }
     }

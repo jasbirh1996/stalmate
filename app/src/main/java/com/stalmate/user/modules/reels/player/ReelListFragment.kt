@@ -56,7 +56,6 @@ class ReelListFragment : BaseFragment(), ReelAdapter.Callback {
         super.onViewCreated(view, savedInstanceState)
         /* Set adapter (items are being used inside adapter, you can setup in your own way*/
 
-
         if (isNetworkAvailable()) {
             adapter = ReelAdapter(requireContext(), this)
             binding.recyclerView.layoutManager =
@@ -218,27 +217,23 @@ class ReelListFragment : BaseFragment(), ReelAdapter.Callback {
 
         hashmap.put("fun_id", "")
         hashmap.put("limit", "5")
-        networkViewModel.funtimeLiveData(prefManager?.access_token.toString(),hashmap)
+        networkViewModel.funtimeLiveData(prefManager?.access_token.toString(), hashmap)
         networkViewModel.funtimeLiveData.observe(viewLifecycleOwner) {
             isApiRuning = false
             //  binding.shimmerLayout.visibility =  View.GONE
-            if (it!!.results.isNotEmpty()) {
-                if (isFirstApiHit) {
-
-                    var list = it.results
-
-                    list.forEach {
-                        it.isDataUpdated = false
+            if (!it?.results.isNullOrEmpty()) {
+                it?.results?.let {
+                    if (isFirstApiHit) {
+                        it.forEach {
+                            it.isDataUpdated = false
+                        }
+                        adapter.setList(it)
+                    } else {
+                        it.forEach {
+                            it.isDataUpdated = false
+                        }
+                        adapter.addToList(it)
                     }
-                    adapter.setList(list)
-                } else {
-
-                    var list = it.results
-
-                    list.forEach {
-                        it.isDataUpdated = false
-                    }
-                    adapter.addToList(list)
                 }
                 isFirstApiHit = false
             }
@@ -290,7 +285,7 @@ class ReelListFragment : BaseFragment(), ReelAdapter.Callback {
 
     private fun likeApiHit(funtime: ResultFuntime) {
         var hashmap = HashMap<String, String>()
-        hashmap.put("funtime_id", funtime.id)
+        hashmap.put("funtime_id", funtime.id.toString())
         networkViewModel.funtimeLiveLikeUnlikeData(hashmap)
         networkViewModel.funtimeLiveLikeUnlikeData.observe(this) {
 

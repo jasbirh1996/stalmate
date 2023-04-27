@@ -15,6 +15,7 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.findFragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import com.c2m.storyviewer.utils.showToast
 import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseActivity
@@ -36,7 +37,6 @@ class ActivityDashboardNew : BaseActivity(), FragmentMenu.Callback {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_dashboard_new)
         drawerLayout = findViewById(R.id.drawerLayout)
         loadFragment(fragmentDashboard)
-        //    onNewIntent(intent)
     }
 
     private fun loadFragment(fragment: Fragment) {

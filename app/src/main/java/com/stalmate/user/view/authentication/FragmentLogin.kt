@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
+import com.c2m.storyviewer.utils.showToast
 import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.base.App
@@ -141,9 +142,13 @@ class FragmentLogin : BaseFragment() {
                             value = if (!it.results?.country.isNullOrEmpty()) it.results?.country else "IN"
                         )
                     App.getInstance().setupApis()
+                    if (PrefManager.getInstance(requireContext())?.userDetail?.results?.is_account_recover == true) {
+                        makeToast("Welcome Back!!")
+                    } else {
+                        makeToast(message)
+                    }
                     startActivity(IntentHelper.getDashboardScreen(context))
                     requireActivity().finish()
-                    makeToast(message)
                 } else {
                     makeToast(message)
                 }
