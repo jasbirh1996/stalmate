@@ -202,9 +202,7 @@ class FragmentMultiUserSelector(
         hashmap.put("filter", "")
 
         networkViewModel.getFriendList(
-            PrefManager.getInstance(App.getInstance())?.userDetail?.results?.get(
-                0
-            )?.access_token.toString(), hashmap
+            PrefManager.getInstance(App.getInstance())?.userDetail?.results?.access_token.toString(), hashmap
         )
         networkViewModel.friendLiveData.observe(viewLifecycleOwner, Observer {
             it.let {

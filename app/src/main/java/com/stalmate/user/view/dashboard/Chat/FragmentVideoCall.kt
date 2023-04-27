@@ -214,7 +214,7 @@ class FragmentVideoCall(var receiver_id: String,var isIncomingCall:Boolean) : Ba
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupVideoSDKEngine();
-        sender_id = PrefManager.getInstance(requireContext())!!.userDetail.results[0].id
+        sender_id = PrefManager.getInstance(requireContext())?.userDetail?.results?._id.toString()
         chatAdapter = CustomChatAdapter(requireContext())
         getRoomId()
 

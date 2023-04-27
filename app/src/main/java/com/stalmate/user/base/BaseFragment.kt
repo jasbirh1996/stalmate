@@ -29,7 +29,7 @@ open class BaseFragment : Fragment(), BaseCallBacks {
     }
 
     val prefManager by lazy {
-        PrefManager.getInstance(App.getInstance())?.userDetail?.results?.get(0)
+        PrefManager.getInstance(App.getInstance())?.userDetail?.results
     }
     //PrefManager.getInstance(App.getInstance())?.userDetail?.results?.get(0)?.access_token ?: ""
 

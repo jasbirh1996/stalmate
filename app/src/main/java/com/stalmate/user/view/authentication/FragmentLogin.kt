@@ -81,7 +81,6 @@ class FragmentLogin : BaseFragment() {
         binding.etEmail.addTextChangedListener(object : TextWatcher {
             @SuppressLint("ResourceAsColor")
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-
                 if (isValidEmail(binding.etEmail.text.toString())) {
                     binding.appCompatImageView12.visibility = View.VISIBLE
                 } else {
@@ -129,17 +128,17 @@ class FragmentLogin : BaseFragment() {
             it?.let {
                 val message = it.message
                 if (it.status) {
-                    PrefManager.getInstance(requireContext())!!.keyIsLoggedIn = true
-                    PrefManager.getInstance(requireContext())!!.userDetail = it
+                    PrefManager.getInstance(requireContext())?.keyIsLoggedIn = true
+                    PrefManager.getInstance(requireContext())?.userDetail = it
                     PrefManager.getInstance(App.getInstance())
                         ?.setStringValue(
                             key = "language",
-                            value = if (!it.results?.get(0)?.language.isNullOrEmpty()) it.results?.get(0)?.language else "English"
+                            value = if (!it.results?.language.isNullOrEmpty()) it.results?.language else "English"
                         )
                     PrefManager.getInstance(App.getInstance())
                         ?.setStringValue(
                             key = "country",
-                            value = if (!it.results?.get(0)?.country.isNullOrEmpty()) it.results?.get(0)?.country else "IN"
+                            value = if (!it.results?.country.isNullOrEmpty()) it.results?.country else "IN"
                         )
                     App.getInstance().setupApis()
                     startActivity(IntentHelper.getDashboardScreen(context))

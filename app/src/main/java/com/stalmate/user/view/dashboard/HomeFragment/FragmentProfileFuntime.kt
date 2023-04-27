@@ -53,7 +53,7 @@ class FragmentProfileFuntime :BaseFragment(), ReelVideosByAudioAdapter.Callback 
         var hashMap=HashMap<String,String>()
         hashMap.put("page", "1")
         hashMap.put("limit", "5")
-        hashMap.put("id_user", prefManager?.id.toString())
+        hashMap.put("id_user", prefManager?._id.toString())
         hashMap.put("fun_id", "")
 
 

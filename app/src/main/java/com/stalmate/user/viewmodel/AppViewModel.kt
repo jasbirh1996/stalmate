@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.slatmate.user.model.CommonModelResponse
+import com.slatmate.user.model.FunTimeAddResponse
 import com.stalmate.user.base.App
 import com.stalmate.user.model.*
 import com.stalmate.user.networking.ApiInterface
@@ -57,7 +58,7 @@ open class AppViewModel : ViewModel() {
     }
 
     var feedLiveData: LiveData<ModelFeed?> = MutableLiveData<ModelFeed?>()
-    fun getFeedList(token: String, map: HashMap<String, String>) {
+    fun getFeedList(token: String="", map: HashMap<String, String>) {
         val temp = MutableLiveData<ModelFeed?>()
         feedLiveData = temp
         getResult(temp, apiInterface.getFeedList(access_token = token))
@@ -66,7 +67,7 @@ open class AppViewModel : ViewModel() {
     var languageLiveData: LiveData<ModelLanguageResponse?> =
         MutableLiveData<ModelLanguageResponse?>()
 
-    fun languageLiveData(map: HashMap<String, String>, access_token: String) {
+    fun languageLiveData(map: HashMap<String, String>, access_token: String="") {
         val temp = MutableLiveData<ModelLanguageResponse?>()
         languageLiveData = temp
         getResult(temp, apiInterface.getLanguageList(access_token = access_token))
@@ -591,10 +592,11 @@ open class AppViewModel : ViewModel() {
     }
 
 
-    var postReelLiveData: LiveData<CommonModelResponse?> = MutableLiveData<CommonModelResponse?>()
+    var postReelLiveData: LiveData<FunTimeAddResponse?> = MutableLiveData<FunTimeAddResponse?>()
     fun postReel(
         access_token: String,
         file: MultipartBody.Part? = null,
+        thum_icon: MultipartBody.Part? = null,
         cover_image: MultipartBody.Part? = null,
         file_type: RequestBody,
         text: RequestBody,
@@ -606,13 +608,14 @@ open class AppViewModel : ViewModel() {
         deviceId: RequestBody,
         deviceToken: RequestBody,
     ) {
-        val temp = MutableLiveData<CommonModelResponse?>()
+        val temp = MutableLiveData<FunTimeAddResponse?>()
         postReelLiveData = temp
         getResult(
             temp,
             apiInterface.postReel(
                 access_token = access_token,
                 file = file,
+                thum_icon = thum_icon,
                 cover_image = cover_image,
                 file_type = file_type,
                 text = text,
@@ -640,7 +643,7 @@ open class AppViewModel : ViewModel() {
         @Part("deviceId") deviceId: RequestBody,
         @Part("deviceToken") deviceToken: RequestBody,
     ) {
-        val temp = MutableLiveData<CommonModelResponse?>()
+        val temp = MutableLiveData<FunTimeAddResponse?>()
         postReelLiveData = temp
         getResult(
             temp,

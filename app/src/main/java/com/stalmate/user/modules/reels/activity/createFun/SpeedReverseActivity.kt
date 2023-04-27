@@ -36,9 +36,14 @@ class SpeedReverseActivity : AppCompatActivity() {
 
     private var countDownTimer: CountDownTimer? = null
     lateinit var segmented_progressbar: LinearProgressIndicator
-    private lateinit var videoUri: Uri
+
+    private val videoUri: Uri
+        get() = intent.getStringExtra("videoUri").toString().toUri()
+    private val mimeType: String
+        get() = intent.getStringExtra("mimeType").toString()
     private val imageVideoDuration: Int
         get() = intent.getIntExtra("imageVideoDuration", -0)
+
     lateinit var tabbarspeed: TabLayout
     private var isSpeedActive: Boolean = false
     private var isReverseActive: Boolean = false
@@ -54,7 +59,6 @@ class SpeedReverseActivity : AppCompatActivity() {
             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
         )
         setContentView(R.layout.activity_speed_reverse)
-        videoUri = intent.getStringExtra("videoUri").toString().toUri()
         initViews()
     }
 
@@ -257,6 +261,7 @@ class SpeedReverseActivity : AppCompatActivity() {
                 startActivity(
                     IntentHelper.getCreateFuntimePostScreen(this)!!
                         .putExtra(ActivityFilter.EXTRA_VIDEO, it.resultUri.toString())
+                        .putExtra("mimeType", mimeType)
                         .putExtra("isImage", false)
                 )
                 Toast.makeText(

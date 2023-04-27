@@ -190,10 +190,10 @@ class DialogFragmentCommentWithVideo(var networkViewModel: AppViewModel, var fun
         binding.tvDate.text =funtime.Created_date
 
         binding.etComment.setHint(
-            "Comment as ${PrefManager.getInstance(requireContext())!!.userDetail.results[0].first_name} ${
+            "Comment as ${PrefManager.getInstance(requireContext())!!.userDetail.results?.first_name} ${
                 PrefManager.getInstance(
                     requireContext()
-                )!!.userDetail.results[0].last_name
+                )!!.userDetail.results?.last_name
             }"
         )
         hitApi(true)

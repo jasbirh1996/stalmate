@@ -278,6 +278,7 @@ interface ApiInterface {
     fun postReel(
         @Header("access_token") access_token: String,
         @Part file: MultipartBody.Part?,
+        @Part thum_icon: MultipartBody.Part?,
         @Part cover_image: MultipartBody.Part?,
         @Part("file_type") file_type: RequestBody,
         @Part("text") text: RequestBody,
@@ -288,7 +289,7 @@ interface ApiInterface {
         @Part("privacy_data") privacy_data: RequestBody,
         @Part("deviceId") deviceId: RequestBody,
         @Part("deviceToken") deviceToken: RequestBody
-    ): Call<CommonModelResponse>
+    ): Call<FunTimeAddResponse>
 
     //M8
 //    @FormUrlEncoded
@@ -397,5 +398,5 @@ interface ApiInterface {
         @Part("privacy_data") privacy_data: RequestBody,
         @Part("deviceId") deviceId: RequestBody,
         @Part("deviceToken") deviceToken: RequestBody
-    ): Call<CommonModelResponse>
+    ): Call<FunTimeAddResponse>
 }

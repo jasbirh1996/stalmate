@@ -34,6 +34,8 @@ class ActivityFuntimePost : BaseActivity() {
         get() = intent.getBooleanExtra("isImage", false)
     val isEdit: Boolean
         get() = intent.getBooleanExtra("isEdit", false)
+    val mimeType: String
+        get() = intent.getStringExtra("mimeType").toString()
     lateinit var mVideoCover: String
 
     override fun onClick(viewId: Int, view: View?) {

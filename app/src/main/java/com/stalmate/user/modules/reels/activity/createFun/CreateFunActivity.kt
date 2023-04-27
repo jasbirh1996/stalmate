@@ -73,6 +73,7 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
     private lateinit var thumbnailsselection: BooleanArray
     private lateinit var arrPath: Array<String?>
     private lateinit var typeMedia: IntArray
+    private var mimeType: String = ""
     private fun getGalleryData() {
         // Get relevant columns for use later.
         // Get relevant columns for use later.
@@ -654,21 +655,19 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
     private var launchActivityForImagePick = registerForActivityResult<Intent, ActivityResult>(
         ActivityResultContracts.StartActivityForResult()
     ) { result: ActivityResult ->
-//        result.data?.getParcelableArrayListExtra<MediaFile>(FilePickerActivity.MEDIA_FILES)?.let {
+        //result.data?.getParcelableArrayListExtra<MediaFile>(FilePickerActivity.MEDIA_FILES)?.let {
         result.data?.data?.let {
             if (!it.toString().isNullOrEmpty()) {
                 val extension: String = MimeTypeMap.getSingleton()
                     .getExtensionFromMimeType(this.contentResolver.getType(it)).toString()
-                val mimeType: String =
-                    MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension).toString()
-                        .split("/")[0].toString()
+                mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension).toString()
 
-                if (mimeType == "image") {
+                if (mimeType.split("/")[0].toString() == "image") {
                     videoFileName = File(RealPathUtil.getRealPath(this, it))
                     if (videoFileName?.exists() == true)
                         videoFileName?.toUri()?.let { it1 -> startPhotoEditorImgLy(it1) }
                 }
-                if (mimeType == "video") {
+                if (mimeType.split("/")[0].toString() == "video") {
                     videoFileName = File(RealPathUtil.getRealPath(this, it))
 
                     val retriever = MediaMetadataRetriever()
@@ -1295,6 +1294,12 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
                 "Screenshot " + imageFile.name + " saved.",
                 Toast.LENGTH_SHORT
             ).show()
+
+            val extension: String = MimeTypeMap.getSingleton()
+                .getExtensionFromMimeType(this.contentResolver.getType(imageFile.toUri()))
+                .toString()
+            mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension).toString()
+
             startPhotoEditorImgLy(imageFile.toUri())
         } catch (e: Throwable) {
             e.printStackTrace()
@@ -1321,6 +1326,7 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
         Handler(Looper.getMainLooper()).postDelayed({
             startActivity(Intent(this, SpeedReverseActivity::class.java).apply {
                 putExtra("videoUri", videoUri)
+                putExtra("mimeType", mimeType)
                 putExtra("imageVideoDuration", imageVideoDuration)
             })
         }, 1000)
@@ -1337,7 +1343,15 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
             Toast.LENGTH_LONG
         ).show()
         //Send to change speed and to do reverse
-        videoFileName?.absolutePath?.toString()?.let { startVideoEditor(it) }
+        videoFileName?.let {
+            val extension: String = MimeTypeMap.getSingleton().getExtensionFromMimeType(
+                this.contentResolver.getType(
+                    it.absolutePath.toString().toUri()
+                )
+            ).toString()
+            mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension).toString()
+            startVideoEditor(it.absolutePath.toString())
+        }
     }
 
     override fun videoRecordingFailed() {
@@ -1372,6 +1386,7 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
                 startActivity(
                     IntentHelper.getCreateFuntimePostScreen(this)!!
                         .putExtra(ActivityFilter.EXTRA_VIDEO, it.resultUri.toString())
+                        .putExtra("mimeType", mimeType)
                         .putExtra("isImage", true)
                 )
                 showToast("${it.resultUri}")

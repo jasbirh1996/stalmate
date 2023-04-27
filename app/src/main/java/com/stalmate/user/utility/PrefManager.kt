@@ -3,7 +3,6 @@ package com.stalmate.user.utilities;
 import android.content.Context
 import android.content.SharedPreferences
 import com.google.gson.Gson
-import com.slatmate.user.model.ModelRegisterResponse
 import com.stalmate.user.model.ModelLoginResponse
 import com.stalmate.user.model.ModelUser
 
@@ -38,7 +37,7 @@ class PrefManager(private val context: Context) {
     var userDetail: ModelLoginResponse
         get() {
             val gson = Gson()
-            val json = preferences.getString(KEY_USER_DETAILS, "")
+            val json = preferences.getString(KEY_USER_DETAILS, "{}")
             return gson.fromJson(json, ModelLoginResponse::class.java)
         }
         set(user) {

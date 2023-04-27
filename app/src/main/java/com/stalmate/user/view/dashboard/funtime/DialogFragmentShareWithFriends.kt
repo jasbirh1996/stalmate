@@ -186,7 +186,7 @@ class DialogFragmentShareWithFriends(
         hashmap.put("sortBy", "")
         hashmap.put("filter", "")
         networkViewModel.getFriendList(
-            PrefManager.getInstance(App.getInstance())?.userDetail?.results?.get(0)?.access_token.toString(),
+            PrefManager.getInstance(App.getInstance())?.userDetail?.results?.access_token.toString(),
             hashmap
         )
         networkViewModel.friendLiveData.observe(viewLifecycleOwner, Observer {

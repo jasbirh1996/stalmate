@@ -77,9 +77,9 @@ class FragmentMenu(var callback: Callback) : BaseFragment(), DrawerAdapter.Callb
             .load(PrefManager.getInstance(requireContext())!!.userProfileDetail.results.profile_img1)
             .placeholder(R.drawable.user_placeholder).circleCrop().into(binding.userProfileImage)*/
         binding.tvUserName.text =
-            PrefManager.getInstance(App.getInstance())!!.userDetail.results[0].first_name + " " + PrefManager.getInstance(
+            PrefManager.getInstance(App.getInstance())?.userDetail?.results?.first_name + " " + PrefManager.getInstance(
                 App.getInstance()
-            )!!.userDetail.results[0].last_name
+            )!!.userDetail.results?.last_name
 
         drawerAdapter = DrawerAdapter(networkViewModel, requireContext(), this)
 

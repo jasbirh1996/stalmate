@@ -76,17 +76,28 @@ class AppSettingFragment : BaseFragment() {
         networkViewModel.languageLiveData(HashMap(), prefManager?.access_token.toString())
         networkViewModel.languageLiveData.observe(requireActivity()) {
             it.let {
+                val listOfString = arrayListOf<String>()
+                if (!it?.results.isNullOrEmpty())
+                    it?.results?.let { it1 ->
+                        listOfString.clear()
+                        listOfString.addAll(it1.map { it.name })
+                    }
+                else
+                    it?.reponse?.let { it1 ->
+                        listOfString.clear()
+                        listOfString.addAll(it1.map { it.name })
+                    }
                 binding.spinnerLanguage.setSpinner(
-                    listFromServer = ArrayList(it?.results?.map { it.name }),
+                    listFromServer = listOfString,
                     listFromResources = 0,
-                    setSelection = (it?.results?.map { it.name }?.indexOf(
+                    setSelection = (listOfString.indexOf(
                         PrefManager.getInstance(App.getInstance())?.getStringValue(key = "language")
                     ) ?: 0),
                     onItemSelectedListener = { pos ->
                         PrefManager.getInstance(App.getInstance())
                             ?.setStringValue(
                                 key = "language",
-                                value = ArrayList(it?.results?.map { it.name })[pos]
+                                value = listOfString[pos]
                             )
                         networkViewModel.updateLanguageAndCountry(
                             access_token = prefManager?.access_token.toString(),

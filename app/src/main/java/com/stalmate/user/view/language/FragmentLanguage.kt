@@ -15,7 +15,7 @@ import com.stalmate.user.databinding.FragmentLanguageBinding
 
 class FragmentLanguage : BaseFragment(), AdapterLanguage.Callbackk {
 
-    private lateinit var binding : FragmentLanguageBinding
+    private lateinit var binding: FragmentLanguageBinding
     lateinit var languageAdapter: AdapterLanguage
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,7 +27,7 @@ class FragmentLanguage : BaseFragment(), AdapterLanguage.Callbackk {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        var view =  inflater.inflate(R.layout.fragment_language, container, false)
+        var view = inflater.inflate(R.layout.fragment_language, container, false)
         binding = DataBindingUtil.bind<FragmentLanguageBinding>(view)!!
 
         return binding.root
@@ -39,14 +39,17 @@ class FragmentLanguage : BaseFragment(), AdapterLanguage.Callbackk {
         /*Common ToolBar SetUp*/
         toolbarSetUp()
 
-        languageAdapter = AdapterLanguage(networkViewModel, requireContext(),this )
-        binding.rvLanguage.adapter=languageAdapter
-        binding.rvLanguage.layoutManager= GridLayoutManager(requireContext(), 3 )
+        languageAdapter = AdapterLanguage(networkViewModel, requireContext(), this)
+        binding.rvLanguage.adapter = languageAdapter
+        binding.rvLanguage.layoutManager = GridLayoutManager(requireContext(), 3)
 
-        networkViewModel.languageLiveData(HashMap(),prefManager?.access_token.toString())
+        networkViewModel.languageLiveData(HashMap(), prefManager?.access_token.toString())
         networkViewModel.languageLiveData.observe(requireActivity()) {
             it.let {
-                languageAdapter.submitList(it!!.results)
+                if (!it?.results.isNullOrEmpty())
+                    it?.results?.let { it1 -> languageAdapter.submitList(it1) }
+                else
+                    it?.reponse?.let { it1 -> languageAdapter.submitList(it1) }
             }
         }
 

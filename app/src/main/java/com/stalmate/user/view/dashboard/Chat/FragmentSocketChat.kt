@@ -54,7 +54,7 @@ class FragmentSocketChat(var receiver_id: String) : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.d("akljsdasd", "alds;asd")
-        sender_id = PrefManager.getInstance(requireContext())!!.userDetail.results[0].id
+        sender_id = PrefManager.getInstance(requireContext())!!.userDetail.results?._id.toString()
         chatAdapter = CustomChatAdapter(requireContext())
         binding.recyclerview.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerview.adapter = chatAdapter
@@ -175,7 +175,7 @@ class FragmentSocketChat(var receiver_id: String) : BaseFragment() {
             if (isSendButtonVisible) {
                 mSocket.emit(
                     "messagedetection",
-                    PrefManager.getInstance(requireContext())!!.userDetail.results[0].first_name,
+                    PrefManager.getInstance(requireContext())!!.userDetail.results?.first_name,
                     binding.msgEdittext.text.toString(),
                     sender_id, receiver_id, roomId
                 )
@@ -186,7 +186,7 @@ class FragmentSocketChat(var receiver_id: String) : BaseFragment() {
                     "",
                     binding.msgEdittext.text.toString(),
                     "",
-                    PrefManager.getInstance(requireContext())!!.userDetail.results[0].first_name,
+                    PrefManager.getInstance(requireContext())!!.userDetail.results?.first_name.toString(),
                     "",
                     0,
                     "right",

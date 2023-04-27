@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.databinding.DataBindingUtil
@@ -228,10 +229,16 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
                 .collect(Collectors.joining(","))
         }
 
+        val mediaUriRealPath =
+            RealPathUtil.getRealPath(this.requireContext(), mediaUri.toUri()).toString()
+
+
         val mediaFile = try {
-            File(RealPathUtil.getRealPath(this.requireContext(),mediaUri.toUri()).toString()).getMultipartBody(
+            File(
+                mediaUriRealPath
+            ).getMultipartBody(
                 keyName = "file",
-                type = if (isImage) "image/*" else "video/*"
+                type = (requireActivity() as ActivityFuntimePost).mimeType
             )
         } catch (e: Exception) {
             e.printStackTrace()
@@ -242,9 +249,12 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
             try {
                 File(
                     if (isImage)
-                        RealPathUtil.getRealPath(this.requireContext(),mediaUri.toUri()).toString()
+                        mediaUriRealPath
                     else
-                        RealPathUtil.getRealPath(this.requireContext(),(requireActivity() as ActivityFuntimePost).mVideoCover.toUri()).toString()
+                        RealPathUtil.getRealPath(
+                            this.requireContext(),
+                            (requireActivity() as ActivityFuntimePost).mVideoCover.toUri()
+                        ).toString()
                 ).getMultipartBody(
                     keyName = "cover_image",
                     type = "image/*"
@@ -262,8 +272,9 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
         networkViewModel.postReel(
             access_token = prefManager?.access_token.toString(),
             file = mediaFile,
+            thum_icon = mediaFileCover,
             cover_image = mediaFileCover,
-            file_type = (if (isImage) "image" else "video").getRequestBody(),
+            file_type = (requireActivity() as ActivityFuntimePost).mimeType.getRequestBody(),
             text = data.getRequestBody(),
             tag_id = commaSeparatedStr.getRequestBody(),
             sound_id = "none".getRequestBody(),
@@ -273,7 +284,10 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
             deviceId = "12345".getRequestBody(),
             deviceToken = "54321".getRequestBody()
         )
-
+        networkViewModel.mThrowable.observe(viewLifecycleOwner) {
+            dismissLoader()
+            Toast.makeText(this.requireContext(), it.toString(), Toast.LENGTH_SHORT).show()
+        }
         networkViewModel.postReelLiveData.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             dismissLoader()
             it.let {
