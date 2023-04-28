@@ -157,7 +157,7 @@ class FragmentLogin : BaseFragment() {
     }
 
 
-    fun isValid(): Boolean {
+    private fun isValid(): Boolean {
         if (ValidationHelper.isNull(binding.etEmail.text.toString())) {
             makeToast(getString(R.string.email_error_toast))
             return false;

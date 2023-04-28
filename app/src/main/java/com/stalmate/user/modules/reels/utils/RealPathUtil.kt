@@ -195,12 +195,13 @@ object RealPathUtil {
         val projection = arrayOf(column)
 
         try {
-            cursor =
-                context.contentResolver.query(uri!!, projection, selection, selectionArgs, null)
+            cursor = context.contentResolver.query(uri!!, projection, selection, selectionArgs, null)
             if (cursor != null && cursor.moveToFirst()) {
                 val index = cursor.getColumnIndexOrThrow(column)
                 return cursor.getString(index)
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
         } finally {
             cursor?.close()
         }

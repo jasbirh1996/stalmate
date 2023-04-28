@@ -3,8 +3,11 @@ package com.stalmate.user.view.dashboard.funtime
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
+import android.text.format.DateFormat
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +16,7 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.core.net.toUri
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.clearFragmentResultListener
@@ -20,6 +24,7 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.anggrayudi.storage.file.forceDelete
 import com.bumptech.glide.Glide
 import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.CropImageView
@@ -34,6 +39,7 @@ import com.stalmate.user.utilities.Constants
 import com.stalmate.user.utilities.ValidationHelper
 import com.stalmate.user.view.adapter.FriendAdapter
 import com.stalmate.user.view.dashboard.ActivityDashboardNew
+import com.stalmate.user.view.dashboard.funtime.SelectThumbnailFragment.Companion.getStartIntent
 import com.stalmate.user.view.dashboard.funtime.viewmodel.TagPeopleViewModel
 import com.stalmate.user.view.singlesearch.ActivitySingleSearch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -41,7 +47,11 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
+import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.*
 import java.util.stream.Collectors
+
 
 class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
     lateinit var binding: FragmentFuntimePostBinding
@@ -75,25 +85,45 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
         return binding.root
     }
 
-    private var launchActivityForImagePickFromGalleryAndCamera =
+    private var launchActivityForImagePickFromGallery =
         registerForActivityResult<Intent, ActivityResult>(
             ActivityResultContracts.StartActivityForResult()
         ) { result: ActivityResult ->
             result.data?.data?.let {
-                val l = result.data?.extras?.get("data")
-                if (!it.toString().isNullOrEmpty()) {
-                    File(
-                        RealPathUtil.getRealPath((requireActivity() as ActivityFuntimePost), it)
-                    ).let { file ->
-                        if (file.exists()) {
-                            // start picker to get image for cropping and then use the image in cropping activity
-                            cropImage.launch(
-                                options(uri = it, builder = {
-                                    this.setGuidelines(CropImageView.Guidelines.ON)
-                                })
-                            )
-                        }
-                    }
+                if (it.toString().isNotEmpty()) {
+                    // start picker to get image for cropping and then use the image in cropping activity
+                    cropImage.launch(
+                        options(
+                            uri = it,
+                            builder = {
+                                this.setGuidelines(CropImageView.Guidelines.ON_TOUCH)
+                            }
+                        )
+                    )
+                }
+            }
+        }
+
+    private var launchActivityForImageCaptureFromCamera =
+        registerForActivityResult<Intent, ActivityResult>(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result: ActivityResult ->
+            when (result.resultCode) {
+                Activity.RESULT_OK -> {
+                    // start picker to get image for cropping and then use the image in cropping activity
+                    cropImage.launch(
+                        options(
+                            uri = (requireActivity() as ActivityFuntimePost).mVideoCover.value?.toUri(),
+                            builder = {
+                                this.setGuidelines(CropImageView.Guidelines.ON_TOUCH)
+                            })
+                    )
+                }
+                Activity.RESULT_CANCELED -> {
+                    // User Cancelled the action
+                }
+                else -> {
+                    // Error
                 }
             }
         }
@@ -108,23 +138,20 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
             Log.d("imageUrl======", uriContent.toString())
             Log.d("imageUrl======", uriFilePath.toString())
 
-            (requireActivity() as ActivityFuntimePost).mVideoCover = Uri.fromFile(imageFile).toString()
-            Glide.with(requireContext())
-                .load((requireActivity() as ActivityFuntimePost).mVideoCover)
-                .thumbnail(Glide.with(requireContext()).load((requireActivity() as ActivityFuntimePost).mVideoCover))
-                .placeholder(R.drawable.profileplaceholder)
-                .error(R.drawable.profileplaceholder)
-                .into(binding.thumbnail)
+            (requireActivity() as ActivityFuntimePost).mVideoCover.value =
+                Uri.fromFile(imageFile).toString()
         } else {
             // an error occurred
             val exception = result.error
         }
     }
 
+
+    private var fromCameraCover: File? = null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        tagPeopleViewModel =
-            ViewModelProvider(requireActivity()).get(TagPeopleViewModel::class.java)
+        tagPeopleViewModel = ViewModelProvider(requireActivity())[TagPeopleViewModel::class.java]
         isEdit = (requireActivity() as ActivityFuntimePost).isEdit
         isImage = (requireActivity() as ActivityFuntimePost).isImage
         mediaUri = (requireActivity() as ActivityFuntimePost).videoUri.toString()
@@ -142,17 +169,42 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
 
         val thumbnailDialog = SelecteThumbnailBottomSheet(
             fromCamera = {
+                if (fromCameraCover != null)
+                    fromCameraCover?.forceDelete()
+                val now = DateFormat.format("yyyy_MM_dd_hh_mm_ss", Date())
+                fromCameraCover = File(
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS + "/Stalmate"),
+                    "image_$now.jpg"
+                )
+                (requireActivity() as ActivityFuntimePost).mVideoCover.value =
+                    FileProvider.getUriForFile(
+                        this.requireContext().applicationContext,
+                        "${this.requireContext().applicationContext.packageName}.provider",
+                        fromCameraCover!!
+                    ).toString()
                 val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                launchActivityForImagePickFromGalleryAndCamera.launch(cameraIntent)
+                cameraIntent.putExtra(
+                    MediaStore.EXTRA_OUTPUT,
+                    (requireActivity() as ActivityFuntimePost).mVideoCover.value?.toUri()
+                )
+                launchActivityForImageCaptureFromCamera.launch(cameraIntent)
             },
             fromGallery = {
                 val pickerIntent = Intent(Intent.ACTION_PICK)
                 pickerIntent.type = "image/*"
                 pickerIntent.putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("image/*"))
                 pickerIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false)
-                launchActivityForImagePickFromGalleryAndCamera.launch(pickerIntent)
+                launchActivityForImagePickFromGallery.launch(pickerIntent)
             },
-            fromVideo = { findNavController().navigate(R.id.action_fragmentFuntimePost_to_fragmentSelectThumbnail) },
+            fromVideo = {
+                findNavController().navigate(
+                    R.id.action_fragmentFuntimePost_to_fragmentSelectThumbnail,
+                    getStartIntent(
+                        uri = mediaUri,
+                        thumbnailPosition = (requireActivity() as ActivityFuntimePost).location
+                    )
+                )
+            },
             fromDismiss = {}
         )
 
@@ -226,6 +278,14 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
             findNavController().navigate(R.id.action_fragmentFuntimePost_to_FragmentFuntimePrivacyOptions)
         }
 
+        (requireActivity() as ActivityFuntimePost).mVideoCover.observe(viewLifecycleOwner) {
+            Glide.with(requireContext())
+                .load(it)
+                .thumbnail(Glide.with(requireContext()).load(it))
+                .placeholder(R.drawable.profileplaceholder)
+                .error(R.drawable.profileplaceholder)
+                .into(binding.thumbnail)
+        }
     }
 
 
@@ -330,7 +390,8 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
                     else
                         RealPathUtil.getRealPath(
                             this.requireContext(),
-                            (requireActivity() as ActivityFuntimePost).mVideoCover.toUri()
+                            (requireActivity() as ActivityFuntimePost).mVideoCover.value.toString()
+                                .toUri()
                         ).toString()
                 ).getMultipartBody(
                     keyName = "thum_icon",
@@ -349,7 +410,8 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
                     else
                         RealPathUtil.getRealPath(
                             this.requireContext(),
-                            (requireActivity() as ActivityFuntimePost).mVideoCover.toUri()
+                            (requireActivity() as ActivityFuntimePost).mVideoCover.value.toString()
+                                .toUri()
                         ).toString()
                 ).getMultipartBody(
                     keyName = "cover_image",

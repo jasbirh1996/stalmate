@@ -2,7 +2,7 @@ package com.stalmate.user.model
 
 data class ModelLoginResponse(
     val message: String = "", // Login successfully
-    val results: Results? = null,
+    val results: Results? = Results(),
     val status: Boolean = false // true
 ) {
     data class Results(

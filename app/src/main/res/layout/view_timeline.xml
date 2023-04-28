@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <merge android:layout_width="match_parent">
+
+        <LinearLayout
+            android:id="@+id/container_thumbnails"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal" />
+
+        <FrameLayout
+            android:id="@+id/container_seek_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/white_border">
+
+            <com.stalmate.user.videoThumbnails.CenterCropVideoView
+                android:id="@+id/view_seek_bar"
+                android:layout_width="@dimen/frames_video_height"
+                android:layout_height="@dimen/frames_video_height"
+                android:layout_gravity="start" />
+
+        </FrameLayout>
+    </merge>
+</layout>

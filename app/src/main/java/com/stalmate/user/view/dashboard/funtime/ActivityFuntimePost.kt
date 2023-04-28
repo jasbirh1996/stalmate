@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.net.toUri
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -36,7 +37,8 @@ class ActivityFuntimePost : BaseActivity() {
         get() = intent.getBooleanExtra("isEdit", false)
     val mimeType: String
         get() = intent.getStringExtra("mimeType").toString()
-    lateinit var mVideoCover: String
+    var mVideoCover = MutableLiveData<String>()
+    var location = 0L
 
     override fun onClick(viewId: Int, view: View?) {
     }
