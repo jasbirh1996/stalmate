@@ -15,6 +15,7 @@ import com.stalmate.user.model.*
 import com.stalmate.user.networking.ApiInterface
 import com.stalmate.user.utilities.ErrorBean
 import com.stalmate.user.utilities.ErrorUtil
+import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.view.dashboard.Friend.categorymodel.AddCategoryModel
 import com.stalmate.user.view.dashboard.Friend.categorymodel.ModelCategoryResponse
 import com.stalmate.user.view.dashboard.funtime.ModelFuntimeLikeResponse
@@ -43,7 +44,6 @@ open class AppViewModel : ViewModel() {
                 if (response.code() in 200..299) {
                     data.value = response.body()
                 } else {
-
                     mThrowable.value = Gson().fromJson(
                         response.errorBody()?.string(),
                         ErrorBean::class.java
@@ -58,7 +58,7 @@ open class AppViewModel : ViewModel() {
     }
 
     var feedLiveData: LiveData<ModelFeed?> = MutableLiveData<ModelFeed?>()
-    fun getFeedList(token: String="", map: HashMap<String, String>) {
+    fun getFeedList(token: String = "", map: HashMap<String, String>) {
         val temp = MutableLiveData<ModelFeed?>()
         feedLiveData = temp
         getResult(temp, apiInterface.getFeedList(access_token = token))
@@ -67,7 +67,7 @@ open class AppViewModel : ViewModel() {
     var languageLiveData: LiveData<ModelLanguageResponse?> =
         MutableLiveData<ModelLanguageResponse?>()
 
-    fun languageLiveData(map: HashMap<String, String>, access_token: String="") {
+    fun languageLiveData(map: HashMap<String, String>, access_token: String = "") {
         val temp = MutableLiveData<ModelLanguageResponse?>()
         languageLiveData = temp
         getResult(temp, apiInterface.getLanguageList(access_token = access_token))
@@ -214,7 +214,7 @@ open class AppViewModel : ViewModel() {
     fun getFriendList(access_token: String, map: HashMap<String, String>) {
         val temp = MutableLiveData<ModelFriend?>()
         friendLiveData = temp
-        getResult(temp, apiInterface.getFriendList(access_token = access_token,map))
+        getResult(temp, apiInterface.getFriendList(access_token = access_token, map))
     }
 
     var funtimeUpdateLiveData: MutableLiveData<ModelSuccess?> = MutableLiveData<ModelSuccess?>()
@@ -255,10 +255,16 @@ open class AppViewModel : ViewModel() {
 
 
     var sendFriendRequestLiveData: LiveData<ModelSuccess?> = MutableLiveData<ModelSuccess?>()
-    fun sendFriendRequest(token: String, map: HashMap<String, String>) {
+    fun sendFriendRequest(access_token: String, map: HashMap<String, String>) {
         val temp = MutableLiveData<ModelSuccess?>()
         sendFriendRequestLiveData = temp
-        getResult(temp, apiInterface.sendFriendRequest(map))
+        getResult(
+            temp,
+            apiInterface.sendFriendRequest(
+                access_token = PrefManager.getInstance(App.getInstance())?.userDetail?.results?.access_token.toString(),
+                map
+            )
+        )
     }
 
     var followRequestLiveData: LiveData<ModelSuccess?> = MutableLiveData<ModelSuccess?>()
@@ -280,7 +286,6 @@ open class AppViewModel : ViewModel() {
         val temp = MutableLiveData<ModelLoginResponse?>()
         registerData = temp
         getResult(temp, apiInterface.setSignupDetails(map))
-
     }
 
 
@@ -290,6 +295,30 @@ open class AppViewModel : ViewModel() {
         checkIfOldEmailLiveData = temp
         getResult(temp, apiInterface.checkIfOldEmail(map))
 
+    }
+
+
+    var checkIfOldUsernameLiveData: MutableLiveData<UserNameValidatedResponse?> =
+        MutableLiveData<UserNameValidatedResponse?>()
+
+    fun checkIfOldUsername(user_name: String) {
+        getResult(
+            checkIfOldUsernameLiveData,
+            apiInterface.checkIfOldUserName(user_name = user_name)
+        )
+    }
+
+
+    var changeUsernameLiveData: MutableLiveData<UserNameChangeResponse?> =
+        MutableLiveData<UserNameChangeResponse?>()
+
+    fun changeUsername(access_token: String, user_name: String) {
+        getResult(
+            changeUsernameLiveData, apiInterface.changeUserName(
+                access_token = access_token,
+                user_name = user_name
+            )
+        )
     }
 
 
@@ -414,10 +443,13 @@ open class AppViewModel : ViewModel() {
 
 
     var otherUserProfileLiveData: MutableLiveData<ModelUser?> = MutableLiveData<ModelUser?>()
-    fun getOtherUserProfileData(map: HashMap<String, String>, user_id: String) {
+    fun getOtherUserProfileData(access_token: String, user_id: String) {
         val temp = MutableLiveData<ModelUser?>()
         otherUserProfileLiveData = temp
-        getResult(temp, apiInterface.getOtherUserProfileDetails(user_id))
+        getResult(
+            temp,
+            apiInterface.getOtherUserProfileDetails(access_token = access_token, user_id)
+        )
     }
 
 

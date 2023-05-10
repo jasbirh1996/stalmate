@@ -18,28 +18,26 @@ class ActivityAuthentication : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding= DataBindingUtil.setContentView(this, R.layout.activity_authentication)!!
-        setUpNavigation()
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_authentication)!!
+        navController = findNavController(R.id.nav_host_fragment)
+        setUpStartPoint()
+    }
 
+    private fun setUpStartPoint() {
         val fragmentManager: FragmentManager = supportFragmentManager
         val currentFragment: Fragment? = fragmentManager.findFragmentById(R.id.nav_host_fragment)
         val inflater = navController.navInflater
         val graph = inflater.inflate(R.navigation.loginsignupnavigation)
-        if (intent.getStringExtra("screen")!=null && intent.getStringExtra("screen")=="login"){
+        if (intent.getStringExtra("screen") != null && intent.getStringExtra("screen") == "login") {
             graph.setStartDestination(R.id.fragmentLogin)
-        }else{
+        } else {
             graph.setStartDestination(R.id.fragmentLanguage)
         }
-        navController.graph=graph
-    }
-
-
-    fun setUpNavigation() {
-        navController=findNavController(R.id.nav_host_fragment)
+        navController.graph = graph
     }
 
     override fun onBackPressed() {
-        if (!navController.popBackStack()){
+        if (!navController.popBackStack()) {
             super.onBackPressed()
         }
     }

@@ -26,6 +26,7 @@ data class User(
     val email: String? = null,
     val first_name: String = "",
     val last_name: String = "",
+    val user_name: String = "",
     val mutual_friend: String? = null,
     val id: String,
     val img_url: String? = null,
@@ -52,6 +53,7 @@ data class User(
     //From M8 work
     val connected_since: String? = "",
     val privacy_setting: PrivacySetting? = null,
+    val block_contact: ArrayList<Any?>? = arrayListOf()
 ) : Serializable
 
 data class Photo(
@@ -123,7 +125,6 @@ data class PrivacySetting(
     val _id: String? = "", // 643955d84d8ac204ccd95141
     val about: Int? = 0, // 2
     val allow_others_to_find_me: Boolean? = false, // true
-    val block_contact: ArrayList<Any?>? = arrayListOf(),
     val groups: Int? = 0, // 1
     val last_seen: Int? = 0, // 1
     val prfile_photo: Int? = 0, // 1

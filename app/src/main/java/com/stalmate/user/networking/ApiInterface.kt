@@ -114,6 +114,19 @@ interface ApiInterface {
     @POST(Constants.URL_EMAIL_CHECK)
     fun checkIfOldEmail(@Body map: HashMap<String, String>): Call<ModelSuccess>
 
+    @FormUrlEncoded
+    @POST(Constants.URL_USERNAME_CHECK)
+    fun checkIfOldUserName(
+        @Field("user_name") user_name: String
+    ): Call<UserNameValidatedResponse>
+
+    @FormUrlEncoded
+    @POST(Constants.URL_USERNAME_CHANGE)
+    fun changeUserName(
+        @Header("access_token") access_token: String,
+        @Field("user_name") user_name: String
+    ): Call<UserNameChangeResponse>
+
     @PATCH(Constants.URL_OTP)
     fun setOtpVerify(@Body map: HashMap<String, String>): Call<CommonModelResponse>
 
@@ -142,7 +155,10 @@ interface ApiInterface {
     fun setCreateAlbumDetails(@Body map: HashMap<String, String>): Call<ModelAlbumCreateResponse>
 
     @POST(Constants.url_send_friend_request)
-    fun sendFriendRequest(@Body map: HashMap<String, String>): Call<ModelSuccess>
+    fun sendFriendRequest(
+        @Header("access_token") access_token: String,
+        @Body map: HashMap<String, String>
+    ): Call<ModelSuccess>
 
     @PUT(Constants.url_update_friend_request)
     fun updateFriendRequest(@Body map: HashMap<String, String>): Call<CommonModelResponse>
@@ -172,7 +188,10 @@ interface ApiInterface {
     ): Call<CommonModelResponse>
 
     @GET(Constants.GET_OTHER_USER_PROFILE_API)
-    fun getOtherUserProfileDetails(@Query("id_user") id_user: String): Call<ModelUser>
+    fun getOtherUserProfileDetails(
+        @Header("access_token") access_token: String,
+        @Query("id_user") id_user: String
+    ): Call<ModelUser>
 
     @GET(Constants.URL_OTP_REGISTRATION)
     fun setOtpVerifyRegistration(

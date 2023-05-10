@@ -100,6 +100,32 @@
 
             </LinearLayout>
 
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etUsername"
+                style="@style/customEditbox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="false"
+                android:hint="Username"
+                android:maxLines="1"
+                android:paddingVertical="12dp"
+                android:textColor="@color/black"
+                app:layout_constraintEnd_toEndOf="@+id/name"
+                app:layout_constraintStart_toStartOf="@+id/name"
+                app:layout_constraintTop_toBottomOf="@+id/name" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/btnEdit"
+                android:layout_width="40dp"
+                android:layout_height="0dp"
+                android:fontFamily="@font/poppins_medium"
+                android:gravity="center"
+                android:text="Edit"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="@id/etUsername"
+                app:layout_constraintEnd_toEndOf="@id/etUsername"
+                app:layout_constraintTop_toTopOf="@id/etUsername" />
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/bio"
@@ -110,10 +136,9 @@
                 android:maxLines="1"
                 android:paddingVertical="12dp"
                 android:textColor="@color/black"
-                app:layout_constraintEnd_toEndOf="@+id/name"
-                app:layout_constraintStart_toStartOf="@+id/name"
-                app:layout_constraintTop_toBottomOf="@+id/name" />
-
+                app:layout_constraintEnd_toEndOf="@+id/etUsername"
+                app:layout_constraintStart_toStartOf="@+id/etUsername"
+                app:layout_constraintTop_toBottomOf="@+id/etUsername" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/layoutDate"
@@ -207,8 +232,8 @@
                         android:id="@+id/spYear"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@null"
                         android:layout_marginStart="@dimen/_15sdp"
+                        android:background="@null"
                         android:entries="@array/year"
                         android:padding="0dp"
                         app:layout_constraintStart_toStartOf="parent"
@@ -378,7 +403,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="8dp"
-                    android:fontFamily="@font/poppins"
+                    android:fontFamily="@font/poppins_medium"
                     android:gravity="center"
                     android:text="Verify"
                     android:textSize="12sp" />
@@ -465,10 +490,10 @@
                 android:id="@+id/tvmarriage"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_5sdp"
                 android:drawablePadding="7dp"
                 android:paddingVertical="8dp"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:layout_marginStart="@dimen/_10sdp"
                 android:textColor="@color/black"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/appCompatImageView19"
@@ -478,8 +503,8 @@
                 android:id="@+id/view_mar"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#B7B7B7"
                 android:layout_marginTop="@dimen/_5sdp"
+                android:background="#B7B7B7"
                 app:layout_constraintTop_toBottomOf="@+id/tvmarriage" />
 
 

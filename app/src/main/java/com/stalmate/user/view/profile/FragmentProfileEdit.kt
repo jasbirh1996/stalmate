@@ -34,15 +34,13 @@ import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.commonadapters.AdapterFeed
 import com.stalmate.user.databinding.FragmentProfileEditBinding
-import com.stalmate.user.model.Education
-import com.stalmate.user.model.ModelUser
-import com.stalmate.user.model.Profession
-import com.stalmate.user.model.User
+import com.stalmate.user.model.*
 import com.stalmate.user.utilities.Constants
 import com.stalmate.user.utilities.ImageLoaderHelperGlide
 import com.stalmate.user.utilities.PriceFormatter
 import com.stalmate.user.utilities.SpinnerUtil.setSpinner
 import com.stalmate.user.utilities.ValidationHelper
+import com.stalmate.user.view.dashboard.funtime.ActivityFuntimePost
 import com.stalmate.user.view.dialogs.DialogAddEditEducation
 import com.stalmate.user.view.dialogs.DialogAddEditProfession
 import com.stalmate.user.view.dialogs.DialogVerifyNumber
@@ -270,7 +268,7 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
     var selectedYear = ""
     fun getUserProfileData() {
         val hashMap = HashMap<String, String>()
-        networkViewModel.getProfileData(hashMap,prefManager?.access_token.toString())
+        networkViewModel.getProfileData(hashMap, prefManager?.access_token.toString())
         hashMap.put("limit", "5")
         hashMap.put("page", "1")
         getBlockList()
@@ -294,12 +292,30 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
     private lateinit var albumImageAdapter: ProfileAlbumImageAdapter
     private lateinit var albumAdapter: SelfProfileAlbumAdapter
 
-    fun setUpAboutUI() {
+    private fun setUpAboutUI() {
+        val changeUsernameBottomSheet = UpdateUsernameBottomSheet(
+            usernameUpdated = {
+                getUserProfileData()
+            })
+        changeUsernameBottomSheet.arguments = Bundle().apply {
+            putString("etUsername", userData.results.user_name)
+        }
+        binding.layout.etUsername.setOnClickListener {
+            if (changeUsernameBottomSheet.isAdded) {
+                return@setOnClickListener
+            }
+            changeUsernameBottomSheet.show(
+                childFragmentManager,
+                changeUsernameBottomSheet.tag
+            )
+        }
+
         getAlbumPhotosById("profile_img")
         getAlbumPhotosById("cover_img")
 
         binding.layout.etName.setText(userData.results.first_name)
         binding.layout.etLastName.setText(userData.results.last_name)
+        binding.layout.etUsername.setText(userData.results.user_name)
         binding.layout.bio.setText(userData.results.about)
         binding.layout.filledTextEmail.text = userData.results.email
         verifyPhoneNumber = userData.results.number.toString()

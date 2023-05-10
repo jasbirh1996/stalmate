@@ -63,7 +63,7 @@ class ActivityOtherUserProfile : BaseActivity(),
         hashmap.put("search", "")
         hashmap.put("page", "1")
         hashmap.put("limit", "6")
-        networkViewModel.getFriendList(prefManager?.access_token.toString(),hashmap)
+        networkViewModel.getFriendList(prefManager?.access_token.toString(), hashmap)
         networkViewModel.friendLiveData.observe(this, Observer {
             it.let {
                 friendAdapter.submitList(it!!.results)
@@ -196,7 +196,7 @@ class ActivityOtherUserProfile : BaseActivity(),
         hashMap.put("id_user", userId)
         Log.d("a;ksda", "akjasdasdsd;asd")
         if (status.equals(Constants.TYPE_USER_ACTION_ADD_FRIEND)) {
-            networkViewModel.sendFriendRequest("", hashMap)
+            networkViewModel.sendFriendRequest(prefManager?.access_token.toString(), hashMap)
             networkViewModel.sendFriendRequestLiveData.observe(this, Observer {
                 it.let {
 
@@ -253,8 +253,10 @@ class ActivityOtherUserProfile : BaseActivity(),
 
 
     fun getUserProfileData() {
-        var hashMap = HashMap<String, String>()
-        networkViewModel.getOtherUserProfileData(hashMap, user_id = userId)
+        networkViewModel.getOtherUserProfileData(
+            access_token = prefManager?.access_token.toString(),
+            user_id = userId
+        )
         networkViewModel.otherUserProfileLiveData.observe(this, Observer {
             it.let {
                 userData = it!!

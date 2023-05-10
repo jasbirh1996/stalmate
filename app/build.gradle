@@ -239,4 +239,8 @@ dependencies {
 //    implementation 'com.arthenica:mobile-ffmpeg-min-gpl:4.4'
     implementation 'com.arthenica:mobile-ffmpeg-full:4.4'
 //    implementation 'com.github.SimformSolutionsPvtLtd:SSffmpegVideoOperation:1.0.8'
+
+    /*implementation 'com.amazonaws:aws-android-sdk-core:2.16'
+    implementation 'com.amazonaws:aws-android-sdk-rekognition:2.16'*/
+    //implementation "software.amazon.awssdk:rekognition:2.17.0"
 }

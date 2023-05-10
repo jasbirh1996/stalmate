@@ -65,6 +65,10 @@ class App : Application() {
                 // Log and toast
                 Log.d(TAG, token!!)
             })
+
+        /*AWSMobileClient.getInstance().initialize(this) {
+            // Add any configuration options here
+        }*/
     }
 
 

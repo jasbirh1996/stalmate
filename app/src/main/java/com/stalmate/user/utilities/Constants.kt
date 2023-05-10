@@ -6,6 +6,8 @@ object Constants {
     const val URL_INTREST_LIST = "/auth_api/category_list"
     const val URL_SIGN_UP = "/auth_api/user_register"
     const val URL_EMAIL_CHECK = "/auth_api/email_number_check"
+    const val URL_USERNAME_CHECK = "/auth_api/check_username"
+    const val URL_USERNAME_CHANGE = "/setting_api/change_username"
 
 
     const val URL_LOGIN = "/auth_api/user_login"

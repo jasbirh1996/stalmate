@@ -133,6 +133,29 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
             }
 
 
+            binding.etUsername.addTextChangedListener(object :TextWatcher{
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    if (binding.etUsername.text.toString().isNotEmpty()) {
+                        hitApiCheckOldUsername()
+                    } else {
+                        binding.ivUsername.visibility = View.GONE
+                        binding.errorTaken.visibility = View.GONE
+                    }
+                }
+
+                override fun afterTextChanged(s: Editable?) {
+
+                }
+            })
 
 
             binding.etEmail.addTextChangedListener(object : TextWatcher {
@@ -330,6 +353,7 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
 
 
     var isUsedEmail = false
+    var isUsedUsername = false
 
     fun isValid(): Boolean {
         lateinit var successdialogBuilder: AlertDialog
@@ -339,7 +363,14 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
         } else if (ValidationHelper.isNull(binding.etLastName.text.toString())) {
             makeToast(getString(R.string.last_name_toast))
             return false
-        } else if (ValidationHelper.isNull(binding.etEmail.text.toString())) {
+        }  else if (ValidationHelper.isNull(binding.etUsername.text.toString())) {
+            makeToast(getString(R.string.user_name_toast))
+            return false
+        } else if (isUsedUsername) {
+            makeToast(getString(R.string.user_name_valid_toast))
+            return false
+        }
+        else if (ValidationHelper.isNull(binding.etEmail.text.toString())) {
             makeToast(getString(R.string.email_error_toast))
             return false
         } else if (!isValidEmail(binding.etEmail.text.toString())) {
@@ -400,6 +431,7 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
         bundle.putString("password", binding.etPassword.text.toString())
         bundle.putString("first_name", binding.etName.text.toString())
         bundle.putString("last_name", binding.etLastName.text.toString())
+        bundle.putString("user_name", binding.etUsername.text.toString())
         bundle.putString("gender", gander_name)
 //        bundle.putString("schoolandcollege", binding.etschoolcollege.text.toString())
         bundle.putString("dob", "$selectedDay-$selectedMonth-$selectedYear")
@@ -432,7 +464,23 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
                 }
             }
         }
+    }
 
+    fun hitApiCheckOldUsername() {
+        networkViewModel.checkIfOldUsername(user_name = binding.etUsername.text.toString())
+        networkViewModel.checkIfOldUsernameLiveData.observe(requireActivity()) {
+            it?.reponse?.let {
+                if (it.name_status == true) {
+                    binding.ivUsername.visibility = View.VISIBLE
+                    binding.errorTaken.visibility = View.GONE
+                    isUsedUsername = false
+                } else {
+                    isUsedUsername = true
+                    binding.ivUsername.visibility = View.GONE
+                    binding.errorTaken.visibility = View.VISIBLE
+                }
+            }
+        }
     }
 
 
