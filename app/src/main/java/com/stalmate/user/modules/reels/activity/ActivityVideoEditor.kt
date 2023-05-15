@@ -177,11 +177,8 @@ class ActivityVideoEditor : BaseActivity(), OnPhotoEditorListener,
 
             binding.imgTrim.visibility = View.VISIBLE
             val retriever = MediaMetadataRetriever()
-            Log.d("pathhhh", videoPath)
-            Log.d("pathhhh", "videoPath")
             retriever.setDataSource(videoPath)
-            val metaRotation =
-                retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION)
+            val metaRotation = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION)
             val rotation = metaRotation?.toInt() ?: 0
             if (rotation == 90 || rotation == 270) {
                 DRAW_CANVASH =

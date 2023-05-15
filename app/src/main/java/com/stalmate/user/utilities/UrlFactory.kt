@@ -12,15 +12,15 @@ object UrlFactory {
     private const val URL_DEV = "https://webservice.kulluu.com/" // Development
     private const val URL_PROD = "https://webservice.kulluu.com/" // Live
     private const val API_VERSION = "api/v0/"
-    const val isModeDevelopment = true
+    private const val isModeDevelopment = true
 
     //return isModeDevelopment() ? URL_DEV : URL_PROD;
-    val baseUrl: String
-        get() = if (isModeDevelopment) {
-            URL_DEV
-        } else {
-            URL_PROD
-        }
+    val baseUrl: String = "https://3d83-125-63-93-60.ngrok-free.app"
+    /*get() = if (isModeDevelopment) {
+        URL_DEV
+    } else {
+        URL_PROD
+    }*/
 
     //return isModeDevelopment() ? URL_DEV : URL_PROD;
 
@@ -69,8 +69,11 @@ object UrlFactory {
     //  appHeaders.put(kHeaderAccessToken, App.getInstance().getAccessToken());
     val appHeaders: HashMap<String, String>
         get() {
-            defaultHeaders.put(kHeaderAccessToken, PrefManager.getInstance(App.getInstance())!!.userDetail.results?.access_token.toString())
-            return  defaultHeaders
+            defaultHeaders.put(
+                kHeaderAccessToken,
+                PrefManager.getInstance(App.getInstance())!!.userDetail.results?.access_token.toString()
+            )
+            return defaultHeaders
         }
 
 

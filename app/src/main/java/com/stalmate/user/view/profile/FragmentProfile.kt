@@ -420,7 +420,7 @@ class FragmentProfile() : BaseFragment(),
         })
     }
 
-    fun getUserProfileData() {
+    private fun getUserProfileData() {
         val hashMap = HashMap<String, String>()
         networkViewModel.getProfileData(hashMap, prefManager?.access_token.toString())
         networkViewModel.profileLiveData.observe(viewLifecycleOwner, Observer {
