@@ -43,7 +43,6 @@ object UrlFactory {
         defaultHeaders.put("currentVersion", BuildConfig.VERSION_NAME);*/
     val defaultHeaders: HashMap<String, String>
         get() {
-
             val defaultHeaders = HashMap<String, String>()
             defaultHeaders["Content-Type"] = "application/json"
             defaultHeaders["Accept"] = "application/json"
@@ -51,8 +50,7 @@ object UrlFactory {
             defaultHeaders[kTimezone] = timezone
             defaultHeaders["language"] = "english"
             defaultHeaders["AppKey"] = "Poru13feqwopto2qMpt43"
-
-            /*       defaultHeaders.put("GuestToken", GuestPrefrenceManager.getInstance(App.getInstance()).getGuestToken());
+            /*defaultHeaders.put("GuestToken", GuestPrefrenceManager.getInstance(App.getInstance()).getGuestToken());
             defaultHeaders.put("currentVersion", BuildConfig.VERSION_NAME);*/return defaultHeaders
         }
     val guestHeaders: HashMap<String, String>
