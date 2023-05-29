@@ -63,23 +63,18 @@ class ActivityFullViewReels : BaseActivity(), ReelFullViewAdapter.Callback {
             VideoAutoPlayFullViewHelper(recyclerView = binding.recyclerView)
         videoAutoPlayHelper!!.startObserving();
 
+        isSelfVideos = intent.getBooleanExtra("showMyVideos", false)
 
         /*Helper class to provide show/hide toolBar*/
 
         /*Helper class to provide show/hide toolBar*/
         //  attachScrollControlListener(binding.customToolBar, binding.recyclerView)
-        var list = ArrayList<ResultFuntime>()
-        var data = intent.getParcelableExtra<ResultFuntime>("data") as ResultFuntime
-
-
-        isSelfVideos = intent.getBooleanExtra("showMyVideos", false)
-        Log.d("klajsdasd", isSelfVideos.toString())
-
-
-
-
-        list.add(data)
-        adapter.setList(list)
+        if (intent.hasExtra("data")) {
+            val list = ArrayList<ResultFuntime>()
+            val data = intent.getParcelableExtra<ResultFuntime>("data") as ResultFuntime
+            list.add(data)
+            adapter.setList(list)
+        }
         callApi()
 
         binding.ivBack.setOnClickListener {
@@ -123,19 +118,24 @@ class ActivityFullViewReels : BaseActivity(), ReelFullViewAdapter.Callback {
     private fun callApi() {
         isApiRuning = true
         val index = 0
-
-
-        var hashmap = HashMap<String, String>()
+        val hashmap = HashMap<String, String>()
         hashmap.put("page", page_count.toString())
         if (isSelfVideos) {
-            hashmap.put("id_user", adapter.reelList[0].user_id.toString())
+            if (!adapter.reelList.isNullOrEmpty()) {
+                hashmap.put("id_user", adapter.reelList[0].user_id.toString())
+            } else {
+                hashmap.put("id_user", "")
+            }
         } else {
             hashmap.put("id_user", "")
         }
-
-        hashmap.put("fun_id", adapter.reelList[0].id.toString())
+        if (!adapter.reelList.isNullOrEmpty()) {
+            hashmap.put("fun_id", adapter.reelList[0].id.toString())
+        } else {
+            hashmap.put("fun_id", "")
+        }
         hashmap.put("limit", "5")
-        networkViewModel.funtimeLiveData(prefManager?.access_token.toString(),hashmap)
+        networkViewModel.funtimeLiveData(prefManager?.access_token.toString(), hashmap)
         networkViewModel.funtimeLiveData.observe(this) {
             isApiRuning = false
             //  binding.shimmerLayout.visibility =  View.GONE

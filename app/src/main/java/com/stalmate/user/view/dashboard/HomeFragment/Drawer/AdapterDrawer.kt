@@ -16,7 +16,9 @@ import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.databinding.ItemDrawerLayoutBinding
 import com.stalmate.user.utilities.PrefManager
+import com.stalmate.user.view.adapter.FriendAdapter
 import com.stalmate.user.view.authentication.ActivityAuthentication
+import com.stalmate.user.view.dashboard.Friend.FragmentFriend
 import com.stalmate.user.viewmodel.AppViewModel
 
 class DrawerAdapter(
@@ -55,27 +57,24 @@ class DrawerAdapter(
 
         @SuppressLint("ResourceAsColor", "ResourceType")
         fun bind(drawerResponse: ModelDrawer) {
-
             Glide.with(context).load(drawerResponse.image).into(binding.cardImage)
             binding.tvcardText.text = drawerResponse.text
 
             binding.card.setOnClickListener {
-
-                Log.d("jjjjjjjjj", bindingAdapterPosition.toString())
-                when (bindingAdapterPosition) {
-
-
-                    10-> {
+                when (drawerResponse.text) {
+                    "My Funtime" -> {
+                        context.startActivity(IntentHelper.getFullViewReelActivity(context))
+                    }
+                    "My Friends" -> {
+                        context.startActivity(Intent(context, FragmentFriend::class.java))
+                    }
+                    "Settings" -> {
                         context.startActivity(IntentHelper.getSettingScreen(context))
-
                     }
-                    12 -> {
-                     context.startActivity(IntentHelper.getSaveFavouriteFuntimeScreen(context))
-
+                    "Saved/Favourite" -> {
+                        context.startActivity(IntentHelper.getSaveFavouriteFuntimeScreen(context))
                     }
-
-
-                    13 -> {
+                    "Logout" -> {
                         PrefManager.getInstance(context)!!.keyIsLoggedIn = false
                         context.startActivity(
                             Intent(
@@ -86,7 +85,6 @@ class DrawerAdapter(
                         )
                         (context as Activity).finishAffinity()
                     }
-
                 }
             }
         }

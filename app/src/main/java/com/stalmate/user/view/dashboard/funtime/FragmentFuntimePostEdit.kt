@@ -36,7 +36,7 @@ import com.stalmate.user.modules.reels.activity.EXTRA_SONG_ID
 import com.stalmate.user.utilities.Constants
 import com.stalmate.user.utilities.ValidationHelper
 import com.stalmate.user.view.adapter.FriendAdapter
-import com.stalmate.user.view.dashboard.ActivityDashboardNew
+import com.stalmate.user.view.dashboard.ActivityDashboard
 import com.stalmate.user.view.dashboard.funtime.viewmodel.TagPeopleViewModel
 import com.stalmate.user.view.singlesearch.ActivitySingleSearch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -56,7 +56,7 @@ class FragmentFuntimePostEdit : BaseFragment(), FriendAdapter.Callbackk {
     var country = ""
     var mAudioId = ""
 
-    //    var ActivityDashboardNew : ActivityDashboardNew
+    //    var ActivityDashboard : ActivityDashboard
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -207,7 +207,7 @@ class FragmentFuntimePostEdit : BaseFragment(), FriendAdapter.Callbackk {
             it.let {
                 dismissLoader()
                 if (it!!.status == true) {
-                    val intent = Intent(context, ActivityDashboardNew::class.java)
+                    val intent = Intent(context, ActivityDashboard::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                     requireContext().startActivity(intent)
                     (context as Activity).finishAffinity()
@@ -311,7 +311,7 @@ class FragmentFuntimePostEdit : BaseFragment(), FriendAdapter.Callbackk {
 
 
                 if (it!!.status) {
-                    val intent = Intent(context, ActivityDashboardNew::class.java)
+                    val intent = Intent(context, ActivityDashboard::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                     requireContext().startActivity(intent)
                     (context as Activity).finishAffinity()

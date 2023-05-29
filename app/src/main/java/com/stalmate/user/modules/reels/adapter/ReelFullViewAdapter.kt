@@ -25,7 +25,7 @@ import com.stalmate.user.modules.reels.player.holders.ReelViewHolder
 import com.stalmate.user.modules.reels.player.holders.VideoReelFullViewHolder
 import com.stalmate.user.utilities.SeeModetextViewHelper
 import com.stalmate.user.utilities.ValidationHelper
-import com.stalmate.user.view.dashboard.ActivityDashboardNew
+import com.stalmate.user.view.dashboard.ActivityDashboard
 import com.stalmate.user.view.dashboard.funtime.*
 import com.stalmate.user.view.dialogs.CommonConfirmationDialog
 import com.stalmate.user.view.dialogs.SuccessDialog
@@ -191,8 +191,6 @@ class ReelFullViewAdapter(
             );
         }
         holder.buttonLike.setOnClickListener {
-
-
             if (reelList[position].isLiked == "Yes") {
                 reelList[position].like_count--
                 holder.likeCount.text = reelList[position].like_count.toString()
@@ -205,7 +203,6 @@ class ReelFullViewAdapter(
             reelList[position].isDataUpdated=true
             callback.onClickOnLikeButtonReel(reelList[position])
         }
-
 
         /* val timesAg = TimesAgo2.covertTimeToText(item.Created_date, true)*/
         if (!ValidationHelper.isNull(reelList[position].sound_name)) {

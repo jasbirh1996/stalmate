@@ -16,7 +16,9 @@ import com.stalmate.user.base.App
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentMenuBinding
 import com.stalmate.user.model.User
+import com.stalmate.user.modules.reels.activity.ActivitySettings
 import com.stalmate.user.utilities.PrefManager
+import com.stalmate.user.view.dashboard.ActivityDashboard
 import com.stalmate.user.view.dashboard.HomeFragment.Drawer.DrawerAdapter
 import com.stalmate.user.view.dashboard.HomeFragment.Drawer.ModelDrawer
 
@@ -54,10 +56,15 @@ class FragmentMenu(var callback: Callback) : BaseFragment(), DrawerAdapter.Callb
         drawerAdapter = DrawerAdapter(networkViewModel, requireContext(), this)
 
         binding.btnBack.setOnClickListener {
-            callback.onCLickBackButton()
+//            callback.onCLickBackButton()
+            try {
+                (requireActivity() as ActivityDashboard).onBackPressed()
+            } catch (e: ClassCastException) {
+                (requireActivity() as ActivitySettings).onBackPressed()
+            }
         }
 
-        data.add(ModelDrawer(R.drawable.ic_menu_posts, "Posts"))
+        /*data.add(ModelDrawer(R.drawable.ic_menu_posts, "Posts"))
         data.add(ModelDrawer(R.drawable.ic_menu_pages, "Pages"))
         data.add(ModelDrawer(R.drawable.ic_menu_mystories, "My stories"))
         data.add(ModelDrawer(R.drawable.ic_menu_groups, "Posts"))
@@ -70,6 +77,14 @@ class FragmentMenu(var callback: Callback) : BaseFragment(), DrawerAdapter.Callb
         data.add(ModelDrawer(R.drawable.ic_menu_settings, "Settings"))
         data.add(ModelDrawer(R.drawable.ic_menu_quite_mode, "Quite mode"))
         data.add(ModelDrawer(R.drawable.ic_menu_saved, "Saved favourite"))
+        data.add(ModelDrawer(R.drawable.ic_menu_logout, "Logout"))*/
+
+        data.add(ModelDrawer(R.drawable.ic_menu_groups, "My Friends"))
+        data.add(ModelDrawer(R.drawable.ic_menu_funtimes, "My Funtime"))
+        data.add(ModelDrawer(R.drawable.ic_menu_saved, "Saved/Favourite"))
+        data.add(ModelDrawer(R.drawable.ic_menu_quite_mode, "Quite mode"))
+        data.add(ModelDrawer(R.drawable.ic_menu_settings, "Settings"))
+        data.add(ModelDrawer(R.drawable.ic_menu_shareapp, "Share App"))
         data.add(ModelDrawer(R.drawable.ic_menu_logout, "Logout"))
 
 
@@ -104,7 +119,7 @@ class FragmentMenu(var callback: Callback) : BaseFragment(), DrawerAdapter.Callb
 
     fun getUserProfileData() {
         var hashMap = HashMap<String, String>()
-        networkViewModel.getProfileData(hashMap,prefManager?.access_token.toString())
+        networkViewModel.getProfileData(hashMap, prefManager?.access_token.toString())
         networkViewModel.profileLiveData.observe(requireActivity(), Observer {
             it.let {
                 userData = it!!.results
@@ -117,15 +132,6 @@ class FragmentMenu(var callback: Callback) : BaseFragment(), DrawerAdapter.Callb
 
     fun setUpAboutUI() {
         binding.tvUserName.text = userData.first_name + " " + userData.last_name
-        if (!userData.profile_data.isNullOrEmpty()) {
-            binding.workStatus.visibility = View.VISIBLE
-        }
-        if (!userData.profile_data.isNullOrEmpty()) {
-            binding.locationStatus.visibility = View.VISIBLE
-        }
-        Glide.with(requireContext()).load(userData.cover_img1)
-            .placeholder(R.drawable.user_placeholder)
-            .into(binding.userCoverImage)
         Glide.with(requireContext()).load(userData.profile_img1)
             .placeholder(R.drawable.user_placeholder)
             .into(binding.userProfileImage)

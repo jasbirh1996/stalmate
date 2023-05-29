@@ -1,12 +1,14 @@
 package com.stalmate.user.commonadapters
 
 
-
 import android.content.Context
+import android.text.Html
 import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 /*import com.github.pgreze.reactions.ReactionPopup
 import com.github.pgreze.reactions.ReactionsConfigBuilder
 import com.github.pgreze.reactions.dsl.reactionConfig
@@ -14,15 +16,17 @@ import com.github.pgreze.reactions.dsl.reactions*/
 import com.stalmate.user.R
 import com.stalmate.user.databinding.ItemFeedBinding
 import com.stalmate.user.model.Feed
+import com.stalmate.user.view.dashboard.funtime.ResultFuntime
 import com.stalmate.user.viewmodel.AppViewModel
 
 class AdapterFeed(
     val viewModel: AppViewModel,
     val context: Context,
-    var callback: FragmentActivity
+    var callback: FragmentActivity,
+    var callBackAdapterFeed: AdapterFeed.Callbackk? = null
 ) :
     RecyclerView.Adapter<AdapterFeed.FeedViewHolder>() {
-    var list = ArrayList<Feed>()
+    var list = ArrayList<ResultFuntime>()
 
 
     override fun onCreateViewHolder(
@@ -36,7 +40,7 @@ class AdapterFeed(
     }
 
     override fun onBindViewHolder(holder: AdapterFeed.FeedViewHolder, position: Int) {
-        holder.bind(list.get(position))
+        holder.bind(list.get(position), callBackAdapterFeed)
     }
 
     override fun getItemCount(): Int {
@@ -46,8 +50,48 @@ class AdapterFeed(
 
     inner class FeedViewHolder(var binding: ItemFeedBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(feed: Feed) {
+        fun bind(feed: ResultFuntime, callBackAdapterFeed: Callbackk?) {
+            val requestOptions = RequestOptions()
+            Glide.with(binding.appCompatImageView5.context)
+                .load(feed.file)
+                .apply(requestOptions)
+                .thumbnail(Glide.with(context).load(feed.file))
+                .placeholder(R.drawable.image)
+                .error(R.drawable.image)
+                .into(binding.appCompatImageView5)
 
+            val requestOptions1 = RequestOptions()
+            Glide.with(binding.userProfileImage.context)
+                .load(feed.profile_img)
+                .apply(requestOptions1)
+                .thumbnail(Glide.with(context).load(feed.profile_img))
+                .placeholder(R.drawable.image)
+                .error(R.drawable.image)
+                .into(binding.userProfileImage)
+
+            binding.tvUserName.text = feed.first_name + " " + feed.last_name
+
+            binding.likeCount.text = feed.like_count.toString() + " Likes"
+            binding.commentCount.text = feed.comment_count.toString() + " Comments"
+            binding.appCompatTextView6.text = feed.Created_date
+//            binding.shareCount.text = feed.share_count.toString()
+
+            if (feed.file_type.contains("image")) {
+                binding.ivPlay.visibility = View.GONE
+            } else {
+                binding.ivPlay.visibility = View.VISIBLE
+            }
+
+            binding.tvPostDescription.setText(
+                Html.fromHtml(
+                    feed.text,
+                    Html.FROM_HTML_MODE_COMPACT
+                )
+            );
+
+            binding.appCompatImageView5.setOnClickListener {
+                callBackAdapterFeed?.onCLickItem(feed)
+            }
 /*
 
             val config = reactionConfig(context) {
@@ -140,16 +184,13 @@ class AdapterFeed(
 */
 
 
-
         }
 
     }
 
-    fun x(){
+    fun x() {
 
     }
-
-
 
 
 /*
@@ -216,21 +257,23 @@ class AdapterFeed(
 */
 
 
-    fun submitList(feedList: List<Feed>) {
+    fun submitList(feedList: List<ResultFuntime>) {
         list.clear()
         list.addAll(feedList)
         notifyDataSetChanged()
     }
 
-    public interface Callbackk {
-        fun onClickOnViewComments(postId: Int)
+    fun addToList(feedList: ArrayList<ResultFuntime>) {
+        val size = list.size
+        list.addAll(feedList)
+        val sizeNew = list.size
+        notifyItemRangeChanged(size, sizeNew)
     }
 
-
-
-
-
-
+    public interface Callbackk {
+        fun onClickOnViewComments(postId: Int)
+        fun onCLickItem(item: ResultFuntime)
+    }
 
 
 }

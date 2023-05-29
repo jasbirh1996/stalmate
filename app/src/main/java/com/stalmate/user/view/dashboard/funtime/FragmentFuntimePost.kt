@@ -38,7 +38,7 @@ import com.stalmate.user.modules.reels.utils.RealPathUtil
 import com.stalmate.user.utilities.Constants
 import com.stalmate.user.utilities.ValidationHelper
 import com.stalmate.user.view.adapter.FriendAdapter
-import com.stalmate.user.view.dashboard.ActivityDashboardNew
+import com.stalmate.user.view.dashboard.ActivityDashboard
 import com.stalmate.user.view.dashboard.funtime.SelectThumbnailFragment.Companion.getStartIntent
 import com.stalmate.user.view.dashboard.funtime.viewmodel.TagPeopleViewModel
 import com.stalmate.user.view.singlesearch.ActivitySingleSearch
@@ -450,7 +450,7 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
             dismissLoader()
             it.let {
                 if (it?.status == true) {
-                    val intent = Intent(context, ActivityDashboardNew::class.java)
+                    val intent = Intent(context, ActivityDashboard::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                     requireContext().startActivity(intent)
                     (context as Activity).finishAffinity()
@@ -546,7 +546,7 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
         networkViewModel.funtimeUpdateLiveData.observe(viewLifecycleOwner, Observer {
             it.let {
                 if (it!!.status) {
-                    val intent = Intent(context, ActivityDashboardNew::class.java)
+                    val intent = Intent(context, ActivityDashboard::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                     requireContext().startActivity(intent)
                     (context as Activity).finishAffinity()

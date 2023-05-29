@@ -20,6 +20,7 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
+import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.commonadapters.FragmentViewPagerAdapter
 import com.stalmate.user.databinding.FragmentFriendBinding
@@ -29,51 +30,38 @@ import com.stalmate.user.utilities.Constants
 import com.stalmate.user.view.adapter.FriendAdapter
 import com.stalmate.user.view.dashboard.ActivityDashboard
 
-class FragmentFriend(var callback: Callbackk) : BaseFragment(), FriendAdapter.Callbackk {
+class FragmentFriend : BaseActivity() {
     lateinit var binding: FragmentFriendBinding
     lateinit var navHostFragment: NavHostFragment
     private lateinit var navController: NavController
+    override fun onClick(viewId: Int, view: View?) {
+
+    }
 //    var activityDashboard : ActivityDashboard
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = DataBindingUtil.setContentView(this, R.layout.fragment_friend)
+        setContentView(binding.root)
+        onViewCreated()
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        binding = DataBindingUtil.bind<FragmentFriendBinding>(
-            inflater.inflate(
-                R.layout.fragment_friend,
-                container,
-                false
-            )
-        )!!
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-
+    fun onViewCreated() {
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Friend Requests"));
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Suggestions"));
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("My Friends"));
 
-        navHostFragment =
-            childFragmentManager.findFragmentById(R.id.nav_host_container) as NavHostFragment
+        navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_container) as NavHostFragment
         navController = navHostFragment.navController
         binding.btnCreateCategory.setOnClickListener {
-            startActivity(IntentHelper.getCategoryCreateScreen(context))
+            startActivity(IntentHelper.getCategoryCreateScreen(this))
         }
         var bundlex = Bundle()
         bundlex.putString("categoryType", Constants.TYPE_FRIEND_REQUEST)
 
 
         binding.btnBack.setOnClickListener {
-            callback.onClickBack()
+            onBackPressed()
         }
 
         navController.navigate(R.id.idFragmentCategory, bundlex)
@@ -116,7 +104,7 @@ class FragmentFriend(var callback: Callbackk) : BaseFragment(), FriendAdapter.Ca
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {
-                binding.tabLayout.tabTextColors = context?.let {
+                binding.tabLayout.tabTextColors = this@FragmentFriend.let {
                     ContextCompat.getColorStateList(
                         it, R.color.grey_dark
                     )
@@ -128,15 +116,6 @@ class FragmentFriend(var callback: Callbackk) : BaseFragment(), FriendAdapter.Ca
             }
 
         })
-
-    }
-
-
-    override fun onClickOnUpdateFriendRequest(friend: User, status: String) {
-
-    }
-
-    override fun onClickOnProfile(friend: User) {
 
     }
 

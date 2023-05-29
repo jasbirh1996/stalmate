@@ -15,12 +15,12 @@ object UrlFactory {
     private const val isModeDevelopment = true
 
     //return isModeDevelopment() ? URL_DEV : URL_PROD;
-    val baseUrl: String = "https://3d83-125-63-93-60.ngrok-free.app"
-    /*get() = if (isModeDevelopment) {
-        URL_DEV
-    } else {
-        URL_PROD
-    }*/
+    val baseUrl: String
+        get() = if (isModeDevelopment) {
+            URL_DEV
+        } else {
+            URL_PROD
+        }
 
     //return isModeDevelopment() ? URL_DEV : URL_PROD;
 

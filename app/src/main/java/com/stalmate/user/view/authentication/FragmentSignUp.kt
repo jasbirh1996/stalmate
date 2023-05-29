@@ -334,7 +334,6 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
 
         binding.btnCrateAccount.setOnClickListener {
             if (isValid()) {
-
                 if (currentYear < selectedYear) {
                     makeToast("Your age should be 13 years or more")
                 } else {

@@ -31,6 +31,7 @@ import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.utilities.ValidationHelper
 import com.stalmate.user.view.adapter.ProfileAboutAdapter
 import com.stalmate.user.view.adapter.ProfileFriendAdapter
+import com.stalmate.user.view.dashboard.funtime.ResultFuntime
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -265,6 +266,10 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
     }
 
     override fun onClickOnViewComments(postId: Int) {
+
+    }
+
+    override fun onCLickItem(item: ResultFuntime) {
 
     }
 

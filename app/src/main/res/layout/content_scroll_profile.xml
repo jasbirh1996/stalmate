@@ -27,12 +27,28 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:listitem="@layout/layout_profile_data_lines" />
 
+            <Button
+                android:id="@+id/buttonEditProfile"
+                android:layout_width="130dp"
+                android:layout_height="36dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="@dimen/_15sdp"
+                android:background="@drawable/primary_button_background"
+                android:text="@string/edit_profile"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:visibility="gone"
+                app:backgroundTint="@null"
+                app:layout_constraintBottom_toBottomOf="@id/rvAbout"
+                app:layout_constraintEnd_toEndOf="parent" />
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/layoutConnectionDetails"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent">
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/rvAbout">
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/connection"
@@ -115,92 +131,100 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/view2">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/layoutFollowers"
+            <TextView
+                android:id="@+id/tvFF"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
+                android:fontFamily="@font/poppins_medium"
+                android:text="Following &amp; Followers"
+                android:textColor="@color/black"
+                android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent" />
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/tvFollowerCount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins_semibold"
-                    android:text="0"
-                    android:textColor="@color/black"
-                    android:textSize="16sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/tvLabelFollower"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins_light"
-                    android:text="@string/followers"
-                    android:textColor="@color/colorTextGray"
-                    android:textSize="14sp"
-                    app:layout_constraintStart_toStartOf="@+id/tvFollowerCount"
-                    app:layout_constraintTop_toBottomOf="@+id/tvFollowerCount" />
-
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/layoutFollowing"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
-                app:layout_constraintBottom_toBottomOf="@+id/layoutFollowers"
-                app:layout_constraintStart_toEndOf="@+id/layoutFollowers"
-                app:layout_constraintTop_toTopOf="@+id/layoutFollowers">
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/tvFollowingCount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins_semibold"
-                    android:text="0"
-                    android:textColor="@color/black"
-                    android:textSize="16sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/tvLabelFollowing"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins_light"
-                    android:text="@string/folllowing"
-                    android:textColor="@color/colorTextGray"
-                    android:textSize="14sp"
-                    app:layout_constraintStart_toStartOf="@+id/tvFollowingCount"
-                    app:layout_constraintTop_toBottomOf="@+id/tvFollowingCount" />
-
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <Button
-                android:id="@+id/buttonEditProfile"
-                android:layout_width="130dp"
-                android:layout_height="36dp"
-                android:layout_marginTop="5dp"
-                android:background="@drawable/primary_button_background"
-                android:text="@string/edit_profile"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:visibility="gone"
-                app:backgroundTint="@null"
-                app:layout_constraintBottom_toBottomOf="@+id/layoutFollowing"
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_70sdp"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toEndOf="@+id/layoutFollowing"
-                app:layout_constraintTop_toTopOf="@+id/layoutFollowing" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvFF">
 
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/layoutFollowers"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="@dimen/_10sdp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_ff">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tvFollowerCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_semibold"
+                        android:text="0"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tvLabelFollower"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_light"
+                        android:text="@string/followers"
+                        android:textColor="@color/colorTextGray"
+                        android:textSize="14sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tvFollowerCount" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/layoutFollowing"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_ff">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tvFollowingCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_semibold"
+                        android:text="0"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tvLabelFollowing"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins_light"
+                        android:text="@string/folllowing"
+                        android:textColor="@color/colorTextGray"
+                        android:textSize="14sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tvFollowingCount" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -257,7 +281,9 @@
             layout="@layout/layout_create_post"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_10sdp"
             android:layout_marginTop="10dp"
+            android:layout_marginEnd="@dimen/_10sdp"
             app:layout_constraintTop_toBottomOf="@+id/layoutWebsite"
             tools:layout_editor_absoluteX="10dp" />
 
@@ -266,6 +292,7 @@
             android:id="@+id/layout_friend"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_10sdp"
             android:layout_marginTop="20dp"
             android:background="@color/white"
             android:padding="@dimen/dp_10"
@@ -311,17 +338,18 @@
                 android:id="@+id/etSearchFriend"
                 android:layout_width="195dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_10sdp"
                 android:background="@drawable/search_background"
                 android:drawableStart="@drawable/ic_header_search"
                 android:drawablePadding="10dp"
-                android:maxLines="1"
-                android:lines="1"
-                android:imeOptions="actionSearch"
                 android:fontFamily="@font/poppins"
                 android:hint="@string/search_friends"
+                android:imeOptions="actionSearch"
                 android:includeFontPadding="false"
-                android:minHeight="0dp"
                 android:inputType="text"
+                android:lines="1"
+                android:maxLines="1"
+                android:minHeight="0dp"
                 android:padding="8dp"
                 android:textColor="@color/black"
                 android:textSize="12sp"
@@ -364,6 +392,7 @@
                 android:id="@+id/tvAlbumPhotoSeeMore"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_10sdp"
                 android:drawablePadding="10dp"
                 android:drawableTint="@color/black"
                 android:text="@string/see_more"

@@ -60,10 +60,7 @@ class FragmentPlaceAutoComplete(var type: TypeFilter) : BaseFragment(), AdapterC
             requireActivity(),
             resources.getString(R.string.google_direction_api_key)
         )
-
         autoComplete()
-
-
     }
 
     override fun onClickIntrastedItem(data: ArrayList<Category>) {

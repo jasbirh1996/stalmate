@@ -15,7 +15,7 @@ import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentOtpForgetPasswordBinding
 import com.stalmate.user.utilities.PrefManager
-import com.stalmate.user.view.dashboard.ActivityDashboardNew
+import com.stalmate.user.view.dashboard.ActivityDashboard
 
 
 class FragmentOtpForgetPassword : BaseFragment() {
@@ -131,7 +131,7 @@ class FragmentOtpForgetPassword : BaseFragment() {
                     PrefManager.getInstance(requireContext())!!.keyIsLoggedIn = true
 
                     Handler(Looper.getMainLooper()).postDelayed({
-                        val intent = Intent(requireContext(), ActivityDashboardNew::class.java)
+                        val intent = Intent(requireContext(), ActivityDashboard::class.java)
                         startActivity(intent)
 
                         builder.dismiss()

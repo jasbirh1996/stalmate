@@ -18,9 +18,9 @@ import com.stalmate.user.databinding.LayoutSingleSearchBinding
 import com.stalmate.user.utilities.ValidationHelper
 import java.util.HashMap
 
-class FragmentSingleSearch(var Type:String) : BaseFragment(), SingleSearchAdapter.Callbackk {
+class FragmentSingleSearch(var Type: String) : BaseFragment(), SingleSearchAdapter.Callbackk {
 
-    private lateinit var binding : LayoutSingleSearchBinding
+    private lateinit var binding: LayoutSingleSearchBinding
     private lateinit var searchAdapter: SingleSearchAdapter
 
     override fun onCreateView(
@@ -28,7 +28,13 @@ class FragmentSingleSearch(var Type:String) : BaseFragment(), SingleSearchAdapte
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding=DataBindingUtil.bind<LayoutSingleSearchBinding>(inflater.inflate(R.layout.layout_single_search, container, false))!!
+        binding = DataBindingUtil.bind<LayoutSingleSearchBinding>(
+            inflater.inflate(
+                R.layout.layout_single_search,
+                container,
+                false
+            )
+        )!!
         return binding.root
     }
 
@@ -36,11 +42,9 @@ class FragmentSingleSearch(var Type:String) : BaseFragment(), SingleSearchAdapte
         super.onCreate(savedInstanceState)
 
 
-      //  hitSearchListApi(Type)
+        //  hitSearchListApi(Type)
 
     }
-
-
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -50,10 +54,11 @@ class FragmentSingleSearch(var Type:String) : BaseFragment(), SingleSearchAdapte
         }
 
     }
-    private fun hitSearchListApi(type : String) {
+
+    private fun hitSearchListApi(type: String) {
         /*SetUp Search Adapter*/
-        searchAdapter = SingleSearchAdapter(networkViewModel, Type,requireContext(),this )
-        binding.rvList.adapter=searchAdapter
+        searchAdapter = SingleSearchAdapter(networkViewModel, Type, requireContext(), this)
+        binding.rvList.adapter = searchAdapter
 
 
         val hashMap = HashMap<String, String>()
@@ -64,23 +69,20 @@ class FragmentSingleSearch(var Type:String) : BaseFragment(), SingleSearchAdapte
             networkViewModel.searchLiveData(hashMap, search = searchData)
             networkViewModel.searchLiveData.observe(this) {
                 it?.let {
-
                     val stateList: ArrayList<ResultSearch> = ArrayList<ResultSearch>()
                     if (it.results.isEmpty()) {
                         binding.itemView.visibility = View.VISIBLE
                         searchAdapter.submitList(stateList)
                     } else {
-
                         searchAdapter.submitList(it.results)
                     }
                 }
             }
 
-        }else if(type == "major"){
-            networkViewModel.searchBranchLiveData(hashMap, search =searchData)
+        } else if (type == "major") {
+            networkViewModel.searchBranchLiveData(hashMap, search = searchData)
             networkViewModel.searchBranchLiveData.observe(this) {
                 it?.let {
-
                     val stateList: ArrayList<ResultSearch> = ArrayList<ResultSearch>()
                     if (it.results.isEmpty()) {
                         binding.itemView.visibility = View.VISIBLE
@@ -99,31 +101,29 @@ class FragmentSingleSearch(var Type:String) : BaseFragment(), SingleSearchAdapte
     }
 
 
-
-    fun finishFragment(id: String, name: String){
-        var bundle=Intent()
-        bundle.putExtra("id",id)
-        bundle.putExtra("name",name)
-        bundle.putExtra("type",Type)
-        requireActivity().setResult(Activity.RESULT_OK,bundle)
+    fun finishFragment(id: String, name: String) {
+        var bundle = Intent()
+        bundle.putExtra("id", id)
+        bundle.putExtra("name", name)
+        bundle.putExtra("type", Type)
+        requireActivity().setResult(Activity.RESULT_OK, bundle)
         requireActivity().finish()
     }
 
 
-
-    var searchData=""
-    fun search(searchData:String){
-       this.searchData=searchData
-        if (!ValidationHelper.isNull(searchData)){
+    var searchData = ""
+    fun search(searchData: String) {
+        this.searchData = searchData
+        if (!ValidationHelper.isNull(searchData)) {
             hitSearchListApi(Type)
-            Log.d("asdasdasd","notempty")
-            binding.rvList.visibility=View.VISIBLE
-            binding.itemView.visibility=View.GONE
-        }else{
+            Log.d("asdasdasd", "notempty")
+            binding.rvList.visibility = View.VISIBLE
+            binding.itemView.visibility = View.GONE
+        } else {
             binding.tvValue.text = "You Want Add $searchData"
-            binding.itemView.visibility=View.VISIBLE
-            binding.rvList.visibility=View.GONE
-            Log.d("asdasdasd","empty")
+            binding.itemView.visibility = View.VISIBLE
+            binding.rvList.visibility = View.GONE
+            Log.d("asdasdasd", "empty")
         }
     }
 }

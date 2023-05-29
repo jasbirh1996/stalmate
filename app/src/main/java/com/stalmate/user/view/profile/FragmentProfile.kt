@@ -42,9 +42,12 @@ import com.stalmate.user.modules.reels.activity.ActivitySettings
 import com.stalmate.user.utilities.*
 import com.stalmate.user.view.adapter.ProfileAboutAdapter
 import com.stalmate.user.view.adapter.ProfileFriendAdapter
-import com.stalmate.user.view.dashboard.ActivityDashboardNew
+import com.stalmate.user.view.dashboard.ActivityDashboard
+import com.stalmate.user.view.dashboard.HomeFragment.FragmentHome
+import com.stalmate.user.view.dashboard.HomeFragment.FragmentMenu
 import com.stalmate.user.view.dashboard.HomeFragment.FragmentProfileActivityLog
 import com.stalmate.user.view.dashboard.HomeFragment.FragmentProfileFuntime
+import com.stalmate.user.view.dashboard.funtime.ResultFuntime
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -52,9 +55,11 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 
 
-class FragmentProfile() : BaseFragment(),
+class FragmentProfile(val callback: FragmentHome.Callback? = null) : BaseFragment(),
     ProfileAboutAdapter.Callbackk, AdapterFeed.Callbackk,
     ProfileFriendAdapter.Callbackk {
+    //Add empty constructor to avoid the exception
+
     lateinit var binding: FragmentProfileBinding
     lateinit var friendAdapter: ProfileFriendAdapter
     var permissions = arrayOf(
@@ -76,7 +81,7 @@ class FragmentProfile() : BaseFragment(),
 
     lateinit var navHostFragment: NavHostFragment
     private lateinit var navController: NavController
-//    var ActivityDashboardNew : ActivityDashboardNew
+//    var ActivityDashboard : ActivityDashboard
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -115,14 +120,11 @@ class FragmentProfile() : BaseFragment(),
 
         binding.nestedScrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
             if (oldScrollY < scrollY) {//increase
-
-                //callback.onScoll(true)
-                Log.d("aklsjdasdasd", "aposkdasd")
-                onScrollToHideTopHeader(true)
+                callback?.onScoll(true)
+                binding.toolbar.root.visibility = View.GONE
             } else {
-
-                onScrollToHideTopHeader(false)
-                Log.d("aklsjdasdasd", "aposkdasdfghfgh")
+                callback?.onScoll(false)
+                binding.toolbar.root.visibility = View.VISIBLE
             }
         })
 
@@ -147,16 +149,16 @@ class FragmentProfile() : BaseFragment(),
 
         binding.appCompatTextView17.setOnClickListener {
             startActivity(IntentHelper.getSyncContactsScreen(requireActivity()))
-            // retreiveGoogleContacts()
         }
+
         binding.layout.etSearchFriend.setOnClickListener {
             startActivity(IntentHelper.getSearchScreen(requireContext()))
         }
+
         requestPermissions(permissions, WRITE_REQUEST_CODE)
         binding.layout.buttonEditProfile.visibility = View.VISIBLE
 
         val radius = resources.getDimension(R.dimen.dp_10)
-
         binding.ivBackground.shapeAppearanceModel = binding.ivBackground.shapeAppearanceModel
             .toBuilder()
             .setBottomLeftCorner(CornerFamily.ROUNDED, radius)
@@ -164,7 +166,6 @@ class FragmentProfile() : BaseFragment(),
             .build()
         getUserProfileData()
         binding.ivBackground.setOnClickListener {
-
             startActivity(
                 IntentHelper.getFullImageScreen(requireActivity())!!
                     .putExtra("picture", userData.cover_img1)
@@ -197,10 +198,23 @@ class FragmentProfile() : BaseFragment(),
 
 
 
-        binding.toolbar.tvhead.text = "Profile"
-        binding.toolbar.topAppBar.setNavigationOnClickListener {
+        binding.toolbar.ivButtonSearch.setImageResource(R.drawable.ic_profile_searchbar)
+        binding.toolbar.ivButtonSearch.setOnClickListener {
+            startActivity(IntentHelper.getSearchScreen(requireContext()))
+        }
+        binding.toolbar.ivButtonMenu.setImageResource(R.drawable.menu)
+        binding.toolbar.ivButtonMenu.setOnClickListener {
+            //ShowMenu from here
             try {
-                (requireActivity() as ActivityDashboardNew).onBackPressed()
+                (requireActivity() as ActivityDashboard).loadDrawerFragment()
+            } catch (e: ClassCastException) {
+                (requireActivity() as ActivitySettings).onBackPressed()
+            }
+        }
+
+        binding.ivBack.setOnClickListener {
+            try {
+                (requireActivity() as ActivityDashboard).onBackPressed()
             } catch (e: ClassCastException) {
                 (requireActivity() as ActivitySettings).onBackPressed()
             }
@@ -256,9 +270,8 @@ class FragmentProfile() : BaseFragment(),
                     .setInterpolator(LinearInterpolator()).start()
                 scrollEnable = false
                 Handler(Looper.getMainLooper()).postDelayed(Runnable { scrollEnable = true }, 150)
+
             }
-
-
         } else {
             if (scrollEnable) {
                 binding.toolbar.root.animate().translationY(0f)
@@ -266,9 +279,6 @@ class FragmentProfile() : BaseFragment(),
                 scrollEnable = false
                 Handler(Looper.getMainLooper()).postDelayed(Runnable { scrollEnable = true }, 150)
             }
-
-
-            //   binding.navigationBar.root.setVisibility(View.VISIBLE)
         }
     }
 
@@ -526,6 +536,10 @@ class FragmentProfile() : BaseFragment(),
 
 
     override fun onClickOnViewComments(postId: Int) {
+
+    }
+
+    override fun onCLickItem(item: ResultFuntime) {
 
     }
 

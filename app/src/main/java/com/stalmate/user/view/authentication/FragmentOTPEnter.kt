@@ -20,7 +20,7 @@ import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentOTPEnterBinding
 import com.stalmate.user.databinding.SignUpSuccessPoppuBinding
 import com.stalmate.user.utilities.PrefManager
-import com.stalmate.user.view.dashboard.ActivityDashboardNew
+import com.stalmate.user.view.dashboard.ActivityDashboard
 import java.util.*
 
 
@@ -247,7 +247,7 @@ class FragmentOTPEnter : BaseFragment() {
 
                     Handler(Looper.myLooper() ?: Looper.getMainLooper()).postDelayed({
                         successdialogBuilder?.dismiss()
-                        startActivity(Intent(requireContext(), ActivityDashboardNew::class.java))
+                        startActivity(Intent(requireContext(), ActivityDashboard::class.java))
                         (context as ActivityAuthentication).finish()
                     }, 3000)
                 } else {

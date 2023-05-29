@@ -18,7 +18,7 @@ import com.stalmate.user.modules.reels.activity.ActivitySettings
 import com.stalmate.user.utilities.Constants
 import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.view.About.AboutActivity
-import com.stalmate.user.view.dashboard.ActivityDashboardNew
+import com.stalmate.user.view.dashboard.ActivityDashboard
 
 class FragmentSettingListing : Fragment(), MainSettingCategoryAdapter.Callbackk {
     lateinit var binding: com.stalmate.user.databinding.FragmentSettingListingBinding
@@ -51,7 +51,11 @@ class FragmentSettingListing : Fragment(), MainSettingCategoryAdapter.Callbackk 
         Glide.with(requireActivity())
             .load(PrefManager.getInstance(requireContext())!!.userProfileDetail.results.profile_img1)
             .placeholder(R.drawable.user_placeholder).circleCrop().into(binding.userProfileImage)
-        binding.tvUserName.setText(PrefManager.getInstance(requireContext())!!.userProfileDetail.results.first_name+PrefManager.getInstance(requireContext())!!.userProfileDetail.results.last_name)
+        binding.tvUserName.setText(
+            PrefManager.getInstance(requireContext())!!.userProfileDetail.results.first_name + PrefManager.getInstance(
+                requireContext()
+            )!!.userProfileDetail.results.last_name
+        )
         binding.tvAbout.setText(PrefManager.getInstance(requireContext())!!.userProfileDetail.results.city)
         binding.userProfileImage.setOnClickListener {
             findNavController().navigate(R.id.action_fragment_setting_main_to_profileFragment)
@@ -100,16 +104,11 @@ class FragmentSettingListing : Fragment(), MainSettingCategoryAdapter.Callbackk 
             Constants.SETTING_TYPE_ABOUT_US -> {
                 startActivity(Intent(requireContext(), AboutActivity::class.java))
             }
-
             Constants.SETTING_TYPE_LEGAL -> {
                 findNavController().navigate(R.id.action_fragment_setting_main_to_legalFragment)
             }
-
         }
-
     }
-
-
 }
 
 

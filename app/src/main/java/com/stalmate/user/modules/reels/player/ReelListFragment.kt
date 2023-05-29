@@ -205,16 +205,13 @@ class ReelListFragment : BaseFragment(), ReelAdapter.Callback {
     private fun callApi() {
         isApiRuning = true
         val index = 0
-
-
-        var hashmap = HashMap<String, String>()
+        val hashmap = HashMap<String, String>()
         hashmap.put("page", page_count.toString())
         if (isSelfVideos) {
             hashmap.put("id_user", adapter.reelList[0].user_id.toString())
         } else {
             hashmap.put("id_user", "")
         }
-
         hashmap.put("fun_id", "")
         hashmap.put("limit", "5")
         networkViewModel.funtimeLiveData(prefManager?.access_token.toString(), hashmap)
@@ -247,12 +244,9 @@ class ReelListFragment : BaseFragment(), ReelAdapter.Callback {
                 binding.recyclerView.findViewHolderForAdapterPosition(videoAutoPlayHelper!!.currentPlayingVideoItemPos);
             if (viewholder != null) {
                 val viewMainHolder = (viewholder as VideoReelViewHolder)
-
                 /*  if ((requireActivity()  as ActivityDashboard).active is FragmentFunTime){
                       viewMainHolder.customPlayerView.startPlaying()
                   }*/
-
-
             }
         }
         super.onStart()
@@ -309,7 +303,6 @@ class ReelListFragment : BaseFragment(), ReelAdapter.Callback {
         startActivityForResult(
             IntentHelper.getFullViewReelActivity(context)!!.putExtra("data", resultFuntime), 120
         )
-
         //  startForResultReels.launch(IntentHelper.getFullViewReelActivity(requireContext()))
     }
 

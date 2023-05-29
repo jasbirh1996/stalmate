@@ -24,13 +24,11 @@ class UserHomeStoryAdapter(
     RecyclerView.Adapter<UserHomeStoryAdapter.FeedViewHolder>() {
     var list = ArrayList<Feed>()
 
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
     ): UserHomeStoryAdapter.FeedViewHolder {
-
-        var view =
+        val view =
             LayoutInflater.from(parent.context).inflate(R.layout.item_home_story, parent, false)
         return FeedViewHolder(DataBindingUtil.bind<ItemHomeStoryBinding>(view)!!)
     }
@@ -57,7 +55,6 @@ class UserHomeStoryAdapter(
             binding.root.setOnClickListener {
                 context.startActivity(IntentHelper.getStoryActivity(context))
             }
-
 
 
         }

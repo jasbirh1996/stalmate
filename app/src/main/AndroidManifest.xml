@@ -68,6 +68,9 @@
         <uses-native-library
             android:name="libOpenCL-pixel.so"
             android:required="false" />-->
+
+        <activity android:name=".view.dashboard.Friend.FragmentFriend"
+            android:exported="false"/>
         <activity
             android:name=".view.settings.TermsAndConditionsAndPrivacyPolicyAndFaqs"
             android:exported="false" />
@@ -115,7 +118,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".view.dashboard.ActivityDashboardNew"
+            android:name=".view.dashboard.ActivityDashboard"
             android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
@@ -216,13 +219,6 @@
             android:name=".view.profile.ActivitySideDawer"
             android:exported="false"
             android:launchMode="singleTop" />
-        <activity
-            android:name=".view.dashboard.ActivityDashboard"
-            android:excludeFromRecents="true"
-            android:exported="false"
-            android:hardwareAccelerated="true"
-            android:launchMode="singleTop"
-            android:taskAffinity="" />
         <activity
             android:name=".modules.reels.activity.ActivityVideoEditor"
             android:exported="false"

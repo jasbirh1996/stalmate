@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import com.stalmate.user.utilities.Constants
-import com.stalmate.user.view.dashboard.ActivityDashboardNew
+import com.stalmate.user.view.dashboard.ActivityDashboard
 
 
 class Authenticator(context: Context) : AbstractAccountAuthenticator(context) {
@@ -23,7 +23,7 @@ class Authenticator(context: Context) : AbstractAccountAuthenticator(context) {
         accountType: String, authTokenType: String, requiredFeatures: Array<String>,
         options: Bundle
     ): Bundle {
-        val intent = Intent(mContext, ActivityDashboardNew::class.java)
+        val intent = Intent(mContext, ActivityDashboard::class.java)
         intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response)
         val bundle = Bundle()
         bundle.putParcelable(AccountManager.KEY_INTENT, intent)

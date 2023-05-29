@@ -17,7 +17,7 @@ import com.google.firebase.messaging.RemoteMessage
 import com.google.gson.Gson
 import com.stalmate.user.R
 import com.stalmate.user.utilities.Constants
-import com.stalmate.user.view.dashboard.ActivityDashboardNew
+import com.stalmate.user.view.dashboard.ActivityDashboard
 
 
 /**
@@ -62,7 +62,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             mChannel.enableLights(true)
             mChannel.lightColor = Color.RED
             notificationManager.createNotificationChannel(mChannel)
-            val intent = Intent(this, ActivityDashboardNew::class.java)
+            val intent = Intent(this, ActivityDashboard::class.java)
           //  intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
 
@@ -137,7 +137,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             }
 
             // Create an explicit intent for an Activity in your app
-            val intent = Intent(this, ActivityDashboardNew::class.java)
+            val intent = Intent(this, ActivityDashboard::class.java)
             intent.putExtra("notificationType", remoteMessage.data["notificationType"])
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
             val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)

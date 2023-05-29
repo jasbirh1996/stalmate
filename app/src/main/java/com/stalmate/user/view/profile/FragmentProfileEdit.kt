@@ -41,6 +41,7 @@ import com.stalmate.user.utilities.PriceFormatter
 import com.stalmate.user.utilities.SpinnerUtil.setSpinner
 import com.stalmate.user.utilities.ValidationHelper
 import com.stalmate.user.view.dashboard.funtime.ActivityFuntimePost
+import com.stalmate.user.view.dashboard.funtime.ResultFuntime
 import com.stalmate.user.view.dialogs.DialogAddEditEducation
 import com.stalmate.user.view.dialogs.DialogAddEditProfession
 import com.stalmate.user.view.dialogs.DialogVerifyNumber
@@ -352,13 +353,16 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
         professionListAdapter.notifyDataSetChanged()
         binding.rvFeeds.layoutManager = LinearLayoutManager(requireContext())
 
-        networkViewModel.getFeedList(prefManager?.access_token.toString(), HashMap())
-        networkViewModel.feedLiveData.observe(requireActivity()) {
+        val hashmap = HashMap<String, String>()
+        hashmap.put("page", 1.toString())
+        hashmap.put("id_user", "")
+        hashmap.put("fun_id", "")
+        hashmap.put("limit", "5")
+        networkViewModel.funtimeLiveData(prefManager?.access_token.toString(), hashmap)
+        networkViewModel.funtimeLiveData.observe(requireActivity()) {
             it.let {
                 if (!it?.results.isNullOrEmpty()) {
                     it?.results?.let { it1 -> feedAdapter.submitList(it1) }
-                } else {
-                    it?.reponse?.let { it1 -> feedAdapter.submitList(it1) }
                 }
             }
         }
@@ -752,6 +756,10 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
 
     override fun onClickOnViewComments(postId: Int) {
         TODO("Not yet implemented")
+    }
+
+    override fun onCLickItem(item: ResultFuntime) {
+
     }
 
     override fun onSuccessFullyAddNumber() {

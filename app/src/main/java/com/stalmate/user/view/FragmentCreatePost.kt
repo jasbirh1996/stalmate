@@ -15,6 +15,7 @@ import com.stalmate.user.model.Feed
 import com.stalmate.user.model.User
 import com.stalmate.user.view.adapter.SuggestedFriendAdapter
 import com.stalmate.user.view.adapter.UserHomeStoryAdapter
+import com.stalmate.user.view.dashboard.funtime.ResultFuntime
 
 
 class FragmentCreatePost : BaseFragment(), AdapterFeed.Callbackk, UserHomeStoryAdapter.Callbackk,
@@ -64,6 +65,10 @@ class FragmentCreatePost : BaseFragment(), AdapterFeed.Callbackk, UserHomeStoryA
     }
 
     override fun onClickOnViewComments(postId: Int) {
+
+    }
+
+    override fun onCLickItem(item: ResultFuntime) {
 
     }
 

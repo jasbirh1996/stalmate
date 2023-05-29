@@ -15,6 +15,7 @@ import com.stalmate.user.databinding.FragmentProfileActivityLogBinding
 import com.stalmate.user.model.User
 import com.stalmate.user.utilities.Constants
 import com.stalmate.user.view.adapter.SuggestedFriendAdapter
+import com.stalmate.user.view.dashboard.funtime.ResultFuntime
 
 class FragmentProfileActivityLog : BaseFragment(), AdapterFeed.Callbackk,
     SuggestedFriendAdapter.Callbackk {
@@ -46,14 +47,17 @@ class FragmentProfileActivityLog : BaseFragment(), AdapterFeed.Callbackk,
         binding.shimmerLayoutFeeds.startShimmer()
         binding.rvFeeds.adapter = feedAdapter
         binding.rvFeeds.layoutManager = LinearLayoutManager(context)
-        networkViewModel.getFeedList(prefManager?.access_token.toString(), HashMap())
-        networkViewModel.feedLiveData.observe(viewLifecycleOwner, Observer {
+        val hashmap = HashMap<String, String>()
+        hashmap.put("page", 1.toString())
+        hashmap.put("id_user", "")
+        hashmap.put("fun_id", "")
+        hashmap.put("limit", "5")
+        networkViewModel.funtimeLiveData(prefManager?.access_token.toString(), hashmap)
+        networkViewModel.funtimeLiveData.observe(viewLifecycleOwner, Observer {
             Log.d("asdasdasd", "oaspiasddsad")
             it.let {
                 if (!it?.results.isNullOrEmpty()) {
                     it?.results?.let { it1 -> feedAdapter.submitList(it1) }
-                } else {
-                    it?.reponse?.let { it1 -> feedAdapter.submitList(it1) }
                 }
                 binding.shimmerLayoutFeeds.stopShimmer()
                 binding.rvFeeds.visibility = View.VISIBLE
@@ -90,6 +94,10 @@ class FragmentProfileActivityLog : BaseFragment(), AdapterFeed.Callbackk,
     }
 
     override fun onClickOnViewComments(postId: Int) {
+
+    }
+
+    override fun onCLickItem(item: ResultFuntime) {
 
     }
 

@@ -1,23 +1,17 @@
 package com.stalmate.user.view.Splash
 
 import android.content.Intent
-import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
-import android.view.Window
-import android.view.WindowInsets
 import android.view.WindowManager
-import androidx.annotation.RequiresApi
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.view.OnBoarding.ActivityOnBoardingScreen
 import com.stalmate.user.view.authentication.ActivityAuthentication
 import com.stalmate.user.view.dashboard.ActivityDashboard
-import com.stalmate.user.view.dashboard.ActivityDashboardNew
 
 class ActivitySplash : BaseActivity() {
     val SPLASH_DURATION: Long = 1000
@@ -38,7 +32,7 @@ class ActivitySplash : BaseActivity() {
         prefManager1 = PrefManager(context)
         Handler(Looper.getMainLooper()).postDelayed({
             if (prefManager1.keyIsLoggedIn) {
-                startActivity(Intent(applicationContext, ActivityDashboardNew::class.java))
+                startActivity(Intent(applicationContext, ActivityDashboard::class.java))
                 finish()
             } else {
                 if (prefManager1.keyIsOldusere) {
