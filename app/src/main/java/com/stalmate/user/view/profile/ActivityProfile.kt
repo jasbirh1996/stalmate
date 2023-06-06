@@ -1,6 +1,5 @@
 package com.stalmate.user.view.profile
 
-import android.Manifest
 import android.accounts.Account
 import android.accounts.AccountManager
 import android.app.ActivityOptions
@@ -18,7 +17,7 @@ import com.canhub.cropper.CropImageView
 import com.canhub.cropper.options
 import com.google.android.material.shape.CornerFamily
 import com.google.android.material.tabs.TabLayout
-import com.stalmate.user.Helper.IntentHelper
+import com.stalmate.user.intentHelper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.commonadapters.AdapterFeed
@@ -270,6 +269,22 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
     }
 
     override fun onCLickItem(item: ResultFuntime) {
+
+    }
+
+    override fun onClickOnLikeButtonReel(feed: ResultFuntime) {
+
+    }
+
+    override fun onClickOnFollowButtonReel(feed: ResultFuntime) {
+
+    }
+
+    override fun onSendComment(feed: ResultFuntime, comment: String) {
+
+    }
+
+    override fun onCaptureImage(feed: ResultFuntime, position: Int) {
 
     }
 

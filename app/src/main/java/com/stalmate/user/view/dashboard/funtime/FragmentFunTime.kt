@@ -1,10 +1,7 @@
 package com.stalmate.user.view.dashboard.funtime
 
-import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
-import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,20 +9,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import androidx.viewpager.widget.ViewPager.OnPageChangeListener
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.Player
-import com.stalmate.user.Helper.IntentHelper
+import com.stalmate.user.intentHelper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentFunTimeBinding
-import com.stalmate.user.databinding.FragmentreellistBinding
-import com.stalmate.user.modules.reels.player.Constants
 import com.stalmate.user.modules.reels.player.ReelListFragment
-import com.stalmate.user.modules.reels.player.VideoPreLoadingService
 import com.stalmate.user.view.dashboard.ActivityDashboard
-import fr.castorflex.android.verticalviewpager.VerticalViewPager
 
 class FragmentFunTime() : BaseFragment(), FragmentCallBack {
     var handler: Handler? = null

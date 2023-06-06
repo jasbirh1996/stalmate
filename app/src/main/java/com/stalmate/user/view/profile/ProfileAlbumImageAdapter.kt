@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.stalmate.user.Helper.IntentHelper
+import com.stalmate.user.intentHelper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.databinding.ItemProfileCoverBinding
 import com.stalmate.user.model.AlbumImage
@@ -13,19 +13,32 @@ import com.stalmate.user.model.AlbumImage
 import com.stalmate.user.utilities.ImageLoaderHelperGlide
 import com.stalmate.user.viewmodel.AppViewModel
 
-class ProfileAlbumImageAdapter(val viewModel: AppViewModel, val context: Context, val type : String)
-    : RecyclerView.Adapter<ProfileAlbumImageAdapter.AlbumViewHolder>() {
+class ProfileAlbumImageAdapter(
+    val viewModel: AppViewModel,
+    val context: Context,
+    val type: String
+) : RecyclerView.Adapter<ProfileAlbumImageAdapter.AlbumViewHolder>() {
 
     var list = ArrayList<AlbumImage>()
 
 
-    inner class AlbumViewHolder(var binding : ItemProfileCoverBinding): RecyclerView.ViewHolder(binding.root) {
+    inner class AlbumViewHolder(var binding: ItemProfileCoverBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(response : AlbumImage){
-            ImageLoaderHelperGlide.setGlideCorner(context,binding.ivImage,response.files,R.drawable.user_placeholder)
+        fun bind(response: AlbumImage) {
+            ImageLoaderHelperGlide.setGlideCorner(
+                context,
+                binding.ivImage,
+                response.files.replace(".com", ".com/"),
+                R.drawable.user_placeholder
+            )
 
             binding.ivImage.setOnClickListener {
-                context.startActivity(IntentHelper.getPhotoGalleryAlbumScreen(context)!!.putExtra("albumId", response.album_id).putExtra("imageId", response._id).putExtra("viewType","viewFullScreen"))
+                context.startActivity(
+                    IntentHelper.getPhotoGalleryAlbumScreen(context)!!
+                        .putExtra("albumId", response.album_id).putExtra("imageId", response._id)
+                        .putExtra("viewType", "viewFullScreen")
+                )
 
             }
         }
@@ -39,7 +52,8 @@ class ProfileAlbumImageAdapter(val viewModel: AppViewModel, val context: Context
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlbumViewHolder {
-        var view = LayoutInflater.from(parent.context).inflate(R.layout.item_profile_cover, parent, false)
+        var view =
+            LayoutInflater.from(parent.context).inflate(R.layout.item_profile_cover, parent, false)
         return AlbumViewHolder(DataBindingUtil.bind<ItemProfileCoverBinding>(view)!!)
     }
 

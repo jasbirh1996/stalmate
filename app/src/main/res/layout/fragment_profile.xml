@@ -167,8 +167,12 @@
 
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/tabLayout"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    app:tabGravity="start"
+                    android:layout_marginStart="@dimen/_15sdp"
+                    app:tabIndicatorGravity="bottom"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/layout" />
 
                 <androidx.viewpager2.widget.ViewPager2

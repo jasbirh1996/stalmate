@@ -24,7 +24,7 @@ class AdapterPhotoIndex(private var context : Context) : RecyclerView.Adapter<Ad
        fun bind(photo : Photo){
 
            Glide.with(context)
-               .load(photo.files)
+               .load(photo.files.replace(".com",".com/"))
                .placeholder(R.drawable.user_placeholder)
                .into(binding.ivIndexPhoto)
 

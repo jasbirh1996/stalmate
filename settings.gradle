@@ -26,5 +26,6 @@ dependencyResolutionManagement {
         }
     }
 }
+
 rootProject.name = "Slatmate"
-include ':app', ':deepar'
+include ':app', ':deepar', ':supernova-emoji-library'

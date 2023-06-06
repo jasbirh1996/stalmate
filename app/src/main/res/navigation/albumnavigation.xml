@@ -5,7 +5,6 @@
     android:id="@+id/albumnavigation"
     app:startDestination="@id/fragmentAlbumPhoto">
 
-
     <fragment
         android:id="@+id/fragmentAlbumPhoto"
         android:name="com.stalmate.user.view.photoalbum.FragmentAlbumPhotoList"

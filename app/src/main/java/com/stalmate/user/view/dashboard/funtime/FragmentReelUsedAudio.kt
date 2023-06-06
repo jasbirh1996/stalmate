@@ -15,7 +15,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.work.*
 import com.google.gson.Gson
-import com.stalmate.user.Helper.IntentHelper
+import com.stalmate.user.intentHelper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentReelUsedAudioBinding

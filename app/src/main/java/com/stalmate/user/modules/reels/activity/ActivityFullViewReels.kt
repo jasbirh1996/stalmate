@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SnapHelper
-import com.stalmate.user.Helper.IntentHelper
+import com.stalmate.user.intentHelper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.databinding.ActivityFullViewReelsBinding
@@ -184,8 +184,7 @@ class ActivityFullViewReels : BaseActivity(), ReelFullViewAdapter.Callback {
 
 
     override fun onPause() {
-        var viewholder =
-            binding.recyclerView.findViewHolderForAdapterPosition(videoAutoPlayHelper!!.currentPlayingVideoItemPos);
+        val viewholder = binding.recyclerView.findViewHolderForAdapterPosition(videoAutoPlayHelper!!.currentPlayingVideoItemPos);
         val viewMainHolder = (viewholder as VideoReelFullViewHolder)
         viewMainHolder.customPlayerView.removePlayer()
         super.onPause()

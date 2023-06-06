@@ -7,13 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
-import com.stalmate.user.Helper.IntentHelper
+import com.stalmate.user.intentHelper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentProfileFuntimeBinding
-import com.stalmate.user.utilities.ImageLoaderHelperGlide
-import com.stalmate.user.utilities.PrefManager
-import com.stalmate.user.utilities.ValidationHelper
 import com.stalmate.user.view.dashboard.funtime.ReelVideosByAudioAdapter
 import com.stalmate.user.view.dashboard.funtime.ResultFuntime
 

@@ -17,6 +17,7 @@ data class Comment(
     val Created_date:String,
     val author: String,
     val comment: String,
+    val comment_image: String,
     var replies: MutableList<Comment> = mutableListOf(),
     val parentId: String? = null,
     var isLiked : String? = null,

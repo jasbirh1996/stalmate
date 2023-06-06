@@ -6,14 +6,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.stalmate.user.Helper.IntentHelper
+import com.stalmate.user.intentHelper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.databinding.ItemHomeStoryBinding
-import com.stalmate.user.databinding.ItemProfileFriendBinding
 import com.stalmate.user.model.Feed
 
-import com.stalmate.user.model.User
-import com.stalmate.user.utilities.ImageLoaderHelperGlide
 import com.stalmate.user.viewmodel.AppViewModel
 
 class UserHomeStoryAdapter(

@@ -14,22 +14,21 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.stalmate.user.Helper.IntentHelper
+import com.stalmate.user.intentHelper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.databinding.HorizontalItemReelBinding
 import com.stalmate.user.databinding.ItemFullViewReelBinding
+import com.stalmate.user.modules.reels.activity.ActivityFullViewReels
 import com.stalmate.user.modules.reels.player.ImageAdapter
 import com.stalmate.user.modules.reels.player.holders.ImageReelViewHolder
 import com.stalmate.user.modules.reels.player.holders.ReelViewHolder
 import com.stalmate.user.modules.reels.player.holders.VideoReelFullViewHolder
 import com.stalmate.user.utilities.SeeModetextViewHelper
 import com.stalmate.user.utilities.ValidationHelper
-import com.stalmate.user.view.dashboard.ActivityDashboard
 import com.stalmate.user.view.dashboard.funtime.*
 import com.stalmate.user.view.dialogs.CommonConfirmationDialog
 import com.stalmate.user.view.dialogs.SuccessDialog
-import com.stalmate.user.viewmodel.AppViewModel
 
 
 class ReelFullViewAdapter(
@@ -150,10 +149,10 @@ class ReelFullViewAdapter(
         holder.likeCount.text = reelList[position].like_count.toString()
         holder.commentCount.text = reelList[position].comment_count.toString()
         holder.shareCount.text = reelList[position].share_count.toString()
-        if ((reelList[position].tag_user?.size?:0) > 0) {
+        if ((reelList[position].tag_user?.size ?: 0) > 0) {
             holder.layoutTagged.visibility = View.VISIBLE
             holder.tvTaggedPeopleCount.text =
-                (reelList[position].tag_user?.size?:0).toString() + " People Tagged"
+                (reelList[position].tag_user?.size ?: 0).toString() + " People Tagged"
             holder.tvTaggedPeopleCount.setOnClickListener {
 
 
@@ -161,7 +160,7 @@ class ReelFullViewAdapter(
                     var dialogFragmen = FragmentBSTaggedUsers(it)
                     dialogFragmen.show((context as AppCompatActivity).supportFragmentManager, "")
                 }
-                reelList[position].isDataUpdated=true
+                reelList[position].isDataUpdated = true
             }
         }
 
@@ -200,7 +199,7 @@ class ReelFullViewAdapter(
                 holder.likeCount.text = reelList[position].like_count.toString()
                 reelList[position].isLiked = "Yes"
             }
-            reelList[position].isDataUpdated=true
+            reelList[position].isDataUpdated = true
             callback.onClickOnLikeButtonReel(reelList[position])
         }
 
@@ -223,37 +222,38 @@ class ReelFullViewAdapter(
         holder.buttonAdd.setOnClickListener {
             context.startActivity(IntentHelper.getCreateReelsScreen(context))
         }
-
-
+        val dialogFragmentComment = DialogFragmentCommentWithVideo(
+            (context as BaseActivity).networkViewModel,
+            reelList[position], object : DialogFragmentCommentWithVideo.Callback {
+                override fun funOnCommentDialogDismissed(commentCount: Int) {
+                    reelList[position].isDataUpdated = true
+                    holder.commentCount.text = commentCount.toString()
+                    if (!reelList[position].file_type.contains("image", true))
+                        holder.customPlayerView.getPlayer()?.play()
+                }
+            }
+        )
         holder.buttonComment.setOnClickListener {
-            var dialogFragmen = DialogFragmentCommentWithVideo(
-                (context as BaseActivity).networkViewModel,
-                reelList[position], object : DialogFragmentCommentWithVideo.Callback {
-                    override fun funOnCommentDialogDismissed(commentCount: Int) {
-                        reelList[position].isDataUpdated=true
-                        holder.commentCount.text = commentCount.toString()
-                        holder.customPlayerView.getPlayer()!!.play()
-                    }
-                }
+            if (!reelList[position].file_type.contains("image", true))
+                holder.customPlayerView.getPlayer()?.pause()
+            dialogFragmentComment.show(
+                (context as ActivityFullViewReels).supportFragmentManager,
+                ""
             )
-
-            holder.customPlayerView.getPlayer()!!.pause()
-
-            dialogFragmen.show((context as AppCompatActivity).supportFragmentManager, "")
         }
-        holder.buttonShare.setOnClickListener {
-            var dialogFragmen = DialogFragmentShareWithFriends(
-                (context as BaseActivity).networkViewModel,
-                reelList[position], object : DialogFragmentShareWithFriends.CAllback {
-                    override fun onTotalShareCountFromDialog(count: Int) {
-                        reelList[position].share_count = reelList[position].share_count + count
-                        holder.shareCount.setText("${reelList[position].share_count}")
-                        reelList[position].isDataUpdated=true
-                    }
-
+        val dialogFragmentShares = DialogFragmentShareWithFriends(
+            (context as BaseActivity).networkViewModel,
+            reelList[position], object : DialogFragmentShareWithFriends.CAllback {
+                override fun onTotalShareCountFromDialog(count: Int) {
+                    reelList[position].share_count = reelList[position].share_count + count
+                    holder.shareCount.setText("${reelList[position].share_count}")
+                    reelList[position].isDataUpdated = true
                 }
-            )
-            dialogFragmen.show((context as AppCompatActivity).supportFragmentManager, "")
+
+            }
+        )
+        holder.buttonShare.setOnClickListener {
+            dialogFragmentShares.show((context as AppCompatActivity).supportFragmentManager, "")
         }
 
 
@@ -286,7 +286,10 @@ class ReelFullViewAdapter(
                                 dialog.show()
                             }
                             3 -> {
-                                context.startActivity(IntentHelper.getReportUserScreen(context)!!.putExtra("id",reelList[position].id))
+                                context.startActivity(
+                                    IntentHelper.getReportUserScreen(context)!!
+                                        .putExtra("id", reelList[position].id)
+                                )
                             }
                             4 -> {
                                 val dialog = CommonConfirmationDialog(
@@ -401,22 +404,22 @@ class ReelFullViewAdapter(
 
     fun blockUserFromList(position: Int) {
 
-     //   reelList.removeAt(position)
-     //   notifyItemRemoved(position)
+        //   reelList.removeAt(position)
+        //   notifyItemRemoved(position)
         notifyDataSetChanged()
-    /*    var listsize=reelList.size
-        var deletionCount=0
-        for (i in 0 until listsize) {
-            Log.d("lkajsdlasd",i.toString())
-            if (reelList[i].user_id == userId) {
-                deletionCount++
-                Log.d("lkajsdlasd",listsize.toString())
-                reelList.removeAt(i)
-                listsize--
+        /*    var listsize=reelList.size
+            var deletionCount=0
+            for (i in 0 until listsize) {
+                Log.d("lkajsdlasd",i.toString())
+                if (reelList[i].user_id == userId) {
+                    deletionCount++
+                    Log.d("lkajsdlasd",listsize.toString())
+                    reelList.removeAt(i)
+                    listsize--
+                }
             }
-        }
-       // notifyItemRangeRemoved(0,deletionCount)
-        notifyItemRangeChanged(0, getItemCount());*/
+           // notifyItemRangeRemoved(0,deletionCount)
+            notifyItemRangeChanged(0, getItemCount());*/
     }
 
 }

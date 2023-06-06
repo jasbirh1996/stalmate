@@ -11,15 +11,13 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.stalmate.user.Helper.IntentHelper
+import com.stalmate.user.intentHelper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentFriendListBinding
 import com.stalmate.user.model.User
 import com.stalmate.user.utilities.Constants
 import com.stalmate.user.view.adapter.FriendAdapter
-import com.stalmate.user.view.dashboard.HomeFragment.FragmentGlobalSearch
-import com.stalmate.user.view.dashboard.HomeFragment.FragmentPeopleSearch
 
 class FragmentFriendList(var type: String, var subtype: String,var userId:String) : BaseFragment(), FriendAdapter.Callbackk {
     lateinit var friendAdapter: FriendAdapter

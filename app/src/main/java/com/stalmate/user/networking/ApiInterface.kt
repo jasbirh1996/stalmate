@@ -220,18 +220,34 @@ interface ApiInterface {
 
 
     @POST(Constants.URL_COMMENT_LIST)
-    fun getCommentList(@Body map: HashMap<String, String>): Call<ModelGetComment>
+    fun getCommentList(
+        @Header("access_token") access_token: String,
+        @Body map: HashMap<String, String>
+    ): Call<ModelGetComment>
 
-
-    @POST(Constants.URL_REPLY_LIST)
-    fun getReplyList(@Body map: HashMap<String, String>): Call<ModelGetComment>
-
+    @Multipart
     @PATCH(Constants.URL_ADD_COMMENT)
-    fun addComment(@Body map: HashMap<String, String>): Call<ModelComment>
+    fun addComment(
+        @Header("access_token") access_token: String,
+        @Part("funtime_id") funtime_id: RequestBody,
+        @Part("comment") comment: RequestBody,
+        @Part("id") id: RequestBody,
+        @Part("comment_id") comment_id: RequestBody,
+        @Part("is_delete") is_delete: RequestBody,
+        @Part images: MultipartBody.Part?
+    ): Call<ModelComment>
+
+    @Multipart
+    @POST(Constants.URL_ADD_COMMENT)
+    fun addComment1(
+        @Header("access_token") access_token: String,
+        @Part("funtime_id") funtime_id: RequestBody,
+        @Part("comment") comment: RequestBody,
+        @Part images: MultipartBody.Part?
+    ): Call<ModelComment>
 
     @PATCH(Constants.URL_LIKE_COMMENT)
     fun likeComment(@Body map: HashMap<String, String>): Call<ModelSuccess>
-
 
     @Multipart
     @POST(Constants.UPDATE_PROFILE_API)

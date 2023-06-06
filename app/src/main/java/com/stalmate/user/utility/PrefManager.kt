@@ -13,7 +13,6 @@ class PrefManager(private val context: Context) {
     var PRIVATE_MODE = 0
 
 
-
     var keyIsLoggedIn: Boolean
         get() = getBooleanValue(KEY_IS_LOGGED_IN)
         set(value) {
@@ -33,7 +32,6 @@ class PrefManager(private val context: Context) {
         get() = getBooleanValue(KEY_IS_OLD_USER)
 
 
-
     var userDetail: ModelLoginResponse
         get() {
             val gson = Gson()
@@ -46,7 +44,6 @@ class PrefManager(private val context: Context) {
             editor.putString(KEY_USER_DETAILS, json)
             editor.commit()
         }
-
 
 
     var userProfileDetail: ModelUser
@@ -63,7 +60,6 @@ class PrefManager(private val context: Context) {
         }
 
     /*
-
     public void setCurrentWeddingDetail(ModelWeddingList.DataBean modelWeddingList) {
         Gson gson = new Gson();
         String json = gson.toJson(modelWeddingList);

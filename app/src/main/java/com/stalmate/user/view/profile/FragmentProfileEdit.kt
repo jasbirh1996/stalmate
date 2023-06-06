@@ -13,8 +13,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -28,7 +26,7 @@ import com.canhub.cropper.CropImageView
 import com.canhub.cropper.options
 import com.google.android.material.shape.CornerFamily
 import com.google.android.material.tabs.TabLayout
-import com.stalmate.user.Helper.IntentHelper
+import com.stalmate.user.intentHelper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.base.BaseFragment
@@ -37,10 +35,8 @@ import com.stalmate.user.databinding.FragmentProfileEditBinding
 import com.stalmate.user.model.*
 import com.stalmate.user.utilities.Constants
 import com.stalmate.user.utilities.ImageLoaderHelperGlide
-import com.stalmate.user.utilities.PriceFormatter
 import com.stalmate.user.utilities.SpinnerUtil.setSpinner
 import com.stalmate.user.utilities.ValidationHelper
-import com.stalmate.user.view.dashboard.funtime.ActivityFuntimePost
 import com.stalmate.user.view.dashboard.funtime.ResultFuntime
 import com.stalmate.user.view.dialogs.DialogAddEditEducation
 import com.stalmate.user.view.dialogs.DialogAddEditProfession
@@ -759,6 +755,22 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
     }
 
     override fun onCLickItem(item: ResultFuntime) {
+
+    }
+
+    override fun onClickOnLikeButtonReel(feed: ResultFuntime) {
+
+    }
+
+    override fun onClickOnFollowButtonReel(feed: ResultFuntime) {
+
+    }
+
+    override fun onSendComment(feed: ResultFuntime, comment: String) {
+
+    }
+
+    override fun onCaptureImage(feed: ResultFuntime, position: Int) {
 
     }
 

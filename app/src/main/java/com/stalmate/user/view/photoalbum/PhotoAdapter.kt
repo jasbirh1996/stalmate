@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.databinding.ItemPhotoLayoutBinding
 import com.stalmate.user.model.Photo
@@ -52,7 +51,7 @@ class PhotoAdapter(val viewModel: AppViewModel, val context: Context,var callbac
         fun bind(feed: Photo) {
 
 
-            Glide.with(context).load(feed.files)
+            Glide.with(context).load(feed.files.replace(".com",".com/"))
                 .placeholder(R.drawable.profileplaceholder)
                 .into(binding.image)
 

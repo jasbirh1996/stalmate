@@ -3,7 +3,6 @@ package com.stalmate.user.view.profile
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.databinding.DataBindingUtil
 import com.stalmate.user.R
 import com.stalmate.user.base.App
@@ -23,8 +22,8 @@ class ActivitySideDawer : AppCompatActivity() {
             PrefManager.getInstance(this)!!.keyIsLoggedIn = false
             startActivity(Intent(this, ActivityAuthentication::class.java))
         }
-        binding.tvUserName.text = PrefManager.getInstance(App.getInstance())!!.userProfileDetail.results.first_name + " " +  PrefManager.getInstance(
-            App.getInstance())!!.userProfileDetail.results.last_name
+        binding.tvUserName.text = PrefManager.getInstance(App.getInstance())?.userProfileDetail?.results?.first_name + " " +  PrefManager.getInstance(
+            App.getInstance())?.userProfileDetail?.results?.last_name
 
         binding.btnBack.setOnClickListener {
             onBackPressed()

@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:emojicon="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clMain"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white">
@@ -31,9 +33,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:background="@color/colorGray"
-                    app:layout_constraintBottom_toBottomOf="@+id/toolbar"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/layoutStatus"
@@ -122,7 +124,6 @@
             android:id="@+id/layoutBottom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
@@ -134,6 +135,27 @@
                 android:background="@color/colorGray"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/ivCommentImage"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/user_placeholder"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="@id/ivUserImage"
+                app:layout_constraintTop_toBottomOf="@id/view16"
+                app:riv_corner_radius="@dimen/_5sdp" />
+
+            <ImageView
+                android:id="@+id/ivDeleteCommentImage"
+                android:layout_width="@dimen/_15sdp"
+                android:layout_height="@dimen/_15sdp"
+                android:src="@drawable/baseline_delete_24"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="@id/ivCommentImage"
+                app:layout_constraintTop_toTopOf="@id/ivCommentImage"
+                app:tint="@color/red_color_picker" />
 
             <ImageView
                 android:id="@+id/ivUserImage"
@@ -145,36 +167,59 @@
                 android:src="@drawable/user_placeholder"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/ivCommentImage" />
 
-            <EditText
+            <hani.momanii.supernova_emoji_library.emojiHelper.EmojiconEditText
                 android:id="@+id/etComment"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginEnd="20dp"
-                android:background="@color/white"
+                android:background="@drawable/border_grey_rectangle"
                 android:fontFamily="@font/poppins_light"
+                android:gravity="start"
                 android:hint="Enter Comment"
                 android:inputType="text"
                 android:maxLines="1"
+                android:padding="@dimen/_4sdp"
                 android:singleLine="true"
                 android:textColorHint="@color/colorGray"
                 android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="@+id/ivUserImage"
                 app:layout_constraintEnd_toStartOf="@+id/tvPOstButton"
                 app:layout_constraintStart_toEndOf="@+id/ivUserImage"
-                app:layout_constraintTop_toTopOf="@+id/ivUserImage" />
+                app:layout_constraintTop_toTopOf="@+id/ivUserImage"
+                emojicon:emojiconSize="28sp" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/appCompatImageView7"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="@dimen/_5sdp"
+                android:layout_marginBottom="@dimen/_5sdp"
+                android:src="@drawable/whatsapp_emoji"
+                app:layout_constraintBottom_toBottomOf="@+id/etComment"
+                app:layout_constraintEnd_toEndOf="@+id/etComment"
+                app:tint="@color/black" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/appCompatImageView6"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_marginEnd="@dimen/_5sdp"
+                android:src="@drawable/whatsapp_camera"
+                app:layout_constraintEnd_toStartOf="@id/appCompatImageView7"
+                app:layout_constraintTop_toTopOf="@id/appCompatImageView7" />
+
+            <ImageView
                 android:id="@+id/tvPOstButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_35sdp"
                 android:layout_marginEnd="20dp"
-                android:fontFamily="@font/poppins_semibold"
-                android:text="POST"
-                android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/_12sdp"
+                android:alpha="0.5"
+                android:background="@drawable/bg_send"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_post_send"
                 app:layout_constraintBottom_toBottomOf="@+id/etComment"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/etComment" />

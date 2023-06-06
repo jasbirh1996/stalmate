@@ -9,17 +9,15 @@ import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
-import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
-import com.stalmate.user.Helper.IntentHelper
+import androidx.lifecycle.MutableLiveData
+import com.stalmate.user.intentHelper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.databinding.ActivityDashboardBinding
 import com.stalmate.user.view.dashboard.Chat.FragmentChatCall
-import com.stalmate.user.view.dashboard.Friend.FragmentFriend
 import com.stalmate.user.view.dashboard.HomeFragment.FragmentHome
 import com.stalmate.user.view.dashboard.HomeFragment.FragmentMenu
 import com.stalmate.user.view.dashboard.VideoReels.FragmentReels
@@ -84,7 +82,10 @@ class ActivityDashboard : BaseActivity(), FragmentHome.Callback,
             isApiRuning = false
             //  binding.shimmerLayout.visibility =  View.GONE
             if (!it?.results.isNullOrEmpty()) {
-                startActivity(IntentHelper.getFullViewReelActivity(this)?.putExtra("data", it?.results?.get(0)))
+                startActivity(
+                    IntentHelper.getFullViewReelActivity(this)
+                        ?.putExtra("data", it?.results?.get(0))
+                )
             }
         }
     }
@@ -148,6 +149,8 @@ class ActivityDashboard : BaseActivity(), FragmentHome.Callback,
 
     private val fragmentMenu = FragmentMenu(this)
     val fragment6 = FragmentMenu(this)
+
+    val pointToMyFuntime = MutableLiveData<Boolean>()
 
     override fun onCLickOnMenuButton() {
 

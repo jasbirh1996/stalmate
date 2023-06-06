@@ -72,6 +72,22 @@ class FragmentCreatePost : BaseFragment(), AdapterFeed.Callbackk, UserHomeStoryA
 
     }
 
+    override fun onClickOnLikeButtonReel(feed: ResultFuntime) {
+
+    }
+
+    override fun onClickOnFollowButtonReel(feed: ResultFuntime) {
+
+    }
+
+    override fun onSendComment(feed: ResultFuntime, comment: String) {
+
+    }
+
+    override fun onCaptureImage(feed: ResultFuntime, position: Int) {
+
+    }
+
     override fun onClickOnProfile(user: Feed) {
 
     }

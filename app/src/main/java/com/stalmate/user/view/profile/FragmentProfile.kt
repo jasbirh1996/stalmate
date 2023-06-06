@@ -6,8 +6,6 @@ import android.accounts.Account
 import android.accounts.AccountManager
 import android.app.ActivityOptions
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -30,7 +28,7 @@ import com.canhub.cropper.options
 import com.google.android.material.shape.CornerFamily
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import com.stalmate.user.Helper.IntentHelper
+import com.stalmate.user.intentHelper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.commonadapters.AdapterFeed
@@ -44,14 +42,11 @@ import com.stalmate.user.view.adapter.ProfileAboutAdapter
 import com.stalmate.user.view.adapter.ProfileFriendAdapter
 import com.stalmate.user.view.dashboard.ActivityDashboard
 import com.stalmate.user.view.dashboard.HomeFragment.FragmentHome
-import com.stalmate.user.view.dashboard.HomeFragment.FragmentMenu
-import com.stalmate.user.view.dashboard.HomeFragment.FragmentProfileActivityLog
 import com.stalmate.user.view.dashboard.HomeFragment.FragmentProfileFuntime
 import com.stalmate.user.view.dashboard.funtime.ResultFuntime
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import java.io.ByteArrayOutputStream
 import java.io.File
 
 
@@ -108,23 +103,31 @@ class FragmentProfile(val callback: FragmentHome.Callback? = null) : BaseFragmen
         super.onViewCreated(view, savedInstanceState)
 
 
-        var adapterTabPager = AdapterTabPager(requireActivity())
-        adapterTabPager.addFragment(FragmentProfileActivityLog(), "Activity Log")
-        adapterTabPager.addFragment(FragmentProfileFuntime(), "Funtime")
+        val adapterTabPager = AdapterTabPager(requireActivity())
+//        adapterTabPager.addFragment(FragmentProfileActivityLog(), "Activity Log")
+        adapterTabPager.addFragment(FragmentProfileFuntime(), "My Funtime")
         binding.viewpager.adapter = adapterTabPager
         TabLayoutMediator(binding.tabLayout, binding.viewpager) { tab, position ->
             tab.text = adapterTabPager.getTabTitle(position)
             binding.viewpager.setCurrentItem(tab.position, true)
         }.attach()
 
+        (context as ActivityDashboard).pointToMyFuntime.observe(requireActivity()) {
+            if (it) {
+                val listOfXy = IntArray(2)
+                binding.tabLayout.getLocationOnScreen(listOfXy)
+                binding.nestedScrollView.dispatchNestedPreScroll(listOfXy[0], listOfXy[1],null,null)
+                binding.nestedScrollView.isSmoothScrollingEnabled = true
+                binding.nestedScrollView.smoothScrollTo(listOfXy[0], listOfXy[1])
+                (context as ActivityDashboard).pointToMyFuntime.value = false
+            }
+        }
 
         binding.nestedScrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
             if (oldScrollY < scrollY) {//increase
                 callback?.onScoll(true)
-                binding.toolbar.root.visibility = View.GONE
             } else {
                 callback?.onScoll(false)
-                binding.toolbar.root.visibility = View.VISIBLE
             }
         })
 
@@ -202,8 +205,10 @@ class FragmentProfile(val callback: FragmentHome.Callback? = null) : BaseFragmen
         binding.toolbar.ivButtonSearch.setOnClickListener {
             startActivity(IntentHelper.getSearchScreen(requireContext()))
         }
-        binding.toolbar.ivButtonMenu.setImageResource(R.drawable.menu)
-        binding.toolbar.ivButtonMenu.setOnClickListener {
+        binding.toolbar.ivButtonMenu.visibility = View.GONE
+        binding.toolbar.ivButtonMenu1.visibility = View.VISIBLE
+        binding.toolbar.ivButtonMenu1.setImageResource(R.drawable.menu)
+        binding.toolbar.ivButtonMenu1.setOnClickListener {
             //ShowMenu from here
             try {
                 (requireActivity() as ActivityDashboard).loadDrawerFragment()
@@ -475,6 +480,7 @@ class FragmentProfile(val callback: FragmentHome.Callback? = null) : BaseFragmen
         if (tabType == "Photos") {
             albumImageAdapter = ProfileAlbumImageAdapter(networkViewModel, requireContext(), "")
             binding.layout.rvPhotoAlbumData.adapter = albumImageAdapter
+            binding.layout.rvPhotoAlbumData.adapter = albumImageAdapter
             albumImageAdapter.submitList(userData.photos)
         } else if (tabType == "Albums") {
             albumAdapter = SelfProfileAlbumAdapter(networkViewModel, requireContext(), "")
@@ -540,6 +546,22 @@ class FragmentProfile(val callback: FragmentHome.Callback? = null) : BaseFragmen
     }
 
     override fun onCLickItem(item: ResultFuntime) {
+
+    }
+
+    override fun onClickOnLikeButtonReel(feed: ResultFuntime) {
+
+    }
+
+    override fun onClickOnFollowButtonReel(feed: ResultFuntime) {
+
+    }
+
+    override fun onSendComment(feed: ResultFuntime, comment: String) {
+
+    }
+
+    override fun onCaptureImage(feed: ResultFuntime, position: Int) {
 
     }
 

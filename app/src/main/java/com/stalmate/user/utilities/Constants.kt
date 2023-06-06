@@ -30,6 +30,7 @@ object Constants {
     const val URL_SAVE_UNSAVE_FUNTIME = "/funtime_api/savefuntime"
 
 
+
     const val URL_GET_SAVED_FUNTIME_MUSIC = "/funtime_api/get_save_sound_api"
     const val URL_GET_SAVED_FUNTIME_REELS = "/funtime_api/get_savefuntime_list"
     const val URL_FUNTIME_LIST_BY_AUDIO = "/funtime_api/get_song_funtime_list"
@@ -52,13 +53,13 @@ object Constants {
     const val URL_SEARCH_BRACNCHLIST = "/auth_api/branch_list"
     const val URL_GLOBAL_SEARCH = "/friend_api/stalmate_search"//"/friend_api/search_list"
 
+
     const val URL_EDUCATION_ADD = "/auth_api/add_update_usereducation"
     const val URL_PROFESSION_ADD = "/auth_api/add_update_userwork"
     const val URL_UPDATE_FRIEND_CATEGORY = "/friend_api/add_update_friend_category"
 
 
     const val URL_COMMENT_LIST = "/funtime_api/get_funtime_comment"
-    const val URL_REPLY_LIST = "/funtime_api/get_funtime_comment"
     const val URL_ADD_COMMENT = "/funtime_api/comment_funtime"
     const val URL_LIKE_COMMENT = "/funtime_api/like_unlike_funtime_comment"
 

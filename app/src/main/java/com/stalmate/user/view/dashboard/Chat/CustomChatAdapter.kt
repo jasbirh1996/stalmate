@@ -1,32 +1,19 @@
 import android.content.Context
-import android.graphics.Typeface
-import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 
 import com.nayaeducation.user.model.Message
-import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
 
 import com.stalmate.user.databinding.ItemTextInNewBinding
 import com.stalmate.user.databinding.ItemTextOutNewBinding
-import com.stalmate.user.utilities.Constants
-import com.stalmate.user.utilities.TimesAgo2
 
 
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.util.ArrayList
-import java.util.HashMap
 
 class CustomChatAdapter     // you can pass other parameters in constructor
     (private val context: Context) :

@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
-import com.stalmate.user.Helper.IntentHelper
 
 
 import com.stalmate.user.R
@@ -78,7 +77,7 @@ class FragmentMenu(var callback: Callback) : BaseFragment(), DrawerAdapter.Callb
         data.add(ModelDrawer(R.drawable.ic_menu_quite_mode, "Quite mode"))
         data.add(ModelDrawer(R.drawable.ic_menu_saved, "Saved favourite"))
         data.add(ModelDrawer(R.drawable.ic_menu_logout, "Logout"))*/
-
+        data.clear()
         data.add(ModelDrawer(R.drawable.ic_menu_groups, "My Friends"))
         data.add(ModelDrawer(R.drawable.ic_menu_funtimes, "My Funtime"))
         data.add(ModelDrawer(R.drawable.ic_menu_saved, "Saved/Favourite"))

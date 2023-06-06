@@ -42,7 +42,7 @@ import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.upstream.FileDataSource
 import com.googlecode.mp4parser.authoring.Track
 import com.googlecode.mp4parser.authoring.tracks.CroppedTrack
-import com.stalmate.user.Helper.IntentHelper
+import com.stalmate.user.intentHelper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.base.App
 import com.stalmate.user.base.BaseActivity
@@ -452,7 +452,6 @@ class ActivityVideoEditor : BaseActivity(), OnPhotoEditorListener,
                     supportFragmentManager,
                     mEmojiBSFragment!!.tag
                 )
-
             }
 
             R.id.ivMusic -> {

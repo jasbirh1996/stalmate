@@ -13,8 +13,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.navigation.fragment.findNavController
-import com.stalmate.user.Helper.IntentHelper
+import com.stalmate.user.intentHelper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentSyncBinding
@@ -98,7 +97,6 @@ class FragmentSync : BaseFragment() {
     }
 
     fun isAccountAdded(): Boolean {
-
         // Get an instance of the Android account manager
         val accountManager = requireActivity().getSystemService(ACCOUNT_SERVICE) as AccountManager
         for (i in 0 until accountManager.accounts.size) {

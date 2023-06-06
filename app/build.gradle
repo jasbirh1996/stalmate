@@ -228,6 +228,7 @@ dependencies {
 // For Country Pecker
     implementation 'com.hbb20:ccp:2.6.0'
 
+    implementation 'com.jakewharton.rxbinding2:rxbinding:2.2.0'
     implementation 'com.burhanrashid52:photoeditor:3.0.0'
     implementation 'com.github.igalata:Bubble-Picker:v0.2.4'
     implementation 'com.github.MasayukiSuda:Mp4Composer-android:v0.4.1'
@@ -243,4 +244,6 @@ dependencies {
     /*implementation 'com.amazonaws:aws-android-sdk-core:2.16'
     implementation 'com.amazonaws:aws-android-sdk-rekognition:2.16'*/
     //implementation "software.amazon.awssdk:rekognition:2.17.0"
+
+    implementation project(':supernova-emoji-library')
 }

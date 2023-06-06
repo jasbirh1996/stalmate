@@ -52,7 +52,7 @@ class AlbumAdapter(val viewModel: AppViewModel, val context: Context,  var callb
 
         fun bind(feed : ResultResponse){
 
-            Glide.with(context).load(feed.img)
+            Glide.with(context).load(feed.img.replace(".com",".com/"))
                 .placeholder(R.drawable.profileplaceholder)
                 .into(binding.imAlbumImage)
 

@@ -45,7 +45,7 @@ import com.google.common.util.concurrent.ListenableFuture
 import com.jaiselrahman.filepicker.activity.FilePickerActivity
 import com.jaiselrahman.filepicker.config.Configurations
 import com.makeramen.roundedimageview.RoundedImageView
-import com.stalmate.user.Helper.IntentHelper
+import com.stalmate.user.intentHelper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.modules.reels.activity.ActivityFilter
 import com.stalmate.user.modules.reels.activity.FragmentGallery

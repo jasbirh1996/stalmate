@@ -4,20 +4,18 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.stalmate.user.Helper.IntentHelper
+import com.stalmate.user.intentHelper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.databinding.ItemDrawerLayoutBinding
+import com.stalmate.user.modules.reels.activity.ActivitySettings
 import com.stalmate.user.utilities.PrefManager
-import com.stalmate.user.view.adapter.FriendAdapter
 import com.stalmate.user.view.authentication.ActivityAuthentication
+import com.stalmate.user.view.dashboard.ActivityDashboard
 import com.stalmate.user.view.dashboard.Friend.FragmentFriend
 import com.stalmate.user.viewmodel.AppViewModel
 
@@ -63,7 +61,12 @@ class DrawerAdapter(
             binding.card.setOnClickListener {
                 when (drawerResponse.text) {
                     "My Funtime" -> {
-                        context.startActivity(IntentHelper.getFullViewReelActivity(context))
+                        try {
+                            (context as ActivityDashboard).pointToMyFuntime.value = true
+                            (context as ActivityDashboard).onBackPressed()
+                        } catch (e: ClassCastException) {
+                            (context as ActivitySettings).onBackPressed()
+                        }
                     }
                     "My Friends" -> {
                         context.startActivity(Intent(context, FragmentFriend::class.java))

@@ -22,10 +22,9 @@ import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.google.android.material.tabs.TabLayout
-import com.stalmate.user.Helper.IntentHelper
+import com.stalmate.user.intentHelper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.modules.reels.activity.ActivityFilter
-import com.stalmate.user.modules.reels.activity.EXTRA_SONG_ID
 import com.stalmate.user.modules.reels.filters.epf.EPlayerView
 import ly.img.android.pesdk.VideoEditorSettingsList
 import ly.img.android.pesdk.backend.model.EditorSDKResult

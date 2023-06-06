@@ -1,35 +1,57 @@
 package com.stalmate.user.view.dashboard.HomeFragment
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.os.Handler
-import android.os.Looper
+import android.provider.MediaStore
+import android.text.format.DateFormat
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.LinearInterpolator
-import androidx.core.content.ContextCompat
+import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.FileProvider
+import androidx.core.net.toFile
+import androidx.core.net.toUri
 import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.anggrayudi.storage.file.forceDelete
 import com.bumptech.glide.Glide
-import com.stalmate.user.Helper.IntentHelper
+import com.canhub.cropper.CropImageContract
+import com.canhub.cropper.CropImageView
+import com.canhub.cropper.options
+import com.stalmate.user.intentHelper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.commonadapters.AdapterFeed
 import com.stalmate.user.databinding.FragmentHomeNewBinding
+import com.stalmate.user.model.Comment
 import com.stalmate.user.model.Feed
 import com.stalmate.user.model.User
+import com.stalmate.user.modules.reels.utils.RealPathUtil
 import com.stalmate.user.utilities.Constants
 import com.stalmate.user.utilities.NetworkUtils
 import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.view.adapter.SuggestedFriendAdapter
 import com.stalmate.user.view.adapter.UserHomeStoryAdapter
+import com.stalmate.user.view.dashboard.funtime.ActivityFuntimePost
 import com.stalmate.user.view.dashboard.funtime.ResultFuntime
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import java.io.File
+import java.util.*
+import kotlin.collections.HashMap
 
 
 class FragmentHome(var callback: Callback) : BaseFragment(),
@@ -39,6 +61,7 @@ class FragmentHome(var callback: Callback) : BaseFragment(),
     lateinit var feedAdapter: AdapterFeed
     lateinit var homeStoryAdapter: UserHomeStoryAdapter
     lateinit var suggestedFriendAdapter: SuggestedFriendAdapter
+    var commentImagePosition = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,16 +89,17 @@ class FragmentHome(var callback: Callback) : BaseFragment(),
         binding.refreshLayout.setOnRefreshListener {
             binding.refreshLayout.isRefreshing = false
             if (isNetworkAvailable()) {
-                callApi()
                 isFirstApiHit = true
                 page_count = 1
+                callApi()
             } else {
                 binding.nointernet.visibility = View.VISIBLE
             }
         }
 
         if (isNetworkAvailable()) {
-            getUserProfileData()
+            isFirstApiHit = true
+            page_count = 1
             callApi()
         } else {
             binding.nointernet.visibility = View.VISIBLE
@@ -90,11 +114,177 @@ class FragmentHome(var callback: Callback) : BaseFragment(),
         })
     }
 
+    fun follow(feed: ResultFuntime) {
+        val hashMap = HashMap<String, String>()
+        hashMap.put("id_user", feed.user_id)
+        networkViewModel.sendFollowRequest("", hashMap)
+        networkViewModel.followRequestLiveData.observe(this, Observer {
+            it.let {
+                Toast.makeText(this.requireContext(), "Success!", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+    private fun likeApiHit(funtime: ResultFuntime) {
+        var hashmap = HashMap<String, String>()
+        hashmap.put("funtime_id", funtime.id.toString())
+        networkViewModel.funtimeLiveLikeUnlikeData(hashmap)
+        networkViewModel.funtimeLiveLikeUnlikeData.observe(this) {
+            it.let {
+                if (it!!.status) {
+                    Toast.makeText(this.requireContext(), "Liked successfully!", Toast.LENGTH_SHORT)
+                        .show()
+                    feedAdapter.likeReelById()
+                }
+            }
+        }
+    }
 
     private var loading = true
     var pastVisiblesItems = 0
     var visibleItemCount: kotlin.Int = 0
     var totalItemCount: kotlin.Int = 0
+    private fun String.getRequestBody(): RequestBody =
+        RequestBody.create("text/plain".toMediaTypeOrNull(), this)
+
+    private fun File.getMultipartBody(
+        keyName: String,
+        type: String
+    ): MultipartBody.Part? {
+        return try {
+            MultipartBody.Part.createFormData(
+                keyName,
+                this.name,
+                this.asRequestBody(type.toMediaTypeOrNull())
+            )
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+
+    fun addComment(comment: String, feed: ResultFuntime) {
+        //fromCameraCoverUri
+        val images = try {
+            File(
+                if (fromCameraCoverUri?.contains("file://",true) == true) {
+                    RealPathUtil.getRealPath(this.requireActivity(), fromCameraCoverUri.toString().toUri())
+                }else{
+                    fromCameraCoverUri
+                }
+            ).getMultipartBody(
+                keyName = "images",
+                type = "image/*"
+            )
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+
+        networkViewModel.addComment1(
+            access_token = prefManager?.access_token.toString(),
+            funtime_id = feed.id.getRequestBody(),
+            comment = comment.getRequestBody(),
+            images = images
+        )
+        networkViewModel.addCommentLiveData.observe(this) {
+            it.let {
+                if (isNetworkAvailable()) {
+                    isFirstApiHit = true
+                    page_count = 1
+                    callApi()
+                } else {
+                    binding.nointernet.visibility = View.VISIBLE
+                }
+
+                fromCameraCover = null
+                fromCameraCoverUri = ""
+                if (it!!.status) {
+                    Toast.makeText(
+                        this.requireContext(),
+                        "Commented successfully!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    val hashmap = HashMap<String, String>()
+                    hashmap.put("page", page_count.toString())
+                    hashmap.put("id_user", "")
+                    hashmap.put("fun_id", "")
+                    hashmap.put("limit", "5")
+                }
+            }
+        }
+    }
+
+    private var fromCameraCover: File? = null
+    private var fromCameraCoverUri: String? = ""
+    private var launchActivityForImageCaptureFromCamera =
+        registerForActivityResult<Intent, ActivityResult>(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result: ActivityResult ->
+            when (result.resultCode) {
+                Activity.RESULT_OK -> {
+                    // start picker to get image for cropping and then use the image in cropping activity
+                    fromCameraCoverUri?.toUri()?.let {
+                        cropImage.launch(
+                            options(
+                                uri = fromCameraCoverUri?.toUri(),
+                                builder = {
+                                    this.setGuidelines(CropImageView.Guidelines.ON_TOUCH)
+                                })
+                        )
+                    }
+                }
+                Activity.RESULT_CANCELED -> {
+                    // User Cancelled the action
+                }
+                else -> {
+                    // Error
+                }
+            }
+        }
+
+    /*Cover Image Picker */
+    private val cropImage = registerForActivityResult(CropImageContract()) { result ->
+        if (result.isSuccessful) {
+            // use the returned uri
+            val uriContent = result.uriContent
+            val uriFilePath = result.getUriFilePath(requireContext()) // optional usage
+            val imageFile = File(result.getUriFilePath(requireContext(), true)!!)
+            Log.d("imageUrl======", uriContent.toString())
+            Log.d("imageUrl======", uriFilePath.toString())
+            fromCameraCoverUri = Uri.fromFile(imageFile).toString()
+            if (commentImagePosition != -1) {
+                if (commentImagePosition < feedAdapter.list.size) {
+                    if (!feedAdapter.list.get(commentImagePosition).topcomment.isNullOrEmpty()) {
+                        feedAdapter.list.get(commentImagePosition).topcomment?.get(0)?.new_comment_image = fromCameraCoverUri.toString()
+                        feedAdapter.notifyDataSetChanged()
+                    } else {
+                        feedAdapter.list.get(commentImagePosition).topcomment?.clear()
+                        feedAdapter.list.get(commentImagePosition).topcomment?.add(
+                            ResultFuntime.TopComment(
+                                comment = "",
+                                comment_image = "",
+                                new_comment_image = fromCameraCoverUri.toString(),
+                                comment_id = "",
+                                Created_date = "",
+                                Updated_date = "",
+                                is_delete = "",
+                                _id = "",
+                                funtime_id = "",
+                                user_id = null,
+                                __v = ""
+                            )
+                        )
+                        feedAdapter.notifyDataSetChanged()
+                    }
+                }
+            }
+        } else {
+            // an error occurred
+            val exception = result.error
+        }
+    }
+
     private fun homeSetUp() {
         setupSearchBox()
         feedAdapter = AdapterFeed(
@@ -110,6 +300,46 @@ class FragmentHome(var callback: Callback) : BaseFragment(),
                     startActivity(
                         IntentHelper.getFullViewReelActivity(context)!!.putExtra("data", item)
                     )
+                }
+
+                override fun onClickOnLikeButtonReel(feed: ResultFuntime) {
+                    likeApiHit(feed)
+                }
+
+                override fun onClickOnFollowButtonReel(feed: ResultFuntime) {
+                    follow(feed)
+                }
+
+                override fun onSendComment(feed: ResultFuntime, comment: String) {
+                    addComment(comment, feed)
+                }
+
+                override fun onCaptureImage(feed: ResultFuntime, position: Int) {
+                    commentImagePosition = position
+                    if (commentImagePosition != -1) {
+                        if (fromCameraCover != null)
+                            fromCameraCover?.forceDelete()
+                        val now = DateFormat.format("yyyy_MM_dd_hh_mm_ss", Date())
+                        fromCameraCover = File(
+                            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS + "/Stalmate"),
+                            "image_$now.jpg"
+                        )
+                        fromCameraCoverUri =
+                            FileProvider.getUriForFile(
+                                this@FragmentHome.requireContext().applicationContext,
+                                "${this@FragmentHome.requireContext().applicationContext.packageName}.provider",
+                                fromCameraCover!!
+                            ).toString()
+                        val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                        cameraIntent.putExtra(
+                            MediaStore.EXTRA_OUTPUT,
+                            fromCameraCoverUri?.toUri()
+                        )
+                        launchActivityForImageCaptureFromCamera.launch(cameraIntent)
+                    } else {
+                        fromCameraCover = null
+                        fromCameraCoverUri = ""
+                    }
                 }
             })
         homeStoryAdapter = UserHomeStoryAdapter(networkViewModel, requireContext(), this)
@@ -133,12 +363,10 @@ class FragmentHome(var callback: Callback) : BaseFragment(),
                             loading = false
                             Log.v("...", "Last Item Wow !")
                             // Do pagination.. i.e. fetch new data
-
                             if (!isApiRuning) {
                                 page_count++
                                 callApi()
                             }
-
                             loading = true
                         }
                     }

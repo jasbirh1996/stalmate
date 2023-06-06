@@ -1,10 +1,15 @@
 package com.stalmate.user.model
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
 data class ModelLoginResponse(
     val message: String = "", // Login successfully
     val results: Results? = Results(),
     val status: Boolean = false // true
-) {
+) : Parcelable {
+    @Parcelize
     data class Results(
         val Created_date: String? = "", // 2023-04-14 13:31:42
         val Updated_date: String? = "", // 2023-04-21 10:6:39
@@ -54,6 +59,9 @@ data class ModelLoginResponse(
         val who_can_see_number: String? = "",
         val who_can_see_people_page: String? = "",
         val who_can_send_me_message: String? = "",
-        val who_can_send_you_friendrequest: String? = ""
-    )
+        val who_can_send_you_friendrequest: String? = "",
+        val last_update_of_username: String? = "",
+        val is_block: Boolean? = false,
+        val stepper: Int? = 0
+    ) : Parcelable
 }

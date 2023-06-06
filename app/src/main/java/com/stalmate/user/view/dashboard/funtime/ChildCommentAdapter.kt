@@ -1,4 +1,5 @@
 package com.stalmate.user.view.dashboard.funtime
+
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
@@ -20,9 +21,9 @@ class ChildCommentAdapter(
     var context: Context,
     var callBack: Callback,
     var funTimeId: String,
-   var networkViewModel: AppViewModel,
-   var lifecyclerOwner: LifecycleOwner
-) : RecyclerView.Adapter< ChildCommentAdapter.CommentViewHolder>() {
+    var networkViewModel: AppViewModel,
+    var lifecyclerOwner: LifecycleOwner
+) : RecyclerView.Adapter<ChildCommentAdapter.CommentViewHolder>() {
     var commentList = ArrayList<Comment>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommentViewHolder {
         return CommentViewHolder(
@@ -44,19 +45,24 @@ class ChildCommentAdapter(
 
         private fun initBinding(binding: ItemCommentBinding, shortComment: Comment) {
 
-           // binding.tvDate.text = "${TimesAgo2.covertTimeToText(shortComment.Created_date,true)}"
+            // binding.tvDate.text = "${TimesAgo2.covertTimeToText(shortComment.Created_date,true)}"
             binding.tvDate.text = "${shortComment.Created_date}"
             binding.tvUserName.text = "${shortComment.first_name} ${shortComment.last_name}"
             binding.tvReply.text = "Reply"
             binding.tvLikesCount.text = "0 Likes"
             binding.tvComment.text = shortComment.comment
+            if (!shortComment.comment_image.isNullOrEmpty()) {
+                binding.ivCommentImage.visibility = View.VISIBLE
+                Glide.with(context).load(shortComment.comment_image).into(binding.ivCommentImage)
+            } else
+                binding.ivCommentImage.visibility = View.GONE
             Glide.with(context).load(shortComment.profile_img).circleCrop()
                 .into(binding.ivUserImage)
 
             binding.tvReply.setOnClickListener {
                 callBack.onClickOnReply(shortComment, bindingAdapterPosition)
             }
-            binding.tvLikesCount.setText(shortComment.like_count.toString()+" likes")
+            binding.tvLikesCount.setText(shortComment.like_count.toString() + " likes")
 
             /* binding.tvReply.setOnClickListener {
                     commentListener.onSendComment(
@@ -75,18 +81,18 @@ class ChildCommentAdapter(
                 binding.btnMore.text = "Show ${shortComment.child_count} replies"
                 binding.view15.visibility = View.VISIBLE
             }*/
-            binding.btnMore.visibility=View.GONE
-            binding.view15.visibility=View.GONE
+            binding.btnMore.visibility = View.GONE
+            binding.view15.visibility = View.GONE
 
 
-            if (shortComment.isLiked=="Yes"){
+            if (shortComment.isLiked == "Yes") {
                 binding.ivHearIcon.setImageDrawable(
                     ContextCompat.getDrawable(
                         context,
                         R.drawable.heart_filled
                     )
                 )
-            }else{
+            } else {
                 binding.ivHearIcon.setImageDrawable(
                     ContextCompat.getDrawable(
                         context,
@@ -97,7 +103,7 @@ class ChildCommentAdapter(
 
 
             binding.ivHearIcon.setOnClickListener {
-                likeComment(shortComment._id,bindingAdapterPosition)
+                likeComment(shortComment._id, bindingAdapterPosition)
             }
 
         }
@@ -105,7 +111,6 @@ class ChildCommentAdapter(
         fun bind(shortComment: Comment) {
             initBinding(binding, shortComment)
         }
-
 
 
     }
@@ -133,11 +138,12 @@ class ChildCommentAdapter(
 
     fun addToList(comments: List<Comment>) {
         val size = commentList.size
-        Log.d("lasjkdasdss",commentList.size.toString())
+        Log.d("lasjkdasdss", commentList.size.toString())
         commentList.addAll(comments)
         val sizeNew = commentList.size
         notifyItemRangeChanged(size, sizeNew)
     }
+
     fun submitList(comments: List<Comment>) {
         commentList.clear()
         commentList.addAll(comments)
@@ -145,21 +151,21 @@ class ChildCommentAdapter(
     }
 
 
-/*
-    fun addComment(data: String) {
-        var hashmap = HashMap<String, String>()
-        hashmap.put("funtime_id", funTimeId)
-        hashmap.put("comment", data)
-        hashmap.put("id", "")
-        hashmap.put("comment_id", "")
-        hashmap.put("is_delete", "0")
+    /*
+        fun addComment(data: String) {
+            var hashmap = HashMap<String, String>()
+            hashmap.put("funtime_id", funTimeId)
+            hashmap.put("comment", data)
+            hashmap.put("id", "")
+            hashmap.put("comment_id", "")
+            hashmap.put("is_delete", "0")
 
-        networkViewModel.addComment(hashmap)
-        networkViewModel.addCommentLiveData.observe(lifecyclerOwner) {
-            it.let {
+            networkViewModel.addComment(hashmap)
+            networkViewModel.addCommentLiveData.observe(lifecyclerOwner) {
+                it.let {
 
-                if (it!!.status) {
-                    */
+                    if (it!!.status) {
+                        */
 /*      viewModel.addComment(
                               Comment(
                                   it.results._id,
@@ -215,37 +221,33 @@ class ChildCommentAdapter(
         }
     }
 */
-fun likeComment(commentId: String,position: Int) {
+    fun likeComment(commentId: String, position: Int) {
 
-    var hashmap = HashMap<String, String>()
-    hashmap.put("funtime_id", funTimeId)
-    hashmap.put("comment_id", commentId)
+        var hashmap = HashMap<String, String>()
+        hashmap.put("funtime_id", funTimeId)
+        hashmap.put("comment_id", commentId)
 
-    networkViewModel.likeComment(hashmap)
-    networkViewModel.likeCommentLiveData.observe(lifecyclerOwner) { mainIt ->
-        run {
-            if (mainIt!!.status) {
+        networkViewModel.likeComment(hashmap)
+        networkViewModel.likeCommentLiveData.observe(lifecyclerOwner) { mainIt ->
+            run {
+                if (mainIt!!.status) {
 
 
+                    if (commentList[position].isLiked == "Yes") {
+                        commentList[position].isLiked = "No"
+                        commentList[position].like_count--
+                    } else {
+                        commentList[position].isLiked = "Yes"
+                        commentList[position].like_count++
+                    }
+                    notifyItemChanged(position)
 
-                if (commentList[position].isLiked=="Yes"){
-                    commentList[position].isLiked="No"
-                    commentList[position].like_count--
-                }else{
-                    commentList[position].isLiked="Yes"
-                    commentList[position].like_count++
+
                 }
-                notifyItemChanged(position)
-
-
-
-
-
             }
-        }
 
+        }
     }
-}
 
 
 }

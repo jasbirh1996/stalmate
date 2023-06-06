@@ -1,44 +1,25 @@
 package com.stalmate.user.view.dashboard.SIdeDrawer
 
-import android.media.AudioAttributes
-import android.media.MediaPlayer
-import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.SeekBar
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import androidx.work.*
 import com.google.gson.Gson
-import com.stalmate.user.Helper.IntentHelper
+import com.stalmate.user.intentHelper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
 
 import com.stalmate.user.databinding.FragmentSavedFavouriteFuntimeBinding
-import com.stalmate.user.modules.reels.activity.EXTRA_SONG_COVER
-import com.stalmate.user.modules.reels.activity.EXTRA_SONG_FILE
-import com.stalmate.user.modules.reels.activity.EXTRA_SONG_ID
-import com.stalmate.user.modules.reels.activity.EXTRA_SONG_NAME
-import com.stalmate.user.modules.reels.model.Song
-import com.stalmate.user.modules.reels.workers.FileDownloadWorker
-import com.stalmate.user.modules.reels.workers.VideoSpeedWorker
-import com.stalmate.user.utilities.ImageLoaderHelperGlide
-import com.stalmate.user.utilities.ValidationHelper
 import com.stalmate.user.view.dashboard.funtime.ReelVideosByAudioAdapter
 import com.stalmate.user.view.dashboard.funtime.ResultFuntime
 import com.stalmate.user.view.dashboard.funtime.TaggedUser
-import java.io.File
-import java.io.IOException
-import java.util.concurrent.TimeUnit
 
 
 class FragmentSavedFavouriteFuntime : BaseFragment(),

@@ -3,7 +3,9 @@ package com.stalmate.user.view.dashboard.funtime
 import android.os.Parcelable
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import com.stalmate.user.model.ModelLoginResponse
 import kotlinx.android.parcel.Parcelize
+import kotlinx.android.parcel.RawValue
 import java.io.Serializable
 
 @Parcelize
@@ -46,7 +48,23 @@ data class ResultFuntime(
     var user_id: String = "", // 643955be4d8ac204ccd950cd
     @SerializedName("isDataUpdated")
     var isDataUpdated: Boolean = false,
-) : Parcelable
+    var topcomment: ArrayList<TopComment>? = arrayListOf()
+) : Parcelable {
+    @Parcelize
+    data class TopComment(
+        var comment: String,
+        var comment_image: String,
+        var new_comment_image: String? = null,
+        var comment_id: String,
+        var Created_date: String,
+        var Updated_date: String,
+        var is_delete: String,
+        var _id: String,
+        var funtime_id: String,
+        var user_id: ModelLoginResponse.Results? = null,
+        var __v: String
+    ) : Parcelable
+}
 
 @Parcelize
 data class TaggedUser(

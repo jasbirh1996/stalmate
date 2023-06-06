@@ -11,14 +11,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.databinding.FragmentSettingListingBinding
 import com.stalmate.user.modules.reels.activity.ActivitySettings
 import com.stalmate.user.utilities.Constants
 import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.view.About.AboutActivity
-import com.stalmate.user.view.dashboard.ActivityDashboard
 
 class FragmentSettingListing : Fragment(), MainSettingCategoryAdapter.Callbackk {
     lateinit var binding: com.stalmate.user.databinding.FragmentSettingListingBinding
@@ -49,14 +47,14 @@ class FragmentSettingListing : Fragment(), MainSettingCategoryAdapter.Callbackk 
         binding.rvList.adapter = settingCategoryAdapter
 
         Glide.with(requireActivity())
-            .load(PrefManager.getInstance(requireContext())!!.userProfileDetail.results.profile_img1)
+            .load(PrefManager.getInstance(requireContext())?.userProfileDetail?.results?.profile_img1)
             .placeholder(R.drawable.user_placeholder).circleCrop().into(binding.userProfileImage)
         binding.tvUserName.setText(
-            PrefManager.getInstance(requireContext())!!.userProfileDetail.results.first_name + PrefManager.getInstance(
+            PrefManager.getInstance(requireContext())?.userProfileDetail?.results?.first_name + PrefManager.getInstance(
                 requireContext()
-            )!!.userProfileDetail.results.last_name
+            )?.userProfileDetail?.results?.last_name
         )
-        binding.tvAbout.setText(PrefManager.getInstance(requireContext())!!.userProfileDetail.results.city)
+        binding.tvAbout.setText(PrefManager.getInstance(requireContext())?.userProfileDetail?.results?.city)
         binding.userProfileImage.setOnClickListener {
             findNavController().navigate(R.id.action_fragment_setting_main_to_profileFragment)
         }

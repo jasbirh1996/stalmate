@@ -52,7 +52,7 @@ open class AppViewModel : ViewModel() {
             }
 
             override fun onFailure(call: Call<T?>, t: Throwable) {
-
+                t.printStackTrace()
             }
         })
     }
@@ -396,25 +396,67 @@ open class AppViewModel : ViewModel() {
 
 
     var repliesLiveData: LiveData<ModelGetComment?> = MutableLiveData<ModelGetComment?>()
-    fun getRepliesList(map: HashMap<String, String>) {
+    fun getRepliesList(
+        access_token: String,
+        map: HashMap<String, String>
+    ) {
         val temp = MutableLiveData<ModelGetComment?>()
         repliesLiveData = temp
-        getResult(temp, apiInterface.getReplyList(map))
+        getResult(temp, apiInterface.getCommentList(access_token, map))
     }
 
     var commentLiveData: LiveData<ModelGetComment?> = MutableLiveData<ModelGetComment?>()
-    fun getCommentList(map: HashMap<String, String>) {
+    fun getCommentList(
+        access_token: String,
+        map: HashMap<String, String>
+    ) {
         val temp = MutableLiveData<ModelGetComment?>()
         commentLiveData = temp
-        getResult(temp, apiInterface.getCommentList(map))
+        getResult(temp, apiInterface.getCommentList(access_token, map))
     }
 
 
     var addCommentLiveData: LiveData<ModelComment?> = MutableLiveData<ModelComment?>()
-    fun addComment(map: HashMap<String, String>) {
+    fun addComment(
+        access_token: String,
+        @Part("funtime_id") funtime_id: RequestBody,
+        @Part("comment") comment: RequestBody,
+        @Part("id") id: RequestBody,
+        @Part("comment_id") comment_id: RequestBody,
+        @Part("is_delete") is_delete: RequestBody,
+        @Part images: MultipartBody.Part? = null
+    ) {
         val temp = MutableLiveData<ModelComment?>()
         addCommentLiveData = temp
-        getResult(temp, apiInterface.addComment(map))
+        getResult(
+            temp, apiInterface.addComment(
+                access_token = access_token,
+                funtime_id = funtime_id,
+                comment = comment,
+                id = id,
+                comment_id = comment_id,
+                is_delete = is_delete,
+                images = images
+            )
+        )
+    }
+
+    fun addComment1(
+        access_token: String,
+        @Part("funtime_id") funtime_id: RequestBody,
+        @Part("comment") comment: RequestBody,
+        @Part images: MultipartBody.Part? = null
+    ) {
+        val temp = MutableLiveData<ModelComment?>()
+        addCommentLiveData = temp
+        getResult(
+            temp, apiInterface.addComment1(
+                access_token = access_token,
+                funtime_id = funtime_id,
+                comment = comment,
+                images = images
+            )
+        )
     }
 
     var likeCommentLiveData: LiveData<ModelSuccess?> = MutableLiveData<ModelSuccess?>()

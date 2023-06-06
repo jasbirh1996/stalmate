@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:emojicon="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layoutTop"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/_10sdp"
         android:background="@color/white"
         android:elevation="0dp"
-        android:paddingBottom="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -47,6 +48,7 @@
             android:id="@+id/appCompatTextView5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+
             android:background="@drawable/bg_follow"
             android:fontFamily="@font/poppins_medium"
             android:paddingHorizontal="@dimen/_10sdp"
@@ -65,6 +67,7 @@
             android:layout_height="20dp"
             android:layout_marginEnd="@dimen/_10sdp"
             android:src="@drawable/menudots"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="@+id/tvUserName"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tvUserName" />
@@ -106,8 +109,8 @@
             android:id="@+id/ivPlay"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:visibility="gone"
             android:src="@drawable/round_play_circle_24"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/appCompatImageView5"
             app:layout_constraintEnd_toEndOf="@+id/appCompatImageView5"
             app:layout_constraintStart_toStartOf="@+id/appCompatImageView5"
@@ -137,6 +140,19 @@
             app:layout_constraintStart_toEndOf="@+id/like_icon"
             app:layout_constraintTop_toBottomOf="@+id/appCompatImageView5" />
 
+        <TextView
+            android:id="@+id/share_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_4sdp"
+            android:fontFamily="@font/poppins_medium"
+            android:text="0 Shares"
+            android:textColor="#333333"
+            android:textSize="10sp"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@id/share_icon"
+            app:layout_constraintTop_toBottomOf="@id/share_icon" />
+
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/comment_icon"
             android:layout_width="wrap_content"
@@ -154,24 +170,25 @@
             android:id="@+id/comment_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_4sdp"
             android:fontFamily="@font/poppins_medium"
             android:gravity="center"
             android:text="20 Comments"
             android:textColor="#333333"
             android:textSize="10sp"
-            app:layout_constraintEnd_toEndOf="@id/comment_icon"
-            app:layout_constraintTop_toBottomOf="@id/comment_icon" />
+            app:layout_constraintEnd_toStartOf="@id/cView"
+            app:layout_constraintTop_toTopOf="@id/cView" />
 
         <TextView
+            android:id="@+id/cView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_4sdp"
             android:fontFamily="@font/poppins_medium"
-            android:text="View "
+            android:text=" View"
             android:textColor="#0E4FB5"
             android:textSize="10sp"
-            app:layout_constraintEnd_toStartOf="@id/comment_count"
-            app:layout_constraintTop_toTopOf="@id/comment_count" />
+            app:layout_constraintEnd_toEndOf="@id/comment_icon"
+            app:layout_constraintTop_toBottomOf="@id/comment_icon" />
 
         <TextView
             android:id="@+id/like_count"
@@ -189,7 +206,6 @@
             android:id="@+id/tvPostDescription"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-
             android:layout_marginStart="@dimen/_10sdp"
             android:layout_marginTop="10dp"
             android:fontFamily="@font/poppins"
@@ -200,24 +216,12 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/like_count" />
 
-        <View
-            android:id="@+id/view"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="10dp"
-            android:background="@color/grey_light"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvPostDescription" />
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/view">
+            app:layout_constraintTop_toBottomOf="@+id/tvPostDescription">
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tvUserName1"
@@ -227,7 +231,6 @@
                 android:layout_marginTop="@dimen/_5sdp"
                 android:fontFamily="@font/poppins_medium"
                 android:includeFontPadding="false"
-                android:text="Abhay kashyap"
                 android:textColor="@color/black"
                 android:textSize="11sp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -235,19 +238,44 @@
 
             <TextView
                 android:id="@+id/tvDes"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Looks Delicious. Can you please share the recipe"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:layout_marginEnd="@dimen/_10sdp"
                 android:textSize="11sp"
-                app:layout_constraintStart_toStartOf="@id/tvUserName1"
-                app:layout_constraintTop_toBottomOf="@id/tvUserName1" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/tvUserName1"
+                app:layout_constraintTop_toTopOf="@id/tvUserName1" />
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/ivCommentImage"
+                android:layout_width="@dimen/_150sdp"
+                android:layout_height="@dimen/_150sdp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:src="@drawable/user_placeholder"
+                android:scaleType="centerCrop"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="@id/tvDes"
+                app:layout_constraintTop_toBottomOf="@id/tvUserName1"
+                app:riv_corner_radius="@dimen/_5sdp" />
+
+            <ImageView
+                android:id="@+id/ivDeleteCommentImage"
+                android:layout_width="wrap_content"
+                android:visibility="gone"
+                android:layout_height="wrap_content"
+                android:src="@drawable/baseline_delete_24"
+                app:layout_constraintEnd_toEndOf="@id/ivCommentImage"
+                app:layout_constraintTop_toTopOf="@id/ivCommentImage"
+                app:tint="@color/red_color_picker" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5sdp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvDes">
+                app:layout_constraintTop_toBottomOf="@+id/ivCommentImage">
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/ivButtonMenu1"
@@ -274,7 +302,7 @@
                     app:layout_constraintStart_toEndOf="@id/ivButtonMenu1"
                     app:layout_constraintTop_toTopOf="@id/ivButtonMenu1">
 
-                    <EditText
+                    <hani.momanii.supernova_emoji_library.emojiHelper.EmojiconEditText
                         android:id="@+id/etSearch"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -291,14 +319,15 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/appCompatImageView6"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        emojicon:emojiconSize="28sp" />
 
                     <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/appCompatImageView7"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_marginEnd="16dp"
-                        android:src="@drawable/ic_post_emoji_grey"
+                        android:src="@drawable/whatsapp_emoji"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
@@ -306,10 +335,10 @@
 
                     <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/appCompatImageView6"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
                         android:layout_marginEnd="@dimen/_5sdp"
-                        android:src="@drawable/whatsapp_attatchment"
+                        android:src="@drawable/whatsapp_camera"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@id/appCompatImageView7"
                         app:layout_constraintTop_toTopOf="parent" />

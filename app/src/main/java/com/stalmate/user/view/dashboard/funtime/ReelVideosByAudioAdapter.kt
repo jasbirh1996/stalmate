@@ -6,7 +6,6 @@ import android.graphics.Bitmap
 import android.media.MediaMetadataRetriever
 import android.os.AsyncTask
 import android.os.Build
-import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -16,7 +15,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.stalmate.user.Helper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.databinding.ItemReelByAudioBinding
 
@@ -43,15 +41,13 @@ class ReelVideosByAudioAdapter(
                 callback.onClickOnReel(video)
             }
 
-            if (showData) {
-                binding.tvViews.visibility= View.VISIBLE
-                binding.ivPlay.visibility= View.VISIBLE
+            binding.tvViews.text = video.text
+
+            if (video.file_type.contains("image")) {
+                binding.ivPlay.visibility = View.GONE
             } else {
-                binding.tvViews.visibility= View.GONE
-                binding.ivPlay.visibility= View.GONE
+                binding.ivPlay.visibility = View.VISIBLE
             }
-
-
         }
     }
 

@@ -101,6 +101,22 @@ class FragmentProfileActivityLog : BaseFragment(), AdapterFeed.Callbackk,
 
     }
 
+    override fun onClickOnLikeButtonReel(feed: ResultFuntime) {
+
+    }
+
+    override fun onClickOnFollowButtonReel(feed: ResultFuntime) {
+
+    }
+
+    override fun onSendComment(feed: ResultFuntime, comment: String) {
+
+    }
+
+    override fun onCaptureImage(feed: ResultFuntime, position: Int) {
+
+    }
+
     override fun onClickOnUpdateFriendRequest(friend: User, status: String) {
 
     }
