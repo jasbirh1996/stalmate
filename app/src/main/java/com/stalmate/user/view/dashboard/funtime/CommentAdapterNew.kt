@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
+import androidx.core.text.isDigitsOnly
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
@@ -18,6 +19,7 @@ import com.stalmate.user.R
 import com.stalmate.user.databinding.ItemCommentBinding
 import com.stalmate.user.model.Comment
 import com.stalmate.user.modules.reels.utils.RealPathUtil
+import com.stalmate.user.utilities.TimesAgo2
 import com.stalmate.user.viewmodel.AppViewModel
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -52,8 +54,10 @@ class CommentAdapterNew(
         RecyclerView.ViewHolder(binding.root),
         ChildCommentAdapter.Callback {
         fun bind(shortComment: Comment, accessToken: String) {
-            //   binding.tvDate.text = "${TimesAgo2.covertTimeToText(shortComment.Created_date,true)}"
-            binding.tvDate.text = "${shortComment.Created_date}"
+            if (shortComment.Created_date.isDigitsOnly())
+                binding.tvDate.text = "${TimesAgo2.covertTimeToText(shortComment.Created_date, true)}"
+            else
+                binding.tvDate.text = "${shortComment.Created_date}"
             binding.tvUserName.text = "${shortComment.first_name} ${shortComment.last_name}"
             val text =
                 "<font color=#000000>${shortComment.first_name + " "} ${shortComment.last_name}</font> <font color=#0f53b8>${shortComment.comment} </font>"
@@ -211,7 +215,7 @@ class CommentAdapterNew(
             }
         }
         val images = try {
-            if (fromCameraCoverUri != null) {
+            if (!fromCameraCoverUri.isNullOrEmpty()) {
                 File(
                     if (fromCameraCoverUri?.contains("file://", true) == true) {
                         RealPathUtil.getRealPath(
@@ -277,7 +281,7 @@ class CommentAdapterNew(
             }
         }
         val images = try {
-            if (fromCameraCoverUri != null) {
+            if (!fromCameraCoverUri.isNullOrEmpty()) {
                 File(
                     if (fromCameraCoverUri?.contains("file://", true) == true) {
                         RealPathUtil.getRealPath(

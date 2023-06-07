@@ -229,17 +229,18 @@ class DialogFragmentCommentWithVideo(
         }
 
         binding.tvPOstButton.setOnClickListener {
-            if (commentOverId != "") {
-                commentAdapter.replyOverComment(
-                    binding.etComment.text.toString(),
-                    commentOverId,
-                    parentPosition,
-                    childPosition,
-                    isReplyisChildComment,
-                    PrefManager.getInstance(App.getInstance())?.userDetail?.results?.access_token.toString()
-                )
+            if (binding.etComment.text.toString().contains(" | ")) {
+                if (commentOverId != "") {
+                    commentAdapter.replyOverComment(
+                        binding.etComment.text.toString().split(" | ")[1].toString(),
+                        commentOverId,
+                        parentPosition,
+                        childPosition,
+                        isReplyisChildComment,
+                        PrefManager.getInstance(App.getInstance())?.userDetail?.results?.access_token.toString()
+                    )
+                }
             } else {
-                //fromCameraCoverUri
                 commentAdapter.addComment(
                     binding.etComment.text.toString(),
                     PrefManager.getInstance(App.getInstance())?.userDetail?.results?.access_token.toString()
@@ -373,6 +374,7 @@ class DialogFragmentCommentWithVideo(
     fun hideImageView() {
         binding.ivCommentImage.visibility = View.GONE
         binding.ivDeleteCommentImage.visibility = View.GONE
+        commentOverId = ""
         fromCameraCover = null
         fromCameraCoverUri = ""
         binding.etComment.setText("")
@@ -515,7 +517,8 @@ class DialogFragmentCommentWithVideo(
         this.parentPosition = parentPosition
         this.childPosition = childPosition
         commentOverId = shortComment.parentId ?: shortComment._id
-        binding.etComment.setText("@${shortComment.first_name} ${shortComment.last_name} ")
+        binding.etComment.setText("@${shortComment.first_name} ${shortComment.last_name} | ")
+        binding.etComment.setSelection(binding.etComment.text.toString().length)
         isReplyisChildComment = isChild
     }
 

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -44,9 +45,10 @@ class ChildCommentAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         private fun initBinding(binding: ItemCommentBinding, shortComment: Comment) {
-
-            // binding.tvDate.text = "${TimesAgo2.covertTimeToText(shortComment.Created_date,true)}"
-            binding.tvDate.text = "${shortComment.Created_date}"
+            if (shortComment.Created_date.isDigitsOnly())
+                binding.tvDate.text = "${TimesAgo2.covertTimeToText(shortComment.Created_date, true)}"
+            else
+                binding.tvDate.text = "${shortComment.Created_date}"
             binding.tvUserName.text = "${shortComment.first_name} ${shortComment.last_name}"
             binding.tvReply.text = "Reply"
             binding.tvLikesCount.text = "0 Likes"

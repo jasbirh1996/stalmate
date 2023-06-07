@@ -44,9 +44,9 @@ import java.util.*
 
 
 class DialogFragmentComments(
-    var networkViewModel: AppViewModel,
-    var funtime: ResultFuntime,
-    var callBack: Callback
+    var networkViewModel: AppViewModel? = null,
+    var funtime: ResultFuntime? = null,
+    var callBack: Callback? = null
 ) :
     DialogFragment(), CommentAdapter.Callback, CommentAdapterNew.Callback {
     lateinit var binding: FragmentCommentsBinding
@@ -133,20 +133,21 @@ class DialogFragmentComments(
         super.onViewCreated(view, savedInstanceState)
         val recyclerView = view.findViewById<RecyclerView>(R.id.rvList)
         //  viewModel = ViewModelProvider(this)[CommentViewModel::class.java]
-        commentAdapter =
-            CommentAdapterNew(
-                requireContext(),
-                this,
-                networkViewModel,
-                funtime.id,
-                this,
-                this,
-                PrefManager.getInstance(App.getInstance())?.userDetail?.results?.access_token.toString()
-            )
-        recyclerView.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        recyclerView.adapter = commentAdapter
-
+        if (networkViewModel != null) {
+            commentAdapter =
+                CommentAdapterNew(
+                    requireContext(),
+                    this,
+                    networkViewModel!!,
+                    funtime?.id.toString(),
+                    this,
+                    this,
+                    PrefManager.getInstance(App.getInstance())?.userDetail?.results?.access_token.toString()
+                )
+            recyclerView.layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+            recyclerView.adapter = commentAdapter
+        }
 
         /*     viewModel.commentList.observe(this) {
 
@@ -160,7 +161,7 @@ class DialogFragmentComments(
 
         binding.toolbar.tvhead.text = "Comments"
         binding.toolbar.topAppBar.setNavigationOnClickListener {
-            callBack.funOnCommentDialogDismissed(commentAdapter.commentList.size)
+            callBack?.funOnCommentDialogDismissed(commentAdapter.commentList.size)
             dismiss()
         }
 
@@ -217,68 +218,42 @@ class DialogFragmentComments(
         }
 
         binding.tvPOstButton.setOnClickListener {
-            if (commentOverId != "") {
-                commentAdapter.replyOverComment(
-                    binding.etComment.text.toString(),
-                    commentOverId,
-                    parentPosition,
-                    childPosition,
-                    isReplyisChildComment,
-                    PrefManager.getInstance(App.getInstance())?.userDetail?.results?.access_token.toString()
-                )
+            if (binding.etComment.text.toString().contains(" | ")) {
+                if (commentOverId != "") {
+                    commentAdapter.replyOverComment(
+                        binding.etComment.text.toString().split(" | ")[1].toString(),
+                        commentOverId,
+                        parentPosition,
+                        childPosition,
+                        isReplyisChildComment,
+                        PrefManager.getInstance(App.getInstance())?.userDetail?.results?.access_token.toString()
+                    )
+                }
             } else {
-                //fromCameraCoverUri
                 commentAdapter.addComment(
                     binding.etComment.text.toString(),
                     PrefManager.getInstance(App.getInstance())?.userDetail?.results?.access_token.toString()
                 )
             }
-
-            /*        val id = (viewModel.commentList.value?.size ?: 0) + 1
-
-                    viewModel.commentList.value!!.forEach {
-
-
-                        try {
-                            Log.d("askldjasdfghfgh",it.replies.size.toString())
-                            Log.d("askldjasd",viewModel.commentList.value?.size.toString())
-                        }catch (e:Exception){}
-
-                    }*/
-
-
-            /*    viewModel.addComment(
-                    Comment(
-                        id.toString(),
-                        Calendar.getInstance(Locale.ROOT).toSimpleDate(),
-                        "test",
-                        "message$id",
-                        first_name = "dfgdfg",
-                        last_name = "dfgdfg",
-                        child_count = 1,
-                        profile_img = "",
-                        parentId = "6385fff8ec61450e2feff028"
-                    )
-                )*/
         }
         Glide.with(requireContext())
             .load(PrefManager.getInstance(requireContext())!!.userDetail.results?.profile_img_1)
             .placeholder(R.drawable.user_placeholder).circleCrop()
             .into(binding.ivUserImage)
 
-        Glide.with(requireContext()).load(funtime.profile_img)
+        Glide.with(requireContext()).load(funtime?.profile_img.toString())
             .placeholder(R.drawable.user_placeholder).circleCrop()
             .into(binding.ivMainUserImage)
 
 
-        binding.tvComment.text = funtime.text
+        binding.tvComment.text = funtime?.text.toString()
 
 
         /*  val text = "<font color=#000000>${funtime.first_name+" "+funtime.last_name+" "}</font> <font color=#0f53b8>${funtime.text} </font>"
           binding.tvUserName.text= Html.fromHtml(text)*/
 
-        binding.tvUserName.text = "${funtime.first_name + " " + funtime.last_name + " "}"
-        binding.tvDate.text = funtime.Created_date
+        binding.tvUserName.text = "${funtime?.first_name + " " + funtime?.last_name + " "}"
+        binding.tvDate.text = funtime?.Created_date
 
         binding.etComment.setHint(
             "Comment as ${PrefManager.getInstance(requireContext())!!.userDetail.results?.first_name} ${
@@ -355,6 +330,7 @@ class DialogFragmentComments(
     fun hideImageView() {
         binding.ivCommentImage.visibility = View.GONE
         binding.ivDeleteCommentImage.visibility = View.GONE
+        commentOverId = ""
         fromCameraCover = null
         fromCameraCoverUri = ""
         binding.etComment.setText("")
@@ -368,7 +344,7 @@ class DialogFragmentComments(
 
 
     override fun onDestroy() {
-        callBack.funOnCommentDialogDismissed(commentAdapter.commentList.size)
+        callBack?.funOnCommentDialogDismissed(commentAdapter.commentList.size)
         super.onDestroy()
     }
 
@@ -390,13 +366,13 @@ class DialogFragmentComments(
         }
 
         var hashmap = HashMap<String, String>()
-        hashmap.put("funtime_id", funtime.id)
+        hashmap.put("funtime_id", funtime?.id.toString())
         hashmap.put("page", currentPage.toString())
-        networkViewModel.getCommentList(
+        networkViewModel?.getCommentList(
             PrefManager.getInstance(App.getInstance())?.userDetail?.results?.access_token.toString(),
             hashmap
         )
-        networkViewModel.commentLiveData.observe(viewLifecycleOwner) { it ->
+        networkViewModel?.commentLiveData?.observe(viewLifecycleOwner) { it ->
             if (it!!.status) {
                 if (it.results.isNotEmpty()) {
                     /*          it.results.forEach {
@@ -468,7 +444,8 @@ class DialogFragmentComments(
         this.parentPosition = parentPosition
         this.childPosition = childPosition
         commentOverId = shortComment.parentId ?: shortComment._id
-        binding.etComment.setText("@${shortComment.first_name} ${shortComment.last_name} ")
+        binding.etComment.setText("@${shortComment.first_name} ${shortComment.last_name} | ")
+        binding.etComment.setSelection(binding.etComment.text.toString().length)
         isReplyisChildComment = isChild
     }
 

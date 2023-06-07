@@ -166,16 +166,22 @@ class FragmentHome(var callback: Callback) : BaseFragment(),
     fun addComment(comment: String, feed: ResultFuntime) {
         //fromCameraCoverUri
         val images = try {
-            File(
-                if (fromCameraCoverUri?.contains("file://",true) == true) {
-                    RealPathUtil.getRealPath(this.requireActivity(), fromCameraCoverUri.toString().toUri())
-                }else{
-                    fromCameraCoverUri
-                }
-            ).getMultipartBody(
-                keyName = "images",
-                type = "image/*"
-            )
+            if (!fromCameraCoverUri.isNullOrEmpty()) {
+                File(
+                    if (fromCameraCoverUri?.contains("file://", true) == true) {
+                        RealPathUtil.getRealPath(
+                            this.requireActivity(),
+                            fromCameraCoverUri.toString().toUri()
+                        )
+                    } else {
+                        fromCameraCoverUri
+                    }
+                ).getMultipartBody(
+                    keyName = "images",
+                    type = "image/*"
+                )
+            } else
+                null
         } catch (e: Exception) {
             e.printStackTrace()
             null
@@ -256,7 +262,8 @@ class FragmentHome(var callback: Callback) : BaseFragment(),
             if (commentImagePosition != -1) {
                 if (commentImagePosition < feedAdapter.list.size) {
                     if (!feedAdapter.list.get(commentImagePosition).topcomment.isNullOrEmpty()) {
-                        feedAdapter.list.get(commentImagePosition).topcomment?.get(0)?.new_comment_image = fromCameraCoverUri.toString()
+                        feedAdapter.list.get(commentImagePosition).topcomment?.get(0)?.new_comment_image =
+                            fromCameraCoverUri.toString()
                         feedAdapter.notifyDataSetChanged()
                     } else {
                         feedAdapter.list.get(commentImagePosition).topcomment?.clear()
