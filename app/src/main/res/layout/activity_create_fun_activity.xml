@@ -11,25 +11,26 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.progressindicator.LinearProgressIndicator
             android:id="@+id/segmented_progressbar"
             android:layout_width="match_parent"
             android:layout_height="5dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="20dp"
+            android:layout_marginHorizontal="@dimen/_15sdp"
             android:layout_marginTop="45dp"
-            android:layout_marginEnd="20dp"
             android:visibility="invisible"
             app:indicatorColor="@android:color/holo_red_dark"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_goneMarginEnd="20dp"
             app:trackCornerRadius="6dp"
             app:trackThickness="8dp" />
@@ -38,23 +39,25 @@
             android:id="@+id/ivClose"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@id/segmented_progressbar"
-            android:layout_marginStart="20dp"
+            android:layout_marginStart="@dimen/_15sdp"
             android:layout_marginTop="20dp"
             android:background="#33000000"
             android:padding="10dp"
-            android:src="@drawable/ic_close" />
+            android:src="@drawable/ic_close"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/segmented_progressbar" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clController"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@id/segmented_progressbar"
-            android:layout_alignParentEnd="true"
             android:layout_marginTop="20dp"
-            android:layout_marginEnd="20dp"
+            android:layout_marginEnd="@dimen/_15sdp"
             android:background="#33000000"
             android:paddingHorizontal="@dimen/_4sdp"
-            android:paddingVertical="@dimen/_2sdp">
+            android:paddingVertical="@dimen/_2sdp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/segmented_progressbar">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/buttonSpeed"
@@ -159,12 +162,14 @@
             android:id="@+id/tabbarduration"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="20dp"
-            android:layout_marginBottom="@dimen/_180sdp"
+            android:layout_marginStart="@dimen/_15sdp"
+            android:layout_marginBottom="@dimen/_25sdp"
             android:background="@drawable/round_very_small_corner_very_light_primary"
             android:contentDescription="Video duration"
             android:padding="6dp"
+            android:elevation="@dimen/_8sdp"
+            app:layout_constraintBottom_toTopOf="@+id/focusStart"
+            app:layout_constraintStart_toStartOf="parent"
             app:tabBackground="@drawable/round_very_small_corner_very_light_primary"
             app:tabIndicator="@drawable/round_very_small_corner_white"
             app:tabIndicatorColor="@android:color/white"
@@ -181,88 +186,80 @@
             android:id="@+id/buttonPickData"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="@dimen/_180sdp"
+            android:layout_marginStart="@dimen/_15sdp"
+            android:layout_marginBottom="@dimen/_25sdp"
             android:background="@drawable/border_white_rectangle"
             android:padding="@dimen/_2sdp"
             android:src="@drawable/ic_gallery"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:riv_corner_radius="@dimen/_2sdp"
             tools:visibility="visible" />
 
-        <androidx.appcompat.widget.LinearLayoutCompat
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvRecordButton"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_70sdp"
+            android:layout_marginBottom="@dimen/_40sdp"
+            android:layoutDirection="ltr"
+            android:nestedScrollingEnabled="true"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toTopOf="@id/tvEffectName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:listitem="@layout/item_snap" />
+
+        <View
+            android:id="@+id/focusStart"
+            android:layout_width="@dimen/_85sdp"
+            android:layout_height="@dimen/_85sdp"
+            android:background="@drawable/circle_camerabackground"
+            app:layout_constraintBottom_toBottomOf="@+id/rvRecordButton"
+            app:layout_constraintEnd_toEndOf="@+id/rvRecordButton"
+            app:layout_constraintStart_toStartOf="@+id/rvRecordButton"
+            app:layout_constraintTop_toTopOf="@+id/rvRecordButton" />
+
+        <View
+            android:id="@+id/centerFocusedView"
+            android:layout_width="@dimen/_2sdp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@id/rvRecordButton"
+            app:layout_constraintEnd_toEndOf="@id/rvRecordButton"
+            app:layout_constraintStart_toStartOf="@id/rvRecordButton"
+            app:layout_constraintTop_toTopOf="@id/rvRecordButton" />
+
+        <TextView
+            android:id="@+id/tvEffectName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="@dimen/_80sdp"
+            android:background="#33000000"
             android:gravity="center"
-            android:orientation="vertical">
-
-            <ImageButton
-                android:id="@+id/recordButton"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:layout_marginBottom="@dimen/_5sdp"
-                android:background="@null"
-                android:contentDescription="Capture"
-                android:scaleType="centerInside"
-                android:src="@drawable/circle_camerabackground" />
-
-            <TextView
-                android:id="@+id/tvEffectName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/recordButton"
-                android:layout_centerHorizontal="true"
-                android:background="#33000000"
-                android:gravity="center"
-                android:paddingHorizontal="@dimen/_2sdp"
-                android:paddingVertical="@dimen/_1sdp"
-                android:visibility="gone"
-                android:textAlignment="center"
-                android:textColor="#ffffff"
-                android:textSize="14sp" />
-        </androidx.appcompat.widget.LinearLayoutCompat>
-
-        <ImageButton
-            android:id="@+id/previousMask"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="20dp"
-            android:layout_marginBottom="25dp"
-            android:background="#33000000"
-            android:contentDescription="Previous Mask"
-            android:scaleType="centerInside"
-            android:src="@drawable/arrow_left" />
-
-        <ImageButton
-            android:id="@+id/nextMask"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="25dp"
-            android:background="#33000000"
-            android:contentDescription="Next Mask"
-            android:scaleType="centerInside"
-            android:src="@drawable/arrow_right" />
+            android:layout_marginBottom="@dimen/_15sdp"
+            android:paddingHorizontal="@dimen/_2sdp"
+            android:paddingVertical="@dimen/_1sdp"
+            android:textAlignment="center"
+            android:textColor="#ffffff"
+            android:textSize="14sp"
+            app:layout_constraintTop_toTopOf="@+id/buttonPickData"
+            app:layout_constraintBottom_toBottomOf="@+id/buttonPickData"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <LinearLayout
             android:id="@+id/llTypes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="20dp"
+            android:layout_marginStart="@dimen/_15sdp"
+            android:layout_marginBottom="@dimen/_15sdp"
             android:background="#33000000"
-            android:orientation="horizontal"
+            android:gravity="center"
+            android:orientation="vertical"
             android:paddingHorizontal="@dimen/_4sdp"
-            android:paddingVertical="@dimen/_2sdp">
+            android:paddingVertical="@dimen/_2sdp"
+            app:layout_constraintBottom_toTopOf="@+id/tabbarduration"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/clController"
+            app:layout_constraintVertical_bias="1">
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="wrap_content"
@@ -352,8 +349,7 @@
                     android:textColor="#ffffff" />
             </androidx.appcompat.widget.LinearLayoutCompat>
         </LinearLayout>
-
-    </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
         android:id="@+id/tvCountDownValue"

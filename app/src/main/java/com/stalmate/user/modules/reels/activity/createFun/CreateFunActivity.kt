@@ -31,11 +31,15 @@ import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.Guideline
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.lifecycle.LifecycleOwner
 import androidx.loader.content.CursorLoader
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.PagerSnapHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -134,6 +138,8 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
     private var currentEffect = 0
     private var currentFilter = 0// if the device's natural orientation is portrait:
 
+    private var snapAdapter: SnapsAdapter? = null
+
     /*
                get interface orientation from
                https://stackoverflow.com/questions/10380989/how-do-i-get-the-current-orientation-activityinfo-screen-orientation-of-an-a/10383164
@@ -170,9 +176,15 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
             }
             return orientation
         }
-    var masks: ArrayList<String>? = null
-    var effects: ArrayList<String>? = null
-    var filters: ArrayList<String>? = null
+
+    data class SnapsData(
+        val name: String = "",
+        val image: Int = 0
+    )
+
+    var masks: ArrayList<SnapsData> = arrayListOf()
+    var effects: ArrayList<SnapsData> = arrayListOf()
+    var filters: ArrayList<SnapsData> = arrayListOf()
     private var activeFilterType = 0
     private var width = 0
     private var height = 0
@@ -198,20 +210,31 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
             if (countdownTimerDuration == 0) {
                 isCountDownActive = false
                 isCounterSelected()
-                findViewById<ImageButton>(R.id.recordButton).visibility = View.GONE
+                findViewById<RecyclerView>(R.id.rvRecordButton).visibility = View.GONE
                 findViewById<TextView>(R.id.tvCountDownValue).visibility = View.GONE
                 captureTimerHandler.removeCallbacks(this)
                 if (isImage) {
-                    findViewById<ImageButton>(R.id.recordButton).performClick()
+                    isImage = true
+                    isTakingVideo = false
+                    deepAR?.takeScreenshot()
                 } else {
-                    findViewById<ImageButton>(R.id.recordButton).performLongClick()
+                    val now = DateFormat.format("yyyy_MM_dd_hh_mm_ss", Date())
+                    videoFileName = File(
+                        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS + "/Stalmate"),
+                        "video_$now.mp4"
+                    )
+                    isImage = false
+                    isTakingVideo = true
+                    segmented_progressbar.visibility = View.VISIBLE
+                    deepAR?.startVideoRecording(videoFileName.toString(), width / 2, height / 2)
+                    countDownTimer?.start()
                 }
             } else {
                 countdownTimerDuration--
                 runOnUiThread {
                     isCountDownActive = true
                     isCounterSelected()
-                    findViewById<ImageButton>(R.id.recordButton).visibility = View.VISIBLE
+                    findViewById<RecyclerView>(R.id.rvRecordButton).visibility = View.VISIBLE
                     findViewById<TextView>(R.id.tvCountDownValue).visibility = View.VISIBLE
                     findViewById<TextView>(R.id.tvCountDownValue).text =
                         countdownTimerDuration.toString()
@@ -255,59 +278,214 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
     }
 
     private fun initializeFilters() {
-        masks = ArrayList()
-        masks!!.add("none")
-        masks!!.add("aviators")
-        masks!!.add("bigmouth")
-        masks!!.add("dalmatian")
-        masks!!.add("flowers")
-        masks!!.add("koala")
-        masks!!.add("lion")
-        masks!!.add("smallface")
-        masks!!.add("teddycigar")
-        masks!!.add("kanye")
-        masks!!.add("tripleface")
-        masks!!.add("sleepingmask")
-        masks!!.add("fatify")
-        masks!!.add("obama")
-        masks!!.add("mudmask")
-        masks!!.add("pug")
-        masks!!.add("slash")
-        masks!!.add("twistedface")
-        masks!!.add("grumpycat")
+        masks.clear()
+        masks.add(SnapsData(name = "none", image = R.drawable.white_circle))
+        masks.add(SnapsData(name = "none", image = R.drawable.white_circle))
+        masks.add(SnapsData(name = "none", image = R.drawable.white_circle))
+        masks.add(SnapsData(name = "aviators", image = R.drawable.aviators_mask))
+        masks.add(SnapsData(name = "bigmouth", image = R.drawable.bigmouth_mask))
+        masks.add(SnapsData(name = "dalmatian", image = R.drawable.dalmatian_mask))
+        masks.add(SnapsData(name = "flowers", image = R.drawable.flowers_mask))
+        masks.add(SnapsData(name = "koala", image = R.drawable.koala_mask))
+        masks.add(SnapsData(name = "lion", image = R.drawable.lion_mask))
+        masks.add(SnapsData(name = "smallface", image = R.drawable.smallface_mask))
+        masks.add(SnapsData(name = "teddycigar", image = R.drawable.teddycigar_mask))
+        masks.add(SnapsData(name = "kanye", image = R.drawable.kanye_mask))
+        masks.add(SnapsData(name = "tripleface", image = R.drawable.tripleface_mask))
+        masks.add(SnapsData(name = "sleepingmask", image = R.drawable.sleepingmask_mask))
+        masks.add(SnapsData(name = "fatify", image = R.drawable.fatify_mask))
+        masks.add(SnapsData(name = "obama", image = R.drawable.obama_mask))
+        masks.add(SnapsData(name = "mudmask", image = R.drawable.mudmask_mask))
+        masks.add(SnapsData(name = "pug", image = R.drawable.pug_mask))
+        masks.add(SnapsData(name = "slash", image = R.drawable.slash_mask))
+        masks.add(SnapsData(name = "twistedface", image = R.drawable.twistedface_mask))
+        masks.add(SnapsData(name = "grumpycat", image = R.drawable.grumpycat_mask))
+        masks.add(SnapsData(name = "none", image = R.drawable.white_circle))
+        masks.add(SnapsData(name = "none", image = R.drawable.white_circle))
 
-        effects = ArrayList()
-        effects!!.add("none")
-        effects!!.add("viking_helmet.deepar")
-        effects!!.add("MakeupLook.deepar")
-        effects!!.add("Split_View_Look.deepar")
-        effects!!.add("Emotions_Exaggerator.deepar")
-        effects!!.add("Emotion_Meter.deepar")
-        effects!!.add("Stallone.deepar")
-        effects!!.add("flower_face.deepar")
-        effects!!.add("galaxy_background.deepar")
-        effects!!.add("Humanoid.deepar")
-        effects!!.add("Neon_Devil_Horns.deepar")
-        effects!!.add("Ping_Pong.deepar")
-        effects!!.add("Pixel_Hearts.deepar")
-        effects!!.add("Snail.deepar")
-        effects!!.add("Hope.deepar")
-        effects!!.add("Vendetta_Mask.deepar")
-        effects!!.add("Fire_Effect.deepar")
-        effects!!.add("burning_effect.deepar")
-        effects!!.add("Elephant_Trunk.deepar")
-        effects!!.add("fire")
-        effects!!.add("rain")
-        effects!!.add("heart")
-        effects!!.add("blizzard")
+        effects.clear()
+        effects.add(SnapsData(name = "none", image = R.drawable.white_circle))
+        effects.add(SnapsData(name = "none", image = R.drawable.white_circle))
+        effects.add(SnapsData(name = "none", image = R.drawable.white_circle))
+        effects.add(SnapsData(name = "viking_helmet.deepar", image = R.drawable.viking_helmet))
+        effects.add(SnapsData(name = "MakeupLook.deepar", image = R.drawable.makeup_look))
+        effects.add(SnapsData(name = "Split_View_Look.deepar", image = R.drawable.spilit_view))
+        effects.add(
+            SnapsData(
+                name = "Emotions_Exaggerator.deepar",
+                image = R.drawable.emotions_exaggerated
+            )
+        )
+        effects.add(SnapsData(name = "Emotion_Meter.deepar", image = R.drawable.emotion_meter))
+        effects.add(SnapsData(name = "Stallone.deepar", image = R.drawable.etallone_effect))
+        effects.add(SnapsData(name = "flower_face.deepar", image = R.drawable.flower_face))
+        effects.add(
+            SnapsData(
+                name = "galaxy_background.deepar",
+                image = R.drawable.galaxy_background
+            )
+        )
+        effects.add(SnapsData(name = "Humanoid.deepar", image = R.drawable.humanoid))
+        effects.add(
+            SnapsData(
+                name = "Neon_Devil_Horns.deepar",
+                image = R.drawable.neon_devil_horns
+            )
+        )
+        effects.add(SnapsData(name = "Ping_Pong.deepar", image = R.drawable.ping_pong))
+        effects.add(SnapsData(name = "Pixel_Hearts.deepar", image = R.drawable.pixel_hearts))
+        effects.add(SnapsData(name = "Snail.deepar", image = R.drawable.snail_img))
+        effects.add(SnapsData(name = "Hope.deepar", image = R.drawable.hope_img))
+        effects.add(
+            SnapsData(
+                name = "Vendetta_Mask.deepar",
+                image = R.drawable.vendetta_mask_effect
+            )
+        )
+        effects.add(SnapsData(name = "Fire_Effect.deepar", image = R.drawable.fair_effect))
+        effects.add(SnapsData(name = "burning_effect.deepar", image = R.drawable.burning_effect))
+        effects.add(SnapsData(name = "Elephant_Trunk.deepar", image = R.drawable.elephant_trunk))
+        effects.add(SnapsData(name = "fire", image = R.drawable.fire_effect))
+        effects.add(SnapsData(name = "rain", image = R.drawable.white_circle))
+        effects.add(SnapsData(name = "heart", image = R.drawable.white_circle))
+        effects.add(SnapsData(name = "blizzard", image = R.drawable.white_circle))
+        effects.add(SnapsData(name = "none", image = R.drawable.white_circle))
+        effects.add(SnapsData(name = "none", image = R.drawable.white_circle))
 
-        filters = ArrayList()
-        filters!!.add("none")
-        filters!!.add("filmcolorperfection")
-        filters!!.add("tv80")
-        filters!!.add("drawingmanga")
-        filters!!.add("sepia")
-        filters!!.add("bleachbypass")
+        filters.clear()
+        filters.add(SnapsData(name = "none", image = R.drawable.white_circle))
+        filters.add(SnapsData(name = "none", image = R.drawable.white_circle))
+        filters.add(SnapsData(name = "none", image = R.drawable.white_circle))
+        filters.add(
+            SnapsData(
+                name = "filmcolorperfection",
+                image = R.drawable.filmcolorperfection_filter
+            )
+        )
+        filters.add(SnapsData(name = "tv80", image = R.drawable.tv_eighty_filter))
+        filters.add(SnapsData(name = "drawingmanga", image = R.drawable.drawingmanga_filter))
+        filters.add(SnapsData(name = "sepia", image = R.drawable.sepia_filter))
+        filters.add(SnapsData(name = "bleachbypass", image = R.drawable.bleachbypass_filter))
+        filters.add(SnapsData(name = "none", image = R.drawable.white_circle))
+        filters.add(SnapsData(name = "none", image = R.drawable.white_circle))
+
+        findViewById<RecyclerView>(R.id.rvRecordButton).layoutManager = LinearLayoutPagerManager(
+            this,
+            LinearLayoutManager.HORIZONTAL,
+            false,
+            5
+        )
+
+        if (snapAdapter != null) {
+            snapAdapter = null
+        }
+
+        snapAdapter =
+            SnapsAdapter(
+                timeList = when (activeFilterType) {
+                    0 -> masks
+                    1 -> effects
+                    2 -> filters
+                    else -> arrayListOf()
+                },
+                callback = object : SnapsAdapter.OnSnapListener {
+                    override fun onItemSelected(data: SnapsData) {
+                        val type = when (activeFilterType) {
+                            0 -> "mask"
+                            1 -> "effect"
+                            2 -> "filter"
+                            else -> ""
+                        }
+                        if (data.name == "none") {
+                            findViewById<TextView>(R.id.tvEffectName).visibility = View.INVISIBLE
+                        } else {
+                            findViewById<TextView>(R.id.tvEffectName).visibility = View.VISIBLE
+                            findViewById<TextView>(R.id.tvEffectName).text =
+                                (data.name[0]?.toUpperCase().toString() + data.name?.substring(
+                                    1,
+                                    (data.name?.lastIndex ?: 0) + 1
+                                )?.replace(".deepar", "")).replace("_", " ")
+                        }
+                        deepAR?.switchEffect(type, getFilterPath(data.name))
+                    }
+
+                    override fun scrollBound() {
+                        findViewById<RecyclerView>(R.id.rvRecordButton).smoothScrollBy(-100, 0)
+                    }
+
+                    override fun setOnClickListener() {
+                        //Capture
+                        isImage = true
+                        isTakingVideo = false
+                        deepAR?.takeScreenshot()
+                    }
+
+                    override fun setOnLongClickListener() {
+                        //Record
+                        val now = DateFormat.format("yyyy_MM_dd_hh_mm_ss", Date())
+                        videoFileName = File(
+                            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS + "/Stalmate"),
+                            "video_$now.mp4"
+                        )
+                        isImage = false
+                        isTakingVideo = true
+                        segmented_progressbar.visibility = View.VISIBLE
+                        deepAR?.startVideoRecording(videoFileName.toString(), width / 2, height / 2)
+                        countDownTimer?.start()
+                    }
+                }
+            )
+        findViewById<RecyclerView>(R.id.rvRecordButton)?.apply {
+            adapter = snapAdapter
+            setHasFixedSize(true)
+        }
+        try {
+            PagerSnapHelper().attachToRecyclerView(findViewById<RecyclerView>(R.id.rvRecordButton))
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        /*findViewById<RecyclerView>(R.id.rvRecordButton).addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                val l = IntArray(2)
+                findViewById<View>(R.id.focusStart).getLocationOnScreen(l)
+                val x = l[0]
+                val y = l[1]
+                snapAdapter?.setCurrentFocus(
+                    x,
+                    y,
+                    this@CreateFunActivity
+                )
+            }
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+            }
+        })*/
+        /*findViewById<RecyclerView>(R.id.rvRecordButton).setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+
+        }*/
+        findViewById<RecyclerView>(R.id.rvRecordButton).setOnScrollChangeListener(object :
+            RecyclerView.OnScrollListener(), View.OnScrollChangeListener {
+            override fun onScrollChange(
+                v: View?,
+                scrollX: Int,
+                scrollY: Int,
+                oldScrollX: Int,
+                oldScrollY: Int
+            ) {
+                val l = IntArray(2)
+                findViewById<View>(R.id.centerFocusedView).getLocationOnScreen(l)
+                val x = l[0]
+                val y = l[1]
+                snapAdapter?.setCurrentFocus(
+                    x,
+                    y,
+                    this@CreateFunActivity
+                )
+            }
+        })
     }
 
     private fun createTimer(duration: Int) {
@@ -320,7 +498,7 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
             override fun onFinish() {
                 isTakingVideo = false
                 segmented_progressbar.visibility = View.INVISIBLE
-                findViewById<ImageButton>(R.id.recordButton).visibility = View.VISIBLE
+                findViewById<RecyclerView>(R.id.rvRecordButton).visibility = View.VISIBLE
                 deepAR?.stopVideoRecording()
             }
         }
@@ -344,28 +522,6 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
             imageChooser()
         }
 
-        //Capture and Record
-        val screenshotBtn = findViewById<ImageButton>(R.id.recordButton)
-        screenshotBtn.setOnClickListener {
-            isImage = true
-            isTakingVideo = false
-            deepAR?.takeScreenshot()
-        }
-        screenshotBtn.setOnLongClickListener {
-            val now = DateFormat.format("yyyy_MM_dd_hh_mm_ss", Date())
-            videoFileName = File(
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS + "/Stalmate"),
-                "video_$now.mp4"
-            )
-            isImage = false
-            isTakingVideo = true
-            segmented_progressbar.visibility = View.VISIBLE
-            screenshotBtn.visibility = View.GONE
-            deepAR?.startVideoRecording(videoFileName.toString(), width / 2, height / 2)
-            countDownTimer?.start()
-            true
-        }
-
         //Switch Camera
         val switchCamera = findViewById<ImageView>(R.id.switchCamera)
         switchCamera.setOnClickListener {
@@ -384,12 +540,6 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
             setupCamera()
         }
 
-        //Apply ARs
-        val previousMask = findViewById<ImageButton>(R.id.previousMask)
-        val nextMask = findViewById<ImageButton>(R.id.nextMask)
-        previousMask.setOnClickListener { gotoPrevious() }
-        nextMask.setOnClickListener { gotoNext() }
-
         //Choose ARs
         val radioMasks = findViewById<RadioButton>(R.id.masks)
         val radioEffects = findViewById<RadioButton>(R.id.effects)
@@ -398,7 +548,14 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
             radioEffects.isChecked = false
             radioFilters.isChecked = false
             activeFilterType = 0
-            if (masks?.get(currentMask) == "none") {
+
+            initializeFilters()
+
+            /*snapAdapter?.timeList?.clear()
+            snapAdapter?.timeList?.addAll(masks)
+            snapAdapter?.notifyDataSetChanged()*/
+
+            /*if (masks?.get(currentMask) == "none") {
                 findViewById<TextView>(R.id.tvEffectName).visibility = View.GONE
             } else {
                 findViewById<TextView>(R.id.tvEffectName).visibility = View.VISIBLE
@@ -412,13 +569,20 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
             deepAR?.switchEffect(
                 "mask",
                 getFilterPath(masks?.get(currentMask).toString())
-            )
+            )*/
         }
         radioEffects.setOnClickListener {
             radioMasks.isChecked = false
             radioFilters.isChecked = false
             activeFilterType = 1
-            if (effects?.get(currentEffect) == "none") {
+
+            initializeFilters()
+
+            /*snapAdapter?.timeList?.clear()
+            snapAdapter?.timeList?.addAll(effects)
+            snapAdapter?.notifyDataSetChanged()*/
+
+            /*if (effects?.get(currentEffect) == "none") {
                 findViewById<TextView>(R.id.tvEffectName).visibility = View.GONE
             } else {
                 findViewById<TextView>(R.id.tvEffectName).visibility = View.VISIBLE
@@ -432,13 +596,20 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
             deepAR?.switchEffect(
                 "effect",
                 getFilterPath(effects?.get(currentEffect).toString())
-            )
+            )*/
         }
         radioFilters.setOnClickListener {
             radioEffects.isChecked = false
             radioMasks.isChecked = false
             activeFilterType = 2
-            if (filters?.get(currentFilter) == "none") {
+
+            initializeFilters()
+
+            /*snapAdapter?.timeList?.clear()
+            snapAdapter?.timeList?.addAll(filters)
+            snapAdapter?.notifyDataSetChanged()*/
+
+            /*if (filters?.get(currentFilter) == "none") {
                 findViewById<TextView>(R.id.tvEffectName).visibility = View.GONE
             } else {
                 findViewById<TextView>(R.id.tvEffectName).visibility = View.VISIBLE
@@ -452,7 +623,7 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
             deepAR?.switchEffect(
                 "filter",
                 getFilterPath(filters?.get(currentFilter).toString())
-            )
+            )*/
         }
 
         //Change Video DUration
@@ -478,7 +649,8 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
         }, onRangeDialogDismiss = {
             isCountDownActive = false
             isCounterSelected()
-            screenshotBtn.visibility = View.VISIBLE
+            findViewById<RecyclerView>(R.id.rvRecordButton).visibility = View.VISIBLE
+            findViewById<RecyclerView>(R.id.focusStart).visibility = View.VISIBLE
         })
 
         val buttonCaptureCounter = findViewById<ConstraintLayout>(R.id.buttonCaptureCounter)
@@ -488,7 +660,8 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
             }
             isCountDownActive = true
             isCounterSelected()
-            screenshotBtn.visibility = View.GONE
+            findViewById<RecyclerView>(R.id.rvRecordButton).visibility = View.INVISIBLE
+            findViewById<RecyclerView>(R.id.focusStart).visibility = View.INVISIBLE
             counter.show(supportFragmentManager, counter.tag)
         }
 
@@ -574,7 +747,7 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
     }
 
     private fun restoreDeepArState() {
-        try {
+        /*try {
             if (masks?.get(currentMask) == "none") {
                 findViewById<TextView>(R.id.tvEffectName).visibility = View.GONE
             } else {
@@ -624,7 +797,7 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
             )
         } catch (e: Exception) {
             e.printStackTrace()
-        }
+        }*/
     }
 
     private fun imageChooser() {
@@ -1103,124 +1276,6 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
         } else "file:///android_asset/$filterName"
     }
 
-    private fun gotoNext() {
-        when (activeFilterType) {
-            0 -> {
-                currentMask = (currentMask + 1) % (masks?.size ?: 0)
-                if (masks?.get(currentMask) == "none") {
-                    findViewById<TextView>(R.id.tvEffectName).visibility = View.GONE
-                } else {
-                    findViewById<TextView>(R.id.tvEffectName).visibility = View.VISIBLE
-                    findViewById<TextView>(R.id.tvEffectName).text =
-                        (masks?.get(currentMask)?.get(0)?.toUpperCase()
-                            .toString() + masks?.get(currentMask)?.substring(
-                            1,
-                            (masks?.get(currentMask)?.lastIndex ?: 0) + 1
-                        )?.replace(".deepar", "")).replace("_", " ")
-                }
-                deepAR?.switchEffect(
-                    "mask",
-                    getFilterPath(masks?.get(currentMask).toString())
-                )
-            }
-            1 -> {
-                currentEffect = (currentEffect + 1) % (effects?.size ?: 0)
-                if (effects?.get(currentEffect) == "none") {
-                    findViewById<TextView>(R.id.tvEffectName).visibility = View.GONE
-                } else {
-                    findViewById<TextView>(R.id.tvEffectName).visibility = View.VISIBLE
-                    findViewById<TextView>(R.id.tvEffectName).text =
-                        (effects?.get(currentEffect)?.get(0)?.toUpperCase()
-                            .toString() + effects?.get(currentEffect)?.substring(
-                            1,
-                            (effects?.get(currentEffect)?.lastIndex ?: 0) + 1
-                        )?.replace(".deepar", "")).replace("_", " ")
-                }
-                deepAR?.switchEffect(
-                    "effect",
-                    getFilterPath(effects?.get(currentEffect).toString())
-                )
-            }
-            2 -> {
-                currentFilter = (currentFilter + 1) % (filters?.size ?: 0)
-                if (filters?.get(currentFilter) == "none") {
-                    findViewById<TextView>(R.id.tvEffectName).visibility = View.GONE
-                } else {
-                    findViewById<TextView>(R.id.tvEffectName).visibility = View.VISIBLE
-                    findViewById<TextView>(R.id.tvEffectName).text =
-                        (filters?.get(currentFilter)?.get(0)?.toUpperCase()
-                            .toString() + filters?.get(currentFilter)?.substring(
-                            1,
-                            (filters?.get(currentFilter)?.lastIndex ?: 0) + 1
-                        )?.replace(".deepar", "")).replace("_", " ")
-                }
-                deepAR?.switchEffect(
-                    "filter",
-                    getFilterPath(filters?.get(currentFilter).toString())
-                )
-            }
-        }
-    }
-
-    private fun gotoPrevious() {
-        when (activeFilterType) {
-            0 -> {
-                currentMask = (currentMask - 1 + (masks?.size ?: 0)) % (masks?.size ?: 0)
-                if (masks?.get(currentMask) == "none") {
-                    findViewById<TextView>(R.id.tvEffectName).visibility = View.GONE
-                } else {
-                    findViewById<TextView>(R.id.tvEffectName).visibility = View.VISIBLE
-                    findViewById<TextView>(R.id.tvEffectName).text =
-                        (masks?.get(currentMask)?.get(0)?.toUpperCase()
-                            .toString() + masks?.get(currentMask)?.substring(
-                            1,
-                            (masks?.get(currentMask)?.lastIndex ?: 0) + 1
-                        )?.replace(".deepar", "")).replace("_", " ")
-                }
-                deepAR?.switchEffect(
-                    "mask",
-                    getFilterPath(masks?.get(currentMask).toString())
-                )
-            }
-            1 -> {
-                currentEffect = (currentEffect - 1 + (effects?.size ?: 0)) % (effects?.size ?: 0)
-                if (effects?.get(currentEffect) == "none") {
-                    findViewById<TextView>(R.id.tvEffectName).visibility = View.GONE
-                } else {
-                    findViewById<TextView>(R.id.tvEffectName).visibility = View.VISIBLE
-                    findViewById<TextView>(R.id.tvEffectName).text =
-                        (effects?.get(currentEffect)?.get(0)?.toUpperCase()
-                            .toString() + effects?.get(currentEffect)?.substring(
-                            1,
-                            (effects?.get(currentEffect)?.lastIndex ?: 0) + 1
-                        )?.replace(".deepar", "")).replace("_", " ")
-                }
-                deepAR?.switchEffect(
-                    "effect",
-                    getFilterPath(effects?.get(currentEffect).toString())
-                )
-            }
-            2 -> {
-                currentFilter = (currentFilter - 1 + (filters?.size ?: 0)) % (filters?.size ?: 0)
-                if (filters?.get(currentFilter) == "none") {
-                    findViewById<TextView>(R.id.tvEffectName).visibility = View.GONE
-                } else {
-                    findViewById<TextView>(R.id.tvEffectName).visibility = View.VISIBLE
-                    findViewById<TextView>(R.id.tvEffectName).text =
-                        (filters?.get(currentFilter)?.get(0)?.toUpperCase()
-                            .toString() + filters?.get(currentFilter)?.substring(
-                            1,
-                            (filters?.get(currentFilter)?.lastIndex ?: 0) + 1
-                        )?.replace(".deepar", "")).replace("_", " ")
-                }
-                deepAR?.switchEffect(
-                    "filter",
-                    getFilterPath(filters?.get(currentFilter).toString())
-                )
-            }
-        }
-    }
-
     override fun onStop() {
         var cameraProvider: ProcessCameraProvider? = null
         try {
@@ -1364,7 +1419,30 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
     override fun shutdownFinished() {}
     override fun initialized() {
         // Restore effect state after deepar release
-        deepAR?.switchEffect("effect", getFilterPath(effects!![currentEffect]))
+        val type = when (activeFilterType) {
+            0 -> "mask"
+            1 -> "effect"
+            2 -> "filter"
+            else -> ""
+        }
+        val typeList = when (activeFilterType) {
+            0 -> masks
+            1 -> effects
+            2 -> filters
+            else -> masks
+        }
+        if (typeList[0].name == "none") {
+            findViewById<TextView>(R.id.tvEffectName).visibility = View.INVISIBLE
+        } else {
+            findViewById<TextView>(R.id.tvEffectName).visibility = View.VISIBLE
+            findViewById<TextView>(R.id.tvEffectName).text =
+                (typeList[0].name?.toUpperCase().toString() + typeList[0].name?.substring(
+                    1,
+                    (typeList[0].name?.lastIndex ?: 0) + 1
+                )?.replace(".deepar", "")).replace("_", " ")
+        }
+        deepAR?.switchEffect(type, getFilterPath(typeList[0].name))
+        deepAR?.switchEffect("effect", getFilterPath(typeList[0].name))
     }
 
     override fun faceVisibilityChanged(b: Boolean) {}
