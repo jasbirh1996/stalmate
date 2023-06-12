@@ -159,7 +159,6 @@ class FragmentProfile(val callback: FragmentHome.Callback? = null) : BaseFragmen
         }
 
         requestPermissions(permissions, WRITE_REQUEST_CODE)
-        binding.layout.buttonEditProfile.visibility = View.VISIBLE
 
         val radius = resources.getDimension(R.dimen.dp_10)
         binding.ivBackground.shapeAppearanceModel = binding.ivBackground.shapeAppearanceModel
@@ -167,7 +166,6 @@ class FragmentProfile(val callback: FragmentHome.Callback? = null) : BaseFragmen
             .setBottomLeftCorner(CornerFamily.ROUNDED, radius)
             .setBottomRightCorner(CornerFamily.ROUNDED, radius)
             .build()
-        getUserProfileData()
         binding.ivBackground.setOnClickListener {
             startActivity(
                 IntentHelper.getFullImageScreen(requireActivity())!!
@@ -538,6 +536,8 @@ class FragmentProfile(val callback: FragmentHome.Callback? = null) : BaseFragmen
             binding.layout.tvWebsite.text = userData.company
             binding.layout.layoutWebsite.visibility = View.VISIBLE
         }
+
+        binding.layout.buttonEditProfile.visibility = View.VISIBLE
     }
 
 

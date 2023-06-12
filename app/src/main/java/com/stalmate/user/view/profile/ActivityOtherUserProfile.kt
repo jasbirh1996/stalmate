@@ -168,10 +168,10 @@ class ActivityOtherUserProfile : BaseActivity(),
         networkViewModel.blockData.observe(this, Observer {
             dismissLoader()
             it.let {
-                if (userData.results.isBlocked == 0) {
-                    userData.results.isBlocked = 1
+                if ((userData.results.isBlocked == "0") || (userData.results.isBlocked == "false")) {
+                    userData.results.isBlocked = "1"
                 } else {
-                    userData.results.isBlocked = 0
+                    userData.results.isBlocked = "0"
                 }
                 networkViewModel.otherUserProfileLiveData.postValue(userData)
             }
@@ -356,7 +356,7 @@ class ActivityOtherUserProfile : BaseActivity(),
         } else {
             binding.tvFollowStatus.text = "Follow"
         }
-        if (userData.results.isBlocked == 1) {
+        if ((userData.results.isBlocked == "1") || (userData.results.isBlocked == "true")) {
             binding.tvBlockStatus.text = "Blocked"
         } else {
             binding.tvBlockStatus.text = "Block"

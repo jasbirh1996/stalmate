@@ -446,7 +446,7 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
                             ProfileAlbumAdapter(networkViewModel, requireActivity(), id)
                         binding.rvCoverPicture.layoutManager =
                             GridLayoutManager(requireActivity(), 5)
-                        if (userData.results.cover_img.isNotEmpty()) {
+                        if (!userData.results.cover_img.isNullOrEmpty()) {
                             binding.rvCoverPicture.adapter = coverPictureAdapter
                             coverPictureAdapter.submitList(it.results)
                             binding.layoutCoverImages.visibility = View.VISIBLE

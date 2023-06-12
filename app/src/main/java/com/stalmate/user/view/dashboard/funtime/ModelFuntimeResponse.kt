@@ -53,7 +53,7 @@ data class ResultFuntime(
     @Parcelize
     data class TopComment(
         var comment: String,
-        var comment_image: String,
+        var comment_image: String? = null,
         var new_comment_image: String? = null,
         var comment_id: String,
         var Created_date: String,

@@ -61,7 +61,7 @@ data class ModelLoginResponse(
         val who_can_send_me_message: String? = "",
         val who_can_send_you_friendrequest: String? = "",
         val last_update_of_username: String? = "",
-        val is_block: Boolean? = false,
+        val is_block: String? = "0",
         val stepper: Int? = 0
     ) : Parcelable
 }

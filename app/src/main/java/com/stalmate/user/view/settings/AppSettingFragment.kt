@@ -140,14 +140,14 @@ class AppSettingFragment : BaseFragment() {
 
     private fun initViews() {
         Glide.with(requireActivity())
-            .load(PrefManager.getInstance(requireContext())?.userProfileDetail?.results?.profile_img1)
+            .load(PrefManager.getInstance(requireContext())?.userDetail?.results?.profile_img_1)
             .placeholder(R.drawable.user_placeholder).circleCrop().into(binding.userProfileImage)
         binding.tvUserName.setText(
-            PrefManager.getInstance(requireContext())?.userProfileDetail?.results?.first_name + PrefManager.getInstance(
+            PrefManager.getInstance(requireContext())?.userDetail?.results?.first_name + PrefManager.getInstance(
                 requireContext()
-            )?.userProfileDetail?.results?.last_name
+            )?.userDetail?.results?.last_name
         )
-        binding.tvAbout.setText(PrefManager.getInstance(requireContext())?.userProfileDetail?.results?.city)
+        binding.tvAbout.setText(PrefManager.getInstance(requireContext())?.userDetail?.results?.city)
 
         val list = ArrayList<AppSettingMenuModel>()
         list.add(AppSettingMenuModel("Version"))
