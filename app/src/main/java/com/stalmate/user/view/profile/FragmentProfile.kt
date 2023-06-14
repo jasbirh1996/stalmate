@@ -50,9 +50,7 @@ import okhttp3.RequestBody
 import java.io.File
 
 
-class FragmentProfile(val callback: FragmentHome.Callback? = null) : BaseFragment(),
-    ProfileAboutAdapter.Callbackk, AdapterFeed.Callbackk,
-    ProfileFriendAdapter.Callbackk {
+class FragmentProfile(val callback: FragmentHome.Callback? = null) : BaseFragment(), ProfileAboutAdapter.Callbackk, AdapterFeed.Callbackk, ProfileFriendAdapter.Callbackk {
     //Add empty constructor to avoid the exception
 
     lateinit var binding: FragmentProfileBinding
@@ -68,15 +66,8 @@ class FragmentProfile(val callback: FragmentHome.Callback? = null) : BaseFragmen
     var imageFile: File? = null
     var isCoverImage = false
     lateinit var userData: User
-    var albumTabType = ""
-    private lateinit var mAccount: Account
     private lateinit var albumImageAdapter: ProfileAlbumImageAdapter
     private lateinit var albumAdapter: SelfProfileAlbumAdapter
-
-
-    lateinit var navHostFragment: NavHostFragment
-    private lateinit var navController: NavController
-//    var ActivityDashboard : ActivityDashboard
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,7 +76,7 @@ class FragmentProfile(val callback: FragmentHome.Callback? = null) : BaseFragmen
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.bind<FragmentProfileBinding>(
             inflater.inflate(
@@ -97,14 +88,9 @@ class FragmentProfile(val callback: FragmentHome.Callback? = null) : BaseFragmen
         return binding.root
     }
 
-    var isIncreasingPreviousValue = 0
-    var isIncreasingCurrentValue = 1
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
         val adapterTabPager = AdapterTabPager(requireActivity())
-//        adapterTabPager.addFragment(FragmentProfileActivityLog(), "Activity Log")
         adapterTabPager.addFragment(FragmentProfileFuntime(), "My Funtime")
         binding.viewpager.adapter = adapterTabPager
         TabLayoutMediator(binding.tabLayout, binding.viewpager) { tab, position ->
@@ -296,25 +282,19 @@ class FragmentProfile(val callback: FragmentHome.Callback? = null) : BaseFragmen
         val accountManager = requireContext().getSystemService(
             AppCompatActivity.ACCOUNT_SERVICE
         ) as AccountManager
-
-
         if (isAccountAdded()) {
-
-            var acc = Account(Constants.ACCOUNT_NAME, Constants.ACCOUNT_TYPE)
+            val acc = Account(Constants.ACCOUNT_NAME, Constants.ACCOUNT_TYPE)
             accountManager.removeAccountExplicitly(acc)
         }
     }
 
     fun isAccountAdded(): Boolean {
-
         // Get an instance of the Android account manager
         val accountManager =
             requireContext().getSystemService(AppCompatActivity.ACCOUNT_SERVICE) as AccountManager
-
         for (i in 0 until accountManager.accounts.size) {
             if (accountManager.accounts[i].type == Constants.ACCOUNT_TYPE) {
                 return true
-
             }
         }
         return false
@@ -336,26 +316,21 @@ class FragmentProfile(val callback: FragmentHome.Callback? = null) : BaseFragmen
                     .putExtra("type", Constants.TYPE_USER_TYPE_FOLLOWINGS)
             )
         }
-
         binding.idCoverPhoto.setOnClickListener {
             isCoverImage = true
             startCrop()
         }
-
         binding.idCameraProfile.setOnClickListener {
             isCoverImage = false
             startCrop()
         }
-
         binding.layout.btnphoto.setOnClickListener {
             startActivity(
                 IntentHelper.getPhotoGalleryAlbumScreen(requireContext())!!
                     .putExtra("viewType", "viewNormal")
             )
         }
-
         binding.layout.buttonEditProfile.setOnClickListener {
-
             // create an options object that defines the transition
             val options = ActivityOptions.makeSceneTransitionAnimation(
                 requireActivity(),
@@ -384,7 +359,7 @@ class FragmentProfile(val callback: FragmentHome.Callback? = null) : BaseFragmen
         if (result.isSuccessful) {
             // use the returned uri
             val uriContent = result.uriContent
-            var uriFilePath = result.getUriFilePath(requireContext()) // optional usage
+            val uriFilePath = result.getUriFilePath(requireContext()) // optional usage
             imageFile = File(result.getUriFilePath(requireContext(), true)!!)
             Log.d("imageUrl======", uriContent.toString())
             Log.d("imageUrl======", uriFilePath.toString())
@@ -568,5 +543,4 @@ class FragmentProfile(val callback: FragmentHome.Callback? = null) : BaseFragmen
     override fun onClickOnProfile(user: User) {
 
     }
-
 }

@@ -184,9 +184,11 @@ class ActivityFullViewReels : BaseActivity(), ReelFullViewAdapter.Callback {
 
 
     override fun onPause() {
-        val viewholder = binding.recyclerView.findViewHolderForAdapterPosition(videoAutoPlayHelper!!.currentPlayingVideoItemPos);
-        val viewMainHolder = (viewholder as VideoReelFullViewHolder)
-        viewMainHolder.customPlayerView.removePlayer()
+        try {
+            val viewholder = binding.recyclerView.findViewHolderForAdapterPosition(videoAutoPlayHelper!!.currentPlayingVideoItemPos);
+            val viewMainHolder = (viewholder as VideoReelFullViewHolder)
+            viewMainHolder.customPlayerView.removePlayer()
+        }catch (e:Exception){e.printStackTrace()}
         super.onPause()
     }
 

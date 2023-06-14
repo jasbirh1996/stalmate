@@ -251,11 +251,7 @@ class SpeedReverseActivity : AppCompatActivity() {
 
     private val videoEditorResult = registerForActivityResult(VideoEditorActivityResultContract()) {
         when (it.resultStatus) {
-            EditorSDKResult.Status.CANCELED -> Toast.makeText(
-                applicationContext,
-                "Editor cancelled",
-                Toast.LENGTH_LONG
-            ).show()
+            EditorSDKResult.Status.CANCELED -> {}
             EditorSDKResult.Status.EXPORT_DONE -> {
                 startActivity(
                     IntentHelper.getCreateFuntimePostScreen(this)!!
@@ -263,11 +259,6 @@ class SpeedReverseActivity : AppCompatActivity() {
                         .putExtra("mimeType", mimeType)
                         .putExtra("isImage", false)
                 )
-                Toast.makeText(
-                    applicationContext,
-                    "${it.resultUri}",
-                    Toast.LENGTH_LONG
-                ).show()
             }
             else -> {
             }

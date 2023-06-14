@@ -196,10 +196,7 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
     var isCountDownActive = false
     var isCaptureDurationActive = false
 
-    private var imageVideoDuration: Int = 5
-    private var speed: Float = 1f
-
-    lateinit var segmented_progressbar: LinearProgressIndicator
+    private var imageVideoDuration: Int = 15
     lateinit var tabbarduration: TabLayout
 
     private lateinit var counter: Counter
@@ -210,8 +207,12 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
             if (countdownTimerDuration == 0) {
                 isCountDownActive = false
                 isCounterSelected()
-                findViewById<RecyclerView>(R.id.rvRecordButton).visibility = View.GONE
                 findViewById<TextView>(R.id.tvCountDownValue).visibility = View.GONE
+
+                findViewById<RecyclerView>(R.id.rvRecordButton).visibility = View.VISIBLE
+                findViewById<View>(R.id.focusStart).visibility = View.VISIBLE
+                findViewById<RoundedImageView>(R.id.buttonPickData).visibility = View.VISIBLE
+
                 captureTimerHandler.removeCallbacks(this)
                 if (isImage) {
                     isImage = true
@@ -225,7 +226,6 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
                     )
                     isImage = false
                     isTakingVideo = true
-                    segmented_progressbar.visibility = View.VISIBLE
                     deepAR?.startVideoRecording(videoFileName.toString(), width / 2, height / 2)
                     countDownTimer?.start()
                 }
@@ -234,7 +234,11 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
                 runOnUiThread {
                     isCountDownActive = true
                     isCounterSelected()
+
                     findViewById<RecyclerView>(R.id.rvRecordButton).visibility = View.VISIBLE
+                    findViewById<View>(R.id.focusStart).visibility = View.VISIBLE
+                    findViewById<RoundedImageView>(R.id.buttonPickData).visibility = View.VISIBLE
+
                     findViewById<TextView>(R.id.tvCountDownValue).visibility = View.VISIBLE
                     findViewById<TextView>(R.id.tvCountDownValue).text =
                         countdownTimerDuration.toString()
@@ -270,10 +274,10 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
     }
 
     private fun initialize() {
-        initializeFilters()
-        getGalleryData()
         initializeDeepAR()
         initalizeViews()
+        initializeFilters()
+        getGalleryData()
         restoreDeepArState()
     }
 
@@ -429,7 +433,6 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
                         )
                         isImage = false
                         isTakingVideo = true
-                        segmented_progressbar.visibility = View.VISIBLE
                         deepAR?.startVideoRecording(videoFileName.toString(), width / 2, height / 2)
                         countDownTimer?.start()
                     }
@@ -489,15 +492,18 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
     }
 
     private fun createTimer(duration: Int) {
+        findViewById<LinearProgressIndicator>(R.id.segmented_progressbar).max = imageVideoDuration
         countDownTimer?.cancel()
+        countDownTimer = null
         countDownTimer = object : CountDownTimer((duration * 1000).toLong(), 1000) {
             override fun onTick(millisUntilFinished: Long) {
-                segmented_progressbar.progress = (duration - (millisUntilFinished / 1000)).toInt()
+                findViewById<LinearProgressIndicator>(R.id.segmented_progressbar).visibility = View.VISIBLE
+                findViewById<LinearProgressIndicator>(R.id.segmented_progressbar).progress = (duration - (millisUntilFinished / 1000)).toInt()
             }
 
             override fun onFinish() {
                 isTakingVideo = false
-                segmented_progressbar.visibility = View.INVISIBLE
+                findViewById<LinearProgressIndicator>(R.id.segmented_progressbar).visibility = View.GONE
                 findViewById<RecyclerView>(R.id.rvRecordButton).visibility = View.VISIBLE
                 deepAR?.stopVideoRecording()
             }
@@ -512,7 +518,6 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
         arView.visibility = View.GONE
         arView.visibility = View.VISIBLE
 
-        segmented_progressbar = findViewById<LinearProgressIndicator>(R.id.segmented_progressbar)
         tabbarduration = findViewById<TabLayout>(R.id.tabbarduration)
         findViewById<ImageView>(R.id.ivClose).setOnClickListener { onBackPressed() }
 
@@ -650,7 +655,8 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
             isCountDownActive = false
             isCounterSelected()
             findViewById<RecyclerView>(R.id.rvRecordButton).visibility = View.VISIBLE
-            findViewById<RecyclerView>(R.id.focusStart).visibility = View.VISIBLE
+            findViewById<View>(R.id.focusStart).visibility = View.VISIBLE
+            findViewById<RoundedImageView>(R.id.buttonPickData).visibility = View.VISIBLE
         })
 
         val buttonCaptureCounter = findViewById<ConstraintLayout>(R.id.buttonCaptureCounter)
@@ -661,7 +667,9 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
             isCountDownActive = true
             isCounterSelected()
             findViewById<RecyclerView>(R.id.rvRecordButton).visibility = View.INVISIBLE
-            findViewById<RecyclerView>(R.id.focusStart).visibility = View.INVISIBLE
+            findViewById<View>(R.id.focusStart).visibility = View.INVISIBLE
+            findViewById<TextView>(R.id.tvEffectName).visibility = View.INVISIBLE
+            findViewById<RoundedImageView>(R.id.buttonPickData).visibility = View.INVISIBLE
             counter.show(supportFragmentManager, counter.tag)
         }
 
@@ -1054,6 +1062,16 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
         }
         val tvTimer = findViewById<TextView>(R.id.tvTimer)
         val ivTimer = findViewById<ImageView>(R.id.ivTimer)
+
+        imageVideoDuration = 15
+        setupProgressBarWithDuration()
+        hideDurationBar(show = false)
+        ivTimer.setImageDrawable(
+            ContextCompat.getDrawable(
+                this@CreateFunActivity, R.drawable.ic_crtpost_timer_one_active
+            )
+        )
+
         tabbarduration.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 tvTimer.setTextColor(resources.getColor(R.color.colorYellow, null))
@@ -1125,7 +1143,6 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
 
     private fun setupProgressBarWithDuration() {
         createTimer(imageVideoDuration)
-        segmented_progressbar.max = imageVideoDuration
     }
 
     //DeepAr Code Below
@@ -1343,11 +1360,11 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
                 null,
                 null
             )
-            Toast.makeText(
+            /*Toast.makeText(
                 this@CreateFunActivity,
                 "Screenshot " + imageFile.name + " saved.",
                 Toast.LENGTH_SHORT
-            ).show()
+            ).show()*/
 
             /*val extension: String =
                 MimeTypeMap.getSingleton().getExtensionFromMimeType(this@CreateFunActivity.contentResolver.getType(Uri.fromFile(imageFile))).toString()
@@ -1386,15 +1403,15 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
     }
 
     override fun videoRecordingStarted() {
-        Toast.makeText(applicationContext, "Recording started.", Toast.LENGTH_LONG).show()
+        //Toast.makeText(applicationContext, "Recording started.", Toast.LENGTH_LONG).show()
     }
 
     override fun videoRecordingFinished() {
-        Toast.makeText(
+        /*Toast.makeText(
             applicationContext,
             "Recording " + videoFileName?.name + " saved.",
             Toast.LENGTH_LONG
-        ).show()
+        ).show()*/
         //Send to change speed and to do reverse
         videoFileName?.let {
             /*val extension: String = MimeTypeMap.getSingleton().getExtensionFromMimeType(
@@ -1409,11 +1426,11 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
     }
 
     override fun videoRecordingFailed() {
-        Toast.makeText(applicationContext, "Error while recording.", Toast.LENGTH_LONG).show()
+        //Toast.makeText(applicationContext, "Error while recording.", Toast.LENGTH_LONG).show()
     }
 
     override fun videoRecordingPrepared() {
-        Toast.makeText(applicationContext, "Recording prepared.", Toast.LENGTH_LONG).show()
+        //Toast.makeText(applicationContext, "Recording prepared.", Toast.LENGTH_LONG).show()
     }
 
     override fun shutdownFinished() {}
@@ -1458,7 +1475,7 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
 
     private val photoEditorResult = registerForActivityResult(PhotoEditorActivityResultContract()) {
         when (it.resultStatus) {
-            EditorSDKResult.Status.CANCELED -> showToast("Editor cancelled")
+            EditorSDKResult.Status.CANCELED -> {}
             EditorSDKResult.Status.EXPORT_DONE -> {
                 startActivity(
                     IntentHelper.getCreateFuntimePostScreen(this)!!
@@ -1466,7 +1483,6 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
                         .putExtra("mimeType", mimeType)
                         .putExtra("isImage", true)
                 )
-                showToast("${it.resultUri}")
             }
             else -> {
             }

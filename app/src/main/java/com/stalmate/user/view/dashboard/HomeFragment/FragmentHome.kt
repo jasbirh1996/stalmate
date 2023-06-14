@@ -53,6 +53,7 @@ import java.io.File
 import java.util.*
 import kotlin.collections.HashMap
 
+//getOtherUserProfileScreen
 
 class FragmentHome(var callback: Callback) : BaseFragment(),
     UserHomeStoryAdapter.Callbackk, SuggestedFriendAdapter.Callbackk {
@@ -168,14 +169,14 @@ class FragmentHome(var callback: Callback) : BaseFragment(),
         val images = try {
             if (!fromCameraCoverUri.isNullOrEmpty()) {
                 File(
-                    if (fromCameraCoverUri?.contains("file://", true) == true) {
+                    (if (fromCameraCoverUri?.contains("file://", true) == true) {
                         RealPathUtil.getRealPath(
                             this.requireActivity(),
                             fromCameraCoverUri.toString().toUri()
                         )
                     } else {
                         fromCameraCoverUri
-                    }
+                    }).toString()
                 ).getMultipartBody(
                     keyName = "images",
                     type = "image/*"

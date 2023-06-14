@@ -135,11 +135,28 @@ class AdapterFeed(
             binding.appCompatTextView6.text = feed.Created_date
 
             if (!feed.topcomment.isNullOrEmpty()) {
-                binding.tvDes.text = feed.topcomment?.get(0)?.comment.toString()
-                feed.topcomment?.get(0)?.user_id?.let {
-                    binding.tvUserName1.text = (it.first_name + " " + it.last_name)
+                if (!feed.topcomment?.get(0)?.comment.isNullOrEmpty()) {
+                    binding.tvDes.visibility = View.VISIBLE
+                    binding.tvDes.text = feed.topcomment?.get(0)?.comment.toString()
+                } else {
+                    binding.tvDes.visibility = View.GONE
                 }
-                if (!feed.topcomment?.get(0)?.comment_image.isNullOrEmpty() && feed.topcomment?.get(0)?.new_comment_image.isNullOrEmpty()) {
+                if (feed.topcomment?.get(0)?.user_id != null) {
+                    feed.topcomment?.get(0)?.user_id?.let {
+                        if (!it.first_name.isNullOrEmpty()) {
+                            binding.tvUserName1.visibility = View.VISIBLE
+                            binding.tvUserName1.text = (it.first_name + " " + it.last_name)
+                        } else {
+                            binding.tvUserName1.visibility = View.GONE
+                        }
+                    }
+                } else {
+                    binding.tvUserName1.visibility = View.GONE
+                }
+                if (!feed.topcomment?.get(0)?.comment_image.isNullOrEmpty() && feed.topcomment?.get(
+                        0
+                    )?.new_comment_image.isNullOrEmpty()
+                ) {
                     binding.ivCommentImage.visibility = View.VISIBLE
                     binding.ivDeleteCommentImage.visibility = View.GONE
                     Glide.with(binding.ivCommentImage.context)
@@ -170,7 +187,7 @@ class AdapterFeed(
                     binding.ivCommentImage.visibility = View.GONE
                     binding.ivDeleteCommentImage.visibility = View.GONE
                 }
-            }else{
+            } else {
                 binding.ivCommentImage.visibility = View.GONE
                 binding.ivDeleteCommentImage.visibility = View.GONE
             }
@@ -183,20 +200,24 @@ class AdapterFeed(
                 binding.ivPlay.visibility = View.VISIBLE
             }
 
-            binding.tvPostDescription.text = Html.fromHtml(
-                feed.text,
-                Html.FROM_HTML_MODE_COMPACT
-            )
-
-            if (binding.tvPostDescription.text.toString()
-                    .split(System.getProperty("line.separator")).size > 2
-            ) {
-                SeeModetextViewHelper.makeTextViewResizable(
-                    binding.tvPostDescription,
-                    2,
-                    "more",
-                    true
+            if (!feed.text.isNullOrEmpty()) {
+                binding.tvPostDescription.visibility = View.VISIBLE
+                binding.tvPostDescription.text = Html.fromHtml(
+                    feed.text,
+                    Html.FROM_HTML_MODE_COMPACT
                 )
+                if (binding.tvPostDescription.text.toString()
+                        .split(System.getProperty("line.separator")).size > 2
+                ) {
+                    SeeModetextViewHelper.makeTextViewResizable(
+                        binding.tvPostDescription,
+                        2,
+                        "more",
+                        true
+                    )
+                }
+            } else {
+                binding.tvPostDescription.visibility = View.GONE
             }
 
             binding.appCompatImageView5.setOnClickListener {
