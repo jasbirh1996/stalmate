@@ -1,6 +1,7 @@
 package com.stalmate.user.utilities
 
 object Constants {
+
     const val url_category_list = "/auth_api/category_list"
     const val url_language_list = "/setting_api/language_list"//"/auth_api/language_list"
     const val URL_INTREST_LIST = "/auth_api/category_list"
