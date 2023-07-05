@@ -134,9 +134,6 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
     private var currentBuffer = 0
     private var buffersInitialized = false
     private var deepAR: DeepAR? = null
-    private var currentMask = 0
-    private var currentEffect = 0
-    private var currentFilter = 0// if the device's natural orientation is portrait:
 
     private var snapAdapter: SnapsAdapter? = null
 
@@ -447,28 +444,6 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
         } catch (e: Exception) {
             e.printStackTrace()
         }
-
-        /*findViewById<RecyclerView>(R.id.rvRecordButton).addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                val l = IntArray(2)
-                findViewById<View>(R.id.focusStart).getLocationOnScreen(l)
-                val x = l[0]
-                val y = l[1]
-                snapAdapter?.setCurrentFocus(
-                    x,
-                    y,
-                    this@CreateFunActivity
-                )
-            }
-
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-            }
-        })*/
-        /*findViewById<RecyclerView>(R.id.rvRecordButton).setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
-
-        }*/
         findViewById<RecyclerView>(R.id.rvRecordButton).setOnScrollChangeListener(object :
             RecyclerView.OnScrollListener(), View.OnScrollChangeListener {
             override fun onScrollChange(
@@ -497,13 +472,16 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
         countDownTimer = null
         countDownTimer = object : CountDownTimer((duration * 1000).toLong(), 1000) {
             override fun onTick(millisUntilFinished: Long) {
-                findViewById<LinearProgressIndicator>(R.id.segmented_progressbar).visibility = View.VISIBLE
-                findViewById<LinearProgressIndicator>(R.id.segmented_progressbar).progress = (duration - (millisUntilFinished / 1000)).toInt()
+                findViewById<LinearProgressIndicator>(R.id.segmented_progressbar).visibility =
+                    View.VISIBLE
+                findViewById<LinearProgressIndicator>(R.id.segmented_progressbar).progress =
+                    (duration - (millisUntilFinished / 1000)).toInt()
             }
 
             override fun onFinish() {
                 isTakingVideo = false
-                findViewById<LinearProgressIndicator>(R.id.segmented_progressbar).visibility = View.GONE
+                findViewById<LinearProgressIndicator>(R.id.segmented_progressbar).visibility =
+                    View.GONE
                 findViewById<RecyclerView>(R.id.rvRecordButton).visibility = View.VISIBLE
                 deepAR?.stopVideoRecording()
             }
@@ -812,7 +790,7 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
         val intent = Intent(this, FilePickerActivity::class.java)
         intent.putExtra(
             FilePickerActivity.CONFIGS, Configurations.Builder()
-//                .setCheckPermission(true)
+                .setCheckPermission(true)
                 .setShowImages(true)
                 .setShowVideos(true)
                 .enableImageCapture(true)

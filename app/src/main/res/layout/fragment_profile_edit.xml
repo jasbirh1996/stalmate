@@ -310,7 +310,6 @@
                     tools:itemCount="5"
                     tools:listitem="@layout/item_profile_cover" />
 
-
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout

@@ -40,7 +40,7 @@ data class ModelLoginResponse(
         val otp: String? = "", // 3010
         val otp_send_time: String? = "", // 1682329504355
         val password: String? = "", // $2b$10$ljjazZ6N7J0rEKvRryd4iu1lpo8POwt56QaHmfUd0qaj.NvjClUpS
-        val profile_img_1: String? = "", // https://webservice.kulluu.com/images/user_img/profile_img_1682071578425.jpg
+        var profile_img_1: String? = "", // https://webservice.kulluu.com/images/user_img/profile_img_1682071578425.jpg
         val schoolandcollege: String? = "",
         val show_to_about: String? = "",
         val show_to_group: String? = "",

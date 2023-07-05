@@ -69,13 +69,11 @@
             android:name="libOpenCL-pixel.so"
             android:required="false" />-->
 
-        <activity android:name=".view.dashboard.Friend.FragmentFriend"
-            android:exported="false"/>
         <activity
-            android:name=".view.settings.TermsAndConditionsAndPrivacyPolicyAndFaqs"
+            android:name=".view.dashboard.Friend.FragmentFriend"
             android:exported="false" />
         <activity
-            android:name=".modules.reels.activity.createFun.CreateFunActivity"
+            android:name=".view.settings.TermsAndConditionsAndPrivacyPolicyAndFaqs"
             android:exported="false" />
         <activity
             android:name=".modules.reels.activity.createFun.SpeedReverseActivity"
@@ -201,7 +199,7 @@
             android:exported="false" />
         <activity
             android:name=".view.profile.ActivityProfileEdit"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".view.settings.ActivityPrivacy"
             android:exported="false" />
@@ -242,6 +240,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".modules.reels.activity.createFun.CreateFunActivity"
+            android:exported="true"/>
         <activity
             android:name=".view.profile.ActivityProfile"
             android:exported="false" />

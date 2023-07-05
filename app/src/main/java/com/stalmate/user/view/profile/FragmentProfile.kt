@@ -50,7 +50,8 @@ import okhttp3.RequestBody
 import java.io.File
 
 
-class FragmentProfile(val callback: FragmentHome.Callback? = null) : BaseFragment(), ProfileAboutAdapter.Callbackk, AdapterFeed.Callbackk, ProfileFriendAdapter.Callbackk {
+class FragmentProfile(val callback: FragmentHome.Callback? = null) : BaseFragment(),
+    ProfileAboutAdapter.Callbackk, AdapterFeed.Callbackk, ProfileFriendAdapter.Callbackk {
     //Add empty constructor to avoid the exception
 
     lateinit var binding: FragmentProfileBinding
@@ -102,7 +103,12 @@ class FragmentProfile(val callback: FragmentHome.Callback? = null) : BaseFragmen
             if (it) {
                 val listOfXy = IntArray(2)
                 binding.tabLayout.getLocationOnScreen(listOfXy)
-                binding.nestedScrollView.dispatchNestedPreScroll(listOfXy[0], listOfXy[1],null,null)
+                binding.nestedScrollView.dispatchNestedPreScroll(
+                    listOfXy[0],
+                    listOfXy[1],
+                    null,
+                    null
+                )
                 binding.nestedScrollView.isSmoothScrollingEnabled = true
                 binding.nestedScrollView.smoothScrollTo(listOfXy[0], listOfXy[1])
                 (context as ActivityDashboard).pointToMyFuntime.value = false
@@ -353,9 +359,8 @@ class FragmentProfile(val callback: FragmentHome.Callback? = null) : BaseFragmen
 
         }
     }
-
     /*Cover Image Picker */
-    private val cropImage = registerForActivityResult(CropImageContract()) { result ->
+    val cropImage = registerForActivityResult(CropImageContract()) { result ->
         if (result.isSuccessful) {
             // use the returned uri
             val uriContent = result.uriContent
@@ -369,22 +374,21 @@ class FragmentProfile(val callback: FragmentHome.Callback? = null) : BaseFragmen
             } else {
                 Glide.with(this).load(uriContent).into(binding.ivUserThumb)
             }*/
-
             updateProfileImageApiHit()
-
         } else {
             // an error occurred
             val exception = result.error
         }
     }
-
     private fun startCrop() {
         // start picker to get image for cropping and then use the image in cropping activity
-        cropImage.launch(
-            options {
-                setGuidelines(CropImageView.Guidelines.ON)
-            }
-        )
+        try {
+            cropImage.launch(
+                options {
+                    setGuidelines(CropImageView.Guidelines.ON)
+                }
+            )
+        }catch (e:Exception){e.printStackTrace()}
     }
 
 
@@ -397,7 +401,7 @@ class FragmentProfile(val callback: FragmentHome.Callback? = null) : BaseFragmen
             thumbnailBody
         ) //image[] for multiple image
 
-        networkViewModel.etsProfileApi(profile_image1)
+        networkViewModel.etsProfileApi(prefManager?.access_token.toString(), profile_image1)
         networkViewModel.UpdateProfileLiveData.observe(this, Observer {
             it.let {
                 makeToast(it!!.message)
@@ -414,6 +418,8 @@ class FragmentProfile(val callback: FragmentHome.Callback? = null) : BaseFragmen
         networkViewModel.profileLiveData.observe(viewLifecycleOwner, Observer {
             it.let {
                 userData = it!!.results
+//                PrefManager.getInstance(requireContext())?.userDetail = it.results
+                prefManager?.profile_img_1 = it.results?.profile_img1.toString()
                 setUpAboutUI("Photos")
                 PrefManager.getInstance(requireContext())!!.userProfileDetail = it
             }

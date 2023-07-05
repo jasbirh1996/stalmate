@@ -462,8 +462,7 @@ class FragmentHome(var callback: Callback) : BaseFragment(),
                     .load(PrefManager.getInstance(requireContext())?.userProfileDetail?.results?.profile_img1)
                     .placeholder(R.drawable.profileplaceholder).circleCrop()
                     .into(binding.postContant.userImage)
-                binding.postContant.appCompatEditText.hint =
-                    "${PrefManager.getInstance(requireContext())?.userProfileDetail?.results?.first_name}, What's in your mind?"
+                binding.postContant.appCompatEditText.hint = "${PrefManager.getInstance(requireContext())?.userProfileDetail?.results?.first_name}, What's in your mind?"
             }
         })
     }

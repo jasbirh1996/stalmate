@@ -545,7 +545,7 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
         binding.btnCrateAccount.setOnClickListener {
             if (ValidationHelper.isNull(merriage)) {
                 makeToast("Please select marriage Status")
-            } else if (Calendar.getInstance()[Calendar.YEAR] < selectedYear.toInt()) {
+            } else if (selectedYear.isNotEmpty() && (Calendar.getInstance()[Calendar.YEAR] < selectedYear.toInt())) {
                 makeToast("Your age should be 13 years or more")
             } else if (verifyPhoneNumber.isNotEmpty()) {
                 if (verifyPhoneNumber == binding.layout.etNumber.text.toString()) {
@@ -631,6 +631,7 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
             RequestBody.create("text/plain".toMediaTypeOrNull(), str.toString())
 
         networkViewModel.etsProfileApi1(
+            access_token = prefManager?.access_token.toString(),
             first_name = getRequestBody(binding.layout.etName.text.toString()),
             last_name = getRequestBody(binding.layout.etLastName.text.toString()),
             about = getRequestBody(binding.layout.bio.text.toString()),
@@ -708,9 +709,10 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
             imageFile!!.name,
             thumbnailBody
         ) //image[] for multiple image
-        networkViewModel.etsProfileApi(profile_image1)
+        networkViewModel.etsProfileApi(prefManager?.access_token.toString(),profile_image1)
         networkViewModel.UpdateProfileLiveData.observe(requireActivity()) {
             it.let {
+                getUserProfileData()
                 makeToast(it!!.message)
                 var hashMap = HashMap<String, String>()
             }

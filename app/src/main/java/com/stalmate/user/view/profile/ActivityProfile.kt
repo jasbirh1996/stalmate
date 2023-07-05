@@ -297,7 +297,7 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
             thumbnailBody
         ) //image[] for multiple image
 
-        networkViewModel.etsProfileApi(profile_image1)
+        networkViewModel.etsProfileApi(prefManager?.access_token.toString(),profile_image1)
         networkViewModel.UpdateProfileLiveData.observe(this, Observer {
             it.let {
                 makeToast(it!!.message)

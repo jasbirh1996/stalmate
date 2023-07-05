@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.databinding.ActivityProfileEditBinding
@@ -18,7 +19,6 @@ import com.stalmate.user.view.settings.FragmentBlockedContacts
 class ActivityProfileEdit : BaseActivity() /*FragmentSync.Callback*/ {
 
     private lateinit var binding: ActivityProfileEditBinding
-    private lateinit var navController: NavController
     override fun onClick(viewId: Int, view: View?) {
         TODO("Not yet implemented")
     }
@@ -29,12 +29,10 @@ class ActivityProfileEdit : BaseActivity() /*FragmentSync.Callback*/ {
         val view = binding.root
         setContentView(view)
         setUpNavigation()
-  /*      loadFragment(FragmentProfileEdit(this))*/
-
     }
 
     private fun setUpNavigation() {
-        navController=findNavController(R.id.nav_host_fragment)
+
     }
 
 

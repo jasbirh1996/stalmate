@@ -10,8 +10,8 @@ object UrlFactory {
     //"https://webservice.kulluu.com/"
     //"http://157.241.38.111:3000/"
 
-    private const val URL_DEV ="http://157.175.98.149:3000/" /*"https://webservice.kulluu.com/"*/ // Development
-    private const val URL_PROD ="http://157.175.98.149:3000/" /*"https://webservice.kulluu.com/"*/ // Live
+    private const val URL_DEV = "http://157.175.98.149:3000/" /*"https://webservice.kulluu.com/"*/ // Development
+    private const val URL_PROD = "http://157.175.98.149:3000/" /*"https://webservice.kulluu.com/"*/ // Live
 
     private const val API_VERSION = "api/v0/"
     private const val isModeDevelopment = true

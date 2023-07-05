@@ -252,6 +252,7 @@ interface ApiInterface {
     @Multipart
     @POST(Constants.UPDATE_PROFILE_API)
     fun updateUserProfile(
+        @Header("access_token") access_token: String,
         @Part("first_name") firstName: RequestBody,
         @Part("last_name") lastName: RequestBody,
         @Part("about") about: RequestBody,
@@ -268,7 +269,10 @@ interface ApiInterface {
 
     @Multipart
     @POST(Constants.UPDATE_PROFILE_API_FILE)
-    fun updateUserProfileImage(@Part cover_img: MultipartBody.Part): Call<CommonModelResponse>
+    fun updateUserProfileImage(
+        @Header("access_token") access_token: String,
+        @Part cover_img: MultipartBody.Part
+    ): Call<CommonModelResponse>
 
 
     @Multipart

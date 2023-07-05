@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/fragmentProfileEdit"
-        tools:layout="@layout/fragment_profile_edit"
         android:name="com.stalmate.user.view.profile.FragmentProfileEdit"
-        android:label="FragmentProfileEdit" >
+        android:label="FragmentProfileEdit"
+        tools:layout="@layout/fragment_profile_edit">
         <action
             android:id="@+id/action_fragmentProfileEdit_to_fragmentBlockedContacts"
             app:destination="@id/fragmentBlockedContacts" />
@@ -19,12 +19,12 @@
     </fragment>
     <fragment
         android:id="@+id/fragmentBlockedContacts"
-        tools:layout="@layout/fragment_blocked_contacts"
         android:name="com.stalmate.user.view.settings.FragmentBlockedContacts"
-        android:label="FragmentBlockedContacts" />
+        android:label="FragmentBlockedContacts"
+        tools:layout="@layout/fragment_blocked_contacts" />
     <fragment
         android:id="@+id/fragmentSync2"
-        tools:layout="@layout/fragment_sync"
         android:name="com.stalmate.user.view.dashboard.welcome.FragmentSync"
-        android:label="FragmentSync" />
+        android:label="FragmentSync"
+        tools:layout="@layout/fragment_sync" />
 </navigation>

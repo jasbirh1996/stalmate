@@ -585,6 +585,7 @@ open class AppViewModel : ViewModel() {
         MutableLiveData<CommonModelResponse?>()
 
     fun etsProfileApi1(
+        access_token: String,
         @Part("first_name") first_name: RequestBody,
         @Part("last_name") last_name: RequestBody,
         @Part("about") about: RequestBody,
@@ -603,6 +604,7 @@ open class AppViewModel : ViewModel() {
 
         getResult(
             temp, apiInterface.updateUserProfile(
+                access_token = access_token,
                 firstName = first_name,
                 lastName = last_name,
                 about = about,
@@ -621,10 +623,13 @@ open class AppViewModel : ViewModel() {
     }
 
 
-    fun etsProfileApi(@Part file_Profile_Image: MultipartBody.Part? = null) {
+    fun etsProfileApi(access_token: String, @Part file_Profile_Image: MultipartBody.Part? = null) {
         val temp = MutableLiveData<CommonModelResponse?>()
         UpdateProfileLiveData = temp
-        getResult(temp, apiInterface.updateUserProfileImage(file_Profile_Image!!))
+        getResult(
+            temp,
+            apiInterface.updateUserProfileImage(access_token = access_token, file_Profile_Image!!)
+        )
     }
 
 

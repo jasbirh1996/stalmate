@@ -73,7 +73,7 @@ class DialogFragmentComments(
                 false
             )
         )!!
-        dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
         return binding.root
     }
 
