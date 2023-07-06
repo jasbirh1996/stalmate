@@ -78,6 +78,8 @@ class DrawerAdapter(
                         context.startActivity(IntentHelper.getSaveFavouriteFuntimeScreen(context))
                     }
                     "Logout" -> {
+
+
                         PrefManager.getInstance(context)!!.keyIsLoggedIn = false
                         context.startActivity(
                             Intent(

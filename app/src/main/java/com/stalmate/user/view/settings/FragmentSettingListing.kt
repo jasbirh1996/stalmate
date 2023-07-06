@@ -79,8 +79,8 @@ class FragmentSettingListing : Fragment(), MainSettingCategoryAdapter.Callbackk 
     override fun onCLickONMenu(settingName: String) {
 
         when (settingName) {
-
             Constants.SETTING_TYPE_ACCOUNT -> {
+                PrefManager.getInstance(requireContext())?.setPopup("popup","true")
                 findNavController().navigate(R.id.fragment_setting_main_to_fragment_account_setting)
             }
 

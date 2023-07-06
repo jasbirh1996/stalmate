@@ -89,7 +89,7 @@ class ProfessionListAdapter(
         hashMap["id"] = id
         hashMap["is_delete"] = "1"
 
-        viewModel.addUpdateProfessionData(hashMap)
+        viewModel.addUpdateProfessionData((context as ActivityProfileEdit)?.prefManager?.access_token.toString(),hashMap)
         viewModel.addUpdateProfessionLiveData.observe(lifecycleObserver) {
             it?.let {
                 if (it.status) {

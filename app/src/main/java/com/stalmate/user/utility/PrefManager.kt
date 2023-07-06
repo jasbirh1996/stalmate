@@ -112,7 +112,7 @@ class PrefManager(private val context: Context) {
     }
 
     fun getLongitudeValue(key: String?): String? {
-        return preferences.getString(key, null)
+        return preferences.getString(key, "")
     }
 
     fun clearPrefs() {
@@ -125,6 +125,16 @@ class PrefManager(private val context: Context) {
         editor.commit()
     }
 
+
+    fun setPopup(key: String?, value: String?) {
+        editor.putString(key, value)
+        editor.commit()
+    }
+
+    fun getPopup(key: String?): String? {
+        return preferences.getString(key, "true")
+    }
+
     companion object {
         private var instance: PrefManager? = null
         private const val PREF_NAME = "WedGuru"
@@ -133,6 +143,9 @@ class PrefManager(private val context: Context) {
         private const val KEY_IS_OLD_USER = "is_First_Time"
         private const val KEY_USER_DETAILS = "user"
         private const val KEY_USER_DETAILS_profile = "userProfile"
+        private const val alreadyShowPopUp = "alreadyShowPopUp"
+
+
         fun getInstance(context: Context): PrefManager? {
             if (instance == null) {
                 instance = PrefManager(context)

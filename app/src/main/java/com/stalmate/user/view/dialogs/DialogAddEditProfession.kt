@@ -22,6 +22,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.stalmate.user.R
 import com.stalmate.user.databinding.DialougeAddProfessionBinding
 import com.stalmate.user.model.Profession
+import com.stalmate.user.view.profile.ActivityProfileEdit
 import com.stalmate.user.viewmodel.AppViewModel
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -223,7 +224,8 @@ class DialogAddEditProfession(
         hashMap["from"] = profession.from
         hashMap["designation"] = profession.designation
 
-        viewModel.addUpdateProfessionData(hashMap)
+        viewModel.addUpdateProfessionData(
+            (context as ActivityProfileEdit)?.prefManager?.access_token.toString(),hashMap)
         viewModel.addUpdateProfessionLiveData.observe((binding.root.context as? LifecycleOwner)!!) {
             it?.let {
                 if (it.status) {

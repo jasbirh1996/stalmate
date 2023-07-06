@@ -1,7 +1,11 @@
 package com.stalmate.user.view.authentication
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -20,6 +24,7 @@ import com.stalmate.user.utilities.CustumEditText
 import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.utilities.ValidationHelper
 import com.stalmate.user.utilities.ValidationHelper.isValidEmail
+import com.stalmate.user.view.dashboard.ActivityDashboard
 
 
 class FragmentLogin : BaseFragment() {
@@ -141,18 +146,21 @@ class FragmentLogin : BaseFragment() {
                         )
                     App.getInstance().setupApis()
                     if (PrefManager.getInstance(requireContext())?.userDetail?.results?.is_account_recover == true) {
-                        makeToast("Welcome Back!!")
+
+                        //makeToast("Welcome Back!! Thank you very much for Reconnecting again ")
                     } else {
                         makeToast(message)
                     }
-                    startActivity(IntentHelper.getDashboardScreen(context))
-                    requireActivity().finish()
+                      startActivity(IntentHelper.getDashboardScreen(context))
+                      requireActivity().finish()
                 } else {
                     makeToast(message)
                 }
             }
         }
     }
+
+
 
 
     private fun isValid(): Boolean {

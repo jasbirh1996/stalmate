@@ -143,13 +143,17 @@ interface ApiInterface {
     fun setUpdateAbout(@Body map: HashMap<String, String>): Call<CommonModelResponse>
 
     @POST(Constants.URL_EDUCATION_ADD)
-    fun setEducationAddDetails(@Body map: HashMap<String, String>): Call<ModelCommonAddEducationAndProfessionResponse>
+    fun setEducationAddDetails(
+        @Header("access_token") access_token: String,
+        @Body map: HashMap<String, String>): Call<ModelCommonAddEducationAndProfessionResponse>
 
     @POST(Constants.URL_UPDATE_FRIEND_CATEGORY)
     fun setUpdateFriendCategoryDetails(@Body map: HashMap<String, String>): Call<AddCategoryModel>
 
     @POST(Constants.URL_PROFESSION_ADD)
-    fun setProfessionAddDetails(@Body map: HashMap<String, String>): Call<ModelCommonAddEducationAndProfessionResponse>
+    fun setProfessionAddDetails(
+        @Header("access_token") access_token: String,
+        @Body map: HashMap<String, String>): Call<ModelCommonAddEducationAndProfessionResponse>
 
     @POST(Constants.URL_PHOTO_ALBUM_NAME)
     fun setCreateAlbumDetails(@Body map: HashMap<String, String>): Call<ModelAlbumCreateResponse>

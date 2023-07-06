@@ -31,7 +31,8 @@ data class ModelLoginResponse(
         val first_name: String? = "", // loop
         val gender: String? = "", // Male
         val home_town: String? = "",
-        val is_account_recover: Boolean? = false, // true
+        var is_account_recover: Boolean? = false, // true
+
         val is_delete: String? = "", // 0
         val language: String? = "English",
         val last_name: String? = "", // two

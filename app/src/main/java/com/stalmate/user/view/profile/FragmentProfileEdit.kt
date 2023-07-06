@@ -559,6 +559,7 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
         }
 
         binding.layout.tvAddMore.setOnClickListener {
+
             val dialogAddEditEducation = DialogAddEditEducation(
                 requireActivity(),
                 Education("", "", 0, "", "", "", "", "", "", ""),
@@ -568,9 +569,7 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
                     @SuppressLint("NotifyDataSetChanged")
                     override fun onSuccessfullyEditedEducation(education: Education) {
                         userData.results.profile_data[0].education.add(education)
-                        (binding.layout.rvEducation.adapter as EducationListAdapter).list.add(
-                            education
-                        )
+                        (binding.layout.rvEducation.adapter as EducationListAdapter).list.add(education)
                         (binding.layout.rvEducation.adapter as EducationListAdapter).notifyDataSetChanged()
                     }
                 })
@@ -712,6 +711,7 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
         networkViewModel.etsProfileApi(prefManager?.access_token.toString(),profile_image1)
         networkViewModel.UpdateProfileLiveData.observe(requireActivity()) {
             it.let {
+
                 getUserProfileData()
                 makeToast(it!!.message)
                 var hashMap = HashMap<String, String>()

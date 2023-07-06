@@ -13,9 +13,12 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleOwner
+import androidx.work.impl.model.Preference
+import com.google.android.gms.common.util.SharedPreferencesUtils
 import com.stalmate.user.R
 import com.stalmate.user.databinding.DialougeAddEducationBinding
 import com.stalmate.user.model.Education
+import com.stalmate.user.view.profile.ActivityProfileEdit
 import com.stalmate.user.viewmodel.AppViewModel
 import java.util.*
 
@@ -121,7 +124,8 @@ class DialogAddEditEducation(
         hashMap["branch"] = education.course
         hashMap["course"] = education.branch
 
-        viewModel.educationData(hashMap)
+        viewModel.educationData((context as ActivityProfileEdit)?.prefManager?.access_token.toString(),hashMap)
+
         viewModel.educationData.observe((binding.root.context as? LifecycleOwner)!!) {
             it?.let {
                 if (it.status) {

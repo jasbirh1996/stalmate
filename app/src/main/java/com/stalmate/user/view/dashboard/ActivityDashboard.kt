@@ -1,6 +1,7 @@
 package com.stalmate.user.view.dashboard
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -17,6 +18,7 @@ import com.stalmate.user.intentHelper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.databinding.ActivityDashboardBinding
+import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.view.dashboard.Chat.FragmentChatCall
 import com.stalmate.user.view.dashboard.HomeFragment.FragmentHome
 import com.stalmate.user.view.dashboard.HomeFragment.FragmentMenu
@@ -45,9 +47,27 @@ class ActivityDashboard : BaseActivity(), FragmentHome.Callback,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDashboardBinding.inflate(layoutInflater)
+       if(PrefManager.getInstance(this)?.getPopup("popup").equals("true")){
+           WelcomeBackPopup()
+           PrefManager.getInstance(this)?.setPopup("popup","false")
+        }
+
+
         setContentView(binding.root)
         setupBottomBar()
         onNewIntent(intent)
+    }
+
+    fun WelcomeBackPopup(){
+        val builder = AlertDialog.Builder(this, R.style.CustomAlertDialog).create()
+        val view = layoutInflater.inflate(R.layout.welcomeback_success_poppu,null)
+        builder.setView(view)
+        builder.setCanceledOnTouchOutside(true)
+        Handler(Looper.getMainLooper()).postDelayed({
+            builder.dismiss()
+
+        }, 3000)
+        builder.show()
     }
 
     @SuppressLint("MissingSuperCall")

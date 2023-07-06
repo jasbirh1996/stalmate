@@ -1,13 +1,16 @@
 package com.stalmate.user.view.profile
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.android.gms.common.util.SharedPreferencesUtils
 import com.stalmate.user.R
 import com.stalmate.user.databinding.ItemEducationprofileBinding
 import com.stalmate.user.databinding.ItemGalleryBinding
@@ -82,7 +85,8 @@ class EducationListAdapter(
         hashMap["id"] = id
         hashMap["is_delete"] = "1"
 
-        viewModel.educationData(hashMap)
+        viewModel.educationData(
+            (context as ActivityProfileEdit)?.prefManager?.access_token.toString(),hashMap)
         viewModel.educationData.observe(lifecycleObserver) {
             it?.let {
                 if (it.status) {

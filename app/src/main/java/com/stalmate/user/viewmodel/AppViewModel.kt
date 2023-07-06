@@ -346,10 +346,14 @@ open class AppViewModel : ViewModel() {
     var educationData: LiveData<ModelCommonAddEducationAndProfessionResponse?> =
         MutableLiveData<ModelCommonAddEducationAndProfessionResponse?>()
 
-    fun educationData(map: HashMap<String, String>) {
+    fun educationData(
+        access_token:String,
+        map: HashMap<String, String>) {
         val temp = MutableLiveData<ModelCommonAddEducationAndProfessionResponse?>()
         educationData = temp
-        getResult(temp, apiInterface.setEducationAddDetails(map))
+        getResult(temp, apiInterface.setEducationAddDetails(
+            access_token = access_token, map =map
+        ))
     }
 
     var updateFriendCategoryLiveData: LiveData<AddCategoryModel?> =
@@ -364,10 +368,12 @@ open class AppViewModel : ViewModel() {
     var addUpdateProfessionLiveData: LiveData<ModelCommonAddEducationAndProfessionResponse?> =
         MutableLiveData<ModelCommonAddEducationAndProfessionResponse?>()
 
-    fun addUpdateProfessionData(map: HashMap<String, String>) {
+    fun addUpdateProfessionData(
+        access_token: String,
+        map: HashMap<String, String>) {
         val temp = MutableLiveData<ModelCommonAddEducationAndProfessionResponse?>()
         addUpdateProfessionLiveData = temp
-        getResult(temp, apiInterface.setProfessionAddDetails(map))
+        getResult(temp, apiInterface.setProfessionAddDetails(access_token,map))
     }
 
     var createAlbumData: LiveData<ModelAlbumCreateResponse?> =
