@@ -474,15 +474,19 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
     }
 
     fun setUpAboutUI(tabType: String) {
-
         if (tabType == "Photos") {
             albumImageAdapter = ProfileAlbumImageAdapter(networkViewModel, requireActivity(), "")
             binding.albumLayout.rvPhotoAlbumData.adapter = albumImageAdapter
             albumImageAdapter.submitList(userData.results.photos)
         } else if (tabType == "Albums") {
-            albumAdapter = SelfProfileAlbumAdapter(networkViewModel, requireActivity(), "")
+          /*  albumAdapter = SelfProfileAlbumAdapter(networkViewModel, requireActivity(), "")
             binding.albumLayout.rvPhotoAlbumData.adapter = albumAdapter
-            albumAdapter.submitList(userData.results.albums)
+            albumAdapter.submitList(userData.results.albums)*/
+
+            startActivity(
+                IntentHelper.getPhotoGalleryAlbumScreen(requireContext())!!
+                    .putExtra("viewType", "viewNormal").putExtra("type", "photos")
+            )
 
         }
 
@@ -490,10 +494,9 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
 
     fun callForAlbum() {
 
-
         binding.albumLayout.tvAlbumPhotoSeeMore.setOnClickListener {
             if (binding.albumLayout.photoTab.selectedTabPosition == 0) {
-                startActivity(
+                   startActivity(
                     IntentHelper.getPhotoGalleryAlbumScreen(requireContext())!!
                         .putExtra("viewType", "viewNormal").putExtra("type", "photos")
                 )

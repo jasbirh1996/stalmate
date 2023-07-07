@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.stalmate.user.R
+import com.stalmate.user.databinding.ActivityDashboardBinding
 import com.stalmate.user.databinding.FragmentSettingListingBinding
 import com.stalmate.user.modules.reels.activity.ActivitySettings
 import com.stalmate.user.utilities.Constants
@@ -56,7 +57,7 @@ class FragmentSettingListing : Fragment(), MainSettingCategoryAdapter.Callbackk 
         )
         binding.tvAbout.setText(PrefManager.getInstance(requireContext())?.userDetail?.results?.city)
         binding.userProfileImage.setOnClickListener {
-            findNavController().navigate(R.id.action_fragment_setting_main_to_profileFragment)
+            findNavController().navigate(R.id.action_fragment_setting_main_to_fragmentProfile)
         }
 
         var list = ArrayList<SettingMenuModel>()

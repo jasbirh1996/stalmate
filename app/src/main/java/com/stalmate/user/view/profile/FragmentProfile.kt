@@ -462,9 +462,15 @@ class FragmentProfile(val callback: FragmentHome.Callback? = null) : BaseFragmen
             binding.layout.rvPhotoAlbumData.adapter = albumImageAdapter
             albumImageAdapter.submitList(userData.photos)
         } else if (tabType == "Albums") {
-            albumAdapter = SelfProfileAlbumAdapter(networkViewModel, requireContext(), "")
+           /* albumAdapter = SelfProfileAlbumAdapter(networkViewModel, requireContext(), "")
             binding.layout.rvPhotoAlbumData.adapter = albumAdapter
-            albumAdapter.submitList(userData.albums)
+            albumAdapter.submitList(userData.albums)*/
+
+            startActivity(
+                IntentHelper.getPhotoGalleryAlbumScreen(requireContext())!!
+                    .putExtra("viewType", "viewNormal").putExtra("type", "photos")
+            )
+
 
         }
 

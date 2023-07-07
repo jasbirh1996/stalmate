@@ -30,7 +30,6 @@ class SelfProfileAlbumAdapter(val viewModel: AppViewModel, val context: Context,
             )
 
             binding.ivImage.setOnClickListener {
-
                 context.startActivity(
                     IntentHelper.getPhotoGalleryAlbumScreen(context)!!
                         .putExtra("viewType", "viewPhotoListing")

@@ -132,7 +132,7 @@ class PrefManager(private val context: Context) {
     }
 
     fun getPopup(key: String?): String? {
-        return preferences.getString(key, "true")
+        return preferences.getString(key, "false")
     }
 
     companion object {
