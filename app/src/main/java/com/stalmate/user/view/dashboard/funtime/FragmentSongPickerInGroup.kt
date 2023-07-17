@@ -248,7 +248,7 @@ class FragmentSongPickerInGroup : BaseFragment(), FriendAdapter.Callbackk,
 
             it.let {
                 adapterFunTimeMusic.submitList(it!!.results)
-                Log.d("=============", it!!.results.size.toString())
+                Log.d("=============", it!!.results?.size.toString())
             }
         }
     }

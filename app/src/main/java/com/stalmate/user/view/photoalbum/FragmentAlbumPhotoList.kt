@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentAlbumPhotoListBinding
-import com.stalmate.user.model.Photo
+import com.stalmate.user.model.Albums
 
 class FragmentAlbumPhotoList : BaseFragment(), PhotoAdapter.Callback, AlbumAdapter.Callbackk {
 
@@ -136,7 +136,7 @@ class FragmentAlbumPhotoList : BaseFragment(), PhotoAdapter.Callback, AlbumAdapt
 
     }
 
-    override fun onClickOnPhoto(photo: Photo) {
+    override fun onClickOnPhoto(photo: Albums) {
 
         val bundle = Bundle()
         bundle.putString("imageId", photo.id)

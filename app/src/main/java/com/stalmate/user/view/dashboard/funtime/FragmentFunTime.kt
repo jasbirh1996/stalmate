@@ -49,7 +49,7 @@ class FragmentFunTime() : BaseFragment(), FragmentCallBack {
         }
 
         binding.ivAddButton.setOnClickListener {
-            startActivity(IntentHelper.getCreateReelsScreen(requireActivity()))
+            IntentHelper.getCreateReelsScreen(requireActivity())?.let { it1 -> startActivity(it1) }
         }
         loadFragment(ReelListFragment())
     }

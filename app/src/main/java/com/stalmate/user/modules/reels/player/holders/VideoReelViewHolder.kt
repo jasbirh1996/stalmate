@@ -26,8 +26,6 @@ class VideoReelViewHolder(binding: ItemReelBinding) : ReelViewHolder(binding.roo
         binding.tvLocation;
     val ivLocation =
         binding.ivLocation;
-
-
 }
 
 

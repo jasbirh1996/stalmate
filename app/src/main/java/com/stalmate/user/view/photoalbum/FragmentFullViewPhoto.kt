@@ -92,12 +92,12 @@ class FragmentFullViewPhoto : BaseFragment() {
         networkViewModel.getAlbumPhotos(hashMap)
         networkViewModel.photoLiveData.observe(requireActivity()) {
             it.let {
-                if (it!!.results.isNotEmpty()) {
+                if (!it?.results.isNullOrEmpty()) {
                     if (isFreshApi) {
-                        currentIndex=it.position
-                        indexPhotoAdapter.setList(it.results)
+                        currentIndex= it?.position?:0
+                        it?.results?.let { it1 -> indexPhotoAdapter.setList(it1) }
                     } else {
-                        indexPhotoAdapter.addToList(it.results)
+                        it?.results?.let { it1 -> indexPhotoAdapter.addToList(it1) }
                     }
                 }
             }

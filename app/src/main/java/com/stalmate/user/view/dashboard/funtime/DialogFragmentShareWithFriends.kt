@@ -191,15 +191,15 @@ class DialogFragmentShareWithFriends(
         )
         networkViewModel.friendLiveData.observe(viewLifecycleOwner, Observer {
             it.let {
-                if (it!!.results.isNotEmpty()) {
+                if (!it?.results.isNullOrEmpty()) {
                     if (isFresh) {
-                        friendAdapter.addToList(it.results as ArrayList<User>)
+                        friendAdapter.addToList(it?.results as ArrayList<User>)
                     } else {
-                        friendAdapter.addToList(it.results as ArrayList<User>)
+                        friendAdapter.addToList(it?.results as ArrayList<User>)
                     }
 
                     isLastPage = false
-                    if (it.results.size < 6) {
+                    if ((it?.results?.size?:0) < 6) {
                         binding.progressLoading.visibility = View.GONE
                     } else {
                         binding.progressLoading.visibility = View.VISIBLE
@@ -207,7 +207,7 @@ class DialogFragmentShareWithFriends(
                     binding.layoutNoData.visibility = View.GONE
                 } else {
                     if (isFresh) {
-                        friendAdapter.submitList(it.results as ArrayList<User>)
+                        friendAdapter.submitList(it?.results as ArrayList<User>)
                         binding.layoutNoData.visibility = View.VISIBLE
                     }
 

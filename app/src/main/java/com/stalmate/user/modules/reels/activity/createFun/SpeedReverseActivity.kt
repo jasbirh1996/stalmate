@@ -10,6 +10,7 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -249,8 +250,8 @@ class SpeedReverseActivity : AppCompatActivity() {
         }
     }
 
-    private val videoEditorResult = registerForActivityResult(VideoEditorActivityResultContract()) {
-        when (it.resultStatus) {
+    private val videoEditorResult = (this as ComponentActivity).registerForActivityResult(VideoEditorActivityResultContract()) {
+        when (it?.resultStatus) {
             EditorSDKResult.Status.CANCELED -> {}
             EditorSDKResult.Status.EXPORT_DONE -> {
                 startActivity(

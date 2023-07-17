@@ -305,6 +305,7 @@
                 android:id="@+id/constraintLayout5"
                 android:layout_width="196dp"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@+id/etSearchFriend"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/etSearchFriend">
@@ -339,6 +340,7 @@
                 android:id="@+id/etSearchFriend"
                 android:layout_width="195dp"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:layout_marginEnd="@dimen/_10sdp"
                 android:background="@drawable/search_background"
                 android:drawableStart="@drawable/ic_header_search"
@@ -364,6 +366,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:background="@color/white"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/etSearchFriend" />
@@ -373,7 +376,8 @@
                 android:id="@+id/photoTab"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="@+id/rvFriends"
+                android:layout_marginHorizontal="@dimen/_10sdp"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/rvFriends"
                 app:tabIndicator="@null">
 
@@ -402,7 +406,7 @@
                 android:visibility="visible"
                 app:fontFamily="@font/poppins"
                 app:layout_constraintBottom_toBottomOf="@+id/photoTab"
-                app:layout_constraintEnd_toEndOf="@+id/rvFriends"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/photoTab" />
 
 

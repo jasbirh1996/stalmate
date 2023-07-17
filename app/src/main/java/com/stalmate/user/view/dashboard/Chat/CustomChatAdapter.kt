@@ -32,10 +32,7 @@ class CustomChatAdapter     // you can pass other parameters in constructor
 */
 
             if (messageModel.is_file == 1) {
-                if (messageModel.file_type.equals("jpg") || messageModel.file_type.equals("jpeg") || messageModel.file_type.equals(
-                        "webp"
-                    )
-                ) {
+                if (messageModel.file_type.equals("0",true)) {
                     binding.ivImage.visibility = View.VISIBLE
                     binding.messageText.visibility = View.GONE
             /*        Glide.with(context).load(messageModel.text).into(binding.ivImage)
@@ -47,7 +44,7 @@ class CustomChatAdapter     // you can pass other parameters in constructor
                                 .putExtra(Constants.url, messageModel.text)
                         )
                     }*/
-                } else if (messageModel.file_type.equals("mp4")) {
+                } else if (messageModel.file_type.equals("1",true)) {
                     binding.ivImage.visibility = View.VISIBLE
                     binding.messageText.visibility = View.GONE
            /*         Glide.with(context).load(R.drawable.video_icon).into(binding.ivImage)
@@ -111,10 +108,7 @@ class CustomChatAdapter     // you can pass other parameters in constructor
             if (messageModel.is_file == 1) {
                 binding.messageText.visibility = View.GONE
 
-                if (messageModel.file_type.equals("jpg") || messageModel.file_type.equals("jpeg") || messageModel.file_type.equals(
-                        "webp"
-                    )
-                ) {
+                if (messageModel.file_type.equals("0",true)) {
 
                     binding.layoutAudio.visibility=View.GONE
                     binding.layoutImage.visibility=View.VISIBLE
@@ -129,7 +123,7 @@ class CustomChatAdapter     // you can pass other parameters in constructor
                                 .putExtra(Constants.url, messageModel.text)
                         )
                     }*/
-                } else if (messageModel.file_type.equals("mp4")) {
+                } else if (messageModel.file_type.equals("1",true)) {
 
                     binding.layoutAudio.visibility=View.GONE
                     binding.layoutImage.visibility=View.GONE

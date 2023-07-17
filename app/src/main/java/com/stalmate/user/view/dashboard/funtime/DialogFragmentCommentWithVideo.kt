@@ -12,6 +12,7 @@ import android.util.DisplayMetrics
 import android.util.Log
 import android.view.*
 import android.widget.FrameLayout
+import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.NonNull
@@ -36,6 +37,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.stalmate.user.R
 import com.stalmate.user.base.App
+import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.databinding.FragmentCommentsWithVideoBinding
 import com.stalmate.user.model.Comment
 import com.stalmate.user.utilities.PrefManager
@@ -222,7 +224,7 @@ class DialogFragmentCommentWithVideo(
                 MediaStore.EXTRA_OUTPUT,
                 fromCameraCoverUri?.toUri()
             )
-            launchActivityForImageCaptureFromCamera.launch(cameraIntent)
+            //launchActivityForImageCaptureFromCamera.launch(cameraIntent)
         }
         binding.appCompatImageView7.setOnClickListener {
             emojiIcon.showPopup()
@@ -278,7 +280,7 @@ class DialogFragmentCommentWithVideo(
         )
         hitApi(true)
 
-        if (funtime.file_type.contains("image", true)) {
+        if (funtime.file_type.equals("0", true)) {
             binding.ivImage.visibility = View.VISIBLE
             val requestOptions = RequestOptions()
             Glide.with(binding.ivImage.context)
@@ -311,8 +313,8 @@ class DialogFragmentCommentWithVideo(
 
     var fromCameraCover: File? = null
     var fromCameraCoverUri: String? = ""
-    private var launchActivityForImageCaptureFromCamera =
-        registerForActivityResult<Intent, ActivityResult>(
+    /*private var launchActivityForImageCaptureFromCamera =
+        (this.requireContext() as ComponentActivity).registerForActivityResult<Intent, ActivityResult>(
             ActivityResultContracts.StartActivityForResult()
         ) { result: ActivityResult ->
             when (result.resultCode) {
@@ -337,8 +339,8 @@ class DialogFragmentCommentWithVideo(
             }
         }
 
-    /*Cover Image Picker */
-    private val cropImage = registerForActivityResult(CropImageContract()) { result ->
+    *//*Cover Image Picker *//*
+    private val cropImage = (this.requireContext() as ComponentActivity).registerForActivityResult(CropImageContract()) { result ->
         if (result.isSuccessful) {
             // use the returned uri
             val uriContent = result.uriContent
@@ -369,7 +371,7 @@ class DialogFragmentCommentWithVideo(
             // an error occurred
             val exception = result.error
         }
-    }
+    }*/
 
     fun hideImageView() {
         binding.ivCommentImage.visibility = View.GONE
@@ -436,16 +438,16 @@ class DialogFragmentCommentWithVideo(
 
 
             if (it!!.status) {
-                if (it.results.isNotEmpty()) {
+                if (!it?.results.isNullOrEmpty()) {
 
-                    /*          it.results.forEach {
+                    /*          it?.results?.forEach {
                                   it.replies = kotlin.collections.ArrayList()
                                   it.level = 1
                                   viewModel.addComment(it)
                               }
                               */
 
-                    it.results.forEach {
+                    it?.results?.forEach {
                         it.replies = ArrayList<Comment>()
                         commentAdapter.addToList(listOf(it))
                     }
@@ -477,14 +479,14 @@ class DialogFragmentCommentWithVideo(
                if (it!!.status) {
                     viewModel.addComment(
                         Comment(
-                            it.results._id,
+                            it?.results?._id,
                             Calendar.getInstance(Locale.ROOT).toSimpleDate(),
                             "test",
                             data,
                             first_name = PrefManager.getInstance(requireContext())!!.userDetail.results[0].first_name,
                             last_name = PrefManager.getInstance(requireContext())!!.userDetail.results[0].last_name,
-                            child_count = it.results.child_count,
-                            profile_img = it.results.profile_img
+                            child_count = it?.results?.child_count,
+                            profile_img = it?.results?.profile_img
                         )
                     )
                     binding.etComment.setText("")

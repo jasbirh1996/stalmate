@@ -73,20 +73,20 @@ lateinit var musicAdapter: SavedGridMusicAdapter
         hashmap.put("limit", "4")
         networkViewModel.getSavedFuntimMusic(hashmap).observe(viewLifecycleOwner, Observer {
             it.let {
-                if (it!!.results.size==0){
+                if (it!!.results?.size==0){
                     binding.tvNoAudio.visibility=View.VISIBLE
                 }
 
-                if (it!!.results.size==1){
+                if (it!!.results?.size==1){
                     binding.rvMusicList.layoutManager=GridLayoutManager(requireContext(),1)
                 }
-                if (it!!.results.size==2){
+                if (it!!.results?.size==2){
 
 
                     binding.rvMusicList.visibility=View.GONE
                     binding.layoutForTwoAudio.visibility=View.VISIBLE
-                    Glide.with(requireActivity()).load(it.results[0].image).into(binding.ivAudioOne)
-                    Glide.with(requireActivity()).load(it.results[1].image).into(binding.ivAudioTwo)
+                    Glide.with(requireActivity()).load(it?.results?.get(0)?.image).into(binding.ivAudioOne)
+                    Glide.with(requireActivity()).load(it?.results?.get(1)?.image).into(binding.ivAudioTwo)
 
                     binding.layoutForTwoAudio.setOnTouchListener { v, event ->
                         Log.d("asdasda", "asdasd")
@@ -101,11 +101,11 @@ lateinit var musicAdapter: SavedGridMusicAdapter
                     }
                 }
 
-                if (it!!.results.size==3){
+                if (it!!.results?.size==3){
                     binding.rvMusicList.layoutManager=GridLayoutManager(requireContext(),2)
                 }
 
-                if (it!!.results.size>3){
+                if ((it!!.results?.size?:0)>3){
                     binding.rvMusicList.layoutManager=GridLayoutManager(requireContext(),2)
                 }
 
@@ -148,14 +148,14 @@ lateinit var musicAdapter: SavedGridMusicAdapter
         networkViewModel.getSavedFuntimReels(hashmap).observe(viewLifecycleOwner, Observer {
             it.let {
 
-                if (it!!.results.size==0){
+                if (it!!.results?.size==0){
                     binding.tvNoReel.visibility=View.VISIBLE
                 }
 
-                if (it!!.results.size==1){
+                if (it!!.results?.size==1){
                     binding.rvReelList.layoutManager=GridLayoutManager(requireContext(),1)
                 }
-                if (it!!.results.size==2){
+                if (it!!.results?.size==2){
                     binding.rvReelList.visibility=View.GONE
                     binding.layoutForTwoVideo.visibility=View.VISIBLE
 
@@ -191,11 +191,11 @@ lateinit var musicAdapter: SavedGridMusicAdapter
 
                 }
 
-                if (it!!.results.size==3){
+                if (it!!.results?.size==3){
                     binding.rvReelList.layoutManager=GridLayoutManager(requireContext(),2)
                 }
 
-                if (it!!.results.size>3){
+                if ((it!!.results?.size?:0)>3){
                     binding.rvReelList.layoutManager=GridLayoutManager(requireContext(),2)
                 }
 

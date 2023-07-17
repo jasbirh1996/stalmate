@@ -18,7 +18,7 @@ import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentAlbumPhotoIdListingBinding
 import com.stalmate.user.databinding.FragmentAlbumPhotoListBinding
-import com.stalmate.user.model.Photo
+import com.stalmate.user.model.Albums
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -126,7 +126,7 @@ class FragmentAlbumPhotoIdListing : BaseFragment(),  PhotoAdapter.Callback {
         })
     }
 
-    override fun onClickOnPhoto(photo: Photo) {
+    override fun onClickOnPhoto(photo: Albums) {
        val bundle = Bundle()
         bundle.putString("imageId", photo.id)
         bundle.putString("albumId", id)

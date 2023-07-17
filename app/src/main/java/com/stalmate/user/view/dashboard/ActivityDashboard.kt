@@ -51,8 +51,6 @@ class ActivityDashboard : BaseActivity(), FragmentHome.Callback,
            WelcomeBackPopup()
            PrefManager.getInstance(this)?.setPopup("popup","false")
         }
-
-
         setContentView(binding.root)
         setupBottomBar()
         onNewIntent(intent)
@@ -119,8 +117,7 @@ class ActivityDashboard : BaseActivity(), FragmentHome.Callback,
             .commit()
         fm.beginTransaction().add(binding.fragmentContainerView.id, fragment3, "3").hide(fragment3)
             .commit()
-        fm.beginTransaction().add(binding.fragmentContainerView.id, fragment2, "2").hide(fragment2)
-            .commit()
+//        fm.beginTransaction().add(binding.fragmentContainerView.id, fragment2, "2").hide(fragment2).commit()
         fm.beginTransaction().add(binding.fragmentContainerView.id, fragment1, "1").commit()
 
         binding.ivHome.setOnClickListener {
@@ -130,6 +127,10 @@ class ActivityDashboard : BaseActivity(), FragmentHome.Callback,
             selectedNavButton(binding.ivHome, binding.ivChat)
         }
         binding.ivFuntime.setOnClickListener {
+            mute(true)
+            /*fm.beginTransaction().hide(active).show(fragment2).commit()
+            active = fragment2
+            selectedNavButton(binding.ivFuntime, binding.ivHome)*/
             startActivity(IntentHelper.getFullViewReelActivity(this))
         }
         binding.ivCreateFuntime.setOnClickListener {
@@ -145,9 +146,9 @@ class ActivityDashboard : BaseActivity(), FragmentHome.Callback,
 
     fun mute(toMute: Boolean) {
         if (toMute) {
-            if (active is FragmentFunTime) {
+            if (active is FragmentHome) {
                 Log.d("askldjalsd", "alksdjasd")
-                (active as FragmentFunTime).pauseMusic()
+                (active as FragmentHome).onPause()
             } else {
 
             }

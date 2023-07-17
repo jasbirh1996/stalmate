@@ -105,8 +105,8 @@ class ActivityCategoryCreate : BaseActivity(), AdapterCategory.Callbackk {
         networkViewModel.categoryFriendLiveData()
         networkViewModel.categoryFriendLiveData.observe(this) {
 
-           if (it!!.status){
-                adapterCategory.submitList(it.results)
+           if (it?.status == true){
+               it?.results?.let { it1 -> adapterCategory.submitList(it1) }
             }
         }
 

@@ -14,7 +14,7 @@ import com.stalmate.user.databinding.FragmentProfileFuntimeBinding
 import com.stalmate.user.view.dashboard.funtime.ReelVideosByAudioAdapter
 import com.stalmate.user.view.dashboard.funtime.ResultFuntime
 
-class FragmentProfileFuntime :BaseFragment(), ReelVideosByAudioAdapter.Callback {
+class FragmentProfileFuntime : BaseFragment(), ReelVideosByAudioAdapter.Callback {
     lateinit var adapter: ReelVideosByAudioAdapter
     lateinit var binding: FragmentProfileFuntimeBinding
     override fun onCreateView(
@@ -34,20 +34,21 @@ class FragmentProfileFuntime :BaseFragment(), ReelVideosByAudioAdapter.Callback 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter=ReelVideosByAudioAdapter(requireContext(),this,true)
-        binding.rvList.layoutManager= GridLayoutManager(context,3)
-        binding.rvList.adapter=adapter
-        Log.d("akljsdasd","aljsdasd")
+        adapter = ReelVideosByAudioAdapter(requireContext(), this, true)
+        binding.rvList.layoutManager = GridLayoutManager(context, 3)
+        binding.rvList.adapter = adapter
+        Log.d("akljsdasd", "aljsdasd")
         getReelsListApiByMusic()
 
     }
+
     override fun onResume() {
         super.onResume()
         binding.root.requestLayout()
     }
 
     private fun getReelsListApiByMusic() {
-        var hashMap=HashMap<String,String>()
+        val hashMap = HashMap<String, String>()
         hashMap.put("page", "1")
         hashMap.put("limit", "5")
         hashMap.put("id_user", prefManager?._id.toString())
@@ -55,20 +56,29 @@ class FragmentProfileFuntime :BaseFragment(), ReelVideosByAudioAdapter.Callback 
 
 
 
-        networkViewModel.funtimeLiveData(prefManager?.access_token.toString(),hashMap)
+        networkViewModel.funtimeLiveData(prefManager?.access_token.toString(), hashMap)
         networkViewModel.funtimeLiveData.observe(viewLifecycleOwner) {
-            it.let {
-                adapter.addToList(it!!.results)
+            it?.let {
+                adapter.submitList(
+                    if (arguments?.getBoolean("isVideos") == false)
+                        it?.results?.filter {
+                            it.file_type.equals("0",true)
+                        }
+                    else
+                        it?.results?.filter {
+                            it.file_type.equals("1",true)
+                        }
+                )
                 binding.root.requestLayout()
-
             }
         }
     }
 
     override fun onClickOnReel(reel: ResultFuntime) {
-        var bundle= Bundle()
-        bundle.putParcelable("data",reel)
-        startActivity(IntentHelper.getFullViewReelActivity(context)!!.putExtra("data",reel).putExtra("showMyVideos",true))
+        IntentHelper.getFullViewReelActivity(context).apply {
+            this?.putExtra("data", reel)
+            this?.putExtra("showMyVideos", true)
+        }?.let { startActivity(it) }
     }
 
 

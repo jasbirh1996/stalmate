@@ -16,7 +16,7 @@ import com.stalmate.user.viewmodel.AppViewModel
 class SelfProfileAlbumAdapter(val viewModel: AppViewModel, val context: Context, val type: String) :
     RecyclerView.Adapter<SelfProfileAlbumAdapter.AlbumViewHolder>() {
 
-    var list = ArrayList<Albums>()
+    var list = ArrayList<Albums?>()
 
     inner class AlbumViewHolder(var binding: ItemProfileCoverBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -25,7 +25,7 @@ class SelfProfileAlbumAdapter(val viewModel: AppViewModel, val context: Context,
             ImageLoaderHelperGlide.setGlideCorner(
                 context,
                 binding.ivImage,
-                response.img.replace(".com", ".com/"),
+                response.img?.replace(".com", ".com/"),
                 R.drawable.user_placeholder
             )
 
@@ -33,13 +33,13 @@ class SelfProfileAlbumAdapter(val viewModel: AppViewModel, val context: Context,
                 context.startActivity(
                     IntentHelper.getPhotoGalleryAlbumScreen(context)!!
                         .putExtra("viewType", "viewPhotoListing")
-                        .putExtra("albumId", response.id)
+                        .putExtra("albumId", response._id)
                 )
             }
         }
     }
 
-    fun submitList(albumList: ArrayList<Albums>) {
+    fun submitList(albumList: ArrayList<Albums?>) {
         list.clear()
         list.addAll(albumList)
         notifyDataSetChanged()
@@ -52,7 +52,7 @@ class SelfProfileAlbumAdapter(val viewModel: AppViewModel, val context: Context,
     }
 
     override fun onBindViewHolder(holder: AlbumViewHolder, position: Int) {
-        holder.bind(list.get(position))
+        list.get(position)?.let { holder.bind(it) }
     }
 
     override fun getItemCount(): Int {

@@ -6,6 +6,7 @@ import android.accounts.Account
 import android.accounts.AccountManager
 import android.app.ActivityOptions
 import android.content.Intent
+import android.graphics.Rect
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -92,10 +93,16 @@ class FragmentProfile(val callback: FragmentHome.Callback? = null) : BaseFragmen
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val adapterTabPager = AdapterTabPager(requireActivity())
-        adapterTabPager.addFragment(FragmentProfileFuntime(), "My Funtime")
         binding.viewpager.adapter = adapterTabPager
         TabLayoutMediator(binding.tabLayout, binding.viewpager) { tab, position ->
-            tab.text = adapterTabPager.getTabTitle(position)
+            when(position){
+                0->{
+                    tab.text = "Photos"
+                }
+                1->{
+                    tab.text = "Videos"
+                }
+            }
             binding.viewpager.setCurrentItem(tab.position, true)
         }.attach()
 
@@ -114,7 +121,6 @@ class FragmentProfile(val callback: FragmentHome.Callback? = null) : BaseFragmen
                 (context as ActivityDashboard).pointToMyFuntime.value = false
             }
         }
-
         binding.nestedScrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
             if (oldScrollY < scrollY) {//increase
                 callback?.onScoll(true)
@@ -143,11 +149,11 @@ class FragmentProfile(val callback: FragmentHome.Callback? = null) : BaseFragmen
               })*/
 
         binding.appCompatTextView17.setOnClickListener {
-            startActivity(IntentHelper.getSyncContactsScreen(requireActivity()))
+            IntentHelper.getSyncContactsScreen(requireActivity())?.let { it1 -> startActivity(it1) }
         }
 
         binding.layout.etSearchFriend.setOnClickListener {
-            startActivity(IntentHelper.getSearchScreen(requireContext()))
+            IntentHelper.getSearchScreen(requireContext())?.let { it1 -> startActivity(it1) }
         }
 
         requestPermissions(permissions, WRITE_REQUEST_CODE)
@@ -184,16 +190,15 @@ class FragmentProfile(val callback: FragmentHome.Callback? = null) : BaseFragmen
         hashmap["limit"] = "6"
         networkViewModel.getFriendList(prefManager?.access_token.toString(), hashmap)
         networkViewModel.friendLiveData.observe(viewLifecycleOwner, Observer {
-            it.let {
-                friendAdapter.submitList(it!!.results)
-            }
+            if (it?.results != null && !it?.results.isNullOrEmpty())
+                friendAdapter.submitList(it?.results)
         })
 
 
 
         binding.toolbar.ivButtonSearch.setImageResource(R.drawable.ic_profile_searchbar)
         binding.toolbar.ivButtonSearch.setOnClickListener {
-            startActivity(IntentHelper.getSearchScreen(requireContext()))
+            IntentHelper.getSearchScreen(requireContext())?.let { it1 -> startActivity(it1) }
         }
         binding.toolbar.ivButtonMenu.visibility = View.GONE
         binding.toolbar.ivButtonMenu1.visibility = View.VISIBLE
@@ -344,7 +349,8 @@ class FragmentProfile(val callback: FragmentHome.Callback? = null) : BaseFragmen
                 "image"
             )
             // start the activity with transition
-            startActivity(IntentHelper.getProfileEditScreen(requireContext()), options.toBundle())
+            IntentHelper.getProfileEditScreen(requireContext())
+                ?.let { it1 -> startActivity(it1, options.toBundle()) }
         }
     }
 
@@ -359,6 +365,7 @@ class FragmentProfile(val callback: FragmentHome.Callback? = null) : BaseFragmen
 
         }
     }
+
     /*Cover Image Picker */
     val cropImage = registerForActivityResult(CropImageContract()) { result ->
         if (result.isSuccessful) {
@@ -380,6 +387,7 @@ class FragmentProfile(val callback: FragmentHome.Callback? = null) : BaseFragmen
             val exception = result.error
         }
     }
+
     private fun startCrop() {
         // start picker to get image for cropping and then use the image in cropping activity
         try {
@@ -388,7 +396,9 @@ class FragmentProfile(val callback: FragmentHome.Callback? = null) : BaseFragmen
                     setGuidelines(CropImageView.Guidelines.ON)
                 }
             )
-        }catch (e:Exception){e.printStackTrace()}
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
 
@@ -404,6 +414,7 @@ class FragmentProfile(val callback: FragmentHome.Callback? = null) : BaseFragmen
         networkViewModel.etsProfileApi(prefManager?.access_token.toString(), profile_image1)
         networkViewModel.UpdateProfileLiveData.observe(this, Observer {
             it.let {
+                prefManager?.profile_img_1 = it?.results?.profile_img_1
                 makeToast(it!!.message)
                 var hashMap = HashMap<String, String>()
                 networkViewModel.getProfileData(hashMap, prefManager?.access_token.toString())
@@ -416,10 +427,10 @@ class FragmentProfile(val callback: FragmentHome.Callback? = null) : BaseFragmen
         val hashMap = HashMap<String, String>()
         networkViewModel.getProfileData(hashMap, prefManager?.access_token.toString())
         networkViewModel.profileLiveData.observe(viewLifecycleOwner, Observer {
-            it.let {
-                userData = it!!.results
-//                PrefManager.getInstance(requireContext())?.userDetail = it.results
-                prefManager?.profile_img_1 = it.results?.profile_img1.toString()
+            it?.let {
+                userData = it?.results!!
+                //PrefManager.getInstance(requireContext())?.userDetail = it?.results
+                prefManager?.profile_img_1 = it?.results?.profile_img1.toString()
                 setUpAboutUI("Photos")
                 PrefManager.getInstance(requireContext())!!.userProfileDetail = it
             }
@@ -428,13 +439,9 @@ class FragmentProfile(val callback: FragmentHome.Callback? = null) : BaseFragmen
 
 
     fun setUpAboutUI(tabType: String) {
-
-        Log.d("ajkbcb", tabType)
-
-        if (userData.about!!.isEmpty()) {
+        if (userData.about.isNullOrEmpty()) {
             binding.tvUserAbout.visibility = View.GONE
         }
-
         binding.tvUserName.text = userData.first_name + " " + userData.last_name
         binding.layout.tvFollowerCount.text = userData.follower_count.toString()
         binding.layout.tvFollowingCount.text = userData.following_count.toString()
@@ -454,43 +461,46 @@ class FragmentProfile(val callback: FragmentHome.Callback? = null) : BaseFragmen
             R.drawable.user_placeholder
         )
 
-        var aboutArrayList = ArrayList<AboutProfileLine>()
+        val aboutArrayList = ArrayList<AboutProfileLine>()
 
         if (tabType == "Photos") {
             albumImageAdapter = ProfileAlbumImageAdapter(networkViewModel, requireContext(), "")
             binding.layout.rvPhotoAlbumData.adapter = albumImageAdapter
             binding.layout.rvPhotoAlbumData.adapter = albumImageAdapter
-            albumImageAdapter.submitList(userData.photos)
+            userData.photos?.let {
+                albumImageAdapter.submitList(it)
+            }
         } else if (tabType == "Albums") {
-           /* albumAdapter = SelfProfileAlbumAdapter(networkViewModel, requireContext(), "")
-            binding.layout.rvPhotoAlbumData.adapter = albumAdapter
-            albumAdapter.submitList(userData.albums)*/
+            /* albumAdapter = SelfProfileAlbumAdapter(networkViewModel, requireContext(), "")
+             binding.layout.rvPhotoAlbumData.adapter = albumAdapter
+             albumAdapter.submitList(userData.albums)*/
 
-            startActivity(
-                IntentHelper.getPhotoGalleryAlbumScreen(requireContext())!!
-                    .putExtra("viewType", "viewNormal").putExtra("type", "photos")
-            )
-
-
+            IntentHelper.getPhotoGalleryAlbumScreen(requireContext())
+                ?.putExtra("viewType", "viewNormal")
+                ?.putExtra("type", "photos")?.let {
+                    startActivity(
+                        it
+                    )
+                }
         }
 
-        if (userData.profile_data[0].profession.isNotEmpty()) {
+        if (!userData.profileData()?.profession.isNullOrEmpty()) {
             aboutArrayList.add(
                 AboutProfileLine(
                     R.drawable.ic_profile_job,
-                    userData.profile_data[0].profession[0].designation,
-                    userData.profile_data[0].profession[0].company_name,
+                    userData.profileData()?.profession?.get(0)?.designation ?: "",
+                    userData.profileData()?.profession?.get(0)?.company_name ?: "",
                     "at"
                 )
             )
         }
 
-        if (userData.profile_data[0].education.isNotEmpty()) {
+        if (!userData.profileData()?.education.isNullOrEmpty()) {
             aboutArrayList.add(
                 AboutProfileLine(
                     R.drawable.ic_profile_graduation,
                     "Student",
-                    userData.profile_data[0].education[0].sehool,
+                    userData.profileData()?.education?.get(0)?.sehool.toString(),
                     "at"
                 )
             )
@@ -500,7 +510,7 @@ class FragmentProfile(val callback: FragmentHome.Callback? = null) : BaseFragmen
             AboutProfileLine(
                 R.drawable.ic_profile_location,
                 "From",
-                userData.profile_data[0].home_town,
+                userData.profileData()?.home_town.toString(),
                 ""
             )
         )
@@ -509,13 +519,13 @@ class FragmentProfile(val callback: FragmentHome.Callback? = null) : BaseFragmen
             AboutProfileLine(
                 R.drawable.ic_profile_status,
                 "",
-                userData.profile_data[0].marital_status,
+                userData.profileData()?.marital_status.toString(),
                 ""
             )
         )
 
         binding.layout.rvAbout.layoutManager = LinearLayoutManager(requireContext())
-        var profileAboutAdapter = ProfileAboutAdapter(networkViewModel, requireContext(), this)
+        val profileAboutAdapter = ProfileAboutAdapter(networkViewModel, requireContext(), this)
         profileAboutAdapter.submitList(aboutArrayList)
         binding.layout.rvAbout.adapter = profileAboutAdapter
 
@@ -549,6 +559,14 @@ class FragmentProfile(val callback: FragmentHome.Callback? = null) : BaseFragmen
     }
 
     override fun onCaptureImage(feed: ResultFuntime, position: Int) {
+
+    }
+
+    override fun showCommentOverlay(feed: ResultFuntime, position: Int) {
+
+    }
+
+    override fun hideCommentOverlay(feed: ResultFuntime, position: Int) {
 
     }
 

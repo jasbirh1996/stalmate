@@ -165,12 +165,14 @@ class FragmentPeopleSearch : BaseFragment(), SearchedUserAdapter.Callbackk {
 
 
     override fun onClickOnProfile(friend: ModelGlobalSearch.Reponse?) {
-        startActivity(
-            IntentHelper.getOtherUserProfileScreen(requireContext())?.apply {
-                putExtra("id", friend?.id)
-                putExtra("userData", friend)
-            }
-        )
+        IntentHelper.getOtherUserProfileScreen(requireContext())?.apply {
+            putExtra("id", friend?.id)
+            putExtra("userData", friend)
+        }?.let {
+            startActivity(
+                it
+            )
+        }
     }
 
 

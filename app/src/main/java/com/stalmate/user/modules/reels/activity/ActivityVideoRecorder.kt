@@ -22,6 +22,8 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -594,8 +596,8 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
         }
     }
 
-    private val photoEditorResult = registerForActivityResult(PhotoEditorActivityResultContract()) {
-        when (it.resultStatus) {
+    private val photoEditorResult = (this as ComponentActivity).registerForActivityResult(PhotoEditorActivityResultContract()) {
+        when (it?.resultStatus) {
             EditorSDKResult.Status.CANCELED -> showToast("Editor cancelled")
             EditorSDKResult.Status.EXPORT_DONE -> {
                 startActivity(
@@ -610,8 +612,8 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
         }
     }
 
-    private val videoEditorResult = registerForActivityResult(VideoEditorActivityResultContract()) {
-        when (it.resultStatus) {
+    private val videoEditorResult = (this as ComponentActivity).registerForActivityResult(VideoEditorActivityResultContract()) {
+        when (it?.resultStatus) {
             EditorSDKResult.Status.CANCELED -> showToast("Editor cancelled")
             EditorSDKResult.Status.EXPORT_DONE -> {
                 startActivity(
@@ -691,7 +693,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
         launchActivityForImagePick.launch(i)
     }
 
-    var launchActivityForImagePick = registerForActivityResult<Intent, ActivityResult>(
+    var launchActivityForImagePick = (this as ComponentActivity).registerForActivityResult<Intent, ActivityResult>(
         ActivityResultContracts.StartActivityForResult()
     ) { result: ActivityResult ->
         if (result.resultCode == RESULT_OK) {
@@ -717,7 +719,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
                     pathList.add(path)
                     Log.d("lkajsda", uri.path.toString())
                     if (path != null) {
-                        val cR = contentResolver
+                        val cR = (this as AppCompatActivity).contentResolver
                         val mime: MimeTypeMap = MimeTypeMap.getSingleton()
                         val type: String = mime.getExtensionFromMimeType(cR.getType(uri))!!
                         if (type == "mp4") {
@@ -779,7 +781,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
 
             } else {
 
-                val cR = contentResolver
+                val cR = (this as AppCompatActivity).contentResolver
                 val mime: MimeTypeMap = MimeTypeMap.getSingleton()
                 val type: String = mime.getExtensionFromMimeType(cR.getType(data.data!!))!!
 
@@ -868,7 +870,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
         launchActivityForVideoPick.launch(i)
     }
 
-    var launchActivityForVideoPick = registerForActivityResult<Intent, ActivityResult>(
+    var launchActivityForVideoPick = (this as ComponentActivity).registerForActivityResult<Intent, ActivityResult>(
         ActivityResultContracts.StartActivityForResult()
     ) { result: ActivityResult ->
         if (result.resultCode == RESULT_OK) {
@@ -1703,7 +1705,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
         }
     }
 
-    private val cropImage = registerForActivityResult(CropImageContract()) { result ->
+    private val cropImage = (this as ComponentActivity).registerForActivityResult(CropImageContract()) { result ->
         if (result.isSuccessful) {
             // use the returned uri
             val uriContent = result.uriContent
@@ -1712,7 +1714,7 @@ class ActivityVideoRecorder : BaseActivity(), FragmentGallery.GalleryPickerListe
             val selectedImageBitmap: Bitmap
             try {
                 selectedImageBitmap = MediaStore.Images.Media.getBitmap(
-                    this.contentResolver, selectedImageUri
+                    (this as AppCompatActivity).contentResolver, selectedImageUri
                 )
                 binding.buttonCaptureCounter.visibility = View.GONE
                 binding.buttonSpeed.visibility = View.GONE

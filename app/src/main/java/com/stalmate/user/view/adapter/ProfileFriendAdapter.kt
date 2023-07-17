@@ -49,10 +49,12 @@ class ProfileFriendAdapter(
 
 
             val radius = context.resources.getDimension(R.dimen.dp_15)
-            binding.ivUserImage.setShapeAppearanceModel(binding.ivUserImage.getShapeAppearanceModel()
-                .toBuilder()
-                .setAllCorners(CornerFamily.ROUNDED,radius)
-                .build());
+            binding.ivUserImage.setShapeAppearanceModel(
+                binding.ivUserImage.getShapeAppearanceModel()
+                    .toBuilder()
+                    .setAllCorners(CornerFamily.ROUNDED, radius)
+                    .build()
+            );
 
 
 /*            binding.ivUserImage.setShapeAppearanceModel(binding.ivUserImage.getShapeAppearanceModel()
@@ -60,13 +62,17 @@ class ProfileFriendAdapter(
                     .setAllCornerSizes(20f)
                     .build());*/
 
-                binding.root.setOnClickListener {
-                    callback.onClickOnProfile(friend)
-                }
-            ImageLoaderHelperGlide.setGlide(context,binding.ivUserImage,friend.img,R.drawable.user_placeholder)
+            binding.root.setOnClickListener {
+                callback.onClickOnProfile(friend)
+            }
+            ImageLoaderHelperGlide.setGlide(
+                context,
+                binding.ivUserImage,
+                friend.img,
+                R.drawable.user_placeholder
+            )
 
-            binding.tvUserName.text=friend.first_name
-
+            binding.tvUserName.text = friend.first_name
 
 
         }
@@ -139,8 +145,10 @@ class ProfileFriendAdapter(
 
 
     fun submitList(feedList: List<User>) {
-        list.clear()
-        list.addAll(feedList)
+        if (!feedList.isNullOrEmpty()) {
+            list.clear()
+            list.addAll(feedList)
+        }
         notifyDataSetChanged()
     }
 

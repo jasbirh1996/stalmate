@@ -10,6 +10,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.slatmate.user.model.CommonModelResponse
 import com.slatmate.user.model.FunTimeAddResponse
+import com.slatmate.user.model.ProfileImagesUpdated
 import com.stalmate.user.base.App
 import com.stalmate.user.model.*
 import com.stalmate.user.networking.ApiInterface
@@ -214,7 +215,13 @@ open class AppViewModel : ViewModel() {
     fun getFriendList(access_token: String, map: HashMap<String, String>) {
         val temp = MutableLiveData<ModelFriend?>()
         friendLiveData = temp
-        getResult(temp, apiInterface.getFriendList(access_token = access_token, map))
+        getResult(temp, apiInterface.getFriendListMap(access_token = access_token, map))
+    }
+
+    fun getFriendListBody(access_token: String, map: ApiInterface.UsersListResponse) {
+        val temp = MutableLiveData<ModelFriend?>()
+        friendLiveData = temp
+        getResult(temp, apiInterface.getFriendListBody(access_token = access_token, map = map))
     }
 
     var funtimeUpdateLiveData: MutableLiveData<ModelSuccess?> = MutableLiveData<ModelSuccess?>()
@@ -330,10 +337,10 @@ open class AppViewModel : ViewModel() {
     }
 
     var numberVerifyData: LiveData<CommonModelResponse?> = MutableLiveData<CommonModelResponse?>()
-    fun numberVerify(map: HashMap<String, String>) {
+    fun numberVerify(access_token: String,map: HashMap<String, String>) {
         val temp = MutableLiveData<CommonModelResponse?>()
         numberVerifyData = temp
-        getResult(temp, apiInterface.setOtpNumberVerify(map))
+        getResult(temp, apiInterface.setOtpNumberVerify(access_token,map))
     }
 
     var aboutProfileData: LiveData<CommonModelResponse?> = MutableLiveData<CommonModelResponse?>()
@@ -347,13 +354,16 @@ open class AppViewModel : ViewModel() {
         MutableLiveData<ModelCommonAddEducationAndProfessionResponse?>()
 
     fun educationData(
-        access_token:String,
-        map: HashMap<String, String>) {
+        access_token: String,
+        map: HashMap<String, String>
+    ) {
         val temp = MutableLiveData<ModelCommonAddEducationAndProfessionResponse?>()
         educationData = temp
-        getResult(temp, apiInterface.setEducationAddDetails(
-            access_token = access_token, map =map
-        ))
+        getResult(
+            temp, apiInterface.setEducationAddDetails(
+                access_token = access_token, map = map
+            )
+        )
     }
 
     var updateFriendCategoryLiveData: LiveData<AddCategoryModel?> =
@@ -370,10 +380,11 @@ open class AppViewModel : ViewModel() {
 
     fun addUpdateProfessionData(
         access_token: String,
-        map: HashMap<String, String>) {
+        map: HashMap<String, String>
+    ) {
         val temp = MutableLiveData<ModelCommonAddEducationAndProfessionResponse?>()
         addUpdateProfessionLiveData = temp
-        getResult(temp, apiInterface.setProfessionAddDetails(access_token,map))
+        getResult(temp, apiInterface.setProfessionAddDetails(access_token, map))
     }
 
     var createAlbumData: LiveData<ModelAlbumCreateResponse?> =
@@ -490,9 +501,9 @@ open class AppViewModel : ViewModel() {
     }
 
 
-    var otherUserProfileLiveData: MutableLiveData<ModelUser?> = MutableLiveData<ModelUser?>()
+    var otherUserProfileLiveData: MutableLiveData<ModelFriend?> = MutableLiveData<ModelFriend?>()
     fun getOtherUserProfileData(access_token: String, user_id: String) {
-        val temp = MutableLiveData<ModelUser?>()
+        val temp = MutableLiveData<ModelFriend?>()
         otherUserProfileLiveData = temp
         getResult(
             temp,
@@ -587,8 +598,8 @@ open class AppViewModel : ViewModel() {
     }
 
 
-    var UpdateProfileLiveData: LiveData<CommonModelResponse?> =
-        MutableLiveData<CommonModelResponse?>()
+    var UpdateProfileLiveData: LiveData<ProfileImagesUpdated?> =
+        MutableLiveData<ProfileImagesUpdated?>()
 
     fun etsProfileApi1(
         access_token: String,
@@ -602,10 +613,9 @@ open class AppViewModel : ViewModel() {
         @Part("home_town") home_town: RequestBody,
         @Part("city") city: RequestBody,
         @Part("url") url: RequestBody,
-        @Part("company") company: RequestBody,
         @Part("gender") gender: RequestBody,
     ) {
-        val temp = MutableLiveData<CommonModelResponse?>()
+        val temp = MutableLiveData<ProfileImagesUpdated?>()
         UpdateProfileLiveData = temp
 
         getResult(
@@ -619,7 +629,6 @@ open class AppViewModel : ViewModel() {
                 dob = dob,
                 maritalStatus = marital_status,
                 url = url,
-                company = company,
                 gender = gender,
                 city = city,
                 home_town = home_town,
@@ -630,7 +639,7 @@ open class AppViewModel : ViewModel() {
 
 
     fun etsProfileApi(access_token: String, @Part file_Profile_Image: MultipartBody.Part? = null) {
-        val temp = MutableLiveData<CommonModelResponse?>()
+        val temp = MutableLiveData<ProfileImagesUpdated?>()
         UpdateProfileLiveData = temp
         getResult(
             temp,

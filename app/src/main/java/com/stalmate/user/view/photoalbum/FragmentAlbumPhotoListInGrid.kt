@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentAlbumPhotoListInGridBinding
-import com.stalmate.user.model.Photo
+import com.stalmate.user.model.Albums
 import java.io.File
 
 class FragmentAlbumPhotoListInGrid : BaseFragment(),  PhotoAdapter.Callback {
@@ -58,18 +58,12 @@ class FragmentAlbumPhotoListInGrid : BaseFragment(),  PhotoAdapter.Callback {
                 photoAdapter.submitList(it!!.results)
             }
         }
-
     }
 
-
-
-
-    override fun onClickOnPhoto(photo: Photo) {
+    override fun onClickOnPhoto(photo: Albums) {
         val bundle = Bundle()
         bundle.putString("imageId", photo.id)
         bundle.putString("albumId", albumId)
         findNavController().navigate(R.id.action_fragmentAlbumPhotoListInGrid_to_fragmentAlbumFullView,bundle)
     }
-
-
 }

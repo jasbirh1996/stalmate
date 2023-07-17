@@ -24,6 +24,11 @@ data class ModelGlobalSearch(
         var request_status: String? = "",
         val url: String? = "" // https://webservice.kulluu.com
     ) : Parcelable {
+
+        fun profileData() = if (!profile_data.isNullOrEmpty())
+            profile_data.get(0)
+        else
+            null
         @Parcelize
         data class ProfileData(
             val education: ArrayList<Educations?>? = arrayListOf(),

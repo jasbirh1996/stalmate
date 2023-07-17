@@ -55,7 +55,8 @@ class CommentAdapterNew(
         ChildCommentAdapter.Callback {
         fun bind(shortComment: Comment, accessToken: String) {
             if (shortComment.Created_date.isDigitsOnly())
-                binding.tvDate.text = "${TimesAgo2.covertTimeToText(shortComment.Created_date, true)}"
+                binding.tvDate.text =
+                    "${TimesAgo2.covertTimeToText(shortComment.Created_date, true)}"
             else
                 binding.tvDate.text = "${shortComment.Created_date}"
             binding.tvUserName.text = "${shortComment.first_name} ${shortComment.last_name}"
@@ -252,8 +253,8 @@ class CommentAdapterNew(
                     }
                 }
                 if (it!!.status) {
-                    it.results.replies = ArrayList<Comment>()
-                    commentList.add(it.results)
+                    it?.results?.replies = ArrayList<Comment>()
+                    it?.results?.let { it1 -> commentList.add(it1) }
                     notifyItemInserted(commentList.size - 1)
                     callback.onCommentAddedSucessfully()
                 }
@@ -322,16 +323,16 @@ class CommentAdapterNew(
                 }
                 if (it!!.status) {
                     if (isReplyisChildComment) {
-                        it.results.replies = ArrayList<Comment>()
+                        it?.results?.replies = ArrayList<Comment>()
                         commentList[parentPosition].isExpanded = true
                         commentList[parentPosition].child_count++
-                        commentList[parentPosition].replies.add(it.results)
+                        it?.results?.let { it1 -> commentList[parentPosition].replies.add(it1) }
                         notifyItemChanged(parentPosition)
                     } else {
-                        it.results.replies = ArrayList<Comment>()
+                        it?.results?.replies = ArrayList<Comment>()
                         commentList[parentPosition].isExpanded = true
                         commentList[parentPosition].child_count++
-                        commentList[parentPosition].replies.add(it.results)
+                        it?.results?.let { it1 -> commentList[parentPosition].replies.add(it1) }
                         notifyItemChanged(parentPosition)
                     }
                     callback.onCommentAddedSucessfully()
@@ -367,29 +368,26 @@ class CommentAdapterNew(
 
         networkViewModel.getRepliesList(accessToken, hashmap)
         networkViewModel.repliesLiveData.observe(lifecyclerOwner) { mainIt ->
-            run {
-                if (mainIt!!.status) {
-                    mainIt.results.forEach {
-                        /*      viewModel.addComment(
-                                  Comment(
-                                      it._id,
-                                      Calendar.getInstance(Locale.ROOT).toSimpleDate(),
-                                      "test",
-                                      it.comment,
-                                      parentId = it.parentId,
-                                      first_name = PrefManager.getInstance(requireContext())!!.userDetail.results[0].first_name,
-                                      last_name = PrefManager.getInstance(requireContext())!!.userDetail.results[0].last_name,
-                                      child_count = 0,
-                                      profile_img = it.profile_img
-                                  )
-                              )*/
-                        it.replies = kotlin.collections.ArrayList<Comment>()
-                    }
-                    commentList[position].replies.addAll(mainIt.results)
-                    notifyItemChanged(position)
+            if (mainIt?.status == true) {
+                mainIt?.results?.forEach {
+                    /*      viewModel.addComment(
+                              Comment(
+                                  it._id,
+                                  Calendar.getInstance(Locale.ROOT).toSimpleDate(),
+                                  "test",
+                                  it.comment,
+                                  parentId = it.parentId,
+                                  first_name = PrefManager.getInstance(requireContext())!!.userDetail.results[0].first_name,
+                                  last_name = PrefManager.getInstance(requireContext())!!.userDetail.results[0].last_name,
+                                  child_count = 0,
+                                  profile_img = it.profile_img
+                              )
+                          )*/
+                    it.replies = kotlin.collections.ArrayList<Comment>()
                 }
+                mainIt?.results?.let { commentList[position].replies.addAll(it) }
+                notifyItemChanged(position)
             }
-
         }
     }
 

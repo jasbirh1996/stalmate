@@ -33,7 +33,6 @@ class ReelAdapter(val context: Context, var callback: Callback) :
     ListAdapter<ResultFuntime, ReelViewHolder>(DIFF_CALLBACK) {
     var isMuted = false
     var reelList = ArrayList<ResultFuntime>()
-    lateinit var instaLikePlayerView: InstaLikePlayerView
 
     companion object {
         /** Mandatory implementation inorder to use "ListAdapter" - new JetPack component" **/
@@ -49,7 +48,6 @@ class ReelAdapter(val context: Context, var callback: Callback) :
                 return false;//oldItem == newItem
             }
         }
-
         const val FEED_TYPE_VIDEO = 1;
         const val FEED_TYPE_IMAGES_MULTIPLE = 2;
     }
@@ -87,17 +85,12 @@ class ReelAdapter(val context: Context, var callback: Callback) :
         } else if (holder is ImageReelViewHolder) {
             handleViewHolder(holder, position)
         }
-
     }
 
     private fun handleViewHolder(holder: VideoReelViewHolder, position: Int) {
         /*Reset ViewHolder */
         removeImageFromImageView(holder.videoThumbnail)
-        try {
-            instaLikePlayerView = holder.customPlayerView
-        } catch (e: Exception) {
 
-        }
         holder.customPlayerView.reset()
 
         /*Set seperate ID for each player view, to prevent it being overlapped by other player's changes*/
@@ -128,8 +121,9 @@ class ReelAdapter(val context: Context, var callback: Callback) :
             .apply(requestOptions)
             .thumbnail(Glide.with(context).load(reelList[position].thum_icon))
             .into(holder.videoThumbnail)
-        holder.tvUserName.text =
-            reelList[position]!!.first_name + " " + reelList[position]!!.last_name
+
+
+        holder.tvUserName.text = reelList[position]!!.first_name + " " + reelList[position]!!.last_name
         Glide.with(context).load(reelList[position].profile_img)
             .placeholder(R.drawable.profileplaceholder).into(holder.imgUserProfile)
 
@@ -184,7 +178,7 @@ class ReelAdapter(val context: Context, var callback: Callback) :
         holder.shareShareCount.setText(reelList[position].share_count.toString())
         holder.shareButton.setOnClickListener {
             callback.onClickOnShareReel(reelList[position])
-            var dialogFragmen = DialogFragmentShareWithFriends(
+            val dialogFragmen = DialogFragmentShareWithFriends(
                 (context as BaseActivity).networkViewModel,
                 reelList[position], object : DialogFragmentShareWithFriends.CAllback {
                     override fun onTotalShareCountFromDialog(count: Int) {
@@ -196,7 +190,7 @@ class ReelAdapter(val context: Context, var callback: Callback) :
             dialogFragmen.show((context as AppCompatActivity).supportFragmentManager, "")
         }
         holder.commentButton.setOnClickListener {
-            var dialogFragmen = DialogFragmentComments(
+            val dialogFragmen = DialogFragmentComments(
                 (context as BaseActivity).networkViewModel,
                 reelList[position],
                 object : DialogFragmentComments.Callback {
@@ -205,14 +199,18 @@ class ReelAdapter(val context: Context, var callback: Callback) :
                         reelList[position].comment_count = commentCount
                         holder.customPlayerView.getPlayer()!!.play()
                     }
+
+                    override fun onCancel() {
+
+                    }
                 })
 
             holder.customPlayerView.getPlayer()!!.pause()
             dialogFragmen.show((context as AppCompatActivity).supportFragmentManager, "")
         }
         holder.soundIcon.setOnClickListener {
-            if (holder.customPlayerView.getPlayer()!!.volume == 0f) {
-                holder.customPlayerView.getPlayer()!!.volume =
+            if (holder.customPlayerView.getPlayer()?.volume == 0f) {
+                holder.customPlayerView.getPlayer()?.volume =
                     holder.customPlayerView.getPlayer()!!.deviceVolume.toFloat()
                 holder.soundIcon.setImageDrawable(
                     ContextCompat.getDrawable(
@@ -250,12 +248,9 @@ class ReelAdapter(val context: Context, var callback: Callback) :
 
 
     private fun handleViewHolder(holder: ImageReelViewHolder, position: Int) {
-
         /* Set adapter (items are being used inside adapter, you can setup in your own way*/
         val ReelAdapter = ImageAdapter(holder.itemView.context, position)
         holder.recyclerViewImages.adapter = ReelAdapter
-
-
     }
 
 
@@ -300,7 +295,6 @@ class ReelAdapter(val context: Context, var callback: Callback) :
 
 
     fun updateList(upatedReelList: ArrayList<ResultFuntime>) {
-
         for (i in 0 until reelList.size) {
             upatedReelList.forEach { newItem ->
                 if (reelList[i].id == newItem.id) {
@@ -320,6 +314,4 @@ class ReelAdapter(val context: Context, var callback: Callback) :
             }
         }
     }
-
-
 }

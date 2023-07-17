@@ -117,6 +117,13 @@ class FragmentProfileActivityLog : BaseFragment(), AdapterFeed.Callbackk,
 
     }
 
+    override fun showCommentOverlay(feed: ResultFuntime, position: Int) {
+
+    }
+
+    override fun hideCommentOverlay(feed: ResultFuntime, position: Int) {
+    }
+
     override fun onClickOnUpdateFriendRequest(friend: User, status: String) {
 
     }

@@ -171,5 +171,4 @@
     <style name="ChatBackground" parent="AppTheme">
         <item name="android:windowBackground">@drawable/whatsapp_dark_background</item>
     </style>
-
 </resources>

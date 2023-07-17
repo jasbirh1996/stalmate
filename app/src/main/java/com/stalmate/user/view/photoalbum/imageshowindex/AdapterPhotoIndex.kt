@@ -12,16 +12,16 @@ import com.bumptech.glide.Glide
 import com.stalmate.user.R
 import com.stalmate.user.databinding.ItemIndexPhotoAlbumShowBinding
 import com.stalmate.user.databinding.ItemSuggestedFriendBinding
-import com.stalmate.user.model.Photo
+import com.stalmate.user.model.Albums
 import com.stalmate.user.model.User
 
 class AdapterPhotoIndex(private var context : Context) : RecyclerView.Adapter<AdapterPhotoIndex.ViewHolder>() {
 
-    var onList = ArrayList<Photo>()
+    var onList = ArrayList<Albums?>()
 
    inner class ViewHolder(val binding : ItemIndexPhotoAlbumShowBinding): RecyclerView.ViewHolder(binding.root) {
 
-       fun bind(photo : Photo){
+       fun bind(photo : Albums){
 
            Glide.with(context)
                .load(photo.files.replace(".com",".com/"))
@@ -33,14 +33,14 @@ class AdapterPhotoIndex(private var context : Context) : RecyclerView.Adapter<Ad
 
 
 
-    fun addToList(users: List<Photo>) {
+    fun addToList(users: List<Albums>) {
 
         val size = onList.size
         onList.addAll(users)
         val sizeNew = onList.size
         notifyItemRangeChanged(size, sizeNew)
     }
-    fun setList(users: List<Photo>) {
+    fun setList(users: List<Albums?>) {
         onList.clear()
         onList.addAll(users)
         notifyDataSetChanged()
@@ -53,7 +53,7 @@ class AdapterPhotoIndex(private var context : Context) : RecyclerView.Adapter<Ad
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(onList.get(position))
+        onList.get(position)?.let { holder.bind(it) }
     }
 
     override fun getItemCount(): Int {

@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.activity.ComponentActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
@@ -216,39 +217,36 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-
         var filePath: String? = ""
-
         if (requestCode == PICK_IMAGE_PROFILE && resultCode == RESULT_OK) {
-
         } else if (requestCode == PICK_IMAGE_COVER && resultCode == RESULT_OK) {
-
         }
     }
 
     /*Cover Image Picker */
-    private val cropImage = registerForActivityResult(CropImageContract()) { result ->
-        if (result.isSuccessful) {
-            // use the returned uri
-            val uriContent = result.uriContent
-            var uriFilePath = result.getUriFilePath(this) // optional usage
-            imageFile = File(result.getUriFilePath(this, true)!!)
-            Log.d("imageUrl======", uriContent.toString())
-            Log.d("imageUrl======", uriFilePath.toString())
+    private val cropImage =
+        (this as ComponentActivity).registerForActivityResult(CropImageContract()) { result ->
+            if (result.isSuccessful) {
+                // use the returned uri
+                val uriContent = result.uriContent
+                var uriFilePath = result.getUriFilePath(this) // optional usage
+                imageFile = File(result.getUriFilePath(this, true))
+                Log.d("imageUrl======", uriContent.toString())
+                Log.d("imageUrl======", uriFilePath.toString())
 
-            /*if (isCoverImage) {
-                Glide.with(this).load(uriContent).into(binding.ivBackground)
+                /*if (isCoverImage) {
+                    Glide.with(this).load(uriContent).into(binding.ivBackground)
+                } else {
+                    Glide.with(this).load(uriContent).into(binding.ivUserThumb)
+                }*/
+
+                updateProfileImageApiHit()
+
             } else {
-                Glide.with(this).load(uriContent).into(binding.ivUserThumb)
-            }*/
-
-            updateProfileImageApiHit()
-
-        } else {
-            // an error occurred
-            val exception = result.error
+                // an error occurred
+                val exception = result.error
+            }
         }
-    }
 
     private fun startCrop() {
         // start picker to get image for cropping and then use the image in cropping activity
@@ -288,6 +286,13 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
 
     }
 
+    override fun showCommentOverlay(feed: ResultFuntime, position: Int) {
+
+    }
+
+    override fun hideCommentOverlay(feed: ResultFuntime, position: Int) {
+    }
+
     private fun updateProfileImageApiHit() {
         val thumbnailBody: RequestBody =
             RequestBody.create("image/*".toMediaTypeOrNull(), imageFile!!)
@@ -297,7 +302,7 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
             thumbnailBody
         ) //image[] for multiple image
 
-        networkViewModel.etsProfileApi(prefManager?.access_token.toString(),profile_image1)
+        networkViewModel.etsProfileApi(prefManager?.access_token.toString(), profile_image1)
         networkViewModel.UpdateProfileLiveData.observe(this, Observer {
             it.let {
                 makeToast(it!!.message)
@@ -310,8 +315,8 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
         val hashMap = HashMap<String, String>()
         networkViewModel.getProfileData(hashMap, prefManager?.access_token.toString())
         networkViewModel.profileLiveData.observe(this, Observer {
-            it.let {
-                userData = it!!.results
+            it?.let {
+                userData = it.results!!
                 setUpAboutUI("Photos")
                 PrefManager.getInstance(this)!!.userProfileDetail = it
             }
@@ -350,31 +355,31 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
         if (tabType == "Photos") {
             albumImageAdapter = ProfileAlbumImageAdapter(networkViewModel, this, "")
             binding.layout.rvPhotoAlbumData.adapter = albumImageAdapter
-            albumImageAdapter.submitList(userData.photos)
+            userData.photos?.let { albumImageAdapter.submitList(it) }
         } else if (tabType == "Albums") {
             albumAdapter = SelfProfileAlbumAdapter(networkViewModel, this, "")
             binding.layout.rvPhotoAlbumData.adapter = albumAdapter
-            albumAdapter.submitList(userData.albums)
+            userData.albums?.let { albumAdapter.submitList(it) }
 
         }
 
-        if (userData.profile_data[0].profession.isNotEmpty()) {
+        if (!userData.profileData()?.profession.isNullOrEmpty()) {
             aboutArrayList.add(
                 AboutProfileLine(
                     R.drawable.ic_profile_job,
-                    userData.profile_data[0].profession[0].designation,
-                    userData.profile_data[0].profession[0].company_name,
+                    userData.profileData()?.profession?.get(0)?.designation ?: "",
+                    userData.profileData()?.profession?.get(0)?.company_name ?: "",
                     "at"
                 )
             )
         }
 
-        if (userData.profile_data[0].education.isNotEmpty()) {
+        if (!userData.profileData()?.education.isNullOrEmpty()) {
             aboutArrayList.add(
                 AboutProfileLine(
                     R.drawable.ic_profile_graduation,
                     "Student",
-                    userData.profile_data[0].education[0].sehool,
+                    userData.profileData()?.education?.get(0)?.sehool ?: "",
                     "at"
                 )
             )
@@ -384,7 +389,7 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
             AboutProfileLine(
                 R.drawable.ic_profile_location,
                 "From",
-                userData.profile_data[0].home_town,
+                userData.profileData()?.home_town.toString(),
                 ""
             )
         )
@@ -393,7 +398,7 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
             AboutProfileLine(
                 R.drawable.ic_profile_status,
                 "",
-                userData.profile_data[0].marital_status,
+                userData.profileData()?.marital_status.toString(),
                 ""
             )
         )

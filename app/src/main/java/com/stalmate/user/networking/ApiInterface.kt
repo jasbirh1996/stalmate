@@ -18,6 +18,10 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.http.*
+import android.os.Parcelable
+
+import kotlinx.parcelize.Parcelize
+
 
 interface ApiInterface {
 
@@ -100,10 +104,24 @@ interface ApiInterface {
     ): Call<ModelFeed>
 
     @POST(Constants.url_friend_list)
-    fun getFriendList(
+    fun getFriendListMap(
         @Header("access_token") access_token: String,
         @Body map: HashMap<String, String>
     ): Call<ModelFriend>
+
+    @POST(Constants.url_friend_list)
+    fun getFriendListBody(
+        @Header("access_token") access_token: String,
+        @Body map: UsersListResponse
+    ): Call<ModelFriend>
+
+    @Parcelize
+    data class UsersListResponse(
+        val limit: String? = "", // 6
+        val page: String? = "", // 1
+        val type: Int? = 0, // 2
+        val user_id: String? = ""
+    ) : Parcelable
 
     @POST(Constants.URL_FUNTIME_UPDATE)
     fun funtimeUpdate(@Body map: HashMap<String, String>): Call<ModelSuccess>
@@ -137,7 +155,9 @@ interface ApiInterface {
     fun setLoginDetails(@Body map: HashMap<String, String>): Call<ModelLoginResponse>
 
     @POST(Constants.URL_NUMBER_VERIFY_UPDATE)
-    fun setOtpNumberVerify(@Body map: HashMap<String, String>): Call<CommonModelResponse>
+    fun setOtpNumberVerify(
+        @Header("access_token") access_token: String,
+        @Body map: HashMap<String, String>): Call<CommonModelResponse>
 
     @PATCH(Constants.URL_UPDATE_ABOUT)
     fun setUpdateAbout(@Body map: HashMap<String, String>): Call<CommonModelResponse>
@@ -145,7 +165,8 @@ interface ApiInterface {
     @POST(Constants.URL_EDUCATION_ADD)
     fun setEducationAddDetails(
         @Header("access_token") access_token: String,
-        @Body map: HashMap<String, String>): Call<ModelCommonAddEducationAndProfessionResponse>
+        @Body map: HashMap<String, String>
+    ): Call<ModelCommonAddEducationAndProfessionResponse>
 
     @POST(Constants.URL_UPDATE_FRIEND_CATEGORY)
     fun setUpdateFriendCategoryDetails(@Body map: HashMap<String, String>): Call<AddCategoryModel>
@@ -153,7 +174,8 @@ interface ApiInterface {
     @POST(Constants.URL_PROFESSION_ADD)
     fun setProfessionAddDetails(
         @Header("access_token") access_token: String,
-        @Body map: HashMap<String, String>): Call<ModelCommonAddEducationAndProfessionResponse>
+        @Body map: HashMap<String, String>
+    ): Call<ModelCommonAddEducationAndProfessionResponse>
 
     @POST(Constants.URL_PHOTO_ALBUM_NAME)
     fun setCreateAlbumDetails(@Body map: HashMap<String, String>): Call<ModelAlbumCreateResponse>
@@ -195,7 +217,7 @@ interface ApiInterface {
     fun getOtherUserProfileDetails(
         @Header("access_token") access_token: String,
         @Query("id_user") id_user: String
-    ): Call<ModelUser>
+    ): Call<ModelFriend>
 
     @GET(Constants.URL_OTP_REGISTRATION)
     fun setOtpVerifyRegistration(
@@ -265,18 +287,17 @@ interface ApiInterface {
         @Part("dob") dob: RequestBody,
         @Part("marital_status") maritalStatus: RequestBody,
         @Part("url") url: RequestBody,
-        @Part("company") company: RequestBody,
         @Part("gender") gender: RequestBody,
         @Part("city") city: RequestBody,
         @Part("home_town") home_town: RequestBody
-    ): Call<CommonModelResponse>
+    ): Call<ProfileImagesUpdated>
 
     @Multipart
     @POST(Constants.UPDATE_PROFILE_API_FILE)
     fun updateUserProfileImage(
         @Header("access_token") access_token: String,
         @Part cover_img: MultipartBody.Part
-    ): Call<CommonModelResponse>
+    ): Call<ProfileImagesUpdated>
 
 
     @Multipart

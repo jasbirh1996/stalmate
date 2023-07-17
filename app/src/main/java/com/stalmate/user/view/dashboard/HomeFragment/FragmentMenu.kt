@@ -88,7 +88,7 @@ class FragmentMenu(var callback: Callback) : BaseFragment(), DrawerAdapter.Callb
 
 
         /*Glide.with(requireActivity())
-            .load(PrefManager.getInstance(requireContext())!!.userProfileDetail.results.profile_img1)
+            .load(PrefManager.getInstance(requireContext())!!.userProfileDetail.results?.profile_img1)
             .placeholder(R.drawable.user_placeholder).circleCrop().into(binding.userProfileImage)*/
         binding.tvUserName.text =
             PrefManager.getInstance(App.getInstance())?.userDetail?.results?.first_name + " " + PrefManager.getInstance(
@@ -121,7 +121,7 @@ class FragmentMenu(var callback: Callback) : BaseFragment(), DrawerAdapter.Callb
         networkViewModel.getProfileData(hashMap, prefManager?.access_token.toString())
         networkViewModel.profileLiveData.observe(requireActivity(), Observer {
             it.let {
-                userData = it!!.results
+                userData = it?.results!!
                 setUpAboutUI()
                 PrefManager.getInstance(requireContext())!!.userProfileDetail = it
 

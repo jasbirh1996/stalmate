@@ -1,13 +1,18 @@
 package com.stalmate.user.model
 
-import java.io.Serializable
+import android.os.Parcelable
+import kotlinx.android.parcel.RawValue
 
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class ModelUser(
     val message: String,
-    val results: User,
+    val results: User? = null,
     val status: Boolean
-)
+) : Parcelable
 
+@Parcelize
 data class User(
     var isFriend: Int = 0,
     var isFollowed: Int = 0,
@@ -18,7 +23,7 @@ data class User(
     val about: String? = null,
     val city: String? = null,
     val company: String? = null,
-    val cover_img: String? = null,
+    val cover_img: ArrayList<Albums?>? = arrayListOf(),
     val cover_img1: String? = null,
     val dob: String? = null,
     var follower_count: Int = 0,
@@ -32,19 +37,19 @@ data class User(
     val img_url: String? = null,
     val gender: String? = null,
     val number: String? = null,
-    val profile_data: ArrayList<ProfileData> = ArrayList<ProfileData>(),
-    val profile_img: String = "",
+    val profile_data: ArrayList<ProfileData?>? = arrayListOf(),
+    val profile_img: ArrayList<Albums?>? = arrayListOf(),
     val profile_img1: String = "",
     val schoolandcollege: String? = null,
     val schoolandcollegename: String? = null,
-    val albums: ArrayList<Albums> = ArrayList<Albums>(),
+    val albums: ArrayList<Albums?>? = arrayListOf(),
     val url: String? = null,
 
 
     //Not coming for new users
     val mes: String? = null,
     var isSelected: Boolean = false,
-    val photos: ArrayList<AlbumImage> = ArrayList<AlbumImage>(),
+    val photos: ArrayList<Albums?>? = arrayListOf(),
     val img: String? = null,
     var request_status: String? = null,
     var isFriendRemovedFromSuggestion: Int? = null,
@@ -52,28 +57,30 @@ data class User(
 
     //From M8 work
     val connected_since: String? = "",
-    val privacy_setting: PrivacySetting? = null,
-    val block_contact: ArrayList<Any?>? = arrayListOf()
-) : Serializable
-
-data class Photo(
-    val _id: String,
-    val id: String,
-    val img: String,
-    val files: String,
-    val url: String
-) : Serializable
+    val privacy_setting: @RawValue PrivacySetting? = null,
+    val block_contact: ArrayList<@RawValue Any?>? = arrayListOf(),
 
 
+    //After M8
+    val _id: String? = "", // 64b268c21fb3be7293ef2000
+    val countrycode: String? = ""
+) : Parcelable{
+    fun profileData() = if (!profile_data.isNullOrEmpty())
+        profile_data.get(0)
+    else
+        null
+}
+
+@Parcelize
 data class ProfileData(
-    val education: ArrayList<Education>,
-    val home_town: String,
-    val location: String,
-    val marital_status: String,
-    val profession: ArrayList<Profession>,
-) : Serializable
+    val education: ArrayList<Education>? = arrayListOf(),
+    val home_town: String? = "",
+    val location: String? = "",
+    val marital_status: String? = "",
+    val profession: ArrayList<Profession> = arrayListOf()
+) : Parcelable
 
-
+@Parcelize
 data class Education(
     val Created_date: String,
     val Updated_date: String,
@@ -85,8 +92,9 @@ data class Education(
     var sehool: String,
     val status: String,
     val user_id: String
-) : Serializable
+) : Parcelable
 
+@Parcelize
 data class Profession(
     val Created_date: String,
     val Updated_date: String,
@@ -100,27 +108,31 @@ data class Profession(
     val status: String,
     var to: String,
     val user_id: String
-) : Serializable
+) : Parcelable
 
 
-data class AlbumImage(
-    val album_id: String,
-    val user_id: String,
-    val Created_date: String,
-    val Updated_date: String,
-    val is_delete: String,
-    val _id: String,
-    val files: String,
-    val __v: String
-) : Serializable
-
-
+@Parcelize
 data class Albums(
-    val id: String,
-    val name: String,
-    val img: String
-) : Serializable
+    val Created_date: String? = "", // 1689246321013
+    val Updated_date: String? = "", // 1689246321013
+    val _id: String? = "", // 64b269831fb3be7293ef21af
+    val img: String? = "", // https://stalematebucket.s3.me-south-1.amazonaws.com/1689414019118/temp_file_20230715_151019.jpg
+    val is_cover: String? = "", // 0
+    val is_delete: String? = "", // 0
+    val name: String? = "", // Profile Photos
+    val status: String? = "", // active
+    val user_id: String? = "", // 64b268c21fb3be7293ef2000
 
+
+    val album_id: String? = "", // 64b269831fb3be7293ef21af
+    val img_type: String? = "", // 0
+
+    val id: String,
+    val files: String,
+    val url: String
+) : Parcelable
+
+@Parcelize
 data class PrivacySetting(
     val _id: String? = "", // 643955d84d8ac204ccd95141
     val about: Int? = 0, // 2
@@ -140,4 +152,4 @@ data class PrivacySetting(
     val who_can_see_phone_number: Int? = 0, // 1
     val who_can_send_me_message: Int? = 0, // 1
     val who_can_send_you_friend_request: Int? = 0 // 1
-)
+) : Parcelable

@@ -15,6 +15,7 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleOwner
 import com.stalmate.user.R
+import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.databinding.DialogueNumberVerifyBinding
 import com.stalmate.user.databinding.DialougeAddEducationBinding
 import com.stalmate.user.model.Education
@@ -93,7 +94,7 @@ class DialogVerifyNumber(
         hashMap["number"] =number
         hashMap["otp"] = binding.pinView.text.toString()
 
-        viewModel.numberVerify(hashMap)
+        viewModel.numberVerify((context as BaseActivity).prefManager?.access_token.toString(),hashMap)
         viewModel.numberVerifyData.observe( (binding.root.context as? LifecycleOwner)!!){
             it?.let {
                 if (it.status == true){

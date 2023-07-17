@@ -16,23 +16,24 @@ import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentFriendListBinding
 import com.stalmate.user.model.User
+import com.stalmate.user.networking.ApiInterface
 import com.stalmate.user.utilities.Constants
 import com.stalmate.user.view.adapter.FriendAdapter
 
-class FragmentFriendList(var type: String, var subtype: String,var userId:String) : BaseFragment(), FriendAdapter.Callbackk {
+class FragmentFriendList(var type: String, var subtype: String, var userId: String) :
+    BaseFragment(), FriendAdapter.Callbackk {
     lateinit var friendAdapter: FriendAdapter
     lateinit var binding: FragmentFriendListBinding
     var searchData = ""
-    var sortBy=""
-    var filter=""
-    var currentPage=1
+    var sortBy = ""
+    var filter = ""
+    var currentPage = 1
     var isLastPage = false
     var isLoading = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true);
     }
-
 
 
     override fun onCreateView(
@@ -52,7 +53,7 @@ class FragmentFriendList(var type: String, var subtype: String,var userId:String
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        friendAdapter = FriendAdapter(networkViewModel, requireContext(), this,type,subtype)
+        friendAdapter = FriendAdapter(networkViewModel, requireContext(), this, type, subtype)
         setupUI()
         binding.etSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -76,7 +77,7 @@ class FragmentFriendList(var type: String, var subtype: String,var userId:String
             }
         })
 
-        binding.shimmerViewContainer.visibility=View.VISIBLE
+        binding.shimmerViewContainer.visibility = View.VISIBLE
         binding.shimmerViewContainer.startShimmer()
         binding.rvFriends.adapter = friendAdapter
         binding.rvFriends.layoutManager = LinearLayoutManager(context)
@@ -87,13 +88,13 @@ class FragmentFriendList(var type: String, var subtype: String,var userId:String
             showMenuOtherFilter(binding.tvFilter)
         }
 
-        hitApi(true,searchData)
+        hitApi(true, searchData)
 
 
         // Refresh function for the layout
-        binding.refreshLayout.setOnRefreshListener{
+        binding.refreshLayout.setOnRefreshListener {
 
-            hitApi(true,searchData)
+            hitApi(true, searchData)
 
         }
 
@@ -118,14 +119,14 @@ class FragmentFriendList(var type: String, var subtype: String,var userId:String
     private fun loadMoreItems() {
         isLoading = true
         currentPage++
-        hitApi(false,searchData)
+        hitApi(false, searchData)
     }
 
 
-    fun hitApi(isFresh:Boolean, dataSearch: String){
+    fun hitApi(isFresh: Boolean, dataSearch: String) {
         this.searchData = dataSearch
-        if (isFresh){
-            currentPage=1
+        if (isFresh) {
+            currentPage = 1
         }
 
         var hashmap = HashMap<String, String>()
@@ -135,37 +136,45 @@ class FragmentFriendList(var type: String, var subtype: String,var userId:String
         hashmap.put("search", this.searchData)
         hashmap.put("page", currentPage.toString())
         hashmap.put("limit", "20")
-        hashmap.put("sortBy",sortBy)
-        hashmap.put("filter",filter)
+        hashmap.put("sortBy", sortBy)
+        hashmap.put("filter", filter)
 
-        networkViewModel.getFriendList(prefManager?.access_token.toString(),hashmap)
+        networkViewModel.getFriendListBody(
+            prefManager?.access_token.toString(),
+            map = ApiInterface.UsersListResponse(
+                limit = "6",
+                page = "1",
+                type = if (subtype == Constants.TYPE_USER_TYPE_FOLLOWERS) Constants.NEW_Type_Follower else Constants.NEW_Type_Following,
+                user_id = userId
+            )
+        )
         networkViewModel.friendLiveData.observe(viewLifecycleOwner, Observer {
             it.let {
 
-                binding.refreshLayout.isRefreshing=false
+                binding.refreshLayout.isRefreshing = false
 
                 binding.shimmerViewContainer.stopShimmer()
-                binding.shimmerViewContainer.visibility=View.GONE
+                binding.shimmerViewContainer.visibility = View.GONE
 
-                if (it!!.results.isNotEmpty()){
+                if (!it?.results.isNullOrEmpty()) {
 
-                    if (isFresh){
-                        friendAdapter.submitList(it.results as java.util.ArrayList<User>)
-                    }else{
-                        friendAdapter.addToList(it.results as java.util.ArrayList<User>)
+                    if (isFresh) {
+                        friendAdapter.submitList(it?.results as java.util.ArrayList<User>)
+                    } else {
+                        friendAdapter.addToList(it?.results as java.util.ArrayList<User>)
                     }
 
-                    isLastPage=false
-                    if (it.results.size<6){
+                    isLastPage = false
+                    if ((it?.results?.size?:0) < 6) {
                         binding.progressLoading.visibility = View.GONE
-                    }else{
+                    } else {
                         binding.progressLoading.visibility = View.VISIBLE
                     }
-                }else{
-                    if (isFresh){
-                        friendAdapter.submitList(it.results as java.util.ArrayList<User>)
+                } else {
+                    if (isFresh) {
+                        friendAdapter.submitList(it?.results as java.util.ArrayList<User>)
                     }
-                    isLastPage=true
+                    isLastPage = true
                     binding.progressLoading.visibility = View.GONE
 
                 }
@@ -190,39 +199,39 @@ class FragmentFriendList(var type: String, var subtype: String,var userId:String
     }
 
 
-
     override fun onClickOnProfile(friend: User) {
-      startActivity(IntentHelper.getOtherUserProfileScreen(requireContext())!!.putExtra("id", friend.id))
+        startActivity(
+            IntentHelper.getOtherUserProfileScreen(requireContext())!!.putExtra("id", friend.id)
+        )
     }
 
 
-
-    fun showMenuFilter(v : View){
+    fun showMenuFilter(v: View) {
         val popup = PopupMenu(requireContext(), v)
         val inflater: MenuInflater = popup.menuInflater
         inflater.inflate(R.menu.user_filter_menu, popup.menu)
         popup.setOnMenuItemClickListener { menuItem ->
 
-            Log.d("klasjdlsad",";lasjd;a")
+            Log.d("klasjdlsad", ";lasjd;a")
 
-            when(menuItem.itemId){
-                R.id.actionSortByAZ-> {
-                    sortBy="ascending"
-                    currentPage=1
+            when (menuItem.itemId) {
+                R.id.actionSortByAZ -> {
+                    sortBy = "ascending"
+                    currentPage = 1
                     filter = ""
-                    hitApi(true,searchData)
+                    hitApi(true, searchData)
                 }
-                R.id.actionSortByZA-> {
-                    sortBy="descending"
-                    currentPage=1
+                R.id.actionSortByZA -> {
+                    sortBy = "descending"
+                    currentPage = 1
                     filter = ""
-                    hitApi(true,searchData)
+                    hitApi(true, searchData)
                 }
-                R.id.actionSortByLatest-> {
-                    sortBy="recentlyAdded"
-                    currentPage=1
+                R.id.actionSortByLatest -> {
+                    sortBy = "recentlyAdded"
+                    currentPage = 1
                     filter = ""
-                    hitApi(true,searchData)
+                    hitApi(true, searchData)
                 }
             }
             true
@@ -231,37 +240,37 @@ class FragmentFriendList(var type: String, var subtype: String,var userId:String
     }
 
 
-    fun showMenuOtherFilter(v : View){
+    fun showMenuOtherFilter(v: View) {
         val popup = PopupMenu(requireContext(), v)
         val inflater: MenuInflater = popup.menuInflater
         inflater.inflate(R.menu.user_other_filter_menu, popup.menu)
         popup.setOnMenuItemClickListener { menuItem ->
 
 
-            when(menuItem.itemId){
-                R.id.actionFilterLocation-> {
-                    filter="location"
-                    currentPage=1
+            when (menuItem.itemId) {
+                R.id.actionFilterLocation -> {
+                    filter = "location"
+                    currentPage = 1
                     sortBy = ""
-                    hitApi(true,searchData)
+                    hitApi(true, searchData)
                 }
-                R.id.actionFilterCollege-> {
-                    filter="college"
-                    currentPage=1
+                R.id.actionFilterCollege -> {
+                    filter = "college"
+                    currentPage = 1
                     sortBy = ""
-                    hitApi(true,searchData)
+                    hitApi(true, searchData)
                 }
-                R.id.actionFilterInterest-> {
-                    filter="interest"
-                    currentPage=1
+                R.id.actionFilterInterest -> {
+                    filter = "interest"
+                    currentPage = 1
                     sortBy = ""
-                    hitApi(true,searchData)
+                    hitApi(true, searchData)
                 }
-                R.id.actionFilterWorkplace-> {
-                    filter="workplace"
-                    currentPage=1
+                R.id.actionFilterWorkplace -> {
+                    filter = "workplace"
+                    currentPage = 1
                     sortBy = ""
-                    hitApi(true,searchData)
+                    hitApi(true, searchData)
                 }
             }
             true
@@ -269,74 +278,79 @@ class FragmentFriendList(var type: String, var subtype: String,var userId:String
         popup.show()
     }
 
-    fun setupUI(){
+    fun setupUI() {
         if (type.equals(Constants.TYPE_FRIEND_REQUEST)) {
-        binding.tvData.text="No Friends Requests to show"
+            binding.tvData.text = "No Friends Requests to show"
         } else if (type.equals(Constants.TYPE_FRIEND_SUGGESTIONS)) {
-            binding.tvData.text="No Friends Suggestions to show"
+            binding.tvData.text = "No Friends Suggestions to show"
         } else if (type.equals(Constants.TYPE_FRIEND_SUGGESTIONS_FOLLOWERS)) {
-            binding.tvData.text="No Friends Suggestions to show"
+            binding.tvData.text = "No Friends Suggestions to show"
         } else if (type.equals(Constants.TYPE_MY_FRIENDS) && subtype.equals(Constants.TYPE_FRIEND_FOLLOWING)) {
-            binding.tvData.text="No Friends to show"
+            binding.tvData.text = "No Friends to show"
         } else if (type.equals(Constants.TYPE_MY_FRIENDS) && subtype.equals(Constants.TYPE_FRIEND_FOLLOWER)) {
-            binding.tvData.text="No Friends to show"
+            binding.tvData.text = "No Friends to show"
         } else if (type.equals(Constants.TYPE_ALL_FOLLOWERS_FOLLOWING) && subtype.equals(Constants.TYPE_USER_TYPE_FOLLOWERS)) {
-            binding.tvData.text="No Followers to show"
+            binding.tvData.text = "No Followers to show"
         } else if (type.equals(Constants.TYPE_ALL_FOLLOWERS_FOLLOWING) && subtype.equals(Constants.TYPE_USER_TYPE_FOLLOWINGS)) {
-            binding.tvData.text="No Followings to show"
+            binding.tvData.text = "No Followings to show"
         }
     }
-    
-    
-  fun   setupUIAfterAiHit(){
-      
-      
-      if (friendAdapter.list.isEmpty()){
-            binding.layoutNoData.visibility=View.VISIBLE
-           /* binding.ivSortIcon.visibility=View.GONE
-            binding.layoutFilter.visibility=View.GONE*/
-      }else{
-          binding.layoutNoData.visibility=View.GONE
-
-          if (type.equals(Constants.TYPE_FRIEND_REQUEST)) {
-
-              binding.ivSortIcon.visibility=View.VISIBLE
-              binding.layoutFilter.visibility=View.GONE 
-              binding.layoutSearchBox.visibility=View.GONE
-
-          } else if (type.equals(Constants.TYPE_FRIEND_SUGGESTIONS)) {
-
-              binding.ivSortIcon.visibility=View.VISIBLE
-              binding.layoutFilter.visibility=View.VISIBLE
-              binding.layoutSearchBox.visibility=View.GONE
-
-          } else if (type.equals(Constants.TYPE_FRIEND_SUGGESTIONS_FOLLOWERS)) {
 
 
-
-          } else if (type.equals(Constants.TYPE_MY_FRIENDS) && subtype.equals(Constants.TYPE_FRIEND_FOLLOWING)) {
-              binding.ivSortIcon.visibility=View.VISIBLE
-              binding.layoutFilter.visibility=View.VISIBLE
-              binding.layoutSearchBox.visibility=View.GONE
-
-          } else if (type.equals(Constants.TYPE_MY_FRIENDS) && subtype.equals(Constants.TYPE_FRIEND_FOLLOWER)) {
-              binding.ivSortIcon.visibility=View.VISIBLE
-              binding.layoutFilter.visibility=View.VISIBLE
-              binding.layoutSearchBox.visibility=View.GONE
+    fun setupUIAfterAiHit() {
 
 
-          } else if (type.equals(Constants.TYPE_ALL_FOLLOWERS_FOLLOWING) && subtype.equals(Constants.TYPE_USER_TYPE_FOLLOWERS)) {
-              binding.ivSortIcon.visibility=View.GONE
-              binding.layoutFilter.visibility=View.GONE
-              binding.layoutSearchBox.visibility=View.VISIBLE
+        if (friendAdapter.list.isEmpty()) {
+            binding.layoutNoData.visibility = View.VISIBLE
+            /* binding.ivSortIcon.visibility=View.GONE
+             binding.layoutFilter.visibility=View.GONE*/
+        } else {
+            binding.layoutNoData.visibility = View.GONE
 
-          } else if (type.equals(Constants.TYPE_ALL_FOLLOWERS_FOLLOWING) && subtype.equals(Constants.TYPE_USER_TYPE_FOLLOWINGS)) {
-              binding.ivSortIcon.visibility=View.GONE
-              binding.layoutFilter.visibility=View.GONE
-              binding.layoutSearchBox.visibility=View.VISIBLE
-          }
-          
-      }
+            if (type.equals(Constants.TYPE_FRIEND_REQUEST)) {
+
+                binding.ivSortIcon.visibility = View.VISIBLE
+                binding.layoutFilter.visibility = View.GONE
+                binding.layoutSearchBox.visibility = View.GONE
+
+            } else if (type.equals(Constants.TYPE_FRIEND_SUGGESTIONS)) {
+
+                binding.ivSortIcon.visibility = View.VISIBLE
+                binding.layoutFilter.visibility = View.VISIBLE
+                binding.layoutSearchBox.visibility = View.GONE
+
+            } else if (type.equals(Constants.TYPE_FRIEND_SUGGESTIONS_FOLLOWERS)) {
+
+
+            } else if (type.equals(Constants.TYPE_MY_FRIENDS) && subtype.equals(Constants.TYPE_FRIEND_FOLLOWING)) {
+                binding.ivSortIcon.visibility = View.VISIBLE
+                binding.layoutFilter.visibility = View.VISIBLE
+                binding.layoutSearchBox.visibility = View.GONE
+
+            } else if (type.equals(Constants.TYPE_MY_FRIENDS) && subtype.equals(Constants.TYPE_FRIEND_FOLLOWER)) {
+                binding.ivSortIcon.visibility = View.VISIBLE
+                binding.layoutFilter.visibility = View.VISIBLE
+                binding.layoutSearchBox.visibility = View.GONE
+
+
+            } else if (type.equals(Constants.TYPE_ALL_FOLLOWERS_FOLLOWING) && subtype.equals(
+                    Constants.TYPE_USER_TYPE_FOLLOWERS
+                )
+            ) {
+                binding.ivSortIcon.visibility = View.GONE
+                binding.layoutFilter.visibility = View.GONE
+                binding.layoutSearchBox.visibility = View.VISIBLE
+
+            } else if (type.equals(Constants.TYPE_ALL_FOLLOWERS_FOLLOWING) && subtype.equals(
+                    Constants.TYPE_USER_TYPE_FOLLOWINGS
+                )
+            ) {
+                binding.ivSortIcon.visibility = View.GONE
+                binding.layoutFilter.visibility = View.GONE
+                binding.layoutSearchBox.visibility = View.VISIBLE
+            }
+
+        }
 
     }
 

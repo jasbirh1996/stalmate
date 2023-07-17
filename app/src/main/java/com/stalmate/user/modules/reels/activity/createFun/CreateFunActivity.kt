@@ -23,6 +23,7 @@ import android.util.Size
 import android.view.*
 import android.webkit.MimeTypeMap
 import android.widget.*
+import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -65,6 +66,7 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.util.*
 import java.util.concurrent.ExecutionException
+import kotlin.collections.ArrayList
 
 
 class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventListener {
@@ -252,6 +254,8 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
         )
         setContentView(R.layout.activity_create_fun_activity)
+        initalizeViews()
+        getGalleryData()
     }
 
     override fun onRequestPermissionsResult(
@@ -272,11 +276,19 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
 
     private fun initialize() {
         initializeDeepAR()
-        initalizeViews()
-        initializeFilters()
-        getGalleryData()
-        restoreDeepArState()
     }
+
+    data class SavedSnapSettings(
+        val type: String,
+        var name: String
+    )
+
+    private var savedMasksSettings: SavedSnapSettings =
+        SavedSnapSettings(type = "mask", name = "none")
+    private var savedEffectsSettings: SavedSnapSettings =
+        SavedSnapSettings(type = "effect", name = "none")
+    private var savedFiltersSettings: SavedSnapSettings =
+        SavedSnapSettings(type = "filter", name = "none")
 
     private fun initializeFilters() {
         masks.clear()
@@ -392,9 +404,18 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
                 callback = object : SnapsAdapter.OnSnapListener {
                     override fun onItemSelected(data: SnapsData) {
                         val type = when (activeFilterType) {
-                            0 -> "mask"
-                            1 -> "effect"
-                            2 -> "filter"
+                            0 -> {
+                                savedMasksSettings.name = data.name
+                                "mask"
+                            }
+                            1 -> {
+                                savedEffectsSettings.name = data.name
+                                "effect"
+                            }
+                            2 -> {
+                                savedFiltersSettings.name = data.name
+                                "filter"
+                            }
                             else -> ""
                         }
                         if (data.name == "none") {
@@ -489,6 +510,7 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
     }
 
     private fun initalizeViews() {
+        initializeFilters()
         //Set ArView
         val arView = findViewById<SurfaceView>(R.id.surface)
         arView.holder.addCallback(this)
@@ -531,82 +553,19 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
             radioEffects.isChecked = false
             radioFilters.isChecked = false
             activeFilterType = 0
-
             initializeFilters()
-
-            /*snapAdapter?.timeList?.clear()
-            snapAdapter?.timeList?.addAll(masks)
-            snapAdapter?.notifyDataSetChanged()*/
-
-            /*if (masks?.get(currentMask) == "none") {
-                findViewById<TextView>(R.id.tvEffectName).visibility = View.GONE
-            } else {
-                findViewById<TextView>(R.id.tvEffectName).visibility = View.VISIBLE
-                findViewById<TextView>(R.id.tvEffectName).text =
-                    (masks?.get(currentMask)?.get(0)?.toUpperCase()
-                        .toString() + masks?.get(currentMask)?.substring(
-                        1,
-                        (masks?.get(currentMask)?.lastIndex ?: 0) + 1
-                    )?.replace(".deepar", "")).replace("_", " ")
-            }
-            deepAR?.switchEffect(
-                "mask",
-                getFilterPath(masks?.get(currentMask).toString())
-            )*/
         }
         radioEffects.setOnClickListener {
             radioMasks.isChecked = false
             radioFilters.isChecked = false
             activeFilterType = 1
-
             initializeFilters()
-
-            /*snapAdapter?.timeList?.clear()
-            snapAdapter?.timeList?.addAll(effects)
-            snapAdapter?.notifyDataSetChanged()*/
-
-            /*if (effects?.get(currentEffect) == "none") {
-                findViewById<TextView>(R.id.tvEffectName).visibility = View.GONE
-            } else {
-                findViewById<TextView>(R.id.tvEffectName).visibility = View.VISIBLE
-                findViewById<TextView>(R.id.tvEffectName).text =
-                    (effects?.get(currentEffect)?.get(0)?.toUpperCase()
-                        .toString() + effects?.get(currentEffect)?.substring(
-                        1,
-                        (effects?.get(currentEffect)?.lastIndex ?: 0) + 1
-                    )?.replace(".deepar", "")).replace("_", " ")
-            }
-            deepAR?.switchEffect(
-                "effect",
-                getFilterPath(effects?.get(currentEffect).toString())
-            )*/
         }
         radioFilters.setOnClickListener {
             radioEffects.isChecked = false
             radioMasks.isChecked = false
             activeFilterType = 2
-
             initializeFilters()
-
-            /*snapAdapter?.timeList?.clear()
-            snapAdapter?.timeList?.addAll(filters)
-            snapAdapter?.notifyDataSetChanged()*/
-
-            /*if (filters?.get(currentFilter) == "none") {
-                findViewById<TextView>(R.id.tvEffectName).visibility = View.GONE
-            } else {
-                findViewById<TextView>(R.id.tvEffectName).visibility = View.VISIBLE
-                findViewById<TextView>(R.id.tvEffectName).text =
-                    (filters?.get(currentFilter)?.get(0)?.toUpperCase()
-                        .toString() + filters?.get(currentFilter)?.substring(
-                        1,
-                        (filters?.get(currentFilter)?.lastIndex ?: 0) + 1
-                    )?.replace(".deepar", "")).replace("_", " ")
-            }
-            deepAR?.switchEffect(
-                "filter",
-                getFilterPath(filters?.get(currentFilter).toString())
-            )*/
         }
 
         //Change Video DUration
@@ -733,57 +692,12 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
     }
 
     private fun restoreDeepArState() {
-        /*try {
-            if (masks?.get(currentMask) == "none") {
-                findViewById<TextView>(R.id.tvEffectName).visibility = View.GONE
-            } else {
-                findViewById<TextView>(R.id.tvEffectName).visibility = View.VISIBLE
-                findViewById<TextView>(R.id.tvEffectName).text =
-                    (masks?.get(currentMask)?.get(0)?.toUpperCase()
-                        .toString() + masks?.get(currentMask)?.substring(
-                        1,
-                        (masks?.get(currentMask)?.lastIndex ?: 0) + 1
-                    )?.replace(".deepar", "")).replace("_", " ")
-            }
-            deepAR?.switchEffect(
-                "mask",
-                getFilterPath(masks?.get(currentMask).toString())
-            )
-            //----------------------------------------------------------------
-            if (effects?.get(currentEffect) == "none") {
-                findViewById<TextView>(R.id.tvEffectName).visibility = View.GONE
-            } else {
-                findViewById<TextView>(R.id.tvEffectName).visibility = View.VISIBLE
-                findViewById<TextView>(R.id.tvEffectName).text =
-                    (effects?.get(currentEffect)?.get(0)?.toUpperCase()
-                        .toString() + effects?.get(currentEffect)?.substring(
-                        1,
-                        (effects?.get(currentEffect)?.lastIndex ?: 0) + 1
-                    )?.replace(".deepar", "")).replace("_", " ")
-            }
-            deepAR?.switchEffect(
-                "effect",
-                getFilterPath(effects?.get(currentEffect).toString())
-            )
-            //-----------------------------------------------------------------
-            if (filters?.get(currentFilter) == "none") {
-                findViewById<TextView>(R.id.tvEffectName).visibility = View.GONE
-            } else {
-                findViewById<TextView>(R.id.tvEffectName).visibility = View.VISIBLE
-                findViewById<TextView>(R.id.tvEffectName).text =
-                    (filters?.get(currentFilter)?.get(0)?.toUpperCase()
-                        .toString() + filters?.get(currentFilter)?.substring(
-                        1,
-                        (filters?.get(currentFilter)?.lastIndex ?: 0) + 1
-                    )?.replace(".deepar", "")).replace("_", " ")
-            }
-            deepAR?.switchEffect(
-                "filter",
-                getFilterPath(filters?.get(currentFilter).toString())
-            )
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }*/
+        if (!savedMasksSettings.name.equals("none"))
+            deepAR?.switchEffect(savedMasksSettings.type, getFilterPath(savedMasksSettings.name))
+        if (!savedEffectsSettings.name.equals("none"))
+            deepAR?.switchEffect(savedEffectsSettings.type, getFilterPath(savedEffectsSettings.name))
+        if (!savedFiltersSettings.name.equals("none"))
+            deepAR?.switchEffect(savedFiltersSettings.type, getFilterPath(savedFiltersSettings.name))
     }
 
     private fun imageChooser() {
@@ -810,84 +724,90 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
         launchActivityForImagePick.launch(pickerIntent)
     }
 
-    private var launchActivityForImagePick = registerForActivityResult<Intent, ActivityResult>(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result: ActivityResult ->
-        //result.data?.getParcelableArrayListExtra<MediaFile>(FilePickerActivity.MEDIA_FILES)?.let {
-        result.data?.data?.let {
-            if (!it.toString().isNullOrEmpty()) {
-                val extension: String = MimeTypeMap.getSingleton()
-                    .getExtensionFromMimeType(this.contentResolver.getType(it)).toString()
-                mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension).toString()
+    private var launchActivityForImagePick =
+        (this as ComponentActivity).registerForActivityResult<Intent, ActivityResult>(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result: ActivityResult ->
+            //result.data?.getParcelableArrayListExtra<MediaFile>(FilePickerActivity.MEDIA_FILES)?.let {
+            result.data?.data?.let {
+                if (!it.toString().isNullOrEmpty()) {
+                    val extension: String = MimeTypeMap.getSingleton()
+                        .getExtensionFromMimeType(
+                            (this as AppCompatActivity).contentResolver.getType(
+                                it
+                            )
+                        ).toString()
+                    mimeType =
+                        MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension).toString()
 
-                if (mimeType.split("/")[0].toString() == "image") {
-                    videoFileName = File(RealPathUtil.getRealPath(this, it))
-                    if (videoFileName?.exists() == true)
-                        videoFileName?.toUri()?.let { it1 -> startPhotoEditorImgLy(it1) }
-                }
-                if (mimeType.split("/")[0].toString() == "video") {
-                    videoFileName = File(RealPathUtil.getRealPath(this, it))
+                    if (mimeType.split("/")[0].toString() == "image") {
+                        videoFileName = File(RealPathUtil.getRealPath(this, it))
+                        if (videoFileName?.exists() == true)
+                            videoFileName?.toUri()?.let { it1 -> startPhotoEditorImgLy(it1) }
+                    }
+                    if (mimeType.split("/")[0].toString() == "video") {
+                        videoFileName = File(RealPathUtil.getRealPath(this, it))
 
-                    val retriever = MediaMetadataRetriever()
-                    //use one of overloaded setDataSource() functions to set your data source
-                    retriever.setDataSource(this, Uri.fromFile(videoFileName))
-                    val time =
-                        (retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
-                            ?.toLongOrNull() ?: 0L)
-                    retriever.release()
+                        val retriever = MediaMetadataRetriever()
+                        //use one of overloaded setDataSource() functions to set your data source
+                        retriever.setDataSource(this, Uri.fromFile(videoFileName))
+                        val time =
+                            (retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)
+                                ?.toLongOrNull() ?: 0L)
+                        retriever.release()
 
-                    if (time > 900000L) {
-                        showToast("Video should be less than or equal to 15 minutes")
-                    } else {
-                        if (videoFileName?.exists() == true) {
-                            imageVideoDuration = (time / 1000L).toInt()
-                            setupProgressBarWithDuration()
-                            startVideoEditor(videoFileName?.absolutePath.toString())
+                        if (time > 900000L) {
+                            showToast("Video should be less than or equal to 15 minutes")
+                        } else {
+                            if (videoFileName?.exists() == true) {
+                                imageVideoDuration = (time / 1000L).toInt()
+                                setupProgressBarWithDuration()
+                                startVideoEditor(videoFileName?.absolutePath.toString())
+                            }
                         }
                     }
                 }
             }
-        }
-        /*if (result.resultCode == RESULT_OK) {
-            val data: Intent = result.data!!
-            val pathList = ArrayList<String>()
-            if (data.clipData != null) {
-                val mClipData: ClipData? = data.clipData
-                val mArrayUri = ArrayList<Uri>()
-                val totalImages = mClipData!!.itemCount
-                Log.d("kasdasd", totalImages.toString())
-                val perImageDuration = (imageVideoDuration / totalImages).toInt()
-                for (i in 0 until mClipData.itemCount) {
-                    val item: ClipData.Item = mClipData.getItemAt(i)
-                    val uri: Uri = item.uri
-                    val path = PathUtil.getPath(this, uri)
-                    pathList.add(path)
-                    Log.d("lkajsda", uri.path.toString())
-                    if (path != null) {
-                        val cR = contentResolver
-                        val mime: MimeTypeMap = MimeTypeMap.getSingleton()
-                        val type: String = mime.getExtensionFromMimeType(cR.getType(uri))!!
-                        if (type == "mp4") {
-                            Log.d(";lasda", "video")
-                            val duration: Long =
-                                VideoUtil.getDuration(this, Uri.fromFile(File(path)))
-                            //video duration validation
-                            if (duration < 15 * 1000) {
-                                Log.d("Less", "Less")
-                                showToast("Video should be grater than or equal to 15 seconds")
-                            } else if (duration > 90 * 1000) {
-                                showToast("Video should be less than or equal to 90 seconds")
-                            } else {
-                                Log.d("Greater", "Greater")
-                                isImage = false
-                                //isVideoTaken = true
-                                try {
-                                    videoFileName = File(path)
-                                    val duration: Long =
-                                        VideoUtil.getDuration(this, Uri.fromFile(videoFileName))
-                                    Log.d("kjashjkdas", duration.toString())
-                                    if (duration > imageVideoDuration * 1000) {
-                                        *//*            binding.segmentedProgressbar.progress = ((duration * 100) / imageVideoDuration).toInt()
+            /*if (result.resultCode == RESULT_OK) {
+                val data: Intent = result.data!!
+                val pathList = ArrayList<String>()
+                if (data.clipData != null) {
+                    val mClipData: ClipData? = data.clipData
+                    val mArrayUri = ArrayList<Uri>()
+                    val totalImages = mClipData!!.itemCount
+                    Log.d("kasdasd", totalImages.toString())
+                    val perImageDuration = (imageVideoDuration / totalImages).toInt()
+                    for (i in 0 until mClipData.itemCount) {
+                        val item: ClipData.Item = mClipData.getItemAt(i)
+                        val uri: Uri = item.uri
+                        val path = PathUtil.getPath(this, uri)
+                        pathList.add(path)
+                        Log.d("lkajsda", uri.path.toString())
+                        if (path != null) {
+                            val cR = contentResolver
+                            val mime: MimeTypeMap = MimeTypeMap.getSingleton()
+                            val type: String = mime.getExtensionFromMimeType(cR.getType(uri))!!
+                            if (type == "mp4") {
+                                Log.d(";lasda", "video")
+                                val duration: Long =
+                                    VideoUtil.getDuration(this, Uri.fromFile(File(path)))
+                                //video duration validation
+                                if (duration < 15 * 1000) {
+                                    Log.d("Less", "Less")
+                                    showToast("Video should be grater than or equal to 15 seconds")
+                                } else if (duration > 90 * 1000) {
+                                    showToast("Video should be less than or equal to 90 seconds")
+                                } else {
+                                    Log.d("Greater", "Greater")
+                                    isImage = false
+                                    //isVideoTaken = true
+                                    try {
+                                        videoFileName = File(path)
+                                        val duration: Long =
+                                            VideoUtil.getDuration(this, Uri.fromFile(videoFileName))
+                                        Log.d("kjashjkdas", duration.toString())
+                                        if (duration > imageVideoDuration * 1000) {
+                                            *//*            binding.segmentedProgressbar.progress = ((duration * 100) / imageVideoDuration).toInt()
                                                     prolength = ((duration * 100) / imageVideoDuration).toInt()*//*
                                         *//*pauseProgress()
                                         applySpeedWithDuration(mModel!!.video!!)*//*
@@ -972,7 +892,7 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
                 }
             }
         }*/
-    }
+        }
 
     private fun getRealPathFromURIVideo(context: Context, contentUri: Uri): String? {
         var cursor: Cursor? = null
@@ -1414,30 +1334,7 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
     override fun shutdownFinished() {}
     override fun initialized() {
         // Restore effect state after deepar release
-        val type = when (activeFilterType) {
-            0 -> "mask"
-            1 -> "effect"
-            2 -> "filter"
-            else -> ""
-        }
-        val typeList = when (activeFilterType) {
-            0 -> masks
-            1 -> effects
-            2 -> filters
-            else -> masks
-        }
-        if (typeList[0].name == "none") {
-            findViewById<TextView>(R.id.tvEffectName).visibility = View.INVISIBLE
-        } else {
-            findViewById<TextView>(R.id.tvEffectName).visibility = View.VISIBLE
-            findViewById<TextView>(R.id.tvEffectName).text =
-                (typeList[0].name?.toUpperCase().toString() + typeList[0].name?.substring(
-                    1,
-                    (typeList[0].name?.lastIndex ?: 0) + 1
-                )?.replace(".deepar", "")).replace("_", " ")
-        }
-        deepAR?.switchEffect(type, getFilterPath(typeList[0].name))
-        deepAR?.switchEffect("effect", getFilterPath(typeList[0].name))
+        restoreDeepArState()
     }
 
     override fun faceVisibilityChanged(b: Boolean) {}
@@ -1451,21 +1348,22 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
     }
 
-    private val photoEditorResult = registerForActivityResult(PhotoEditorActivityResultContract()) {
-        when (it.resultStatus) {
-            EditorSDKResult.Status.CANCELED -> {}
-            EditorSDKResult.Status.EXPORT_DONE -> {
-                startActivity(
-                    IntentHelper.getCreateFuntimePostScreen(this)!!
-                        .putExtra(ActivityFilter.EXTRA_VIDEO, it.resultUri.toString())
-                        .putExtra("mimeType", mimeType)
-                        .putExtra("isImage", true)
-                )
-            }
-            else -> {
+    private val photoEditorResult =
+        (this as ComponentActivity).registerForActivityResult(PhotoEditorActivityResultContract()) {
+            when (it?.resultStatus) {
+                EditorSDKResult.Status.CANCELED -> {}
+                EditorSDKResult.Status.EXPORT_DONE -> {
+                    startActivity(
+                        IntentHelper.getCreateFuntimePostScreen(this)!!
+                            .putExtra(ActivityFilter.EXTRA_VIDEO, it.resultUri.toString())
+                            .putExtra("mimeType", mimeType)
+                            .putExtra("isImage", true)
+                    )
+                }
+                else -> {
+                }
             }
         }
-    }
 
     companion object {
         private const val NUMBER_OF_BUFFERS = 2

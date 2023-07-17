@@ -2,9 +2,12 @@ package com.stalmate.user.commonadapters
 
 
 import android.content.Context
+import android.content.DialogInterface
+import android.net.Uri
 import android.text.Html
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
@@ -18,6 +21,7 @@ import com.github.pgreze.reactions.dsl.reactions*/
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.databinding.ItemFeedBinding
+import com.stalmate.user.modules.reels.player.InstaLikePlayerView
 import com.stalmate.user.utilities.SeeModetextViewHelper
 import com.stalmate.user.view.dashboard.ActivityDashboard
 import com.stalmate.user.view.dashboard.funtime.DialogFragmentComments
@@ -37,6 +41,8 @@ class AdapterFeed(
 ) :
     RecyclerView.Adapter<AdapterFeed.FeedViewHolder>() {
     var list = ArrayList<ResultFuntime>()
+    var isMuted = false
+
     fun likeReelById() {
         /*       var position=  reelList.indexOfFirst { it.id== id}
                if (reelList[position].isLiked == "Yes"){
@@ -59,117 +65,99 @@ class AdapterFeed(
     }
 
     override fun onBindViewHolder(holder: AdapterFeed.FeedViewHolder, position: Int) {
-        holder.bind(list.get(position), callBackAdapterFeed, position)
-    }
-
-    override fun getItemCount(): Int {
-        return list.size
-    }
-
-
-    inner class FeedViewHolder(var binding: ItemFeedBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-        fun bind(feed: ResultFuntime, callBackAdapterFeed: Callbackk?, position: Int) {
+        holder.itemView.apply {
+            val feed = list[position]
             try {
                 if (feed.user_id == ((context as ActivityDashboard).prefManager?._id)) {
-                    binding.appCompatTextView5.visibility = View.INVISIBLE
+                    holder.appCompatTextView5.visibility = View.INVISIBLE
                 } else {
                     if (feed.isFollowing == "No") {
-                        binding.appCompatTextView5.text = "Follow"
-                        binding.appCompatTextView5.visibility = View.VISIBLE
-                        binding.appCompatTextView5.setOnClickListener {
+                        holder.appCompatTextView5.text = "Follow"
+                        holder.appCompatTextView5.visibility = View.VISIBLE
+                        holder.appCompatTextView5.setOnClickListener {
                             feed.isFollowing = "Yes"
-                            binding.appCompatTextView5.text = "Sent follow request"
+                            holder.appCompatTextView5.text = "Sent follow request"
                             callBackAdapterFeed?.onClickOnFollowButtonReel(feed)
                             notifyDataSetChanged()
                         }
                     } else {
-                        binding.appCompatTextView5.setOnClickListener {
+                        holder.appCompatTextView5.setOnClickListener {
                             feed.isFollowing = "No"
-                            binding.appCompatTextView5.text = "Follow"
+                            holder.appCompatTextView5.text = "Follow"
                             callBackAdapterFeed?.onClickOnFollowButtonReel(feed)
                             notifyDataSetChanged()
                         }
-                        binding.appCompatTextView5.text = "Sent follow request"
-                        binding.appCompatTextView5.visibility = View.VISIBLE
+                        holder.appCompatTextView5.text = "Sent follow request"
+                        holder.appCompatTextView5.visibility = View.VISIBLE
                     }
                 }
                 val requestOptionsMe = RequestOptions()
-                Glide.with(binding.appCompatImageView5.context)
-                    .load((context).prefManager?.profile_img_1)
+                Glide.with(holder.appCompatImageView5.context)
+                    .load(((context as ActivityDashboard).prefManager?.profile_img_1))
                     .apply(requestOptionsMe)
                     .thumbnail(
                         Glide.with(context)
-                            .load((context).prefManager?.profile_img_1)
+                            .load(((context as ActivityDashboard).prefManager?.profile_img_1))
                     )
                     .placeholder(R.drawable.image)
                     .error(R.drawable.image)
-                    .into(binding.ivButtonMenu1)
+                    .into(holder.ivButtonMenu1)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
 
-            val requestOptions = RequestOptions()
-            Glide.with(binding.appCompatImageView5.context)
-                .load(feed.file)
-                .apply(requestOptions)
-                .thumbnail(Glide.with(context).load(feed.file))
-                .placeholder(R.drawable.image)
-                .error(R.drawable.image)
-                .into(binding.appCompatImageView5)
-
             val requestOptions1 = RequestOptions()
-            Glide.with(binding.userProfileImage.context)
+            Glide.with(holder.userProfileImage.context)
                 .load(feed.profile_img)
                 .apply(requestOptions1)
                 .thumbnail(Glide.with(context).load(feed.profile_img))
                 .placeholder(R.drawable.image)
                 .error(R.drawable.image)
-                .into(binding.userProfileImage)
+                .into(holder.userProfileImage)
 
-            binding.tvUserName.text = feed.first_name + " " + feed.last_name
+            holder.tvUserName.text = feed.first_name + " " + feed.last_name
 
-            binding.likeCount.text = feed.like_count.toString() + " Likes"
-            binding.commentCount.text = feed.comment_count.toString() + " Comments"
-            binding.shareCount.text = "${feed.share_count} Shares"
-            binding.appCompatTextView6.text = feed.Created_date
+            holder.likeCount.text = feed.like_count.toString() + " Likes"
+            holder.commentCount.text = feed.comment_count.toString() + " Comments"
+            holder.shareCount.text = "${feed.share_count} Shares"
+            holder.appCompatTextView6.text = feed.Created_date
 
             if (!feed.topcomment.isNullOrEmpty()) {
                 if (!feed.topcomment?.get(0)?.comment.isNullOrEmpty()) {
-                    binding.tvDes.visibility = View.VISIBLE
-                    binding.tvDes.text = feed.topcomment?.get(0)?.comment.toString()
+                    holder.tvDes.visibility = View.VISIBLE
+                    holder.tvDes.text = feed.topcomment?.get(0)?.comment.toString()
                 } else {
-                    binding.tvDes.visibility = View.GONE
+                    holder.tvDes.visibility = View.GONE
                 }
                 if (feed.topcomment?.get(0)?.user_id != null) {
                     feed.topcomment?.get(0)?.user_id?.let {
                         if (!it.first_name.isNullOrEmpty()) {
-                            binding.tvUserName1.visibility = View.VISIBLE
-                            binding.tvUserName1.text = (it.first_name + " " + it.last_name)
+                            holder.tvUserName1.visibility = View.VISIBLE
+                            holder.tvUserName1.text = (it.first_name + " " + it.last_name)
                         } else {
-                            binding.tvUserName1.visibility = View.GONE
+                            holder.tvUserName1.visibility = View.GONE
                         }
                     }
                 } else {
-                    binding.tvUserName1.visibility = View.GONE
+                    holder.tvUserName1.visibility = View.GONE
                 }
                 if (!feed.topcomment?.get(0)?.comment_image.isNullOrEmpty() && feed.topcomment?.get(
                         0
                     )?.new_comment_image.isNullOrEmpty()
                 ) {
-                    binding.ivCommentImage.visibility = View.VISIBLE
-                    binding.ivDeleteCommentImage.visibility = View.GONE
-                    Glide.with(binding.ivCommentImage.context)
+                    holder.ivCommentImage.visibility = View.VISIBLE
+                    holder.ivDeleteCommentImage.visibility = View.GONE
+                    Glide.with(holder.ivCommentImage.context)
                         .load(feed.topcomment?.get(0)?.comment_image)
                         .apply(RequestOptions())
                         .thumbnail(Glide.with(context).load(feed.topcomment?.get(0)?.comment_image))
                         .placeholder(R.drawable.user_placeholder)
                         .error(R.drawable.user_placeholder)
-                        .into(binding.ivCommentImage)
+                        .into(holder.ivCommentImage)
                 } else if (!feed.topcomment?.get(0)?.new_comment_image.isNullOrEmpty()) {
-                    binding.ivCommentImage.visibility = View.VISIBLE
-                    binding.ivDeleteCommentImage.visibility = View.VISIBLE
-                    Glide.with(binding.ivCommentImage.context)
+                    holder.ivCommentImage.visibility = View.VISIBLE
+                    holder.ivDeleteCommentImage.visibility = View.VISIBLE
+                    Glide.with(holder.ivCommentImage.context)
                         .load(feed.topcomment?.get(0)?.new_comment_image)
                         .apply(RequestOptions())
                         .thumbnail(
@@ -177,60 +165,54 @@ class AdapterFeed(
                         )
                         .placeholder(R.drawable.user_placeholder)
                         .error(R.drawable.user_placeholder)
-                        .into(binding.ivCommentImage)
-                    binding.ivDeleteCommentImage.setOnClickListener {
+                        .into(holder.ivCommentImage)
+                    holder.ivDeleteCommentImage.setOnClickListener {
                         callBackAdapterFeed?.onCaptureImage(feed, -1)
                         list[position].topcomment?.get(0)?.new_comment_image = ""
                         notifyDataSetChanged()
                     }
                 } else {
-                    binding.ivCommentImage.visibility = View.GONE
-                    binding.ivDeleteCommentImage.visibility = View.GONE
+                    holder.ivCommentImage.visibility = View.GONE
+                    holder.ivDeleteCommentImage.visibility = View.GONE
                 }
             } else {
-                binding.ivCommentImage.visibility = View.GONE
-                binding.ivDeleteCommentImage.visibility = View.GONE
+                holder.ivCommentImage.visibility = View.GONE
+                holder.ivDeleteCommentImage.visibility = View.GONE
             }
 
-//            binding.shareCount.text = feed.share_count.toString()
-
-            if (feed.file_type.contains("image")) {
-                binding.ivPlay.visibility = View.GONE
-            } else {
-                binding.ivPlay.visibility = View.VISIBLE
-            }
+//            holder.shareCount.text = feed.share_count.toString()
 
             if (!feed.text.isNullOrEmpty()) {
-                binding.tvPostDescription.visibility = View.VISIBLE
-                binding.tvPostDescription.text = Html.fromHtml(
+                holder.tvPostDescription.visibility = View.VISIBLE
+                holder.tvPostDescription.text = Html.fromHtml(
                     feed.text,
                     Html.FROM_HTML_MODE_COMPACT
                 )
-                if (binding.tvPostDescription.text.toString()
+                if (holder.tvPostDescription.text.toString()
                         .split(System.getProperty("line.separator")).size > 2
                 ) {
                     SeeModetextViewHelper.makeTextViewResizable(
-                        binding.tvPostDescription,
+                        holder.tvPostDescription,
                         2,
                         "more",
                         true
                     )
                 }
             } else {
-                binding.tvPostDescription.visibility = View.GONE
+                holder.tvPostDescription.visibility = View.GONE
             }
 
-            binding.appCompatImageView5.setOnClickListener {
+            holder.appCompatImageView5.setOnClickListener {
                 callBackAdapterFeed?.onCLickItem(feed)
             }
 
-            binding.shareIcon.setOnClickListener {
+            holder.shareIcon.setOnClickListener {
                 val dialogFragmen = DialogFragmentShareWithFriends(
                     (context as BaseActivity).networkViewModel,
                     feed, object : DialogFragmentShareWithFriends.CAllback {
                         override fun onTotalShareCountFromDialog(count: Int) {
                             feed.share_count = feed.share_count + count
-                            binding.shareCount.text = "${feed.share_count} Shares"
+                            holder.shareCount.text = "${feed.share_count} Shares"
                             feed.isDataUpdated = true
                         }
                     }
@@ -239,22 +221,22 @@ class AdapterFeed(
             }
 
             if (feed.isLiked == "Yes") {
-                binding.likeIcon.setImageResource(R.drawable.liked)
+                holder.likeIcon.setImageResource(R.drawable.liked)
             } else {
-                binding.likeIcon.setImageResource(R.drawable.like)
+                holder.likeIcon.setImageResource(R.drawable.like)
             }
 
-            binding.likeIcon.setOnClickListener {
+            holder.likeIcon.setOnClickListener {
                 if (feed.isLiked == "Yes") {
                     feed.like_count--
-                    binding.likeCount.text = feed.like_count.toString()
+                    holder.likeCount.text = feed.like_count.toString()
                     feed.isLiked = "No"
-                    binding.likeIcon.setImageResource(R.drawable.like)
+                    holder.likeIcon.setImageResource(R.drawable.like)
                 } else {
                     feed.like_count++
-                    binding.likeCount.text = feed.like_count.toString()
+                    holder.likeCount.text = feed.like_count.toString()
                     feed.isLiked = "Yes"
-                    binding.likeIcon.setImageResource(R.drawable.liked)
+                    holder.likeIcon.setImageResource(R.drawable.liked)
                 }
                 feed.isDataUpdated = true
                 callBackAdapterFeed?.onClickOnLikeButtonReel(feed)
@@ -264,12 +246,17 @@ class AdapterFeed(
                 feed,
                 object : DialogFragmentComments.Callback {
                     override fun funOnCommentDialogDismissed(commentCount: Int) {
-                        binding.commentCount.text = "$commentCount Comments"
+                        holder.commentCount.text = "$commentCount Comments"
                         feed.comment_count = commentCount
                         notifyDataSetChanged()
                     }
+
+                    override fun onCancel() {
+                        callBackAdapterFeed?.hideCommentOverlay(feed, position)
+                    }
                 })
-            binding.commentIcon.setOnClickListener {
+            holder.commentIcon.setOnClickListener {
+                callBackAdapterFeed?.showCommentOverlay(feed, position)
                 dialogFragmentComment.show(
                     (context as AppCompatActivity).supportFragmentManager,
                     ""
@@ -278,133 +265,121 @@ class AdapterFeed(
 
             val emojiIcon = EmojIconActions(
                 (context as AppCompatActivity),
-                binding.root,
-                binding.etSearch,
-                binding.appCompatImageView7
+                holder.appCompatImageView7.rootView,
+                holder.etSearch,
+                holder.appCompatImageView7
             )
 //        emojiIcon.setUseSystemEmoji(true);
-//        binding.etComment.setUseSystemDefault(true)
+//        holder.etComment.setUseSystemDefault(true)
             emojiIcon.setKeyboardListener(object : EmojIconActions.KeyboardListener {
                 override fun onKeyboardOpen() {}
                 override fun onKeyboardClose() {}
             })
 
-            binding.appCompatImageView7.setOnClickListener {
+            holder.appCompatImageView7.setOnClickListener {
                 emojiIcon.showPopup()
             }
 
-            binding.appCompatImageView6.setOnClickListener {
+            holder.appCompatImageView6.setOnClickListener {
                 callBackAdapterFeed?.onCaptureImage(feed, position)
             }
 
-            binding.ivSend.setOnClickListener {
-                callBackAdapterFeed?.onSendComment(feed, binding.etSearch.text.toString())
-                binding.etSearch.setText("")
-            }
-
-            /*val disposable4 = RxTextView.textChangeEvents(binding.etSearch)
-                .skipInitialValue()
-                .debounce(400, TimeUnit.MILLISECONDS)
-                .map { it.text().toString() }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-
-                }*/
-/*
-
-            val config = reactionConfig(context) {
-                reactions {
-                    resId    { com.stalmate.user.R.drawable.ic_fb_like }
-                    resId    { R.drawable.ic_fb_love }
-                    resId    { R.drawable.ic_fb_laugh }
-                    reaction { R.drawable.ic_fb_wow scale ImageView.ScaleType.FIT_XY }
-                    reaction { R.drawable.ic_fb_sad scale ImageView.ScaleType.FIT_XY }
-                    reaction { R.drawable.ic_fb_angry scale ImageView.ScaleType.FIT_XY }
-                }
+            holder.ivSend.setOnClickListener {
+                callBackAdapterFeed?.onSendComment(feed, holder.etSearch.text.toString())
+                holder.etSearch.setText("")
             }
 
 
+            if (feed.file_type.equals("0", true)) {
+                holder.customPlayerView.visibility = View.GONE
+                holder.ivSoundButton.visibility = View.GONE
+                holder.ivPlay.visibility = View.GONE
+                holder.appCompatImageView5.visibility = View.VISIBLE
+                val requestOptions = RequestOptions()
+                Glide.with(holder.appCompatImageView5.context)
+                    .load(feed.file)
+                    .apply(requestOptions)
+                    .thumbnail(Glide.with(context).load(feed.file))
+                    .placeholder(R.drawable.image)
+                    .error(R.drawable.image)
+                    .into(holder.appCompatImageView5)
+            } else {
+                //video/mp4
+                holder.appCompatImageView5.background = null
+                holder.appCompatImageView5.setImageDrawable(null)
 
-            val popup = ReactionPopup(
-                context,
-                ReactionsConfigBuilder(context)
-                    .withReactions(
-                        intArrayOf(
-                            R.drawable.ic_fb_like,
-                            R.drawable.ic_fb_love,
-                            R.drawable.ic_fb_laugh,
-                            R.drawable.ic_fb_wow,
-                            R.drawable.ic_fb_sad,
-                            R.drawable.ic_fb_angry
-                        )
-                    )
-                    .build())
+                holder.customPlayerView.visibility = View.VISIBLE
+                holder.ivSoundButton.visibility = View.VISIBLE
+                holder.ivPlay.visibility = View.GONE
+                holder.appCompatImageView5.visibility = View.GONE
 
+                try {
+                    /*holder.customPlayerView.reset()
+//                    Set seperate ID for each player view, to prevent it being overlapped by other player's changes
+                    holder.customPlayerView.id = View.generateViewId()*/
+//                    Set video's direct url
+                    holder.customPlayerView.setVideoUri(Uri.parse(feed.file))
 
-            popup.reactionSelectedListener = { position: Int ->
-
-                Log.d("Reactions", "Selection position=$position")
-                position != 3
-            }
-
-
-     */
-/*       binding.like.setOnLongClickListener {
-                Log.d("Reactions", "Selection position")
-                popup.showAsDropDown(binding.likeIcon)
-                return@setOnLongClickListener true
-            }*//*
-
-
-
-
-
-
-            binding.like.setOnTouchListener(object : View.OnTouchListener {
-               @SuppressLint("ClickableViewAccessibility")
-               var firsttouch=0.0;
-              var  isup=false;
-                var  millistotouch=400;
-                override fun onTouch(view: View?, motionEvent: MotionEvent?): Boolean {
-                    if(motionEvent!!.action==MotionEvent.ACTION_DOWN){
-                        firsttouch = System.currentTimeMillis().toDouble();
-                        Handler().postDelayed(Runnable {
-                            if (!isup) {
-                                //
-                                // Do your long click work
-                                //
-                                popup.onTouch(binding.like, motionEvent)
-                            }
-                            else
-                            {
-                                firsttouch=0.0;
-                                isup=false;
-                            }
-
-                        }, millistotouch.toLong())
-                        return true
+                    holder.customPlayerView.setOnClickListener {
+                        callBackAdapterFeed?.onCLickItem(feed)
                     }
 
-                    if (motionEvent!!.action==MotionEvent.ACTION_UP){
-                        if ((System.currentTimeMillis()-firsttouch)<millistotouch)
-                        {
-                            isup=true;
-                            //
-                            // Do your short click work
-                            //
+                    holder.ivSoundButton.setOnClickListener {
+                        if (holder.customPlayerView.getPlayer()?.volume == 0f) {
+                            holder.customPlayerView.getPlayer()?.volume =
+                                holder.customPlayerView.getPlayer()?.deviceVolume?.toFloat() ?: 1f
+                            holder.ivSoundButton.setImageDrawable(
+                                ContextCompat.getDrawable(
+                                    context,
+                                    R.drawable.ic_sound_on
+                                )
+                            )
+                        } else {
+                            holder.customPlayerView.getPlayer()?.volume = 0f
+                            holder.ivSoundButton.setImageDrawable(
+                                ContextCompat.getDrawable(
+                                    context,
+                                    R.drawable.ic_sound_off
+                                )
+                            )
                         }
                     }
-
-
-                    return false
-                } });
-
-*/
-
-
+                } catch (e: Exception) {
+                }
+            }
         }
+    }
 
+    inner class FeedViewHolder(var binding: ItemFeedBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        val customPlayerView = binding.feedPlayerView
+        val ivSoundButton = binding.ivSoundButton
+        val appCompatImageView5 = binding.appCompatImageView5
+        val appCompatImageView6 = binding.appCompatImageView6
+        val appCompatImageView7 = binding.appCompatImageView7
+        val appCompatTextView5 = binding.appCompatTextView5
+        val appCompatTextView6 = binding.appCompatTextView6
+        val ivPlay = binding.ivPlay
+        val ivSend = binding.ivSend
+        val etSearch = binding.etSearch
+        val commentIcon = binding.commentIcon
+        val commentCount = binding.commentCount
+        val likeCount = binding.likeCount
+        val likeIcon = binding.likeIcon
+        val shareIcon = binding.shareIcon
+        val shareCount = binding.shareCount
+        val tvPostDescription = binding.tvPostDescription
+        val ivDeleteCommentImage = binding.ivDeleteCommentImage
+        val ivCommentImage = binding.ivCommentImage
+        val ivButtonMenu1 = binding.ivButtonMenu1
+        val tvUserName = binding.tvUserName
+        val tvUserName1 = binding.tvUserName1
+        val userProfileImage = binding.userProfileImage
+        val tvDes = binding.tvDes
+    }
+
+    override fun getItemCount(): Int {
+        return list.size
     }
 
     fun x() {
@@ -497,6 +472,8 @@ class AdapterFeed(
         fun onClickOnFollowButtonReel(feed: ResultFuntime)
         fun onSendComment(feed: ResultFuntime, comment: String)
         fun onCaptureImage(feed: ResultFuntime, position: Int)
+        fun showCommentOverlay(feed: ResultFuntime, position: Int)
+        fun hideCommentOverlay(feed: ResultFuntime, position: Int)
     }
 
 

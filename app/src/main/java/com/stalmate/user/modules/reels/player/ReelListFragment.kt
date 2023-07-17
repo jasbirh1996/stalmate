@@ -57,10 +57,9 @@ class ReelListFragment : BaseFragment(), ReelAdapter.Callback {
 
         if (isNetworkAvailable()) {
             adapter = ReelAdapter(requireContext(), this)
-            binding.recyclerView.layoutManager =
-                LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
-            val snapHelper: SnapHelper = PagerSnapHelper()
-            snapHelper.attachToRecyclerView(binding.recyclerView)
+            binding.recyclerView.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+            /*val snapHelper: SnapHelper = PagerSnapHelper()
+            snapHelper.attachToRecyclerView(binding.recyclerView)*/
             binding.recyclerView.adapter = adapter
 
             /*Helper class to provide AutoPlay feature inside cell*/
@@ -239,8 +238,7 @@ class ReelListFragment : BaseFragment(), ReelAdapter.Callback {
 
     override fun onStart() {
         if (videoAutoPlayHelper != null) {
-            var viewholder =
-                binding.recyclerView.findViewHolderForAdapterPosition(videoAutoPlayHelper!!.currentPlayingVideoItemPos);
+            val viewholder = binding.recyclerView.findViewHolderForAdapterPosition(videoAutoPlayHelper!!.currentPlayingVideoItemPos);
             if (viewholder != null) {
                 val viewMainHolder = (viewholder as VideoReelViewHolder)
                 /*  if ((requireActivity()  as ActivityDashboard).active is FragmentFunTime){
@@ -254,8 +252,7 @@ class ReelListFragment : BaseFragment(), ReelAdapter.Callback {
 
     override fun onPause() {
         try {
-            var viewholder =
-                binding.recyclerView.findViewHolderForAdapterPosition(videoAutoPlayHelper!!.currentPlayingVideoItemPos);
+            val viewholder = binding.recyclerView.findViewHolderForAdapterPosition(videoAutoPlayHelper!!.currentPlayingVideoItemPos);
             val viewMainHolder = (viewholder as VideoReelViewHolder)
             viewMainHolder.customPlayerView.removePlayer()
         } catch (e: Exception) {
@@ -334,9 +331,7 @@ class ReelListFragment : BaseFragment(), ReelAdapter.Callback {
         }
     }
 
-    val startForResultReels =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult())
-        { result: ActivityResult ->
+    val startForResultReels = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
                 //  you will get result here in result.data
                 Log.d(";laskdasd", ";alksdasd")
@@ -346,6 +341,4 @@ class ReelListFragment : BaseFragment(), ReelAdapter.Callback {
             }
 
         }
-
-
 }

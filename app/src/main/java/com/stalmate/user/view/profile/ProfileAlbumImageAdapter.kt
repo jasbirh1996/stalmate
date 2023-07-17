@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.stalmate.user.intentHelper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.databinding.ItemProfileCoverBinding
-import com.stalmate.user.model.AlbumImage
+import com.stalmate.user.model.Albums
 
 import com.stalmate.user.utilities.ImageLoaderHelperGlide
 import com.stalmate.user.viewmodel.AppViewModel
@@ -19,24 +19,24 @@ class ProfileAlbumImageAdapter(
     val type: String
 ) : RecyclerView.Adapter<ProfileAlbumImageAdapter.AlbumViewHolder>() {
 
-    var list = ArrayList<AlbumImage>()
+    var list = ArrayList<Albums?>()
 
 
     inner class AlbumViewHolder(var binding: ItemProfileCoverBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(response: AlbumImage) {
+        fun bind(response: Albums?) {
             ImageLoaderHelperGlide.setGlideCorner(
                 context,
                 binding.ivImage,
-                response.files.replace(".com", ".com/"),
+                response?.img,
                 R.drawable.user_placeholder
             )
 
             binding.ivImage.setOnClickListener {
                 context.startActivity(
                     IntentHelper.getPhotoGalleryAlbumScreen(context)!!
-                        .putExtra("albumId", response.album_id).putExtra("imageId", response._id)
+                        .putExtra("albumId", response?._id).putExtra("imageId", response?._id)
                         .putExtra("viewType", "viewFullScreen")
                 )
 
@@ -45,7 +45,7 @@ class ProfileAlbumImageAdapter(
     }
 
 
-    fun submitList(albumList: ArrayList<AlbumImage>) {
+    fun submitList(albumList: ArrayList<Albums?>) {
         list.clear()
         list.addAll(albumList)
         notifyDataSetChanged()

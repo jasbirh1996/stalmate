@@ -208,11 +208,11 @@ class FragmentMultiUserSelector(
             it.let {
 
 
-                if (it!!.results.isNotEmpty()) {
+                if (!it?.results.isNullOrEmpty()) {
                     tagPeopleViewModel.taggedModelObject.specifFriendsList.forEach { userdata ->
                         run {
                             try {
-                                it.results.find { it.id == userdata.id }!!.isSelected = true
+                                it?.results?.find { it.id == userdata.id }!!.isSelected = true
                             } catch (e: java.lang.Exception) {
                             }
                         }
@@ -222,13 +222,13 @@ class FragmentMultiUserSelector(
                     if (isFresh) {
 
 
-                        friendAdapter.submitList(it.results as ArrayList<User>)
+                        friendAdapter.submitList(it?.results as ArrayList<User>)
                     } else {
-                        friendAdapter.addToList(it.results as ArrayList<User>)
+                        friendAdapter.addToList(it?.results as ArrayList<User>)
                     }
 
                     isLastPage = false
-                    if (it.results.size < 6) {
+                    if ((it?.results?.size?:0) < 6) {
                         binding.progressLoading.visibility = View.GONE
                     } else {
                         binding.progressLoading.visibility = View.VISIBLE
@@ -237,7 +237,7 @@ class FragmentMultiUserSelector(
 
 
                     if (isFresh) {
-                        friendAdapter.submitList(it.results as ArrayList<User>)
+                        friendAdapter.submitList(it?.results as ArrayList<User>)
                     }
                     isLastPage = true
                     binding.progressLoading.visibility = View.GONE

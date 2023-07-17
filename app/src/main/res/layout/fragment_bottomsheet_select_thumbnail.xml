@@ -19,36 +19,51 @@
             app:layout_constraintTop_toTopOf="parent"
             app:tint="@color/black" />
 
-        <TextView
-            android:id="@+id/btnCamera"
-            android:layout_width="wrap_content"
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/llActions"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_marginHorizontal="@dimen/_15sdp"
             android:layout_marginTop="@dimen/_20sdp"
-            android:drawableStart="@drawable/ic_camera"
-            android:drawablePadding="@dimen/_10sdp"
-            android:drawableTint="@color/black"
-            android:fontFamily="@font/poppins_medium"
-            android:text="Take Photo"
-            android:textColor="@color/black"
-            android:textSize="16sp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ivClose" />
+            app:layout_constraintTop_toBottomOf="@+id/ivClose">
 
-        <TextView
-            android:id="@+id/btnGallery"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_15sdp"
-            android:drawableStart="@drawable/ic_gallery"
-            android:drawablePadding="@dimen/_10sdp"
-            android:drawableTint="@color/black"
-            android:fontFamily="@font/poppins_medium"
-            android:text="Gallery"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="@id/btnCamera"
-            app:layout_constraintTop_toBottomOf="@+id/btnCamera" />
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/btnCamera"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_marginTop="@dimen/_3sdp"
+                android:layout_weight="1"
+                android:src="@drawable/take_photo" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="#333333" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/btnGallery"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_weight="1"
+                android:src="@drawable/gallery" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="#333333" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/btn_ChooseFromVideo"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_weight="1"
+                android:src="@drawable/choose_from_video" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="0dp"
@@ -58,12 +73,12 @@
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/ivClose"
-            app:layout_constraintStart_toStartOf="@id/btnCamera"
-            app:layout_constraintTop_toBottomOf="@+id/btnGallery"
+            app:layout_constraintStart_toStartOf="@id/llActions"
+            app:layout_constraintTop_toBottomOf="@+id/llActions"
             app:layout_constraintVertical_bias="0">
 
             <Button
-                android:id="@+id/btn_ChooseFromVideo"
+                android:id="@+id/btnPreview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/_10sdp"
@@ -75,7 +90,7 @@
                 android:paddingTop="@dimen/_4sdp"
                 android:paddingEnd="@dimen/_10sdp"
                 android:paddingBottom="6dp"
-                android:text="Choose from video"
+                android:text="Preview"
                 android:textAllCaps="false"
                 android:textColor="@color/white" />
 

@@ -90,12 +90,12 @@ class FragmentSavedMusicList : BaseFragment(), FriendAdapter.Callbackk,
 
             it.let {
 
-                it!!.results.forEach {
+                it!!.results?.forEach {
                     it.isSave="Yes"
                 }
 
                 adapterFunTimeMusic.submitList(it!!.results)
-                Log.d("=============", it!!.results.size.toString())
+                Log.d("=============", it!!.results?.size.toString())
             }
 
 

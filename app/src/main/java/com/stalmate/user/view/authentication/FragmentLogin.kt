@@ -137,12 +137,12 @@ class FragmentLogin : BaseFragment() {
                     PrefManager.getInstance(App.getInstance())
                         ?.setStringValue(
                             key = "language",
-                            value = if (!it.results?.language.isNullOrEmpty()) it.results?.language else "English"
+                            value = if (!it?.results?.language.isNullOrEmpty()) it?.results?.language else "English"
                         )
                     PrefManager.getInstance(App.getInstance())
                         ?.setStringValue(
                             key = "country",
-                            value = if (!it.results?.country.isNullOrEmpty()) it.results?.country else "IN"
+                            value = if (!it?.results?.country.isNullOrEmpty()) it?.results?.country else "IN"
                         )
                     App.getInstance().setupApis()
                     if (PrefManager.getInstance(requireContext())?.userDetail?.results?.is_account_recover == true) {
@@ -151,7 +151,7 @@ class FragmentLogin : BaseFragment() {
                     } else {
                         makeToast(message)
                     }
-                      startActivity(IntentHelper.getDashboardScreen(context))
+                    IntentHelper.getDashboardScreen(context)?.let { it1 -> startActivity(it1) }
                       requireActivity().finish()
                 } else {
                     makeToast(message)

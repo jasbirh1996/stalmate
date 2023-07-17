@@ -60,7 +60,7 @@ class FragmentSocketChat(var receiver_id: String) : BaseFragment() {
         binding.recyclerview.adapter = chatAdapter
         getRoomId()
         binding.ivVideoCall.setOnClickListener {
-            startActivity(IntentHelper.getCallScreen(requireContext()))
+            IntentHelper.getCallScreen(requireContext())?.let { it1 -> startActivity(it1) }
         }
         Glide.with(requireActivity()).load(R.drawable.user_placeholder).circleCrop()
             .into(binding.ivUserImage)

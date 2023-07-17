@@ -73,7 +73,7 @@ class FragmentSettingsAccount : Fragment(), MainSettingCategoryAdapter.Callbackk
 
             Constants.SETTING_ACCOUNT_PRIVACY -> {
 //                findNavController().navigate(R.id.action_fragment_account_setting_to_fragmentPrivacy2)
-                startActivity(IntentHelper.getFragmentPrivacyScreen(requireActivity()))
+                IntentHelper.getFragmentPrivacyScreen(requireActivity())?.let { startActivity(it) }
             }
 
             Constants.SETTING_CHANGE_NUMBER -> {
@@ -87,7 +87,7 @@ class FragmentSettingsAccount : Fragment(), MainSettingCategoryAdapter.Callbackk
 
             Constants.SETTING_BLOCKED_CONTACTS -> {
 //                findNavController().navigate(R.id.fragment_account_setting_to_fragment_blocked_users)
-                startActivity(IntentHelper.getBlockListScreen(requireActivity()))
+                IntentHelper.getBlockListScreen(requireActivity())?.let { startActivity(it) }
 
             }
 

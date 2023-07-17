@@ -20,15 +20,17 @@ import com.stalmate.user.view.adapter.FriendAdapter
 import com.stalmate.user.viewmodel.AppViewModel
 import eightbitlab.com.blurview.RenderScriptBlur
 
-class AdapterFunTime(val viewModel: AppViewModel,
-                     val context: Context,
-                     ) : RecyclerView.Adapter<AdapterFunTime.ViewHolder>() {
+class AdapterFunTime(
+    val viewModel: AppViewModel,
+    val context: Context,
+) : RecyclerView.Adapter<AdapterFunTime.ViewHolder>() {
 
     var list = ArrayList<ResultFuntime>()
 
-    inner class ViewHolder(var binding : ItemFunTimeBinding): RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(var binding: ItemFunTimeBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
-        fun  bind(funtimeResponse : ResultFuntime){
+        fun bind(funtimeResponse: ResultFuntime) {
             var radius = 20f
 
             var decorView: View = (context as Activity?)!!.window.getDecorView();
@@ -42,13 +44,13 @@ class AdapterFunTime(val viewModel: AppViewModel,
 
 
 
-            binding.tvUserName.text = funtimeResponse.first_name+ " " + funtimeResponse.last_name
+            binding.tvUserName.text = funtimeResponse.first_name + " " + funtimeResponse.last_name
 
-            if (funtimeResponse.file_type=="Video"){
+            if (funtimeResponse.file_type.equals("1", true)) {
 
                 binding.pvExoplayer.visibility = View.VISIBLE
 
-            }else {
+            } else {
                 Glide.with(context).load(funtimeResponse.file).into(binding.shapeableImageView)
             }
         }
@@ -56,7 +58,8 @@ class AdapterFunTime(val viewModel: AppViewModel,
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        var view = LayoutInflater.from(parent.context).inflate(R.layout.item_fun_time, parent, false)
+        var view =
+            LayoutInflater.from(parent.context).inflate(R.layout.item_fun_time, parent, false)
         return ViewHolder(DataBindingUtil.bind<ItemFunTimeBinding>(view)!!)
 
     }
@@ -75,7 +78,6 @@ class AdapterFunTime(val viewModel: AppViewModel,
         list.addAll(funtimeList)
         notifyDataSetChanged()
     }
-
 
 
 }

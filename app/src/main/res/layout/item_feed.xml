@@ -48,10 +48,10 @@
             android:id="@+id/appCompatTextView5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/_10sdp"
             android:background="@drawable/bg_follow"
             android:fontFamily="@font/poppins_medium"
             android:paddingHorizontal="@dimen/_10sdp"
-            android:layout_marginEnd="@dimen/_10sdp"
             android:paddingVertical="@dimen/_2sdp"
             android:text="@string/follow"
             android:textColor="@color/blue_line"
@@ -68,7 +68,7 @@
             android:layout_marginEnd="@dimen/_10sdp"
             android:src="@drawable/menudots"
             android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@+id/appCompatImageView5"
+            app:layout_constraintBottom_toTopOf="@+id/clView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -94,27 +94,56 @@
             app:layout_constraintStart_toEndOf="@+id/appCompatTextView6"
             app:layout_constraintTop_toTopOf="@+id/appCompatTextView6" />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/appCompatImageView5"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clView"
             android:layout_width="match_parent"
-            android:layout_height="360dp"
+            android:layout_height="@dimen/_360sdp"
             android:layout_marginTop="10dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/image"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/user_profile_image" />
+            app:layout_constraintTop_toBottomOf="@+id/user_profile_image">
 
-        <ImageView
-            android:id="@+id/ivPlay"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/round_play_circle_24"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@+id/appCompatImageView5"
-            app:layout_constraintEnd_toEndOf="@+id/appCompatImageView5"
-            app:layout_constraintStart_toStartOf="@+id/appCompatImageView5"
-            app:layout_constraintTop_toTopOf="@+id/appCompatImageView5" />
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/appCompatImageView5"
+                android:layout_width="match_parent"
+                android:layout_height="360dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/image"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.stalmate.user.modules.reels.player.InstaLikePlayerView
+                android:id="@+id/feedPlayerView"
+                android:layout_width="match_parent"
+                android:layout_height="360dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/ivSoundButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_24sdp"
+                android:layout_marginEnd="@dimen/_24sdp"
+                android:src="@drawable/ic_sound_on"
+                android:tint="@color/white"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/feedPlayerView" />
+
+            <ImageView
+                android:id="@+id/ivPlay"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/round_play_circle_24"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@+id/feedPlayerView"
+                app:layout_constraintEnd_toEndOf="@+id/feedPlayerView"
+                app:layout_constraintStart_toStartOf="@+id/feedPlayerView"
+                app:layout_constraintTop_toTopOf="@+id/feedPlayerView" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/like_icon"
@@ -126,7 +155,7 @@
             android:padding="@dimen/_4sdp"
             android:src="@drawable/like"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/appCompatImageView5" />
+            app:layout_constraintTop_toBottomOf="@+id/clView" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/share_icon"
@@ -138,7 +167,7 @@
             android:padding="@dimen/_4sdp"
             android:src="@drawable/share"
             app:layout_constraintStart_toEndOf="@+id/like_icon"
-            app:layout_constraintTop_toBottomOf="@+id/appCompatImageView5" />
+            app:layout_constraintTop_toBottomOf="@+id/clView" />
 
         <TextView
             android:id="@+id/share_count"
@@ -164,7 +193,7 @@
             android:padding="@dimen/_4sdp"
             android:src="@drawable/comment"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/appCompatImageView5" />
+            app:layout_constraintTop_toBottomOf="@+id/clView" />
 
         <TextView
             android:id="@+id/comment_count"
@@ -254,11 +283,11 @@
                 android:id="@+id/ivCommentImage"
                 android:layout_width="@dimen/_150sdp"
                 android:layout_height="@dimen/_150sdp"
+                android:layout_marginStart="@dimen/_10sdp"
                 android:layout_marginTop="@dimen/_5sdp"
                 android:scaleType="centerCrop"
-                android:visibility="gone"
                 android:src="@drawable/user_placeholder"
-                android:layout_marginStart="@dimen/_10sdp"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvUserName1"
                 app:riv_corner_radius="@dimen/_5sdp" />

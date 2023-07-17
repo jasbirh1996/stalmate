@@ -1,10 +1,10 @@
 package com.stalmate.user.view.photoalbum.imageshowindex
 
-import com.stalmate.user.model.Photo
+import com.stalmate.user.model.Albums
 
 data class ModelPhotoIndexDataResponse(
     val message: String,
-    val results: ArrayList<Photo>,
+    val results: ArrayList<Albums>,
     val status: Boolean
 )
 

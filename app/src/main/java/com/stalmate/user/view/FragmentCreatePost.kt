@@ -88,6 +88,14 @@ class FragmentCreatePost : BaseFragment(), AdapterFeed.Callbackk, UserHomeStoryA
 
     }
 
+    override fun showCommentOverlay(feed: ResultFuntime, position: Int) {
+
+    }
+
+    override fun hideCommentOverlay(feed: ResultFuntime, position: Int) {
+
+    }
+
     override fun onClickOnProfile(user: Feed) {
 
     }

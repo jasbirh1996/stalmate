@@ -35,15 +35,11 @@ class ReelVideosByAudioAdapter(
                 .apply(requestOptions)
                 .thumbnail(Glide.with(context).load(video.file))
                 .into(binding.ivMusicImage);
-            // new DownloadImage(YourImageView).execute("Your URL");
-            //  Glide.with(context).load(SeeModetextViewHelper.retriveVideoFrameFromVideo(video.file)).into(binding.ivMusicImage)
             binding.root.setOnClickListener {
                 callback.onClickOnReel(video)
             }
-
             binding.tvViews.text = video.text
-
-            if (video.file_type.contains("image")) {
+            if (video.file_type.equals("0",true)){
                 binding.ivPlay.visibility = View.GONE
             } else {
                 binding.ivPlay.visibility = View.VISIBLE
@@ -76,10 +72,9 @@ class ReelVideosByAudioAdapter(
         notifyItemRangeChanged(size, sizeNew)
     }
 
-    fun submitList(users: List<ResultFuntime>) {
-        Log.d("laksjdlasd", users.size.toString())
+    fun submitList(users: List<ResultFuntime>?) {
         list.clear()
-        list.addAll(users)
+        users?.let { list.addAll(it) }
         notifyDataSetChanged()
     }
 

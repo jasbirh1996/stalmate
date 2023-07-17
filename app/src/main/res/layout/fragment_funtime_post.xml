@@ -121,10 +121,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/poppins"
-            app:layout_constraintTop_toTopOf="@id/editor"
-            app:layout_constraintStart_toStartOf="@id/editor"
             android:text="@string/whats_on_your_mind"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@id/editor"
+            app:layout_constraintTop_toTopOf="@id/editor" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layoutBottomControlls"

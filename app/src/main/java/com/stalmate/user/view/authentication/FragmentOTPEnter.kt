@@ -20,6 +20,7 @@ import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentOTPEnterBinding
 import com.stalmate.user.databinding.SignUpSuccessPoppuBinding
 import com.stalmate.user.utilities.PrefManager
+import com.stalmate.user.utilities.ValidationHelper
 import com.stalmate.user.view.dashboard.ActivityDashboard
 import java.util.*
 
@@ -61,7 +62,6 @@ class FragmentOTPEnter : BaseFragment() {
         password = requireArguments().getString("password").toString()
         first_name = requireArguments().getString("first_name").toString()
         last_name = requireArguments().getString("last_name").toString()
-        user_name = requireArguments().getString("user_name").toString()
         gender = requireArguments().getString("gender").toString()
         dob = requireArguments().getString("dob").toString()
         device_token = requireArguments().getString("device_token").toString()
@@ -75,6 +75,39 @@ class FragmentOTPEnter : BaseFragment() {
         getOtpApiCall()
         getOtpRegistrationApiCall()
 
+
+        binding.etUsername.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(
+                s: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (binding.etUsername.text.toString().isNotEmpty()) {
+                    hitApiCheckOldUsername()
+                } else {
+                    binding.ivUsername.visibility = View.GONE
+                    binding.errorTaken.visibility = View.GONE
+                }
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+
+            }
+        })
+        binding.btnCrateAccount.setOnClickListener {
+            if (ValidationHelper.isNull(binding.etUsername.text.toString())) {
+                makeToast(getString(R.string.user_name_toast))
+            } else if (isUsedUsername) {
+                makeToast("Username is not available!")
+            } else {
+                createAccountApiCall()
+            }
+        }
 
         binding.btnProcess.setOnClickListener {
 
@@ -111,6 +144,24 @@ class FragmentOTPEnter : BaseFragment() {
 
         })
 
+    }
+
+    var isUsedUsername = false
+    fun hitApiCheckOldUsername() {
+        networkViewModel.checkIfOldUsername(user_name = binding.etUsername.text.toString())
+        networkViewModel.checkIfOldUsernameLiveData.observe(requireActivity()) {
+            it?.reponse?.let {
+                if (it.name_status == true) {
+                    binding.ivUsername.visibility = View.VISIBLE
+                    binding.errorTaken.visibility = View.GONE
+                    isUsedUsername = false
+                } else {
+                    isUsedUsername = true
+                    binding.ivUsername.visibility = View.GONE
+                    binding.errorTaken.visibility = View.VISIBLE
+                }
+            }
+        }
     }
 
     private fun getOtpRegistrationApiCall() {
@@ -195,20 +246,10 @@ class FragmentOTPEnter : BaseFragment() {
         networkViewModel.otpVerifyRegistarionData.observe(requireActivity()) {
             it?.let {
                 val message = it.message
-
                 if (it.status == true) {
-
-                    successdialogBuilder =
-                        AlertDialog.Builder(requireContext(), R.style.CustomAlertDialog).create()
-                    val view = layoutInflater.inflate(R.layout.sign_up_success_poppu, null)
-
-                    successdialogBuilder?.setView(view)
-                    successdialogBuilder?.setCanceledOnTouchOutside(false)
-                    successdialogBuilder?.show()
-
-                    createAccountApiCall()
-
-                    makeToast(message)
+                    //Update here
+                    next()
+                    makeToast("Otp verified successfully!")
                 } else {
                     makeToast(message)
                 }
@@ -220,8 +261,15 @@ class FragmentOTPEnter : BaseFragment() {
 
     }
 
+    fun next() {
+        binding.clOtp.visibility = View.GONE
+        binding.clUsername.visibility = View.VISIBLE
+        binding.btnCrateAccount.text = "Submit"
+        binding.toolbar.toolBarCenterText.text = "Create Username"
+    }
 
     private fun createAccountApiCall() {
+        user_name = binding.etUsername.text.toString()
         val hashMap = HashMap<String, String>()
         hashMap["email"] = email
         hashMap["password"] = password
@@ -241,9 +289,17 @@ class FragmentOTPEnter : BaseFragment() {
             it?.let {
                 val message = it.message
                 if (it.status) {
+                    makeToast("Username is created!")
                     PrefManager.getInstance(requireContext())?.keyIsLoggedIn = true
                     PrefManager.getInstance(requireContext())?.userDetail = it
                     App.getInstance().setupApis()
+
+                    successdialogBuilder =
+                        AlertDialog.Builder(requireContext(), R.style.CustomAlertDialog).create()
+                    val view = layoutInflater.inflate(R.layout.sign_up_success_poppu, null)
+                    successdialogBuilder?.setView(view)
+                    successdialogBuilder?.setCanceledOnTouchOutside(false)
+                    successdialogBuilder?.show()
 
                     Handler(Looper.myLooper() ?: Looper.getMainLooper()).postDelayed({
                         successdialogBuilder?.dismiss()

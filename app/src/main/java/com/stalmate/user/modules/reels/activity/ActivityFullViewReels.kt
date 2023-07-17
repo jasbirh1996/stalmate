@@ -59,9 +59,8 @@ class ActivityFullViewReels : BaseActivity(), ReelFullViewAdapter.Callback {
         binding.recyclerView.adapter = adapter
 
         /*Helper class to provide AutoPlay feature inside cell*/
-        videoAutoPlayHelper =
-            VideoAutoPlayFullViewHelper(recyclerView = binding.recyclerView)
-        videoAutoPlayHelper!!.startObserving();
+        videoAutoPlayHelper = VideoAutoPlayFullViewHelper(recyclerView = binding.recyclerView)
+        videoAutoPlayHelper?.startObserving();
 
         isSelfVideos = intent.getBooleanExtra("showMyVideos", false)
 

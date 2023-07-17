@@ -2,17 +2,17 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <layer-list>
-            <!--<item>
+            <item>
                 <shape>
-                    &lt;!&ndash;<gradient android:angle="90" android:endColor="#ffffff" android:startColor="#ffffff" android:type="linear" />&ndash;&gt;
-                    &lt;!&ndash;<stroke android:width="0.33dp" android:color="#0fb1fa" />&ndash;&gt;
+                    <!--<gradient android:angle="90" android:endColor="#ffffff" android:startColor="#ffffff" android:type="linear" />-->
+                    <!--<stroke android:width="0.33dp" android:color="#0fb1fa" />-->
                     <corners android:radius="0dp" />
                     <padding android:bottom="3dp" android:left="3dp" android:right="3dp" android:top="3dp" />
                 </shape>
             </item>
             <item android:right="5dp">
-                <bitmap android:gravity="center_vertical|right" android:src="@drawable/ic_back_arrow" />
-            </item>-->
+                <bitmap android:gravity="center_vertical|right" android:src="@drawable/ic_profile_dropdown" />
+            </item>
         </layer-list>
     </item>
 </selector>

@@ -70,11 +70,11 @@ class FragmentSingleSearch(var Type: String) : BaseFragment(), SingleSearchAdapt
             networkViewModel.searchLiveData.observe(this) {
                 it?.let {
                     val stateList: ArrayList<ResultSearch> = ArrayList<ResultSearch>()
-                    if (it.results.isEmpty()) {
+                    if (it?.results.isNullOrEmpty()) {
                         binding.itemView.visibility = View.VISIBLE
                         searchAdapter.submitList(stateList)
                     } else {
-                        searchAdapter.submitList(it.results)
+                        it?.results?.let { it1 -> searchAdapter.submitList(it1) }
                     }
                 }
             }
@@ -84,11 +84,11 @@ class FragmentSingleSearch(var Type: String) : BaseFragment(), SingleSearchAdapt
             networkViewModel.searchBranchLiveData.observe(this) {
                 it?.let {
                     val stateList: ArrayList<ResultSearch> = ArrayList<ResultSearch>()
-                    if (it.results.isEmpty()) {
+                    if (it?.results.isNullOrEmpty()) {
                         binding.itemView.visibility = View.VISIBLE
                         searchAdapter.submitList(stateList)
                     } else {
-                        searchAdapter.submitList(it.results)
+                        it?.results?.let { it1 -> searchAdapter.submitList(it1) }
                     }
                 }
             }

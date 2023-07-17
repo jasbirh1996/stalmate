@@ -1,6 +1,5 @@
 package com.stalmate.user.base
 
-import android.R
 import android.app.AlertDialog
 import android.app.ProgressDialog
 import android.content.Context
@@ -101,12 +100,12 @@ abstract class BaseActivity : AppCompatActivity(), View.OnClickListener,
     }
 
     protected fun showSnackbar(message: String) {
-        val view = findViewById<View>(R.id.content)
-        if (view != null) {
-            Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show()
-        } else {
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-        }
+//        val view = findViewById<View>(R.id.content)
+//        if (view != null) {
+//            Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show()
+//        } else {
+//            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+//        }
     }
 
     override

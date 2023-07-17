@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -65,18 +66,16 @@ class ReelFullViewAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        Log.d("akljsdasd", "asdkasd")
-        if (true) {
+        if (reelList[position].file_type.equals("1",true)) {
             return FEED_TYPE_VIDEO;
         } else {
-            return FEED_TYPE_IMAGES_MULTIPLE
+            return FEED_TYPE_VIDEO;//return FEED_TYPE_IMAGES_MULTIPLE
         }
     }
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReelViewHolder {
-
-        if (viewType == FEED_TYPE_IMAGES_MULTIPLE) {
+        return if (viewType == FEED_TYPE_IMAGES_MULTIPLE) {
             return ImageReelViewHolder(
                 HorizontalItemReelBinding.inflate(
                     LayoutInflater.from(
@@ -84,61 +83,46 @@ class ReelFullViewAdapter(
                     ), parent, false
                 )
             )
+        } else {
+            VideoReelFullViewHolder(
+                ItemFullViewReelBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            )
         }
-        return VideoReelFullViewHolder(
-            ItemFullViewReelBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        )
     }
 
     override fun onBindViewHolder(holder: ReelViewHolder, position: Int) {
-
         if (holder is VideoReelFullViewHolder) {
             handleViewHolder(holder, position)
         } else if (holder is ImageReelViewHolder) {
             handleViewHolder(holder, position)
         }
-
     }
 
     private fun handleViewHolder(holder: VideoReelFullViewHolder, position: Int) {
-        /*Reset ViewHolder */
-        removeImageFromImageView(holder.videoThumbnail)
-
-        holder.customPlayerView.reset()
-
-        /*Set seperate ID for each player view, to prevent it being overlapped by other player's changes*/
-        holder.customPlayerView.id = View.generateViewId()
-
-        /*circlular repeatation of items*/
-        //  val videoPos = (position % Constants.videoList.size);
-
-        /*Set ratio according to video*/
-        //  (holder.videoThumbnail.layoutParams as ConstraintLayout.LayoutParams).dimensionRatio = Constants.videoList.get(videoPos).dimension
-
-        /*Set video's direct url*/
-        holder.customPlayerView.setVideoUri(Uri.parse(reelList[position].file))
-
-
-        /*      *//*Set video's thumbnail locally (by drawable), you can set it by remoteUrl too*//*
-        val resID: Int = context.getResources().getIdentifier(
-            "thumbnail_" + position,
-            "drawable",
-            context.getPackageName()
-        )
-
-        val res: Drawable = context.getResources().getDrawable(resID, null)*/
-
-/*        (context as Activity).runOnUiThread(Runnable {
-            //change View Data
-        })*/
-
-        val requestOptions = RequestOptions()
-        Glide.with(context)
-            .load(reelList[position].file)
-            .apply(requestOptions)
-            .thumbnail(Glide.with(context).load(reelList[position].file))
-            .into(holder.videoThumbnail)
-        //  holder.videoThumbnail.setImageDrawable(res);
+        if (reelList[position].file_type.equals("0",true)) {
+            holder.customPlayerView.visibility = View.GONE
+            holder.videoThumbnail.visibility = View.VISIBLE
+            val requestOptions = RequestOptions()
+            Glide.with(holder.videoThumbnail.context)
+                .load(reelList[position].file)
+                .apply(requestOptions)
+                .thumbnail(Glide.with(context).load(reelList[position].file))
+                .placeholder(R.drawable.image)
+                .error(R.drawable.image)
+                .into(holder.videoThumbnail)
+        } else {
+            //video/mp4
+            holder.customPlayerView.visibility = View.VISIBLE
+            holder.videoThumbnail.visibility = View.GONE
+            try {
+                /*holder.customPlayerView.reset()
+//                    Set seperate ID for each player view, to prevent it being overlapped by other player's changes
+                holder.customPlayerView.id = View.generateViewId()*/
+//                    Set video's direct url
+                holder.customPlayerView.setVideoUri(Uri.parse(reelList[position].file))
+            } catch (e: Exception) {
+            }
+        }
 
         holder.tvUserName.text = reelList[position].first_name + " " + reelList[position].last_name
         Glide.with(context).load(reelList[position].profile_img)
@@ -228,13 +212,13 @@ class ReelFullViewAdapter(
                 override fun funOnCommentDialogDismissed(commentCount: Int) {
                     reelList[position].isDataUpdated = true
                     holder.commentCount.text = commentCount.toString()
-                    if (!reelList[position].file_type.contains("image", true))
+                    if (reelList[position].file_type.equals("1", true))
                         holder.customPlayerView.getPlayer()?.play()
                 }
             }
         )
         holder.buttonComment.setOnClickListener {
-            if (!reelList[position].file_type.contains("image", true))
+            if (reelList[position].file_type.equals("1", true))
                 holder.customPlayerView.getPlayer()?.pause()
             dialogFragmentComment.show(
                 (context as ActivityFullViewReels).supportFragmentManager,
@@ -347,28 +331,15 @@ class ReelFullViewAdapter(
     }
 
     private fun handleViewHolder(holder: ImageReelViewHolder, position: Int) {
-
         /* Set adapter (items are being used inside adapter, you can setup in your own way*/
         val ReelFullViewAdapter = ImageAdapter(holder.itemView.context, position)
         holder.recyclerViewImages.adapter = ReelFullViewAdapter
-
-
     }
 
     override fun getItemCount(): Int {
         Log.d("akljsdasd", reelList.size.toString())
         return reelList.size;
     }
-
-    fun removeImageFromImageView(imageView: ImageView) {
-        try {
-            imageView.background = null
-            imageView.setImageDrawable(null)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-
 
     fun setList(feedList: ArrayList<ResultFuntime>) {
         reelList.clear()

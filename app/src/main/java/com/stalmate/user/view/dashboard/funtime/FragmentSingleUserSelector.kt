@@ -151,13 +151,13 @@ class FragmentSingleUserSelector : BaseFragment(), FriendAdapter.Callbackk,
             it.let {
 
 
-                if (it!!.results.isNotEmpty()) {
+                if (!it?.results.isNullOrEmpty()) {
 
                     if (isFresh) {
 
                       if (tagPeopleViewModel.taggedModelObject.policy==Constants.PRIVACY_TYPE_SPECIFIC){
                           friendAdapter.list.clear()
-                          it.results.forEach { user ->
+                          it?.results?.forEach { user ->
 
                               tagPeopleViewModel.taggedModelObject.specifFriendsList.forEach {
                                   if (user.id == it.id) {
@@ -166,12 +166,12 @@ class FragmentSingleUserSelector : BaseFragment(), FriendAdapter.Callbackk,
                               }
                           }
                       }else{
-                          friendAdapter.submitList(it.results as ArrayList<User>)
+                          friendAdapter.submitList(it?.results as ArrayList<User>)
                       }
                     } else {
 
                         if (tagPeopleViewModel.taggedModelObject.policy==Constants.PRIVACY_TYPE_SPECIFIC){
-                            it.results.forEach { user ->
+                            it?.results?.forEach { user ->
                                 tagPeopleViewModel.taggedModelObject.specifFriendsList.forEach {
                                     if (user.id == it.id) {
                                         friendAdapter.addToList(listOf(user))
@@ -179,21 +179,21 @@ class FragmentSingleUserSelector : BaseFragment(), FriendAdapter.Callbackk,
                                 }
                             }
                         }else{
-                            friendAdapter.addToList(it.results as ArrayList<User>)
+                            friendAdapter.addToList(it?.results as ArrayList<User>)
                         }
 
 
                     }
 
                     isLastPage = false
-                    if (it.results.size < 16) {
+                    if ((it?.results?.size?:0) < 16) {
                         binding.progressLoading.visibility = View.GONE
                     } else {
                         binding.progressLoading.visibility = View.VISIBLE
                     }
                 } else {
                     if (isFresh) {
-                        friendAdapter.submitList(it.results as ArrayList<User>)
+                        friendAdapter.submitList(it?.results as ArrayList<User>)
                     }
                     isLastPage = true
                     binding.progressLoading.visibility = View.GONE

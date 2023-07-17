@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -12,7 +12,7 @@
 
         <include
             android:id="@+id/toolbar"
-            layout="@layout/common_toolbar"/>
+            layout="@layout/common_toolbar" />
 
         <ScrollView
             android:layout_width="match_parent"
@@ -20,130 +20,223 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbar">
 
-
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                >
+                android:layout_height="wrap_content">
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/appCompatTextView"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/clOtp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="50dp"
-                    android:layout_marginTop="52dp"
-                    android:fontFamily="@font/poppins"
-                    android:gravity="center"
-                    android:text="Enter the OTP sent to your registered email id to reset your password."
-                    android:textColor="@color/colorGray"
-                    android:textSize="14sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/appCompatTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="50dp"
+                        android:layout_marginTop="52dp"
+                        android:fontFamily="@font/poppins"
+                        android:gravity="center"
+                        android:text="Enter the OTP sent to your registered email id to reset your password."
+                        android:textColor="@color/colorGray"
+                        android:textSize="14sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/otp_image"
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/otp_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="48dp"
+                        android:src="@drawable/ic_forgot_otp_vector"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/appCompatTextView" />
+
+                    <com.chaos.view.PinView
+                        android:id="@+id/pin_view"
+                        style="@style/PinWidget.PinView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="48dp"
+                        android:cursorVisible="true"
+                        android:inputType="number"
+                        android:itemBackground="@drawable/otp_box_border_filted"
+                        android:textColor="@color/app_color"
+                        app:hideLineWhenFilled="true"
+                        app:itemCount="4"
+                        app:itemHeight="50dp"
+                        app:itemRadius="5dp"
+                        app:itemSpacing="18dp"
+                        app:itemWidth="50dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/otp_image"
+                        app:lineColor="@color/obboard_indicator2"
+                        app:lineWidth="2dp" />
+
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/dont_receive"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:fontFamily="@font/poppins"
+                        android:text="Didn't receive OTP?"
+                        android:textColor="@color/colorTextGray"
+                        android:textSize="14sp"
+                        app:layout_constraintEnd_toEndOf="@+id/pin_view"
+                        app:layout_constraintStart_toStartOf="@+id/pin_view"
+                        app:layout_constraintTop_toBottomOf="@+id/pin_view" />
+
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/otp_count_down"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:fontFamily="@font/poppins_medium"
+                        android:text="Resend 25 Sec"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="14sp"
+                        android:visibility="visible"
+                        app:layout_constraintEnd_toEndOf="@+id/dont_receive"
+                        app:layout_constraintStart_toStartOf="@+id/dont_receive"
+                        app:layout_constraintTop_toBottomOf="@+id/dont_receive" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/otp_resent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="@font/poppins_medium"
+                        android:text="Resend"
+                        android:textColor="@color/app_color"
+                        android:textSize="14sp"
+                        android:visibility="gone"
+                        app:layout_constraintEnd_toEndOf="@+id/dont_receive"
+                        app:layout_constraintStart_toStartOf="@+id/dont_receive"
+                        app:layout_constraintTop_toBottomOf="@+id/dont_receive" />
+
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/btn_process"
+                        style="@style/primaryButtonStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="60dp"
+                        android:layout_marginTop="50dp"
+                        android:gravity="center"
+                        android:text="@string/proceed"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/dont_receive" />
+
+                    <ProgressBar
+                        android:id="@+id/progressBar"
+                        style="?android:attr/progressBarStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:visibility="invisible"
+                        app:layout_constraintBottom_toBottomOf="@+id/btn_process"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/clUsername"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="48dp"
-                    android:src="@drawable/ic_forgot_otp_vector"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/appCompatTextView" />
-
-                <com.chaos.view.PinView
-                    android:id="@+id/pin_view"
-                    style="@style/PinWidget.PinView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="48dp"
-                    android:cursorVisible="true"
-                    android:inputType="number"
-                    android:itemBackground="@drawable/otp_box_border_filted"
-                    app:hideLineWhenFilled="true"
-                    app:itemCount="4"
-                    android:textColor="@color/app_color"
-                    app:itemHeight="50dp"
-                    app:itemRadius="5dp"
-                    app:itemSpacing="18dp"
-                    app:itemWidth="50dp"
-                    app:lineColor="@color/obboard_indicator2"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/otp_image"
-                    app:lineWidth="2dp" />
-
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/dont_receive"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:text="Didn't receive OTP?"
-                    android:textSize="14sp"
-                    android:textColor="@color/colorTextGray"
-                    android:fontFamily="@font/poppins"
-                    app:layout_constraintEnd_toEndOf="@+id/pin_view"
-                    app:layout_constraintStart_toStartOf="@+id/pin_view"
-                    app:layout_constraintTop_toBottomOf="@+id/pin_view" />
-
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/otp_count_down"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:fontFamily="@font/poppins_medium"
-                    android:text="Resend 25 Sec"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="14sp"
-                    android:visibility="visible"
-                    app:layout_constraintEnd_toEndOf="@+id/dont_receive"
-                    app:layout_constraintStart_toStartOf="@+id/dont_receive"
-                    app:layout_constraintTop_toBottomOf="@+id/dont_receive" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/otp_resent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:text="Resend"
-                    android:textColor="@color/app_color"
-                    android:textSize="14sp"
-                    android:fontFamily="@font/poppins_medium"
+                    android:layout_marginHorizontal="@dimen/_20sdp"
+                    android:layout_marginTop="@dimen/_30sdp"
                     android:visibility="gone"
-                    app:layout_constraintEnd_toEndOf="@+id/dont_receive"
-                    app:layout_constraintStart_toStartOf="@+id/dont_receive"
-                    app:layout_constraintTop_toBottomOf="@+id/dont_receive" />
-
-
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/btn_process"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="60dp"
-                    android:layout_marginTop="50dp"
-                    style="@style/primaryButtonStyle"
-                    android:gravity="center"
-                    android:text="@string/proceed"
-                    app:layout_constraintTop_toBottomOf="@id/dont_receive"
-                    app:layout_constraintBottom_toBottomOf="parent" />
-
-                <ProgressBar
-                    android:id="@+id/progressBar"
-                    style="?android:attr/progressBarStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:visibility="invisible"
-                    app:layout_constraintBottom_toBottomOf="@+id/btn_process"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent">
 
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/back_button_left_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Create a username"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/back_button_left_text1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Add a username or use our suggestion, you can change this at anytime."
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/back_button_left_text" />
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etUsername"
+                        style="@style/customEditbox"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_20sdp"
+                        android:backgroundTint="@color/grey1"
+                        android:hint="@string/user_name"
+                        android:inputType="textPersonName"
+                        android:maxLines="1"
+                        android:paddingVertical="12dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/back_button_left_text1" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/ivUsername"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/_5sdp"
+                        android:src="@drawable/ic_login_check_tick"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/errorTaken"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:text="Username already taken"
+                        android:textColor="@color/colorRed"
+                        android:textSize="12sp"
+                        android:visibility="gone"
+                        app:layout_constraintStart_toStartOf="@id/etUsername"
+                        app:layout_constraintTop_toBottomOf="@+id/etUsername" />
+
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/btnCrateAccount"
+                        style="@style/primaryButtonStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="30dp"
+                        android:layout_marginTop="32dp"
+                        android:gravity="center"
+                        android:text="Submit"
+                        android:textColor="@color/white"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/errorTaken"
+                        app:textAllCaps="false" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </ScrollView>

@@ -27,6 +27,7 @@ import com.stalmate.user.databinding.TermandconditionpopupBinding
 import com.stalmate.user.utilities.CustumEditText
 import com.stalmate.user.utilities.PriceFormatter
 import com.stalmate.user.utilities.ValidationHelper
+import java.text.SimpleDateFormat
 import java.util.*
 import java.util.regex.Matcher
 import java.util.regex.Pattern
@@ -65,59 +66,10 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
         val views = layoutInflater.inflate(R.layout.termandconditionpopup, null)
         bindingpopup = DataBindingUtil.bind(views)!!
 
-        // Drop down layout style - list view with radio button
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        // attaching data adapter to spinner
-        binding.spMonth.setAdapter(dataAdapter)
-
-
-//        binding.spDate.setBackgroundColor()
-
-
-        var cal = Calendar.getInstance()
-
-//        Log.d("ajhcbjahc", cal.get(Calendar.YEAR).toString())
+        val cal = Calendar.getInstance()
         currentYear = (cal.get(Calendar.YEAR) - 13).toString()
 
-
-        /*val dateSetListener =
-            DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-                cal.set(Calendar.YEAR, year)
-                cal.set(Calendar.MONTH, monthOfYear)
-                cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-
-                val myFormat = "dd.MM.yyyy" // mention the format you need
-                val sdf = SimpleDateFormat(myFormat, Locale.US)
-                binding.etDOB.text = sdf.format(cal.time)
-
-            }
-
-
-        // Display Selected date in textbox
-        binding.etDOB.setOnClickListener {
-            DatePickerDialog(
-                requireContext(), dateSetListener,
-                cal.get(Calendar.YEAR),
-                cal.get(Calendar.MONTH),
-                cal.get(Calendar.DAY_OF_MONTH)
-            ).show()
-        }*/
-
-
         with(binding) {
-
-
-            /*   // Display Selected date in textbox
-            etDOB.setOnClickListener {
-                DatePickerDialog(
-                    requireContext(), dateSetListener,
-                    cal.get(Calendar.YEAR),
-                    cal.get(Calendar.MONTH),
-                    cal.get(Calendar.DAY_OF_MONTH)
-                ).show()
-            }*/
-
 
             binding.tmcondition.setOnClickListener {
                 builder.setView(views)
@@ -131,31 +83,6 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
                 builder.setCanceledOnTouchOutside(false)
                 builder.dismiss()
             }
-
-
-            binding.etUsername.addTextChangedListener(object :TextWatcher{
-                override fun beforeTextChanged(
-                    s: CharSequence?,
-                    start: Int,
-                    count: Int,
-                    after: Int
-                ) {
-
-                }
-
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    if (binding.etUsername.text.toString().isNotEmpty()) {
-                        hitApiCheckOldUsername()
-                    } else {
-                        binding.ivUsername.visibility = View.GONE
-                        binding.errorTaken.visibility = View.GONE
-                    }
-                }
-
-                override fun afterTextChanged(s: Editable?) {
-
-                }
-            })
 
 
             binding.etEmail.addTextChangedListener(object : TextWatcher {
@@ -337,7 +264,7 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
                 if (currentYear < selectedYear) {
                     makeToast("Your age should be 13 years or more")
                 } else {
-                    if (!isUsedEmail) {
+                    if (!isUsedEmail || (binding.appCompatImageView12.visibility == View.VISIBLE)) {
                         createAccountApiCall()
                     } else {
                         makeToast("Email Already Used")
@@ -350,9 +277,7 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
         CustumEditText.setup(binding.filledTextPassword, binding.etPassword)
     }
 
-
     var isUsedEmail = false
-    var isUsedUsername = false
 
     fun isValid(): Boolean {
         lateinit var successdialogBuilder: AlertDialog
@@ -362,14 +287,7 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
         } else if (ValidationHelper.isNull(binding.etLastName.text.toString())) {
             makeToast(getString(R.string.last_name_toast))
             return false
-        }  else if (ValidationHelper.isNull(binding.etUsername.text.toString())) {
-            makeToast(getString(R.string.user_name_toast))
-            return false
-        } else if (isUsedUsername) {
-            makeToast(getString(R.string.user_name_valid_toast))
-            return false
-        }
-        else if (ValidationHelper.isNull(binding.etEmail.text.toString())) {
+        } else if (ValidationHelper.isNull(binding.etEmail.text.toString())) {
             makeToast(getString(R.string.email_error_toast))
             return false
         } else if (!isValidEmail(binding.etEmail.text.toString())) {
@@ -430,20 +348,14 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
         bundle.putString("password", binding.etPassword.text.toString())
         bundle.putString("first_name", binding.etName.text.toString())
         bundle.putString("last_name", binding.etLastName.text.toString())
-        bundle.putString("user_name", binding.etUsername.text.toString())
         bundle.putString("gender", gander_name)
 //        bundle.putString("schoolandcollege", binding.etschoolcollege.text.toString())
         bundle.putString("dob", "$selectedDay-$selectedMonth-$selectedYear")
-        bundle.putString("year", selectedYear)
-        bundle.putString("month", selectedMonth)
-        bundle.putString("date", selectedDay)
         bundle.putString("device_token", App.getInstance().firebaseToken.toString())
         bundle.putString("device_type", "android")
         bundle.putString("layout", "SignUp")
         findNavController().navigate(R.id.fragmentOTPEnter, bundle)
         Log.d("kacajhshc", bundle.toString())
-
-
     }
 
 
@@ -460,23 +372,6 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
                 } else {
                     isUsedEmail = true
                     binding.appCompatImageView12.visibility = View.GONE
-                }
-            }
-        }
-    }
-
-    fun hitApiCheckOldUsername() {
-        networkViewModel.checkIfOldUsername(user_name = binding.etUsername.text.toString())
-        networkViewModel.checkIfOldUsernameLiveData.observe(requireActivity()) {
-            it?.reponse?.let {
-                if (it.name_status == true) {
-                    binding.ivUsername.visibility = View.VISIBLE
-                    binding.errorTaken.visibility = View.GONE
-                    isUsedUsername = false
-                } else {
-                    isUsedUsername = true
-                    binding.ivUsername.visibility = View.GONE
-                    binding.errorTaken.visibility = View.VISIBLE
                 }
             }
         }
@@ -510,26 +405,17 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
 
     }
 
+    var selectedDay = ""
+    var selectedMonth = ""
+    var selectedYear = ""
+    fun fetchDOB() {
+        selectedDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH).toString()
+        selectedMonth = SimpleDateFormat("MMMM").format(Calendar.getInstance().timeInMillis)
+        selectedYear = Calendar.getInstance().get(Calendar.YEAR).toString()
 
-    var selectedDay = "1"
-    var selectedMonth = "January"
-    var selectedYear = "1996"
-    lateinit var dataAdapter: ArrayAdapter<String>
-
-    fun fetchDOB(date: String) {
-        val calender = Calendar.getInstance()
-        val datee = PriceFormatter.getDateObject(date)
-        calender.time = datee
-        selectedYear = calender.get(Calendar.YEAR).toString()
-        selectedMonth = PriceFormatter.getMonth(date)
-        Log.d(";lksdf;l", selectedMonth)
-        selectedDay = calender.get(Calendar.DAY_OF_MONTH).toString()
-        val selectedYearIndex =
-            resources.getStringArray(R.array.year).indexOf(selectedYear)
-        val selectedMonthIndex =
-            resources.getStringArray(R.array.month).indexOf(selectedMonth)
-        val selectedDayIndex =
-            resources.getStringArray(R.array.date).indexOf(selectedDay)
+        val selectedYearIndex = resources.getStringArray(R.array.year).indexOf(selectedYear)
+        val selectedMonthIndex = resources.getStringArray(R.array.month).indexOf(selectedMonth)
+        val selectedDayIndex = resources.getStringArray(R.array.date).indexOf(selectedDay)
         binding.spYear.setSelection(selectedYearIndex)
         binding.spMonth.setSelection(selectedMonthIndex)
         binding.spDate.setSelection(selectedDayIndex)
@@ -537,11 +423,28 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
 
 
     fun setupSpinnerListener() {
-        dataAdapter = ArrayAdapter(
+        binding.spDate.adapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_item,
+            resources.getStringArray(R.array.date)
+        ).apply {
+            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
+        binding.spMonth.adapter = ArrayAdapter(
             requireContext(),
             android.R.layout.simple_spinner_item,
             resources.getStringArray(R.array.month)
-        )
+        ).apply {
+            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
+        binding.spYear.adapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_item,
+            resources.getStringArray(R.array.year)
+        ).apply {
+            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
+
 
         binding.spDate.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
@@ -551,44 +454,6 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
                 p3: Long
             ) {
                 selectedDay = p0!!.getItemAtPosition(position).toString()
-                dataAdapter = ArrayAdapter(
-                    requireContext(),
-                    android.R.layout.simple_spinner_item,
-                    resources.getStringArray(R.array.month)
-                )
-
-                if (selectedDay.toInt() == 31) {
-                    dataAdapter = ArrayAdapter(
-                        requireContext(),
-                        android.R.layout.simple_spinner_item,
-                        resources.getStringArray(R.array.monthOfthreeOne)
-                    )
-                }
-
-
-                if (selectedDay.toInt() == 30) {
-                    dataAdapter = ArrayAdapter(
-                        requireContext(),
-                        android.R.layout.simple_spinner_item,
-                        resources.getStringArray(R.array.monthOfThirty)
-                    )
-                }
-
-                if (selectedDay.toInt() == 28) {
-                    dataAdapter = ArrayAdapter(
-                        requireContext(),
-                        android.R.layout.simple_spinner_item,
-                        resources.getStringArray(R.array.monthOfTwentyEight)
-                    )
-                }
-
-
-                // Drop down layout style - list view with radio button
-                dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-                // attaching data adapter to spinner
-                binding.spMonth.adapter = dataAdapter
-
             }
 
             override fun onNothingSelected(p0: AdapterView<*>?) {
@@ -605,7 +470,6 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
                     p3: Long
                 ) {
                     selectedMonth = p0!!.getItemAtPosition(position).toString()
-                    Log.d("jcaujc", selectedMonth)
                 }
 
                 override fun onNothingSelected(p0: AdapterView<*>?) {
@@ -623,15 +487,12 @@ class FragmentSignUp : BaseFragment(), AdapterView.OnItemSelectedListener {
                 p3: Long
             ) {
                 selectedYear = p0!!.getItemAtPosition(position).toString()
-                Log.d("jcaujc", selectedYear)
             }
 
             override fun onNothingSelected(p0: AdapterView<*>?) {
 
             }
         }
-
+        fetchDOB()
     }
-
-
 }

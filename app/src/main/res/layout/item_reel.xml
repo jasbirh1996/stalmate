@@ -174,7 +174,6 @@
                         android:layout_marginEnd="24dp"
                         android:src="@drawable/ic_sound_on"
                         android:tint="@color/white"
-
                         app:layout_constraintBottom_toBottomOf="@+id/tv_story_post_time"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="@+id/tv_user_name" />

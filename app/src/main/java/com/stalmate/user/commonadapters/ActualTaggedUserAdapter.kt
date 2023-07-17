@@ -2,22 +2,13 @@ package com.stalmate.user.commonadapters
 
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.otaliastudios.opengl.core.use
 import com.stalmate.user.R
 import com.stalmate.user.databinding.ItemActualTaggedUsersBinding
-import com.stalmate.user.databinding.ItemFriendBigBinding
-import com.stalmate.user.databinding.ItemTaggedUsersBinding
-import com.stalmate.user.model.User
 import com.stalmate.user.utilities.ImageLoaderHelperGlide
-import com.stalmate.user.view.dashboard.funtime.FragmentFuntimeTag
 import com.stalmate.user.view.dashboard.funtime.TaggedUser
-import com.stalmate.user.view.dashboard.funtime.viewmodel.TagPeopleViewModel
-import com.stalmate.user.viewmodel.AppViewModel
 
 class ActualTaggedUserAdapter(
     val context: Context,var callback : Callback

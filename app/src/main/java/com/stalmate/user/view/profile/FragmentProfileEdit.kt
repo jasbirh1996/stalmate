@@ -86,13 +86,13 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
 
             startActivity(
                 IntentHelper.getFullImageScreen(requireActivity())!!
-                    .putExtra("picture", userData.results.cover_img1)
+                    .putExtra("picture", userData.results?.cover_img1)
             )
         }
         binding.ivUserThumb.setOnClickListener {
             startActivity(
                 IntentHelper.getFullImageScreen(requireActivity())!!
-                    .putExtra("picture", userData.results.profile_img1)
+                    .putExtra("picture", userData.results?.profile_img1)
             )
         }
         binding.buttonSyncContacts.setOnClickListener {
@@ -183,11 +183,11 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
 
         binding.buttonSeeAllBlockList.setOnClickListener {
             //callback.onCLickONBlockedContactSeeAllButton()
-            startActivity(IntentHelper.getBlockListScreen(requireActivity()))
+            IntentHelper.getBlockListScreen(requireActivity())?.let { it1 -> startActivity(it1) }
 
         }
         binding.buttonFindFriends.setOnClickListener {
-            startActivity(IntentHelper.getSearchScreen(requireContext()))
+            IntentHelper.getSearchScreen(requireContext())?.let { it1 -> startActivity(it1) }
         }
         clickLister()
         callForAlbum()
@@ -225,20 +225,20 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
                         }, prefManager?.access_token.toString()
                     )
 
-                    if (it.results.isEmpty()) {
+                    if (it?.results.isNullOrEmpty()) {
                         binding.layoutBlockList.visibility = View.GONE
                     } else {
                         binding.layoutBlockList.visibility = View.VISIBLE
                         binding.buttonSeeAllBlockList.visibility = View.VISIBLE
                         val firstTwoElements: List<User?>
                         blockedUserAdapter.list.clear()
-                        /*     if (it.results.size > 2) {
-                                 firstTwoElements = it.results.subList(0, 2)
+                        /*     if (it?.results?.size > 2) {
+                                 firstTwoElements = it?.results?.subList(0, 2)
                                  binding.buttonSeeAllBlockList.visibility = View.VISIBLE
                              } else {
-                                 firstTwoElements = it.results
+                                 firstTwoElements = it?.results
                              }*/
-                        blockedUserAdapter.submitList(it.results)
+                        it?.results?.let { it1 -> blockedUserAdapter.submitList(it1) }
                         binding.rvBlockList.adapter = blockedUserAdapter
                         blockedUserAdapter.notifyDataSetChanged()
 
@@ -273,13 +273,13 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
             it.let {
                 userData = it!!
                 setUpAboutUI()
-                if (it.results.profile_data[0].education.isNotEmpty()) {
+                if (!it?.results?.profileData()?.education.isNullOrEmpty()) {
                     binding.layout.rvEducation.visibility = View.VISIBLE
                 }
-                if (it.results.profile_data[0].profession.isNotEmpty()) {
+                if (!it?.results?.profileData()?.profession.isNullOrEmpty()) {
                     binding.layout.rvProfession.visibility = View.VISIBLE
                 }
-                if (!it.results.number.isNullOrEmpty()) {
+                if (!it?.results?.number.isNullOrEmpty()) {
                     isNumberVerify = true
                 }
             }
@@ -295,7 +295,7 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
                 getUserProfileData()
             })
         changeUsernameBottomSheet.arguments = Bundle().apply {
-            putString("etUsername", userData.results.user_name)
+            putString("etUsername", userData.results?.user_name)
         }
         binding.layout.etUsername.setOnClickListener {
             if (changeUsernameBottomSheet.isAdded) {
@@ -310,41 +310,41 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
         getAlbumPhotosById("profile_img")
         getAlbumPhotosById("cover_img")
 
-        binding.layout.etName.setText(userData.results.first_name)
-        binding.layout.etLastName.setText(userData.results.last_name)
-        binding.layout.etUsername.setText(userData.results.user_name)
-        binding.layout.bio.setText(userData.results.about)
-        binding.layout.filledTextEmail.text = userData.results.email
-        verifyPhoneNumber = userData.results.number.toString()
-        binding.layout.etNumber.setText(userData.results.number)
-        binding.layout.etHowTown.setText(userData.results.profile_data[0].home_town)
-        binding.layout.etCurrentCity.setText(userData.results.city)
+        binding.layout.etName.setText(userData.results?.first_name)
+        binding.layout.etLastName.setText(userData.results?.last_name)
+        binding.layout.etUsername.setText(userData.results?.user_name)
+        binding.layout.bio.setText(userData.results?.about)
+        binding.layout.filledTextEmail.text = userData.results?.email
+        verifyPhoneNumber = userData.results?.number.toString()
+        binding.layout.etNumber.setText(userData.results?.number)
+        binding.layout.etHowTown.setText(userData.results?.profileData()?.home_town)
+        binding.layout.etCurrentCity.setText(userData.results?.city)
 
         ImageLoaderHelperGlide.setGlide(
             requireContext(),
             binding.ivBackground,
-            userData.results.cover_img1,
+            userData.results?.cover_img1,
             R.drawable.user_placeholder
         )
         ImageLoaderHelperGlide.setGlide(
             requireContext(),
             binding.ivUserThumb,
-            userData.results.profile_img1,
+            userData.results?.profile_img1,
             R.drawable.user_placeholder
         )
 
-        binding.etWebsite.setText(userData.results.company)
+        binding.etWebsite.setText(userData.results?.company)
         educationAdapter = EducationListAdapter(networkViewModel, requireContext(), this)
 
         binding.layout.rvEducation.adapter = educationAdapter
         binding.layout.rvEducation.layoutManager = LinearLayoutManager(requireContext())
-        educationAdapter.submitList(userData.results.profile_data[0].education)
+        userData.results?.profileData()?.education?.let { educationAdapter.submitList(it) }
         educationAdapter.notifyDataSetChanged()
         professionListAdapter = ProfessionListAdapter(networkViewModel, requireContext(), this)
         binding.layout.rvProfession.adapter = professionListAdapter
         binding.layout.rvProfession.layoutManager = LinearLayoutManager(requireActivity())
 
-        professionListAdapter.submitList(userData.results.profile_data[0].profession)
+        userData.results?.profileData()?.profession?.let { professionListAdapter.submitList(it) }
 
         professionListAdapter.notifyDataSetChanged()
         binding.rvFeeds.layoutManager = LinearLayoutManager(requireContext())
@@ -364,12 +364,12 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
         }
 
         setUpAboutUI("Photos")
-        fetchDOB(userData.results.dob.toString())
+        fetchDOB(userData.results?.dob.toString())
     }
 
     fun fetchDOB(date: String) {
-        GANDER = userData.results.gender.toString()
-        when (userData.results.gender) {
+        GANDER = userData.results?.gender.toString()
+        when (userData.results?.gender) {
             "Male" -> {
                 binding.layout.rdmale.isChecked = true
             }
@@ -382,7 +382,7 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
         }
 
         try {
-            merriage = userData.results.profile_data[0].marital_status
+            merriage = userData.results?.profileData()?.marital_status.toString()
             binding.layout.tvmarriage.setSpinner(
                 listFromResources = R.array.marrage,
                 setSelection = resources.getStringArray(R.array.marrage)
@@ -440,15 +440,15 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
         networkViewModel.photoLiveData.observe(requireActivity()) {
             it.let {
 
-                if (it!!.results.isNotEmpty()) {
+                if (!it?.results.isNullOrEmpty()) {
                     if (id == "cover_img") {
                         coverPictureAdapter =
                             ProfileAlbumAdapter(networkViewModel, requireActivity(), id)
                         binding.rvCoverPicture.layoutManager =
                             GridLayoutManager(requireActivity(), 5)
-                        if (!userData.results.cover_img.isNullOrEmpty()) {
+                        if (!userData.results?.cover_img.isNullOrEmpty()) {
                             binding.rvCoverPicture.adapter = coverPictureAdapter
-                            coverPictureAdapter.submitList(it.results)
+                            it?.results?.let { coverPictureAdapter.submitList(it) }
                             binding.layoutCoverImages.visibility = View.VISIBLE
                         } else {
                             binding.layoutCoverImages.visibility = View.GONE
@@ -459,9 +459,9 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
                             ProfileAlbumAdapter(networkViewModel, requireActivity(), id)
                         binding.rvProfilePicture.layoutManager =
                             GridLayoutManager(requireActivity(), 5)
-                        if (userData.results.profile_img.isNotEmpty()) {
+                        if (!userData.results?.profile_img.isNullOrEmpty()) {
                             binding.rvProfilePicture.adapter = profilePictureAdapter
-                            profilePictureAdapter.submitList(it.results)
+                            it?.results?.let { profilePictureAdapter.submitList(it) }
                             binding.layoutProfileImages.visibility = View.VISIBLE
                         } else {
                             binding.layoutProfileImages.visibility = View.GONE
@@ -477,11 +477,11 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
         if (tabType == "Photos") {
             albumImageAdapter = ProfileAlbumImageAdapter(networkViewModel, requireActivity(), "")
             binding.albumLayout.rvPhotoAlbumData.adapter = albumImageAdapter
-            albumImageAdapter.submitList(userData.results.photos)
+            userData.results?.photos?.let { albumImageAdapter.submitList(it) }
         } else if (tabType == "Albums") {
           /*  albumAdapter = SelfProfileAlbumAdapter(networkViewModel, requireActivity(), "")
             binding.albumLayout.rvPhotoAlbumData.adapter = albumAdapter
-            albumAdapter.submitList(userData.results.albums)*/
+            albumAdapter.submitList(userData.results?.albums)*/
 
             startActivity(
                 IntentHelper.getPhotoGalleryAlbumScreen(requireContext())!!
@@ -571,7 +571,7 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
                 object : DialogAddEditEducation.Callbackk {
                     @SuppressLint("NotifyDataSetChanged")
                     override fun onSuccessfullyEditedEducation(education: Education) {
-                        userData.results.profile_data[0].education.add(education)
+                        userData.results?.profileData()?.education?.add(education)
                         (binding.layout.rvEducation.adapter as EducationListAdapter).list.add(education)
                         (binding.layout.rvEducation.adapter as EducationListAdapter).notifyDataSetChanged()
                     }
@@ -582,12 +582,25 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
         binding.layout.tvaddMoreProfession.setOnClickListener {
             val dialogAddEditProfession = DialogAddEditProfession(
                 requireContext(),
-                Profession("", "", 0, "", "", "", "", "", "", "", "", ""),
+                Profession(
+                    "",
+                    "",
+                    0,
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    ""
+                ),
                 networkViewModel,
                 false,
                 object : DialogAddEditProfession.Callbackk {
                     override fun onSuccessfullyEditedProfession(profession: Profession) {
-                        userData.results.profile_data[0].profession.add(profession)
+                        userData.results?.profileData()?.profession?.add(profession)
                         (binding.layout.rvProfession.adapter as ProfessionListAdapter).list.add(
                             profession
                         )
@@ -602,7 +615,7 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
                 if (binding.layout.etNumber.text!!.length >= 8) {
                     val hashMap = HashMap<String, String>()
                     hashMap["number"] = binding.layout.etNumber.text.toString()
-                    networkViewModel.numberVerify(hashMap)
+                    networkViewModel.numberVerify(prefManager?.access_token.toString(),hashMap)
                     networkViewModel.numberVerifyData.observe(requireActivity()) {
                         verifyPhoneNumber = binding.layout.etNumber.text.toString()
                         it.let {
@@ -644,7 +657,6 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
             home_town = getRequestBody(binding.layout.etHowTown.text.toString()),
             city = getRequestBody(binding.layout.etCurrentCity.text.toString()),
             url = getRequestBody(binding.etWebsite.text.toString()),
-            company = getRequestBody(prefManager?.country.toString()),
             gender = getRequestBody(GANDER)
         )
 
@@ -779,6 +791,14 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
 
     }
 
+    override fun showCommentOverlay(feed: ResultFuntime, position: Int) {
+
+    }
+
+    override fun hideCommentOverlay(feed: ResultFuntime, position: Int) {
+
+    }
+
     override fun onSuccessFullyAddNumber() {
         //getUserProfileData()
     }
@@ -791,7 +811,7 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
             true,
             object : DialogAddEditEducation.Callbackk {
                 override fun onSuccessfullyEditedEducation(education: Education) {
-                    userData.results.profile_data[0].education[0] = education
+                    userData.results?.profileData()?.education?.set(0, education)
                     networkViewModel.profileLiveData.postValue(userData)
                     educationAdapter.notifyDataSetChanged()
                 }
@@ -808,7 +828,7 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
             true,
             object : DialogAddEditProfession.Callbackk {
                 override fun onSuccessfullyEditedProfession(profession: Profession) {
-                    userData.results.profile_data[0].profession[0] = profession
+                    userData.results?.profileData()?.profession?.set(0, profession)
                     networkViewModel.profileLiveData.postValue(userData)
                     professionListAdapter.notifyDataSetChanged()
                 }

@@ -13,9 +13,11 @@ import com.stalmate.user.R
 import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.databinding.ActivityOtherUserProfileBinding
 import com.stalmate.user.model.AboutProfileLine
+import com.stalmate.user.model.ModelFriend
 
 import com.stalmate.user.model.ModelUser
 import com.stalmate.user.model.User
+import com.stalmate.user.networking.ApiInterface
 import com.stalmate.user.utilities.Constants
 import com.stalmate.user.utilities.ImageLoaderHelperGlide
 import com.stalmate.user.utilities.ValidationHelper
@@ -29,7 +31,7 @@ class ActivityOtherUserProfile : BaseActivity(),
     lateinit var binding: ActivityOtherUserProfileBinding
     lateinit var friendAdapter: ProfileFriendAdapter
     var userId = ""
-    lateinit var userData: ModelUser
+    lateinit var userData: User
     override fun onClick(viewId: Int, view: View?) {
     }
 
@@ -63,16 +65,24 @@ class ActivityOtherUserProfile : BaseActivity(),
         hashmap.put("search", "")
         hashmap.put("page", "1")
         hashmap.put("limit", "6")
-        networkViewModel.getFriendList(prefManager?.access_token.toString(), hashmap)
+        networkViewModel.getFriendListBody(
+            prefManager?.access_token.toString(),
+            map = ApiInterface.UsersListResponse(
+                limit = "6",
+                page = "1",
+                type = Constants.NEW_Type_Friend_List,
+                user_id = userId
+            )
+        )
         networkViewModel.friendLiveData.observe(this, Observer {
-            it.let {
-                friendAdapter.submitList(it!!.results)
+            it?.results?.let {
+                friendAdapter.submitList(it)
             }
         })
 
 
         binding.buttonChat.setOnClickListener {
-            startActivity(IntentHelper.getChatScreen(this)!!.putExtra("id", userData.results.id))
+            startActivity(IntentHelper.getChatScreen(this)!!.putExtra("id", userData?.id))
         }
 
         setupData()
@@ -87,13 +97,15 @@ class ActivityOtherUserProfile : BaseActivity(),
 
         binding.layout.layoutFollowers.setOnClickListener {
             startActivity(
-                IntentHelper.getFollowersFollowingScreen(this)!!.putExtra("id", userData.results.id)
+                IntentHelper.getFollowersFollowingScreen(this)!!
+                    .putExtra("id", userData?.id)
                     .putExtra("type", "follower")
             )
         }
         binding.layout.layoutFollowing.setOnClickListener {
             startActivity(
-                IntentHelper.getFollowersFollowingScreen(this)!!.putExtra("id", userData.results.id)
+                IntentHelper.getFollowersFollowingScreen(this)!!
+                    .putExtra("id", userData?.id)
                     .putExtra("type", "following")
             )
         }
@@ -168,12 +180,18 @@ class ActivityOtherUserProfile : BaseActivity(),
         networkViewModel.blockData.observe(this, Observer {
             dismissLoader()
             it.let {
-                if ((userData.results.isBlocked == "0") || (userData.results.isBlocked == "false")) {
-                    userData.results.isBlocked = "1"
+                if ((userData?.isBlocked == "0") || (userData?.isBlocked == "false")) {
+                    userData?.isBlocked = "1"
                 } else {
-                    userData.results.isBlocked = "0"
+                    userData?.isBlocked = "0"
                 }
-                networkViewModel.otherUserProfileLiveData.postValue(userData)
+                networkViewModel.otherUserProfileLiveData.postValue(
+                    ModelFriend(
+                        message = "",
+                        results = listOf(userData),
+                        status = false
+                    )
+                )
             }
         })
     }
@@ -201,18 +219,18 @@ class ActivityOtherUserProfile : BaseActivity(),
                 it.let {
 
 
-                    if (userData.results.isFriend == 1) {
-                        userData.results.isFriend = 0
-                        userData.results.isFollowed = 0
+                    if (userData?.isFriend == 1) {
+                        userData?.isFriend = 0
+                        userData?.isFollowed = 0
                     } else {
 
-                        if (userData.results.friendRequestsent == 0) {
-                            userData.results.isFollowed = 1
-                            userData.results.friendRequestsent = 1
+                        if (userData?.friendRequestsent == 0) {
+                            userData?.isFollowed = 1
+                            userData?.friendRequestsent = 1
                         } else {
-                            userData.results.friendRequestsent = 0
+                            userData?.friendRequestsent = 0
                         }
-                        Log.d("alkshdasldaupdating", userData.results.friendRequestsent.toString())
+                        Log.d("alkshdasldaupdating", userData?.friendRequestsent.toString())
                     }
 
 
@@ -232,12 +250,14 @@ class ActivityOtherUserProfile : BaseActivity(),
             networkViewModel.sendFollowRequest("", hashMap)
             networkViewModel.followRequestLiveData.observe(this, Observer {
                 it.let {
-                    if (networkViewModel.otherUserProfileLiveData.value!!.results.isFollowed == 1) {
-                        userData.results.isFollowed = 0
-                        userData.results.follower_count = userData.results.follower_count - 1
+                    if (networkViewModel.otherUserProfileLiveData.value?.results?.get(0)?.isFollowed == 1) {
+                        userData?.isFollowed = 0
+                        userData?.follower_count =
+                            (userData?.follower_count ?: 1) - 1
                     } else {
-                        userData.results.isFollowed = 1
-                        userData.results.follower_count = userData.results.follower_count + 1
+                        userData?.isFollowed = 1
+                        userData?.follower_count =
+                            (userData?.follower_count ?: 1) + 1
                     }
                     notifyData()
                 }
@@ -248,7 +268,13 @@ class ActivityOtherUserProfile : BaseActivity(),
 
 
     fun notifyData() {
-        networkViewModel.otherUserProfileLiveData.postValue(userData)
+        networkViewModel.otherUserProfileLiveData.postValue(
+            ModelFriend(
+                message = "",
+                results = listOf(userData),
+                status = false
+            )
+        )
     }
 
 
@@ -258,83 +284,84 @@ class ActivityOtherUserProfile : BaseActivity(),
             user_id = userId
         )
         networkViewModel.otherUserProfileLiveData.observe(this, Observer {
-            it.let {
-                userData = it!!
+            it?.results.let {
+                if (!it.isNullOrEmpty())
+                    userData = it.get(0)
                 setUpAboutUI()
             }
         })
     }
 
     fun setUpAboutUI() {
-        binding.tvUserName.text = userData.results.first_name + " " + userData.results.last_name
-        binding.layout.tvFollowerCount.text = userData.results.follower_count.toString()
-        binding.layout.tvFollowingCount.text = userData.results.following_count.toString()
-        binding.tvUserAbout.text = userData.results.about
-        binding.layout.tvFriendCount.text = userData.results.friends_count.toString()
+        binding.tvUserName.text = userData?.first_name + " " + userData?.last_name
+        binding.layout.tvFollowerCount.text = userData?.follower_count.toString()
+        binding.layout.tvFollowingCount.text = userData?.following_count.toString()
+        binding.tvUserAbout.text = userData?.about
+        binding.layout.tvFriendCount.text = userData?.friends_count.toString()
         ImageLoaderHelperGlide.setGlide(
             this,
             binding.ivBackground,
-            userData.results.cover_img1,
+            userData?.cover_img1,
             R.drawable.user_placeholder
         )
         ImageLoaderHelperGlide.setGlide(
             this,
             binding.ivUserThumb,
-            userData.results.profile_img1,
+            userData?.profile_img1,
             R.drawable.user_placeholder
         )
         var aboutArrayList = ArrayList<AboutProfileLine>()
-        if (userData.results.profile_data[0].profession.isNotEmpty()) {
+        if (!userData?.profileData()?.profession.isNullOrEmpty()) {
             aboutArrayList.add(
                 AboutProfileLine(
                     R.drawable.ic_profile_designation_icon,
-                    userData.results.profile_data[0].profession[0].designation,
-                    userData.results.profile_data[0].profession[0].company_name,
+                    userData?.profileData()?.profession?.get(0)?.designation ?: "",
+                    userData?.profileData()?.profession?.get(0)?.company_name ?: "",
                     "at"
                 )
             )
         }
 
-        if (userData.results.profile_data[0].education.isNotEmpty()) {
+        if (!userData?.profileData()?.education.isNullOrEmpty()) {
             aboutArrayList.add(
                 AboutProfileLine(
                     R.drawable.ic_profile_graduation,
                     "Student",
-                    userData.results.profile_data[0].education[0].sehool,
+                    userData?.profileData()?.education?.get(0)?.sehool ?: "",
                     "at"
                 )
             )
         }
 
-        if (userData.results.profile_data[0].home_town.isNotEmpty()) {
+        if (!userData?.profileData()?.home_town.isNullOrEmpty()) {
 
             aboutArrayList.add(
                 AboutProfileLine(
                     R.drawable.ic_profile_location,
                     "Lives at",
-                    userData.results.profile_data[0].home_town,
+                    userData?.profileData()?.home_town.toString(),
                     "at"
                 )
             )
         }
 
-        if (userData.results.profile_data[0].location.isNotEmpty()) {
+        if (!userData?.profileData()?.location.isNullOrEmpty()) {
             aboutArrayList.add(
                 AboutProfileLine(
                     R.drawable.ic_profile_location,
                     "From",
-                    userData.results.profile_data[0].location,
+                    userData?.profileData()?.location.toString(),
                     ""
                 )
             )
         }
 
-        if (userData.results.profile_data[0].marital_status.isNotEmpty()) {
+        if (!userData?.profileData()?.marital_status.isNullOrEmpty()) {
             aboutArrayList.add(
                 AboutProfileLine(
                     R.drawable.ic_profile_heart_icon,
                     "",
-                    userData.results.profile_data[0].marital_status,
+                    userData?.profileData()?.marital_status.toString(),
                     ""
                 )
             )
@@ -345,25 +372,25 @@ class ActivityOtherUserProfile : BaseActivity(),
         profileAboutAdapter.submitList(aboutArrayList)
         binding.layout.rvAbout.adapter = profileAboutAdapter
 
-        if (!ValidationHelper.isNull(userData.results.company)) {
-            binding.layout.tvWebsite.text = userData.results.company
+        if (!ValidationHelper.isNull(userData?.company)) {
+            binding.layout.tvWebsite.text = userData?.company
             binding.layout.layoutWebsite.visibility = View.VISIBLE
         }
 
 
-        if (userData.results.isFollowed == 1) {
+        if (userData?.isFollowed == 1) {
             binding.tvFollowStatus.text = "Following"
         } else {
             binding.tvFollowStatus.text = "Follow"
         }
-        if ((userData.results.isBlocked == "1") || (userData.results.isBlocked == "true")) {
+        if ((userData?.isBlocked == "1") || (userData?.isBlocked == "true")) {
             binding.tvBlockStatus.text = "Blocked"
         } else {
             binding.tvBlockStatus.text = "Block"
         }
 
 
-        if (userData.results.isFriend == 1) {
+        if (userData?.isFriend == 1) {
             binding.layoutButtonsAcceptReject.visibility = View.GONE
             binding.layoutTopControlls.visibility = View.VISIBLE
             binding.layoutButtonsFriends.visibility = View.VISIBLE
@@ -372,14 +399,14 @@ class ActivityOtherUserProfile : BaseActivity(),
             binding.buttonFriend.text = "Unfriend"
 
         } else {//not a friend
-            if (userData.results.hasFriendRequest == 1) {
+            if (userData?.hasFriendRequest == 1) {
                 binding.layoutButtonsFriends.visibility = View.GONE
                 binding.layoutButtonsAcceptReject.visibility = View.VISIBLE
                 binding.layoutTopControlls.visibility = View.VISIBLE
             } else {
-                Log.d("alkshdasldaview", userData.results.friendRequestsent.toString())
+                Log.d("alkshdasldaview", userData?.friendRequestsent.toString())
 
-                if (userData.results.friendRequestsent == 1) {
+                if (userData?.friendRequestsent == 1) {
                     binding.layoutButtonsFriends.visibility = View.VISIBLE
                     binding.buttonFriend.text = "Friend Request Sent"
                     binding.layoutButtonsAcceptReject.visibility = View.GONE

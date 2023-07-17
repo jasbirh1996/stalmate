@@ -52,7 +52,7 @@ class FragmentAllFollowersFollowingList(var type: String, var subtype: String) :
         networkViewModel.getFriendList(prefManager?.access_token.toString(), hashmap)
         networkViewModel.friendLiveData.observe(viewLifecycleOwner, Observer {
             it.let {
-                friendAdapter.submitList(it!!.results)
+                it?.results?.let { it1 -> friendAdapter.submitList(it1) }
             }
         })
     }

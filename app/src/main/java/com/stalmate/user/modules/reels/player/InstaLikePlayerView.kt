@@ -8,12 +8,12 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.*
 import android.widget.FrameLayout
+import android.widget.ProgressBar
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.C.*
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.ui.AdViewProvider
-import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
 import com.google.android.exoplayer2.upstream.DefaultAllocator
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import com.google.android.exoplayer2.upstream.cache.CacheDataSource
@@ -28,8 +28,8 @@ class InstaLikePlayerView @JvmOverloads constructor(
     context!!, attrs, defStyleAttr
 ), AdViewProvider {
     var videoSurfaceView: View?
+    var progressBar: ProgressBar? = null
     private var player: ExoPlayer? = null
-    private var textureViewRotation = 0
     private var isTouching = false
 
     /**
@@ -52,7 +52,7 @@ class InstaLikePlayerView @JvmOverloads constructor(
      * @param player The [Player] to use, or `null` to detach the current player. Only
      * players which are accessed on the main thread are supported (`player.getApplicationLooper() == Looper.getMainLooper()`).
      */
-    fun setPlayer(player: SimpleExoPlayer?) {
+    private fun setPlayer(player: SimpleExoPlayer?) {
         Assertions.checkState(Looper.myLooper() == Looper.getMainLooper())
         Assertions.checkArgument(
             player == null || player.applicationLooper == Looper.getMainLooper()
@@ -63,26 +63,19 @@ class InstaLikePlayerView @JvmOverloads constructor(
         val oldPlayer = this.player
         if (oldPlayer != null) {
             val oldVideoComponent = oldPlayer.videoComponent
-            if (oldVideoComponent != null) {
-                oldVideoComponent.clearVideoSurfaceView(videoSurfaceView as SurfaceView?)
-            }
+            oldVideoComponent?.clearVideoSurfaceView(videoSurfaceView as SurfaceView?)
         }
         this.player = player
         if (player != null) {
-            val newVideoComponent = player.videoComponent
-            if (newVideoComponent != null) {
-                newVideoComponent.setVideoSurfaceView(videoSurfaceView as SurfaceView?)
-            }
+            player.videoComponent?.setVideoSurfaceView(videoSurfaceView as SurfaceView?)
         } else {
         }
     }
 
     override fun setVisibility(visibility: Int) {
         super.setVisibility(visibility)
-
         // Work around https://github.com/google/ExoPlayer/issues/3160.
-        videoSurfaceView?.setVisibility(visibility)
-
+        videoSurfaceView?.setVisibility(View.VISIBLE)
     }
 
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
@@ -142,7 +135,6 @@ class InstaLikePlayerView @JvmOverloads constructor(
     init {
         if (isInEditMode) {
             videoSurfaceView = null
-
         } else {
             val playerLayoutId = R.layout.exo_simple_player_view
             LayoutInflater.from(context).inflate(playerLayoutId, this)
@@ -150,6 +142,7 @@ class InstaLikePlayerView @JvmOverloads constructor(
 
             // Content frame.
             videoSurfaceView = findViewById(R.id.surface_view)
+            progressBar = findViewById(R.id.progressBarBuffering)
             init()
         }
     }
@@ -158,66 +151,55 @@ class InstaLikePlayerView @JvmOverloads constructor(
     private var videoUri: Uri? = null;
 
 
-
-
-
-
     fun init() {
         reset()
 
         /*Setup player + Adding Cache Directory*/
 
         val loadControl: LoadControl = DefaultLoadControl.Builder()
-            .setAllocator( DefaultAllocator(true, 16))
-        .setBufferDurationsMs(VideoPlayerConfig.MIN_BUFFER_DURATION,
-            VideoPlayerConfig.MAX_BUFFER_DURATION,
-            VideoPlayerConfig.MIN_PLAYBACK_START_BUFFER,
-            VideoPlayerConfig.MIN_PLAYBACK_RESUME_BUFFER)
+            .setAllocator(DefaultAllocator(true, 16))
+            .setBufferDurationsMs(
+                VideoPlayerConfig.MIN_BUFFER_DURATION,
+                VideoPlayerConfig.MAX_BUFFER_DURATION,
+                VideoPlayerConfig.MIN_PLAYBACK_START_BUFFER,
+                VideoPlayerConfig.MIN_PLAYBACK_RESUME_BUFFER
+            )
             .setTargetBufferBytes(-1)
             .setPrioritizeTimeOverSizeThresholds(true)
             .build()
 
         val trackSelector = DefaultTrackSelector(context)
 
-        val simpleExoPlayer = SimpleExoPlayer.Builder(context).setTrackSelector(trackSelector).setLoadControl(loadControl).setVideoScalingMode(
-            VIDEO_SCALING_MODE_SCALE_TO_FIT)
+        val simpleExoPlayer = SimpleExoPlayer.Builder(context).setTrackSelector(trackSelector)
+            .setLoadControl(loadControl).setVideoScalingMode(
+            VIDEO_SCALING_MODE_SCALE_TO_FIT
+        )
             .build()
-  /*      simpleExoPlayer.videoScalingMode= VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING*/
+        /*      simpleExoPlayer.videoScalingMode= VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING*/
         simpleExoPlayer.repeatMode = Player.REPEAT_MODE_ONE;
         simpleExoPlayer.addListener(object : Player.Listener {
-
-
             override fun onPlaybackStateChanged(playbackState: Int) {
                 super.onPlaybackStateChanged(playbackState)
-                Log.d("askdasd",playbackState.toString())
-                if (playbackState == Player.STATE_READY) {
-
-                  //  simpleExoPlayer.seekTo(lastPos!!)
-                    alpha = 1f
-
+                if (playbackState == ExoPlayer.STATE_BUFFERING) {
+                    progressBar?.setVisibility(View.VISIBLE);
+                } else {
+                    progressBar?.setVisibility(View.INVISIBLE);
+                    if (playbackState == Player.STATE_READY) {
+                        //  simpleExoPlayer.seekTo(lastPos!!)
+                        alpha = 1f
+                    }
                 }
-
             }
-
-
-
         })
-
         simpleExoPlayer.playWhenReady = false
         setPlayer(simpleExoPlayer);
 
     }
 
 
-
-
-
-
-
-
-
 /*
-    *//**
+    */
+    /**
      * This will resuse the player and will play new URI we have provided
      *//*
     fun startPlaying() {
@@ -267,20 +249,18 @@ class InstaLikePlayerView @JvmOverloads constructor(
 
         try {
 
-    /*        val dataSourceFactory: DataSource.Factory =
-                DefaultDataSourceFactory(
-                    context, context.getString(R.string.app_name)
-                )
-            Log.d("alskdasd","aosdasd")
-            val videoSource: MediaSource = ProgressiveMediaSource.Factory(dataSourceFactory)
-                .createMediaSource(MediaItem.fromUri(videoUri!!))
-            //  exoplayer!!.setThrowsWhenUsingWrongThread(false)
-         //   player!!.addMediaSource(videoSource)
-            Log.d("alskdasd","aosdasd")
+            /*        val dataSourceFactory: DataSource.Factory =
+                        DefaultDataSourceFactory(
+                            context, context.getString(R.string.app_name)
+                        )
+                    Log.d("alskdasd","aosdasd")
+                    val videoSource: MediaSource = ProgressiveMediaSource.Factory(dataSourceFactory)
+                        .createMediaSource(MediaItem.fromUri(videoUri!!))
+                    //  exoplayer!!.setThrowsWhenUsingWrongThread(false)
+                 //   player!!.addMediaSource(videoSource)
+                    Log.d("alskdasd","aosdasd")
 
-*/
-
-
+        */
 
 
             val mediaSource = ProgressiveMediaSource.Factory(
@@ -302,7 +282,7 @@ class InstaLikePlayerView @JvmOverloads constructor(
 
 
 
-            player!!.prepare(mediaSource)
+            player?.prepare(mediaSource)
             /*   val audioAttributes = AudioAttributes.Builder()
                        .setUsage(C.USAGE_MEDIA)
                        .setContentType(C.AUDIO_CONTENT_TYPE_MOVIE)
@@ -313,18 +293,12 @@ class InstaLikePlayerView @JvmOverloads constructor(
         }
 
         if (player != null) {
-            Log.d("jkasdas","aklsdlaskjdlas")
+            Log.d("jkasdas", "aklsdlaskjdlas")
             player?.seekTo(lastPos!!)
             player?.playWhenReady = true
-          //  player!!.play()
+            //  player!!.play()
         }
-
-
-
-
     }
-
-
 
 
     /**
@@ -341,13 +315,12 @@ class InstaLikePlayerView @JvmOverloads constructor(
         lastPos = getPlayer()?.currentPosition
         reset()
         getPlayer()?.stop(true)
-
     }
 
     fun reset() {
         // This will prevent surface view to show black screen,
         // and we will make it visible when it will be loaded
-        alpha = 0f
+        alpha = 1f
     }
 
     fun setVideoUri(uri: Uri?) {

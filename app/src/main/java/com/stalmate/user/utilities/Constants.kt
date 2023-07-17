@@ -1,6 +1,9 @@
 package com.stalmate.user.utilities
 
 object Constants {
+    const val NEW_Type_Friend_List = 1
+    const val NEW_Type_Follower = 2
+    const val NEW_Type_Following = 3
 
     const val url_category_list = "/auth_api/category_list"
     const val url_language_list = "/setting_api/language_list"//"/auth_api/language_list"
@@ -31,13 +34,12 @@ object Constants {
     const val URL_SAVE_UNSAVE_FUNTIME = "/funtime_api/savefuntime"
 
 
-
     const val URL_GET_SAVED_FUNTIME_MUSIC = "/funtime_api/get_save_sound_api"
     const val URL_GET_SAVED_FUNTIME_REELS = "/funtime_api/get_savefuntime_list"
     const val URL_FUNTIME_LIST_BY_AUDIO = "/funtime_api/get_song_funtime_list"
     const val URL_SAVE_UNSAVE_MUISIC = "/funtime_api/savesound"
 
-    const val url_friend_list = "/friend_api/get_friend_list"
+    const val url_friend_list = "/friend_api/get_user_list"//"/friend_api/get_friend_list"
     const val URL_FUNTIME_UPDATE = "/funtime_api/funtime_update"
 
 

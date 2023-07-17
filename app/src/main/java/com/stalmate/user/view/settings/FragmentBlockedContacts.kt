@@ -73,10 +73,10 @@ class FragmentBlockedContacts : BaseFragment() {
                     binding.rvList.layoutManager = LinearLayoutManager(requireContext())
                     binding.rvList.adapter = blockedUserAdapter
 
-                    if (it.results.isEmpty()) {
+                    if (it?.results.isNullOrEmpty()) {
                         binding.tvNoData.visibility = View.VISIBLE
                     }
-                    blockedUserAdapter.submitList(it.results as ArrayList<User>)
+                    blockedUserAdapter.submitList(it?.results as ArrayList<User>)
 
                 }
             }

@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.stalmate.user.intentHelper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.databinding.ItemProfileCoverBinding
-import com.stalmate.user.model.Photo
+import com.stalmate.user.model.Albums
 
 import com.stalmate.user.utilities.ImageLoaderHelperGlide
 import com.stalmate.user.viewmodel.AppViewModel
@@ -17,11 +17,11 @@ import com.stalmate.user.viewmodel.AppViewModel
 class ProfileAlbumAdapter(val viewModel: AppViewModel, val context: Context,var type:String)
     : RecyclerView.Adapter<ProfileAlbumAdapter.AlbumViewHolder>() {
 
-    var list = ArrayList<Photo>()
+    var list = ArrayList<Albums>()
 
 
     inner class AlbumViewHolder(var binding : ItemProfileCoverBinding): RecyclerView.ViewHolder(binding.root) {
-        fun bind(response : Photo){
+        fun bind(response : Albums){
             ImageLoaderHelperGlide.setGlideCorner(context,binding.ivImage,response.files,R.drawable.user_placeholder)
             binding.ivImage.setOnClickListener {
                 Log.d("alksjdasd",type)
@@ -30,7 +30,7 @@ class ProfileAlbumAdapter(val viewModel: AppViewModel, val context: Context,var 
         }
     }
 
-    fun submitList(albumList: List<Photo>) {
+    fun submitList(albumList: List<Albums>) {
         list.clear()
         list.addAll(albumList)
         notifyDataSetChanged()

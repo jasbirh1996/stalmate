@@ -178,11 +178,11 @@ class SearchedUserAdapter(
             R.drawable.user_placeholder
         )
         binding.tvUserName.text = friend?.first_name + " " + friend?.last_name
-        if (friend?.profile_data?.get(0)?.profession?.isNotEmpty() == true) {
-            binding.tvLineOne.text = friend?.profile_data[0]?.profession?.get(0)?.designation
+        if (friend?.profileData()?.profession?.isNotEmpty() == true) {
+            binding.tvLineOne.text = friend?.profileData()?.profession?.get(0)?.designation
             binding.tvLineOne.visibility = View.VISIBLE
-        } else if (friend?.profile_data?.get(0)?.education?.isNotEmpty() == true) {
-            binding.tvLineOne.text = friend?.profile_data[0]?.education?.get(0)?.sehool
+        } else if (friend?.profileData()?.education?.isNotEmpty() == true) {
+            binding.tvLineOne.text = friend?.profileData()?.education?.get(0)?.sehool
             binding.tvLineOne.visibility = View.VISIBLE
         }
 
@@ -191,8 +191,8 @@ class SearchedUserAdapter(
             binding.tvMutualFirnds.visibility = View.VISIBLE
         }*/
 
-        if (!ValidationHelper.isNull(friend?.profile_data?.get(0)?.home_town)) {
-            binding.tvLineTwo.text = friend?.profile_data?.get(0)?.home_town
+        if (!ValidationHelper.isNull(friend?.profileData()?.home_town)) {
+            binding.tvLineTwo.text = friend?.profileData()?.home_town
             binding.tvLineTwo.visibility = View.VISIBLE
 
         }

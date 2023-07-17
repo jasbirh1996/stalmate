@@ -12,12 +12,11 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-       android:tint="#656565"
         android:scaleType="centerCrop"
         android:layout_marginTop="@dimen/_10sdp"
         android:layout_marginBottom="@dimen/_10sdp"
         android:layout_marginStart="@dimen/_10sdp"
-       />
+        app:tint="#656565" />
 
 
     <TextView

@@ -55,11 +55,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
-            android:alpha=".4"
             app:layout_constraintBottom_toBottomOf="@+id/ivBack"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/ivBack"
-            app:srcCompat="@drawable/logo_funtime" />
+            app:srcCompat="@drawable/android_logo_white" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

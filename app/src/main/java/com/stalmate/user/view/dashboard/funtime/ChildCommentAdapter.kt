@@ -170,14 +170,14 @@ class ChildCommentAdapter(
                         */
 /*      viewModel.addComment(
                               Comment(
-                                  it.results._id,
+                                  it?.results?._id,
                                   Calendar.getInstance(Locale.ROOT).toSimpleDate(),
                                   "test",
                                   data,
                                   first_name = PrefManager.getInstance(requireContext())!!.userDetail.results[0].first_name,
                                   last_name = PrefManager.getInstance(requireContext())!!.userDetail.results[0].last_name,
-                                  child_count = it.results.child_count,
-                                  profile_img = it.results.profile_img
+                                  child_count = it?.results?.child_count,
+                                  profile_img = it?.results?.profile_img
                               )
                           )*//*
 
@@ -205,15 +205,15 @@ class ChildCommentAdapter(
                     */
 /*    viewModel.addComment(
                             Comment(
-                                it.results._id,
+                                it?.results?._id,
                                 Calendar.getInstance(Locale.ROOT).toSimpleDate(),
                                 "test",
                                 data,
-                                parentId = it.results.parentId ?: it.results._id,
+                                parentId = it?.results?.parentId ?: it?.results?._id,
                                 first_name = PrefManager.getInstance(requireContext())!!.userDetail.results[0].first_name,
                                 last_name = PrefManager.getInstance(requireContext())!!.userDetail.results[0].last_name,
-                                child_count = it.results.child_count,
-                                profile_img = it.results.profile_img
+                                child_count = it?.results?.child_count,
+                                profile_img = it?.results?.profile_img
                             )
                         )*//*
 

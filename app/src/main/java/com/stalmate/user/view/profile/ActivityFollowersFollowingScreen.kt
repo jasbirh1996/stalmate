@@ -20,33 +20,25 @@ class ActivityFollowersFollowingScreen : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_followers_following_screen)
-
-
-
-        if (intent.getSerializableExtra("id") != null) {
-            userId = intent.getSerializableExtra("id").toString()
+        if (intent.getStringExtra("id") != null) {
+            userId = intent.getStringExtra("id").toString()
         }
-
-
-
-
-        var list = ArrayList<Fragment>()
-
+        val list = ArrayList<Fragment>()
         list.add(
             FragmentFriendList(
-                Constants.TYPE_ALL_FOLLOWERS_FOLLOWING,
-                Constants.TYPE_USER_TYPE_FOLLOWERS,
-                userId
+                type = Constants.TYPE_ALL_FOLLOWERS_FOLLOWING,
+                subtype = Constants.TYPE_USER_TYPE_FOLLOWERS,
+                userId = userId
             )
         )
         list.add(
             FragmentFriendList(
-                Constants.TYPE_ALL_FOLLOWERS_FOLLOWING,
-                Constants.TYPE_USER_TYPE_FOLLOWINGS,
-                userId
+                type = Constants.TYPE_ALL_FOLLOWERS_FOLLOWING,
+                subtype = Constants.TYPE_USER_TYPE_FOLLOWINGS,
+                userId = userId
             )
         )
-        var adapter=FragmentViewPagerAdapter(this,this)
+        val adapter=FragmentViewPagerAdapter(this,this)
         adapter.addFragments(list)
         binding.viewPager.adapter=adapter
 

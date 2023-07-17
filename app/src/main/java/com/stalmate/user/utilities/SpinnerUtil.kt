@@ -18,8 +18,7 @@ object SpinnerUtil {
         onItemSelectedListener: (position: Int) -> Unit
     ) {
         var list = arrayListOf<String>()
-        list =
-            listFromServer ?: ArrayList(resources.getStringArray(listFromResources).toMutableList())
+        list = listFromServer ?: ArrayList(resources.getStringArray(listFromResources).toMutableList())
         this.dropDownVerticalOffset = 100
         this.setPopupBackgroundResource(R.drawable.bg_spinner_popup)
         // Creating adapter for spinner
@@ -67,7 +66,7 @@ object SpinnerUtil {
         //onItemSelectedListener
         val listener =
             SpinnerInteractionListener(onItemSelectedByUser = { parent: AdapterView<*>?, view: View, pos: Int, id: Long ->
-                onItemSelectedListener(pos + 1)
+                onItemSelectedListener(pos)
             })
         this.setOnTouchListener(listener)
         this.onItemSelectedListener = listener
@@ -80,7 +79,7 @@ object SpinnerUtil {
             } else
                 spinner.setSelection(array.size - 1)
         }*/
-        this.setSelection(setSelection - 1)
+        this.setSelection(setSelection)
     }
 }
 

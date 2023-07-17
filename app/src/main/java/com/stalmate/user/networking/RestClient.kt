@@ -25,9 +25,9 @@ class RestClient private constructor() {
      */
     fun setup() {
         val builder: OkHttpClient.Builder = OkHttpClient.Builder()
-            .connectTimeout(60, TimeUnit.SECONDS)
-            .readTimeout(30, TimeUnit.SECONDS)
-            .writeTimeout(60, TimeUnit.SECONDS)
+            .connectTimeout(90, TimeUnit.SECONDS)
+            .readTimeout(90, TimeUnit.SECONDS)
+            .writeTimeout(90, TimeUnit.SECONDS)
         // Should be used only in Debug Mode.
         if (true) {
             val interceptor = HttpLoggingInterceptor()

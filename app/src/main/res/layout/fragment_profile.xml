@@ -9,14 +9,6 @@
         android:background="@color/white"
         app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior">
 
-        <include
-            android:id="@+id/toolbar"
-            layout="@layout/home_page_toolbar_new"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <androidx.core.widget.NestedScrollView
             android:id="@+id/nestedScrollView"
             android:layout_width="match_parent"
@@ -25,11 +17,20 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar">
+            app:layout_constraintTop_toTopOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
+                <include
+                    android:id="@+id/toolbar"
+                    layout="@layout/home_page_toolbar_new"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_60sdp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/back"
@@ -37,7 +38,7 @@
                     android:layout_height="220dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
 
                     <androidx.cardview.widget.CardView
@@ -167,13 +168,18 @@
 
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/tabLayout"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:tabGravity="start"
                     android:layout_marginStart="@dimen/_15sdp"
-                    app:tabIndicatorGravity="bottom"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/layout" />
+                    app:layout_constraintTop_toBottomOf="@+id/layout"
+                    app:tabGravity="fill"
+                    app:tabMode="fixed"
+                    app:tabMaxWidth="0dp"
+                    app:tabIndicatorFullWidth="true"
+                    app:tabTextColor="@color/black"
+                    app:tabSelectedTextColor="@color/black"
+                    app:tabIndicatorGravity="bottom" />
 
                 <androidx.viewpager2.widget.ViewPager2
                     android:id="@+id/viewpager"
@@ -188,14 +194,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_15sdp"
-            android:layout_marginTop="@dimen/_20sdp"
+            android:layout_marginTop="@dimen/_85sdp"
             android:fontFamily="@font/poppins_medium"
             android:text="@string/profile"
             android:textColor="@color/white"
             android:textSize="16sp"
+            android:visibility="invisible"
             app:drawableStartCompat="@drawable/ic_back"
             app:drawableTint="@color/white"
-            app:layout_constraintStart_toStartOf="@id/nestedScrollView"
-            app:layout_constraintTop_toTopOf="@id/nestedScrollView" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
