@@ -1,8 +1,11 @@
 package com.stalmate.user.view.dashboard
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -10,6 +13,8 @@ import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
@@ -63,7 +68,6 @@ class ActivityDashboard : BaseActivity(), FragmentHome.Callback,
         builder.setCanceledOnTouchOutside(true)
         Handler(Looper.getMainLooper()).postDelayed({
             builder.dismiss()
-
         }, 3000)
         builder.show()
     }
@@ -278,6 +282,100 @@ class ActivityDashboard : BaseActivity(), FragmentHome.Callback,
             binding.ivChat.id -> {
                 binding.ivChat.setImageResource(R.drawable.btm_chat)
             }
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == 1 && grantResults.isNotEmpty()) {
+            for (grantResult in grantResults) {
+                if (grantResult != PackageManager.PERMISSION_GRANTED) {
+                    return  // no permission
+                }
+            }
+            //Work fro here
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val readImagePermission =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+                Manifest.permission.READ_MEDIA_IMAGES
+            else
+                Manifest.permission.READ_EXTERNAL_STORAGE
+        val readVideoPermission =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+                Manifest.permission.READ_MEDIA_VIDEO
+            else
+                Manifest.permission.READ_EXTERNAL_STORAGE
+        val readAudioPermission =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+                Manifest.permission.READ_MEDIA_AUDIO
+            else
+                Manifest.permission.READ_EXTERNAL_STORAGE
+
+        if (
+            ContextCompat.checkSelfPermission(
+                this,
+                readImagePermission
+            ) != PackageManager.PERMISSION_GRANTED ||
+            ContextCompat.checkSelfPermission(
+                this,
+                readVideoPermission
+            ) != PackageManager.PERMISSION_GRANTED ||
+            ContextCompat.checkSelfPermission(
+                this,
+                readAudioPermission
+            ) != PackageManager.PERMISSION_GRANTED ||
+            ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.CAMERA
+            ) != PackageManager.PERMISSION_GRANTED ||
+            ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.RECORD_AUDIO
+            ) != PackageManager.PERMISSION_GRANTED ||
+            ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.READ_CONTACTS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            //permission not granted
+            if (Build.VERSION.SDK_INT <= 29) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(
+                        Manifest.permission.CAMERA,
+                        Manifest.permission.RECORD_AUDIO,
+                        Manifest.permission.READ_CONTACTS,
+                        readImagePermission,
+                        readAudioPermission,
+                        readVideoPermission,
+                    ),
+                    1
+                )
+            } else {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(
+                        Manifest.permission.CAMERA,
+                        Manifest.permission.RECORD_AUDIO,
+                        Manifest.permission.READ_CONTACTS,
+                        readImagePermission,
+                        readAudioPermission,
+                        readVideoPermission
+                    ),
+                    1
+                )
+            }
+        } else {
+            // Permission has already been granted
+
         }
     }
 }

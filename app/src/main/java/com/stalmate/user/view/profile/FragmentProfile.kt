@@ -57,12 +57,6 @@ class FragmentProfile(val callback: FragmentHome.Callback? = null) : BaseFragmen
 
     lateinit var binding: FragmentProfileBinding
     lateinit var friendAdapter: ProfileFriendAdapter
-    var permissions = arrayOf(
-        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-        Manifest.permission.CAMERA,
-        Manifest.permission.READ_CONTACTS
-    )
-    var WRITE_REQUEST_CODE = 100
     val PICK_IMAGE_PROFILE = 1
     val PICK_IMAGE_COVER = 1
     var imageFile: File? = null
@@ -155,9 +149,6 @@ class FragmentProfile(val callback: FragmentHome.Callback? = null) : BaseFragmen
         binding.layout.etSearchFriend.setOnClickListener {
             IntentHelper.getSearchScreen(requireContext())?.let { it1 -> startActivity(it1) }
         }
-
-        requestPermissions(permissions, WRITE_REQUEST_CODE)
-
         val radius = resources.getDimension(R.dimen.dp_10)
         binding.ivBackground.shapeAppearanceModel = binding.ivBackground.shapeAppearanceModel
             .toBuilder()

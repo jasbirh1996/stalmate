@@ -40,10 +40,10 @@ class ARSurfaceProvider internal constructor(
             deepAR?.let {
                 try {
                     nativeGLTextureHandle = (it.externalGlTexture ?: 0)
-                } catch (e: IllegalStateException) {
+                } catch (e: Exception) {
                     e.printStackTrace()
+                    printEglState()
                 }
-                printEglState()
             }
             Log.d(tag, "request new external GL texture")
 
