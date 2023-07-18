@@ -102,13 +102,6 @@ class FragmentHome(var callback: Callback?=null) : BaseFragment(),
             }
         }
 
-        if (isNetworkAvailable()) {
-            isFirstApiHit = true
-            page_count = 1
-            callApi()
-        } else {
-            binding.nointernet.visibility = View.VISIBLE
-        }
 
         /*binding.nestedScrollview.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
             if (oldScrollY < scrollY) {//increase
@@ -555,7 +548,16 @@ class FragmentHome(var callback: Callback?=null) : BaseFragment(),
     }
 
     override fun onResume() {
+
         try {
+            if (isNetworkAvailable()) {
+                isFirstApiHit = true
+                page_count = 1
+                callApi()
+            } else {
+                binding.nointernet.visibility = View.VISIBLE
+            }
+
             getUserProfileData()
             if ((videoAutoPlayHelper != null)) {
                 val viewholder =
