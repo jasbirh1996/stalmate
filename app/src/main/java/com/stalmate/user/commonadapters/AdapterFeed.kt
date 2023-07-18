@@ -287,6 +287,7 @@ class AdapterFeed(
 
 
             if (feed.file_type.equals("0", true)) {
+                holder.isVideo = false
                 holder.customPlayerView.visibility = View.GONE
                 holder.ivSoundButton.visibility = View.GONE
                 holder.ivPlay.visibility = View.GONE
@@ -308,10 +309,9 @@ class AdapterFeed(
                 holder.appCompatImageView5.visibility = View.GONE
 
                 try {
-                    /*holder.customPlayerView.reset()
-//                    Set seperate ID for each player view, to prevent it being overlapped by other player's changes
-                    holder.customPlayerView.id = View.generateViewId()*/
-//                    Set video's direct url
+                    holder.isVideo = true
+                    //Set seperate ID for each player view, to prevent it being overlapped by other player's changes
+//                    holder.customPlayerView.id = View.generateViewId()
                     holder.customPlayerView.setVideoUri(Uri.parse(feed.file))
 
                     holder.customPlayerView.setOnClickListener {
@@ -339,6 +339,7 @@ class AdapterFeed(
                         }
                     }
                 } catch (e: Exception) {
+                    e.printStackTrace()
                 }
             }
         }
@@ -346,6 +347,7 @@ class AdapterFeed(
 
     inner class FeedViewHolder(var binding: ItemFeedBinding) :
         RecyclerView.ViewHolder(binding.root) {
+        var isVideo = false
         val customPlayerView = binding.feedPlayerView
         val ivSoundButton = binding.ivSoundButton
         val appCompatImageView5 = binding.appCompatImageView5

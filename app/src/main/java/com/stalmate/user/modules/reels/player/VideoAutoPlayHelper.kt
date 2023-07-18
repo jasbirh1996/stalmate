@@ -28,7 +28,8 @@ class VideoAutoPlayHelper(var recyclerView: RecyclerView) {
         if (pos == -1) {
             /*check if current view is more than MIN_LIMIT_VISIBILITY*/
             if (currentPlayingVideoItemPos != -1) {
-                val viewHolder: RecyclerView.ViewHolder = recyclerView.findViewHolderForAdapterPosition(currentPlayingVideoItemPos)!!
+                val viewHolder: RecyclerView.ViewHolder =
+                    recyclerView.findViewHolderForAdapterPosition(currentPlayingVideoItemPos)!!
                 val currentVisibility = getVisiblePercentage(viewHolder);
                 if (currentVisibility < MIN_LIMIT_VISIBILITY) {
                     lastPlayerView?.removePlayer()
@@ -73,25 +74,26 @@ class VideoAutoPlayHelper(var recyclerView: RecyclerView) {
             }
         } else {
             if (recyclerView.adapter is AdapterFeed) {
-                val feedViewHolder: AdapterFeed.FeedViewHolder = (recyclerView.findViewHolderForAdapterPosition(pos) as AdapterFeed.FeedViewHolder?)!!
+                val feedViewHolder: AdapterFeed.FeedViewHolder =
+                    (recyclerView.findViewHolderForAdapterPosition(pos) as AdapterFeed.FeedViewHolder?)!!
 
                 if (feedViewHolder is AdapterFeed.FeedViewHolder) {
                     /** in case its a video**/
                     if (lastPlayerView == null || lastPlayerView != feedViewHolder.customPlayerView) {
-                        feedViewHolder.customPlayerView.startPlaying()
-                        // stop last player
-                        lastPlayerView?.removePlayer();
+                        if (feedViewHolder.isVideo) {
+                            feedViewHolder.customPlayerView.startPlaying()
+                            // stop last player
+                            lastPlayerView?.removePlayer();
+                            lastPlayerView = feedViewHolder.customPlayerView;
+                        } else {
+                            /** in case its a image**/
+                            if (lastPlayerView != null) {
+                                // stop last player
+                                lastPlayerView?.removePlayer();
+                                lastPlayerView = null
+                            }
+                        }
                     }
-                    lastPlayerView = feedViewHolder.customPlayerView;
-
-                } else {
-                    /** in case its a image**/
-                    if (lastPlayerView != null) {
-                        // stop last player
-                        lastPlayerView?.removePlayer();
-                        lastPlayerView = null
-                    }
-
                 }
             } else {
                 throw IllegalStateException("Adapter should be FeedAdapter or extend FeedAdapter")
@@ -102,12 +104,12 @@ class VideoAutoPlayHelper(var recyclerView: RecyclerView) {
     private fun getMostVisibleItem(firstVisiblePosition: Int, lastVisiblePosition: Int): Int {
 
         var maxPercentage = -1;
-        var pos = 0;
+        var pos = -1;
         for (i in firstVisiblePosition..lastVisiblePosition) {
             val viewHolder: RecyclerView.ViewHolder =
                 recyclerView.findViewHolderForAdapterPosition(i)!!
 
-            var currentPercentage = getVisiblePercentage(viewHolder);
+            val currentPercentage = getVisiblePercentage(viewHolder);
             if (currentPercentage > maxPercentage) {
                 maxPercentage = currentPercentage.toInt();
                 pos = i;
@@ -169,8 +171,8 @@ class VideoAutoPlayHelper(var recyclerView: RecyclerView) {
     }
 
     private fun findLastVisibleItemPosition(): Int {
-        if (recyclerView.getLayoutManager() is LinearLayoutManager) {
-            return (recyclerView.getLayoutManager() as LinearLayoutManager).findLastVisibleItemPosition()
+        if (recyclerView.layoutManager is LinearLayoutManager) {
+            return (recyclerView.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
         }
         return -1
     }

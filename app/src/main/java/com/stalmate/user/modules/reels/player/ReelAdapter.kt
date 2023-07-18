@@ -91,7 +91,6 @@ class ReelAdapter(val context: Context, var callback: Callback) :
         /*Reset ViewHolder */
         removeImageFromImageView(holder.videoThumbnail)
 
-        holder.customPlayerView.reset()
 
         /*Set seperate ID for each player view, to prevent it being overlapped by other player's changes*/
         holder.customPlayerView.id = View.generateViewId()

@@ -113,12 +113,11 @@ class ReelFullViewAdapter(
             holder.customPlayerView.visibility = View.VISIBLE
             holder.videoThumbnail.visibility = View.GONE
             try {
-                /*holder.customPlayerView.reset()
-//                    Set seperate ID for each player view, to prevent it being overlapped by other player's changes
-                holder.customPlayerView.id = View.generateViewId()*/
-//                    Set video's direct url
+                //Set seperate ID for each player view, to prevent it being overlapped by other player's changes
+//                holder.customPlayerView.id = View.generateViewId()
                 holder.customPlayerView.setVideoUri(Uri.parse(reelList[position].file))
             } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
 
