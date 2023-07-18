@@ -58,7 +58,7 @@ import kotlin.collections.HashMap
 
 //getOtherUserProfileScreen
 
-class FragmentHome(var callback: Callback) : BaseFragment(),
+class FragmentHome(var callback: Callback?=null) : BaseFragment(),
     UserHomeStoryAdapter.Callbackk, SuggestedFriendAdapter.Callbackk {
 
     private lateinit var binding: FragmentHomeNewBinding
@@ -403,7 +403,7 @@ class FragmentHome(var callback: Callback) : BaseFragment(),
         binding.rvFeeds.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 if (dy > 0) { //check for scroll down
-                    callback.onScoll(true)
+                    callback?.onScoll(true)
                     visibleItemCount =
                         (binding.rvFeeds.layoutManager as LinearLayoutManager).getChildCount()
                     totalItemCount =
@@ -423,7 +423,7 @@ class FragmentHome(var callback: Callback) : BaseFragment(),
                         }
                     }
                 } else {
-                    callback.onScoll(false)
+                    callback?.onScoll(false)
                 }
             }
         })
@@ -431,7 +431,7 @@ class FragmentHome(var callback: Callback) : BaseFragment(),
 
         getFriendSuggestionListing()
         binding.postContant.userImage.setOnClickListener {
-            callback.onCLickOnProfileButton()
+            callback?.onCLickOnProfileButton()
         }
 
         binding.layoutNewUser.setOnClickListener {
@@ -455,7 +455,7 @@ class FragmentHome(var callback: Callback) : BaseFragment(),
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-            callback.onCLickOnProfileButton()
+            callback?.onCLickOnProfileButton()
         }
 
         binding.nointernet.visibility = View.GONE

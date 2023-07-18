@@ -107,8 +107,6 @@ class ReelFullViewAdapter(
                 .load(reelList[position].file)
                 .apply(requestOptions)
                 .thumbnail(Glide.with(context).load(reelList[position].file))
-                .placeholder(R.drawable.image)
-                .error(R.drawable.image)
                 .into(holder.videoThumbnail)
         } else {
             //video/mp4

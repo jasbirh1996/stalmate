@@ -99,8 +99,6 @@ class AdapterFeed(
                         Glide.with(context)
                             .load(((context as ActivityDashboard).prefManager?.profile_img_1))
                     )
-                    .placeholder(R.drawable.image)
-                    .error(R.drawable.image)
                     .into(holder.ivButtonMenu1)
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -111,8 +109,6 @@ class AdapterFeed(
                 .load(feed.profile_img)
                 .apply(requestOptions1)
                 .thumbnail(Glide.with(context).load(feed.profile_img))
-                .placeholder(R.drawable.image)
-                .error(R.drawable.image)
                 .into(holder.userProfileImage)
 
             holder.tvUserName.text = feed.first_name + " " + feed.last_name
@@ -300,8 +296,6 @@ class AdapterFeed(
                     .load(feed.file)
                     .apply(requestOptions)
                     .thumbnail(Glide.with(context).load(feed.file))
-                    .placeholder(R.drawable.image)
-                    .error(R.drawable.image)
                     .into(holder.appCompatImageView5)
             } else {
                 //video/mp4

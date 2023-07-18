@@ -69,7 +69,7 @@ import java.util.concurrent.ExecutionException
 import kotlin.collections.ArrayList
 
 
-class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventListener {
+class CreateFunActivity : AppCompatActivity() {
     private var galleryFragment: FragmentGallery? = null
     private var count = 0
     private lateinit var thumbnails: Array<Bitmap?>
@@ -270,7 +270,6 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
                     return  // no permission
                 }
             }
-            initialize()
         }
     }
 
@@ -511,13 +510,6 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
 
     private fun initalizeViews() {
         initializeFilters()
-        //Set ArView
-        val arView = findViewById<SurfaceView>(R.id.surface)
-        arView.holder.addCallback(this)
-        // Surface might already be initialized, so we force the call to onSurfaceChanged
-        arView.visibility = View.GONE
-        arView.visibility = View.VISIBLE
-
         tabbarduration = findViewById<TabLayout>(R.id.tabbarduration)
         findViewById<ImageView>(R.id.ivClose).setOnClickListener { onBackPressed() }
 
@@ -662,8 +654,6 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
                     arrayOf(
                         Manifest.permission.CAMERA,
                         Manifest.permission.RECORD_AUDIO,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
                         readImagePermission,
                         readAudioPermission,
                         readVideoPermission,
@@ -676,8 +666,6 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
                     arrayOf(
                         Manifest.permission.CAMERA,
                         Manifest.permission.RECORD_AUDIO,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
                         readImagePermission,
                         readAudioPermission,
                         readVideoPermission
@@ -1048,8 +1036,105 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
     private fun initializeDeepAR() {
         deepAR = DeepAR(this)
         deepAR?.setLicenseKey("a8934255341d56543840fc370805931902372ed78dc6def033a9f6c38ea8ec102617d6ed4da7fc17")
-        deepAR?.initialize(this, this)
+        deepAR?.initialize(this, object :AREventListener{
+            override fun screenshotTaken(bitmap: Bitmap) {
+                val now = DateFormat.format("yyyy_MM_dd_hh_mm_ss", Date())
+                try {
+                    val file =
+                        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS + "/Stalmate")
+                    if (!file.exists())
+                        file.mkdir()
+                    val imageFile = File(file, "image_$now.jpg")
+                    val outputStream = FileOutputStream(imageFile)
+                    val quality = 100
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream)
+                    outputStream.flush()
+                    outputStream.close()
+                    MediaScannerConnection.scanFile(
+                        this@CreateFunActivity,
+                        arrayOf(imageFile.toString()),
+                        null,
+                        null
+                    )
+                    /*Toast.makeText(
+                        this@CreateFunActivity,
+                        "Screenshot " + imageFile.name + " saved.",
+                        Toast.LENGTH_SHORT
+                    ).show()*/
+
+                    /*val extension: String =
+                        MimeTypeMap.getSingleton().getExtensionFromMimeType(this@CreateFunActivity.contentResolver.getType(Uri.fromFile(imageFile))).toString()
+                    mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension).toString()*/
+                    mimeType = "image/jpeg"
+                    startPhotoEditorImgLy(imageFile.toUri())
+                } catch (e: Throwable) {
+                    e.printStackTrace()
+                }
+            }
+            override fun videoRecordingStarted() {
+                //Toast.makeText(applicationContext, "Recording started.", Toast.LENGTH_LONG).show()
+            }
+
+            override fun videoRecordingFinished() {
+                /*Toast.makeText(
+                    applicationContext,
+                    "Recording " + videoFileName?.name + " saved.",
+                    Toast.LENGTH_LONG
+                ).show()*/
+                //Send to change speed and to do reverse
+                videoFileName?.let {
+                    /*val extension: String = MimeTypeMap.getSingleton().getExtensionFromMimeType(
+                        this.contentResolver.getType(
+                            Uri.fromFile(it)
+                        )
+                    ).toString()
+                    mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension).toString()*/
+                    mimeType = "video/mp4"
+                    startVideoEditor(it.absolutePath.toString())
+                }
+            }
+            override fun videoRecordingFailed() {
+                //Toast.makeText(applicationContext, "Error while recording.", Toast.LENGTH_LONG).show()
+            }
+
+            override fun videoRecordingPrepared() {
+                //Toast.makeText(applicationContext, "Recording prepared.", Toast.LENGTH_LONG).show()
+            }
+
+            override fun shutdownFinished() {}
+            override fun initialized() {
+                // Restore effect state after deepar release
+                restoreDeepArState()
+            }
+
+            override fun faceVisibilityChanged(b: Boolean) {}
+            override fun imageVisibilityChanged(s: String, b: Boolean) {}
+            override fun frameAvailable(image: Image) {}
+            override fun error(arErrorType: ARErrorType, s: String) {}
+            override fun effectSwitched(s: String) {}
+        })
         setupCamera()
+        //Set ArView
+        val arView = findViewById<SurfaceView>(R.id.surface)
+        arView.holder.addCallback(object :SurfaceHolder.Callback{
+            //Surface Callbacks
+            override fun surfaceCreated(holder: SurfaceHolder) {}
+            override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
+                // If we are using on screen rendering we have to set surface view where DeepAR will render
+                if (deepAR != null) {
+                    deepAR?.setRenderSurface(holder.surface, width, height)
+                }
+            }
+
+            override fun surfaceDestroyed(holder: SurfaceHolder) {
+                if (deepAR != null) {
+                    deepAR?.setRenderSurface(null, 0, 0)
+                }
+            }
+        })
+        // Surface might already be initialized, so we force the call to onSurfaceChanged
+        arView.visibility = View.GONE
+        arView.visibility = View.VISIBLE
     }
 
     private fun setupCamera() {
@@ -1223,57 +1308,6 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
         deepAR = null
     }
 
-    //Surface Callbacks
-    override fun surfaceCreated(holder: SurfaceHolder) {}
-    override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
-        // If we are using on screen rendering we have to set surface view where DeepAR will render
-        if (deepAR != null) {
-            deepAR?.setRenderSurface(holder.surface, width, height)
-        }
-    }
-
-    override fun surfaceDestroyed(holder: SurfaceHolder) {
-        if (deepAR != null) {
-            deepAR?.setRenderSurface(null, 0, 0)
-        }
-    }
-
-    //Callbacks DeepAr
-    override fun screenshotTaken(bitmap: Bitmap) {
-        val now = DateFormat.format("yyyy_MM_dd_hh_mm_ss", Date())
-        try {
-            val file =
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS + "/Stalmate")
-            if (!file.exists())
-                file.mkdir()
-            val imageFile = File(file, "image_$now.jpg")
-            val outputStream = FileOutputStream(imageFile)
-            val quality = 100
-            bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream)
-            outputStream.flush()
-            outputStream.close()
-            MediaScannerConnection.scanFile(
-                this@CreateFunActivity,
-                arrayOf(imageFile.toString()),
-                null,
-                null
-            )
-            /*Toast.makeText(
-                this@CreateFunActivity,
-                "Screenshot " + imageFile.name + " saved.",
-                Toast.LENGTH_SHORT
-            ).show()*/
-
-            /*val extension: String =
-                MimeTypeMap.getSingleton().getExtensionFromMimeType(this@CreateFunActivity.contentResolver.getType(Uri.fromFile(imageFile))).toString()
-            mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension).toString()*/
-            mimeType = "image/jpeg"
-            startPhotoEditorImgLy(imageFile.toUri())
-        } catch (e: Throwable) {
-            e.printStackTrace()
-        }
-    }
-
     private fun startPhotoEditorImgLy(imageFile: Uri) {
         //Start img.ly
         // In this example, we do not need access to the Uri(s) after the editor is closed
@@ -1299,50 +1333,6 @@ class CreateFunActivity : AppCompatActivity(), SurfaceHolder.Callback, AREventLi
             })
         }, 1000)
     }
-
-    override fun videoRecordingStarted() {
-        //Toast.makeText(applicationContext, "Recording started.", Toast.LENGTH_LONG).show()
-    }
-
-    override fun videoRecordingFinished() {
-        /*Toast.makeText(
-            applicationContext,
-            "Recording " + videoFileName?.name + " saved.",
-            Toast.LENGTH_LONG
-        ).show()*/
-        //Send to change speed and to do reverse
-        videoFileName?.let {
-            /*val extension: String = MimeTypeMap.getSingleton().getExtensionFromMimeType(
-                this.contentResolver.getType(
-                    Uri.fromFile(it)
-                )
-            ).toString()
-            mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension).toString()*/
-            mimeType = "video/mp4"
-            startVideoEditor(it.absolutePath.toString())
-        }
-    }
-
-    override fun videoRecordingFailed() {
-        //Toast.makeText(applicationContext, "Error while recording.", Toast.LENGTH_LONG).show()
-    }
-
-    override fun videoRecordingPrepared() {
-        //Toast.makeText(applicationContext, "Recording prepared.", Toast.LENGTH_LONG).show()
-    }
-
-    override fun shutdownFinished() {}
-    override fun initialized() {
-        // Restore effect state after deepar release
-        restoreDeepArState()
-    }
-
-    override fun faceVisibilityChanged(b: Boolean) {}
-    override fun imageVisibilityChanged(s: String, b: Boolean) {}
-    override fun frameAvailable(image: Image) {}
-    override fun error(arErrorType: ARErrorType, s: String) {}
-    override fun effectSwitched(s: String) {}
-
     //Callbacks img.Ly
     fun showToast(msg: String) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
