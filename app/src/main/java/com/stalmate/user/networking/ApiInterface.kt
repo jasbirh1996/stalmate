@@ -157,7 +157,8 @@ interface ApiInterface {
     @POST(Constants.URL_NUMBER_VERIFY_UPDATE)
     fun setOtpNumberVerify(
         @Header("access_token") access_token: String,
-        @Body map: HashMap<String, String>): Call<CommonModelResponse>
+        @Body map: HashMap<String, String>
+    ): Call<CommonModelResponse>
 
     @PATCH(Constants.URL_UPDATE_ABOUT)
     fun setUpdateAbout(@Body map: HashMap<String, String>): Call<CommonModelResponse>
@@ -340,6 +341,7 @@ interface ApiInterface {
     @Multipart
     @POST(Constants.ADD_REEL)
     fun postReel(
+        @Header("Authorization") Authorization: String,
         @Header("access_token") access_token: String,
         @Part file: MultipartBody.Part?,
         @Part thum_icon: MultipartBody.Part?,

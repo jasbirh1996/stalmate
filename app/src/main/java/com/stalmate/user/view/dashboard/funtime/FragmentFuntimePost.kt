@@ -432,7 +432,7 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
             file = mediaFile,
             thum_icon = mediaFileThumIcon,
             cover_image = mediaFileCover,
-            file_type = (requireActivity() as ActivityFuntimePost).mimeType.getRequestBody(),
+            file_type = (if (isImage) "0" else "1").getRequestBody(),
             text = data.getRequestBody(),
             tag_id = commaSeparatedStr.getRequestBody(),
             sound_id = "none".getRequestBody(),

@@ -337,10 +337,10 @@ open class AppViewModel : ViewModel() {
     }
 
     var numberVerifyData: LiveData<CommonModelResponse?> = MutableLiveData<CommonModelResponse?>()
-    fun numberVerify(access_token: String,map: HashMap<String, String>) {
+    fun numberVerify(access_token: String, map: HashMap<String, String>) {
         val temp = MutableLiveData<CommonModelResponse?>()
         numberVerifyData = temp
-        getResult(temp, apiInterface.setOtpNumberVerify(access_token,map))
+        getResult(temp, apiInterface.setOtpNumberVerify(access_token, map))
     }
 
     var aboutProfileData: LiveData<CommonModelResponse?> = MutableLiveData<CommonModelResponse?>()
@@ -707,6 +707,7 @@ open class AppViewModel : ViewModel() {
         getResult(
             temp,
             apiInterface.postReel(
+                Authorization = access_token,
                 access_token = access_token,
                 file = file,
                 thum_icon = thum_icon,

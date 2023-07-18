@@ -134,6 +134,37 @@ class DialogFragmentComments(
     lateinit var commentAdapter: CommentAdapterNew
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        launchActivityForImageCaptureFromCamera =
+            (this.requireContext() as ComponentActivity).registerForActivityResult<Intent, ActivityResult>(
+                ActivityResultContracts.StartActivityForResult()
+            ) { result: ActivityResult ->
+                when (result.resultCode) {
+                    Activity.RESULT_OK -> {
+                        // start picker to get image for cropping and then use the image in cropping activity
+                        fromCameraCoverUri?.toUri()?.let {
+                            cropImage.launch(
+                                options(
+                                    uri = fromCameraCoverUri?.toUri(),
+                                    builder = {
+                                        this.setGuidelines(CropImageView.Guidelines.ON_TOUCH)
+                                    })
+                            )
+                        }
+                    }
+                    Activity.RESULT_CANCELED -> {
+                        // User Cancelled the action
+                    }
+                    else -> {
+                        // Error
+                    }
+                }
+            }
+
+
+
+
+
+
         val recyclerView = view.findViewById<RecyclerView>(R.id.rvList)
         //  viewModel = ViewModelProvider(this)[CommentViewModel::class.java]
         if (networkViewModel != null) {
@@ -224,7 +255,7 @@ class DialogFragmentComments(
                 MediaStore.EXTRA_OUTPUT,
                 fromCameraCoverUri?.toUri()
             )
-            //launchActivityForImageCaptureFromCamera.launch(cameraIntent)
+            launchActivityForImageCaptureFromCamera.launch(cameraIntent)
         }
         binding.appCompatImageView7.setOnClickListener {
             emojiIcon.showPopup()
@@ -280,7 +311,7 @@ class DialogFragmentComments(
 
     var fromCameraCover: File? = null
     var fromCameraCoverUri: String? = ""
-    /*private var launchActivityForImageCaptureFromCamera =
+    private var launchActivityForImageCaptureFromCamera =
         (this.requireContext() as ComponentActivity).registerForActivityResult<Intent, ActivityResult>(
             ActivityResultContracts.StartActivityForResult()
         ) { result: ActivityResult ->
@@ -288,13 +319,13 @@ class DialogFragmentComments(
                 Activity.RESULT_OK -> {
                     // start picker to get image for cropping and then use the image in cropping activity
                     fromCameraCoverUri?.toUri()?.let {
-                        *//*cropImage.launch(
+                        cropImage.launch(
                             options(
                                 uri = fromCameraCoverUri?.toUri(),
                                 builder = {
                                     this.setGuidelines(CropImageView.Guidelines.ON_TOUCH)
                                 })
-                        )*//*
+                        )
                     }
                 }
                 Activity.RESULT_CANCELED -> {
@@ -306,7 +337,7 @@ class DialogFragmentComments(
             }
         }
 
-    *//*Cover Image Picker *//*
+//    Cover Image Picker
     private val cropImage = (this.requireContext() as ComponentActivity).registerForActivityResult(CropImageContract()) { result ->
         if (result.isSuccessful) {
             // use the returned uri
@@ -338,7 +369,7 @@ class DialogFragmentComments(
             // an error occurred
             val exception = result.error
         }
-    }*/
+    }
 
     fun hideImageView() {
         binding.ivCommentImage.visibility = View.GONE
