@@ -13,6 +13,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.stalmate.user.R
+import com.stalmate.user.base.App
 import com.stalmate.user.databinding.ItemFriendBigBinding
 import com.stalmate.user.model.User
 import com.stalmate.user.utilities.Constants
@@ -21,6 +22,7 @@ import com.stalmate.user.utilities.Constants.TYPE_MY_FRIENDS
 import com.stalmate.user.utilities.Constants.TYPE_USER_ACTION_ADD_FRIEND
 import com.stalmate.user.utilities.Constants.TYPE_USER_ACTION_FOLLOW
 import com.stalmate.user.utilities.ImageLoaderHelperGlide
+import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.utilities.ValidationHelper
 import com.stalmate.user.viewmodel.AppViewModel
 
@@ -109,7 +111,7 @@ class FriendAdapter(
         }
 
         if (status.equals(TYPE_USER_ACTION_FOLLOW)) {
-            viewModel.sendFollowRequest("", hashMap)
+            viewModel.sendFollowRequest(PrefManager.getInstance(App.getInstance())?.userDetail?.results?.access_token.toString(), hashMap)
             viewModel.followRequestLiveData.observe(lifecycleOwner, Observer {
                 it.let {
 

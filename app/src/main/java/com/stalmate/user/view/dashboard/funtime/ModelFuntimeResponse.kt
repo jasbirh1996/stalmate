@@ -50,6 +50,15 @@ data class ResultFuntime(
     var isDataUpdated: Boolean = false,
     var topcomment: ArrayList<TopComment>? = arrayListOf()
 ) : Parcelable {
+
+    fun isImage(): Boolean {
+        return (file_type.contains("0", true) ||
+                file_type.contains("image", true) ||
+                file_type.contains("png", true) ||
+                file_type.contains("jpg", true) ||
+                file_type.contains("jpeg", true))
+    }
+
     @Parcelize
     data class TopComment(
         var comment: String,

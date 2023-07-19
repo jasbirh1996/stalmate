@@ -1214,7 +1214,6 @@ class ActivityVideoEditor : BaseActivity(), OnPhotoEditorListener,
                         runOnUiThread {
                             mergeAudioVideo(outputPath)
                         }
-
                     }
                 })
         asyncTask.execute()
@@ -1222,8 +1221,6 @@ class ActivityVideoEditor : BaseActivity(), OnPhotoEditorListener,
 
 
     fun ffmpegWatermark(input: String, output: String, image: String) {
-        Log.d("la';sdlasd", "lasjdasd")
-
         val asyncTask =
             FFmpegAsyncTask("-i $input -i $image -filter_complex [1][0]scale2ref=w=oh*mdar:h=ih*1.1[logo][video];[video][logo]overlay=0:0 -crf 23 -preset ultrafast -vcodec libx264 -c:a aac $output",
                 object : FFmpegAsyncTask.OnTaskCompleted {
@@ -1232,7 +1229,6 @@ class ActivityVideoEditor : BaseActivity(), OnPhotoEditorListener,
                             dismissLoader()
                             saveVideoToInternalStorage(output)
                         }
-
                     }
                 })
         asyncTask.execute()

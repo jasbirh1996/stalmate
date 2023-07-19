@@ -114,10 +114,10 @@ open class AppViewModel : ViewModel() {
     var funtimeLiveLikeUnlikeData: LiveData<ModelFuntimeLikeResponse?> =
         MutableLiveData<ModelFuntimeLikeResponse?>()
 
-    fun funtimeLiveLikeUnlikeData(map: HashMap<String, String>) {
+    fun funtimeLiveLikeUnlikeData(access_token: String, map: HashMap<String, String>) {
         val temp = MutableLiveData<ModelFuntimeLikeResponse?>()
         funtimeLiveLikeUnlikeData = temp
-        getResult(temp, apiInterface.getFuntimeLikeUnlike(map))
+        getResult(temp, apiInterface.getFuntimeLikeUnlike(access_token, access_token, map))
     }
 
 
@@ -130,11 +130,11 @@ open class AppViewModel : ViewModel() {
     }
 
 
-    fun followUnfollowUser(map: HashMap<String, String>): LiveData<ModelSuccess?> {
+    fun followUnfollowUser(access_token: String,map: HashMap<String, String>): LiveData<ModelSuccess?> {
         val temp = MutableLiveData<ModelSuccess?>()
         var saveLiveDAta: LiveData<ModelSuccess?>
         saveLiveDAta = temp
-        getResult(temp, apiInterface.requestBeFollower(map))
+        getResult(temp, apiInterface.requestBeFollower(access_token,access_token,map))
         return saveLiveDAta
     }
 
@@ -278,7 +278,7 @@ open class AppViewModel : ViewModel() {
     fun sendFollowRequest(token: String, map: HashMap<String, String>) {
         val temp = MutableLiveData<ModelSuccess?>()
         followRequestLiveData = temp
-        getResult(temp, apiInterface.requestBeFollower(map))
+        getResult(temp, apiInterface.requestBeFollower(token,token,map))
     }
 
     var categoryLiveData: LiveData<ModelCategory?> = MutableLiveData<ModelCategory?>()
@@ -477,10 +477,10 @@ open class AppViewModel : ViewModel() {
     }
 
     var likeCommentLiveData: LiveData<ModelSuccess?> = MutableLiveData<ModelSuccess?>()
-    fun likeComment(map: HashMap<String, String>) {
+    fun likeComment(access_token: String, map: HashMap<String, String>) {
         val temp = MutableLiveData<ModelSuccess?>()
         likeCommentLiveData = temp
-        getResult(temp, apiInterface.likeComment(map))
+        getResult(temp, apiInterface.likeComment(access_token, access_token, map))
     }
 
 
@@ -501,9 +501,9 @@ open class AppViewModel : ViewModel() {
     }
 
 
-    var otherUserProfileLiveData: MutableLiveData<ModelFriend?> = MutableLiveData<ModelFriend?>()
+    var otherUserProfileLiveData: MutableLiveData<ModelFriend1?> = MutableLiveData<ModelFriend1?>()
     fun getOtherUserProfileData(access_token: String, user_id: String) {
-        val temp = MutableLiveData<ModelFriend?>()
+        val temp = MutableLiveData<ModelFriend1?>()
         otherUserProfileLiveData = temp
         getResult(
             temp,

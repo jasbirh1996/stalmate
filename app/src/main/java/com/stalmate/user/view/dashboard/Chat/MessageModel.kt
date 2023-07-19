@@ -42,11 +42,19 @@ data class Message(
     @ColumnInfo(name = "user_name")
     val user_name: String,
     @ColumnInfo(name = "file_type")
-    var file_type:String,
+    var file_type: String,
     @ColumnInfo(name = "is_file")
-    var is_file:Int,
+    var is_file: Int,
     @ColumnInfo(name = "position")
-    var position:String,
+    var position: String,
     @ColumnInfo(name = "status")
-var status:String
-)
+    var status: String
+){
+    fun isImage(): Boolean {
+        return (file_type.contains("0", true) ||
+                file_type.contains("image", true) ||
+                file_type.contains("png", true) ||
+                file_type.contains("jpg", true) ||
+                file_type.contains("jpeg", true))
+    }
+}

@@ -8,5 +8,11 @@ data class ModelFriend(
     val status: Boolean
 )
 
+data class ModelFriend1(
+    val message: String,
+    val results: List<User1>,
+    val status: Boolean
+)
+
 
 

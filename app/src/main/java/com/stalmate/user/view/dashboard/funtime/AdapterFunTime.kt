@@ -46,10 +46,8 @@ class AdapterFunTime(
 
             binding.tvUserName.text = funtimeResponse.first_name + " " + funtimeResponse.last_name
 
-            if (funtimeResponse.file_type.equals("1", true)) {
-
+            if (!funtimeResponse.isImage()) {
                 binding.pvExoplayer.visibility = View.VISIBLE
-
             } else {
                 Glide.with(context).load(funtimeResponse.file).into(binding.shapeableImageView)
             }

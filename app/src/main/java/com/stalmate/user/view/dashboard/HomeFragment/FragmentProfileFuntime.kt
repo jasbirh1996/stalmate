@@ -61,12 +61,12 @@ class FragmentProfileFuntime : BaseFragment(), ReelVideosByAudioAdapter.Callback
             it?.let {
                 adapter.submitList(
                     if (arguments?.getBoolean("isVideos") == false)
-                        it?.results?.filter {
-                            it.file_type.equals("0",true)
+                        it.results.filter {
+                            it.isImage()
                         }
                     else
-                        it?.results?.filter {
-                            it.file_type.equals("1",true)
+                        it.results.filter {
+                            (!it.isImage())
                         }
                 )
                 binding.root.requestLayout()
@@ -80,6 +80,4 @@ class FragmentProfileFuntime : BaseFragment(), ReelVideosByAudioAdapter.Callback
             this?.putExtra("showMyVideos", true)
         }?.let { startActivity(it) }
     }
-
-
 }

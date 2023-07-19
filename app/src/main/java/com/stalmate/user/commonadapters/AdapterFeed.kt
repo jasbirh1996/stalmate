@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -34,6 +35,7 @@ import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 
 class AdapterFeed(
+    private val chileFragmentManager: FragmentManager,
     val viewModel: AppViewModel,
     val context: Context,
     var callback: FragmentActivity,
@@ -66,6 +68,10 @@ class AdapterFeed(
 
     override fun onBindViewHolder(holder: AdapterFeed.FeedViewHolder, position: Int) {
         holder.itemView.apply {
+            if (position == (itemCount - 1))
+                holder.bottomSpace.visibility = View.VISIBLE
+            else
+                holder.bottomSpace.visibility = View.GONE
             val feed = list[position]
             try {
                 if (feed.user_id == ((context as ActivityDashboard).prefManager?._id)) {
@@ -76,7 +82,7 @@ class AdapterFeed(
                         holder.appCompatTextView5.visibility = View.VISIBLE
                         holder.appCompatTextView5.setOnClickListener {
                             feed.isFollowing = "Yes"
-                            holder.appCompatTextView5.text = "Sent follow request"
+                            holder.appCompatTextView5.text = "Following"
                             callBackAdapterFeed?.onClickOnFollowButtonReel(feed)
                             notifyDataSetChanged()
                         }
@@ -87,7 +93,7 @@ class AdapterFeed(
                             callBackAdapterFeed?.onClickOnFollowButtonReel(feed)
                             notifyDataSetChanged()
                         }
-                        holder.appCompatTextView5.text = "Sent follow request"
+                        holder.appCompatTextView5.text = "Following"
                         holder.appCompatTextView5.visibility = View.VISIBLE
                     }
                 }
@@ -102,6 +108,10 @@ class AdapterFeed(
                     .into(holder.ivButtonMenu1)
             } catch (e: Exception) {
                 e.printStackTrace()
+            }
+
+            holder.userProfileImage.setOnClickListener {
+                callBackAdapterFeed?.onCLickUserProfile(feed.user_id.toString())
             }
 
             val requestOptions1 = RequestOptions()
@@ -184,8 +194,8 @@ class AdapterFeed(
                     feed.text,
                     Html.FROM_HTML_MODE_COMPACT
                 )
-                if (holder.tvPostDescription.text.toString()
-                        .split(System.getProperty("line.separator")).size > 2
+                if ((holder.tvPostDescription.text.toString()
+                        .split(System.getProperty("line.separator")).size > 2) || (holder.tvPostDescription.text.toString().length >= 100)
                 ) {
                     SeeModetextViewHelper.makeTextViewResizable(
                         holder.tvPostDescription,
@@ -225,12 +235,12 @@ class AdapterFeed(
             holder.likeIcon.setOnClickListener {
                 if (feed.isLiked == "Yes") {
                     feed.like_count--
-                    holder.likeCount.text = feed.like_count.toString()
+                    holder.likeCount.text = feed.like_count.toString() + " Likes"
                     feed.isLiked = "No"
                     holder.likeIcon.setImageResource(R.drawable.like)
                 } else {
                     feed.like_count++
-                    holder.likeCount.text = feed.like_count.toString()
+                    holder.likeCount.text = feed.like_count.toString() + " Likes"
                     feed.isLiked = "Yes"
                     holder.likeIcon.setImageResource(R.drawable.liked)
                 }
@@ -241,22 +251,22 @@ class AdapterFeed(
                 (context as BaseActivity).networkViewModel,
                 feed,
                 object : DialogFragmentComments.Callback {
-                    override fun funOnCommentDialogDismissed(commentCount: Int) {
+                    override fun onCommentCount(commentCount: Int) {
                         holder.commentCount.text = "$commentCount Comments"
                         feed.comment_count = commentCount
                         notifyDataSetChanged()
                     }
 
-                    override fun onCancel() {
+                    override fun onDismiss() {
                         callBackAdapterFeed?.hideCommentOverlay(feed, position)
+                    }
+
+                    override fun onShow() {
+                        callBackAdapterFeed?.showCommentOverlay(feed, position)
                     }
                 })
             holder.commentIcon.setOnClickListener {
-                callBackAdapterFeed?.showCommentOverlay(feed, position)
-                dialogFragmentComment.show(
-                    (context as AppCompatActivity).supportFragmentManager,
-                    ""
-                )
+                dialogFragmentComment.show(chileFragmentManager, dialogFragmentComment.tag)
             }
 
             val emojiIcon = EmojIconActions(
@@ -286,7 +296,7 @@ class AdapterFeed(
             }
 
 
-            if (feed.file_type.equals("0", true)) {
+            if (feed.isImage()) {
                 holder.isVideo = false
                 holder.customPlayerView.visibility = View.GONE
                 holder.ivSoundButton.visibility = View.GONE
@@ -349,6 +359,7 @@ class AdapterFeed(
         RecyclerView.ViewHolder(binding.root) {
         var isVideo = false
         val customPlayerView = binding.feedPlayerView
+        val bottomSpace = binding.bottomSpace
         val ivSoundButton = binding.ivSoundButton
         val appCompatImageView5 = binding.appCompatImageView5
         val appCompatImageView6 = binding.appCompatImageView6
@@ -358,7 +369,7 @@ class AdapterFeed(
         val ivPlay = binding.ivPlay
         val ivSend = binding.ivSend
         val etSearch = binding.etSearch
-        val commentIcon = binding.commentIcon
+        val commentIcon = binding.clComments
         val commentCount = binding.commentCount
         val likeCount = binding.likeCount
         val likeIcon = binding.likeIcon
@@ -463,7 +474,7 @@ class AdapterFeed(
     public interface Callbackk {
         fun onClickOnViewComments(postId: Int)
         fun onCLickItem(item: ResultFuntime)
-
+        fun onCLickUserProfile(item: String)
         fun onClickOnLikeButtonReel(feed: ResultFuntime)
         fun onClickOnFollowButtonReel(feed: ResultFuntime)
         fun onSendComment(feed: ResultFuntime, comment: String)

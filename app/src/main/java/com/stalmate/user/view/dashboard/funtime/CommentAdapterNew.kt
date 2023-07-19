@@ -16,9 +16,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.stalmate.user.R
+import com.stalmate.user.base.App
 import com.stalmate.user.databinding.ItemCommentBinding
 import com.stalmate.user.model.Comment
 import com.stalmate.user.modules.reels.utils.RealPathUtil
+import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.utilities.TimesAgo2
 import com.stalmate.user.viewmodel.AppViewModel
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -92,11 +94,9 @@ class CommentAdapterNew(
                 }
             }
 
-            var commentRepliedAdapter =
-                ChildCommentAdapter(context, this, funTimeId, networkViewModel, lifecyclerOwner)
+            val commentRepliedAdapter = ChildCommentAdapter(context, this, funTimeId, networkViewModel, lifecyclerOwner)
             commentRepliedAdapter.addToList(shortComment.replies)
-            binding.rvChildReplies.layoutManager =
-                LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+            binding.rvChildReplies.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             binding.rvChildReplies.adapter = commentRepliedAdapter
 
             /* binding.tvReply.setOnClickListener {
@@ -189,7 +189,6 @@ class CommentAdapterNew(
     }
 
     fun addToList(comments: List<Comment>) {
-
         val size = commentList.size
         commentList.addAll(comments)
         val sizeNew = commentList.size
@@ -398,7 +397,10 @@ class CommentAdapterNew(
         hashmap.put("funtime_id", funTimeId)
         hashmap.put("comment_id", commentId)
 
-        networkViewModel.likeComment(hashmap)
+        networkViewModel.likeComment(
+            PrefManager.getInstance(App.getInstance())?.userDetail?.results?.access_token.toString(),
+            hashmap
+        )
         networkViewModel.likeCommentLiveData.observe(lifecyclerOwner) { mainIt ->
             run {
                 if (mainIt!!.status) {

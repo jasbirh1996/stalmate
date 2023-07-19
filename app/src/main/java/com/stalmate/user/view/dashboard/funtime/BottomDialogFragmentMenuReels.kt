@@ -17,12 +17,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.stalmate.user.R
+import com.stalmate.user.base.App
 import com.stalmate.user.databinding.FragmentBottomDialogReelsMenuBinding
+import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.viewmodel.AppViewModel
 
 
-class BottomDialogFragmentMenuReels(var isOtherUserReel: Boolean, var networkViewModel: AppViewModel,var funtime: ResultFuntime,
-                                    var callBack: Callback) :
+class BottomDialogFragmentMenuReels(
+    var isOtherUserReel: Boolean, var networkViewModel: AppViewModel, var funtime: ResultFuntime,
+    var callBack: Callback
+) :
     BottomSheetDialogFragment() {
     lateinit var binding: FragmentBottomDialogReelsMenuBinding
     private val mBottomSheetBehaviorCallback: BottomSheetBehavior.BottomSheetCallback =
@@ -53,7 +57,7 @@ class BottomDialogFragmentMenuReels(var isOtherUserReel: Boolean, var networkVie
         if (isOtherUserReel) {
             binding.layoutOtherUserMenu.visibility = View.VISIBLE
             binding.layoutOwnMenu.visibility = View.GONE
-        }else{
+        } else {
             binding.layoutOtherUserMenu.visibility = View.GONE
             binding.layoutOwnMenu.visibility = View.VISIBLE
         }
@@ -94,22 +98,41 @@ class BottomDialogFragmentMenuReels(var isOtherUserReel: Boolean, var networkVie
         }
 
 
-        if (funtime.isSave=="Yes"){
-            binding.ivSave.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.fun_unsave))
-            binding.tvSave.text="Unsave"
-        }else{
-            binding.ivSave.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.fun_save))
-            binding.tvSave.text="Save"
+        if (funtime.isSave == "Yes") {
+            binding.ivSave.setImageDrawable(
+                ContextCompat.getDrawable(
+                    requireContext(),
+                    R.drawable.fun_unsave
+                )
+            )
+            binding.tvSave.text = "Unsave"
+        } else {
+            binding.ivSave.setImageDrawable(
+                ContextCompat.getDrawable(
+                    requireContext(),
+                    R.drawable.fun_save
+                )
+            )
+            binding.tvSave.text = "Save"
         }
 
-        if (funtime.isFollowing=="Yes"){
-            binding.ivFollow.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.fun_unfollow))
-            binding.tvFollow.text="Unfollow Account"
-        }else{
-            binding.ivFollow.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.fun_follow))
-            binding.tvFollow.text="Follow Account"
+        if (funtime.isFollowing == "Yes") {
+            binding.ivFollow.setImageDrawable(
+                ContextCompat.getDrawable(
+                    requireContext(),
+                    R.drawable.fun_unfollow
+                )
+            )
+            binding.tvFollow.text = "Unfollow Account"
+        } else {
+            binding.ivFollow.setImageDrawable(
+                ContextCompat.getDrawable(
+                    requireContext(),
+                    R.drawable.fun_follow
+                )
+            )
+            binding.tvFollow.text = "Follow Account"
         }
-
 
 
     }
@@ -121,12 +144,22 @@ class BottomDialogFragmentMenuReels(var isOtherUserReel: Boolean, var networkVie
         networkViewModel.saveUnsavePost(hashmap).observe(this) {
             it.let {
                 if (it!!.status!!) {
-                    if (it.message=="Remove"){
-                        binding.ivSave.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.fun_save))
-                        binding.tvSave.text="Save"
-                    }else{
-                        binding.ivSave.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.fun_unsave))
-                        binding.tvSave.text="Unsave"
+                    if (it.message == "Remove") {
+                        binding.ivSave.setImageDrawable(
+                            ContextCompat.getDrawable(
+                                requireContext(),
+                                R.drawable.fun_save
+                            )
+                        )
+                        binding.tvSave.text = "Save"
+                    } else {
+                        binding.ivSave.setImageDrawable(
+                            ContextCompat.getDrawable(
+                                requireContext(),
+                                R.drawable.fun_unsave
+                            )
+                        )
+                        binding.tvSave.text = "Unsave"
                     }
 
                 }
@@ -137,22 +170,34 @@ class BottomDialogFragmentMenuReels(var isOtherUserReel: Boolean, var networkVie
     private fun followUnfollowUer(funtime: ResultFuntime) {
         var hashmap = HashMap<String, String>()
         hashmap.put("id_user", funtime.user_id!!)
-        networkViewModel.followUnfollowUser(hashmap).observe(this) {
+        networkViewModel.followUnfollowUser(
+            PrefManager.getInstance(App.getInstance())?.userDetail?.results?.access_token.toString(),
+            hashmap
+        ).observe(this) {
             it.let {
                 if (it!!.status) {
 
-                        if (it.message=="Add request successfully"){
-                            binding.ivFollow.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.fun_unfollow))
-                            binding.tvFollow.text="Unfollow Account"
-                        }else{
-                            binding.ivFollow.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.fun_follow))
-                            binding.tvFollow.text="Follow Account"
-                        }
+                    if (it.message == "Add request successfully") {
+                        binding.ivFollow.setImageDrawable(
+                            ContextCompat.getDrawable(
+                                requireContext(),
+                                R.drawable.fun_unfollow
+                            )
+                        )
+                        binding.tvFollow.text = "Unfollow Account"
+                    } else {
+                        binding.ivFollow.setImageDrawable(
+                            ContextCompat.getDrawable(
+                                requireContext(),
+                                R.drawable.fun_follow
+                            )
+                        )
+                        binding.tvFollow.text = "Follow Account"
+                    }
                 }
             }
         }
     }
-
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -163,11 +208,6 @@ class BottomDialogFragmentMenuReels(var isOtherUserReel: Boolean, var networkVie
     public interface Callback {
         fun onClickOnMenu(typeCode: Int)
     }
-
-
-
-
-
 
 
 }

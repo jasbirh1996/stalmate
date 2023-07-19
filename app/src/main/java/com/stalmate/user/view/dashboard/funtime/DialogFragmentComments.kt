@@ -3,9 +3,8 @@ package com.stalmate.user.view.dashboard.funtime
 
 import android.app.Activity
 import android.app.Dialog
-import android.content.DialogInterface
+import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
@@ -14,9 +13,6 @@ import android.util.DisplayMetrics
 import android.util.Log
 import android.view.*
 import android.widget.FrameLayout
-import androidx.activity.ComponentActivity
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.NonNull
 import androidx.core.content.FileProvider
 import androidx.core.net.toUri
@@ -26,16 +22,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.anggrayudi.storage.file.forceDelete
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
-import com.canhub.cropper.CropImageContract
-import com.canhub.cropper.CropImageView
-import com.canhub.cropper.options
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.stalmate.user.R
 import com.stalmate.user.base.App
-import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.databinding.FragmentCommentsBinding
 import com.stalmate.user.model.Comment
 import com.stalmate.user.utilities.PrefManager
@@ -52,6 +43,17 @@ class DialogFragmentComments(
     var callBack: Callback? = null
 ) :
     DialogFragment(), CommentAdapter.Callback, CommentAdapterNew.Callback {
+
+    override fun onDetach() {
+        callBack?.onDismiss()
+        super.onDetach()
+    }
+
+    override fun onAttach(context: Context) {
+        callBack?.onShow()
+        super.onAttach(context)
+    }
+
     lateinit var binding: FragmentCommentsBinding
     private val mBottomSheetBehaviorCallback: BottomSheetBehavior.BottomSheetCallback =
         object : BottomSheetBehavior.BottomSheetCallback() {
@@ -164,19 +166,9 @@ class DialogFragmentComments(
 
         binding.toolbar.tvhead.text = "Comments"
         binding.toolbar.topAppBar.setNavigationOnClickListener {
-            callBack?.funOnCommentDialogDismissed(commentAdapter.commentList.size)
+            callBack?.onCommentCount(commentAdapter.commentList.size)
             dismiss()
         }
-
-        onDismiss(object : DialogInterface {
-            override fun cancel() {
-                callBack?.onCancel()
-            }
-
-            override fun dismiss() {
-                callBack?.onCancel()
-            }
-        })
 
         binding.nestedScrollView.viewTreeObserver.addOnScrollChangedListener(ViewTreeObserver.OnScrollChangedListener {
             val view =
@@ -388,7 +380,7 @@ class DialogFragmentComments(
                                   viewModel.addComment(it)
                               }
                               */
-                    it?.results?.forEach {
+                    it.results.forEach {
                         it.replies = ArrayList<Comment>()
                         commentAdapter.addToList(listOf(it))
                     }
@@ -465,9 +457,10 @@ class DialogFragmentComments(
     }
 
     public interface Callback {
-        fun funOnCommentDialogDismissed(commentCount: Int)
+        fun onCommentCount(commentCount: Int)
 
-        fun onCancel()
+        fun onDismiss()
+        fun onShow()
     }
 
 

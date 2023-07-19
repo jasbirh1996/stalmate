@@ -39,7 +39,7 @@ class ReelVideosByAudioAdapter(
                 callback.onClickOnReel(video)
             }
             binding.tvViews.text = video.text
-            if (video.file_type.equals("0",true)){
+            if (video.isImage()) {
                 binding.ivPlay.visibility = View.GONE
             } else {
                 binding.ivPlay.visibility = View.VISIBLE

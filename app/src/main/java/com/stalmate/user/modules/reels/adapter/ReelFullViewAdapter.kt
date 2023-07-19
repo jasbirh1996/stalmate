@@ -66,7 +66,7 @@ class ReelFullViewAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        if (reelList[position].file_type.equals("1",true)) {
+        if (!reelList[position].isImage()) {
             return FEED_TYPE_VIDEO;
         } else {
             return FEED_TYPE_VIDEO;//return FEED_TYPE_IMAGES_MULTIPLE
@@ -99,7 +99,7 @@ class ReelFullViewAdapter(
     }
 
     private fun handleViewHolder(holder: VideoReelFullViewHolder, position: Int) {
-        if (reelList[position].file_type.equals("0",true)) {
+        if (reelList[position].isImage()) {
             holder.customPlayerView.visibility = View.GONE
             holder.videoThumbnail.visibility = View.VISIBLE
             val requestOptions = RequestOptions()
@@ -160,8 +160,8 @@ class ReelFullViewAdapter(
             )
         );
 
-        if (holder.tvStatusDescription.getText().toString()
-                .split(System.getProperty("line.separator")).size > 2
+        if ((holder.tvStatusDescription.text.toString()
+                .split(System.getProperty("line.separator")).size > 2) || (holder.tvStatusDescription.text.toString().length >= 100)
         ) {
             SeeModetextViewHelper.makeTextViewResizable(
                 holder.tvStatusDescription,
@@ -170,15 +170,24 @@ class ReelFullViewAdapter(
                 true
             );
         }
+
+        if (reelList[position].isLiked == "Yes") {
+            holder.ivLikeIcon.setImageResource(R.drawable.ic_funtime_slidepost_liked_icon)
+        } else {
+            holder.ivLikeIcon.setImageResource(R.drawable.ic_funtime_slidepost_like_icon)
+        }
+
         holder.buttonLike.setOnClickListener {
             if (reelList[position].isLiked == "Yes") {
                 reelList[position].like_count--
                 holder.likeCount.text = reelList[position].like_count.toString()
                 reelList[position].isLiked = "No"
+                holder.ivLikeIcon.setImageResource(R.drawable.ic_funtime_slidepost_like_icon)
             } else {
                 reelList[position].like_count++
                 holder.likeCount.text = reelList[position].like_count.toString()
                 reelList[position].isLiked = "Yes"
+                holder.ivLikeIcon.setImageResource(R.drawable.ic_funtime_slidepost_liked_icon)
             }
             reelList[position].isDataUpdated = true
             callback.onClickOnLikeButtonReel(reelList[position])
@@ -209,13 +218,13 @@ class ReelFullViewAdapter(
                 override fun funOnCommentDialogDismissed(commentCount: Int) {
                     reelList[position].isDataUpdated = true
                     holder.commentCount.text = commentCount.toString()
-                    if (reelList[position].file_type.equals("1", true))
+                    if (!reelList[position].isImage())
                         holder.customPlayerView.getPlayer()?.play()
                 }
             }
         )
         holder.buttonComment.setOnClickListener {
-            if (reelList[position].file_type.equals("1", true))
+            if (!reelList[position].isImage())
                 holder.customPlayerView.getPlayer()?.pause()
             dialogFragmentComment.show(
                 (context as ActivityFullViewReels).supportFragmentManager,

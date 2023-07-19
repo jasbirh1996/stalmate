@@ -119,7 +119,7 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
                 "FragmentAlertDialogAccessContacts"
             )
         }
-        feedAdapter = AdapterFeed(networkViewModel, requireContext(), requireActivity())
+        feedAdapter = AdapterFeed(childFragmentManager,networkViewModel, requireContext(), requireActivity())
         binding.rvFeeds.isNestedScrollingEnabled = false
         binding.rvFeeds.adapter = feedAdapter
         val radius = resources.getDimension(R.dimen.dp_10)
@@ -446,13 +446,13 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
                             ProfileAlbumAdapter(networkViewModel, requireActivity(), id)
                         binding.rvCoverPicture.layoutManager =
                             GridLayoutManager(requireActivity(), 5)
-                        if (!userData.results?.cover_img.isNullOrEmpty()) {
+                        /*if (!userData.results?.cover_img.isNullOrEmpty()) {
                             binding.rvCoverPicture.adapter = coverPictureAdapter
                             it?.results?.let { coverPictureAdapter.submitList(it) }
                             binding.layoutCoverImages.visibility = View.VISIBLE
                         } else {
                             binding.layoutCoverImages.visibility = View.GONE
-                        }
+                        }*/
                     } else if (id == "profile_img") {
 
                         profilePictureAdapter =
@@ -773,6 +773,10 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
 
     override fun onCLickItem(item: ResultFuntime) {
 
+    }
+
+    override fun onCLickUserProfile(item: String) {
+        startActivity(IntentHelper.getOtherUserProfileScreen(this.requireContext())!!.putExtra("id", item))
     }
 
     override fun onClickOnLikeButtonReel(feed: ResultFuntime) {

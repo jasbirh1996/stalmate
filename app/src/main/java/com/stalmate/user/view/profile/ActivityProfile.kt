@@ -270,6 +270,10 @@ class ActivityProfile : BaseActivity(), AdapterFeed.Callbackk, ProfileFriendAdap
 
     }
 
+    override fun onCLickUserProfile(item: String) {
+        startActivity(IntentHelper.getOtherUserProfileScreen(this)!!.putExtra("id", item))
+    }
+
     override fun onClickOnLikeButtonReel(feed: ResultFuntime) {
 
     }

@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
+import android.os.Looper
 import android.provider.MediaStore
 import android.text.format.DateFormat
 import android.util.Log
@@ -31,6 +32,7 @@ import com.canhub.cropper.CropImageView
 import com.canhub.cropper.options
 import com.stalmate.user.intentHelper.IntentHelper
 import com.stalmate.user.R
+import com.stalmate.user.base.App
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.commonadapters.AdapterFeed
 import com.stalmate.user.databinding.FragmentHomeNewBinding
@@ -102,6 +104,13 @@ class FragmentHome(var callback: Callback?=null) : BaseFragment(),
             }
         }
 
+        if (isNetworkAvailable()) {
+            isFirstApiHit = true
+            page_count = 1
+            callApi()
+        } else {
+            binding.nointernet.visibility = View.VISIBLE
+        }
 
         /*binding.nestedScrollview.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
             if (oldScrollY < scrollY) {//increase
@@ -115,7 +124,7 @@ class FragmentHome(var callback: Callback?=null) : BaseFragment(),
     fun follow(feed: ResultFuntime) {
         val hashMap = HashMap<String, String>()
         hashMap.put("id_user", feed.user_id)
-        networkViewModel.sendFollowRequest("", hashMap)
+        networkViewModel.sendFollowRequest(PrefManager.getInstance(App.getInstance())?.userDetail?.results?.access_token.toString(), hashMap)
         networkViewModel.followRequestLiveData.observe(this, Observer {
             it.let {
                 Toast.makeText(this.requireContext(), "Success!", Toast.LENGTH_SHORT).show()
@@ -126,12 +135,10 @@ class FragmentHome(var callback: Callback?=null) : BaseFragment(),
     private fun likeApiHit(funtime: ResultFuntime) {
         var hashmap = HashMap<String, String>()
         hashmap.put("funtime_id", funtime.id.toString())
-        networkViewModel.funtimeLiveLikeUnlikeData(hashmap)
+        networkViewModel.funtimeLiveLikeUnlikeData(prefManager?.access_token.toString(),hashmap)
         networkViewModel.funtimeLiveLikeUnlikeData.observe(this) {
             it.let {
-                if (it!!.status) {
-                    Toast.makeText(this.requireContext(), "Liked successfully!", Toast.LENGTH_SHORT)
-                        .show()
+                if (it?.status == true) {
                     feedAdapter.likeReelById()
                 }
             }
@@ -293,6 +300,7 @@ class FragmentHome(var callback: Callback?=null) : BaseFragment(),
     private fun homeSetUp() {
         setupSearchBox()
         feedAdapter = AdapterFeed(
+            childFragmentManager,
             networkViewModel,
             requireContext(),
             requireActivity(),
@@ -305,6 +313,10 @@ class FragmentHome(var callback: Callback?=null) : BaseFragment(),
                     startActivity(
                         IntentHelper.getFullViewReelActivity(context)!!.putExtra("data", item)
                     )
+                }
+
+                override fun onCLickUserProfile(item: String) {
+                    startActivity(IntentHelper.getOtherUserProfileScreen(this@FragmentHome.requireContext())!!.putExtra("id", item))
                 }
 
                 override fun onClickOnLikeButtonReel(feed: ResultFuntime) {
@@ -384,8 +396,8 @@ class FragmentHome(var callback: Callback?=null) : BaseFragment(),
         binding.rvStory.adapter = homeStoryAdapter
 
         binding.rvFeeds.adapter = feedAdapter
-        binding.rvFeeds.layoutManager =
-            LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+        (binding.rvFeeds.adapter as AdapterFeed).stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+        binding.rvFeeds.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
         binding.shimmerLayoutFeeds.startShimmer()
         /*Helper class to provide AutoPlay feature inside cell*/
         if (videoAutoPlayHelper == null) {
@@ -415,8 +427,10 @@ class FragmentHome(var callback: Callback?=null) : BaseFragment(),
                             loading = true
                         }
                     }
+                    Handler(Looper.getMainLooper()).postDelayed({binding.toolbar.clTool.visibility = View.GONE},250)
                 } else {
                     callback?.onScoll(false)
+                    Handler(Looper.getMainLooper()).postDelayed({binding.toolbar.clTool.visibility = View.VISIBLE},250)
                 }
             }
         })
@@ -548,16 +562,7 @@ class FragmentHome(var callback: Callback?=null) : BaseFragment(),
     }
 
     override fun onResume() {
-
         try {
-            if (isNetworkAvailable()) {
-                isFirstApiHit = true
-                page_count = 1
-                callApi()
-            } else {
-                binding.nointernet.visibility = View.VISIBLE
-            }
-
             getUserProfileData()
             if ((videoAutoPlayHelper != null)) {
                 val viewholder =

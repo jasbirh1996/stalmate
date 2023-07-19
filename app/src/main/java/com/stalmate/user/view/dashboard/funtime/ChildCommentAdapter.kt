@@ -12,8 +12,10 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.stalmate.user.R
+import com.stalmate.user.base.App
 import com.stalmate.user.databinding.ItemCommentBinding
 import com.stalmate.user.model.Comment
+import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.utilities.TimesAgo2
 import com.stalmate.user.viewmodel.AppViewModel
 import java.util.HashMap
@@ -46,7 +48,8 @@ class ChildCommentAdapter(
 
         private fun initBinding(binding: ItemCommentBinding, shortComment: Comment) {
             if (shortComment.Created_date.isDigitsOnly())
-                binding.tvDate.text = "${TimesAgo2.covertTimeToText(shortComment.Created_date, true)}"
+                binding.tvDate.text =
+                    "${TimesAgo2.covertTimeToText(shortComment.Created_date, true)}"
             else
                 binding.tvDate.text = "${shortComment.Created_date}"
             binding.tvUserName.text = "${shortComment.first_name} ${shortComment.last_name}"
@@ -225,11 +228,14 @@ class ChildCommentAdapter(
 */
     fun likeComment(commentId: String, position: Int) {
 
-        var hashmap = HashMap<String, String>()
+        val hashmap = HashMap<String, String>()
         hashmap.put("funtime_id", funTimeId)
         hashmap.put("comment_id", commentId)
 
-        networkViewModel.likeComment(hashmap)
+        networkViewModel.likeComment(
+            PrefManager.getInstance(App.getInstance())?.userDetail?.results?.access_token.toString(),
+            hashmap
+        )
         networkViewModel.likeCommentLiveData.observe(lifecyclerOwner) { mainIt ->
             run {
                 if (mainIt!!.status) {

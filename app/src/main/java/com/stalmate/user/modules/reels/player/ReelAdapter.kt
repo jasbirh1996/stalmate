@@ -193,18 +193,22 @@ class ReelAdapter(val context: Context, var callback: Callback) :
                 (context as BaseActivity).networkViewModel,
                 reelList[position],
                 object : DialogFragmentComments.Callback {
-                    override fun funOnCommentDialogDismissed(commentCount: Int) {
+                    override fun onCommentCount(commentCount: Int) {
                         holder.commentCount.text = commentCount.toString()
                         reelList[position].comment_count = commentCount
                         holder.customPlayerView.getPlayer()!!.play()
                     }
 
-                    override fun onCancel() {
+                    override fun onDismiss() {
+
+                    }
+
+                    override fun onShow() {
 
                     }
                 })
 
-            holder.customPlayerView.getPlayer()!!.pause()
+            holder.customPlayerView.getPlayer()?.pause()
             dialogFragmen.show((context as AppCompatActivity).supportFragmentManager, "")
         }
         holder.soundIcon.setOnClickListener {

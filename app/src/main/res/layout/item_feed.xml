@@ -17,7 +17,7 @@
 
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/user_profile_image"
+            android:id="@+id/userProfileImage"
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:layout_marginStart="@dimen/_10sdp"
@@ -39,7 +39,7 @@
             android:textColor="@color/black"
             android:textSize="14sp"
             app:layout_constraintBottom_toTopOf="@+id/appCompatTextView6"
-            app:layout_constraintStart_toEndOf="@+id/user_profile_image"
+            app:layout_constraintStart_toEndOf="@+id/userProfileImage"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_chainStyle="packed" />
 
@@ -80,7 +80,7 @@
             android:text="2h"
             android:textColor="@color/colorGray"
             android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="@+id/user_profile_image"
+            app:layout_constraintBottom_toBottomOf="@+id/userProfileImage"
             app:layout_constraintStart_toStartOf="@+id/tvUserName"
             app:layout_constraintTop_toBottomOf="@+id/tvUserName" />
 
@@ -101,7 +101,7 @@
             android:layout_marginTop="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/user_profile_image">
+            app:layout_constraintTop_toBottomOf="@+id/userProfileImage">
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/appCompatImageView5"
@@ -181,42 +181,51 @@
             app:layout_constraintStart_toStartOf="@id/share_icon"
             app:layout_constraintTop_toBottomOf="@id/share_icon" />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/comment_icon"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clComments"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_10sdp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="@dimen/_15sdp"
-            android:background="@drawable/bg_post_btns"
-            android:padding="@dimen/_4sdp"
-            android:src="@drawable/comment"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/clView" />
+            app:layout_constraintTop_toBottomOf="@+id/clView">
 
-        <TextView
-            android:id="@+id/comment_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/poppins_medium"
-            android:gravity="center"
-            android:text="20 Comments"
-            android:textColor="#333333"
-            android:textSize="10sp"
-            app:layout_constraintEnd_toStartOf="@id/cView"
-            app:layout_constraintTop_toTopOf="@id/cView" />
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/commentIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_post_btns"
+                android:padding="@dimen/_4sdp"
+                android:src="@drawable/comment"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/cView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_4sdp"
-            android:fontFamily="@font/poppins_medium"
-            android:text=" View"
-            android:textColor="#0E4FB5"
-            android:textSize="10sp"
-            app:layout_constraintEnd_toEndOf="@id/comment_icon"
-            app:layout_constraintTop_toBottomOf="@id/comment_icon" />
+            <TextView
+                android:id="@+id/comment_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_medium"
+                android:gravity="center"
+                android:text="20 Comments"
+                android:textColor="#333333"
+                android:textSize="10sp"
+                app:layout_constraintEnd_toStartOf="@id/cView"
+                app:layout_constraintTop_toTopOf="@id/cView" />
+
+            <TextView
+                android:id="@+id/cView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:fontFamily="@font/poppins_medium"
+                android:text=" View"
+                android:textColor="#0E4FB5"
+                android:textSize="10sp"
+                app:layout_constraintEnd_toEndOf="@id/commentIcon"
+                app:layout_constraintTop_toBottomOf="@id/commentIcon" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
             android:id="@+id/like_count"
@@ -234,10 +243,9 @@
             android:id="@+id/tvPostDescription"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_marginHorizontal="@dimen/_10sdp"
             android:layout_marginTop="10dp"
             android:fontFamily="@font/poppins"
-            android:text="Draw inspiration from your love for motorcycling and share expressions of #Motorcycling... more"
             android:textColor="@color/colorTextBlack"
             android:textSize="13sp"
             android:visibility="gone"
@@ -246,6 +254,7 @@
             app:layout_constraintTop_toBottomOf="@+id/like_count" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clCommentsList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
@@ -394,6 +403,15 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:id="@+id/bottomSpace"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_30sdp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/clCommentsList" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

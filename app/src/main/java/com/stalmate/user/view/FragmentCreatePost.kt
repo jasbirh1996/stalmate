@@ -11,6 +11,7 @@ import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.commonadapters.AdapterFeed
 import com.stalmate.user.databinding.FragmentCreatePostBinding
+import com.stalmate.user.intentHelper.IntentHelper
 import com.stalmate.user.model.Feed
 import com.stalmate.user.model.User
 import com.stalmate.user.view.adapter.SuggestedFriendAdapter
@@ -44,7 +45,7 @@ class FragmentCreatePost : BaseFragment(), AdapterFeed.Callbackk, UserHomeStoryA
         super.onViewCreated(view, savedInstanceState)
 
 
-        feedAdapter = AdapterFeed(networkViewModel, requireContext(), requireActivity())
+        feedAdapter = AdapterFeed(childFragmentManager,networkViewModel, requireContext(), requireActivity())
         homeStoryAdapter = UserHomeStoryAdapter(networkViewModel, requireContext(), this)
         suggestedFriendAdapter = SuggestedFriendAdapter(networkViewModel, requireContext(), this)
 
@@ -70,6 +71,10 @@ class FragmentCreatePost : BaseFragment(), AdapterFeed.Callbackk, UserHomeStoryA
 
     override fun onCLickItem(item: ResultFuntime) {
 
+    }
+
+    override fun onCLickUserProfile(item: String) {
+        startActivity(IntentHelper.getOtherUserProfileScreen(this.requireContext())!!.putExtra("id", item))
     }
 
     override fun onClickOnLikeButtonReel(feed: ResultFuntime) {

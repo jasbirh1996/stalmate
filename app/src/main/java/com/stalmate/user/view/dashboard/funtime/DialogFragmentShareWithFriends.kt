@@ -22,6 +22,7 @@ import com.stalmate.user.base.App
 import com.stalmate.user.commonadapters.ShareWithFriendAdapter
 import com.stalmate.user.databinding.FragmentShareWithFriendsBinding
 import com.stalmate.user.model.User
+import com.stalmate.user.networking.ApiInterface
 import com.stalmate.user.utilities.Constants
 import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.viewmodel.AppViewModel
@@ -176,7 +177,7 @@ class DialogFragmentShareWithFriends(
             currentPage = 1
         }
 
-        var hashmap = HashMap<String, String>()
+        val hashmap = HashMap<String, String>()
         hashmap.put("other_user_id", "")
         hashmap.put("type", Constants.TYPE_PROFILE_FRIENDS)
         hashmap.put("sub_type", "")
@@ -185,9 +186,14 @@ class DialogFragmentShareWithFriends(
         hashmap.put("limit", "20")
         hashmap.put("sortBy", "")
         hashmap.put("filter", "")
-        networkViewModel.getFriendList(
+        networkViewModel.getFriendListBody(
             PrefManager.getInstance(App.getInstance())?.userDetail?.results?.access_token.toString(),
-            hashmap
+            map = ApiInterface.UsersListResponse(
+                limit = "6",
+                page = "1",
+                type = Constants.NEW_Type_Friend_List,
+                user_id = PrefManager.getInstance(App.getInstance())?.userDetail?.results?._id.toString()
+            )
         )
         networkViewModel.friendLiveData.observe(viewLifecycleOwner, Observer {
             it.let {

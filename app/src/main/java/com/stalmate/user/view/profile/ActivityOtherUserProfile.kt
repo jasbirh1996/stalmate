@@ -10,16 +10,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.shape.CornerFamily
 import com.stalmate.user.intentHelper.IntentHelper
 import com.stalmate.user.R
+import com.stalmate.user.base.App
 import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.databinding.ActivityOtherUserProfileBinding
-import com.stalmate.user.model.AboutProfileLine
-import com.stalmate.user.model.ModelFriend
+import com.stalmate.user.model.*
 
-import com.stalmate.user.model.ModelUser
-import com.stalmate.user.model.User
 import com.stalmate.user.networking.ApiInterface
 import com.stalmate.user.utilities.Constants
 import com.stalmate.user.utilities.ImageLoaderHelperGlide
+import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.utilities.ValidationHelper
 import com.stalmate.user.view.adapter.ProfileAboutAdapter
 
@@ -31,7 +30,7 @@ class ActivityOtherUserProfile : BaseActivity(),
     lateinit var binding: ActivityOtherUserProfileBinding
     lateinit var friendAdapter: ProfileFriendAdapter
     var userId = ""
-    lateinit var userData: User
+    lateinit var userData: User1
     override fun onClick(viewId: Int, view: View?) {
     }
 
@@ -186,7 +185,7 @@ class ActivityOtherUserProfile : BaseActivity(),
                     userData?.isBlocked = "0"
                 }
                 networkViewModel.otherUserProfileLiveData.postValue(
-                    ModelFriend(
+                    ModelFriend1(
                         message = "",
                         results = listOf(userData),
                         status = false
@@ -247,7 +246,7 @@ class ActivityOtherUserProfile : BaseActivity(),
             })
         }
         if (status.equals(Constants.TYPE_USER_ACTION_FOLLOW)) {
-            networkViewModel.sendFollowRequest("", hashMap)
+            networkViewModel.sendFollowRequest(PrefManager.getInstance(App.getInstance())?.userDetail?.results?.access_token.toString(), hashMap)
             networkViewModel.followRequestLiveData.observe(this, Observer {
                 it.let {
                     if (networkViewModel.otherUserProfileLiveData.value?.results?.get(0)?.isFollowed == 1) {
@@ -269,7 +268,7 @@ class ActivityOtherUserProfile : BaseActivity(),
 
     fun notifyData() {
         networkViewModel.otherUserProfileLiveData.postValue(
-            ModelFriend(
+            ModelFriend1(
                 message = "",
                 results = listOf(userData),
                 status = false
@@ -301,13 +300,13 @@ class ActivityOtherUserProfile : BaseActivity(),
         ImageLoaderHelperGlide.setGlide(
             this,
             binding.ivBackground,
-            userData?.cover_img1,
+            userData?.cover_img,
             R.drawable.user_placeholder
         )
         ImageLoaderHelperGlide.setGlide(
             this,
             binding.ivUserThumb,
-            userData?.profile_img1,
+            userData?.profile_img,
             R.drawable.user_placeholder
         )
         var aboutArrayList = ArrayList<AboutProfileLine>()

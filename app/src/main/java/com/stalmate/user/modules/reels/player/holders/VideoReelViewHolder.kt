@@ -34,6 +34,7 @@ class VideoReelFullViewHolder(binding: ItemFullViewReelBinding) : ReelViewHolder
     val customPlayerView = binding.feedPlayerView;
     val tvUserName = binding.tvUserName;
     val imgUserProfile = binding.imgUserProfile;
+    val ivLikeIcon = binding.ivLikeIcon;
     val likeCount = binding.tvLikeCount;
     val shareCount = binding.tvShareCount;
     val commentCount = binding.tvCommentCount;

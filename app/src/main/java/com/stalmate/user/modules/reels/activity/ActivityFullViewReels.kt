@@ -195,7 +195,7 @@ class ActivityFullViewReels : BaseActivity(), ReelFullViewAdapter.Callback {
     private fun likeApiHit(funtime: ResultFuntime) {
         var hashmap = HashMap<String, String>()
         hashmap.put("funtime_id", funtime.id.toString())
-        networkViewModel.funtimeLiveLikeUnlikeData(hashmap)
+        networkViewModel.funtimeLiveLikeUnlikeData(prefManager?.access_token.toString(),hashmap)
         networkViewModel.funtimeLiveLikeUnlikeData.observe(this) {
 
             it.let {

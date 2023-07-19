@@ -23,9 +23,8 @@ public class TimesAgo2 {
             if (isTimeStamp){
                 Calendar cal = Calendar.getInstance(Locale.ENGLISH);
 
-              //  cal.setTimeInMillis(Long.parseLong(dataDate) * 1000);
-                cal.setTimeInMillis(totalTimeInMilli(dataDate));
-                Log.d("alshdlasd",String.valueOf(totalTimeInMilli(dataDate)));
+                cal.setTimeInMillis(Long.parseLong(dataDate));
+//                cal.setTimeInMillis(totalTimeInMilli(dataDate));
                 dataDate = DateFormat.format("yyyy-MM-dd HH:mm:ss", cal).toString();
             }
 

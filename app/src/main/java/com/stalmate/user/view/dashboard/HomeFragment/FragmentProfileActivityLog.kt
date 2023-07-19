@@ -12,6 +12,7 @@ import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.commonadapters.AdapterFeed
 import com.stalmate.user.databinding.FragmentProfileActivityLogBinding
+import com.stalmate.user.intentHelper.IntentHelper
 import com.stalmate.user.model.User
 import com.stalmate.user.utilities.Constants
 import com.stalmate.user.view.adapter.SuggestedFriendAdapter
@@ -43,7 +44,7 @@ class FragmentProfileActivityLog : BaseFragment(), AdapterFeed.Callbackk,
     }
 
     fun getActivityLogs() {
-        feedAdapter = AdapterFeed(networkViewModel, requireContext(), requireActivity())
+        feedAdapter = AdapterFeed(childFragmentManager,networkViewModel, requireContext(), requireActivity())
         binding.shimmerLayoutFeeds.startShimmer()
         binding.rvFeeds.adapter = feedAdapter
         binding.rvFeeds.layoutManager = LinearLayoutManager(context)
@@ -99,6 +100,10 @@ class FragmentProfileActivityLog : BaseFragment(), AdapterFeed.Callbackk,
 
     override fun onCLickItem(item: ResultFuntime) {
 
+    }
+
+    override fun onCLickUserProfile(item: String) {
+        startActivity(IntentHelper.getOtherUserProfileScreen(this.requireContext())!!.putExtra("id", item))
     }
 
     override fun onClickOnLikeButtonReel(feed: ResultFuntime) {

@@ -65,7 +65,11 @@ interface ApiInterface {
 
 
     @PATCH(Constants.URL_FUNTIME_LIKE_UNLIKE)
-    fun getFuntimeLikeUnlike(@Body map: HashMap<String, String>): Call<ModelFuntimeLikeResponse>
+    fun getFuntimeLikeUnlike(
+        @Header("Authorization") Authorization: String,
+        @Header("access_token") access_token: String,
+        @Body map: HashMap<String, String>
+    ): Call<ModelFuntimeLikeResponse>
 
 
     @PATCH(Constants.URL_SAVE_UNSAVE_FUNTIME)
@@ -197,7 +201,10 @@ interface ApiInterface {
     fun shareWithFriend(@Body map: HashMap<String, String>): Call<CommonModelResponse>
 
     @POST(Constants.url_send_follower_request)
-    fun requestBeFollower(@Body map: HashMap<String, String>): Call<ModelSuccess>
+    fun requestBeFollower(
+        @Header("Authorization") Authorization: String,
+        @Header("access_token") access_token: String,
+        @Body map: HashMap<String, String>): Call<ModelSuccess>
 
     @GET(Constants.GET_PROFILE_API)
     fun setProfileDetails(
@@ -218,7 +225,7 @@ interface ApiInterface {
     fun getOtherUserProfileDetails(
         @Header("access_token") access_token: String,
         @Query("id_user") id_user: String
-    ): Call<ModelFriend>
+    ): Call<ModelFriend1>
 
     @GET(Constants.URL_OTP_REGISTRATION)
     fun setOtpVerifyRegistration(
@@ -274,7 +281,10 @@ interface ApiInterface {
     ): Call<ModelComment>
 
     @PATCH(Constants.URL_LIKE_COMMENT)
-    fun likeComment(@Body map: HashMap<String, String>): Call<ModelSuccess>
+    fun likeComment(
+        @Header("Authorization") Authorization: String,
+        @Header("access_token") access_token: String,
+        @Body map: HashMap<String, String>): Call<ModelSuccess>
 
     @Multipart
     @POST(Constants.UPDATE_PROFILE_API)

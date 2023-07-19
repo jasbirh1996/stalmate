@@ -106,7 +106,7 @@ class FragmentReelPlay : BaseFragment, Player.Listener {
     private fun likeApiHit() {
         var hashmap = HashMap<String, String>()
         hashmap.put("funtime_id", item!!.id)
-        networkViewModel.funtimeLiveLikeUnlikeData(hashmap)
+        networkViewModel.funtimeLiveLikeUnlikeData(prefManager?.access_token.toString(),hashmap)
         networkViewModel.funtimeLiveLikeUnlikeData.observe(viewLifecycleOwner) {
             if (it!!.message == "Liked") {
                 binding.like.text = it.like_count.toString()

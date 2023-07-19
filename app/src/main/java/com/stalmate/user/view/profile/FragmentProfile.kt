@@ -537,6 +537,10 @@ class FragmentProfile(val callback: FragmentHome.Callback? = null) : BaseFragmen
 
     }
 
+    override fun onCLickUserProfile(item: String) {
+        startActivity(IntentHelper.getOtherUserProfileScreen(this.requireContext())!!.putExtra("id", item))
+    }
+
     override fun onClickOnLikeButtonReel(feed: ResultFuntime) {
 
     }

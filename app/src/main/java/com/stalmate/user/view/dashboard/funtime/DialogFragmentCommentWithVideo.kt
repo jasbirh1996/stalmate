@@ -280,7 +280,7 @@ class DialogFragmentCommentWithVideo(
         )
         hitApi(true)
 
-        if (funtime.file_type.equals("0", true)) {
+        if (funtime.isImage()) {
             binding.ivImage.visibility = View.VISIBLE
             val requestOptions = RequestOptions()
             Glide.with(binding.ivImage.context)
