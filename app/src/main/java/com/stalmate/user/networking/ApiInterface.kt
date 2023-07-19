@@ -93,7 +93,9 @@ interface ApiInterface {
     fun get_song_funtime_list(@Body map: HashMap<String, String>): Call<ModelFuntimeResponse>
 
     @POST(Constants.URL_PHOTO_ALBUM_PHOTO)
-    fun getPhotoList(@Body map: HashMap<String, String>): Call<ModelPhotoResponse>
+    fun getPhotoList(
+        @Body map: HashMap<String, Any>
+    ): Call<ModelPhotoResponse>
 
     @POST(Constants.URL_PHOTO_INDEX)
     fun getPhotoIndexList(@Body map: HashMap<String, String>): Call<ModelPhotoIndexDataResponse>
@@ -149,7 +151,9 @@ interface ApiInterface {
     fun setOtpVerify(@Body map: HashMap<String, String>): Call<CommonModelResponse>
 
     @POST(Constants.URL_BLOCKED_LIST)
-    fun getBlockedList(@Body map: HashMap<String, String>): Call<ModelBlockedUser>
+    fun getBlockedList(
+        @Body map: HashMap<String, String>
+    ): Call<ModelBlockedUser>
 
     @POST(Constants.URL_LOGIN)
     fun setLoginDetails(@Body map: HashMap<String, String>): Call<ModelLoginResponse>
@@ -179,7 +183,9 @@ interface ApiInterface {
     ): Call<ModelCommonAddEducationAndProfessionResponse>
 
     @POST(Constants.URL_PHOTO_ALBUM_NAME)
-    fun setCreateAlbumDetails(@Body map: HashMap<String, String>): Call<ModelAlbumCreateResponse>
+    fun setCreateAlbumDetails(
+        @Body map: HashMap<String, String>
+    ): Call<ModelAlbumCreateResponse>
 
     @POST(Constants.url_send_friend_request)
     fun sendFriendRequest(
@@ -304,6 +310,7 @@ interface ApiInterface {
     @Multipart
     @POST(Constants.UPLOADE_ALBUM_IMAGE_API_FILE)
     fun addAlbumImage(
+        @Header("access_token") access_token: String,
         @Part cover_img: MultipartBody.Part,
         @Part("album_id") firstName: RequestBody,
     ): Call<CommonModelResponse>
@@ -335,7 +342,8 @@ interface ApiInterface {
     ): Call<ReportsListingResponse>
 
     @GET(Constants.URL_PHOTO_ALBUM)
-    fun getAlbumList(): Call<ModelAlbumsResponse>
+    fun getAlbumList(@Header("access_token") access_token: String,
+    ): Call<ModelAlbumsResponse>
 
 
     @Multipart

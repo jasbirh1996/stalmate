@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
@@ -78,7 +77,7 @@ class FragmentFullViewPhoto : BaseFragment() {
     }
 
     private fun hitphotoListApi() {
-        val hashMap = HashMap<String, String>()
+        val hashMap = HashMap<String, Any>()
         hashMap["album_id"] = albumId
         hashMap["limit"]="1"
         if (!isFreshApi) {

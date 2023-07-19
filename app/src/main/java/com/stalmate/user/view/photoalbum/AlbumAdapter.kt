@@ -60,7 +60,7 @@ class AlbumAdapter(val viewModel: AppViewModel, val context: Context,  var callb
             binding.tvAlbumName.text = feed.name
 
             binding.photoLayout.setOnClickListener {
-                callback.onClickItem(list[position].id)
+                callback.onClickItem(list[position]._id)
             }
 
 

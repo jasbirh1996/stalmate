@@ -7,7 +7,8 @@ data class ModelAlbumsResponse(
 )
 
 data class ResultResponse(
-    val id: String,
+    val _id: String,
+//    val id: String,
     val name: String,
     val img : String
 )

@@ -2,7 +2,6 @@ package com.stalmate.user.view.settings
 
 import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.databinding.FragmentBlockedContactsBinding

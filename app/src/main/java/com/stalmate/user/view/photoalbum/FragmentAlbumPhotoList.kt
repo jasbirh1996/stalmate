@@ -103,8 +103,11 @@ class FragmentAlbumPhotoList : BaseFragment(), PhotoAdapter.Callback, AlbumAdapt
     }
 
     private fun hitphotoListApi() {
-        val hashMap = HashMap<String, String>()
+        val hashMap = HashMap<String, Any>()
         hashMap["album_id"] = albumId
+        hashMap["user_id"] = prefManager?._id.toString()
+        hashMap["limit"] = 100
+        hashMap["page"] = 1
         networkViewModel.getAlbumPhotos(hashMap)
         networkViewModel.photoLiveData.observe(requireActivity()) {
             it.let {
@@ -118,7 +121,7 @@ class FragmentAlbumPhotoList : BaseFragment(), PhotoAdapter.Callback, AlbumAdapt
 
 
     private fun setUpAdapter() {
-        networkViewModel.albumLiveDatas("", HashMap())
+        networkViewModel.albumLiveDatas(prefManager?.access_token.toString(), HashMap())
         networkViewModel.albumLiveData.observe(requireActivity()) {
             it.let {
                 binding.rvPhoto.layoutManager= GridLayoutManager(context, 3)

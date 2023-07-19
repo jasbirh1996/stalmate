@@ -44,6 +44,9 @@ class RestClient private constructor() {
                 val request = chain.request().newBuilder().addHeader(
                     "Authorization",
                     "Bearer ${PrefManager.getInstance(App.getInstance())?.userDetail?.results?.access_token}"
+                ).removeHeader("access_token").addHeader(
+                    "access_token",
+                    PrefManager.getInstance(App.getInstance())?.userDetail?.results?.access_token+""
                 ).build()
                 chain.proceed(request)
             }.build())

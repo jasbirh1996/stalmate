@@ -48,8 +48,12 @@ class FragmentAlbumPhotoListInGrid : BaseFragment(),  PhotoAdapter.Callback {
 
     private fun getAlbumImagelist() {
 
-        val hashMap = HashMap<String, String>()
-        hashMap["album_id"] = albumId
+        val hashMap = HashMap<String, Any>()
+//        hashMap["album_id"] = albumId
+//        hashMap["album_id"] = id
+        hashMap["user_id"] = prefManager?._id.toString()
+        hashMap["limit"] = 100
+        hashMap["page"] = 1
         networkViewModel.getAlbumPhotos(hashMap)
         networkViewModel.photoLiveData.observe(requireActivity()) {
             it.let {
