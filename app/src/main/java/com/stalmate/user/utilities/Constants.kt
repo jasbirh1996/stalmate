@@ -70,6 +70,7 @@ object Constants {
     const val url_send_follower_request = "/friend_api/send_follower_request"
     const val GET_PROFILE_API = "/auth_api/get_profile_data"
     const val GET_OTHER_USER_PROFILE_API = "/auth_api/get_profile_user"
+    const val get_hash_tags = "/funtime_api/get_has_tag_api"
     const val UPDATE_PROFILE_API = "/auth_api/profile_update"
     const val UPDATE_PROFILE_API_FILE = "/auth_api/profile_update_file"
     const val UPLOADE_ALBUM_IMAGE_API_FILE = "/auth_api/add_albums_img"

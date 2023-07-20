@@ -32,6 +32,7 @@ import com.canhub.cropper.options
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.databinding.FragmentFuntimePostBinding
+import com.stalmate.user.model.HashTagsListResponse
 import com.stalmate.user.model.SelecteThumbnailBottomSheet
 import com.stalmate.user.model.User
 import com.stalmate.user.modules.reels.utils.RealPathUtil
@@ -51,6 +52,7 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.stream.Collectors
+import kotlin.collections.ArrayList
 
 
 class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
@@ -149,6 +151,8 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
 
     private var fromCameraCover: File? = null
 
+    private val hashTagsListResponse: ArrayList<HashTagsListResponse.Result?> = arrayListOf()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         tagPeopleViewModel = ViewModelProvider(requireActivity())[TagPeopleViewModel::class.java]
@@ -156,10 +160,35 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
         isImage = (requireActivity() as ActivityFuntimePost).isImage
         mediaUri = (requireActivity() as ActivityFuntimePost).videoUri.toString()
 
+        networkViewModel.get_hash_tags(prefManager?.access_token.toString())
+        networkViewModel.hashTagsListResponse.observe(this) {
+            if (!it?.results.isNullOrEmpty()) {
+                hashTagsListResponse.clear()
+                it?.results?.let { it1 -> hashTagsListResponse.addAll(it1) }
+                binding.rvHashTags.apply {
+                    adapter = HashTagsListAdapter(hashTagsListResponse) {
+                        binding.nsvHashTags.visibility = View.GONE
+                        binding.editor.html = binding.editor.html.toString().replaceAfterLast("#",it.replace("#",""))
+                    }
+                }
+            }
+        }
+
         binding.editor.setOnTextChangeListener {
             if (it.isNullOrEmpty()) {
                 binding.llHint.visibility = View.VISIBLE
+                binding.nsvHashTags.visibility = View.GONE
             } else {
+                hashTagsListResponse.filter { hashTag ->
+                    (hashTag?.name?.startsWith(it.substringAfterLast("#"), true) == true)
+                }.let {
+                    if (it.isNotEmpty()) {
+                        binding.nsvHashTags.visibility = View.VISIBLE
+                        (binding.rvHashTags.adapter as HashTagsListAdapter).hashTagsListResponse.clear()
+                        (binding.rvHashTags.adapter as HashTagsListAdapter).hashTagsListResponse.addAll(it)
+                        (binding.rvHashTags.adapter as HashTagsListAdapter).notifyDataSetChanged()
+                    }
+                }
                 binding.llHint.visibility = View.GONE
             }
         }

@@ -312,8 +312,8 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
             )
         }
 
-        getAlbumPhotosById("profile_img")
-        getAlbumPhotosById("cover_img")
+        getAlbumPhotosById("0")
+        getAlbumPhotosById("1")
 
         binding.layout.etName.setText(userData.results?.first_name)
         binding.layout.etLastName.setText(userData.results?.last_name)
@@ -357,7 +357,7 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
 
         val hashmap = HashMap<String, String>()
         hashmap.put("page", 1.toString())
-        hashmap.put("id_user", "")
+        hashmap.put("id_user", prefManager?._id.toString())
         hashmap.put("fun_id", "")
         hashmap.put("limit", "5")
         networkViewModel.funtimeLiveData(prefManager?.access_token.toString(), hashmap)
@@ -448,18 +448,16 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
 
     private fun getAlbumPhotosById(id: String) {
         val hashMap = HashMap<String, Any>()
-        hashMap["album_id"] = id
-//        hashMap["user_id"] = prefManager?._id.toString()
-//        hashMap["limit"] = 100
-//        hashMap["page"] = 1
-        networkViewModel.getAlbumPhotos(hashMap)
+//        hashMap["is_cover"] = id
+        hashMap["user_id"] = prefManager?._id.toString()
+        hashMap["limit"] = 10
+        hashMap["page"] = 1
+        networkViewModel.getAlbumPhotos(prefManager?.access_token.toString(),hashMap)
         networkViewModel.photoLiveData.observe(requireActivity()) {
             it.let {
-
                 if (!it?.results.isNullOrEmpty()) {
-                    if (id == "cover_img") {
-                        coverPictureAdapter =
-                            ProfileAlbumAdapter(networkViewModel, requireActivity(), id)
+                    if (id == "1") {
+                        coverPictureAdapter = ProfileAlbumAdapter(networkViewModel, requireActivity(), id)
                         binding.rvCoverPicture.layoutManager =
                             GridLayoutManager(requireActivity(), 5)
                         /*if (!userData.results?.cover_img.isNullOrEmpty()) {
@@ -469,10 +467,8 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
                         } else {
                             binding.layoutCoverImages.visibility = View.GONE
                         }*/
-                    } else if (id == "profile_img") {
-
-                        profilePictureAdapter =
-                            ProfileAlbumAdapter(networkViewModel, requireActivity(), id)
+                    } else if (id == "0") {
+                        profilePictureAdapter = ProfileAlbumAdapter(networkViewModel, requireActivity(), id)
                         binding.rvProfilePicture.layoutManager =
                             GridLayoutManager(requireActivity(), 5)
                         if (!userData.results?.profile_img.isNullOrEmpty()) {

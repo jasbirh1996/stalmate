@@ -73,6 +73,16 @@ class AdapterFeed(
             else
                 holder.bottomSpace.visibility = View.GONE
             val feed = list[position]
+
+            if (feed.comment_status.equals("on", true) || feed.comment_status.equals("true", true)) {
+                holder.commentIcon.visibility = View.VISIBLE
+                holder.clCommentsList.visibility = View.VISIBLE
+            } else {
+                holder.bottomSpace.visibility = View.VISIBLE
+                holder.commentIcon.visibility = View.GONE
+                holder.clCommentsList.visibility = View.GONE
+            }
+
             try {
                 if (feed.user_id == ((context as ActivityDashboard).prefManager?._id)) {
                     holder.appCompatTextView5.visibility = View.INVISIBLE
@@ -370,6 +380,7 @@ class AdapterFeed(
         val ivSend = binding.ivSend
         val etSearch = binding.etSearch
         val commentIcon = binding.clComments
+        val clCommentsList = binding.clCommentsList
         val commentCount = binding.commentCount
         val likeCount = binding.likeCount
         val likeIcon = binding.likeIcon

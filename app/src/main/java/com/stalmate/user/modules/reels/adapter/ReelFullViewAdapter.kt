@@ -124,6 +124,12 @@ class ReelFullViewAdapter(
         holder.tvUserName.text = reelList[position].first_name + " " + reelList[position].last_name
         Glide.with(context).load(reelList[position].profile_img)
             .placeholder(R.drawable.profileplaceholder).into(holder.imgUserProfile)
+        holder.imgUserProfile.setOnClickListener {
+            context.startActivity(
+                IntentHelper.getOtherUserProfileScreen(this.context)!!
+                    .putExtra("id", reelList[position].user_id)
+            )
+        }
         Glide.with(context).load(reelList[position].sound_image)
             .placeholder(R.drawable.profileplaceholder).into(holder.ivMusicImage)
 

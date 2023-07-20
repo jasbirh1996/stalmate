@@ -197,7 +197,7 @@ class FragmentProfile(val callback: FragmentHome.Callback? = null) : BaseFragmen
         binding.toolbar.ivButtonMenu1.setOnClickListener {
             //ShowMenu from here
             try {
-                (requireActivity() as ActivityDashboard).loadDrawerFragment()
+                (requireActivity() as ActivityDashboard).loadFragment((requireActivity() as ActivityDashboard).fragmentMenu)
             } catch (e: ClassCastException) {
                 (requireActivity() as ActivitySettings).onBackPressed()
             }

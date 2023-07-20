@@ -88,7 +88,7 @@ class FragmentFullViewPhoto : BaseFragment() {
         }
 
 
-        networkViewModel.getAlbumPhotos(hashMap)
+        networkViewModel.getAlbumPhotos(prefManager?.access_token.toString(),hashMap)
         networkViewModel.photoLiveData.observe(requireActivity()) {
             it.let {
                 if (!it?.results.isNullOrEmpty()) {

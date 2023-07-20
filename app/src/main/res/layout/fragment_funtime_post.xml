@@ -116,6 +116,36 @@
             app:layout_constraintStart_toEndOf="@+id/thumbnail"
             app:layout_constraintTop_toTopOf="@+id/thumbnail" />
 
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/nsvHashTags"
+            android:layout_width="0dp"
+            android:visibility="gone"
+            android:layout_height="@dimen/_200sdp"
+            android:background="@drawable/border_grey_rectangle_solid_white"
+            android:elevation="@dimen/_8sdp"
+            app:layout_constraintEnd_toEndOf="@id/editor"
+            app:layout_constraintStart_toStartOf="@id/editor"
+            app:layout_constraintTop_toBottomOf="@id/editor">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvHashTags"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:scrollbars="vertical"
+                    app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:listitem="@layout/item_hash_tag" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
+
         <TextView
             android:id="@+id/llHint"
             android:layout_width="wrap_content"

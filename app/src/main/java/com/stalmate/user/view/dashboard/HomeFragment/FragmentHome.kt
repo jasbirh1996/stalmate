@@ -2,6 +2,7 @@ package com.stalmate.user.view.dashboard.HomeFragment
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -60,10 +61,10 @@ import kotlin.collections.HashMap
 
 //getOtherUserProfileScreen
 
-class FragmentHome(var callback: Callback?=null) : BaseFragment(),
+class FragmentHome(var callback: Callback? = null) : BaseFragment(),
     UserHomeStoryAdapter.Callbackk, SuggestedFriendAdapter.Callbackk {
 
-    private lateinit var binding: FragmentHomeNewBinding
+    private var binding: FragmentHomeNewBinding? = null
     lateinit var feedAdapter: AdapterFeed
     lateinit var homeStoryAdapter: UserHomeStoryAdapter
     lateinit var suggestedFriendAdapter: SuggestedFriendAdapter
@@ -80,27 +81,33 @@ class FragmentHome(var callback: Callback?=null) : BaseFragment(),
         fun onScoll(toHide: Boolean)
     }
 
+    private var fragmentView: View? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_home_new, container, false)
-        binding = DataBindingUtil.bind<FragmentHomeNewBinding>(view)!!
-        return binding.root
+        if ((binding == null) && (fragmentView == null)) {
+            // Inflate the layout for this fragment and store the view
+            val view = inflater.inflate(R.layout.fragment_home_new, container, false)
+            binding = DataBindingUtil.bind(view)
+            fragmentView = binding?.root
+        }
+        // Return the view, whether it's newly created or the existing one
+        return fragmentView!!
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         homeSetUp()
 
-        binding.refreshLayout.setOnRefreshListener {
-            binding.refreshLayout.isRefreshing = false
+        binding?.refreshLayout?.setOnRefreshListener {
+            binding?.refreshLayout?.isRefreshing = false
             if (isNetworkAvailable()) {
                 isFirstApiHit = true
                 page_count = 1
                 callApi()
             } else {
-                binding.nointernet.visibility = View.VISIBLE
+                binding?.nointernet?.visibility = View.VISIBLE
             }
         }
 
@@ -109,10 +116,10 @@ class FragmentHome(var callback: Callback?=null) : BaseFragment(),
             page_count = 1
             callApi()
         } else {
-            binding.nointernet.visibility = View.VISIBLE
+            binding?.nointernet?.visibility = View.VISIBLE
         }
 
-        /*binding.nestedScrollview.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+        /*binding?.nestedScrollview.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
             if (oldScrollY < scrollY) {//increase
                 callback.onScoll(true)
             } else {
@@ -124,7 +131,10 @@ class FragmentHome(var callback: Callback?=null) : BaseFragment(),
     fun follow(feed: ResultFuntime) {
         val hashMap = HashMap<String, String>()
         hashMap.put("id_user", feed.user_id)
-        networkViewModel.sendFollowRequest(PrefManager.getInstance(App.getInstance())?.userDetail?.results?.access_token.toString(), hashMap)
+        networkViewModel.sendFollowRequest(
+            PrefManager.getInstance(App.getInstance())?.userDetail?.results?.access_token.toString(),
+            hashMap
+        )
         networkViewModel.followRequestLiveData.observe(this, Observer {
             it.let {
                 Toast.makeText(this.requireContext(), "Success!", Toast.LENGTH_SHORT).show()
@@ -135,7 +145,7 @@ class FragmentHome(var callback: Callback?=null) : BaseFragment(),
     private fun likeApiHit(funtime: ResultFuntime) {
         var hashmap = HashMap<String, String>()
         hashmap.put("funtime_id", funtime.id.toString())
-        networkViewModel.funtimeLiveLikeUnlikeData(prefManager?.access_token.toString(),hashmap)
+        networkViewModel.funtimeLiveLikeUnlikeData(prefManager?.access_token.toString(), hashmap)
         networkViewModel.funtimeLiveLikeUnlikeData.observe(this) {
             it.let {
                 if (it?.status == true) {
@@ -205,7 +215,7 @@ class FragmentHome(var callback: Callback?=null) : BaseFragment(),
                     page_count = 1
                     callApi()
                 } else {
-                    binding.nointernet.visibility = View.VISIBLE
+                    binding?.nointernet?.visibility = View.VISIBLE
                 }
 
                 fromCameraCover = null
@@ -316,7 +326,10 @@ class FragmentHome(var callback: Callback?=null) : BaseFragment(),
                 }
 
                 override fun onCLickUserProfile(item: String) {
-                    startActivity(IntentHelper.getOtherUserProfileScreen(this@FragmentHome.requireContext())!!.putExtra("id", item))
+                    startActivity(
+                        IntentHelper.getOtherUserProfileScreen(this@FragmentHome.requireContext())!!
+                            .putExtra("id", item)
+                    )
                 }
 
                 override fun onClickOnLikeButtonReel(feed: ResultFuntime) {
@@ -362,13 +375,15 @@ class FragmentHome(var callback: Callback?=null) : BaseFragment(),
                 override fun showCommentOverlay(feed: ResultFuntime, position: Int) {
                     try {
                         if ((videoAutoPlayHelper != null)) {
-                            val viewholder =
-                                binding.rvFeeds.findViewHolderForAdapterPosition(videoAutoPlayHelper!!.currentPlayingVideoItemPos);
-                            if (viewholder != null) {
-                                val viewMainHolder = (viewholder as AdapterFeed.FeedViewHolder)
-                                if (viewMainHolder.customPlayerView.getPlayer()?.isPlaying == true)
-                                    viewMainHolder.customPlayerView.removePlayer()
-                            }
+                            binding?.rvFeeds?.postDelayed({
+                                val viewholder =
+                                    binding?.rvFeeds?.findViewHolderForAdapterPosition(videoAutoPlayHelper!!.currentPlayingVideoItemPos);
+                                if (viewholder != null) {
+                                    val viewMainHolder = (viewholder as AdapterFeed.FeedViewHolder)
+                                    if (viewMainHolder.customPlayerView.getPlayer()?.isPlaying == true)
+                                        viewMainHolder.customPlayerView.removePlayer()
+                                }
+                            }, 500)
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()
@@ -377,14 +392,17 @@ class FragmentHome(var callback: Callback?=null) : BaseFragment(),
 
                 override fun hideCommentOverlay(feed: ResultFuntime, position: Int) {
                     try {
+                        getUserProfileData()
                         if ((videoAutoPlayHelper != null)) {
-                            val viewholder =
-                                binding.rvFeeds.findViewHolderForAdapterPosition(videoAutoPlayHelper!!.currentPlayingVideoItemPos);
-                            if (viewholder != null) {
-                                val viewMainHolder = (viewholder as AdapterFeed.FeedViewHolder)
-                                if (viewMainHolder.customPlayerView.getPlayer()?.isPlaying == false)
-                                    viewMainHolder.customPlayerView.startPlaying()
-                            }
+                            binding?.rvFeeds?.postDelayed({
+                                val viewholder =
+                                    binding?.rvFeeds?.findViewHolderForAdapterPosition(videoAutoPlayHelper!!.currentPlayingVideoItemPos);
+                                if (viewholder != null) {
+                                    val viewMainHolder = (viewholder as AdapterFeed.FeedViewHolder)
+                                    if (viewMainHolder.customPlayerView.getPlayer()?.isPlaying == false)
+                                        viewMainHolder.customPlayerView.startPlaying()
+                                }
+                            }, 500)
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()
@@ -392,29 +410,33 @@ class FragmentHome(var callback: Callback?=null) : BaseFragment(),
                 }
             })
         homeStoryAdapter = UserHomeStoryAdapter(networkViewModel, requireContext(), this)
-        binding.shimmerViewContainer.startShimmer()
-        binding.rvStory.adapter = homeStoryAdapter
+        binding?.shimmerViewContainer?.startShimmer()
+        binding?.rvStory?.adapter = homeStoryAdapter
 
-        binding.rvFeeds.adapter = feedAdapter
-        (binding.rvFeeds.adapter as AdapterFeed).stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
-        binding.rvFeeds.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
-        binding.shimmerLayoutFeeds.startShimmer()
+        binding?.rvFeeds?.adapter = feedAdapter
+        (binding?.rvFeeds?.adapter as AdapterFeed).stateRestorationPolicy =
+            RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+        binding?.rvFeeds?.layoutManager =
+            LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+        binding?.shimmerLayoutFeeds?.startShimmer()
         /*Helper class to provide AutoPlay feature inside cell*/
         if (videoAutoPlayHelper == null) {
-            videoAutoPlayHelper = VideoAutoPlayHelper(recyclerView = binding.rvFeeds)
-            videoAutoPlayHelper?.startObserving();
+            binding?.rvFeeds?.let {
+                videoAutoPlayHelper = VideoAutoPlayHelper(recyclerView = it)
+                videoAutoPlayHelper?.startObserving()
+            }
         }
 
-        binding.rvFeeds.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        binding?.rvFeeds?.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 if (dy > 0) { //check for scroll down
                     callback?.onScoll(true)
                     visibleItemCount =
-                        (binding.rvFeeds.layoutManager as LinearLayoutManager).getChildCount()
+                        (binding?.rvFeeds?.layoutManager as LinearLayoutManager).getChildCount()
                     totalItemCount =
-                        (binding.rvFeeds.layoutManager as LinearLayoutManager).getItemCount()
+                        (binding?.rvFeeds?.layoutManager as LinearLayoutManager).getItemCount()
                     pastVisiblesItems =
-                        (binding.rvFeeds.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
+                        (binding?.rvFeeds?.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
                     if (loading) {
                         if (visibleItemCount + pastVisiblesItems >= totalItemCount) {
                             loading = false
@@ -427,45 +449,36 @@ class FragmentHome(var callback: Callback?=null) : BaseFragment(),
                             loading = true
                         }
                     }
-                    Handler(Looper.getMainLooper()).postDelayed({binding.toolbar.clTool.visibility = View.GONE},250)
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        binding?.toolbar?.clTool?.visibility = View.GONE
+                    }, 500)
                 } else {
                     callback?.onScoll(false)
-                    Handler(Looper.getMainLooper()).postDelayed({binding.toolbar.clTool.visibility = View.VISIBLE},250)
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        binding?.toolbar?.clTool?.visibility = View.VISIBLE
+                    }, 500)
                 }
             }
         })
 
 
         getFriendSuggestionListing()
-        binding.postContant.userImage.setOnClickListener {
+        binding?.postContant?.userImage?.setOnClickListener {
             callback?.onCLickOnProfileButton()
         }
 
-        binding.layoutNewUser.setOnClickListener {
+        binding?.layoutNewUser?.setOnClickListener {
             IntentHelper.getActivityWelcomeScreen(requireContext())
                 ?.let { it1 -> startActivity(it1) }
         }
 
-        binding.toolbar.ivButtonMenu.setOnClickListener {
+        binding?.toolbar?.ivButtonMenu?.setOnClickListener {
 //            startActivity(Intent(requireContext(), ActivitySideDawer::class.java))
 //            callback.onCLickOnMenuButton()
-            try {
-                if ((videoAutoPlayHelper != null)) {
-                    val viewholder =
-                        binding.rvFeeds.findViewHolderForAdapterPosition(videoAutoPlayHelper!!.currentPlayingVideoItemPos);
-                    if (viewholder != null) {
-                        val viewMainHolder = (viewholder as AdapterFeed.FeedViewHolder)
-                        if (viewMainHolder.customPlayerView.getPlayer()?.isPlaying == true)
-                            viewMainHolder.customPlayerView.removePlayer()
-                    }
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
             callback?.onCLickOnProfileButton()
         }
 
-        binding.nointernet.visibility = View.GONE
+        binding?.nointernet?.visibility = View.GONE
     }
 
     var page_count = 1
@@ -483,15 +496,15 @@ class FragmentHome(var callback: Callback?=null) : BaseFragment(),
         networkViewModel.funtimeLiveData(prefManager?.access_token.toString(), hashmap)
         networkViewModel.funtimeLiveData.observe(viewLifecycleOwner, Observer {
             /*
-            binding.shimmerViewContainer.stopShimmer()
-                binding.storyView.visibility = View.GONE
+            binding?.shimmerViewContainer.stopShimmer()
+                binding?.storyView.visibility = View.GONE
                 if (!it?.results.isNullOrEmpty())
                     it?.results?.let { it1 -> homeStoryAdapter.submitList(it1) }
             */
             isApiRuning = false
             if (!it?.results.isNullOrEmpty()) {
-                binding.shimmerLayoutFeeds.stopShimmer()
-                binding.rvFeeds.visibility = View.VISIBLE
+                binding?.shimmerLayoutFeeds?.stopShimmer()
+                binding?.rvFeeds?.visibility = View.VISIBLE
                 it?.results?.let {
                     if (isFirstApiHit) {
                         it.forEach {
@@ -511,15 +524,18 @@ class FragmentHome(var callback: Callback?=null) : BaseFragment(),
     }
 
     override fun onPause() {
+        Log.d("#HomeTag", "onPause")
         try {
             if ((videoAutoPlayHelper != null)) {
-                val viewholder =
-                    binding.rvFeeds.findViewHolderForAdapterPosition(videoAutoPlayHelper!!.currentPlayingVideoItemPos);
-                if (viewholder != null) {
-                    val viewMainHolder = (viewholder as AdapterFeed.FeedViewHolder)
-                    if (viewMainHolder.customPlayerView.getPlayer()?.isPlaying == true)
-                        viewMainHolder.customPlayerView.removePlayer()
-                }
+                binding?.rvFeeds?.postDelayed({
+                    val viewholder =
+                        binding?.rvFeeds?.findViewHolderForAdapterPosition(videoAutoPlayHelper!!.currentPlayingVideoItemPos);
+                    if (viewholder != null) {
+                        val viewMainHolder = (viewholder as AdapterFeed.FeedViewHolder)
+                        if (viewMainHolder.customPlayerView.getPlayer()?.isPlaying == true)
+                            viewMainHolder.customPlayerView.removePlayer()
+                    }
+                }, 500)
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -527,58 +543,29 @@ class FragmentHome(var callback: Callback?=null) : BaseFragment(),
         super.onPause()
     }
 
-    override fun onStop() {
-        try {
-            if ((videoAutoPlayHelper != null)) {
-                val viewholder =
-                    binding.rvFeeds.findViewHolderForAdapterPosition(videoAutoPlayHelper!!.currentPlayingVideoItemPos);
-                if (viewholder != null) {
-                    val viewMainHolder = (viewholder as AdapterFeed.FeedViewHolder)
-                    if (viewMainHolder.customPlayerView.getPlayer()?.isPlaying == true)
-                        viewMainHolder.customPlayerView.removePlayer()
-                }
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        super.onStop()
-    }
-
-    override fun onStart() {
-        try {
-            if ((videoAutoPlayHelper != null)) {
-                val viewholder =
-                    binding.rvFeeds.findViewHolderForAdapterPosition(videoAutoPlayHelper!!.currentPlayingVideoItemPos);
-                if (viewholder != null) {
-                    val viewMainHolder = (viewholder as AdapterFeed.FeedViewHolder)
-                    if (viewMainHolder.customPlayerView.getPlayer()?.isPlaying == false)
-                        viewMainHolder.customPlayerView.startPlaying()
-                }
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        super.onStart()
-    }
-
     override fun onResume() {
+        Log.d("#HomeTag", "onResume")
         try {
             getUserProfileData()
             if ((videoAutoPlayHelper != null)) {
-                val viewholder =
-                    binding.rvFeeds.findViewHolderForAdapterPosition(videoAutoPlayHelper!!.currentPlayingVideoItemPos);
-                if (viewholder != null) {
-                    val viewMainHolder = (viewholder as AdapterFeed.FeedViewHolder)
-                    if (viewMainHolder.customPlayerView.getPlayer()?.isPlaying == false)
-                        viewMainHolder.customPlayerView.startPlaying()
-                }
+                binding?.rvFeeds?.postDelayed({
+                    val viewholder =
+                        binding?.rvFeeds?.findViewHolderForAdapterPosition(videoAutoPlayHelper!!.currentPlayingVideoItemPos);
+                    if (viewholder != null) {
+                        val viewMainHolder = (viewholder as AdapterFeed.FeedViewHolder)
+                        if (viewMainHolder.customPlayerView.getPlayer()?.isPlaying == false)
+                            viewMainHolder.customPlayerView.startPlaying()
+                    }
+                }, 500)
             }
         } catch (e: Exception) {
             e.printStackTrace()
         }
-        Glide.with(this).load(prefManager?.profile_img_1.toString())
-            .placeholder(R.drawable.user_placeholder).error(R.drawable.user_placeholder)
-            .into(binding.toolbar.ivButtonMenu)
+        binding?.toolbar?.ivButtonMenu?.let {
+            Glide.with(this).load(prefManager?.profile_img_1.toString())
+                .placeholder(R.drawable.user_placeholder).error(R.drawable.user_placeholder)
+                .into(it)
+        }
         super.onResume()
     }
 
@@ -590,17 +577,22 @@ class FragmentHome(var callback: Callback?=null) : BaseFragment(),
                 if (it != null) {
                     PrefManager.getInstance(requireContext())!!.userProfileDetail = it
                 }
-                Glide.with(requireContext())
-                    .load(PrefManager.getInstance(requireContext())?.userProfileDetail?.results?.profile_img1)
-                    .placeholder(R.drawable.profileplaceholder).circleCrop()
-                    .into(binding.postContant.userImage)
+                binding?.postContant?.userImage?.let { it1 ->
+                    Glide.with(requireContext())
+                        .load(PrefManager.getInstance(requireContext())?.userProfileDetail?.results?.profile_img1)
+                        .placeholder(R.drawable.profileplaceholder).circleCrop()
+                        .into(it1)
+                }
 
-                Glide.with(requireContext())
-                    .load(PrefManager.getInstance(requireContext())?.userProfileDetail?.results?.profile_img1)
-                    .placeholder(R.drawable.user_placeholder).error(R.drawable.user_placeholder)
-                    .into(binding.toolbar.ivButtonMenu)
+                binding?.toolbar?.ivButtonMenu?.let { it1 ->
+                    Glide.with(requireContext())
+                        .load(PrefManager.getInstance(requireContext())?.userProfileDetail?.results?.profile_img1)
+                        .placeholder(R.drawable.user_placeholder).error(R.drawable.user_placeholder)
+                        .into(it1)
+                }
 
-                binding.postContant.appCompatEditText.hint = "${PrefManager.getInstance(requireContext())?.userProfileDetail?.results?.first_name}, What's in your mind?"
+                binding?.postContant?.appCompatEditText?.hint =
+                    "${PrefManager.getInstance(requireContext())?.userProfileDetail?.results?.first_name}, What's in your mind?"
             }
         })
     }
@@ -637,7 +629,7 @@ class FragmentHome(var callback: Callback?=null) : BaseFragment(),
             it.let {
                 suggestedFriendAdapter =
                     SuggestedFriendAdapter(networkViewModel, requireContext(), this)
-                binding.rvSuggestedFriends.adapter = suggestedFriendAdapter
+                binding?.rvSuggestedFriends?.adapter = suggestedFriendAdapter
                 it?.results?.let { it1 -> suggestedFriendAdapter.submitList(it1) }
             }
         })
@@ -645,8 +637,8 @@ class FragmentHome(var callback: Callback?=null) : BaseFragment(),
 
     @SuppressLint("ClickableViewAccessibility")
     private fun setupSearchBox() {
-        binding.toolbar.ivButtonSearch.setImageResource(R.drawable.ic_profile_searchbar)
-        binding.toolbar.ivButtonSearch.setOnClickListener {
+        binding?.toolbar?.ivButtonSearch?.setImageResource(R.drawable.ic_profile_searchbar)
+        binding?.toolbar?.ivButtonSearch?.setOnClickListener {
             IntentHelper.getSearchScreen(requireContext())?.let { it1 -> startActivity(it1) }
         }
     }

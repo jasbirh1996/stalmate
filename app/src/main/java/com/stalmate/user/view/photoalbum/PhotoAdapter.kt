@@ -51,7 +51,7 @@ class PhotoAdapter(val viewModel: AppViewModel, val context: Context,var callbac
         fun bind(feed: Albums) {
 
 
-            Glide.with(context).load(feed.files.replace(".com",".com/"))
+            Glide.with(context).load(feed.img)
                 .placeholder(R.drawable.profileplaceholder)
                 .into(binding.image)
 

@@ -98,6 +98,7 @@ interface ApiInterface {
 
     @POST(Constants.URL_PHOTO_ALBUM_PHOTO)
     fun getPhotoList(
+        @Header("access_token") access_token: String,
         @Body map: HashMap<String, Any>
     ): Call<ModelPhotoResponse>
 
@@ -210,7 +211,8 @@ interface ApiInterface {
     fun requestBeFollower(
         @Header("Authorization") Authorization: String,
         @Header("access_token") access_token: String,
-        @Body map: HashMap<String, String>): Call<ModelSuccess>
+        @Body map: HashMap<String, String>
+    ): Call<ModelSuccess>
 
     @GET(Constants.GET_PROFILE_API)
     fun setProfileDetails(
@@ -229,6 +231,7 @@ interface ApiInterface {
 
     @GET(Constants.GET_OTHER_USER_PROFILE_API)
     fun getOtherUserProfileDetails(
+        @Header("Authorization") Authorization: String,
         @Header("access_token") access_token: String,
         @Query("id_user") id_user: String
     ): Call<ModelFriend1>
@@ -290,7 +293,8 @@ interface ApiInterface {
     fun likeComment(
         @Header("Authorization") Authorization: String,
         @Header("access_token") access_token: String,
-        @Body map: HashMap<String, String>): Call<ModelSuccess>
+        @Body map: HashMap<String, String>
+    ): Call<ModelSuccess>
 
     @Multipart
     @POST(Constants.UPDATE_PROFILE_API)
@@ -352,7 +356,8 @@ interface ApiInterface {
     ): Call<ReportsListingResponse>
 
     @GET(Constants.URL_PHOTO_ALBUM)
-    fun getAlbumList(@Header("access_token") access_token: String,
+    fun getAlbumList(
+        @Header("access_token") access_token: String,
     ): Call<ModelAlbumsResponse>
 
 
@@ -374,6 +379,12 @@ interface ApiInterface {
         @Part("deviceId") deviceId: RequestBody,
         @Part("deviceToken") deviceToken: RequestBody
     ): Call<FunTimeAddResponse>
+
+    @POST(Constants.get_hash_tags)
+    fun get_hash_tags(
+        @Header("Authorization") Authorization: String,
+        @Header("access_token") access_token: String,
+    ): Call<HashTagsListResponse>
 
     //M8
 //    @FormUrlEncoded

@@ -123,11 +123,14 @@ open class AppViewModel : ViewModel() {
     }
 
 
-    fun followUnfollowUser(access_token: String,map: HashMap<String, String>): LiveData<ModelSuccess?> {
+    fun followUnfollowUser(
+        access_token: String,
+        map: HashMap<String, String>
+    ): LiveData<ModelSuccess?> {
         val temp = MutableLiveData<ModelSuccess?>()
         var saveLiveDAta: LiveData<ModelSuccess?>
         saveLiveDAta = temp
-        getResult(temp, apiInterface.requestBeFollower(access_token,access_token,map))
+        getResult(temp, apiInterface.requestBeFollower(access_token, access_token, map))
         return saveLiveDAta
     }
 
@@ -187,10 +190,10 @@ open class AppViewModel : ViewModel() {
     }
 
     var photoLiveData: LiveData<ModelPhotoResponse?> = MutableLiveData<ModelPhotoResponse?>()
-    fun getAlbumPhotos(map: HashMap<String, Any>) {
+    fun getAlbumPhotos(access_token: String,map: HashMap<String, Any>) {
         val temp = MutableLiveData<ModelPhotoResponse?>()
         photoLiveData = temp
-        getResult(temp, apiInterface.getPhotoList( map))
+        getResult(temp, apiInterface.getPhotoList(access_token,map))
     }
 
 
@@ -271,7 +274,7 @@ open class AppViewModel : ViewModel() {
     fun sendFollowRequest(token: String, map: HashMap<String, String>) {
         val temp = MutableLiveData<ModelSuccess?>()
         followRequestLiveData = temp
-        getResult(temp, apiInterface.requestBeFollower(token,token,map))
+        getResult(temp, apiInterface.requestBeFollower(token, token, map))
     }
 
     var categoryLiveData: LiveData<ModelCategory?> = MutableLiveData<ModelCategory?>()
@@ -386,7 +389,7 @@ open class AppViewModel : ViewModel() {
     fun createAlbum(map: HashMap<String, String>) {
         val temp = MutableLiveData<ModelAlbumCreateResponse?>()
         createAlbumData = temp
-        getResult(temp, apiInterface.setCreateAlbumDetails( map))
+        getResult(temp, apiInterface.setCreateAlbumDetails(map))
     }
 
 
@@ -500,7 +503,7 @@ open class AppViewModel : ViewModel() {
         otherUserProfileLiveData = temp
         getResult(
             temp,
-            apiInterface.getOtherUserProfileDetails(access_token = access_token, user_id)
+            apiInterface.getOtherUserProfileDetails(access_token, access_token, user_id)
         )
     }
 
@@ -651,7 +654,10 @@ open class AppViewModel : ViewModel() {
     ) {
         val temp = MutableLiveData<CommonModelResponse?>()
         UplodedAlbumImageLiveData = temp
-        getResult(temp, apiInterface.addAlbumImage(access_token = access_token,album_image!!, albumId))
+        getResult(
+            temp,
+            apiInterface.addAlbumImage(access_token = access_token, album_image!!, albumId)
+        )
     }
 
 
@@ -717,6 +723,14 @@ open class AppViewModel : ViewModel() {
                 deviceToken = deviceToken
             )
         )
+    }
+
+    var hashTagsListResponse: LiveData<HashTagsListResponse?> =
+        MutableLiveData<HashTagsListResponse?>()
+    fun get_hash_tags(access_token: String) {
+        val temp = MutableLiveData<HashTagsListResponse?>()
+        hashTagsListResponse = temp
+        getResult(temp, apiInterface.get_hash_tags(access_token, access_token))
     }
 
     fun saveAsDraft(

@@ -52,18 +52,18 @@ class ActivityDashboard : BaseActivity(), FragmentHome.Callback,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDashboardBinding.inflate(layoutInflater)
-       if(PrefManager.getInstance(this)?.getPopup("popup").equals("true")){
-           WelcomeBackPopup()
-           PrefManager.getInstance(this)?.setPopup("popup","false")
+        if (PrefManager.getInstance(this)?.getPopup("popup").equals("true")) {
+            WelcomeBackPopup()
+            PrefManager.getInstance(this)?.setPopup("popup", "false")
         }
         setContentView(binding.root)
         setupBottomBar()
         onNewIntent(intent)
     }
 
-    fun WelcomeBackPopup(){
+    fun WelcomeBackPopup() {
         val builder = AlertDialog.Builder(this, R.style.CustomAlertDialog).create()
-        val view = layoutInflater.inflate(R.layout.welcomeback_success_poppu,null)
+        val view = layoutInflater.inflate(R.layout.welcomeback_success_poppu, null)
         builder.setView(view)
         builder.setCanceledOnTouchOutside(true)
         Handler(Looper.getMainLooper()).postDelayed({
@@ -115,65 +115,27 @@ class ActivityDashboard : BaseActivity(), FragmentHome.Callback,
 
     private fun setupBottomBar() {
         selectedNavButton(binding.ivHome, binding.ivChat)
-        fm.beginTransaction().add(binding.fragmentContainerView.id, fragment5, "5").hide(fragment5)
-            .commit()
-        fm.beginTransaction().add(binding.fragmentContainerView.id, fragment4, "4").hide(fragment4)
-            .commit()
-        fm.beginTransaction().add(binding.fragmentContainerView.id, fragment3, "3").hide(fragment3)
-            .commit()
-//        fm.beginTransaction().add(binding.fragmentContainerView.id, fragment2, "2").hide(fragment2).commit()
-        fm.beginTransaction().add(binding.fragmentContainerView.id, fragment1, "1").commit()
-
+        loadFragment(fragmentHome)
         binding.ivHome.setOnClickListener {
-            mute(true)
-            fm.beginTransaction().hide(active).show(fragment1).commit()
-            active = fragment1
+            loadFragment(fragmentHome)
             selectedNavButton(binding.ivHome, binding.ivChat)
         }
         binding.ivFuntime.setOnClickListener {
-            mute(true)
-            /*fm.beginTransaction().hide(active).show(fragment2).commit()
-            active = fragment2
-            selectedNavButton(binding.ivFuntime, binding.ivHome)*/
             startActivity(IntentHelper.getFullViewReelActivity(this))
         }
         binding.ivCreateFuntime.setOnClickListener {
             startActivity(IntentHelper.getCreateReelsScreen(this))
         }
         binding.ivChat.setOnClickListener {
-            mute(true)
-            fm.beginTransaction().hide(active).show(fragment3).commit()
-            active = fragment3
+            loadFragment(fragmentChatCall)
             selectedNavButton(binding.ivChat, binding.ivHome)
         }
     }
 
-    fun mute(toMute: Boolean) {
-        if (toMute) {
-            if (active is FragmentHome) {
-                Log.d("askldjalsd", "alksdjasd")
-                (active as FragmentHome).onPause()
-            } else {
-
-            }
-        }
-    }
-
-    val fragment1: Fragment = FragmentHome(this)
-    val fragment2: Fragment = FragmentFunTime()
-
-    //    val fragment3: Fragment = FragmentChatNCallBase()
-    val fragment3: Fragment = FragmentChatCall()
-    val fragment4: Fragment = FragmentReels()
-
-    //  val fragment5: Fragment = FragmentFriend(this)
-    val fragment5: Fragment = FragmentProfile(this)
-    val fragmentProfile: FragmentProfile = FragmentProfile(this)
-    val fm: FragmentManager = supportFragmentManager
-    var active = fragment1
-
-    private val fragmentMenu = FragmentMenu(this)
-    val fragment6 = FragmentMenu(this)
+    private val fragmentHome by lazy { FragmentHome(this) }
+    private val fragmentProfile by lazy { FragmentProfile(this) }
+    private val fragmentChatCall by lazy { FragmentChatCall() }
+    val fragmentMenu by lazy { FragmentMenu(this) }
 
     val pointToMyFuntime = MutableLiveData<Boolean>()
 
@@ -182,15 +144,7 @@ class ActivityDashboard : BaseActivity(), FragmentHome.Callback,
     }
 
     override fun onCLickOnProfileButton() {
-        if (fragmentProfile.isAdded) {
-            fm.beginTransaction().show(fragmentProfile).commit()
-            return
-        } else {
-            fm.beginTransaction().add(binding.fragmentContainerView.id, fragmentProfile, "6")
-                .hide(active)
-                .commit()
-        }
-        active = fragmentProfile
+        loadFragment(fragmentProfile)
     }
 
     override fun onScoll(toHide: Boolean) {
@@ -204,7 +158,7 @@ class ActivityDashboard : BaseActivity(), FragmentHome.Callback,
 
     private var doubleBackToExitPressedOnce = false
     override fun onBackPressed() {
-        when (active) {
+        when (supportFragmentManager.findFragmentById(binding.fragmentContainerView.id)) {
             is FragmentHome -> {
                 if (doubleBackToExitPressedOnce) {
                     super.onBackPressed()
@@ -218,35 +172,45 @@ class ActivityDashboard : BaseActivity(), FragmentHome.Callback,
 
             }
             is FragmentProfile -> {
-                Log.d(";laksd;asd", "removeddd")
-                fm.beginTransaction().remove(fragmentProfile).show(fragment1).commit()
-                active = fragment1
-                Log.d("lkjasdoas", active.javaClass.toString())
+                loadFragment(fragmentHome)
+                selectedNavButton(binding.ivHome, binding.ivChat)
             }
             is FragmentMenu -> {
-                fm.beginTransaction().remove(fragmentMenu).show(fragment6).commit()
-                active = fragment1
+                loadFragment(fragmentProfile)
+                selectedNavButton(binding.ivHome, binding.ivChat)
+            }
+            is FragmentChatCall -> {
+                loadFragment(fragmentHome)
+                selectedNavButton(binding.ivHome, binding.ivChat)
             }
             else -> {
-                Log.d("lkjasdoas", active.javaClass.toString())
+                loadFragment(fragmentHome)
                 selectedNavButton(binding.ivHome, binding.ivChat)
-                active = fragment1
             }
         }
     }
 
-    fun loadDrawerFragment() {
-        val backStateName = fragmentMenu.javaClass.name
+    fun loadFragment(fragment: Fragment) {
+        val backStateName = fragment.javaClass.name
         val manager: FragmentManager = supportFragmentManager
-        val fragmentPopped = manager.popBackStackImmediate(backStateName, 1)
-        if (!fragmentPopped && manager.findFragmentByTag(backStateName) == null) {
-            //fragment not in back stack, create it.
-            val ft = manager.beginTransaction()
-            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-            ft.add(binding.fragmentContainerView.id, fragmentMenu, backStateName)
-            ft.commit()
-            active = fragmentMenu
+        val ft = manager.beginTransaction()
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+        val existingFragment = manager.findFragmentByTag(backStateName)
+        if (existingFragment == null) {
+            // The Fragment does not exist, so create and add it.
+            ft.replace(binding.fragmentContainerView.id, fragment, backStateName)
+        } else {
+            // The Fragment exists, so show or attach it.
+            if (!existingFragment.isAdded) {
+                // Fragment was previously detached, so attach it.
+                ft.attach(existingFragment)
+            }
+            // If the Fragment was hidden, show it now.
+            if (existingFragment.isHidden) {
+                ft.show(existingFragment)
+            }
         }
+        ft.commit()
     }
 
     /*override fun onClickBack() {

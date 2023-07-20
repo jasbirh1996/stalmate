@@ -40,8 +40,7 @@ class FriendAdapter(
         parent: ViewGroup,
         viewType: Int,
     ): FriendAdapter.FeedViewHolder {
-        var view =
-            LayoutInflater.from(parent.context).inflate(R.layout.item_friend_big, parent, false)
+        var view = LayoutInflater.from(parent.context).inflate(R.layout.item_friend_big, parent, false)
         return FeedViewHolder(DataBindingUtil.bind<ItemFriendBigBinding>(view)!!)
     }
 

@@ -67,7 +67,7 @@ class FragmentAlbumPhotoIdListing : BaseFragment(),  PhotoAdapter.Callback {
         hashMap["user_id"] = prefManager?._id.toString()
         hashMap["limit"] = 100
         hashMap["page"] = 1
-        networkViewModel.getAlbumPhotos(hashMap)
+        networkViewModel.getAlbumPhotos(prefManager?.access_token.toString(),hashMap)
         networkViewModel.photoLiveData.observe(requireActivity()) {
             it.let {
                 binding.rvPhoto.layoutManager= GridLayoutManager(context, 4)
