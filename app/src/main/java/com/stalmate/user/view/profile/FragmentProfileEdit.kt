@@ -191,6 +191,11 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
         }
         clickLister()
         callForAlbum()
+
+        networkViewModel.mThrowable.observe(requireActivity()) {
+//            binding.progressBar.visibility = View.GONE
+            Toast.makeText(this.requireContext(), it, Toast.LENGTH_SHORT).show()
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -314,6 +319,7 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
         binding.layout.etLastName.setText(userData.results?.last_name)
         binding.layout.etUsername.setText(userData.results?.user_name)
         binding.layout.bio.setText(userData.results?.about)
+        binding.etWebsite.setText(userData.results?.url)
         binding.layout.filledTextEmail.text = userData.results?.email
         verifyPhoneNumber = userData.results?.number.toString()
         binding.layout.etNumber.setText(userData.results?.number)
@@ -333,7 +339,7 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
             R.drawable.user_placeholder
         )
 
-        binding.etWebsite.setText(userData.results?.company)
+//        binding.etWebsite.setText(userData.results?.company)
         educationAdapter = EducationListAdapter(networkViewModel, requireContext(), this)
 
         binding.layout.rvEducation.adapter = educationAdapter
@@ -368,6 +374,7 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
     }
 
     fun fetchDOB(date: String) {
+
         GANDER = userData.results?.gender.toString()
         when (userData.results?.gender) {
             "Male" -> {
@@ -401,10 +408,15 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
                         }
                 }
             )
+            date.split("-").apply {
+                selectedDay= this[2]
+                selectedMonth= this[1]
+                selectedYear= this[0]
+            }
 
-            selectedDay = date.split("-")[0]
+           /* selectedDay = date.split("-")[0]
             selectedMonth = date.split("-")[1]
-            selectedYear = date.split("-")[2]
+            selectedYear = date.split("-")[2]*/
 
             binding.layout.spDate.setSpinner(
                 listFromResources = R.array.date,
@@ -415,7 +427,9 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
             )
             binding.layout.spMonth.setSpinner(
                 listFromResources = R.array.month,
-                setSelection = resources.getStringArray(R.array.month).indexOf(selectedMonth),
+//                setSelection =  resources.getStringArray(R.array.month).map { it.substring(0,3) }.indexOf(selectedMonth),
+                setSelection =  resources.getStringArray(R.array.month).indexOfFirst { it.contains(selectedMonth) },
+//                setSelection = resources.getStringArray(R.array.month).indexOf(selectedMonth),
                 onItemSelectedListener = {
                     selectedMonth = binding.layout.spMonth.selectedItem.toString()
                 }
@@ -433,9 +447,11 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
     }
 
     private fun getAlbumPhotosById(id: String) {
-        val hashMap = HashMap<String, String>()
+        val hashMap = HashMap<String, Any>()
         hashMap["album_id"] = id
-        hashMap["limit"] = "5"
+//        hashMap["user_id"] = prefManager?._id.toString()
+//        hashMap["limit"] = 100
+//        hashMap["page"] = 1
         networkViewModel.getAlbumPhotos(hashMap)
         networkViewModel.photoLiveData.observe(requireActivity()) {
             it.let {
@@ -572,8 +588,8 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
                     @SuppressLint("NotifyDataSetChanged")
                     override fun onSuccessfullyEditedEducation(education: Education) {
                         userData.results?.profileData()?.education?.add(education)
-                        (binding.layout.rvEducation.adapter as EducationListAdapter).list.add(education)
-                        (binding.layout.rvEducation.adapter as EducationListAdapter).notifyDataSetChanged()
+                        educationAdapter.list.add(education)
+                        educationAdapter.notifyDataSetChanged()
                     }
                 })
             dialogAddEditEducation.show()
@@ -601,10 +617,8 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
                 object : DialogAddEditProfession.Callbackk {
                     override fun onSuccessfullyEditedProfession(profession: Profession) {
                         userData.results?.profileData()?.profession?.add(profession)
-                        (binding.layout.rvProfession.adapter as ProfessionListAdapter).list.add(
-                            profession
-                        )
-                        (binding.layout.rvProfession.adapter as ProfessionListAdapter).notifyDataSetChanged()
+                        professionListAdapter.list.add(profession)
+                        professionListAdapter.notifyDataSetChanged()
                     }
                 })
             dialogAddEditProfession.show()

@@ -1,12 +1,9 @@
 package com.stalmate.user.viewmodel
 
 
-import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.slatmate.user.model.CommonModelResponse
 import com.slatmate.user.model.FunTimeAddResponse
@@ -15,7 +12,6 @@ import com.stalmate.user.base.App
 import com.stalmate.user.model.*
 import com.stalmate.user.networking.ApiInterface
 import com.stalmate.user.utilities.ErrorBean
-import com.stalmate.user.utilities.ErrorUtil
 import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.view.dashboard.Friend.categorymodel.AddCategoryModel
 import com.stalmate.user.view.dashboard.Friend.categorymodel.ModelCategoryResponse
@@ -26,13 +22,10 @@ import com.stalmate.user.view.photoalbum.ModelAlbumCreateResponse
 import com.stalmate.user.view.photoalbum.ModelPhotoResponse
 import com.stalmate.user.view.photoalbum.imageshowindex.ModelPhotoIndexDataResponse
 import com.stalmate.user.view.singlesearch.ModelSearch
-import okhttp3.Callback
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Response
-import retrofit2.http.Field
-import retrofit2.http.Header
 import retrofit2.http.Part
 
 open class AppViewModel : ViewModel() {
@@ -194,10 +187,10 @@ open class AppViewModel : ViewModel() {
     }
 
     var photoLiveData: LiveData<ModelPhotoResponse?> = MutableLiveData<ModelPhotoResponse?>()
-    fun getAlbumPhotos(map: HashMap<String, String>) {
+    fun getAlbumPhotos(map: HashMap<String, Any>) {
         val temp = MutableLiveData<ModelPhotoResponse?>()
         photoLiveData = temp
-        getResult(temp, apiInterface.getPhotoList(map))
+        getResult(temp, apiInterface.getPhotoList( map))
     }
 
 
@@ -393,7 +386,7 @@ open class AppViewModel : ViewModel() {
     fun createAlbum(map: HashMap<String, String>) {
         val temp = MutableLiveData<ModelAlbumCreateResponse?>()
         createAlbumData = temp
-        getResult(temp, apiInterface.setCreateAlbumDetails(map))
+        getResult(temp, apiInterface.setCreateAlbumDetails( map))
     }
 
 
@@ -652,12 +645,13 @@ open class AppViewModel : ViewModel() {
         MutableLiveData<CommonModelResponse?>()
 
     fun uploadAlbumImageApi(
+        access_token: String,
         @Part album_image: MultipartBody.Part? = null,
         @Part("album_id") albumId: RequestBody,
     ) {
         val temp = MutableLiveData<CommonModelResponse?>()
         UplodedAlbumImageLiveData = temp
-        getResult(temp, apiInterface.addAlbumImage(album_image!!, albumId))
+        getResult(temp, apiInterface.addAlbumImage(access_token = access_token,album_image!!, albumId))
     }
 
 
@@ -682,7 +676,7 @@ open class AppViewModel : ViewModel() {
     fun albumLiveDatas(token: String, map: HashMap<String, String>) {
         val temp = MutableLiveData<ModelAlbumsResponse?>()
         albumLiveData = temp
-        getResult(temp, apiInterface.getAlbumList())
+        getResult(temp, apiInterface.getAlbumList(access_token = token))
     }
 
 

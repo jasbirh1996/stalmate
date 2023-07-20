@@ -25,8 +25,8 @@ class ProfessionListAdapter(
         parent: ViewGroup,
         viewType: Int
     ): ProfessionListAdapter.AlbumViewHolder {
-        var view = LayoutInflater.from(parent.context).inflate(R.layout.item_profession_profile, parent, false)
-        return AlbumViewHolder(DataBindingUtil.bind<ItemProfessionProfileBinding>(view)!!)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_profession_profile, parent, false)
+        return AlbumViewHolder(DataBindingUtil.bind(view)!!)
     }
 
     override fun onBindViewHolder(holder: AlbumViewHolder, position: Int) {

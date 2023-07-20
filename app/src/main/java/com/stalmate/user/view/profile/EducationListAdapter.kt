@@ -32,9 +32,9 @@ class EducationListAdapter(
         parent: ViewGroup,
         viewType: Int
     ): EducationListAdapter.AlbumViewHolder {
-        var view = LayoutInflater.from(parent.context)
+        val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_educationprofile, parent, false)
-        return AlbumViewHolder(DataBindingUtil.bind<ItemEducationprofileBinding>(view)!!)
+        return AlbumViewHolder(DataBindingUtil.bind(view)!!)
     }
 
     override fun onBindViewHolder(holder: AlbumViewHolder, position: Int) {

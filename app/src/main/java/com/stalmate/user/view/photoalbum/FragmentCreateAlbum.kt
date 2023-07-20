@@ -1,7 +1,6 @@
 package com.stalmate.user.view.photoalbum
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +8,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
-import com.stalmate.user.databinding.FragmentAlbumPhotoListBinding
 import com.stalmate.user.databinding.FragmentCreateAlbumBinding
 
 class FragmentCreateAlbum : BaseFragment() {
