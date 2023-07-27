@@ -116,7 +116,7 @@ class FragmentHome(var callback: Callback? = null) : BaseFragment(),
 
     fun follow(feed: ResultFuntime) {
         val hashMap = HashMap<String, String>()
-        hashMap.put("id_user", feed.user_id)
+        hashMap.put("id_user", feed.user_id.toString())
         networkViewModel.sendFollowRequest(
             PrefManager.getInstance(App.getInstance())?.userDetail?.results?.access_token.toString(),
             hashMap
@@ -190,7 +190,7 @@ class FragmentHome(var callback: Callback? = null) : BaseFragment(),
 
         networkViewModel.addComment1(
             access_token = prefManager?.access_token.toString(),
-            funtime_id = feed.id.getRequestBody(),
+            funtime_id = feed.id.toString().getRequestBody(),
             comment = comment.getRequestBody(),
             images = images
         )
@@ -480,7 +480,8 @@ class FragmentHome(var callback: Callback? = null) : BaseFragment(),
         hashmap.put("page", page_count.toString())
         hashmap.put("id_user", "")
         hashmap.put("fun_id", "")
-        hashmap.put("limit", "5")
+        hashmap.put("limit", "50")
+        hashmap.put("is_video", "2")
         networkViewModel.funtimeLiveData(prefManager?.access_token.toString(), hashmap)
         networkViewModel.funtimeLiveData.observe(viewLifecycleOwner, Observer {
             /*

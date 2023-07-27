@@ -164,7 +164,7 @@ class BottomDialogFragmentMenuReels(
 
     private fun saveUnsaveFuntime(funtime: ResultFuntime) {
         val hashmap = HashMap<String, String>()
-        hashmap.put("funtime_id", funtime.id)
+        hashmap.put("funtime_id", funtime.id.toString())
         networkViewModel.saveUnsavePost(
             PrefManager.getInstance(App.getInstance())?.userDetail?.results?.access_token.toString(),
             hashmap
@@ -197,7 +197,7 @@ class BottomDialogFragmentMenuReels(
 
     private fun followUnfollowUer(funtime: ResultFuntime) {
         val hashmap = HashMap<String, String>()
-        hashmap.put("id_user", funtime.user_id)
+        hashmap.put("id_user", funtime.user_id.toString())
         networkViewModel.followUnfollowUser(
             PrefManager.getInstance(App.getInstance())?.userDetail?.results?.access_token.toString(),
             hashmap

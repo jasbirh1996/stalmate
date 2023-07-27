@@ -50,12 +50,10 @@ class FragmentProfileFuntime : BaseFragment(), ReelVideosByAudioAdapter.Callback
     private fun getReelsListApiByMusic() {
         val hashMap = HashMap<String, String>()
         hashMap.put("page", "1")
-        hashMap.put("limit", "5")
         hashMap.put("id_user", prefManager?._id.toString())
         hashMap.put("fun_id", "")
-
-
-
+        hashMap.put("limit", "50")
+        hashMap.put("is_video", "2")
         networkViewModel.funtimeLiveData(prefManager?.access_token.toString(), hashMap)
         networkViewModel.funtimeLiveData.observe(viewLifecycleOwner) {
             it?.let {

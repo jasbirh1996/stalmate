@@ -40,7 +40,6 @@ class SavedGridVideoAdapter(
 
     inner class VideoViewHolder(var binding: ItemSquareVideoViewBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(funtime: ResultFuntime) {
-            Log.d("lasjkdasd",funtime.file)
             val requestOptions = RequestOptions()
             Glide.with(context)
                 .load(funtime.file)

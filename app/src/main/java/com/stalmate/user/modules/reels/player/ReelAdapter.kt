@@ -154,7 +154,7 @@ class ReelAdapter(val context: Context, var callback: Callback) :
         holder.likeButton.setOnClickListener {
             if (reelList[position].isLiked == "Yes") {
                 reelList[position].isLiked = "No"
-                reelList[position].like_count--
+                reelList[position].like_count = (reelList[position].like_count?:0)-1
                 holder.likeIcon.setImageDrawable(
                     ContextCompat.getDrawable(
                         context,
@@ -164,7 +164,7 @@ class ReelAdapter(val context: Context, var callback: Callback) :
 
             } else {
                 reelList[position].isLiked = "Yes"
-                reelList[position].like_count += 1
+                reelList[position].like_count = (reelList[position].like_count?:0)+1
                 holder.likeIcon.setImageDrawable(
                     ContextCompat.getDrawable(
                         context,
@@ -182,7 +182,7 @@ class ReelAdapter(val context: Context, var callback: Callback) :
                 (context as BaseActivity).networkViewModel,
                 reelList[position], object : DialogFragmentShareWithFriends.CAllback {
                     override fun onTotalShareCountFromDialog(count: Int) {
-                        reelList[position].share_count = reelList[position].share_count + count
+                        reelList[position].share_count = (reelList[position].share_count?:0) + count
                         holder.shareShareCount.setText(reelList[position].share_count.toString())
                     }
                 }

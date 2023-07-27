@@ -99,6 +99,7 @@ class ActivityDashboard : BaseActivity(), FragmentHome.Callback,
         hashmap.put("limit", "5")
         hashmap.put("id_user", "")
         hashmap.put("fun_id", id)
+        hashmap.put("is_video", "1")
         networkViewModel.funtimeLiveData(prefManager?.access_token.toString(), hashmap)
         networkViewModel.funtimeLiveData.observe(this) {
             isApiRuning = false

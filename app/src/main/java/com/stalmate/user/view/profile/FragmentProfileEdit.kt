@@ -359,7 +359,8 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
         hashmap.put("page", 1.toString())
         hashmap.put("id_user", prefManager?._id.toString())
         hashmap.put("fun_id", "")
-        hashmap.put("limit", "5")
+        hashmap.put("limit", "50")
+        hashmap.put("is_video", "2")
         networkViewModel.funtimeLiveData(prefManager?.access_token.toString(), hashmap)
         networkViewModel.funtimeLiveData.observe(requireActivity()) {
             it.let {

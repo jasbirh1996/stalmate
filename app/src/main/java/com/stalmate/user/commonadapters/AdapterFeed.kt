@@ -258,8 +258,8 @@ class AdapterFeed(
                     (context as BaseActivity).networkViewModel,
                     feed, object : DialogFragmentShareWithFriends.CAllback {
                         override fun onTotalShareCountFromDialog(count: Int) {
-                            feed.share_count = feed.share_count + count
-                            holder.shareCount.text = "${feed.share_count} Shares"
+                            feed.share_count = (feed.share_count?:0) + count
+                            holder.shareCount.text = "${feed.share_count?:0} Shares"
                             feed.isDataUpdated = true
                         }
                     }
@@ -275,12 +275,12 @@ class AdapterFeed(
 
             holder.likeIcon.setOnClickListener {
                 if (feed.isLiked == "Yes") {
-                    feed.like_count--
+                    feed.like_count = (feed.like_count?:0)-1
                     holder.likeCount.text = feed.like_count.toString() + " Likes"
                     feed.isLiked = "No"
                     holder.likeIcon.setImageResource(R.drawable.like)
                 } else {
-                    feed.like_count++
+                    feed.like_count = (feed.like_count?:0)+1
                     holder.likeCount.text = feed.like_count.toString() + " Likes"
                     feed.isLiked = "Yes"
                     holder.likeIcon.setImageResource(R.drawable.liked)
@@ -404,7 +404,7 @@ class AdapterFeed(
 
     override fun onViewAttachedToWindow(holder: FeedViewHolder) {
         try {
-            if (holder.isVideo){
+            if (holder.isVideo) {
                 holder.customPlayerView.getPlayer()?.volume = volumeForAll
                 holder.ivSoundButton.setImageDrawable(
                     ContextCompat.getDrawable(
@@ -534,7 +534,12 @@ class AdapterFeed(
         val size = list.size
         list.addAll(feedList)
         val sizeNew = list.size
-        notifyItemRangeChanged(size, sizeNew)
+        try {
+            notifyItemRangeChanged(size, sizeNew)
+        } catch (e: Exception) {
+            notifyDataSetChanged()
+            e.printStackTrace()
+        }
     }
 
     public interface Callbackk {

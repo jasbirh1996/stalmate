@@ -151,7 +151,7 @@ class DialogFragmentCommentWithVideo(
                 requireContext(),
                 this,
                 networkViewModel,
-                funtime.id,
+                funtime.id.toString(),
                 this,
                 this,
                 PrefManager.getInstance(App.getInstance())?.userDetail?.results?.access_token.toString()
@@ -430,7 +430,7 @@ class DialogFragmentCommentWithVideo(
         }
 
         var hashmap = HashMap<String, String>()
-        hashmap.put("funtime_id", funtime.id)
+        hashmap.put("funtime_id", funtime.id.toString())
         hashmap.put("page", currentPage.toString())
 
         networkViewModel.getCommentList(

@@ -235,7 +235,7 @@ class DialogFragmentShareWithFriends(
 
     fun shareWithFriend(user: User) {
         var hashmap = HashMap<String, String>()
-        hashmap.put("funtime_id", funtime.id)
+        hashmap.put("funtime_id", funtime.id.toString())
         hashmap.put("user_id", user.id)
         networkViewModel.shareWithFriend(hashmap)
         networkViewModel.shareWithFriendLiveData.observe(viewLifecycleOwner, Observer {

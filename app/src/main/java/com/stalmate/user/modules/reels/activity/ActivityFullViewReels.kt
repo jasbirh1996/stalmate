@@ -182,7 +182,8 @@ class ActivityFullViewReels : BaseActivity(), ReelFullViewAdapter.Callback {
         } else {
             hashmap.put("fun_id", "")
         }
-        hashmap.put("limit", "5")
+        hashmap.put("limit", "50")
+        hashmap.put("is_video", "1")
         networkViewModel.funtimeLiveData(prefManager?.access_token.toString(), hashmap)
         networkViewModel.funtimeLiveData.observe(this) {
             isApiRuning = false
@@ -243,8 +244,6 @@ class ActivityFullViewReels : BaseActivity(), ReelFullViewAdapter.Callback {
     }
 
     private fun hitBlockApi(funtime: ResultFuntime) {
-
-        showLoader()
         /*val hashMap = HashMap<String, String>()
         hashMap["id_user"] = funtime.user_id!!
         networkViewModel.block(hashMap)*/
@@ -253,7 +252,6 @@ class ActivityFullViewReels : BaseActivity(), ReelFullViewAdapter.Callback {
             _id = funtime.user_id.toString()
         )
         networkViewModel.blockData.observe(this, Observer {
-            dismissLoader()
             it.let {
                 val position = reelFullViewAdapter.reelList.indexOfFirst { it.id == funtime.id }
                 binding.recyclerView.smoothScrollToPosition(position + 1)
@@ -341,8 +339,7 @@ class ActivityFullViewReels : BaseActivity(), ReelFullViewAdapter.Callback {
                     outputStream.close()
                 }
             }
-            val fileName = resultFuntime.file.splitToSequence(".com/")
-                .toList()[1]//.substringBeforeLast(".").toString()
+            val fileName = resultFuntime.file?.splitToSequence(".com/")?.toList()?.get(1).toString()//.substringBeforeLast(".").toString()
             val filePath = "/Stalmate/FunTimes/$fileName"
             val input =
                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
@@ -358,7 +355,7 @@ class ActivityFullViewReels : BaseActivity(), ReelFullViewAdapter.Callback {
                 customDownloadDialog.show()
                 //If file not exist in directory
                 downloadFile(
-                    url = resultFuntime.file,
+                    url = resultFuntime.file.toString(),
                     filePath = filePath,
                     input = input,
                     output = output

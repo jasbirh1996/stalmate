@@ -213,7 +213,8 @@ class ReelListFragment : BaseFragment(), ReelAdapter.Callback {
             hashmap.put("id_user", "")
         }
         hashmap.put("fun_id", "")
-        hashmap.put("limit", "5")
+        hashmap.put("limit", "50")
+        hashmap.put("is_video", "1")
         networkViewModel.funtimeLiveData(prefManager?.access_token.toString(), hashmap)
         networkViewModel.funtimeLiveData.observe(viewLifecycleOwner) {
             isApiRuning = false

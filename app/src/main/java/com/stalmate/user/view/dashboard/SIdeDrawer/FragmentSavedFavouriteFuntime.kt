@@ -74,9 +74,9 @@ class FragmentSavedFavouriteFuntime : BaseFragment(),
 
 
     override fun onClickOnReel(reel: ResultFuntime) {
-        var bundle = Bundle()
-        var taghhedUser = TaggedUser("", "", "", "")
-        reel.tag_user.add(taghhedUser)
+        val bundle = Bundle()
+        val taghhedUser = TaggedUser("", "", "", "")
+        reel.tag_user?.add(taghhedUser)
         reel.isSave="Yes"
         bundle.putParcelable("data", reel)
         Log.d("lkajsdlasd", Gson().toJson(reel))
