@@ -27,8 +27,10 @@ import com.stalmate.user.viewmodel.AppViewModel
 
 
 class BottomDialogFragmentMenuReels(
-    val isOtherUserReel: Boolean, val networkViewModel: AppViewModel, val funtime: ResultFuntime,
-    val callBack: Callback
+    val isOtherUserReel: Boolean?=null,
+    val networkViewModel: AppViewModel?=null,
+    val funtime: ResultFuntime?=null,
+    val callBack: Callback?=null
 ) :
     BottomSheetDialogFragment() {
     lateinit var binding: FragmentBottomDialogReelsMenuBinding
@@ -56,7 +58,7 @@ class BottomDialogFragmentMenuReels(
         }
         (contentView.parent as View).setBackgroundColor(resources.getColor(android.R.color.transparent))
 
-        if (isOtherUserReel) {
+        if (isOtherUserReel == true) {
             binding.layoutOtherUserMenu.visibility = View.VISIBLE
             binding.layoutOwnMenu.visibility = View.GONE
         } else {
@@ -66,35 +68,37 @@ class BottomDialogFragmentMenuReels(
 
         //For others
         binding.layoutButtonSave.setOnClickListener { //save
-            saveUnsaveFuntime(funtime)
+            funtime?.let { it1 -> saveUnsaveFuntime(it1) }
         }
         binding.layoutFollowAccount.setOnClickListener { //follow
-            followUnfollowUer(funtime)
+            if (funtime != null) {
+                followUnfollowUer(funtime)
+            }
         }
         binding.layoutShareAspost.setOnClickListener {  //shareaspost
             dismiss()
-            callBack.onClickOnMenu(7)
+            callBack?.onClickOnMenu(7)
         }
         binding.layoutButtonReport.setOnClickListener {
             dismiss()
-            callBack.onClickOnMenu(3)
+            callBack?.onClickOnMenu(3)
         }
         binding.layoutButtonBlock.setOnClickListener {
             dismiss()
-            callBack.onClickOnMenu(4)
+            callBack?.onClickOnMenu(4)
         }
 
         //For self
         binding.layoutButtonEdit.setOnClickListener {
             dismiss()
-            callBack.onClickOnMenu(1)
+            callBack?.onClickOnMenu(1)
         }
         binding.layoutButtonDelete.setOnClickListener {
             dismiss()
-            callBack.onClickOnMenu(2)
+            callBack?.onClickOnMenu(2)
         }
 
-        if (funtime.isSave.equals("Yes", true)) {
+        if (funtime?.isSave.equals("Yes", true)) {
             binding.ivSave.setImageDrawable(
                 ContextCompat.getDrawable(
                     requireContext(),
@@ -112,7 +116,7 @@ class BottomDialogFragmentMenuReels(
             binding.tvSave.text = "Save"
         }
 
-        if (funtime.isFollowing.equals("Yes", true)) {
+        if (funtime?.isFollowing.equals("Yes", true)) {
             binding.ivFollow.setImageDrawable(
                 ContextCompat.getDrawable(
                     requireContext(),
@@ -130,9 +134,9 @@ class BottomDialogFragmentMenuReels(
             binding.tvFollow.text = "Follow"
         }
 
-        if (funtime.comment_status.equals("on", true) ||
-            funtime.comment_status.equals("true", true) ||
-            funtime.comment_status.equals("1", true)
+        if (funtime?.comment_status.equals("on", true) ||
+            funtime?.comment_status.equals("true", true) ||
+            funtime?.comment_status.equals("1", true)
         ) {
             binding.imageView17.setImageDrawable(
                 ContextCompat.getDrawable(
@@ -151,24 +155,24 @@ class BottomDialogFragmentMenuReels(
             binding.textView17.text = "Comment is OFF"
         }
         binding.layoutButtonCommentOnOff.setOnClickListener {
-            val isCommentOnOff = (funtime.comment_status.equals("on", true) ||
-                    funtime.comment_status.equals("true", true) ||
-                    funtime.comment_status.equals("1", true))
-            updateCommentSettings(funtime, !isCommentOnOff)
+            val isCommentOnOff = (funtime?.comment_status.equals("on", true) ||
+                    funtime?.comment_status.equals("true", true) ||
+                    funtime?.comment_status.equals("1", true))
+            funtime?.let { it1 -> updateCommentSettings(it1, !isCommentOnOff) }
         }
         binding.layoutButtonDownload.setOnClickListener {
-            callBack.onClickOnMenu(5)
+            callBack?.onClickOnMenu(5)
             dismiss()
         }
     }
 
     private fun saveUnsaveFuntime(funtime: ResultFuntime) {
         val hashmap = HashMap<String, String>()
-        hashmap.put("funtime_id", funtime.id.toString())
-        networkViewModel.saveUnsavePost(
+        hashmap.put("funtime_id", funtime?.id.toString())
+        networkViewModel?.saveUnsavePost(
             PrefManager.getInstance(App.getInstance())?.userDetail?.results?.access_token.toString(),
             hashmap
-        ).observe(this) {
+        )?.observe(this) {
             it.let {
                 if (it?.status!!) {
                     if (it.message == "Remove") {
@@ -179,7 +183,7 @@ class BottomDialogFragmentMenuReels(
                             )
                         )
                         binding.tvSave.text = "Save"
-                        funtime.isSave = "No"
+                        funtime?.isSave = "No"
                     } else {
                         binding.ivSave.setImageDrawable(
                             ContextCompat.getDrawable(
@@ -188,7 +192,7 @@ class BottomDialogFragmentMenuReels(
                             )
                         )
                         binding.tvSave.text = "Unsave"
-                        funtime.isSave = "Yes"
+                        funtime?.isSave = "Yes"
                     }
                 }
             }
@@ -197,11 +201,11 @@ class BottomDialogFragmentMenuReels(
 
     private fun followUnfollowUer(funtime: ResultFuntime) {
         val hashmap = HashMap<String, String>()
-        hashmap.put("id_user", funtime.user_id.toString())
-        networkViewModel.followUnfollowUser(
+        hashmap.put("id_user", funtime?.user_id.toString())
+        networkViewModel?.followUnfollowUser(
             PrefManager.getInstance(App.getInstance())?.userDetail?.results?.access_token.toString(),
             hashmap
-        ).observe(this) {
+        )?.observe(this) {
             it.let {
                 if (it!!.status) {
                     if (it.message == "Add request successfully") {
@@ -212,7 +216,7 @@ class BottomDialogFragmentMenuReels(
                             )
                         )
                         binding.tvFollow.text = "Unfollow Account"
-                        funtime.isFollowing = "Yes"
+                        funtime?.isFollowing = "Yes"
                     } else {
                         binding.ivFollow.setImageDrawable(
                             ContextCompat.getDrawable(
@@ -221,7 +225,7 @@ class BottomDialogFragmentMenuReels(
                             )
                         )
                         binding.tvFollow.text = "Follow Account"
-                        funtime.isFollowing = "No"
+                        funtime?.isFollowing = "No"
                     }
                 }
             }
@@ -231,18 +235,18 @@ class BottomDialogFragmentMenuReels(
 
     fun updateCommentSettings(funtime: ResultFuntime, isCommentOn: Boolean) {
         val hashmap = HashMap<String, String>()
-        hashmap.put("id", funtime.id.toString())
+        hashmap.put("id", funtime?.id.toString())
 //        hashmap.put("is_delete", "0")
-//        hashmap.put("text", funtime.text)
+//        hashmap.put("text", funtime?.text)
         hashmap.put("comment_status", if (isCommentOn) "on" else "off")
-        networkViewModel.funtimUpdate(
+        networkViewModel?.funtimUpdate(
             PrefManager.getInstance(App.getInstance())?.userDetail?.results?.access_token.toString(),
             hashmap
         )
-        networkViewModel.funtimeUpdateLiveData.observe(this) {
+        networkViewModel?.funtimeUpdateLiveData?.observe(this) {
             it?.let {
-                funtime.comment_status = isCommentOn.toString()
-                callBack.onClickOnMenu(6, isCommentOn)
+                funtime?.comment_status = isCommentOn.toString()
+                callBack?.onClickOnMenu(6, isCommentOn)
                 dismiss()
             }
         }

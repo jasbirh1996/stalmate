@@ -261,12 +261,12 @@ class ReelFullViewAdapter(
 
         holder.buttonLike.setOnClickListener {
             if (reelList[position].isLiked == "Yes") {
-                reelList[position].like_count= (reelList[position].like_count?:0)-1
+                reelList[position].like_count = (reelList[position].like_count ?: 0) - 1
                 holder.likeCount.text = reelList[position].like_count.toString()
                 reelList[position].isLiked = "No"
                 holder.ivLikeIcon.setImageResource(R.drawable.ic_funtime_slidepost_like_icon)
             } else {
-                reelList[position].like_count= (reelList[position].like_count?:0)+1
+                reelList[position].like_count = (reelList[position].like_count ?: 0) + 1
                 holder.likeCount.text = reelList[position].like_count.toString()
                 reelList[position].isLiked = "Yes"
                 holder.ivLikeIcon.setImageResource(R.drawable.ic_funtime_slidepost_liked_icon)
@@ -325,7 +325,7 @@ class ReelFullViewAdapter(
             (context as BaseActivity).networkViewModel,
             reelList[position], object : DialogFragmentShareWithFriends.CAllback {
                 override fun onTotalShareCountFromDialog(count: Int) {
-                    reelList[position].share_count = (reelList[position].share_count?:0) + count
+                    reelList[position].share_count = (reelList[position].share_count ?: 0) + count
                     holder.shareCount.setText("${reelList[position].share_count}")
                     reelList[position].isDataUpdated = true
                 }
@@ -335,8 +335,6 @@ class ReelFullViewAdapter(
         holder.buttonShare.setOnClickListener {
             dialogFragmentShares.show((context as AppCompatActivity).supportFragmentManager, "")
         }
-
-
 
         holder.ivMenu.setOnClickListener {
             val dialog = BottomDialogFragmentMenuReels((reelList[position].user_id != userId),
@@ -352,8 +350,8 @@ class ReelFullViewAdapter(
                             2 -> {//delete
                                 val dialog = CommonConfirmationDialog(
                                     context,
-                                    "Delete User",
-                                    "Are you sure you want to Delete this post? ",
+                                    "Delete Funtime",
+                                    "Are you sure you want to Delete this funtime? ",
                                     "Delete",
                                     "Cancel",
                                     object : CommonConfirmationDialog.Callback {
@@ -383,21 +381,7 @@ class ReelFullViewAdapter(
                                     object : CommonConfirmationDialog.Callback {
                                         override fun onDialogResult(isPermissionGranted: Boolean) {
                                             if (isPermissionGranted) {
-                                                val dialogSuccess = SuccessDialog(
-                                                    context,
-                                                    "Success",
-                                                    "User Blocked Successfully.",
-                                                    "Done",
-                                                    object : SuccessDialog.Callback {
-                                                        override fun onDialogResult(
-                                                            isPermissionGranted: Boolean
-                                                        ) {
-                                                            if (isPermissionGranted) {
-                                                                callback.onClickOnBlockUser(reelList[position])
-                                                            }
-                                                        }
-                                                    })
-                                                dialogSuccess.show()
+                                                callback.onClickOnBlockUser(reelList[position])
                                             }
                                         }
                                     })
@@ -483,7 +467,7 @@ class ReelFullViewAdapter(
     }
 
     fun removeReelById(id: String) {
-        var position = reelList.indexOfFirst { it.id == id }
+        val position = reelList.indexOfFirst { it.id == id }
         reelList.removeAt(position)
         notifyItemRemoved(position)
     }

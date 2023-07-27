@@ -4,13 +4,15 @@ import android.app.Activity
 import android.app.DownloadManager
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.net.Uri
 import android.os.*
 import android.util.Log
-import android.view.MotionEvent
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
-import androidx.core.content.ContextCompat
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -20,7 +22,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SnapHelper
 import com.arthenica.mobileffmpeg.FFmpeg
 import com.c2m.storyviewer.utils.showToast
-import com.stalmate.user.BuildConfig
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.databinding.ActivityFullViewReelsBinding
@@ -30,6 +31,7 @@ import com.stalmate.user.modules.reels.player.VideoAutoPlayHelper
 import com.stalmate.user.modules.reels.player.holders.VideoReelFullViewHolder
 import com.stalmate.user.view.dashboard.funtime.ResultFuntime
 import com.stalmate.user.view.dashboard.funtime.viewmodel.ReelListViewModel
+import com.stalmate.user.view.dialogs.SuccessDialog
 import java.io.*
 
 class ActivityFullViewReels : BaseActivity(), ReelFullViewAdapter.Callback {
@@ -253,23 +255,38 @@ class ActivityFullViewReels : BaseActivity(), ReelFullViewAdapter.Callback {
         )
         networkViewModel.blockData.observe(this, Observer {
             it.let {
-                val position = reelFullViewAdapter.reelList.indexOfFirst { it.id == funtime.id }
-                binding.recyclerView.smoothScrollToPosition(position + 1)
-                Handler(Looper.getMainLooper()).postDelayed(
-                    Runnable {
-                        val selectedList = ArrayList<ResultFuntime>()
-                        reelFullViewAdapter.reelList.forEach {
-                            if (it.user_id == funtime.user_id) {
-                                selectedList.add(it)
+                val dialogSuccess = SuccessDialog(
+                    this,
+                    "Success",
+                    "User Blocked Successfully.",
+                    "Done",
+                    object : SuccessDialog.Callback {
+                        override fun onDialogResult(
+                            isPermissionGranted: Boolean
+                        ) {
+                            if (isPermissionGranted) {
+                                val position =
+                                    reelFullViewAdapter.reelList.indexOfFirst { it.id == funtime.id }
+                                binding.recyclerView.smoothScrollToPosition(position + 1)
+                                Handler(Looper.getMainLooper()).postDelayed(
+                                    Runnable {
+                                        val selectedList = ArrayList<ResultFuntime>()
+                                        reelFullViewAdapter.reelList.forEach {
+                                            if (it.user_id == funtime.user_id) {
+                                                selectedList.add(it)
+                                            }
+                                        }
+                                        selectedList.forEach {
+                                            reelFullViewAdapter.reelList.remove(it)
+                                        }
+                                        reelFullViewAdapter.blockUserFromList(position)
+                                    },
+                                    500
+                                )
                             }
                         }
-                        selectedList.forEach {
-                            reelFullViewAdapter.reelList.remove(it)
-                        }
-                        reelFullViewAdapter.blockUserFromList(position)
-                    },
-                    500
-                )
+                    })
+                dialogSuccess.show()
             }
         })
     }
@@ -320,38 +337,52 @@ class ActivityFullViewReels : BaseActivity(), ReelFullViewAdapter.Callback {
 
     override fun downloadThisFuntime(resultFuntime: ResultFuntime) {
         try {
-            val uri =
-                Uri.parse("android.resource://${BuildConfig.APPLICATION_ID}/drawable/android_logo_white")
-            val inputStream = contentResolver.openInputStream(uri)
-            masked = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-                .toString() + "/Stalmate/FunTimes/"
-            if (!File(masked + "stalmate.png").exists()) {
-                File(masked).mkdirs()
-                Handler(Looper.getMainLooper()).post {
-                    val outputStream: OutputStream = FileOutputStream(masked + "stalmate.png")
-                    val buf = ByteArray(1024)
-                    var len: Int
-                    while ((inputStream?.read(buf).also { len = (it ?: 0) } ?: 0) > 0) {
-                        outputStream.write(buf, 0, len)
-                    }
-                    outputStream.flush()
-                    inputStream?.close()
-                    outputStream.close()
-                }
-            }
             val fileName = resultFuntime.file?.splitToSequence(".com/")?.toList()?.get(1).toString()//.substringBeforeLast(".").toString()
             val filePath = "/Stalmate/FunTimes/$fileName"
-            val input =
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-                    .toString() + filePath
-            val output =
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-                    .toString() + "/Stalmate/FunTimes/temp_$fileName"
+            val input = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString() + filePath
+            val output = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString() + "/Stalmate/FunTimes/temp_$fileName"
             if (File(input).exists()) {
                 //If file exist in directory
                 customDownloadDialog.dismiss()
                 showToast("Already Downloaded!")
             } else {
+                val inflater: LayoutInflater = this.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+                val view: View = inflater.inflate(R.layout.item_watermark, null)
+                view.findViewById<AppCompatTextView>(R.id.tvUsername).text =
+                    if (!resultFuntime.user_name.isNullOrEmpty()) "@"+resultFuntime.user_name else "@"+resultFuntime.first_name + " " + resultFuntime.last_name
+                // Measure the View with unspecified dimensions to get its natural size
+                view.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+                val width = view.measuredWidth
+                val height = view.measuredHeight
+                view.layout(0, 0, width, height)
+                // Use the bitmap in your application (e.g., set it to an ImageView)
+                val bitmap: Bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+                val canvas = Canvas(bitmap)
+                view.draw(canvas)
+
+                /*val uri = Uri.parse("android.resource://${BuildConfig.APPLICATION_ID}/drawable/android_logo_white")
+                val inputStream = contentResolver.openInputStream(uri)*/
+
+                masked = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString() + "/Stalmate/FunTimes/"
+                if (!File(masked + "stalmate.png").exists()) {
+                    File(masked).mkdirs()
+                    Handler(Looper.getMainLooper()).post {
+                        // Save the bitmap to a file (e.g., PNG format)
+                        val outStream = FileOutputStream(masked + "stalmate.png")
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, outStream)
+                        outStream.close()
+
+                        /*val outputStream: OutputStream = FileOutputStream(masked + "stalmate.png")
+                        val buf = ByteArray(1024)
+                        var len: Int
+                        while ((inputStream?.read(buf).also { len = (it ?: 0) } ?: 0) > 0) {
+                            outputStream.write(buf, 0, len)
+                        }
+                        outputStream.flush()
+                        inputStream?.close()
+                        outputStream.close()*/
+                    }
+                }
                 customDownloadDialog.show()
                 //If file not exist in directory
                 downloadFile(
@@ -461,6 +492,9 @@ class ActivityFullViewReels : BaseActivity(), ReelFullViewAdapter.Callback {
                     currentFile.delete()
                 }
                 customDownloadDialog.dismiss()
+                try {
+                    File(masked + "stalmate.png").delete()
+                }catch (e:Exception){e.printStackTrace()}
                 Toast.makeText(
                     this.applicationContext,
                     "Downloaded",

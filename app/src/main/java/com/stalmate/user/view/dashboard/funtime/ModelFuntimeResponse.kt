@@ -46,6 +46,7 @@ data class ResultFuntime(
     var thum_icon: String? = "",
     var url: String? = "", // https://webservice.kulluu.com
     var user_id: String? = "", // 643955be4d8ac204ccd950cd
+    var user_name: String? = "", // 643955be4d8ac204ccd950cd
     @SerializedName("isDataUpdated")
     var isDataUpdated: Boolean = false,
     var topcomment: @RawValue ArrayList<TopComment>? = arrayListOf()
