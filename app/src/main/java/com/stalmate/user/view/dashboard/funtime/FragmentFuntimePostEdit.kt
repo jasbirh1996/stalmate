@@ -293,8 +293,7 @@ class FragmentFuntimePostEdit : BaseFragment(), FriendAdapter.Callbackk {
 
 
     fun editPost(){
-
-        var hashmap = HashMap<String, String>()
+        val hashmap = HashMap<String, String>()
         hashmap.put("id", (requireActivity() as ActivityFuntimePost).funtime.id)
         hashmap.put("is_delete", "0")
         var data = ""
@@ -302,9 +301,8 @@ class FragmentFuntimePostEdit : BaseFragment(), FriendAdapter.Callbackk {
             data = binding.editor.html.toString()
         }
         hashmap.put("text", data)
-
-
-        networkViewModel.funtimUpdate(hashmap)
+        //hashmap.put("comment_status", "true")
+        networkViewModel.funtimUpdate(prefManager?.access_token.toString(),hashmap)
         networkViewModel.funtimeUpdateLiveData.observe(viewLifecycleOwner, Observer {
             it.let {
 

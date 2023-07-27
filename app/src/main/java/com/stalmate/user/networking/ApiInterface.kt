@@ -73,7 +73,10 @@ interface ApiInterface {
 
 
     @PATCH(Constants.URL_SAVE_UNSAVE_FUNTIME)
-    fun saveUnsaveFuntime(@Body map: HashMap<String, String>): Call<CommonModelResponse>
+    fun saveUnsaveFuntime(
+        @Header("Authorization") Authorization: String,
+        @Header("access_token") access_token: String,
+        @Body map: HashMap<String, String>): Call<CommonModelResponse>
 
 
     @POST(Constants.URL_GET_SAVED_FUNTIME_MUSIC)
@@ -81,7 +84,11 @@ interface ApiInterface {
 
 
     @POST(Constants.URL_GET_SAVED_FUNTIME_REELS)
-    fun getSavedFuntimReels(@Body map: HashMap<String, String>): Call<ModelFuntimeResponse>
+    fun getSavedFuntimReels(
+        @Header("Authorization") Authorization: String,
+        @Header("access_token") access_token: String,
+        @Body map: HashMap<String, String>
+    ): Call<ModelFuntimeResponse>
 
     @PATCH(Constants.URL_SAVE_UNSAVE_MUISIC)
     fun saveUnsaveMusic(@Body map: HashMap<String, String>): Call<CommonModelResponse>
@@ -131,7 +138,11 @@ interface ApiInterface {
     ) : Parcelable
 
     @POST(Constants.URL_FUNTIME_UPDATE)
-    fun funtimeUpdate(@Body map: HashMap<String, String>): Call<ModelSuccess>
+    fun funtimeUpdate(
+        @Header("Authorization") Authorization: String,
+        @Header("access_token") access_token: String,
+        @Body map: HashMap<String, String>
+    ): Call<ModelSuccess>
 
     @POST(Constants.URL_SIGN_UP)
     fun setSignupDetails(@Body map: HashMap<String, String>): Call<ModelLoginResponse>

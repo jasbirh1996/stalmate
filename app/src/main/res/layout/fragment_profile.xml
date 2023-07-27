@@ -27,7 +27,7 @@
                     android:id="@+id/toolbar"
                     layout="@layout/home_page_toolbar_new"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/_60sdp"
+                    android:layout_height="@dimen/_50sdp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />

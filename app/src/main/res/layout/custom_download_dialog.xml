@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="@dimen/_32sdp"
+        android:paddingTop="16dp"
+        android:paddingEnd="@dimen/_32sdp"
+        android:paddingBottom="@dimen/_16sdp">
+
+        <TextView
+            android:id="@+id/tv_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:fontFamily="@font/poppins"
+            android:gravity="center"
+            android:text="Wait a while, It's being downloaded!"
+            android:textColor="@color/app_color"
+            android:textSize="@dimen/_13sdp" />
+        <!--android:text="@string/you_need_to_download_a_few_extra_files"-->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_files_no"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                android:text="0%"
+                android:textColor="@color/app_color"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="@id/progress_bar"
+                app:layout_constraintEnd_toEndOf="@id/progress_bar"
+                app:layout_constraintStart_toStartOf="@id/progress_bar"
+                app:layout_constraintTop_toTopOf="@id/progress_bar" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <RelativeLayout
+            android:id="@+id/rlCancel"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_40sdp"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/btn_cancel"
+                android:layout_width="@dimen/_100sdp"
+                android:layout_height="@dimen/_30sdp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/bg_btn"
+                android:text="@string/txt_cancel"
+                android:textColor="@color/white" />
+        </RelativeLayout>
+
+    </LinearLayout>
+</layout>

@@ -65,7 +65,7 @@ class FragmentSavedFavouriteFuntime : BaseFragment(),
     fun getSavedVideoData() {
         var hashmap = HashMap<String, String>()
         hashmap.put("limit", "20")
-        networkViewModel.getSavedFuntimReels(hashmap).observe(viewLifecycleOwner, Observer {
+        networkViewModel.getSavedFuntimReels(prefManager?.access_token.toString(),hashmap).observe(viewLifecycleOwner, Observer {
             it.let {
                 adapter.submitList(it!!.results)
             }

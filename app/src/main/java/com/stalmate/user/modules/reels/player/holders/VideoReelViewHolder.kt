@@ -5,13 +5,14 @@ import com.stalmate.user.databinding.ItemReelBinding
 
 
 class VideoReelViewHolder(binding: ItemReelBinding) : ReelViewHolder(binding.root) {
+    var isVideo = false
     val customPlayerView = binding.feedPlayerView;
     val tvUserName = binding.tvUserName;
     val imgUserProfile = binding.imgUserProfile;
     val likeCount = binding.like;
     val shareShareCount = binding.share;
     val commentCount = binding.comment;
-    val likeIcon=binding.likeIcon
+    val likeIcon = binding.likeIcon
 
     val likeButton = binding.likeContainer;
     val shareButton = binding.shareContainer;
@@ -29,8 +30,10 @@ class VideoReelViewHolder(binding: ItemReelBinding) : ReelViewHolder(binding.roo
 }
 
 
-
 class VideoReelFullViewHolder(binding: ItemFullViewReelBinding) : ReelViewHolder(binding.root) {
+    var isVideo = false
+    val progressBarBuffering = binding.progressBarBuffering;
+    val videoLayout = binding.videoLayout;
     val customPlayerView = binding.feedPlayerView;
     val tvUserName = binding.tvUserName;
     val imgUserProfile = binding.imgUserProfile;
@@ -43,20 +46,20 @@ class VideoReelFullViewHolder(binding: ItemFullViewReelBinding) : ReelViewHolder
     val buttonComment = binding.buttonComment;
     val tvStatusDescription = binding.tvStatusDescription;
     val tvStoryPostTime = binding.tvStoryPostTime;
-    val videoThumbnail =
-        binding.feedThumbnailView;
+    val videoThumbnail = binding.feedThumbnailView;
     val buttonAdd = binding.addPostButton;
-    val tvTaggedPeopleCount =
-        binding.tvTaggedPeopleCount;
-    val layoutTagged =
-        binding.layoutTagged;
+    val ivMenu = binding.ivMenu;
+
+    val ivSoundButton = binding.ivSoundButton;
+
+    val tvLocation = binding.tvLocation;
+    val ivLocation = binding.ivLocation;
+
+    val ivMusicImage = binding.ivMusic;
     val tvMusic = binding.tvMusicName;
     val tvMusicArtist = binding.tvMusicArtist;
-    val ivMusicImage = binding.ivMusic;
     val layoutMusic = binding.layoutMusic;
-    val ivMenu = binding.ivMenu;
-    val tvLocation =
-        binding.tvLocation;
-    val ivLocation =
-        binding.ivLocation;
+
+    val layoutTagged = binding.layoutTagged;
+    val tvTaggedPeopleCount = binding.tvTaggedPeopleCount;
 }

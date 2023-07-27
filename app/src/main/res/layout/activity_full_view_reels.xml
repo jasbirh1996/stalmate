@@ -9,7 +9,6 @@
         android:windowSoftInputMode="adjustNothing"
         tools:context=".modules.reels.activity.ActivityFullViewReels">
 
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
@@ -22,7 +21,6 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
 
         <ImageView
             android:id="@+id/ivBack"

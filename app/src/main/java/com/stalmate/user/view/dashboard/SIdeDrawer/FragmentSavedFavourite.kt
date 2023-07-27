@@ -145,7 +145,7 @@ lateinit var musicAdapter: SavedGridMusicAdapter
     fun getSavedVideoData() {
         var hashmap = HashMap<String, String>()
         hashmap.put("limit", "4")
-        networkViewModel.getSavedFuntimReels(hashmap).observe(viewLifecycleOwner, Observer {
+        networkViewModel.getSavedFuntimReels(prefManager?.access_token.toString(),hashmap).observe(viewLifecycleOwner, Observer {
             it.let {
 
                 if (it!!.results?.size==0){

@@ -13,11 +13,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
+        <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
             android:id="@+id/feedThumbnailView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="fitXY"
+            android:background="@android:color/transparent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ProgressBar
+            android:id="@+id/progressBarBuffering"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -25,22 +35,25 @@
 
         <com.stalmate.user.modules.reels.player.InstaLikePlayerView
             android:id="@+id/feedPlayerView"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:background="@color/pinklight" />
-
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layoutBottom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:padding="@dimen/_20sdp"
-            app:layout_constraintBottom_toBottomOf="parent">
+            android:background="#1F000000"
+            android:paddingHorizontal="@dimen/_20sdp"
+            android:paddingTop="@dimen/_20sdp"
+            android:paddingBottom="@dimen/_40sdp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
             <ImageView
                 android:id="@+id/ivMenu"
@@ -58,6 +71,7 @@
                 android:id="@+id/img_user_profile"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
+                android:src="@drawable/user_placeholder"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -73,7 +87,7 @@
                 android:shadowDx="6"
                 android:shadowDy="6"
                 android:shadowRadius="6"
-                android:text=""
+                android:text="@string/user_name"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toStartOf="@+id/ivMenu"
@@ -92,6 +106,7 @@
                 android:shadowDx="6"
                 android:shadowDy="6"
                 android:shadowRadius="6"
+                android:visibility="gone"
                 android:text="jhkjhkjhk"
                 android:textColor="@color/white"
                 android:textSize="8sp"
@@ -112,9 +127,9 @@
                 android:shadowDy="6"
                 android:shadowRadius="6"
                 android:text="Location"
+                android:visibility="gone"
                 android:textColor="@color/white"
                 android:textSize="8sp"
-                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="@+id/tv_user_name"
                 app:layout_constraintStart_toEndOf="@+id/ivLocation"
                 app:layout_constraintTop_toBottomOf="@+id/tv_user_name" />
@@ -134,7 +149,7 @@
                 android:id="@+id/tv_status_description"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="@dimen/_5sdp"
                 android:ellipsize="end"
                 android:fontFamily="@font/poppins"
                 android:shadowColor="#55000000"
@@ -152,6 +167,7 @@
                 android:id="@+id/constraintLayout14"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5sdp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -161,7 +177,6 @@
                     android:id="@+id/layoutTagged"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
@@ -204,7 +219,7 @@
                         android:shadowDx="6"
                         android:shadowDy="6"
                         android:shadowRadius="6"
-                        android:text="3 People tagged"
+                        android:text="0 People tagged"
                         android:textColor="@color/white"
                         android:textSize="12sp"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -216,7 +231,6 @@
                     android:id="@+id/layoutMusic"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/layoutTagged"
                     app:layout_constraintStart_toStartOf="parent"
@@ -228,7 +242,7 @@
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/logo"
+                        android:src="@drawable/ic_music_play_icon"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -278,17 +292,14 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layoutRight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="10dp"
+            android:padding="@dimen/_10sdp"
+            android:paddingEnd="@dimen/_20sdp"
             app:layout_constraintBottom_toTopOf="@+id/layoutBottom"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0">
+            app:layout_constraintEnd_toEndOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/buttonLike"
@@ -326,7 +337,7 @@
                 android:id="@+id/buttonComment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/buttonLike">
@@ -360,7 +371,7 @@
                 android:id="@+id/buttonShare"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/buttonComment">
@@ -393,18 +404,29 @@
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/addPostButton"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginTop="20dp"
-                android:layout_weight="1"
-                android:src="@drawable/ic_home_add_story_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/btm_create_funtime"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/buttonShare" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/ivSoundButton"
+            android:layout_width="@dimen/_150sdp"
+            android:layout_height="@dimen/_150sdp"
+            android:padding="@dimen/_30sdp"
+            android:src="@drawable/ic_sound_off"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="#80000000" />
 
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

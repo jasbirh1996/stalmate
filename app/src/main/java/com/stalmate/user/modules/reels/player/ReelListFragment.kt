@@ -21,9 +21,9 @@ import androidx.recyclerview.widget.SnapHelper
 import com.google.gson.Gson
 import com.stalmate.user.intentHelper.IntentHelper
 import com.stalmate.user.base.BaseFragment
+import com.stalmate.user.commonadapters.AdapterFeed
 import com.stalmate.user.databinding.FragmentreellistBinding
-import com.stalmate.user.modules.reels.Extensions.Companion.findFirstVisibleItemPosition
-import com.stalmate.user.modules.reels.Extensions.Companion.isAtTop
+import com.stalmate.user.modules.reels.player.holders.VideoReelFullViewHolder
 import com.stalmate.user.modules.reels.player.holders.VideoReelViewHolder
 import com.stalmate.user.utilities.NetworkUtils
 import com.stalmate.user.view.dashboard.funtime.ResultFuntime
@@ -54,17 +54,21 @@ class ReelListFragment : BaseFragment(), ReelAdapter.Callback {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         /* Set adapter (items are being used inside adapter, you can setup in your own way*/
-
         if (isNetworkAvailable()) {
             adapter = ReelAdapter(requireContext(), this)
-            binding.recyclerView.layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
+            binding.recyclerView.layoutManager =
+                LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
             /*val snapHelper: SnapHelper = PagerSnapHelper()
             snapHelper.attachToRecyclerView(binding.recyclerView)*/
             binding.recyclerView.adapter = adapter
 
             /*Helper class to provide AutoPlay feature inside cell*/
-            videoAutoPlayHelper = VideoAutoPlayHelper(recyclerView = binding.recyclerView)
-            videoAutoPlayHelper!!.startObserving();
+            if (videoAutoPlayHelper == null) {
+                binding.recyclerView.let {
+                    videoAutoPlayHelper = VideoAutoPlayHelper(recyclerView = it)
+                    videoAutoPlayHelper?.startObserving();
+                }
+            }
 
 
             /*Helper class to provide show/hide toolBar*/
@@ -99,8 +103,6 @@ class ReelListFragment : BaseFragment(), ReelAdapter.Callback {
                 }
             })
         }
-
-
     }
 
     fun isNetworkAvailable(): Boolean {
@@ -112,87 +114,87 @@ class ReelListFragment : BaseFragment(), ReelAdapter.Callback {
     /**
      * This method will show hide view passed as @param -toolBar
      */
-    fun attachScrollControlListener(toolBar: View?, recyclerView: RecyclerView) {
-
-        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-
-
-                var firstVisibleItem = -1
-                try {
-                    firstVisibleItem = recyclerView.findFirstVisibleItemPosition()
-                } catch (e: Exception) {
-
-                }
-
-                if (firstVisibleItem == -1) {
-                    return
-                }
-
-                //show views if first item is first visible position and views are hidden
-
-                if (firstVisibleItem == 0 && recyclerView.computeVerticalScrollOffset() < HIDE_THRESHOLD) {
-                    if (!controlsVisibleShowHide) {
-                        controlsVisibleShowHide = true
-                        showTopBarWithAnim(toolBar, recyclerView, true, null)
-                        scrolledDistance = 0
-                    }
-                } else {
-                    if (scrolledDistance < -HIDE_THRESHOLD && !controlsVisibleShowHide) {
-                        controlsVisibleShowHide = true
-                        showTopBarWithAnim(toolBar, recyclerView, true, null)
-                        scrolledDistance = 0
-                    } else if (dy > 0/* && hideForcefully()*/ || scrolledDistance > HIDE_THRESHOLD && controlsVisibleShowHide) {
-                        controlsVisibleShowHide = false
-                        showTopBarWithAnim(toolBar, recyclerView, false, null)
-                        scrolledDistance = 0
-                    }
-                }
-
-                if (controlsVisibleShowHide && dy > 0 || !controlsVisibleShowHide && dy < 0) {
-                    scrolledDistance += dy
-                }
-
-            }
-        })
-
-    }
+//    fun attachScrollControlListener(toolBar: View?, recyclerView: RecyclerView) {
+//
+//        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+//            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+//                super.onScrolled(recyclerView, dx, dy)
+//
+//
+//                var firstVisibleItem = -1
+//                try {
+//                    firstVisibleItem = recyclerView.findFirstVisibleItemPosition()
+//                } catch (e: Exception) {
+//
+//                }
+//
+//                if (firstVisibleItem == -1) {
+//                    return
+//                }
+//
+//                //show views if first item is first visible position and views are hidden
+//
+//                if (firstVisibleItem == 0 && recyclerView.computeVerticalScrollOffset() < HIDE_THRESHOLD) {
+//                    if (!controlsVisibleShowHide) {
+//                        controlsVisibleShowHide = true
+//                        showTopBarWithAnim(toolBar, recyclerView, true, null)
+//                        scrolledDistance = 0
+//                    }
+//                } else {
+//                    if (scrolledDistance < -HIDE_THRESHOLD && !controlsVisibleShowHide) {
+//                        controlsVisibleShowHide = true
+//                        showTopBarWithAnim(toolBar, recyclerView, true, null)
+//                        scrolledDistance = 0
+//                    } else if (dy > 0/* && hideForcefully()*/ || scrolledDistance > HIDE_THRESHOLD && controlsVisibleShowHide) {
+//                        controlsVisibleShowHide = false
+//                        showTopBarWithAnim(toolBar, recyclerView, false, null)
+//                        scrolledDistance = 0
+//                    }
+//                }
+//
+//                if (controlsVisibleShowHide && dy > 0 || !controlsVisibleShowHide && dy < 0) {
+//                    scrolledDistance += dy
+//                }
+//
+//            }
+//        })
+//
+//    }
 
 
     /***
      * Animation to show/hide
      */
-    fun showTopBarWithAnim(
-        toolBar: View?,
-        recyclerView: RecyclerView,
-        show: Boolean,
-        animationListener: Animator.AnimatorListener?
-    ) {
-        if (show) {
-            if (!isHeaderAlreadyHidden) {
-                return
-            }
-            isHeaderAlreadyHidden = false
-            toolBar?.animate()?.translationY(0f)
-                ?.setInterpolator(DecelerateInterpolator(2f))
-        } else {
-            // To check if at the top of recycler view
-            if (recyclerView.isAtTop()
-            ) {
-                // Its at top
-                return
-            }
-            if (isHeaderAlreadyHidden) {
-                return
-            }
-            isHeaderAlreadyHidden = true
-            toolBar?.animate()
-                ?.translationY((-toolBar?.getHeight()!!).toFloat())
-                ?.setInterpolator(AccelerateInterpolator(2F))
-
-        }
-    }
+//    fun showTopBarWithAnim(
+//        toolBar: View?,
+//        recyclerView: RecyclerView,
+//        show: Boolean,
+//        animationListener: Animator.AnimatorListener?
+//    ) {
+//        if (show) {
+//            if (!isHeaderAlreadyHidden) {
+//                return
+//            }
+//            isHeaderAlreadyHidden = false
+//            toolBar?.animate()?.translationY(0f)
+//                ?.setInterpolator(DecelerateInterpolator(2f))
+//        } else {
+//            // To check if at the top of recycler view
+//            if (recyclerView.isAtTop()
+//            ) {
+//                // Its at top
+//                return
+//            }
+//            if (isHeaderAlreadyHidden) {
+//                return
+//            }
+//            isHeaderAlreadyHidden = true
+//            toolBar?.animate()
+//                ?.translationY((-toolBar?.getHeight()!!).toFloat())
+//                ?.setInterpolator(AccelerateInterpolator(2F))
+//
+//        }
+//    }
 
 
     var isFirstApiHit = true
@@ -235,32 +237,6 @@ class ReelListFragment : BaseFragment(), ReelAdapter.Callback {
         }
     }
 
-
-    override fun onStart() {
-        if (videoAutoPlayHelper != null) {
-            val viewholder = binding.recyclerView.findViewHolderForAdapterPosition(videoAutoPlayHelper!!.currentPlayingVideoItemPos);
-            if (viewholder != null) {
-                val viewMainHolder = (viewholder as VideoReelViewHolder)
-                /*  if ((requireActivity()  as ActivityDashboard).active is FragmentFunTime){
-                      viewMainHolder.customPlayerView.startPlaying()
-                  }*/
-            }
-        }
-        super.onStart()
-    }
-
-
-    override fun onPause() {
-        try {
-            val viewholder = binding.recyclerView.findViewHolderForAdapterPosition(videoAutoPlayHelper!!.currentPlayingVideoItemPos);
-            val viewMainHolder = (viewholder as VideoReelViewHolder)
-            viewMainHolder.customPlayerView.removePlayer()
-        } catch (e: Exception) {
-
-        }
-        super.onPause()
-    }
-
     override fun onClickOnRemoveReel(resultFuntime: ResultFuntime) {
 
     }
@@ -272,11 +248,10 @@ class ReelListFragment : BaseFragment(), ReelAdapter.Callback {
 
     }
 
-
     private fun likeApiHit(funtime: ResultFuntime) {
         var hashmap = HashMap<String, String>()
         hashmap.put("funtime_id", funtime.id.toString())
-        networkViewModel.funtimeLiveLikeUnlikeData(prefManager?.access_token.toString(),hashmap)
+        networkViewModel.funtimeLiveLikeUnlikeData(prefManager?.access_token.toString(), hashmap)
         networkViewModel.funtimeLiveLikeUnlikeData.observe(this) {
 
             it.let {
@@ -306,7 +281,6 @@ class ReelListFragment : BaseFragment(), ReelAdapter.Callback {
 
     }
 
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK && requestCode == 120) {
@@ -331,14 +305,41 @@ class ReelListFragment : BaseFragment(), ReelAdapter.Callback {
         }
     }
 
-    val startForResultReels = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                //  you will get result here in result.data
-                Log.d(";laskdasd", ";alksdasd")
-
-
-                adapter
+    override fun onPause() {
+        try {
+            if ((videoAutoPlayHelper != null)) {
+                binding.recyclerView.postDelayed({
+                    val viewholder =
+                        binding.recyclerView.findViewHolderForAdapterPosition(videoAutoPlayHelper!!.currentPlayingVideoItemPos);
+                    if (viewholder != null) {
+                        val viewMainHolder = (viewholder as VideoReelViewHolder)
+                        if (viewMainHolder.isVideo && viewMainHolder.customPlayerView.getPlayer()?.isPlaying == true)
+                            viewMainHolder.customPlayerView.removePlayer()
+                    }
+                }, 500)
             }
-
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
+        super.onPause()
+    }
+
+    override fun onResume() {
+        try {
+            if ((videoAutoPlayHelper != null)) {
+                binding.recyclerView.postDelayed({
+                    val viewholder =
+                        binding.recyclerView.findViewHolderForAdapterPosition(videoAutoPlayHelper!!.currentPlayingVideoItemPos);
+                    if (viewholder != null) {
+                        val viewMainHolder = (viewholder as VideoReelViewHolder)
+                        if (viewMainHolder.isVideo && viewMainHolder.customPlayerView.getPlayer()?.isPlaying == false)
+                            viewMainHolder.customPlayerView.startPlaying()
+                    }
+                }, 500)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        super.onResume()
+    }
 }

@@ -100,7 +100,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/llBottomNavView"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_60sdp"
+            android:layout_height="@dimen/_50sdp"
             android:background="@drawable/bg_new_btm_nav"
             android:elevation="@dimen/_12sdp"
             app:layout_constraintBottom_toBottomOf="parent">
@@ -109,7 +109,7 @@
                 android:id="@+id/ivHome"
                 android:layout_width="@dimen/_38sdp"
                 android:layout_height="@dimen/_38sdp"
-                android:src="@drawable/btm_home"
+                android:src="@drawable/round_home_24"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/ivFuntime"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -143,10 +143,10 @@
                 android:layout_width="@dimen/_38sdp"
                 android:layout_height="@dimen/_38sdp"
                 android:src="@drawable/btm_chat"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                android:visibility="gone"
                 app:layout_constraintStart_toEndOf="@+id/ivCreateFuntime"
                 app:layout_constraintTop_toTopOf="parent" />
 

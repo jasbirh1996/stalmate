@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.text.Html
 import android.text.format.DateFormat
 import android.util.DisplayMetrics
 import android.util.Log
@@ -260,8 +261,10 @@ class DialogFragmentCommentWithVideo(
             .placeholder(R.drawable.user_placeholder).circleCrop()
             .into(binding.ivMainUserImage)
 
-
-        binding.tvComment.text = funtime.text
+        binding.tvComment.text = Html.fromHtml(
+            funtime.text.toString(),
+            Html.FROM_HTML_MODE_COMPACT
+        )
 
 /*
         val text = "<font color=#000000>${funtime.first_name+" "+funtime.last_name+" "}</font><font color=#0f53b8>${funtime.text}  </font>"

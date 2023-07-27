@@ -168,7 +168,8 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
                 binding.rvHashTags.apply {
                     adapter = HashTagsListAdapter(hashTagsListResponse) {
                         binding.nsvHashTags.visibility = View.GONE
-                        binding.editor.html = binding.editor.html.toString().replaceAfterLast("#",it.replace("#",""))
+                        binding.editor.html = binding.editor.html.toString()
+                            .replaceAfterLast("#", it.replace("#", ""))
                     }
                 }
             }
@@ -185,7 +186,9 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
                     if (it.isNotEmpty()) {
                         binding.nsvHashTags.visibility = View.VISIBLE
                         (binding.rvHashTags.adapter as HashTagsListAdapter).hashTagsListResponse.clear()
-                        (binding.rvHashTags.adapter as HashTagsListAdapter).hashTagsListResponse.addAll(it)
+                        (binding.rvHashTags.adapter as HashTagsListAdapter).hashTagsListResponse.addAll(
+                            it
+                        )
                         (binding.rvHashTags.adapter as HashTagsListAdapter).notifyDataSetChanged()
                     }
                 }
@@ -571,10 +574,11 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
             data = binding.editor.html.toString()
         }
         hashmap["text"] = data
-        networkViewModel.funtimUpdate(hashmap)
+        //hashmap.put("comment_status", "true")
+        networkViewModel.funtimUpdate(prefManager?.access_token.toString(), hashmap)
         networkViewModel.funtimeUpdateLiveData.observe(viewLifecycleOwner, Observer {
             it.let {
-                if (it!!.status) {
+                if (it?.status == true) {
                     val intent = Intent(context, ActivityDashboard::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                     requireContext().startActivity(intent)

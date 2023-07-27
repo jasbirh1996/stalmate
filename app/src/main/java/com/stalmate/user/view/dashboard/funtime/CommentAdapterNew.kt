@@ -30,8 +30,11 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 
 class CommentAdapterNew(
-    var context: Context, var callback: Callback,
-    var networkViewModel: AppViewModel, var funTimeId: String, var lifecyclerOwner: LifecycleOwner,
+    var context: Context,
+    var callback: Callback,
+    var networkViewModel: AppViewModel,
+    var funTimeId: String,
+    var lifecyclerOwner: LifecycleOwner,
     val dialogFragment: DialogFragment,
     val accessToken: String
 ) : RecyclerView.Adapter<CommentAdapterNew.CommentViewHolder>() {
@@ -53,78 +56,50 @@ class CommentAdapterNew(
 
 
     inner class CommentViewHolder(val binding: ItemCommentBinding) :
-        RecyclerView.ViewHolder(binding.root),
-        ChildCommentAdapter.Callback {
+        RecyclerView.ViewHolder(binding.root), ChildCommentAdapter.Callback {
         fun bind(shortComment: Comment, accessToken: String) {
             if (shortComment.Created_date.isDigitsOnly())
-                binding.tvDate.text =
-                    "${TimesAgo2.covertTimeToText(shortComment.Created_date, true)}"
+                binding.tvDate.text = "${TimesAgo2.covertTimeToText(shortComment.Created_date, true)}"
             else
                 binding.tvDate.text = "${shortComment.Created_date}"
             binding.tvUserName.text = "${shortComment.first_name} ${shortComment.last_name}"
-            val text =
-                "<font color=#000000>${shortComment.first_name + " "} ${shortComment.last_name}</font> <font color=#0f53b8>${shortComment.comment} </font>"
-            binding.tvUserName.text = "${shortComment.first_name} ${shortComment.last_name}"
-
-            binding.tvReply.text = "Reply"
-            binding.tvLikesCount.text = "0 Likes"
             binding.tvComment.text = shortComment.comment
+            binding.tvLikesCount.setText(shortComment.like_count.toString() + " likes")
             if (!shortComment.comment_image.isNullOrEmpty()) {
                 binding.ivCommentImage.visibility = View.VISIBLE
                 Glide.with(context).load(shortComment.comment_image).into(binding.ivCommentImage)
             } else
                 binding.ivCommentImage.visibility = View.GONE
-            Glide.with(context).load(shortComment.profile_img).circleCrop()
-                .into(binding.ivUserImage)
+            Glide.with(context).load(shortComment.profile_img).circleCrop().into(binding.ivUserImage)
             binding.tvReply.setOnClickListener {
                 callback.onClickOnReply(shortComment, bindingAdapterPosition, 0, false)
             }
-            binding.tvLikesCount.setText(shortComment.like_count.toString() + " likes")
             binding.btnMore.setOnClickListener {
                 if (shortComment.isExpanded) {
-                    Log.d("a;ksdasd", "laskjdlasd")
                     shortComment.isExpanded = false
                     binding.btnMore.text = "Hide replies"
-                    commentList[bindingAdapterPosition].replies.clear()
-
                     notifyItemChanged(bindingAdapterPosition)
                 } else {
                     shortComment.isExpanded = true
-                    viewReplies(shortComment, bindingAdapterPosition, accessToken)
+                    //viewReplies(shortComment, bindingAdapterPosition, accessToken)
+                    binding.rvChildReplies.visibility = View.VISIBLE
                 }
             }
 
             val commentRepliedAdapter = ChildCommentAdapter(context, this, funTimeId, networkViewModel, lifecyclerOwner)
             commentRepliedAdapter.addToList(shortComment.replies)
-            binding.rvChildReplies.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             binding.rvChildReplies.adapter = commentRepliedAdapter
+            binding.rvChildReplies.visibility = View.GONE
 
-            /* binding.tvReply.setOnClickListener {
-                    commentListener.onSendComment(
-                        "author",
-                        "message",
-                        shortComment.level, shortComment.parentId ?: shortComment._id,bindingAdapterPosition
-                    )
-                }*/
-
-
-            if (shortComment.child_count == 0) {
+            if (shortComment.replies.isNullOrEmpty()) {
                 binding.btnMore.visibility = View.GONE
                 binding.view15.visibility = View.GONE
             } else {
                 binding.btnMore.visibility = View.VISIBLE
-                binding.btnMore.text = "Show ${shortComment.child_count} replies"
                 binding.view15.visibility = View.VISIBLE
-
-                if (shortComment.isExpanded) {
-                    binding.btnMore.text = "Hide replies"
-                } else {
-                    binding.btnMore.text = "Show ${shortComment.child_count} replies"
-                }
-
+                binding.btnMore.text = "Show ${shortComment.replies.size} replies"
+                binding.rvChildReplies.visibility = View.GONE
             }
-
-
 
             if (shortComment.isLiked == "Yes") {
                 binding.ivHearIcon.setImageDrawable(
@@ -141,12 +116,11 @@ class CommentAdapterNew(
                     )
                 )
             }
-            binding.tvLikesCount.setText(shortComment.like_count.toString() + " likes")
+            binding.tvLikesCount.text = shortComment.like_count.toString() + " likes"
             binding.ivHearIcon.setOnClickListener {
                 likeComment(shortComment._id, bindingAdapterPosition)
             }
         }
-
 
         override fun onClickOnReply(shortComment: Comment, childPosition: Int) {
             callback.onClickOnReply(shortComment, bindingAdapterPosition, childPosition, true)
@@ -155,8 +129,6 @@ class CommentAdapterNew(
         override fun onClickOnViewMoreReply(shortComment: Comment, position: Int) {
             callback.onClickOnViewMoreReply(shortComment, position)
         }
-
-
     }
 
 
@@ -167,22 +139,9 @@ class CommentAdapterNew(
             childPosition: Int,
             isChild: Boolean
         )
-
         fun onClickOnViewMoreReply(shortComment: Comment, position: Int)
         fun onCommentAddedSucessfully()
     }
-
-    object ShortCommentDiffUtil : DiffUtil.ItemCallback<Comment>() {
-
-        override fun areItemsTheSame(oldItem: Comment, newItem: Comment): Boolean {
-            return oldItem._id == newItem._id
-        }
-
-        override fun areContentsTheSame(oldItem: Comment, newItem: Comment): Boolean {
-            return oldItem == newItem
-        }
-    }
-
 
     override fun getItemCount(): Int {
         return commentList.size
@@ -200,7 +159,6 @@ class CommentAdapterNew(
         commentList.addAll(comments)
         notifyDataSetChanged()
     }
-
 
     fun addComment(data: String, accessToken: String) {
         val fromCameraCoverUri = when (dialogFragment) {
@@ -363,40 +321,24 @@ class CommentAdapterNew(
         val hashmap = HashMap<String, String>()
         hashmap.put("funtime_id", funTimeId)
         hashmap.put("comment_id", comment._id)
-        hashmap.put("page", "0")
+        hashmap.put("page", "1")
 
         networkViewModel.getRepliesList(accessToken, hashmap)
         networkViewModel.repliesLiveData.observe(lifecyclerOwner) { mainIt ->
             if (mainIt?.status == true) {
-                mainIt?.results?.forEach {
-                    /*      viewModel.addComment(
-                              Comment(
-                                  it._id,
-                                  Calendar.getInstance(Locale.ROOT).toSimpleDate(),
-                                  "test",
-                                  it.comment,
-                                  parentId = it.parentId,
-                                  first_name = PrefManager.getInstance(requireContext())!!.userDetail.results[0].first_name,
-                                  last_name = PrefManager.getInstance(requireContext())!!.userDetail.results[0].last_name,
-                                  child_count = 0,
-                                  profile_img = it.profile_img
-                              )
-                          )*/
+                mainIt.results.forEach {
                     it.replies = kotlin.collections.ArrayList<Comment>()
                 }
-                mainIt?.results?.let { commentList[position].replies.addAll(it) }
+                mainIt.results.let { commentList[position].replies.addAll(it) }
                 notifyItemChanged(position)
             }
         }
     }
 
-
     fun likeComment(commentId: String, position: Int) {
-
-        var hashmap = HashMap<String, String>()
+        val hashmap = HashMap<String, String>()
         hashmap.put("funtime_id", funTimeId)
         hashmap.put("comment_id", commentId)
-
         networkViewModel.likeComment(
             PrefManager.getInstance(App.getInstance())?.userDetail?.results?.access_token.toString(),
             hashmap
@@ -404,8 +346,6 @@ class CommentAdapterNew(
         networkViewModel.likeCommentLiveData.observe(lifecyclerOwner) { mainIt ->
             run {
                 if (mainIt!!.status) {
-
-
                     if (commentList[position].isLiked == "Yes") {
                         commentList[position].isLiked = "No"
                         commentList[position].like_count--
@@ -414,13 +354,9 @@ class CommentAdapterNew(
                         commentList[position].like_count++
                     }
                     notifyItemChanged(position)
-
-
                 }
             }
-
         }
     }
-
 }
 
