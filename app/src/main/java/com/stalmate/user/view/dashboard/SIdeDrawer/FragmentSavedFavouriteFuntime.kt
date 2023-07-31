@@ -65,7 +65,7 @@ class FragmentSavedFavouriteFuntime : BaseFragment(),
     fun getSavedVideoData() {
         var hashmap = HashMap<String, String>()
         hashmap.put("limit", "20")
-        networkViewModel.getSavedFuntimReels(hashmap).observe(viewLifecycleOwner, Observer {
+        networkViewModel.getSavedFuntimReels(prefManager?.access_token.toString(),hashmap).observe(viewLifecycleOwner, Observer {
             it.let {
                 adapter.submitList(it!!.results)
             }
@@ -74,9 +74,9 @@ class FragmentSavedFavouriteFuntime : BaseFragment(),
 
 
     override fun onClickOnReel(reel: ResultFuntime) {
-        var bundle = Bundle()
-        var taghhedUser = TaggedUser("", "", "", "")
-        reel.tag_user.add(taghhedUser)
+        val bundle = Bundle()
+        val taghhedUser = TaggedUser("", "", "", "")
+        reel.tag_user?.add(taghhedUser)
         reel.isSave="Yes"
         bundle.putParcelable("data", reel)
         Log.d("lkajsdlasd", Gson().toJson(reel))

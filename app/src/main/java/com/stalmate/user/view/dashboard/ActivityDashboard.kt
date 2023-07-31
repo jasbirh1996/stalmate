@@ -99,6 +99,7 @@ class ActivityDashboard : BaseActivity(), FragmentHome.Callback,
         hashmap.put("limit", "5")
         hashmap.put("id_user", "")
         hashmap.put("fun_id", id)
+        hashmap.put("is_video", "1")
         networkViewModel.funtimeLiveData(prefManager?.access_token.toString(), hashmap)
         networkViewModel.funtimeLiveData.observe(this) {
             isApiRuning = false
@@ -233,7 +234,7 @@ class ActivityDashboard : BaseActivity(), FragmentHome.Callback,
     fun selectedNavButton(selected: ImageView, unSelected: ImageView) {
         when (selected.id) {
             binding.ivHome.id -> {
-                binding.ivHome.setImageResource(R.drawable.btm_home_active)
+                binding.ivHome.setImageResource(R.drawable.round_home_24)
             }
             binding.ivChat.id -> {
                 binding.ivChat.setImageResource(R.drawable.btm_chat_active)

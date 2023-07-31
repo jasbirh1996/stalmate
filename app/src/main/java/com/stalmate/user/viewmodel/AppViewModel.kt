@@ -114,11 +114,11 @@ open class AppViewModel : ViewModel() {
     }
 
 
-    fun saveUnsavePost(map: HashMap<String, String>): LiveData<CommonModelResponse?> {
+    fun saveUnsavePost(access_token: String,map: HashMap<String, String>): LiveData<CommonModelResponse?> {
         val temp = MutableLiveData<CommonModelResponse?>()
         var saveLiveDAta: LiveData<CommonModelResponse?>
         saveLiveDAta = temp
-        getResult(temp, apiInterface.saveUnsaveFuntime(map))
+        getResult(temp, apiInterface.saveUnsaveFuntime(access_token,access_token,map))
         return saveLiveDAta
     }
 
@@ -190,10 +190,10 @@ open class AppViewModel : ViewModel() {
     }
 
     var photoLiveData: LiveData<ModelPhotoResponse?> = MutableLiveData<ModelPhotoResponse?>()
-    fun getAlbumPhotos(access_token: String,map: HashMap<String, Any>) {
+    fun getAlbumPhotos(access_token: String, map: HashMap<String, Any>) {
         val temp = MutableLiveData<ModelPhotoResponse?>()
         photoLiveData = temp
-        getResult(temp, apiInterface.getPhotoList(access_token,map))
+        getResult(temp, apiInterface.getPhotoList(access_token, map))
     }
 
 
@@ -221,10 +221,10 @@ open class AppViewModel : ViewModel() {
     }
 
     var funtimeUpdateLiveData: MutableLiveData<ModelSuccess?> = MutableLiveData<ModelSuccess?>()
-    fun funtimUpdate(map: HashMap<String, String>) {
+    fun funtimUpdate(access_token: String, map: HashMap<String, String>) {
         val temp = MutableLiveData<ModelSuccess?>()
         funtimeUpdateLiveData = temp
-        getResult(temp, apiInterface.funtimeUpdate(map))
+        getResult(temp, apiInterface.funtimeUpdate(access_token, access_token, map))
     }
 
 
@@ -532,11 +532,14 @@ open class AppViewModel : ViewModel() {
     }
 
 
-    fun getSavedFuntimReels(map: HashMap<String, String>): LiveData<ModelFuntimeResponse?> {
+    fun getSavedFuntimReels(
+        access_token: String,
+        map: HashMap<String, String>
+    ): LiveData<ModelFuntimeResponse?> {
         val temp = MutableLiveData<ModelFuntimeResponse?>()
-        var saveLiveDAta: LiveData<ModelFuntimeResponse?>
+        val saveLiveDAta: LiveData<ModelFuntimeResponse?>
         saveLiveDAta = temp
-        getResult(temp, apiInterface.getSavedFuntimReels(map))
+        getResult(temp, apiInterface.getSavedFuntimReels(access_token, access_token,map))
         return saveLiveDAta
     }
 
@@ -732,6 +735,7 @@ open class AppViewModel : ViewModel() {
 
     var hashTagsListResponse: LiveData<HashTagsListResponse?> =
         MutableLiveData<HashTagsListResponse?>()
+
     fun get_hash_tags(access_token: String) {
         val temp = MutableLiveData<HashTagsListResponse?>()
         hashTagsListResponse = temp

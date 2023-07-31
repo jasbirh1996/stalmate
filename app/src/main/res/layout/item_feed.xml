@@ -8,7 +8,6 @@
         android:id="@+id/layoutTop"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/_10sdp"
         android:background="@color/white"
         android:elevation="0dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -103,11 +102,22 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/userProfileImage">
 
-            <androidx.appcompat.widget.AppCompatImageView
+            <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
                 android:id="@+id/appCompatImageView5"
                 android:layout_width="match_parent"
-                android:layout_height="360dp"
-                android:scaleType="centerCrop"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ProgressBar
+                android:id="@+id/progressBarBuffering"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -115,7 +125,9 @@
             <com.stalmate.user.modules.reels.player.InstaLikePlayerView
                 android:id="@+id/feedPlayerView"
                 android:layout_width="match_parent"
-                android:layout_height="360dp"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -132,16 +144,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/feedPlayerView" />
 
-            <ImageView
-                android:id="@+id/ivPlay"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:src="@drawable/round_play_circle_24"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="@+id/feedPlayerView"
-                app:layout_constraintEnd_toEndOf="@+id/feedPlayerView"
-                app:layout_constraintStart_toStartOf="@+id/feedPlayerView"
-                app:layout_constraintTop_toTopOf="@+id/feedPlayerView" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.appcompat.widget.AppCompatImageView

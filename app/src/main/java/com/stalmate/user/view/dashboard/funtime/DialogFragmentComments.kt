@@ -8,6 +8,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.text.Html
 import android.text.format.DateFormat
 import android.util.DisplayMetrics
 import android.util.Log
@@ -182,8 +183,7 @@ class DialogFragmentComments(
             }
         })
 
-        val emojiconEditText: hani.momanii.supernova_emoji_library.emojiHelper.EmojiconEditText =
-            binding.etComment
+        val emojiconEditText: hani.momanii.supernova_emoji_library.emojiHelper.EmojiconEditText = binding.etComment
         val emojiIcon = EmojIconActions(
             this.requireContext(),
             binding.clMain,
@@ -251,7 +251,10 @@ class DialogFragmentComments(
             .into(binding.ivMainUserImage)
 
 
-        binding.tvComment.text = funtime?.text.toString()
+        binding.tvComment.text = Html.fromHtml(
+            funtime?.text.toString(),
+            Html.FROM_HTML_MODE_COMPACT
+        )
 
 
         /*  val text = "<font color=#000000>${funtime.first_name+" "+funtime.last_name+" "}</font> <font color=#0f53b8>${funtime.text} </font>"
@@ -359,12 +362,10 @@ class DialogFragmentComments(
 
 
     fun hitApi(isFresh: Boolean) {
-
         if (isFresh) {
             currentPage = 1
         }
-
-        var hashmap = HashMap<String, String>()
+        val hashmap = HashMap<String, String>()
         hashmap.put("funtime_id", funtime?.id.toString())
         hashmap.put("page", currentPage.toString())
         networkViewModel?.getCommentList(
@@ -372,56 +373,13 @@ class DialogFragmentComments(
             hashmap
         )
         networkViewModel?.commentLiveData?.observe(viewLifecycleOwner) { it ->
-            if (it!!.status) {
-                if (!it?.results.isNullOrEmpty()) {
-                    /*          it?.results?.forEach {
-                                  it.replies = kotlin.collections.ArrayList()
-                                  it.level = 1
-                                  viewModel.addComment(it)
-                              }
-                              */
-                    it.results.forEach {
-                        it.replies = ArrayList<Comment>()
-                        commentAdapter.addToList(listOf(it))
-                    }
-                    isLastPage = false
-                } else {
-                    isLastPage = true
+            if (it?.status == true) {
+                if (!it.results.isNullOrEmpty()) {
+                    commentAdapter.addToList(it.results)
                 }
             }
         }
     }
-
-
-/*    fun likeComment(id: String) {
-        var hashmap = HashMap<String, String>()
-        hashmap.put("comment_id", id)
-        networkViewModel.likeComment(hashmap)
-        networkViewModel.likeCommentLiveData.observe(viewLifecycleOwner) {
-            it.let {
-
-               if (it!!.status) {
-                    viewModel.addComment(
-                        Comment(
-                            it?.results?._id,
-                            Calendar.getInstance(Locale.ROOT).toSimpleDate(),
-                            "test",
-                            data,
-                            first_name = PrefManager.getInstance(requireContext())!!.userDetail.results[0].first_name,
-                            last_name = PrefManager.getInstance(requireContext())!!.userDetail.results[0].last_name,
-                            child_count = it?.results?.child_count,
-                            profile_img = it?.results?.profile_img
-                        )
-                    )
-                    binding.etComment.setText("")
-                    binding.rvList.scrollToPosition(binding.rvList.adapter!!.itemCount - 1)
-                }
-
-
-            }
-        }
-    }*/
-
 
     var commentOverId = ""
     var parentPosition = 0

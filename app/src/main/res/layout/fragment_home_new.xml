@@ -14,7 +14,7 @@
             android:id="@+id/toolbar"
             layout="@layout/home_page_toolbar_new"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_60sdp"
+            android:layout_height="@dimen/_50sdp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -248,7 +248,6 @@
                         android:id="@+id/rvFeeds"
                         android:layout_width="0dp"
                         android:layout_height="0dp"
-                        android:layout_marginTop="@dimen/_10sdp"
                         android:background="@color/white"
                         android:clipToPadding="false"
                         android:orientation="vertical"

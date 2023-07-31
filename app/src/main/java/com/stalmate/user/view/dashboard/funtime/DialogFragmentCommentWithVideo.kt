@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.text.Html
 import android.text.format.DateFormat
 import android.util.DisplayMetrics
 import android.util.Log
@@ -150,7 +151,7 @@ class DialogFragmentCommentWithVideo(
                 requireContext(),
                 this,
                 networkViewModel,
-                funtime.id,
+                funtime.id.toString(),
                 this,
                 this,
                 PrefManager.getInstance(App.getInstance())?.userDetail?.results?.access_token.toString()
@@ -260,8 +261,10 @@ class DialogFragmentCommentWithVideo(
             .placeholder(R.drawable.user_placeholder).circleCrop()
             .into(binding.ivMainUserImage)
 
-
-        binding.tvComment.text = funtime.text
+        binding.tvComment.text = Html.fromHtml(
+            funtime.text.toString(),
+            Html.FROM_HTML_MODE_COMPACT
+        )
 
 /*
         val text = "<font color=#000000>${funtime.first_name+" "+funtime.last_name+" "}</font><font color=#0f53b8>${funtime.text}  </font>"
@@ -427,7 +430,7 @@ class DialogFragmentCommentWithVideo(
         }
 
         var hashmap = HashMap<String, String>()
-        hashmap.put("funtime_id", funtime.id)
+        hashmap.put("funtime_id", funtime.id.toString())
         hashmap.put("page", currentPage.toString())
 
         networkViewModel.getCommentList(

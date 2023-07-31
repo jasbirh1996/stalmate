@@ -71,10 +71,6 @@ class FragmentHome(var callback: Callback? = null) : BaseFragment(),
     var commentImagePosition = -1
     var videoAutoPlayHelper: VideoAutoPlayHelper? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     public interface Callback {
         fun onCLickOnMenuButton()
         fun onCLickOnProfileButton()
@@ -99,7 +95,6 @@ class FragmentHome(var callback: Callback? = null) : BaseFragment(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         homeSetUp()
-
         binding?.refreshLayout?.setOnRefreshListener {
             binding?.refreshLayout?.isRefreshing = false
             if (isNetworkAvailable()) {
@@ -110,15 +105,6 @@ class FragmentHome(var callback: Callback? = null) : BaseFragment(),
                 binding?.nointernet?.visibility = View.VISIBLE
             }
         }
-
-        if (isNetworkAvailable()) {
-            isFirstApiHit = true
-            page_count = 1
-            callApi()
-        } else {
-            binding?.nointernet?.visibility = View.VISIBLE
-        }
-
         /*binding?.nestedScrollview.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
             if (oldScrollY < scrollY) {//increase
                 callback.onScoll(true)
@@ -130,7 +116,7 @@ class FragmentHome(var callback: Callback? = null) : BaseFragment(),
 
     fun follow(feed: ResultFuntime) {
         val hashMap = HashMap<String, String>()
-        hashMap.put("id_user", feed.user_id)
+        hashMap.put("id_user", feed.user_id.toString())
         networkViewModel.sendFollowRequest(
             PrefManager.getInstance(App.getInstance())?.userDetail?.results?.access_token.toString(),
             hashMap
@@ -204,7 +190,7 @@ class FragmentHome(var callback: Callback? = null) : BaseFragment(),
 
         networkViewModel.addComment1(
             access_token = prefManager?.access_token.toString(),
-            funtime_id = feed.id.getRequestBody(),
+            funtime_id = feed.id.toString().getRequestBody(),
             comment = comment.getRequestBody(),
             images = images
         )
@@ -309,6 +295,10 @@ class FragmentHome(var callback: Callback? = null) : BaseFragment(),
 
     private fun homeSetUp() {
         setupSearchBox()
+        homeStoryAdapter = UserHomeStoryAdapter(networkViewModel, requireContext(), this)
+        binding?.shimmerViewContainer?.startShimmer()
+        binding?.rvStory?.adapter = homeStoryAdapter
+
         feedAdapter = AdapterFeed(
             childFragmentManager,
             networkViewModel,
@@ -377,10 +367,12 @@ class FragmentHome(var callback: Callback? = null) : BaseFragment(),
                         if ((videoAutoPlayHelper != null)) {
                             binding?.rvFeeds?.postDelayed({
                                 val viewholder =
-                                    binding?.rvFeeds?.findViewHolderForAdapterPosition(videoAutoPlayHelper!!.currentPlayingVideoItemPos);
+                                    binding?.rvFeeds?.findViewHolderForAdapterPosition(
+                                        videoAutoPlayHelper!!.currentPlayingVideoItemPos
+                                    );
                                 if (viewholder != null) {
                                     val viewMainHolder = (viewholder as AdapterFeed.FeedViewHolder)
-                                    if (viewMainHolder.customPlayerView.getPlayer()?.isPlaying == true)
+                                    if (viewMainHolder.isVideo && viewMainHolder.customPlayerView.getPlayer()?.isPlaying == true)
                                         viewMainHolder.customPlayerView.removePlayer()
                                 }
                             }, 500)
@@ -396,10 +388,12 @@ class FragmentHome(var callback: Callback? = null) : BaseFragment(),
                         if ((videoAutoPlayHelper != null)) {
                             binding?.rvFeeds?.postDelayed({
                                 val viewholder =
-                                    binding?.rvFeeds?.findViewHolderForAdapterPosition(videoAutoPlayHelper!!.currentPlayingVideoItemPos);
+                                    binding?.rvFeeds?.findViewHolderForAdapterPosition(
+                                        videoAutoPlayHelper!!.currentPlayingVideoItemPos
+                                    );
                                 if (viewholder != null) {
                                     val viewMainHolder = (viewholder as AdapterFeed.FeedViewHolder)
-                                    if (viewMainHolder.customPlayerView.getPlayer()?.isPlaying == false)
+                                    if (viewMainHolder.isVideo && viewMainHolder.customPlayerView.getPlayer()?.isPlaying == false)
                                         viewMainHolder.customPlayerView.startPlaying()
                                 }
                             }, 500)
@@ -409,15 +403,9 @@ class FragmentHome(var callback: Callback? = null) : BaseFragment(),
                     }
                 }
             })
-        homeStoryAdapter = UserHomeStoryAdapter(networkViewModel, requireContext(), this)
-        binding?.shimmerViewContainer?.startShimmer()
-        binding?.rvStory?.adapter = homeStoryAdapter
-
         binding?.rvFeeds?.adapter = feedAdapter
         (binding?.rvFeeds?.adapter as AdapterFeed).stateRestorationPolicy =
             RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
-        binding?.rvFeeds?.layoutManager =
-            LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
         binding?.shimmerLayoutFeeds?.startShimmer()
         /*Helper class to provide AutoPlay feature inside cell*/
         if (videoAutoPlayHelper == null) {
@@ -492,7 +480,8 @@ class FragmentHome(var callback: Callback? = null) : BaseFragment(),
         hashmap.put("page", page_count.toString())
         hashmap.put("id_user", "")
         hashmap.put("fun_id", "")
-        hashmap.put("limit", "5")
+        hashmap.put("limit", "50")
+        hashmap.put("is_video", "2")
         networkViewModel.funtimeLiveData(prefManager?.access_token.toString(), hashmap)
         networkViewModel.funtimeLiveData.observe(viewLifecycleOwner, Observer {
             /*
@@ -532,7 +521,7 @@ class FragmentHome(var callback: Callback? = null) : BaseFragment(),
                         binding?.rvFeeds?.findViewHolderForAdapterPosition(videoAutoPlayHelper!!.currentPlayingVideoItemPos);
                     if (viewholder != null) {
                         val viewMainHolder = (viewholder as AdapterFeed.FeedViewHolder)
-                        if (viewMainHolder.customPlayerView.getPlayer()?.isPlaying == true)
+                        if (viewMainHolder.isVideo && viewMainHolder.customPlayerView.getPlayer()?.isPlaying == true)
                             viewMainHolder.customPlayerView.removePlayer()
                     }
                 }, 500)
@@ -546,6 +535,13 @@ class FragmentHome(var callback: Callback? = null) : BaseFragment(),
     override fun onResume() {
         Log.d("#HomeTag", "onResume")
         try {
+            if (isNetworkAvailable()) {
+                isFirstApiHit = true
+                page_count = 1
+                callApi()
+            } else {
+                binding?.nointernet?.visibility = View.VISIBLE
+            }
             getUserProfileData()
             if ((videoAutoPlayHelper != null)) {
                 binding?.rvFeeds?.postDelayed({
@@ -553,7 +549,7 @@ class FragmentHome(var callback: Callback? = null) : BaseFragment(),
                         binding?.rvFeeds?.findViewHolderForAdapterPosition(videoAutoPlayHelper!!.currentPlayingVideoItemPos);
                     if (viewholder != null) {
                         val viewMainHolder = (viewholder as AdapterFeed.FeedViewHolder)
-                        if (viewMainHolder.customPlayerView.getPlayer()?.isPlaying == false)
+                        if (viewMainHolder.isVideo && viewMainHolder.customPlayerView.getPlayer()?.isPlaying == false)
                             viewMainHolder.customPlayerView.startPlaying()
                     }
                 }, 500)

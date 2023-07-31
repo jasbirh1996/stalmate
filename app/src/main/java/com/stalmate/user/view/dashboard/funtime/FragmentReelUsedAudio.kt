@@ -36,13 +36,13 @@ import java.util.concurrent.TimeUnit
 class FragmentReelUsedAudio(var reelData: ResultFuntime) : BaseFragment(),
     ReelVideosByAudioAdapter.Callback {
     private var playingAudio = false
-    var currentPos=0
+    var currentPos = 0
     var runnable: Runnable? = null
     var handler: Handler? = null
-     var mediaPlayer:MediaPlayer?=null
-    lateinit var adapter:ReelVideosByAudioAdapter
-    lateinit var binding:FragmentReelUsedAudioBinding
-    var wasPlaying=false
+    var mediaPlayer: MediaPlayer? = null
+    lateinit var adapter: ReelVideosByAudioAdapter
+    lateinit var binding: FragmentReelUsedAudioBinding
+    var wasPlaying = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -53,31 +53,46 @@ class FragmentReelUsedAudio(var reelData: ResultFuntime) : BaseFragment(),
     ): View? {
 
         // Inflate the layout for this fragment
-        var view=inflater.inflate(R.layout.fragment_reel_used_audio, container, false)
-        binding=DataBindingUtil.bind<FragmentReelUsedAudioBinding>(view)!!
+        var view = inflater.inflate(R.layout.fragment_reel_used_audio, container, false)
+        binding = DataBindingUtil.bind<FragmentReelUsedAudioBinding>(view)!!
         return binding.root
     }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        handler= Handler()
-        binding.tvArtistName.text=reelData.artist_name
-        binding.tvMusicName.text=reelData.sound_name
-        adapter=ReelVideosByAudioAdapter(requireContext(),this,true)
-        binding.rvList.layoutManager=GridLayoutManager(context,3)
-        binding.rvList.adapter=adapter
-        ImageLoaderHelperGlide.setGlideCorner(requireContext(),binding.ivImage,reelData.sound_image,R.drawable.user_placeholder)
+        handler = Handler()
+        binding.tvArtistName.text = reelData.artist_name
+        binding.tvMusicName.text = reelData.sound_name
+        adapter = ReelVideosByAudioAdapter(requireContext(), this, true)
+        binding.rvList.layoutManager = GridLayoutManager(context, 3)
+        binding.rvList.adapter = adapter
+        ImageLoaderHelperGlide.setGlideCorner(
+            requireContext(),
+            binding.ivImage,
+            reelData.sound_image,
+            R.drawable.user_placeholder
+        )
 
         binding.ivplayPauseButton.setOnClickListener {
-            if (mediaPlayer!!.isPlaying){
-               // pause()
-                binding.ivplayPauseButton.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.ic_music_play_icon))
+            if (mediaPlayer!!.isPlaying) {
+                // pause()
+                binding.ivplayPauseButton.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        requireContext(),
+                        R.drawable.ic_music_play_icon
+                    )
+                )
                 mediaPlayer!!.pause()
-            }else{
-                binding.ivplayPauseButton.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.ic_postvideo_pause_icon))
+            } else {
+                binding.ivplayPauseButton.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        requireContext(),
+                        R.drawable.ic_postvideo_pause_icon
+                    )
+                )
                 mediaPlayer!!.start()
-               // playSong()
+                // playSong()
             }
         }
         setUPPlayer()
@@ -86,8 +101,13 @@ class FragmentReelUsedAudio(var reelData: ResultFuntime) : BaseFragment(),
 
 
         binding.buttonUseAudio.setOnClickListener {
-            if (reelData.sound_id!=null){
-                onSongSelected(reelData.sound_id!!,reelData.sound_file,reelData.sound_name,reelData.sound_image!!)
+            if (reelData.sound_id != null) {
+                onSongSelected(
+                    reelData.sound_id.toString(),
+                    reelData.sound_file.toString(),
+                    reelData.sound_name.toString(),
+                    reelData.sound_image.toString()
+                )
             }
 
 
@@ -96,7 +116,7 @@ class FragmentReelUsedAudio(var reelData: ResultFuntime) : BaseFragment(),
     }
 
 
-    fun setUPPlayer(){
+    fun setUPPlayer() {
         mediaPlayer = MediaPlayer()
         mediaPlayer!!.setAudioAttributes(
             AudioAttributes.Builder()
@@ -113,7 +133,12 @@ class FragmentReelUsedAudio(var reelData: ResultFuntime) : BaseFragment(),
         }
 
         mediaPlayer!!.setOnPreparedListener { mp: MediaPlayer ->
-            binding.ivplayPauseButton.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.ic_postvideo_pause_icon))
+            binding.ivplayPauseButton.setImageDrawable(
+                ContextCompat.getDrawable(
+                    requireContext(),
+                    R.drawable.ic_postvideo_pause_icon
+                )
+            )
             binding.seekbar.max = mp.duration
             binding.tvAudioDuration.setText(convertDurationMillis(mp.duration))
             mediaPlayer!!.start()
@@ -145,7 +170,7 @@ class FragmentReelUsedAudio(var reelData: ResultFuntime) : BaseFragment(),
                     " Seconds " + second
         )
 
-        binding.tvAudioDuration.setText(minute.toInt().toString()+":"+second.toString())
+        binding.tvAudioDuration.setText(minute.toInt().toString() + ":" + second.toString())
     }
 
     fun convertDurationMillis(getDurationInMillis: Int): String? {
@@ -192,7 +217,7 @@ class FragmentReelUsedAudio(var reelData: ResultFuntime) : BaseFragment(),
         override fun run() {
             try {
 
-               currentPos = mediaPlayer!!.currentPosition
+                currentPos = mediaPlayer!!.currentPosition
                 Log.d("aksdasda", currentPos.toString())
                 binding.seekbar.progress = currentPos as Int
 
@@ -204,10 +229,10 @@ class FragmentReelUsedAudio(var reelData: ResultFuntime) : BaseFragment(),
 
 
     private fun getReelsListApiByMusic() {
-        var hashMap=HashMap<String,String>()
-        hashMap.put("page","1")
-        if (!ValidationHelper.isNull(reelData.sound_id)){
-            hashMap.put("sound_id",reelData.sound_id!!)
+        var hashMap = HashMap<String, String>()
+        hashMap.put("page", "1")
+        if (!ValidationHelper.isNull(reelData.sound_id)) {
+            hashMap.put("sound_id", reelData.sound_id!!)
         }
 
         networkViewModel.get_song_funtime_list(hashMap)
@@ -215,7 +240,7 @@ class FragmentReelUsedAudio(var reelData: ResultFuntime) : BaseFragment(),
 
             it.let {
 
-                    adapter.addToList(it!!.results)
+                adapter.addToList(it!!.results)
 
             }
         }
@@ -229,7 +254,7 @@ class FragmentReelUsedAudio(var reelData: ResultFuntime) : BaseFragment(),
     }
 
     override fun onPause() {
-        if (mediaPlayer!=null){
+        if (mediaPlayer != null) {
             stopRepeatingTask()
             mediaPlayer!!.pause()
         }
@@ -241,9 +266,7 @@ class FragmentReelUsedAudio(var reelData: ResultFuntime) : BaseFragment(),
         handler!!.removeCallbacks(updateSeekbar)
 
 
-
     }
-
 
 
     fun downloadSelectedSong(song: Song) {
@@ -281,30 +304,34 @@ class FragmentReelUsedAudio(var reelData: ResultFuntime) : BaseFragment(),
     }
 
 
-
     private fun closeWithSelection(song: Song, file: Uri) {
 
-        startActivity(IntentHelper.getCreateReelsScreen(context)!!.putExtra(EXTRA_SONG_ID,song.id).putExtra(EXTRA_SONG_NAME,song.title).putExtra(EXTRA_SONG_FILE,File(file.path).absolutePath).putExtra("type","image").putExtra(
-            EXTRA_SONG_COVER,song.album))
+        startActivity(
+            IntentHelper.getCreateReelsScreen(context)!!.putExtra(EXTRA_SONG_ID, song.id)
+                .putExtra(EXTRA_SONG_NAME, song.title)
+                .putExtra(EXTRA_SONG_FILE, File(file.path).absolutePath).putExtra("type", "image")
+                .putExtra(
+                    EXTRA_SONG_COVER, song.album
+                )
+        )
     }
 
-     fun onSongSelected(songId: String, songUrl: String, songTitle: String, soundImage: String) {
-        var downloadableSong= Song()
-        downloadableSong.id=songId
-        downloadableSong.audio=songUrl
-        downloadableSong.title=songTitle
-         downloadableSong.album=soundImage
+    fun onSongSelected(songId: String, songUrl: String, songTitle: String, soundImage: String) {
+        val downloadableSong = Song()
+        downloadableSong.id = songId
+        downloadableSong.audio = songUrl
+        downloadableSong.title = songTitle
+        downloadableSong.album = soundImage
         downloadSelectedSong(downloadableSong)
     }
 
     override fun onClickOnReel(reel: ResultFuntime) {
-        var bundle= Bundle()
-
-        var taghhedUser=TaggedUser("","","","")
-        reel.tag_user.add(taghhedUser)
-        bundle.putParcelable("data",reel)
-        Log.d("lkajsdlasd",Gson().toJson(reel))
-        startActivity(IntentHelper.getFullViewReelActivity(context)!!.putExtra("data",reel))
+        val bundle = Bundle()
+        val taghhedUser = TaggedUser("", "", "", "")
+        reel.tag_user?.add(taghhedUser)
+        bundle.putParcelable("data", reel)
+        Log.d("lkajsdlasd", Gson().toJson(reel))
+        startActivity(IntentHelper.getFullViewReelActivity(context)!!.putExtra("data", reel))
     }
 
 }

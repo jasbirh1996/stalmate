@@ -1,20 +1,36 @@
 package com.stalmate.user.modules.reels.adapter
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Handler
+import android.os.Looper
 import android.text.Html
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
+import androidx.palette.graphics.Palette
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.Target
+import com.davemorrissey.labs.subscaleview.ImageSource
+import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator
+import com.nostra13.universalimageloader.core.ImageLoader
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration
+import com.nostra13.universalimageloader.core.assist.QueueProcessingType
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener
 import com.stalmate.user.intentHelper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseActivity
@@ -35,9 +51,27 @@ import com.stalmate.user.view.dialogs.SuccessDialog
 class ReelFullViewAdapter(
     val context: Context,
     var callback: Callback,
+    val userId: String
 ) :
     ListAdapter<ResultFuntime, ReelViewHolder>(DIFF_CALLBACK) {
     var reelList = ArrayList<ResultFuntime>()
+    private var imageLoader: ImageLoader? = null
+    private var volumeForAll = 0f
+
+    init {
+        if (imageLoader == null) {
+            val imageLoaderConfiguration = ImageLoaderConfiguration.Builder(context)
+                .threadPriority(Thread.NORM_PRIORITY)
+                .denyCacheImageMultipleSizesInMemory()
+                .diskCacheFileNameGenerator(Md5FileNameGenerator())
+                .diskCacheSize(50 * 1024 * 1024) // 50 Mb
+                .tasksProcessingOrder(QueueProcessingType.FIFO)
+                .writeDebugLogs() // Remove for release app
+                .build()
+            imageLoader = ImageLoader.getInstance()
+            imageLoader?.init(imageLoaderConfiguration)
+        }
+    }
 
     companion object {
         /** Mandatory implementation inorder to use "ListAdapter" - new JetPack component" **/
@@ -63,6 +97,7 @@ class ReelFullViewAdapter(
         fun onClickOnLikeButtonReel(resultFuntime: ResultFuntime)
         fun onClickOnEditReel(resultFuntime: ResultFuntime)
         fun onClickOnBlockUser(resultFuntime: ResultFuntime)
+        fun downloadThisFuntime(resultFuntime: ResultFuntime)
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -99,23 +134,64 @@ class ReelFullViewAdapter(
     }
 
     private fun handleViewHolder(holder: VideoReelFullViewHolder, position: Int) {
+        imageLoader?.loadImage(reelList[position].file, object : SimpleImageLoadingListener() {
+            override fun onLoadingStarted(imageUri: String?, view: View?) {
+                holder.progressBarBuffering.visibility = View.VISIBLE
+                holder.videoThumbnail.visibility = View.GONE
+            }
+
+            override fun onLoadingComplete(
+                imageUri: String?,
+                view: View?,
+                loadedImage: Bitmap?
+            ) {
+                holder.progressBarBuffering.visibility = View.GONE
+                loadedImage?.let {
+                    holder.videoThumbnail.visibility = View.VISIBLE
+                    holder.videoThumbnail.setImage(ImageSource.bitmap(it))
+                    Palette.from(it).generate { palette ->
+                        palette?.let { it1 ->
+                            setUpInfoBackgroundColor(
+                                holder.videoLayout,
+                                it1
+                            )
+                        }
+                    }
+                }
+            }
+        })
+
         if (reelList[position].isImage()) {
+            holder.isVideo = false
+            holder.ivSoundButton.visibility = View.GONE
             holder.customPlayerView.visibility = View.GONE
-            holder.videoThumbnail.visibility = View.VISIBLE
-            val requestOptions = RequestOptions()
-            Glide.with(holder.videoThumbnail.context)
-                .load(reelList[position].file)
-                .apply(requestOptions)
-                .thumbnail(Glide.with(context).load(reelList[position].file))
-                .into(holder.videoThumbnail)
+            //holder.videoThumbnail.visibility = View.GONE
+            //LoadImage here also
         } else {
             //video/mp4
+            holder.ivSoundButton.visibility = View.VISIBLE
             holder.customPlayerView.visibility = View.VISIBLE
             holder.videoThumbnail.visibility = View.GONE
             try {
+                holder.isVideo = true
                 //Set seperate ID for each player view, to prevent it being overlapped by other player's changes
 //                holder.customPlayerView.id = View.generateViewId()
                 holder.customPlayerView.setVideoUri(Uri.parse(reelList[position].file))
+
+                holder.ivSoundButton.setOnClickListener {
+                    holder.ivSoundButton.animate().alpha(1f).setDuration(1000).start()
+                    volumeForAll = if (volumeForAll == 0f) 1f else 0f
+                    holder.ivSoundButton.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            holder.ivSoundButton.context,
+                            if (volumeForAll == 0f) R.drawable.ic_sound_off else R.drawable.ic_sound_on
+                        )
+                    )
+                    holder.ivSoundButton.postDelayed({
+                        holder.ivSoundButton.animate().alpha(0f).setDuration(1000).start()
+                    }, 1000)
+                    holder.customPlayerView.getPlayer()?.volume = volumeForAll
+                }
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -136,13 +212,11 @@ class ReelFullViewAdapter(
         holder.likeCount.text = reelList[position].like_count.toString()
         holder.commentCount.text = reelList[position].comment_count.toString()
         holder.shareCount.text = reelList[position].share_count.toString()
-        if ((reelList[position].tag_user?.size ?: 0) > 0) {
+        if (!reelList[position].tag_user.isNullOrEmpty()) {
             holder.layoutTagged.visibility = View.VISIBLE
             holder.tvTaggedPeopleCount.text =
                 (reelList[position].tag_user?.size ?: 0).toString() + " People Tagged"
             holder.tvTaggedPeopleCount.setOnClickListener {
-
-
                 reelList[position].tag_user?.let {
                     var dialogFragmen = FragmentBSTaggedUsers(it)
                     dialogFragmen.show((context as AppCompatActivity).supportFragmentManager, "")
@@ -151,30 +225,32 @@ class ReelFullViewAdapter(
             }
         }
 
-        if (!ValidationHelper.isNull(reelList[position].location)) {
+        if (!reelList[position].location.toString().isNullOrEmpty()) {
             holder.tvLocation.text = reelList[position].location
             holder.tvLocation.visibility = View.VISIBLE
             holder.ivLocation.visibility = View.VISIBLE
         }
 
-
-
-        holder.tvStatusDescription.setText(
-            Html.fromHtml(
+        if (!reelList[position].text.isNullOrEmpty()) {
+            holder.tvStatusDescription.visibility = View.VISIBLE
+            holder.tvStatusDescription.text = Html.fromHtml(
                 reelList[position].text,
                 Html.FROM_HTML_MODE_COMPACT
             )
-        );
-
-        if ((holder.tvStatusDescription.text.toString()
-                .split(System.getProperty("line.separator")).size > 2) || (holder.tvStatusDescription.text.toString().length >= 100)
-        ) {
-            SeeModetextViewHelper.makeTextViewResizable(
-                holder.tvStatusDescription,
-                2,
-                "more",
-                true
-            );
+            try {
+                if ((holder.tvStatusDescription.text.toString().length > 80)) {
+                    SeeModetextViewHelper.makeTextViewResizable(
+                        holder.tvStatusDescription,
+                        1,
+                        "more",
+                        true
+                    )
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        } else {
+            holder.tvStatusDescription.visibility = View.GONE
         }
 
         if (reelList[position].isLiked == "Yes") {
@@ -185,12 +261,12 @@ class ReelFullViewAdapter(
 
         holder.buttonLike.setOnClickListener {
             if (reelList[position].isLiked == "Yes") {
-                reelList[position].like_count--
+                reelList[position].like_count = (reelList[position].like_count ?: 0) - 1
                 holder.likeCount.text = reelList[position].like_count.toString()
                 reelList[position].isLiked = "No"
                 holder.ivLikeIcon.setImageResource(R.drawable.ic_funtime_slidepost_like_icon)
             } else {
-                reelList[position].like_count++
+                reelList[position].like_count = (reelList[position].like_count ?: 0) + 1
                 holder.likeCount.text = reelList[position].like_count.toString()
                 reelList[position].isLiked = "Yes"
                 holder.ivLikeIcon.setImageResource(R.drawable.ic_funtime_slidepost_liked_icon)
@@ -237,11 +313,19 @@ class ReelFullViewAdapter(
                 ""
             )
         }
+        if (reelList[position].comment_status.equals("on", true) ||
+            reelList[position].comment_status.equals("true", true) ||
+            reelList[position].comment_status.equals("1", true)
+        ) {
+            holder.buttonComment.visibility = View.VISIBLE
+        } else {
+            holder.buttonComment.visibility = View.GONE
+        }
         val dialogFragmentShares = DialogFragmentShareWithFriends(
             (context as BaseActivity).networkViewModel,
             reelList[position], object : DialogFragmentShareWithFriends.CAllback {
                 override fun onTotalShareCountFromDialog(count: Int) {
-                    reelList[position].share_count = reelList[position].share_count + count
+                    reelList[position].share_count = (reelList[position].share_count ?: 0) + count
                     holder.shareCount.setText("${reelList[position].share_count}")
                     reelList[position].isDataUpdated = true
                 }
@@ -252,24 +336,22 @@ class ReelFullViewAdapter(
             dialogFragmentShares.show((context as AppCompatActivity).supportFragmentManager, "")
         }
 
-
-
         holder.ivMenu.setOnClickListener {
-            var dialog = BottomDialogFragmentMenuReels(reelList[position].is_my != "YES",
+            val dialog = BottomDialogFragmentMenuReels((reelList[position].user_id != userId),
                 (context as BaseActivity).networkViewModel,
                 reelList[position],
                 object : BottomDialogFragmentMenuReels.Callback {
-                    override fun onClickOnMenu(typeCode: Int) {
+                    override fun onClickOnMenu(typeCode: Int, commentMode: Boolean?) {
                         when (typeCode) {
-                            1 -> {
+                            1 -> {//Edit
                                 callback.onClickOnEditReel(reelList[position])
                             }
 
                             2 -> {//delete
-                                var dialog = CommonConfirmationDialog(
+                                val dialog = CommonConfirmationDialog(
                                     context,
-                                    "Delete User",
-                                    "Are you sure you want to Delete this post? ",
+                                    "Delete Funtime",
+                                    "Are you sure you want to Delete this funtime? ",
                                     "Delete",
                                     "Cancel",
                                     object : CommonConfirmationDialog.Callback {
@@ -282,12 +364,14 @@ class ReelFullViewAdapter(
                                 dialog.show()
                             }
                             3 -> {
+                                //Report user's funtime only
                                 context.startActivity(
                                     IntentHelper.getReportUserScreen(context)!!
                                         .putExtra("id", reelList[position].id)
                                 )
                             }
                             4 -> {
+                                //Block user
                                 val dialog = CommonConfirmationDialog(
                                     context,
                                     "Block User",
@@ -297,49 +381,64 @@ class ReelFullViewAdapter(
                                     object : CommonConfirmationDialog.Callback {
                                         override fun onDialogResult(isPermissionGranted: Boolean) {
                                             if (isPermissionGranted) {
-                                                var dialogSuccess = SuccessDialog(
-                                                    context,
-                                                    "Success",
-                                                    "User Blocked Successfully.",
-                                                    "Done",
-                                                    object : SuccessDialog.Callback {
-                                                        override fun onDialogResult(
-                                                            isPermissionGranted: Boolean
-                                                        ) {
-                                                            if (isPermissionGranted) {
-
-                                                                callback.onClickOnBlockUser(reelList[position])
-
-                                                            }
-                                                        }
-                                                    })
-                                                dialogSuccess.show()
-
+                                                callback.onClickOnBlockUser(reelList[position])
                                             }
                                         }
                                     })
                                 dialog.show()
                             }
-                            5 -> {
-
+                            5 -> {//Download
+                                callback.downloadThisFuntime(reelList[position])
                             }
-
-                            6 -> {
-
+                            6 -> {//Comment settings
+                                Toast.makeText(
+                                    it.context,
+                                    if (commentMode == true) "Comment is On" else "Comment is Off",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                if (commentMode == true) {
+                                    holder.buttonComment.visibility = View.VISIBLE
+                                } else {
+                                    holder.buttonComment.visibility = View.GONE
+                                }
                             }
                             7 -> {
-
+                                Toast.makeText(
+                                    it.context,
+                                    "Sharing coming soon.",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
-
                         }
                     }
                 })
+
             val manager: FragmentManager =
                 (context as AppCompatActivity).getSupportFragmentManager()
             dialog.show(manager, "asdasd")
         }
+    }
 
-
+    override fun onViewAttachedToWindow(holder: ReelViewHolder) {
+        try {
+            if (holder is VideoReelFullViewHolder)
+                if (holder.isVideo) {
+                    holder.customPlayerView.getPlayer()?.volume = volumeForAll
+                    holder.ivSoundButton.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            holder.ivSoundButton.context,
+                            if (volumeForAll == 0f) R.drawable.ic_sound_off else R.drawable.ic_sound_on
+                        )
+                    )
+                    holder.ivSoundButton.animate().alpha(1f).setDuration(1000).start()
+                    holder.ivSoundButton.postDelayed({
+                        holder.ivSoundButton.animate().alpha(0f).setDuration(1000).start()
+                    }, 1000)
+                }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        super.onViewAttachedToWindow(holder)
     }
 
     private fun handleViewHolder(holder: ImageReelViewHolder, position: Int) {
@@ -368,7 +467,7 @@ class ReelFullViewAdapter(
     }
 
     fun removeReelById(id: String) {
-        var position = reelList.indexOfFirst { it.id == id }
+        val position = reelList.indexOfFirst { it.id == id }
         reelList.removeAt(position)
         notifyItemRemoved(position)
     }
@@ -405,4 +504,26 @@ class ReelFullViewAdapter(
             notifyItemRangeChanged(0, getItemCount());*/
     }
 
+    private fun setUpInfoBackgroundColor(cl: ConstraintLayout, palette: Palette) {
+        val swatch = getMostPopulousSwatch(palette)
+        if (swatch != null) {
+            val endColor = swatch.rgb
+            cl.setBackgroundColor(endColor)
+        } else {
+            val defaultColor = ContextCompat.getColor(cl.context, R.color.pinklight)
+            cl.setBackgroundColor(defaultColor)
+        }
+    }
+
+    private fun getMostPopulousSwatch(palette: Palette?): Palette.Swatch? {
+        var mostPopulous: Palette.Swatch? = null
+        if (palette != null) {
+            for (swatch in palette.swatches) {
+                if (mostPopulous == null || swatch.population > mostPopulous.population) {
+                    mostPopulous = swatch
+                }
+            }
+        }
+        return mostPopulous
+    }
 }

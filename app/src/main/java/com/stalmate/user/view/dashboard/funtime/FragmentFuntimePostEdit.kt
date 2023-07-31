@@ -93,8 +93,8 @@ class FragmentFuntimePostEdit : BaseFragment(), FriendAdapter.Callbackk {
         if ((requireActivity() as ActivityFuntimePost).isEdit) {
             Log.d("aklsjdasd", "oooooo")
             var funtime = (requireActivity() as ActivityFuntimePost).funtime
-            Log.d("aklsjdasd", funtime.tag_user.size.toString())
-            mVideo = funtime.file
+            Log.d("aklsjdasd", funtime.tag_user?.size.toString())
+            mVideo = funtime.file.toString()
             binding.editor.html=funtime.text
 
 
@@ -293,18 +293,16 @@ class FragmentFuntimePostEdit : BaseFragment(), FriendAdapter.Callbackk {
 
 
     fun editPost(){
-
-        var hashmap = HashMap<String, String>()
-        hashmap.put("id", (requireActivity() as ActivityFuntimePost).funtime.id)
+        val hashmap = HashMap<String, String>()
+        hashmap.put("id", (requireActivity() as ActivityFuntimePost).funtime.id.toString())
         hashmap.put("is_delete", "0")
         var data = ""
         if (!ValidationHelper.isNull(binding.editor.html)) {
             data = binding.editor.html.toString()
         }
         hashmap.put("text", data)
-
-
-        networkViewModel.funtimUpdate(hashmap)
+        //hashmap.put("comment_status", "true")
+        networkViewModel.funtimUpdate(prefManager?.access_token.toString(),hashmap)
         networkViewModel.funtimeUpdateLiveData.observe(viewLifecycleOwner, Observer {
             it.let {
 

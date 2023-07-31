@@ -1,12 +1,11 @@
 package com.stalmate.user.modules.reels.player
 
 import android.graphics.Rect
-import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.stalmate.user.commonadapters.AdapterFeed
-
-import com.stalmate.user.modules.reels.player.holders.ReelViewHolder
+import com.stalmate.user.modules.reels.adapter.ReelFullViewAdapter
+import com.stalmate.user.modules.reels.player.holders.VideoReelFullViewHolder
 import com.stalmate.user.modules.reels.player.holders.VideoReelViewHolder
 
 
@@ -19,12 +18,9 @@ class VideoAutoPlayHelper(var recyclerView: RecyclerView) {
     var currentPlayingVideoItemPos = -1; // -1 indicates nothing playing
 
     fun onScrolled(recyclerView: RecyclerView, feedAdapter: RecyclerView.Adapter<*>) {
-
         val firstVisiblePosition: Int = findFirstVisibleItemPosition()
         val lastVisiblePosition: Int = findLastVisibleItemPosition()
-
         val pos = getMostVisibleItem(firstVisiblePosition, lastVisiblePosition)
-
         if (pos == -1) {
             /*check if current view is more than MIN_LIMIT_VISIBILITY*/
             if (currentPlayingVideoItemPos != -1) {
@@ -36,67 +32,78 @@ class VideoAutoPlayHelper(var recyclerView: RecyclerView) {
                 }
                 currentPlayingVideoItemPos = -1;
             }
-
-
         } else {
-
             if (currentPlayingVideoItemPos != pos) {
                 currentPlayingVideoItemPos = pos;
                 attachVideoPlayerAt(pos);
             }
-
         }
-
     }
 
     private fun attachVideoPlayerAt(pos: Int) {
         if (recyclerView.adapter is ReelAdapter) {
-            val feedViewHolder: ReelViewHolder =
-                (recyclerView.findViewHolderForAdapterPosition(pos) as ReelViewHolder?)!!
-
+            val feedViewHolder: VideoReelViewHolder =
+                (recyclerView.findViewHolderForAdapterPosition(pos) as VideoReelViewHolder?)!!
             if (feedViewHolder is VideoReelViewHolder) {
                 /** in case its a video**/
-                if (lastPlayerView == null || lastPlayerView != feedViewHolder.customPlayerView) {
-                    feedViewHolder.customPlayerView.startPlaying()
-                    // stop last player
-                    lastPlayerView?.removePlayer();
-                }
-                lastPlayerView = feedViewHolder.customPlayerView;
-
-            } else {
-                /** in case its a image**/
-                if (lastPlayerView != null) {
-                    // stop last player
-                    lastPlayerView?.removePlayer();
-                    lastPlayerView = null
-                }
-
-            }
-        } else {
-            if (recyclerView.adapter is AdapterFeed) {
-                val feedViewHolder: AdapterFeed.FeedViewHolder =
-                    (recyclerView.findViewHolderForAdapterPosition(pos) as AdapterFeed.FeedViewHolder?)!!
-
-                if (feedViewHolder is AdapterFeed.FeedViewHolder) {
-                    /** in case its a video**/
-                    if (lastPlayerView == null || lastPlayerView != feedViewHolder.customPlayerView) {
-                        if (feedViewHolder.isVideo) {
-                            feedViewHolder.customPlayerView.startPlaying()
+                if (lastPlayerView == null || (lastPlayerView != feedViewHolder.customPlayerView)) {
+                    if (feedViewHolder.isVideo) {
+                        feedViewHolder.customPlayerView.startPlaying()
+                        // stop last player
+                        lastPlayerView?.removePlayer();
+                        lastPlayerView = feedViewHolder.customPlayerView;
+                    } else {
+                        /** in case its a image**/
+                        if (lastPlayerView != null) {
                             // stop last player
                             lastPlayerView?.removePlayer();
-                            lastPlayerView = feedViewHolder.customPlayerView;
-                        } else {
-                            /** in case its a image**/
-                            if (lastPlayerView != null) {
-                                // stop last player
-                                lastPlayerView?.removePlayer();
-                                lastPlayerView = null
-                            }
+                            lastPlayerView = null
                         }
                     }
                 }
-            } else {
-                throw IllegalStateException("Adapter should be FeedAdapter or extend FeedAdapter")
+            }
+        }
+        if (recyclerView.adapter is AdapterFeed) {
+            val feedViewHolder: AdapterFeed.FeedViewHolder =
+                (recyclerView.findViewHolderForAdapterPosition(pos) as AdapterFeed.FeedViewHolder?)!!
+            if (feedViewHolder is AdapterFeed.FeedViewHolder) {
+                /** in case its a video**/
+                if (lastPlayerView == null || (lastPlayerView != feedViewHolder.customPlayerView)) {
+                    if (feedViewHolder.isVideo) {
+                        feedViewHolder.customPlayerView.startPlaying()
+                        // stop last player
+                        lastPlayerView?.removePlayer();
+                        lastPlayerView = feedViewHolder.customPlayerView;
+                    } else {
+                        /** in case its a image**/
+                        if (lastPlayerView != null) {
+                            // stop last player
+                            lastPlayerView?.removePlayer();
+                            lastPlayerView = null
+                        }
+                    }
+                }
+            }
+        }
+        if (recyclerView.adapter is ReelFullViewAdapter) {
+            val feedViewHolder: VideoReelFullViewHolder = (recyclerView.findViewHolderForAdapterPosition(pos) as VideoReelFullViewHolder?)!!
+            if (feedViewHolder is VideoReelFullViewHolder) {
+                /** in case its a video**/
+                if (lastPlayerView == null || (lastPlayerView != feedViewHolder.customPlayerView)) {
+                    if (feedViewHolder.isVideo) {
+                        feedViewHolder.customPlayerView.startPlaying()
+                        // stop last player
+                        lastPlayerView?.removePlayer()
+                        lastPlayerView = feedViewHolder.customPlayerView;
+                    } else {
+                        /** in case its a image**/
+                        if (lastPlayerView != null) {
+                            // stop last player
+                            lastPlayerView?.removePlayer();
+                            lastPlayerView = null
+                        }
+                    }
+                }
             }
         }
     }
@@ -183,15 +190,14 @@ class VideoAutoPlayHelper(var recyclerView: RecyclerView) {
                 super.onScrolled(recyclerView, dx, dy)
                 if (recyclerView.adapter is ReelAdapter) {
                     onScrolled(recyclerView, recyclerView.adapter as ReelAdapter)
-                } else {
-                    if (recyclerView.adapter is AdapterFeed) {
-                        onScrolled(recyclerView, recyclerView.adapter as AdapterFeed)
-                    } else {
-                        throw IllegalStateException("Adapter should be FeedAdapter or extend FeedAdapter")
-                    }
+                }
+                if (recyclerView.adapter is AdapterFeed) {
+                    onScrolled(recyclerView, recyclerView.adapter as AdapterFeed)
+                }
+                if (recyclerView.adapter is ReelFullViewAdapter) {
+                    onScrolled(recyclerView, recyclerView.adapter as ReelFullViewAdapter)
                 }
             }
         })
     }
-
 }

@@ -3,18 +3,27 @@ package com.stalmate.user.commonadapters
 
 import android.content.Context
 import android.content.DialogInterface
+import android.graphics.Bitmap
 import android.net.Uri
 import android.text.Html
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
+import androidx.palette.graphics.Palette
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.davemorrissey.labs.subscaleview.ImageSource
 import com.jakewharton.rxbinding2.widget.RxTextView
+import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator
+import com.nostra13.universalimageloader.core.ImageLoader
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration
+import com.nostra13.universalimageloader.core.assist.QueueProcessingType
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener
 /*import com.github.pgreze.reactions.ReactionPopup
 import com.github.pgreze.reactions.ReactionsConfigBuilder
 import com.github.pgreze.reactions.dsl.reactionConfig
@@ -23,6 +32,8 @@ import com.stalmate.user.R
 import com.stalmate.user.base.BaseActivity
 import com.stalmate.user.databinding.ItemFeedBinding
 import com.stalmate.user.modules.reels.player.InstaLikePlayerView
+import com.stalmate.user.modules.reels.player.holders.ReelViewHolder
+import com.stalmate.user.modules.reels.player.holders.VideoReelFullViewHolder
 import com.stalmate.user.utilities.SeeModetextViewHelper
 import com.stalmate.user.view.dashboard.ActivityDashboard
 import com.stalmate.user.view.dashboard.funtime.DialogFragmentComments
@@ -43,7 +54,23 @@ class AdapterFeed(
 ) :
     RecyclerView.Adapter<AdapterFeed.FeedViewHolder>() {
     var list = ArrayList<ResultFuntime>()
-    var isMuted = false
+    private var imageLoader: ImageLoader? = null
+    private var volumeForAll = 0f
+
+    init {
+        if (imageLoader == null) {
+            val imageLoaderConfiguration = ImageLoaderConfiguration.Builder(context)
+                .threadPriority(Thread.NORM_PRIORITY)
+                .denyCacheImageMultipleSizesInMemory()
+                .diskCacheFileNameGenerator(Md5FileNameGenerator())
+                .diskCacheSize(50 * 1024 * 1024) // 50 Mb
+                .tasksProcessingOrder(QueueProcessingType.FIFO)
+                .writeDebugLogs() // Remove for release app
+                .build()
+            imageLoader = ImageLoader.getInstance()
+            imageLoader?.init(imageLoaderConfiguration)
+        }
+    }
 
     fun likeReelById() {
         /*       var position=  reelList.indexOfFirst { it.id== id}
@@ -61,8 +88,7 @@ class AdapterFeed(
         parent: ViewGroup,
         viewType: Int,
     ): AdapterFeed.FeedViewHolder {
-
-        var view = LayoutInflater.from(parent.context).inflate(R.layout.item_feed, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_feed, parent, false)
         return FeedViewHolder(DataBindingUtil.bind<ItemFeedBinding>(view)!!)
     }
 
@@ -74,7 +100,10 @@ class AdapterFeed(
                 holder.bottomSpace.visibility = View.GONE
             val feed = list[position]
 
-            if (feed.comment_status.equals("on", true) || feed.comment_status.equals("true", true)) {
+            if (feed.comment_status.equals("on", true) ||
+                feed.comment_status.equals("true", true) ||
+                feed.comment_status.equals("1", true)
+            ) {
                 holder.commentIcon.visibility = View.VISIBLE
                 holder.clCommentsList.visibility = View.VISIBLE
             } else {
@@ -108,7 +137,7 @@ class AdapterFeed(
                     }
                 }
                 val requestOptionsMe = RequestOptions()
-                Glide.with(holder.appCompatImageView5.context)
+                Glide.with(holder.ivButtonMenu1.context)
                     .load(((context as ActivityDashboard).prefManager?.profile_img_1))
                     .apply(requestOptionsMe)
                     .thumbnail(
@@ -204,15 +233,17 @@ class AdapterFeed(
                     feed.text,
                     Html.FROM_HTML_MODE_COMPACT
                 )
-                if ((holder.tvPostDescription.text.toString()
-                        .split(System.getProperty("line.separator")).size > 2) || (holder.tvPostDescription.text.toString().length >= 100)
-                ) {
-                    SeeModetextViewHelper.makeTextViewResizable(
-                        holder.tvPostDescription,
-                        2,
-                        "more",
-                        true
-                    )
+                try {
+                    if ((holder.tvPostDescription.text.toString().length > 80)) {
+                        SeeModetextViewHelper.makeTextViewResizable(
+                            holder.tvPostDescription,
+                            1,
+                            "more",
+                            true
+                        )
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
             } else {
                 holder.tvPostDescription.visibility = View.GONE
@@ -227,8 +258,8 @@ class AdapterFeed(
                     (context as BaseActivity).networkViewModel,
                     feed, object : DialogFragmentShareWithFriends.CAllback {
                         override fun onTotalShareCountFromDialog(count: Int) {
-                            feed.share_count = feed.share_count + count
-                            holder.shareCount.text = "${feed.share_count} Shares"
+                            feed.share_count = (feed.share_count?:0) + count
+                            holder.shareCount.text = "${feed.share_count?:0} Shares"
                             feed.isDataUpdated = true
                         }
                     }
@@ -244,12 +275,12 @@ class AdapterFeed(
 
             holder.likeIcon.setOnClickListener {
                 if (feed.isLiked == "Yes") {
-                    feed.like_count--
+                    feed.like_count = (feed.like_count?:0)-1
                     holder.likeCount.text = feed.like_count.toString() + " Likes"
                     feed.isLiked = "No"
                     holder.likeIcon.setImageResource(R.drawable.like)
                 } else {
-                    feed.like_count++
+                    feed.like_count = (feed.like_count?:0)+1
                     holder.likeCount.text = feed.like_count.toString() + " Likes"
                     feed.isLiked = "Yes"
                     holder.likeIcon.setImageResource(R.drawable.liked)
@@ -306,26 +337,42 @@ class AdapterFeed(
             }
 
 
+            imageLoader?.loadImage(feed.file, object : SimpleImageLoadingListener() {
+                override fun onLoadingStarted(imageUri: String?, view: View?) {
+                    holder.progressBarBuffering.visibility = View.VISIBLE
+                    holder.appCompatImageView5.visibility = View.GONE
+                }
+
+                override fun onLoadingComplete(
+                    imageUri: String?,
+                    view: View?,
+                    loadedImage: Bitmap?
+                ) {
+                    holder.progressBarBuffering.visibility = View.GONE
+                    loadedImage?.let {
+                        holder.appCompatImageView5.visibility = View.VISIBLE
+                        holder.appCompatImageView5.setImage(ImageSource.bitmap(it))
+                        Palette.from(it).generate { palette ->
+                            palette?.let { it1 ->
+                                setUpInfoBackgroundColor(
+                                    holder.clView,
+                                    it1
+                                )
+                            }
+                        }
+                    }
+                }
+            })
             if (feed.isImage()) {
                 holder.isVideo = false
                 holder.customPlayerView.visibility = View.GONE
                 holder.ivSoundButton.visibility = View.GONE
-                holder.ivPlay.visibility = View.GONE
-                holder.appCompatImageView5.visibility = View.VISIBLE
-                val requestOptions = RequestOptions()
-                Glide.with(holder.appCompatImageView5.context)
-                    .load(feed.file)
-                    .apply(requestOptions)
-                    .thumbnail(Glide.with(context).load(feed.file))
-                    .into(holder.appCompatImageView5)
+                //holder.appCompatImageView5.visibility = View.GONE
+                //LoadImage here also
             } else {
                 //video/mp4
-                holder.appCompatImageView5.background = null
-                holder.appCompatImageView5.setImageDrawable(null)
-
                 holder.customPlayerView.visibility = View.VISIBLE
                 holder.ivSoundButton.visibility = View.VISIBLE
-                holder.ivPlay.visibility = View.GONE
                 holder.appCompatImageView5.visibility = View.GONE
 
                 try {
@@ -339,24 +386,14 @@ class AdapterFeed(
                     }
 
                     holder.ivSoundButton.setOnClickListener {
-                        if (holder.customPlayerView.getPlayer()?.volume == 0f) {
-                            holder.customPlayerView.getPlayer()?.volume =
-                                holder.customPlayerView.getPlayer()?.deviceVolume?.toFloat() ?: 1f
-                            holder.ivSoundButton.setImageDrawable(
-                                ContextCompat.getDrawable(
-                                    context,
-                                    R.drawable.ic_sound_on
-                                )
+                        volumeForAll = if (volumeForAll == 0f) 1f else 0f
+                        holder.ivSoundButton.setImageDrawable(
+                            ContextCompat.getDrawable(
+                                holder.ivSoundButton.context,
+                                if (volumeForAll == 0f) R.drawable.ic_sound_off else R.drawable.ic_sound_on
                             )
-                        } else {
-                            holder.customPlayerView.getPlayer()?.volume = 0f
-                            holder.ivSoundButton.setImageDrawable(
-                                ContextCompat.getDrawable(
-                                    context,
-                                    R.drawable.ic_sound_off
-                                )
-                            )
-                        }
+                        )
+                        holder.customPlayerView.getPlayer()?.volume = volumeForAll
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -365,18 +402,36 @@ class AdapterFeed(
         }
     }
 
+    override fun onViewAttachedToWindow(holder: FeedViewHolder) {
+        try {
+            if (holder.isVideo) {
+                holder.customPlayerView.getPlayer()?.volume = volumeForAll
+                holder.ivSoundButton.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        holder.ivSoundButton.context,
+                        if (volumeForAll == 0f) R.drawable.ic_sound_off else R.drawable.ic_sound_on
+                    )
+                )
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        super.onViewAttachedToWindow(holder)
+    }
+
     inner class FeedViewHolder(var binding: ItemFeedBinding) :
         RecyclerView.ViewHolder(binding.root) {
         var isVideo = false
+        val clView = binding.clView
         val customPlayerView = binding.feedPlayerView
         val bottomSpace = binding.bottomSpace
         val ivSoundButton = binding.ivSoundButton
         val appCompatImageView5 = binding.appCompatImageView5
+        val progressBarBuffering = binding.progressBarBuffering
         val appCompatImageView6 = binding.appCompatImageView6
         val appCompatImageView7 = binding.appCompatImageView7
         val appCompatTextView5 = binding.appCompatTextView5
         val appCompatTextView6 = binding.appCompatTextView6
-        val ivPlay = binding.ivPlay
         val ivSend = binding.ivSend
         val etSearch = binding.etSearch
         val commentIcon = binding.clComments
@@ -479,7 +534,12 @@ class AdapterFeed(
         val size = list.size
         list.addAll(feedList)
         val sizeNew = list.size
-        notifyItemRangeChanged(size, sizeNew)
+        try {
+            notifyItemRangeChanged(size, sizeNew)
+        } catch (e: Exception) {
+            notifyDataSetChanged()
+            e.printStackTrace()
+        }
     }
 
     public interface Callbackk {
@@ -494,5 +554,26 @@ class AdapterFeed(
         fun hideCommentOverlay(feed: ResultFuntime, position: Int)
     }
 
+    private fun setUpInfoBackgroundColor(cl: ConstraintLayout, palette: Palette) {
+        val swatch = getMostPopulousSwatch(palette)
+        if (swatch != null) {
+            val endColor = swatch.rgb
+            cl.setBackgroundColor(endColor)
+        } else {
+            val defaultColor = ContextCompat.getColor(cl.context, R.color.pinklight)
+            cl.setBackgroundColor(defaultColor)
+        }
+    }
 
+    private fun getMostPopulousSwatch(palette: Palette?): Palette.Swatch? {
+        var mostPopulous: Palette.Swatch? = null
+        if (palette != null) {
+            for (swatch in palette.swatches) {
+                if (mostPopulous == null || swatch.population > mostPopulous.population) {
+                    mostPopulous = swatch
+                }
+            }
+        }
+        return mostPopulous
+    }
 }

@@ -69,11 +69,6 @@ class SuccessDialog(
                 callback.onDialogResult(isPermissionGranted = true)
                 dismiss()
             }
-        if (!isAutoDismiss)
-            dialog?.setOnDismissListener {
-                callback.onDialogResult(isPermissionGranted = true)
-            }
-
         dialog?.show()
         isDialogShowing = true
     }

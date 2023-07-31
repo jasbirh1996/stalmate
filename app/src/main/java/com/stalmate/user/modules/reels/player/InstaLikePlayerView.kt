@@ -171,12 +171,10 @@ class InstaLikePlayerView @JvmOverloads constructor(
         val trackSelector = DefaultTrackSelector(context)
 
         val simpleExoPlayer = SimpleExoPlayer.Builder(context).setTrackSelector(trackSelector)
-            .setLoadControl(loadControl).setVideoScalingMode(
-            VIDEO_SCALING_MODE_SCALE_TO_FIT
-        )
+            .setLoadControl(loadControl)
+            .setVideoScalingMode(VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING)
             .build()
-        /*      simpleExoPlayer.videoScalingMode= VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING*/
-        simpleExoPlayer.repeatMode = Player.REPEAT_MODE_ONE;
+        simpleExoPlayer.repeatMode = Player.REPEAT_MODE_ALL;
         simpleExoPlayer.addListener(object : Player.Listener {
             override fun onPlaybackStateChanged(playbackState: Int) {
                 super.onPlaybackStateChanged(playbackState)

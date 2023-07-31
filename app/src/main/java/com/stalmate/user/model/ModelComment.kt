@@ -5,10 +5,9 @@ data class ModelComment(
     val results: Comment,
 )
 
-
 data class ModelGetComment(
     val status: Boolean = false,
-    val results: List<Comment>,
+    val results: ArrayList<Comment> = arrayListOf(),
 )
 
 data class Comment(
@@ -18,7 +17,7 @@ data class Comment(
     val author: String = "",
     val comment: String = "",
     val comment_image: String = "",
-    var replies: MutableList<Comment> = mutableListOf(),
+    var replies: ArrayList<Comment> = arrayListOf(),
     val parentId: String? = null,
     var isLiked: String? = null,
     val first_name: String = "",

@@ -576,9 +576,7 @@ class ActivityVideoEditor : BaseActivity(), OnPhotoEditorListener,
     }
 
     private fun applayWaterMark(beforeWatermarkAddedFile: File) {
-
         try {
-            //    addWaterMarkProcess()
             addToWatermark(beforeWatermarkAddedFile)
         } catch (e: Exception) {
             Log.d("lkajsdlasd", e.toString())
@@ -693,16 +691,6 @@ class ActivityVideoEditor : BaseActivity(), OnPhotoEditorListener,
                     outputStream.flush()
                     inputStream.close()
                     outputStream.close()
-                }
-
-                /*       Toast.makeText(applicationContext, "Video has just saved!!", Toast.LENGTH_LONG)
-                           .show()
-                       */
-                try {
-                    Log.d("asdasdasd", "songIdvv")
-                    Log.d("asdasdasd", songId)
-                } catch (e: java.lang.Exception) {
-                    Log.d("asdasdasd", "songId")
                 }
                 startActivity(
                     IntentHelper.getCreateFuntimePostScreen(this)!!

@@ -105,7 +105,7 @@ class FragmentReelPlay : BaseFragment, Player.Listener {
 
     private fun likeApiHit() {
         var hashmap = HashMap<String, String>()
-        hashmap.put("funtime_id", item!!.id)
+        hashmap.put("funtime_id", item?.id.toString())
         networkViewModel.funtimeLiveLikeUnlikeData(prefManager?.access_token.toString(),hashmap)
         networkViewModel.funtimeLiveLikeUnlikeData.observe(viewLifecycleOwner) {
             if (it!!.message == "Liked") {
@@ -166,7 +166,7 @@ class FragmentReelPlay : BaseFragment, Player.Listener {
                     )
                 Log.d("alskdasd", "aosdasd")
                 val videoSource: MediaSource = ProgressiveMediaSource.Factory(dataSourceFactory)
-                    .createMediaSource(MediaItem.fromUri(item!!.file))
+                    .createMediaSource(MediaItem.fromUri(item?.file.toString()))
                 //  exoplayer!!.setThrowsWhenUsingWrongThread(false)
 
                 binding.playerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FILL);

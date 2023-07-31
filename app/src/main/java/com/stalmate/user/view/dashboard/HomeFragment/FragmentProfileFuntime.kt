@@ -22,7 +22,7 @@ class FragmentProfileFuntime : BaseFragment(), ReelVideosByAudioAdapter.Callback
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = DataBindingUtil.bind(
+        binding = DataBindingUtil.bind<FragmentProfileFuntimeBinding>(
             inflater.inflate(
                 R.layout.fragment_profile_funtime,
                 container,
@@ -50,29 +50,22 @@ class FragmentProfileFuntime : BaseFragment(), ReelVideosByAudioAdapter.Callback
     private fun getReelsListApiByMusic() {
         val hashMap = HashMap<String, String>()
         hashMap.put("page", "1")
-        hashMap.put("limit", "5")
         hashMap.put("id_user", prefManager?._id.toString())
         hashMap.put("fun_id", "")
-        hashMap.put("is_video", if(arguments?.getBoolean("isVideos") == true) "1" else "0")
-
-        /*2 - All File
-                1- video File
-                0- image file*/
-
-
-
-                networkViewModel.funtimeLiveData(prefManager?.access_token.toString(), hashMap)
+        hashMap.put("limit", "50")
+        hashMap.put("is_video", "2")
+        networkViewModel.funtimeLiveData(prefManager?.access_token.toString(), hashMap)
         networkViewModel.funtimeLiveData.observe(viewLifecycleOwner) {
             it?.let {
-                adapter.submitList(it.results
-                  /*  if (arguments?.getBoolean("isVideos") == false)
+                adapter.submitList(
+                    if (arguments?.getBoolean("isVideos") == false)
                         it.results.filter {
                             it.isImage()
                         }
                     else
                         it.results.filter {
                             (!it.isImage())
-                        }*/
+                        }
                 )
                 binding.root.requestLayout()
             }

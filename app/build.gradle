@@ -248,4 +248,12 @@ dependencies {
     //implementation "software.amazon.awssdk:rekognition:2.17.0"
 
     implementation project(':supernova-emoji-library')
+
+
+    //SubSampling scale image view
+    implementation 'com.davemorrissey.labs:subsampling-scale-image-view-androidx:3.10.0'
+    //ImageLoader
+    implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
+    //Palette loader
+    implementation 'androidx.palette:palette-ktx:1.0.0'
 }
