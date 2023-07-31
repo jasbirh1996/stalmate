@@ -475,7 +475,7 @@ class FragmentProfileEdit : BaseFragment(), EducationListAdapter.Callbackk,
                         if (!userData.results?.profile_img.isNullOrEmpty()) {
                             binding.rvProfilePicture.adapter = profilePictureAdapter
                             it?.results?.let { profilePictureAdapter.submitList(it) }
-                            binding.layoutProfileImages.visibility = View.VISIBLE
+//                            binding.layoutProfileImages.visibility = View.VISIBLE
                         } else {
                             binding.layoutProfileImages.visibility = View.GONE
                         }

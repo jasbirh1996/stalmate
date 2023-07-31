@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
@@ -52,7 +53,7 @@ class FragmentMenu(var callback: Callback) : BaseFragment(), DrawerAdapter.Callb
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        drawerAdapter = DrawerAdapter(networkViewModel, requireContext(), this)
+        drawerAdapter = DrawerAdapter(networkViewModel, requireActivity() as AppCompatActivity, this)
 
         binding.btnBack.setOnClickListener {
 //            callback.onCLickBackButton()
@@ -95,7 +96,7 @@ class FragmentMenu(var callback: Callback) : BaseFragment(), DrawerAdapter.Callb
                 App.getInstance()
             )!!.userDetail.results?.last_name
 
-        drawerAdapter = DrawerAdapter(networkViewModel, requireActivity(), this)
+        drawerAdapter = DrawerAdapter(networkViewModel, requireActivity() as AppCompatActivity, this)
 
         binding.rvMenu.adapter = drawerAdapter
         drawerAdapter.submitList(data)

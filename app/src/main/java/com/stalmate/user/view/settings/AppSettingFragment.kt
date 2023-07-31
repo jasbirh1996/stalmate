@@ -168,7 +168,7 @@ class AppSettingFragment : BaseFragment() {
                     startActivity(Intent(requireActivity(), FragmentNotification::class.java))
                 }
                 "Share App" -> {
-                    shareApp(this.requireContext())
+                    this.requireActivity().shareApp()
                 }
             }
         }
@@ -203,25 +203,7 @@ class AppSettingFragment : BaseFragment() {
         return intent
     }
 
-    fun shareApp(context: Context) {
-        try {
-            val shareIntent = Intent(Intent.ACTION_SEND)
-            shareIntent.type = "text/plain"
-            shareIntent.putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.app_name))
-            var shareMessage = "\nLet me recommend you this application\n\n"
-            shareMessage =
-                shareMessage + "https://play.google.com/store/apps/details?_id=" + BuildConfig.APPLICATION_ID
-            shareIntent.putExtra(Intent.EXTRA_TEXT, shareMessage)
-            context.startActivity(
-                Intent.createChooser(
-                    shareIntent,
-                    "Share Stalmate with your friends"
-                )
-            )
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
+
 
     fun shareSocial(context: Context, propertyId: String, propertyType: String) {
         try {
@@ -235,5 +217,24 @@ class AppSettingFragment : BaseFragment() {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+}
+fun Context.shareApp() {
+    try {
+        val shareIntent = Intent(Intent.ACTION_SEND)
+        shareIntent.type = "text/plain"
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name))
+        var shareMessage = "\nLet me recommend you this application\n\n"
+        shareMessage =
+            shareMessage + "https://play.google.com/store/apps/details?_id=" + BuildConfig.APPLICATION_ID
+        shareIntent.putExtra(Intent.EXTRA_TEXT, shareMessage)
+        startActivity(
+            Intent.createChooser(
+                shareIntent,
+                "Share Stalmate with your friends"
+            )
+        )
+    } catch (e: Exception) {
+        e.printStackTrace()
     }
 }

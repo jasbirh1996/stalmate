@@ -6,7 +6,9 @@ import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.stalmate.user.intentHelper.IntentHelper
@@ -17,11 +19,12 @@ import com.stalmate.user.utilities.PrefManager
 import com.stalmate.user.view.authentication.ActivityAuthentication
 import com.stalmate.user.view.dashboard.ActivityDashboard
 import com.stalmate.user.view.dashboard.Friend.FragmentFriend
+import com.stalmate.user.view.settings.shareApp
 import com.stalmate.user.viewmodel.AppViewModel
 
 class DrawerAdapter(
     val viewModel: AppViewModel,
-    val context: Context,
+    val context: AppCompatActivity,
     var callback: Callbackk
 ) : RecyclerView.Adapter<DrawerAdapter.ViewHolder>() {
 
@@ -60,12 +63,20 @@ class DrawerAdapter(
 
             binding.card.setOnClickListener {
                 when (drawerResponse.text) {
+                    "Share App" -> {
+                        it.context.shareApp()
+                    }
                     "My Fun times" -> {
                         try {
-                            (context as ActivityDashboard).pointToMyFuntime.value = true
-                            (context as ActivityDashboard).onBackPressed()
+                            if(context is ActivityDashboard) {
+//                                context.pointToMyFuntime.value = true
+                                context.onBackPressed()
+                            }else if(context is ActivitySettings){
+                                context.onBackPressed()
+                            }
                         } catch (e: ClassCastException) {
-                            (context as ActivitySettings).onBackPressed()
+                            e.printStackTrace()
+//                            (context as ActivitySettings).onBackPressed()
                         }
                     }
                     "My Friends" -> {

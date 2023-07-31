@@ -100,19 +100,23 @@ class FragmentProfile(val callback: FragmentHome.Callback? = null) : BaseFragmen
             binding.viewpager.setCurrentItem(tab.position, true)
         }.attach()
 
-        (requireActivity() as ActivityDashboard).pointToMyFuntime.observe(requireActivity()) {
-            if (it) {
-                val listOfXy = IntArray(2)
-                binding.tabLayout.getLocationOnScreen(listOfXy)
-                binding.nestedScrollView.dispatchNestedPreScroll(
-                    listOfXy[0],
-                    listOfXy[1],
-                    null,
-                    null
-                )
-                binding.nestedScrollView.isSmoothScrollingEnabled = true
-                binding.nestedScrollView.smoothScrollTo(listOfXy[0], listOfXy[1])
-                (requireActivity() as ActivityDashboard).pointToMyFuntime.value = false
+        if(requireActivity() is ActivityDashboard) {
+            (requireActivity() as ActivityDashboard).pointToMyFuntime.observe(requireActivity()) {
+                if (it) {
+                    val listOfXy = IntArray(2)
+                    binding.tabLayout.getLocationOnScreen(listOfXy)
+                    binding.nestedScrollView.dispatchNestedPreScroll(
+                        listOfXy[0],
+                        listOfXy[1],
+                        null,
+                        null
+                    )
+                    binding.nestedScrollView.isSmoothScrollingEnabled = true
+                    binding.nestedScrollView.smoothScrollTo(listOfXy[0], listOfXy[1])
+                    if (requireActivity() is ActivityDashboard) {
+                        (requireActivity() as ActivityDashboard).pointToMyFuntime.value = false
+                    }
+                }
             }
         }
         binding.nestedScrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
