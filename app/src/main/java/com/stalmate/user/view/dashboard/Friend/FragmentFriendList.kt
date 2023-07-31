@@ -145,7 +145,8 @@ class FragmentFriendList(var type: String, var subtype: String, var userId: Stri
                 limit = "6",
                 page = "1",
                 type = if (subtype == Constants.TYPE_USER_TYPE_FOLLOWERS) Constants.NEW_Type_Follower else Constants.NEW_Type_Following,
-                user_id = userId
+//                user_id = userId
+                user_id = ""
             )
         )
         networkViewModel.friendLiveData.observe(viewLifecycleOwner, Observer {

@@ -74,24 +74,25 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
-                        android:text="Abhay Kashyap"
+                        tools:text="Abhay Kashyap"
                         android:textColor="@color/black"
                         android:textSize="18sp"
-                        app:layout_constraintBottom_toTopOf="@+id/imageView21"
+                        app:layout_constraintBottom_toTopOf="@+id/tvLocation"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/user_profile_image"
                         app:layout_constraintTop_toTopOf="@+id/user_profile_image"
                         app:layout_constraintVertical_chainStyle="packed" />
 
-                    <ImageView
-                        android:id="@+id/imageView21"
+                    <TextView
+                        android:id="@+id/tvLocation"
                         android:layout_width="wrap_content"
+                        android:layout_marginTop="8dp"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/location_icon"
                         app:layout_constraintBottom_toBottomOf="@+id/user_profile_image"
                         app:layout_constraintStart_toStartOf="@+id/tv_user_name"
                         app:layout_constraintTop_toBottomOf="@+id/tv_user_name"
-                        app:tint="@color/colorGray" />
+                        app:tint="@color/colorGray"
+                        app:drawableStartCompat="@drawable/location_icon" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.recyclerview.widget.RecyclerView

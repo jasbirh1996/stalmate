@@ -1,12 +1,11 @@
 package com.stalmate.user.view.profile
 
 
-import android.Manifest
 import android.accounts.Account
 import android.accounts.AccountManager
 import android.app.ActivityOptions
 import android.content.Intent
-import android.graphics.Rect
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -19,8 +18,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.navigation.NavController
-import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.canhub.cropper.CropImageContract
@@ -29,21 +27,23 @@ import com.canhub.cropper.options
 import com.google.android.material.shape.CornerFamily
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import com.stalmate.user.intentHelper.IntentHelper
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.commonadapters.AdapterFeed
 import com.stalmate.user.commonadapters.AdapterTabPager
 import com.stalmate.user.databinding.FragmentProfileBinding
+import com.stalmate.user.intentHelper.IntentHelper
 import com.stalmate.user.model.AboutProfileLine
 import com.stalmate.user.model.User
 import com.stalmate.user.modules.reels.activity.ActivitySettings
-import com.stalmate.user.utilities.*
+import com.stalmate.user.utilities.Constants
+import com.stalmate.user.utilities.ImageLoaderHelperGlide
+import com.stalmate.user.utilities.PrefManager
+import com.stalmate.user.utilities.ValidationHelper
 import com.stalmate.user.view.adapter.ProfileAboutAdapter
 import com.stalmate.user.view.adapter.ProfileFriendAdapter
 import com.stalmate.user.view.dashboard.ActivityDashboard
 import com.stalmate.user.view.dashboard.HomeFragment.FragmentHome
-import com.stalmate.user.view.dashboard.HomeFragment.FragmentProfileFuntime
 import com.stalmate.user.view.dashboard.funtime.ResultFuntime
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -91,16 +91,16 @@ class FragmentProfile(val callback: FragmentHome.Callback? = null) : BaseFragmen
         TabLayoutMediator(binding.tabLayout, binding.viewpager) { tab, position ->
             when(position){
                 0->{
-                    tab.text = "Photos"
+                    tab.text = "Funtime Photos"
                 }
                 1->{
-                    tab.text = "Videos"
+                    tab.text = "Funtime Videos"
                 }
             }
             binding.viewpager.setCurrentItem(tab.position, true)
         }.attach()
 
-        (context as ActivityDashboard).pointToMyFuntime.observe(requireActivity()) {
+        (requireActivity() as ActivityDashboard).pointToMyFuntime.observe(requireActivity()) {
             if (it) {
                 val listOfXy = IntArray(2)
                 binding.tabLayout.getLocationOnScreen(listOfXy)
@@ -112,7 +112,7 @@ class FragmentProfile(val callback: FragmentHome.Callback? = null) : BaseFragmen
                 )
                 binding.nestedScrollView.isSmoothScrollingEnabled = true
                 binding.nestedScrollView.smoothScrollTo(listOfXy[0], listOfXy[1])
-                (context as ActivityDashboard).pointToMyFuntime.value = false
+                (requireActivity() as ActivityDashboard).pointToMyFuntime.value = false
             }
         }
         binding.nestedScrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
@@ -304,14 +304,14 @@ class FragmentProfile(val callback: FragmentHome.Callback? = null) : BaseFragmen
 
 
     fun setupData() {
-        binding.layout.layoutFollowers.setOnClickListener {
+        binding.layoutFollowers.setOnClickListener {
             startActivity(
                 IntentHelper.getFollowersFollowingScreen(requireContext())!!
                     .putExtra("id", userData.id)
                     .putExtra("type", Constants.TYPE_USER_TYPE_FOLLOWERS)
             )
         }
-        binding.layout.layoutFollowing.setOnClickListener {
+        binding.layoutFollowing.setOnClickListener {
             startActivity(
                 IntentHelper.getFollowersFollowingScreen(requireContext())!!
                     .putExtra("id", userData.id)
@@ -332,7 +332,11 @@ class FragmentProfile(val callback: FragmentHome.Callback? = null) : BaseFragmen
                     .putExtra("viewType", "viewNormal")
             )
         }
-        binding.layout.buttonEditProfile.setOnClickListener {
+
+        binding.ivBack.setOnClickListener {
+           requireActivity().onBackPressed()
+        }
+        binding.buttonEditProfile.setOnClickListener {
             // create an options object that defines the transition
             val options = ActivityOptions.makeSceneTransitionAnimation(
                 requireActivity(),
@@ -434,10 +438,10 @@ class FragmentProfile(val callback: FragmentHome.Callback? = null) : BaseFragmen
             binding.tvUserAbout.visibility = View.GONE
         }
         binding.tvUserName.text = userData.first_name + " " + userData.last_name
-        binding.layout.tvFollowerCount.text = userData.follower_count.toString()
-        binding.layout.tvFollowingCount.text = userData.following_count.toString()
+        binding.tvFollowerCount.text = userData.follower_count.toString()
+        binding.tvFollowingCount.text = userData.following_count.toString()
         binding.tvUserAbout.text = userData.about
-        binding.layout.tvFriendCount.text = userData.friends_count.toString()
+//        binding.tvFriendCount.text = userData.friends_count.toString()
         ImageLoaderHelperGlide.setGlide(
             requireContext(),
             binding.ivBackground,
@@ -523,9 +527,17 @@ class FragmentProfile(val callback: FragmentHome.Callback? = null) : BaseFragmen
         if (!ValidationHelper.isNull(userData.company)) {
             binding.layout.tvWebsite.text = userData.company
             binding.layout.layoutWebsite.visibility = View.VISIBLE
+
+        }
+        if (!ValidationHelper.isNull(userData.url)) {
+            binding.layout.tvWebsite.text = userData.url
+            binding.layout.layoutWebsite.visibility = View.VISIBLE
+            binding.layout.layoutWebsite.setOnClickListener {
+                requireActivity().startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(userData.url)))
+            }
         }
 
-        binding.layout.buttonEditProfile.visibility = View.VISIBLE
+        binding.buttonEditProfile.visibility = View.VISIBLE
     }
 
 

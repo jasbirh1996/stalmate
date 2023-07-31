@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -36,6 +37,7 @@
                     android:id="@+id/back"
                     android:layout_width="match_parent"
                     android:layout_height="220dp"
+                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/toolbar">
@@ -56,6 +58,7 @@
                             android:id="@+id/iv_background"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
+
                             android:scaleType="centerCrop"
                             android:src="@drawable/user_placeholder" />
 
@@ -69,6 +72,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
+                    android:visibility="gone"
                     android:layout_marginBottom="10dp"
                     app:layout_constraintBottom_toBottomOf="@+id/back"
                     app:layout_constraintEnd_toEndOf="parent">
@@ -86,6 +90,34 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
+                <ImageView
+                    android:id="@+id/iv_back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:adjustViewBounds="true"
+                    android:paddingStart="20dp"
+                    android:paddingTop="20dp"
+                    android:paddingBottom="20dp"
+                    android:paddingEnd="4dp"
+                    android:src="@drawable/ic_back"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/toolbar"
+                    app:tint="@color/black" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvProfile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Profile"
+                    android:textSize="16sp"
+                    app:fontFamily="@font/poppins_medium"
+                    android:textColor="@color/black"
+                    app:layout_constraintBottom_toBottomOf="@+id/iv_back"
+                    app:layout_constraintStart_toEndOf="@+id/iv_back"
+                    app:layout_constraintTop_toTopOf="@+id/iv_back" />
+
+
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/iv_user_thumb"
@@ -95,101 +127,216 @@
                     android:src="@drawable/profileplaceholder"
                     app:civ_border_color="@color/white"
                     app:civ_border_width="2dp"
-                    app:layout_constraintBottom_toBottomOf="@+id/back"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/back" />
+                    app:layout_constraintTop_toBottomOf="@+id/tvProfile" />
 
                 <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/id_camera_profile"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginEnd="6dp"
-                    android:layout_marginBottom="6dp"
-                    android:background="@drawable/circle_blue_background_stock"
-                    android:padding="@dimen/dp_5"
-                    android:src="@drawable/ic_profile_camera"
-                    app:layout_constraintBottom_toBottomOf="@+id/iv_user_thumb"
-                    app:layout_constraintEnd_toEndOf="@+id/iv_user_thumb" />
+                     android:id="@+id/id_camera_profile"
+                     android:layout_width="24dp"
+                     android:layout_height="24dp"
+                     android:layout_marginEnd="6dp"
+                     android:layout_marginBottom="6dp"
+                     android:background="@drawable/circle_blue_background_stock"
+                     android:padding="@dimen/dp_5"
+                     android:src="@drawable/ic_profile_camera"
+                     app:layout_constraintBottom_toBottomOf="@+id/iv_user_thumb"
+                     app:layout_constraintEnd_toEndOf="@+id/iv_user_thumb" />
+
+
+                <Button
+                    android:id="@+id/buttonEditProfile"
+                    android:layout_width="130dp"
+                    android:layout_height="wrap_content"
+                    android:minHeight="36dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginEnd="@dimen/_15sdp"
+                    android:background="@drawable/primary_button_background"
+                    android:text="@string/edit_profile"
+                    android:textAllCaps="false"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    tools:visibility="visible"
+                    android:visibility="gone"
+                    app:backgroundTint="@null"
+                    app:layout_constraintBottom_toBottomOf="@id/iv_user_thumb"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/_70sdp"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:orientation="horizontal"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/tvProfile"
+                        app:layout_constraintTop_toTopOf="@+id/tvProfile">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/layoutFollowers"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginEnd="@dimen/_10sdp"
+                            android:layout_weight="1"
+                            >
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/tvFollowerCount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/poppins_semibold"
+                                android:text="0"
+                                android:textColor="@color/black"
+                                android:textSize="16sp"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/tvLabelFollower"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/poppins_light"
+                                android:text="@string/followers"
+                                android:textColor="@color/colorTextGray"
+                                android:textSize="14sp"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/tvFollowerCount" />
+
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/layoutFollowing"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="@dimen/_10sdp"
+                            android:layout_weight="1"
+                           >
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/tvFollowingCount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/poppins_semibold"
+                                android:text="0"
+                                android:textColor="@color/black"
+                                android:textSize="16sp"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/tvLabelFollowing"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/poppins_light"
+                                android:text="@string/folllowing"
+                                android:textColor="@color/colorTextGray"
+                                android:textSize="14sp"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/tvFollowingCount" />
+
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/tv_user_name"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_weight="1"
-                    android:text=""
-                    android:textColor="@color/black"
-                    android:textSize="18sp"
-                    app:layout_constraintEnd_toStartOf="@+id/appCompatTextView17"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/iv_user_thumb" />
+                      android:id="@+id/tv_user_name"
+                      android:layout_width="0dp"
+                      android:layout_height="wrap_content"
+                      android:layout_marginStart="20dp"
+                      android:layout_marginTop="16dp"
+                      android:fontFamily="@font/poppins_extra_bold"
+                      android:layout_weight="1"
+                      tools:text="Deepak "
+                      android:text=""
+                      android:textColor="@color/black"
+                      android:textSize="18sp"
+                      app:layout_constraintEnd_toStartOf="@+id/appCompatTextView17"
+                      app:layout_constraintStart_toStartOf="parent"
+                      app:layout_constraintTop_toBottomOf="@+id/iv_user_thumb" />
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/appCompatTextView17"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:layout_marginEnd="16dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/rounded_border_text_view_blue"
-                    android:fontFamily="@font/poppins"
-                    android:paddingHorizontal="8dp"
-                    android:paddingVertical="4dp"
-                    android:text="@string/sync_contacts"
-                    android:textColor="@color/app_color"
-                    android:textSize="12sp"
-                    app:layout_constraintBottom_toBottomOf="@+id/tv_user_name"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/tv_user_name" />
+                  <androidx.appcompat.widget.AppCompatTextView
+                      android:id="@+id/appCompatTextView17"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_gravity="end"
+                      android:layout_marginEnd="16dp"
+                      android:layout_weight="1"
+                      android:background="@drawable/rounded_border_text_view_blue"
+                      android:fontFamily="@font/poppins"
+                      android:paddingHorizontal="8dp"
+                      android:paddingVertical="4dp"
+                      android:text="@string/sync_contacts"
+                      android:textColor="@color/app_color"
+                      android:textSize="12sp"
+                      app:layout_constraintBottom_toBottomOf="@+id/tv_user_name"
+                      app:layout_constraintEnd_toEndOf="parent"
+                      app:layout_constraintTop_toTopOf="@+id/tv_user_name" />
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/tv_user_about"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:ellipsize="end"
-                    android:fontFamily="@font/poppins"
-                    android:textColor="@color/colorTextGray"
-                    android:textSize="14sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@+id/tv_user_name"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_user_name" />
+                  <androidx.appcompat.widget.AppCompatTextView
+                      android:id="@+id/tv_user_about"
+                      android:layout_width="0dp"
+                      android:layout_height="wrap_content"
+                      android:layout_marginTop="8dp"
+                      android:ellipsize="end"
+                      android:fontFamily="@font/poppins"
+                      android:textColor="@color/colorTextGray"
+                      android:textSize="14sp"
+                      app:layout_constraintEnd_toEndOf="parent"
+                      app:layout_constraintStart_toStartOf="@+id/tv_user_name"
+                      app:layout_constraintTop_toBottomOf="@+id/tv_user_name" />
 
-                <include
-                    android:id="@+id/layout"
-                    layout="@layout/content_scroll_profile"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="18dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_user_about" />
+                     <include
+                        android:id="@+id/layout"
+                        layout="@layout/content_scroll_profile_new"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
 
-                <com.google.android.material.tabs.TabLayout
-                    android:id="@+id/tabLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_15sdp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/layout"
-                    app:tabGravity="fill"
-                    app:tabMode="fixed"
-                    app:tabMaxWidth="0dp"
-                    app:tabIndicatorFullWidth="true"
-                    app:tabTextColor="@color/black"
-                    app:tabSelectedTextColor="@color/black"
-                    app:tabIndicatorGravity="bottom" />
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_user_about" />
 
-                <androidx.viewpager2.widget.ViewPager2
-                    android:id="@+id/viewpager"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@+id/tabLayout" />
+                       <com.google.android.material.tabs.TabLayout
+                          android:id="@+id/tabLayout"
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:layout_marginStart="@dimen/_15sdp"
+                          app:layout_constraintStart_toStartOf="parent"
+                          app:layout_constraintTop_toBottomOf="@+id/layout"
+                          app:tabGravity="fill"
+                          app:tabMode="fixed"
+                          app:tabMaxWidth="0dp"
+                          app:tabIndicatorFullWidth="true"
+                          app:tabTextColor="@color/black"
+                          app:tabSelectedTextColor="@color/black"
+                          app:tabIndicatorGravity="bottom" />
+
+                      <androidx.viewpager2.widget.ViewPager2
+                          android:id="@+id/viewpager"
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          app:layout_constraintTop_toBottomOf="@+id/tabLayout" />
+
+                      <View
+                          android:layout_width="match_parent"
+                          android:layout_height="400dp"
+                          app:layout_constraintTop_toBottomOf="@+id/viewpager" />
+
+
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>
 
-        <TextView
+       <!-- <TextView
             android:id="@+id/ivBack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -203,6 +350,6 @@
             app:drawableStartCompat="@drawable/ic_back"
             app:drawableTint="@color/white"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent" />-->
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

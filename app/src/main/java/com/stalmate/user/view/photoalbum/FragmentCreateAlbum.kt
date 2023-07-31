@@ -27,6 +27,10 @@ class FragmentCreateAlbum : BaseFragment() {
         var view =  inflater.inflate(R.layout.fragment_create_album, container, false)
         binding = DataBindingUtil.bind<FragmentCreateAlbumBinding>(view)!!
 
+        binding.back.setOnClickListener {
+            findNavController().popBackStack()
+        }
+
         binding.createAlbumBtn.setOnClickListener {
             if (binding.etalbumname.text!!.isNotEmpty()){
                 val hashMap = HashMap<String, String>()

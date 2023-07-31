@@ -92,7 +92,7 @@
                             android:layout_marginEnd="4dp"
                             android:background="@null"
                             android:fontFamily="@font/poppins"
-                            android:hint="@string/search"
+                            android:hint="@string/search_friends"
                             android:textSize="12sp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toStartOf="@+id/appCompatImageView6"

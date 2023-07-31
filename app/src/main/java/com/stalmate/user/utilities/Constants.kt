@@ -45,6 +45,7 @@ object Constants {
 
     const val url_send_friend_request = "/friend_api/send_friend_request"
     const val url_update_friend_request = "/friend_api/update_friend_request"
+    const val url_remove_friend_request = "/index/user/remove_follower"
     const val url_remove_user_from_suggestions = "/friend_api/remove_suggestions"
     const val URL_SHARE_FUNTIME_WITH_FRIEND = "/funtime_api/funtime_share"
     const val URL_PHOTO_ALBUM = "/auth_api/get_albums"
@@ -97,6 +98,7 @@ object Constants {
     const val TYPE_USER_ACTION_REMOVE_FROM_SUGGESTIONS = "remove from suggestion"
     const val TYPE_USER_ACTION_ACCEPT_FRIEND_REQUEST = "Accept"
     const val TYPE_USER_ACTION_DELETE_FRIEND_REQUEST = "delete"
+    const val TYPE_USER_ACTION_REMOVE = "remove"
     const val TYPE_USER_ACTION_FOLLOW = "follow"
     const val TYPE_USER_ACTION_UNFOLLOW = "unfollow"
 

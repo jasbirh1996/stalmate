@@ -31,6 +31,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="50dp"
                     android:text=""
+                    tools:text="Profile"
                     android:textColor="@color/black"
                     android:textSize="16sp"
                     android:visibility="visible"

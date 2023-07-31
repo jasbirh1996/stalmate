@@ -33,7 +33,7 @@ class ProfileAboutAdapter(
         parent: ViewGroup,
         viewType: Int,
     ): ProfileAboutAdapter.FeedViewHolder {
-        var view = LayoutInflater.from(parent.context)
+        val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_profile_about_data, parent, false)
         return FeedViewHolder(DataBindingUtil.bind<ItemProfileAboutDataBinding>(view)!!)
     }
@@ -49,7 +49,7 @@ class ProfileAboutAdapter(
 
     inner class FeedViewHolder(var binding: ItemProfileAboutDataBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        @SuppressLint("ResourceAsColor")
+        @SuppressLint("ResourceAsColor", "SetTextI18n")
         fun bind(about: AboutProfileLine) {
 
                 if (ValidationHelper.isNull(about.key) && ValidationHelper.isNull(about.middle) && ValidationHelper.isNull(about.value)){
@@ -58,8 +58,8 @@ class ProfileAboutAdapter(
                 }else
 
             if (!ValidationHelper.isNull(about.key) && !ValidationHelper.isNull(about.middle)) {
-                binding.tvValue.text = " " + about.middle + " " + about.value
-                binding.tvKey.text = about.key
+                binding.tvValue.text =  about.value
+                binding.tvKey.text = "${about.key} ${about.middle} "
                 binding.tvKey.visibility = View.VISIBLE
             } else if (ValidationHelper.isNull(about.key) && ValidationHelper.isNull(about.middle)) {
                 binding.tvValue.text = about.value

@@ -29,7 +29,7 @@ class DrawerAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
-        var view =
+        val view =
             LayoutInflater.from(parent.context).inflate(R.layout.item_drawer_layout, parent, false)
         return ViewHolder(DataBindingUtil.bind(view)!!)
     }
@@ -60,7 +60,7 @@ class DrawerAdapter(
 
             binding.card.setOnClickListener {
                 when (drawerResponse.text) {
-                    "My Funtime" -> {
+                    "My Fun times" -> {
                         try {
                             (context as ActivityDashboard).pointToMyFuntime.value = true
                             (context as ActivityDashboard).onBackPressed()

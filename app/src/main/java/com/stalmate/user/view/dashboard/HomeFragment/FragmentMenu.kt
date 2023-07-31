@@ -78,8 +78,8 @@ class FragmentMenu(var callback: Callback) : BaseFragment(), DrawerAdapter.Callb
         data.add(ModelDrawer(R.drawable.ic_menu_saved, "Saved favourite"))
         data.add(ModelDrawer(R.drawable.ic_menu_logout, "Logout"))*/
         data.clear()
-        data.add(ModelDrawer(R.drawable.ic_menu_groups, "My Friends"))
-        data.add(ModelDrawer(R.drawable.ic_menu_funtimes, "My Funtime"))
+//        data.add(ModelDrawer(R.drawable.ic_menu_groups, "My Friends"))
+        data.add(ModelDrawer(R.drawable.ic_menu_funtimes, "My Fun times"))
         data.add(ModelDrawer(R.drawable.ic_menu_saved, "Saved/Favourite"))
         data.add(ModelDrawer(R.drawable.ic_menu_quite_mode, "Quite mode"))
         data.add(ModelDrawer(R.drawable.ic_menu_settings, "Settings"))
@@ -95,7 +95,7 @@ class FragmentMenu(var callback: Callback) : BaseFragment(), DrawerAdapter.Callb
                 App.getInstance()
             )!!.userDetail.results?.last_name
 
-        drawerAdapter = DrawerAdapter(networkViewModel, requireContext(), this)
+        drawerAdapter = DrawerAdapter(networkViewModel, requireActivity(), this)
 
         binding.rvMenu.adapter = drawerAdapter
         drawerAdapter.submitList(data)
@@ -131,6 +131,9 @@ class FragmentMenu(var callback: Callback) : BaseFragment(), DrawerAdapter.Callb
 
     fun setUpAboutUI() {
         binding.tvUserName.text = userData.first_name + " " + userData.last_name
+        binding.tvLocation.text = userData.profileData()?.home_town?:""
+
+
         Glide.with(requireContext()).load(userData.profile_img1)
             .placeholder(R.drawable.user_placeholder)
             .into(binding.userProfileImage)

@@ -192,7 +192,7 @@ data class Albums(
     val img_type: String? = "", // 0
 
     val id: String,
-    val files: String,
+    val files: String?,
     val url: String
 ) : Parcelable
 

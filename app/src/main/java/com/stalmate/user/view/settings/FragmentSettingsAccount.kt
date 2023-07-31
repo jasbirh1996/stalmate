@@ -37,12 +37,12 @@ class FragmentSettingsAccount : Fragment(), MainSettingCategoryAdapter.Callbackk
         }
 
         val list = ArrayList<SettingMenuModel>()
-        list.add(
+        /*list.add(
             SettingMenuModel(
                 R.drawable.account_privacy_icon,
                 Constants.SETTING_ACCOUNT_PRIVACY
             )
-        )
+        )*/
 //        list.add(SettingMenuModel(R.drawable.account_change_number_icon, Constants.SETTING_CHANGE_NUMBER))
         list.add(
             SettingMenuModel(

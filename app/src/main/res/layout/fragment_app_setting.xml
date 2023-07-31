@@ -248,9 +248,20 @@
                 app:layout_constraintTop_toTopOf="@+id/tv_Font_appSeting"
                 app:tint="@color/colorGray" />-->
 
-            <Spinner
+           <!-- <Spinner
                 android:id="@+id/fontSize_small"
                 style="@style/SpinnerTheme1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_marginEnd="@dimen/_5sdp"
+                android:entries="@array/font_size"
+                android:textColor="#B7B7B7"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_Font_appSeting" />-->
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/fontSize_small"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_10sdp"

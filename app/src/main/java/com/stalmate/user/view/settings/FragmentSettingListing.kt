@@ -62,7 +62,7 @@ class FragmentSettingListing : Fragment(), MainSettingCategoryAdapter.Callbackk 
 
         var list = ArrayList<SettingMenuModel>()
         list.add(SettingMenuModel(R.drawable.menu_settings_icon, Constants.SETTING_TYPE_ACCOUNT))
-        list.add(SettingMenuModel(R.drawable.menu_chatsetting_icon, Constants.SETTING_TYPE_CHAT))
+//        list.add(SettingMenuModel(R.drawable.menu_chatsetting_icon, Constants.SETTING_TYPE_CHAT))
         list.add(SettingMenuModel(R.drawable.menu_appsetting_icon, Constants.SETTING_TYPE_APP))
         list.add(
             SettingMenuModel(

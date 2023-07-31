@@ -45,6 +45,7 @@ class ActivityFollowersFollowingScreen : AppCompatActivity() {
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             if (position == 0) tab.text = "Followers" else if (position == 1) {
                 tab.text = "Followings"
+
             }
         }.attach()
 

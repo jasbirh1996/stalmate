@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
@@ -144,6 +145,17 @@ class FriendAdapter(
                 }
             })
         }
+        if (status.equals(Constants.TYPE_USER_ACTION_REMOVE)) {
+            hashMap["user_id"] = userId
+            hashMap.remove("id_user")
+            viewModel.removeFriendRequest(hashMap)
+            viewModel.updateFriendRequestLiveData.observe(lifecycleOwner, Observer {
+                it.let {
+//                    binding.buttonAccept.text = "Accepted"
+
+                }
+            })
+        }
     }
 
 
@@ -225,6 +237,7 @@ class FriendAdapter(
             binding.layoutFriendRequestExtra.visibility = View.GONE
             binding.ivDelete.visibility = View.GONE
             binding.buttonOuterFollow.visibility=View.VISIBLE
+
             Log.d("asdasdafgh",type+subtype)
          //   setupButtonColor("Following", false, binding.buttonFollow)
 //            binding.buttonFriend.visibility=View.GONE
@@ -248,6 +261,13 @@ class FriendAdapter(
             binding.buttonOuterFollow.text = "Follow"
         }
 
+
+        if (type.equals(TYPE_ALL_FOLLOWERS_FOLLOWING) && subtype.equals(Constants.TYPE_USER_TYPE_FOLLOWINGS)) {
+            binding.buttonOuterFollow.text = "UnFollow"
+        }
+        if (type.equals(TYPE_ALL_FOLLOWERS_FOLLOWING) && subtype.equals(Constants.TYPE_USER_TYPE_FOLLOWERS)) {
+            binding.buttonRemove.isVisible=true
+        }
 
         if (friend.request_status.equals(Constants.FRIEND_CONNECTION_STATUS_PENDING)) {
             binding.buttonFriend.text="Friend Request Sent"
@@ -274,6 +294,8 @@ class FriendAdapter(
                 binding.buttonFriend.text = "Friend"
             }
         }
+
+
 
 
 
@@ -326,6 +348,16 @@ class FriendAdapter(
                 bindingAdapterPosition
             )
         }
+        binding.buttonRemove.setOnClickListener {
+            //  callback.onClickOnProfile(friend)
+            updateFriendStatus(
+                Constants.TYPE_USER_ACTION_REMOVE,
+                friend.id,
+                (binding.root.context as? LifecycleOwner)!!,
+                binding,
+                bindingAdapterPosition
+            )
+        }
         
         binding.ivDelete.setOnClickListener {
             updateFriendStatus(
@@ -351,6 +383,9 @@ class FriendAdapter(
         }else if (!friend.profileData()?.education.isNullOrEmpty()){
             binding.tvLineOne.text = friend.profileData()?.education?.get(0)?.sehool ?: ""
             binding.tvLineOne.visibility = View.VISIBLE
+        }else {
+//            binding.tvLineOne.text = friend.profileData()?.home_town?:""
+//            binding.tvLineOne.visibility = View.VISIBLE
         }
 
         if (!friend.mutual_friend.isNullOrEmpty()){

@@ -79,7 +79,9 @@ class FragmentFullViewPhoto : BaseFragment() {
     private fun hitphotoListApi() {
         val hashMap = HashMap<String, Any>()
         hashMap["album_id"] = albumId
+        hashMap["user_id"] = prefManager?._id.toString()
         hashMap["limit"]="1"
+        hashMap["page"] = 1
         if (!isFreshApi) {
             currentIndex++
             hashMap["page"] = currentIndex.toString()

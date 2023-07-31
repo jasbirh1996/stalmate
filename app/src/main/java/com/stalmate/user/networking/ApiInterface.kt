@@ -200,6 +200,8 @@ interface ApiInterface {
 
     @PUT(Constants.url_update_friend_request)
     fun updateFriendRequest(@Body map: HashMap<String, String>): Call<CommonModelResponse>
+    @POST(Constants.url_remove_friend_request)
+    fun removeFriendRequest(@Body map: HashMap<String, String>): Call<CommonModelResponse>
 
     @POST(Constants.url_remove_user_from_suggestions)
     fun removeUserFromSuggestions(@Body map: HashMap<String, String>): Call<CommonModelResponse>

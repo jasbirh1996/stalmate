@@ -22,7 +22,7 @@ class FragmentProfileFuntime : BaseFragment(), ReelVideosByAudioAdapter.Callback
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = DataBindingUtil.bind<FragmentProfileFuntimeBinding>(
+        binding = DataBindingUtil.bind(
             inflater.inflate(
                 R.layout.fragment_profile_funtime,
                 container,
@@ -53,21 +53,26 @@ class FragmentProfileFuntime : BaseFragment(), ReelVideosByAudioAdapter.Callback
         hashMap.put("limit", "5")
         hashMap.put("id_user", prefManager?._id.toString())
         hashMap.put("fun_id", "")
+        hashMap.put("is_video", if(arguments?.getBoolean("isVideos") == true) "1" else "0")
+
+        /*2 - All File
+                1- video File
+                0- image file*/
 
 
 
-        networkViewModel.funtimeLiveData(prefManager?.access_token.toString(), hashMap)
+                networkViewModel.funtimeLiveData(prefManager?.access_token.toString(), hashMap)
         networkViewModel.funtimeLiveData.observe(viewLifecycleOwner) {
             it?.let {
-                adapter.submitList(
-                    if (arguments?.getBoolean("isVideos") == false)
+                adapter.submitList(it.results
+                  /*  if (arguments?.getBoolean("isVideos") == false)
                         it.results.filter {
                             it.isImage()
                         }
                     else
                         it.results.filter {
                             (!it.isImage())
-                        }
+                        }*/
                 )
                 binding.root.requestLayout()
             }

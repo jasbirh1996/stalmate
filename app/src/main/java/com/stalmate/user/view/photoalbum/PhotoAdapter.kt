@@ -50,10 +50,20 @@ class PhotoAdapter(val viewModel: AppViewModel, val context: Context,var callbac
         @SuppressLint("ResourceAsColor", "ResourceType")
         fun bind(feed: Albums) {
 
+           /*  try {
+                 Glide.with(context).load(feed.files?.replace(".com",".com/"))
+                     .placeholder(R.drawable.profileplaceholder)
+                     .into(binding.image)
+             }catch (e:Exception){
+                 e.printStackTrace()
+             }*/
 
+//<<<<<<< Updated upstream
             Glide.with(context).load(feed.img)
                 .placeholder(R.drawable.profileplaceholder)
                 .into(binding.image)
+//=======
+//>>>>>>> Stashed changes
 
             binding.image.setOnClickListener {
                 callback.onClickOnPhoto(feed)

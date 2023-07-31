@@ -42,7 +42,7 @@ class FragmentNotification : AppCompatActivity() {
     private fun viewPagerNotificationBinding() {
         val fragmentAdapter = ChatFragmentAdapter(this.supportFragmentManager)
         fragmentAdapter.addFragment(FragmentNotificationRecent(), getString(R.string.recent))
-        fragmentAdapter.addFragment(FragmentNotificationSeeMore(), getString(R.string.seeMore))
+//        fragmentAdapter.addFragment(FragmentNotificationSeeMore(), getString(R.string.seeMore))
         binding.viewPagerChatCall.adapter = fragmentAdapter
         binding.tabLayoutChatCall.setupWithViewPager(binding.viewPagerChatCall)
         binding.viewPagerChatCall.addOnPageChangeListener(
