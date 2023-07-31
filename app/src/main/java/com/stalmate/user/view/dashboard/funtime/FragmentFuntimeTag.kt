@@ -1,22 +1,32 @@
 package com.stalmate.user.view.dashboard.funtime
 
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.clearFragmentResultListener
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.palette.graphics.Palette
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
+import com.makeramen.roundedimageview.RoundedImageView
 import com.stalmate.user.R
 import com.stalmate.user.base.BaseFragment
 import com.stalmate.user.commonadapters.TaggedUsersAdapter
@@ -34,18 +44,16 @@ class FragmentFuntimeTag : BaseFragment(), FriendAdapter.Callbackk, TaggedUsersA
     lateinit var peopleAdapter: TaggedUsersAdapter
     lateinit var tagPeopleViewModel: TagPeopleViewModel
     var mVideo = ""
-//    var activityDashboard : ActivityDashboard
+    private var isImage: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
 
-    var isEdit=false
-
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.bind<FragmentFuntimeTagBinding>(
             inflater.inflate(
@@ -60,88 +68,102 @@ class FragmentFuntimeTag : BaseFragment(), FriendAdapter.Callbackk, TaggedUsersA
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (requireActivity().intent.getStringExtra(ActivityFilter.EXTRA_VIDEO)!=null){
-            mVideo = requireActivity().intent.getStringExtra(ActivityFilter.EXTRA_VIDEO)!!
+        if (!arguments?.getString("mediaUri").isNullOrEmpty()) {
+            mVideo = arguments?.getString("mediaUri").toString()
+            isImage = arguments?.getBoolean("isImage", false)!!
         }
 
-
-
-
-
-
-
-        tagPeopleViewModel= ViewModelProvider(requireActivity()).get(TagPeopleViewModel::class.java)
-        peopleAdapter = TaggedUsersAdapter(tagPeopleViewModel, requireContext(),false,this)
+        tagPeopleViewModel =
+            ViewModelProvider(requireActivity()).get(TagPeopleViewModel::class.java)
+        peopleAdapter = TaggedUsersAdapter(tagPeopleViewModel, requireContext(), false, this)
         binding.rvPeople.adapter = peopleAdapter
         binding.rvPeople.layoutManager = LinearLayoutManager(requireContext())
-        Log.d("asdasdgkn","okpppoo")
-        mPlayer = ExoPlayer.Builder(requireContext()).build()
-        mPlayer!!.repeatMode = ExoPlayer.REPEAT_MODE_ALL
-        val factory = DefaultDataSourceFactory(requireContext(), getString(R.string.app_name))
-        val mediaItem: MediaItem
-        if ((requireActivity() as ActivityFuntimePost).isEdit){
-             mediaItem = MediaItem.fromUri(Uri.parse((requireActivity() as ActivityFuntimePost).funtime.file))
-        }else{
-            mediaItem = MediaItem.fromUri(Uri.fromFile(File(mVideo!!)))
+
+
+        if (!isImage) {
+            binding.playerView.visibility = View.VISIBLE
+            binding.playerImage.visibility = View.GONE
+            mPlayer = ExoPlayer.Builder(requireContext()).build()
+            mPlayer?.repeatMode = ExoPlayer.REPEAT_MODE_ALL
+            val factory = DefaultDataSourceFactory(requireContext(), getString(R.string.app_name))
+            val mediaItem: MediaItem = if ((requireActivity() as ActivityFuntimePost).isEdit) {
+                //MediaItem.fromUri(Uri.parse((requireActivity() as ActivityFuntimePost).funtime.file))
+                MediaItem.fromUri(Uri.fromFile(File(mVideo)))
+            } else {
+                MediaItem.fromUri(Uri.fromFile(File(mVideo)))
+            }
+            val source: ProgressiveMediaSource = ProgressiveMediaSource.Factory(factory).createMediaSource(mediaItem)
+            binding.playerView.player = mPlayer;
+            mPlayer?.prepare(source);
+            mPlayer?.playWhenReady = true;
+            mPlayer?.play()
+        } else {
+            binding.playerView.visibility = View.GONE
+            binding.playerImage.visibility = View.VISIBLE
+            Glide.with(binding.playerImage.context).asBitmap().load(mVideo).addListener(object :RequestListener<Bitmap>{
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: Target<Bitmap>?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    return isFirstResource
+                }
+
+                override fun onResourceReady(
+                    resource: Bitmap?,
+                    model: Any?,
+                    target: Target<Bitmap>?,
+                    dataSource: DataSource?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    resource?.let {
+                        Palette.from(it).generate { palette ->
+                            palette?.let { it1 ->
+                                setUpInfoBackgroundColor(
+                                    binding.clContainer,
+                                    it1
+                                )
+                            }
+                        }
+                    }
+                    return isFirstResource
+                }
+            }).into(binding.playerImage)
         }
 
-
-
-
-
-        val source: ProgressiveMediaSource = ProgressiveMediaSource.Factory(factory).createMediaSource(mediaItem)
-
-
-
-
-        binding.playerView.player=mPlayer;
-        mPlayer!!.prepare(source);
-        mPlayer!!.playWhenReady = true;
-        mPlayer!!.play()
-
         binding.layoutAddMoreButton.setOnClickListener {
-        /*    setFragmentResultListener(SELECT_USER) { key, bundle ->
+            /*    setFragmentResultListener(SELECT_USER) { key, bundle ->
                 clearFragmentResultListener(requestKey = SELECT_USER)
               *//*  var arrayList=ArrayList<User>()
                 arrayList.add(bundle.getSerializable(SELECT_USER) as User)
                 peopleAdapter.addToList(arrayList)*//*
             }*/
-            if (binding.layoutWhio.visibility==View.GONE){
-                binding.layoutWhio.visibility=View.VISIBLE
-            }else{
-                binding.layoutWhio.visibility=View.GONE
+            if (binding.layoutWhio.visibility == View.GONE) {
+                binding.layoutWhio.visibility = View.VISIBLE
+            } else {
+                binding.layoutWhio.visibility = View.GONE
             }
-
         }
-
-
-
         binding.layoutWhio.setOnClickListener {
             findNavController().navigate(R.id.action_fragmentFuntimeTag_to_fragmentSingleUserSelector)
         }
-
         tagPeopleViewModel.getTaggedPeopleList().observe(viewLifecycleOwner, Observer {
-            binding.layoutWhio.visibility=View.GONE
+            binding.layoutWhio.visibility = View.GONE
             peopleAdapter.submitList(it.taggedPeopleList)
-            if (it.taggedPeopleList.size>0){
-                binding.buttonOk.visibility=View.VISIBLE
+            if (it.taggedPeopleList.size > 0) {
+                binding.buttonOk.visibility = View.VISIBLE
                 binding.buttonOk.setOnClickListener {
                     findNavController().popBackStack()
                 }
             }
         })
-
-
         binding.ivDone.setOnClickListener {
             findNavController().popBackStack()
         }
         binding.ivCloseScreen.setOnClickListener {
             findNavController().popBackStack()
         }
-
-
-
-
     }
 
     override fun onClickOnUpdateFriendRequest(friend: User, status: String) {
@@ -151,44 +173,63 @@ class FragmentFuntimeTag : BaseFragment(), FriendAdapter.Callbackk, TaggedUsersA
     override fun onClickOnProfile(friend: User) {
 
     }
-    override fun onDestroy() {
-        super.onDestroy()
-        mPlayer!!.stop(true)
-        mPlayer!!.playWhenReady = false
-        mPlayer!!.release()
-        mPlayer = null
-    }
-
-
 
     override fun onUserSelected(user: User) {
 
     }
-    override fun onDestroyView() {
-        super.onDestroyView()
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (!isImage) {
+            mPlayer?.stop(true)
+            mPlayer?.playWhenReady = false
+            mPlayer?.release()
+            mPlayer = null
+        }
     }
 
-
     override fun onResume() {
-        if (mPlayer!=null){
-            mPlayer!!.play()
+        if (!isImage) {
+            if (mPlayer != null) {
+                mPlayer?.play()
+            }
         }
         super.onResume()
     }
 
-
     override fun onPause() {
-        if (mPlayer!=null){
-            mPlayer!!.release()
+        if (!isImage) {
+            if (mPlayer != null) {
+                mPlayer?.release()
+            }
         }
         super.onPause()
     }
 
+    private fun setUpInfoBackgroundColor(cl: ConstraintLayout, palette: Palette) {
+        val swatch = getMostPopulousSwatch(palette)
+        if (swatch != null) {
+            val endColor = swatch.rgb
+            cl.setBackgroundColor(endColor)
+        } else {
+            val defaultColor = ContextCompat.getColor(cl.context, R.color.pinklight)
+            cl.setBackgroundColor(defaultColor)
+        }
+    }
 
-
-
+    private fun getMostPopulousSwatch(palette: Palette?): Palette.Swatch? {
+        var mostPopulous: Palette.Swatch? = null
+        if (palette != null) {
+            for (swatch in palette.swatches) {
+                if (mostPopulous == null || swatch.population > mostPopulous.population) {
+                    mostPopulous = swatch
+                }
+            }
+        }
+        return mostPopulous
+    }
 }
 
-const val SELECT_USER="selectUser"
+const val SELECT_USER = "selectUser"
 
 

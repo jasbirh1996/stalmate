@@ -18,6 +18,7 @@ import com.stalmate.user.commonadapters.TaggedUsersAdapter
 import com.stalmate.user.databinding.FragmentSingleUserSelectorBinding
 
 import com.stalmate.user.model.User
+import com.stalmate.user.networking.ApiInterface
 import com.stalmate.user.utilities.Constants
 import com.stalmate.user.view.adapter.FriendAdapter
 import com.stalmate.user.view.dashboard.funtime.viewmodel.TagPeopleViewModel
@@ -135,42 +136,21 @@ class FragmentSingleUserSelector : BaseFragment(), FriendAdapter.Callbackk,
         if (isFresh) {
             currentPage = 1
         }
-
-        var hashmap = HashMap<String, String>()
-        hashmap.put("other_user_id", "")
-        hashmap.put("type", Constants.TYPE_PROFILE_FRIENDS)
-        hashmap.put("sub_type", "")
-        hashmap.put("search", this.searchData)
-        hashmap.put("page", currentPage.toString())
-        hashmap.put("limit", "20")
-        hashmap.put("sortBy", "")
-        hashmap.put("filter", "")
-
-        networkViewModel.getFriendList(prefManager?.access_token.toString(),hashmap)
+        networkViewModel.getFriendListBody(
+            prefManager?.access_token.toString(),
+            ApiInterface.UsersListResponse(
+                limit = "6",
+                page = "1",
+                type = Constants.NEW_Type_Friend_List,
+                user_id = ""
+            )
+        )
         networkViewModel.friendLiveData.observe(viewLifecycleOwner, Observer {
             it.let {
-
-
                 if (!it?.results.isNullOrEmpty()) {
-
                     if (isFresh) {
-
-                      if (tagPeopleViewModel.taggedModelObject.policy==Constants.PRIVACY_TYPE_SPECIFIC){
-                          friendAdapter.list.clear()
-                          it?.results?.forEach { user ->
-
-                              tagPeopleViewModel.taggedModelObject.specifFriendsList.forEach {
-                                  if (user.id == it.id) {
-                                      friendAdapter.addToList(listOf(user))
-                                  }
-                              }
-                          }
-                      }else{
-                          friendAdapter.submitList(it?.results as ArrayList<User>)
-                      }
-                    } else {
-
-                        if (tagPeopleViewModel.taggedModelObject.policy==Constants.PRIVACY_TYPE_SPECIFIC){
+                        if (tagPeopleViewModel.taggedModelObject.policy == Constants.PRIVACY_TYPE_SPECIFIC) {
+                            friendAdapter.list.clear()
                             it?.results?.forEach { user ->
                                 tagPeopleViewModel.taggedModelObject.specifFriendsList.forEach {
                                     if (user.id == it.id) {
@@ -178,15 +158,24 @@ class FragmentSingleUserSelector : BaseFragment(), FriendAdapter.Callbackk,
                                     }
                                 }
                             }
-                        }else{
+                        } else {
+                            friendAdapter.submitList(it?.results as ArrayList<User>)
+                        }
+                    } else {
+                        if (tagPeopleViewModel.taggedModelObject.policy == Constants.PRIVACY_TYPE_SPECIFIC) {
+                            it?.results?.forEach { user ->
+                                tagPeopleViewModel.taggedModelObject.specifFriendsList.forEach {
+                                    if (user.id == it.id) {
+                                        friendAdapter.addToList(listOf(user))
+                                    }
+                                }
+                            }
+                        } else {
                             friendAdapter.addToList(it?.results as ArrayList<User>)
                         }
-
-
                     }
-
                     isLastPage = false
-                    if ((it?.results?.size?:0) < 16) {
+                    if ((it?.results?.size ?: 0) < 16) {
                         binding.progressLoading.visibility = View.GONE
                     } else {
                         binding.progressLoading.visibility = View.VISIBLE
@@ -199,8 +188,6 @@ class FragmentSingleUserSelector : BaseFragment(), FriendAdapter.Callbackk,
                     binding.progressLoading.visibility = View.GONE
 
                 }
-
-
             }
         })
     }
@@ -216,7 +203,6 @@ class FragmentSingleUserSelector : BaseFragment(), FriendAdapter.Callbackk,
     }
 
     override fun onUserSelected(user: User) {
-
 
 
         if (tagPeopleViewModel.getPolicy().value!!.policy == Constants.PRIVACY_TYPE_PRIVATE) {
@@ -238,7 +224,6 @@ class FragmentSingleUserSelector : BaseFragment(), FriendAdapter.Callbackk,
                     }
                 })
             custumConfirmDialogForAccountPublic.show()
-
 
 
 /*

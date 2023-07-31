@@ -267,7 +267,14 @@ class FragmentFuntimePost : BaseFragment(), FriendAdapter.Callbackk {
             findNavController().popBackStack()
         }
 
-        binding.layoutTagPeople.setOnClickListener { findNavController().navigate(R.id.action_fragmentFuntimePost_to_fragmentFuntimeTag) }
+        binding.layoutTagPeople.setOnClickListener {
+            findNavController().navigate(
+                R.id.action_fragmentFuntimePost_to_fragmentFuntimeTag,
+                Bundle().apply {
+                    putBoolean("isImage", isImage)
+                    putString("mediaUri", mediaUri)
+                })
+        }
 
         Glide.with(requireContext())
             .load(mediaUri)
